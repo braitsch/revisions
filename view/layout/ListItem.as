@@ -1,0 +1,82 @@
+package view.layout {
+	import com.greensock.TweenLite;
+
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
+	import flash.display.Shape;
+	import flash.display.Sprite;
+	import flash.events.MouseEvent;
+	import flash.filesystem.File;
+
+	public class ListItem extends Sprite {
+
+		private var _file				:File;
+		private var _active				:Boolean;
+		private var _bkgd				:Shape = new Shape();	
+
+		public function ListItem($f:File, $w:uint, $a:Boolean)
+		{
+			draw($w);
+			_file = $f;
+			_active = $a;
+			_bkgd.alpha = .5;
+			addChildAt(_bkgd, 0);	
+			
+			buttonMode = true;
+			addEventListener(MouseEvent.ROLL_OUT, onRollOut);			
+			addEventListener(MouseEvent.ROLL_OVER, onRollOver);
+		}
+		
+	// public setters / getters 	
+		
+		public function draw(w:Number):void
+		{
+			_bkgd.graphics.beginFill(0xffffff);
+			_bkgd.graphics.drawRect(0, 0, w, 20);
+			_bkgd.graphics.endFill();			
+		}
+		
+		public function get file():File
+		{
+			return _file;
+		}	
+		
+		public function get active():Boolean
+		{
+			return _active;
+		}
+		
+		public function set active($on:Boolean):void
+		{
+			_active = $on;
+			TweenLite.to(_bkgd, .3, {alpha:_active ? 1 : .5});		
+		}
+	
+	// protected methods 	
+		
+		protected function getFileSystemIcon(bmd:BitmapData):Bitmap 
+		{
+			var bmp:Bitmap = new Bitmap(bmd);
+				bmp.y = 2; 
+				bmp.x = 4;
+			bmp.width = bmp.height = 16;			
+			return(bmp);	
+		}		
+
+	// mouse events //
+
+		private function onRollOver(e:MouseEvent):void 
+		{
+			if (_active) return;
+			TweenLite.to(_bkgd, .3, {alpha:1});
+		}
+		
+		private function onRollOut(e:MouseEvent):void 
+		{
+			if (_active) return;
+			TweenLite.to(_bkgd, .3, {alpha:.5});
+		}
+		
+	}
+	
+}
