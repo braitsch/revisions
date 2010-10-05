@@ -9,16 +9,16 @@ package view.files {
 
 	public class FileItem extends ListItem {
 
-		private static var blue:IconBallBlue = new IconBallBlue(15, 15);		private static var green:IconBallGreen = new IconBallGreen(15, 15);		private static var grey:IconBallGrey = new IconBallGrey(15, 15);		private static var orange:IconBallOrange = new IconBallOrange(15, 15);
+		private static var blue		:IconBallBlue = new IconBallBlue(15, 15);		private static var green	:IconBallGreen = new IconBallGreen(15, 15);		private static var grey		:IconBallGrey = new IconBallGrey(15, 15);		private static var orange	:IconBallOrange = new IconBallOrange(15, 15);
 		
-		private var _view:FileItemMC = new FileItemMC();
-		private var _label:String;
-		private var _icon:Bitmap;
+		private var _view			:FileItemMC = new FileItemMC();
+		private var _label			:String;
+		private var _icon			:Bitmap;
 
-		public function FileItem($f:File) 
+		public function FileItem($file:File) 
 		{
-			super($f, 440, false);
-						
+			super(440, false);
+			super.file = $file;
 			_view.label_txt.x = 25;
 			_view.label_txt.autoSize = 'left';
 			_view.label_txt.mouseEnabled = false;

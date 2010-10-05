@@ -11,7 +11,8 @@ package view.bookmarks {
 
 		public function Bookmark($label:String, $local:String, $remote:String, $active:uint)
 		{
-			super(new File('file://'+$local), 190, $active==1);
+			super(190, $active==1);
+			super.file = new File('file://'+$local);
 			
 			_label = $label;
 			_local = $local;

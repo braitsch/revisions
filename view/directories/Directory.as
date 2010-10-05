@@ -15,8 +15,8 @@ package view.directories {
 
 		public function Directory($f:File)
 		{
-			super($f, 280, false);
-						
+			super(280, false);
+			super.file = $f;	
 			_view.mouseEnabled = false;
 			_view.label_txt.x = 25;
 			_view.label_txt.autoSize = 'left';

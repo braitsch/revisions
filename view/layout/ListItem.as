@@ -1,8 +1,6 @@
 package view.layout {
 	import com.greensock.TweenLite;
 
-	import flash.display.Bitmap;
-	import flash.display.BitmapData;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -14,10 +12,9 @@ package view.layout {
 		private var _active				:Boolean;
 		private var _bkgd				:Shape = new Shape();	
 
-		public function ListItem($f:File, $w:uint, $a:Boolean)
+		public function ListItem($w:uint, $a:Boolean)
 		{
 			draw($w);
-			_file = $f;
 			_active = $a;
 			_bkgd.alpha = .5;
 			addChildAt(_bkgd, 0);	
@@ -36,6 +33,11 @@ package view.layout {
 			_bkgd.graphics.endFill();			
 		}
 		
+		public function set file($f:File):void
+		{
+			_file = $f;
+		}
+		
 		public function get file():File
 		{
 			return _file;
@@ -52,17 +54,6 @@ package view.layout {
 			TweenLite.to(_bkgd, .3, {alpha:_active ? 1 : .5});		
 		}
 	
-	// protected methods 	
-		
-		protected function getFileSystemIcon(bmd:BitmapData):Bitmap 
-		{
-			var bmp:Bitmap = new Bitmap(bmd);
-				bmp.y = 2; 
-				bmp.x = 4;
-			bmp.width = bmp.height = 16;			
-			return(bmp);	
-		}		
-
 	// mouse events //
 
 		private function onRollOver(e:MouseEvent):void 
@@ -76,6 +67,15 @@ package view.layout {
 			if (_active) return;
 			TweenLite.to(_bkgd, .3, {alpha:.5});
 		}
+		
+//		protected function getFileSystemIcon(bmd:BitmapData):Bitmap 
+//		{
+//			var bmp:Bitmap = new Bitmap(bmd);
+//				bmp.y = 2; 
+//				bmp.x = 4;
+//			bmp.width = bmp.height = 16;			
+//			return(bmp);	
+//		}		
 		
 	}
 	

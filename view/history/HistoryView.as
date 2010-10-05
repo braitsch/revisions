@@ -1,17 +1,18 @@
 package view.history {
-	import flash.events.MouseEvent;
 	import events.RepositoryEvent;
 
 	import model.AppModel;
 
+	import view.layout.ListItem;
+	import view.layout.SimpleList;
 	import view.modals.ModelWindow;
 
-	import flash.display.Sprite;
+	import flash.events.MouseEvent;
 
 	public class HistoryView extends ModelWindow {
 
 		private static var _view			:HistoryViewMC = new HistoryViewMC();
-		private static var _list			:Sprite = new Sprite();
+		private static var _list			:SimpleList = new SimpleList();
 
 		public function HistoryView()
 		{
@@ -34,13 +35,13 @@ package view.history {
 		}
 
 		private function refreshList(e:RepositoryEvent):void 
-		{			while(_list.numChildren) _list.removeChildAt(0);
-			var h:Array = e.data as Array;
+		{
+			var v:Vector.<ListItem> = new Vector.<ListItem>();			var h:Array = e.data as Array;
 			for (var i:int = 0; i < h.length; i++) {
-				var n:HistoryItem = new HistoryItem(h.length-i, h[i]);
-				n.y = 24 * i;
-				_list.addChild(n);
-			}		
+				v.push(new HistoryItem(h.length-i, h[i]));
+			}
+			_list.refresh(v);
+			
 		}
 		
 	}
