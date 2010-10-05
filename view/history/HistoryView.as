@@ -1,4 +1,5 @@
 package view.history {
+	import flash.events.MouseEvent;
 	import events.RepositoryEvent;
 
 	import model.AppModel;
@@ -15,17 +16,28 @@ package view.history {
 		public function HistoryView()
 		{
 			addChild(_view);
-			_list.x = 20;			_list.y = 70;
+			super.cancel = _view.close_btn;			_list.x = 20;
+			_list.y = 70;
+			_list.addEventListener(MouseEvent.CLICK, onRecordSelection);
 			_view.addChild(_list);
-			super.cancel = _view.close_btn;
-			AppModel.history.addEventListener(RepositoryEvent.HISTORY_RECEIVED, onHistoryData);
+			AppModel.history.addEventListener(RepositoryEvent.HISTORY_RECEIVED, refreshList);			AppModel.history.addEventListener(RepositoryEvent.HISTORY_UNAVAILABLE, clearList);
 		}
 
-		private function onHistoryData(e:RepositoryEvent):void 
+		private function onRecordSelection(e:MouseEvent):void 
+		{
+			trace("HistoryView.onRecordSelection(e)", e.target.sha1);	
+		}
+
+		private function clearList(e:RepositoryEvent):void 
 		{
 			while(_list.numChildren) _list.removeChildAt(0);
-			for (var i:int = 0; i < e.data.notes.length; i++) {
-				var n:HistoryItem = new HistoryItem(i, e.data);
+		}
+
+		private function refreshList(e:RepositoryEvent):void 
+		{			while(_list.numChildren) _list.removeChildAt(0);
+			var h:Array = e.data as Array;
+			for (var i:int = 0; i < h.length; i++) {
+				var n:HistoryItem = new HistoryItem(h.length-i, h[i]);
 				n.y = 24 * i;
 				_list.addChild(n);
 			}		

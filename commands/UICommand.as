@@ -20,7 +20,8 @@ package commands {
 		
 		public static const SAVE_PROJECT:String = "SAVE_PROJECT";			
 		public static const VIEW_HISTORY:String = "VIEW_HISTORY";
-			// list item selections //	
+		public static const VIEW_VERSION:String = "VIEW_VERSION";		
+	// list item selections //	
 		public static const LIST_ITEM_SELECTED:String = "LIST_ITEM_SELECTED";
 		public static const BOOKMARK_SELECTED:String = "BOOKMARK_SELECTED";
 		public static const BRANCH_SELECTED:String = "BRANCH_SELECTED";

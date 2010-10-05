@@ -4,13 +4,21 @@ package view.history {
 	public class HistoryItem extends Sprite {
 
 		private var _view			:HistoryItemMC = new HistoryItemMC();
+		private var _sha1			:String;			
 
-		public function HistoryItem(n:uint, d:Object)
+		public function HistoryItem(n:uint, s:String)
 		{
-			_view.num_txt.text = String(n+1);			_view.date_txt.text = d.dates[n];			_view.author_txt.text = d.authors[n];			_view.note_txt.text = d.notes[n];
+			var a:Array = s.split('##');
+			_sha1 = a[0];
+			_view.num_txt.text = n.toString();			_view.date_txt.text = a[1]; 			_view.author_txt.text = a[2];			_view.note_txt.text = a[3];
 			addChild(_view);
+			buttonMode = true;
+			mouseChildren = false;
 		}
 		
+		public function get sha1():String
+		{
+			return _sha1;
+		}
 	}
-	
 }

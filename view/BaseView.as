@@ -62,8 +62,9 @@ package view {
 		
 		private function onHistoryReceived(e:RepositoryEvent):void 
 		{
-			if (e.data.dates[0]=='0 seconds ago') e.data.dates[0]='Just Now';
-			_view.target_txt.text = 'Repository / Branch : ' + _bookmark.label;							_view.target_txt.appendText(' -- Last Commit : '+e.data.dates[0]+' by '+e.data.authors[0]);
+			var a:Array = e.data[0].split('##');
+			if (a[1]=='0 seconds ago') a[1]='Just Now';
+			_view.target_txt.text = 'Repository / Branch : ' + _bookmark.label;							_view.target_txt.appendText(' -- Version '+e.data.length+' -- Last Commit : '+a[1]+' by '+a[2]);
 		}
 		
 		private function onHistoryUnavailable(e:RepositoryEvent):void 

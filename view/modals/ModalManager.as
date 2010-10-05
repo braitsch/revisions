@@ -45,7 +45,7 @@ package view.modals {
 			_dragAndDrop.target = stage;
 			_dragAndDrop.addEventListener(NativeDragEvent.NATIVE_DRAG_COMPLETE, onDragAndDrop);
 			stage.addEventListener(UICommand.INSTALL_GIT, installGit);			stage.addEventListener(UICommand.NEW_BOOKMARK, addBookmark);			stage.addEventListener(UICommand.EDIT_BOOKMARK, editBookmark);			stage.addEventListener(UICommand.SAVE_PROJECT, addNewCommit);			stage.addEventListener(UICommand.REPAIR_BOOKMARK, repairBookmark);			stage.addEventListener(UICommand.ADD_BRANCH, branchBookmark);			stage.addEventListener(UICommand.DELETE_BOOKMARK, removeBookmark);
-			stage.addEventListener(UICommand.VIEW_HISTORY, viewHistory);			}	
+			stage.addEventListener(UICommand.VIEW_HISTORY, viewHistory);			stage.addEventListener(UICommand.VIEW_VERSION, viewVersion);		}	
 
 		private function onDragAndDrop(e:NativeDragEvent):void 
 		{
@@ -99,7 +99,12 @@ package view.modals {
 		private function viewHistory(e:UICommand):void 
 		{
 			addChild(_history);
-		}				
+		}	
+		
+		private function viewVersion(e:UICommand):void 
+		{
+			trace("ModalManager.viewVersion(e)");
+		}					
 		
 		private function onCloseModelWindow(e:UICommand):void 
 		{
