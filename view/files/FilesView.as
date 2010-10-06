@@ -1,5 +1,6 @@
 package view.files {
 	import commands.UICommand;
+
 	import events.RepositoryEvent;
 
 	import model.AppModel;
@@ -30,8 +31,7 @@ package view.files {
 			_list.contextMenu = AirContextMenu.menu;
 			_list.addEventListener(UICommand.LIST_ITEM_SELECTED, onListSelection);					
 			
-			AppModel.status.addEventListener(RepositoryEvent.STATUS, onRepositoryStatus);			
-			AppModel.getInstance().addEventListener(RepositoryEvent.SET_BOOKMARK, onBookmarkChange);
+			AppModel.getInstance().addEventListener(RepositoryEvent.BOOKMARK_SELECTED, onBookmarkChange);
 		}
 		
 		public function set directory(d:ListItem):void
@@ -42,7 +42,7 @@ package view.files {
 				for (var i : int = 0; i < a.length; i++) if (validate(a[i])) _files.push(new FileItem(a[i]));
 			}
 		// force a status refresh //
-			AppModel.status.getStatus();			
+			onRepositoryStatus();
 		}
 		
 		private function onBookmarkChange(e:RepositoryEvent):void 
@@ -52,10 +52,10 @@ package view.files {
 			directory = e.data as ListItem;
 		}
 
-		private function onRepositoryStatus(e:RepositoryEvent):void 
+		private function onRepositoryStatus():void 
 		{
-		// we receive the status of everything in the repository //	
-			var s:Array = e.data as Array;
+		// fetch the status of everything in the repository //	
+			var s:Array = AppModel.bookmark.status;
 			var i:uint;
 			file: for (i = 0; i < _files.length; i++) {
 				var p:String = _files[i].file.nativePath.replace(_bmkpath+'/', '');

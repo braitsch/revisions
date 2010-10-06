@@ -19,17 +19,18 @@ package model.git {
 			_proxy = new NativeProcessProxy();
 			_proxy.executable = 'Install.sh';			_proxy.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);
 			_proxy.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
+			checkGitIsInstalled();			
 		}
 
-		public function checkGitIsInstalled():void 
-		{
-			_proxy.call(Vector.<String>([BashMethods.GET_VERSION]));			
-		}
-		
 		public function install():void
 		{
 			_proxy.call(Vector.<String>([BashMethods.DOWNLOAD]));						
 		}	
+		
+		private function checkGitIsInstalled():void 
+		{
+			_proxy.call(Vector.<String>([BashMethods.GET_VERSION]));			
+		}
 		
 	// response handlers //			
 		
@@ -42,7 +43,7 @@ package model.git {
 					if (_gitNotInstalled) return;
 					var v:String = r.substring(12);
 					if (v >= SystemRules.MIN_GIT_VERSION){
-						dispatchEvent(new InstallEvent(InstallEvent.GIT_AVAILABLE, v));
+						dispatchEvent(new InstallEvent(InstallEvent.SET_GIT_VERSION, v));
 					}	else{
 						dispatchEvent(new InstallEvent(InstallEvent.GIT_UNAVAILABLE, v));						
 					}

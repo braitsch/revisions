@@ -5,7 +5,6 @@ package view.modals {
 
 	import model.AppModel;
 	import model.SystemRules;
-	import model.git.GitInstaller;
 
 	import flash.desktop.NativeApplication;
 	import flash.events.MouseEvent;
@@ -13,7 +12,6 @@ package view.modals {
 	public class InstallGit extends ModelWindow {
 
 		private static var _view		:InstallGitMC = new InstallGitMC();
-		private static var _installer	:GitInstaller = AppModel.core;
 		private static var _installed	:Boolean;
 
 		public function InstallGit()
@@ -21,7 +19,8 @@ package view.modals {
 			addChild(_view);
 			super.addButtons([_view.ok_btn, _view.quit_btn]);
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onButtonOK);			_view.quit_btn.addEventListener(MouseEvent.CLICK, onButtonQuit);
-			_installer.addEventListener(InstallEvent.GIT_INSTALL_COMPLETE, onInstallComplete);				
+			
+			AppModel.installer.addEventListener(InstallEvent.GIT_INSTALL_COMPLETE, onInstallComplete);				
 		}
 
 		public function set version(s:String):void
@@ -39,7 +38,7 @@ package view.modals {
 			if (!_installed){
 				_view.message_txt.text = 'Installing Git - This will take a few seconds..';
 				_view.ok_btn.visible = false;
-				_view.quit_btn.visible = false;				AppModel.core.install();
+				_view.quit_btn.visible = false;				AppModel.installer.install();
 			}	else{	
 				dispatchEvent(new UICommand(UICommand.CLOSE_MODAL_WINDOW, this));
 			}

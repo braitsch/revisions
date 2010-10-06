@@ -29,7 +29,7 @@ package view.directories {
 			_list.contextMenu = AirContextMenu.menu;
 			_list.addEventListener(UICommand.LIST_ITEM_SELECTED, onListSelection);
 			
-			AppModel.getInstance().addEventListener(RepositoryEvent.SET_BOOKMARK, onBookmarkChange);			
+			AppModel.getInstance().addEventListener(RepositoryEvent.BOOKMARK_SELECTED, onBookmarkChange);			
 		}
 
 		private function onBookmarkChange(e:RepositoryEvent):void 

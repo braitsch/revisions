@@ -10,8 +10,8 @@ package model.git {
 
 	public class RepositoryHistory extends EventDispatcher {
 		
-		private static var _proxy	:NativeProcessProxy;
-		private static var _failed	:Boolean;
+		private var _failed	:Boolean;
+		private var _proxy	:NativeProcessProxy;
 
 		public function RepositoryHistory()
 		{

@@ -71,7 +71,7 @@ package model.git {
 			}						
 			
 		//	for (i = 0; i < 4; i++) trace('result set '+i+' = ', r[i]);
-			dispatchEvent(new RepositoryEvent(RepositoryEvent.STATUS, r));
+			dispatchEvent(new RepositoryEvent(RepositoryEvent.STATUS_RECEIVED, r));
 		}
 
 		private function purgeForbiddenFiles(r:Array):void 
@@ -97,7 +97,7 @@ package model.git {
 
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
-			trace("StatusShell.onShellProcessFailure(e)");
+			trace("RepositoryStatus.onProcessFailure(e)");
 		}
 		
 		private function getTransaction():Array

@@ -1,4 +1,5 @@
 package view.modals {
+	import events.InstallEvent;
 	import commands.UICommand;
 
 	import events.RepositoryEvent;
@@ -24,7 +25,7 @@ package view.modals {
 		private static var _add				:AddBookmark = new AddBookmark();
 		private static var _edit			:EditBookmark = new EditBookmark();
 		private static var _repair			:RepairBookmark = new RepairBookmark();
-		private static var _remove			:RemoveBookmark = new RemoveBookmark();		private static var _commit			:Commit = new Commit();
+		private static var _remove			:RemoveBookmark = new RemoveBookmark();		private static var _commit			:CommitChanges = new CommitChanges();
 		private static var _history			:HistoryView = new HistoryView();		
 		private static var _install			:InstallGit = new InstallGit();	
 
@@ -32,7 +33,9 @@ package view.modals {
 		{
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);	
 			addEventListener(UICommand.CLOSE_MODAL_WINDOW, onCloseModelWindow);	
-			AppModel.getInstance().addEventListener(RepositoryEvent.SET_BOOKMARK, onBookmarkChange);										
+			
+			AppModel.installer.addEventListener(InstallEvent.GIT_UNAVAILABLE, installGit);
+			AppModel.getInstance().addEventListener(RepositoryEvent.BOOKMARK_SELECTED, onBookmarkChange);										
 		}
 
 		private function onBookmarkChange(e:RepositoryEvent):void 
@@ -44,7 +47,7 @@ package view.modals {
 		{
 			_dragAndDrop.target = stage;
 			_dragAndDrop.addEventListener(NativeDragEvent.NATIVE_DRAG_COMPLETE, onDragAndDrop);
-			stage.addEventListener(UICommand.INSTALL_GIT, installGit);			stage.addEventListener(UICommand.NEW_BOOKMARK, addBookmark);			stage.addEventListener(UICommand.EDIT_BOOKMARK, editBookmark);			stage.addEventListener(UICommand.SAVE_PROJECT, addNewCommit);			stage.addEventListener(UICommand.REPAIR_BOOKMARK, repairBookmark);			stage.addEventListener(UICommand.ADD_BRANCH, branchBookmark);			stage.addEventListener(UICommand.DELETE_BOOKMARK, removeBookmark);
+			stage.addEventListener(UICommand.NEW_BOOKMARK, addBookmark);			stage.addEventListener(UICommand.EDIT_BOOKMARK, editBookmark);			stage.addEventListener(UICommand.SAVE_PROJECT, addNewCommit);			stage.addEventListener(UICommand.REPAIR_BOOKMARK, repairBookmark);			stage.addEventListener(UICommand.ADD_BRANCH, branchBookmark);			stage.addEventListener(UICommand.DELETE_BOOKMARK, removeBookmark);
 			stage.addEventListener(UICommand.VIEW_HISTORY, viewHistory);			stage.addEventListener(UICommand.VIEW_VERSION, viewVersion);		}	
 
 		private function onDragAndDrop(e:NativeDragEvent):void 
@@ -56,7 +59,7 @@ package view.modals {
 		
 	// modal windows //		
 
-		private function installGit(e:UICommand):void 
+		private function installGit(e:InstallEvent):void 
 		{
 			_install.version = String(e.data);
 			addChild(_install);

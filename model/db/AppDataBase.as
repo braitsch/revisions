@@ -1,21 +1,28 @@
 package model.db {
 	import events.DataBaseEvent;
 
+	import view.bookmarks.Bookmark;
+
 	import flash.data.SQLStatement;
 	import flash.events.EventDispatcher;
 
-	public class GitMeDataBase extends EventDispatcher {
+	public class AppDataBase extends EventDispatcher {
 	
 		private static var _db					:SQLLiteDataBase;
 		private static var _init				:Vector.<SQLStatement>;		private static var _add					:Vector.<SQLStatement>;
 		private static var _edit				:Vector.<SQLStatement>;		private static var _delete				:Vector.<SQLStatement>;		private static var _setActive			:Vector.<SQLStatement>;
 		private static var _ready				:Boolean = false;
 		private static var _repositories		:Array;		
-		public function GitMeDataBase()
+		public function AppDataBase()
 		{
 			_db = new SQLLiteDataBase('GitMe.db');
 			_db.addEventListener(DataBaseEvent.DATABASE_READY, onDataBaseReady);			_db.addEventListener(DataBaseEvent.TRANSACTION_COMPLETE, onTransactionComplete);
 		}
+
+		public function set bookmark(b:Bookmark):void 
+		{
+			setActiveBookmark(b.label);
+		}		
 
 		private function onDataBaseReady(e:DataBaseEvent):void 
 		{
@@ -61,10 +68,10 @@ package model.db {
 			_db.execute(_edit, true);			
 		}		
 		
-		public function setActiveBookmark($label:String):void
+		private function setActiveBookmark(label:String):void
 		{
 			_setActive = new Vector.<SQLStatement>();
-			_setActive.push(GitMeSQLQuery.CLEAR_ACTIVE);				_setActive.push(GitMeSQLQuery.SET_ACTIVE($label));	
+			_setActive.push(GitMeSQLQuery.CLEAR_ACTIVE);				_setActive.push(GitMeSQLQuery.SET_ACTIVE(label));	
 			_db.execute(_setActive, true);	
 		}			
 			//	private methods //	

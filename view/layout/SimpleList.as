@@ -28,7 +28,8 @@ package view.layout {
 					n.y = (n.height+_leading) * i;
 				if (n.active==1) this.activeItem = n;
 				list.addChild(n);
-			}		
+			}
+		//	trace('list refreshed, num items = ', list.numChildren);
 		}
 		
 		public function get activeItem():ListItem

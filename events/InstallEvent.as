@@ -3,7 +3,7 @@ package events {
 
 	public class InstallEvent extends Event {
 		
-		public static const GIT_AVAILABLE:String = "GIT_AVAILABLE";
+		public static const SET_GIT_VERSION:String = "SET_GIT_VERSION";
 		public static const GIT_UNAVAILABLE:String = "GIT_UNAVAILABLE";
 		public static const GIT_INSTALL_COMPLETE:String = "GIT_INSTALL_COMPLETE";	
 		

@@ -1,11 +1,10 @@
 package model {
+	import events.InstallEvent;
 	import events.RepositoryEvent;
 
-	import model.db.GitMeDataBase;
+	import model.db.AppDataBase;
 	import model.git.GitInstaller;
 	import model.git.RepositoryEditor;
-	import model.git.RepositoryHistory;
-	import model.git.RepositoryStatus;
 
 	import view.bookmarks.Bookmark;
 
@@ -13,27 +12,35 @@ package model {
 
 	public class AppModel extends EventDispatcher {
 		
-		private static var _installer	:GitInstaller = new GitInstaller();		private static var _editor		:RepositoryEditor = new RepositoryEditor();
-		private static var _status 		:RepositoryStatus = new RepositoryStatus();
-		private static var _history		:RepositoryHistory = new RepositoryHistory();
-		private static var _database	:GitMeDataBase = new GitMeDataBase();
 		private static var _instance	:AppModel;
+		private static var _bookmark	:Bookmark;		private static var _editor		:RepositoryEditor = new RepositoryEditor();
+		private static var _database	:AppDataBase = new AppDataBase();
+		private static var _installer	:GitInstaller = new GitInstaller();
 
 		public function AppModel() 
 		{
 			_instance = this;
-			_installer.checkGitIsInstalled();
+			_installer.addEventListener(InstallEvent.SET_GIT_VERSION, onGitAvailable);			
 		}
-		
-		public function set bookmark(b:Bookmark):void
-		{
-			_editor.bookmark = b;			_status.bookmark = b;			_history.bookmark = b;
-			_database.setActiveBookmark(b.label);				
-			dispatchEvent(new RepositoryEvent(RepositoryEvent.SET_BOOKMARK, b));
-		}			
 
-	//TODO this needs to be renamed to installer...
-		static public function get core():GitInstaller
+		private function onGitAvailable(e:InstallEvent):void 
+		{
+			_database.init();
+		}
+
+		static public function set bookmark(b:Bookmark):void
+		{
+		// set only from BookmarkView //	
+			_bookmark = b;
+			_editor.bookmark = _database.bookmark = _bookmark;			_instance.dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_SELECTED, b));
+		}	
+		
+		static public function get bookmark():Bookmark
+		{
+			return _bookmark;
+		}				
+
+		static public function get installer():GitInstaller
 		{
 			return _installer;
 		}	
@@ -41,19 +48,9 @@ package model {
 		static public function get editor():RepositoryEditor
 		{
 			return _editor;
-		}						
+		}							
 		
-		static public function get status():RepositoryStatus
-		{
-			return _status;
-		}		
-		
-		static public function get history():RepositoryHistory
-		{
-			return _history;
-		}	
-		
-		static public function get database():GitMeDataBase
+		static public function get database():AppDataBase
 		{
 			return _database;
 		}
