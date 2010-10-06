@@ -1,5 +1,6 @@
 package model.git {
 	import events.NativeProcessEvent;
+	import events.RepositoryEvent;
 
 	import model.air.NativeProcessProxy;
 
@@ -66,14 +67,12 @@ package model.git {
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
-		//	AppModel.status.getStatus(); 
 			switch(e.data.method){
 				case 'commit' : 
-		// force update status and history viewers on successful commits //	
-			//		AppModel.history.getHistory();
+					dispatchEvent(new RepositoryEvent(RepositoryEvent.REFRESH_HISTORY));
 				break;
-			}
-			trace("RepositoryEditor.onProcessComplete(e)", 'method = '+e.data.method, 'result = '+e.data.result);		
+			}			dispatchEvent(new RepositoryEvent(RepositoryEvent.REFRESH_STATUS));
+	//		trace("RepositoryEditor.onProcessComplete(e)", 'method = '+e.data.method, 'result = '+e.data.result);		
 		}	
 		
 		private function onProcessFailure(e:NativeProcessEvent):void 

@@ -1,7 +1,7 @@
 package view.bookmarks {
 	import events.RepositoryEvent;
 
-	import model.git.RepositoryProxy;
+	import model.git.RepositoryHistory;
 
 	import view.layout.ListItem;
 
@@ -9,11 +9,12 @@ package view.bookmarks {
 
 	public class Bookmark extends ListItem {
 
-		private var _view		:BookmarkItemMC = new BookmarkItemMC();
-		private var _label		:String;		private var _local		:String;
-		private var _remote		:String;
-		private var _proxy		:RepositoryProxy;		
-		private var _status 	:Array = [];		private var _history	:Array = [];
+		private var _view			:BookmarkItemMC = new BookmarkItemMC();
+		private var _label			:String;		private var _local			:String;
+		private var _remote			:String;
+		private var _proxy			:RepositoryHistory = new RepositoryHistory();		
+		private var _history		:Array = [];
+		private var _initialized	:Boolean = false;
 
 		public function Bookmark($label:String, $local:String, $remote:String, $active:uint)
 		{
@@ -30,27 +31,15 @@ package view.bookmarks {
 			_view.mouseChildren = false;
 			addChild(_view);
 			
-			initialize();
+			_proxy.bookmark = this;
+			_proxy.getHistory();
+			_proxy.addEventListener(RepositoryEvent.HISTORY_RECEIVED, onHistoryReceived);	
 		}
-
-		private function initialize():void 
+		
+		public function getHistory():void
 		{
-			_proxy = new RepositoryProxy(this);
-			_proxy.status.addEventListener(RepositoryEvent.STATUS_RECEIVED, onStatus);			
-			_proxy.history.addEventListener(RepositoryEvent.HISTORY_RECEIVED, onHistory);
-		}
-
-		private function onStatus(e:RepositoryEvent):void 
-		{
-			trace("Bookmark.onStatus(e)");
-			_status = e.data as Array;
-		}
-
-		private function onHistory(e:RepositoryEvent):void 
-		{
-			trace("Bookmark.onHistory(e)");
-			_history = e.data as Array;
-		}
+			_proxy.getHistory();	
+		}		
 
 		public function get label():String
 		{
@@ -67,15 +56,19 @@ package view.bookmarks {
 			return _remote;
 		}
 		
-		public function get status():Array
-		{
-			return _status;
-		}		
-		
 		public function get history():Array
 		{
 			return _history;
 		}
+		
+		private function onHistoryReceived(e:RepositoryEvent):void 
+		{
+			trace("Bookmark.onHistoryReceived(e)");
+			_history = e.data as Array;
+			if (!_initialized) dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_READY));
+			_initialized = true;
+			
+		}		
 		
 	}
 	

@@ -25,6 +25,8 @@ package model.git {
 		public function set bookmark(b:Bookmark):void 
 		{
 			_proxy.directory = b.local;
+		// force a status refresh //
+			getStatus();	
 		}		
 		
 		public function getStatus():void

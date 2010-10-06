@@ -5,6 +5,7 @@ package model {
 	import model.db.AppDataBase;
 	import model.git.GitInstaller;
 	import model.git.RepositoryEditor;
+	import model.git.RepositoryStatus;
 
 	import view.bookmarks.Bookmark;
 
@@ -13,26 +14,27 @@ package model {
 	public class AppModel extends EventDispatcher {
 		
 		private static var _instance	:AppModel;
-		private static var _bookmark	:Bookmark;		private static var _editor		:RepositoryEditor = new RepositoryEditor();
+		private static var _bookmark	:Bookmark;
+		private static var _status 		:RepositoryStatus = new RepositoryStatus();				private static var _editor		:RepositoryEditor = new RepositoryEditor();
 		private static var _database	:AppDataBase = new AppDataBase();
 		private static var _installer	:GitInstaller = new GitInstaller();
 
 		public function AppModel() 
 		{
 			_instance = this;
-			_installer.addEventListener(InstallEvent.SET_GIT_VERSION, onGitAvailable);			
+			_installer.addEventListener(InstallEvent.SET_GIT_VERSION, onGitAvailable);						_editor.addEventListener(RepositoryEvent.REFRESH_STATUS, onRefreshStatus);						_editor.addEventListener(RepositoryEvent.REFRESH_HISTORY, onRefreshHistory);			
 		}
-
-		private function onGitAvailable(e:InstallEvent):void 
+		
+		static public function getInstance():AppModel
 		{
-			_database.init();
-		}
+			return _instance;
+		}			
 
 		static public function set bookmark(b:Bookmark):void
 		{
 		// set only from BookmarkView //	
 			_bookmark = b;
-			_editor.bookmark = _database.bookmark = _bookmark;			_instance.dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_SELECTED, b));
+			_status.bookmark = _editor.bookmark = _database.bookmark = _bookmark;			_instance.dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_SELECTED, b));
 		}	
 		
 		static public function get bookmark():Bookmark
@@ -48,18 +50,35 @@ package model {
 		static public function get editor():RepositoryEditor
 		{
 			return _editor;
-		}							
+		}	
+		
+		static public function get status():RepositoryStatus
+		{
+			return _status;
+		}									
 		
 		static public function get database():AppDataBase
 		{
 			return _database;
 		}
-
-		static public function getInstance():AppModel
+		
+	// event handlers //	
+	
+		private function onGitAvailable(e:InstallEvent):void 
 		{
-			return _instance;
+			_database.init();
+		}		
+		
+		private function onRefreshStatus(e:RepositoryEvent):void 
+		{
+			_status.getStatus();	
 		}
 		
+		private function onRefreshHistory(e:RepositoryEvent):void 
+		{
+			_bookmark.getHistory();
+		}
+
 	}
 	
 }

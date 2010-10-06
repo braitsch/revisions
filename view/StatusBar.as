@@ -4,8 +4,6 @@ package view {
 	import model.AppModel;
 	import model.git.RepositoryStatus;
 
-	import view.bookmarks.Bookmark;
-
 	import flash.display.Sprite;
 
 	public class StatusBar extends Sprite {
@@ -18,15 +16,14 @@ package view {
 			this.x = 740;			
 			addChild(_view);
 			
-			AppModel.getInstance().addEventListener(RepositoryEvent.BOOKMARK_SELECTED, onBookmarkChange);		
+			AppModel.status.addEventListener(RepositoryEvent.STATUS_RECEIVED, onStatusReceived);
 		}
 
-		private function onBookmarkChange(e:RepositoryEvent):void 
+		private function onStatusReceived(e:RepositoryEvent):void 
 		{
-			var b:Bookmark = e.data as Bookmark;
-			_view.tracked_txt.text = String(b.status[RepositoryStatus.T].length);			_view.untracked_txt.text = String(b.status[RepositoryStatus.U].length);
-			_view.modified_txt.text = String(b.status[RepositoryStatus.M].length);
-			_view.ignored_txt.text = String(b.status[RepositoryStatus.I].length);
+			_view.tracked_txt.text = String(e.data[RepositoryStatus.T].length);			_view.untracked_txt.text = String(e.data[RepositoryStatus.U].length);
+			_view.modified_txt.text = String(e.data[RepositoryStatus.M].length);
+			_view.ignored_txt.text = String(e.data[RepositoryStatus.I].length);
 		}
 		
 	}

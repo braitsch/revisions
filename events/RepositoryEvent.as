@@ -3,6 +3,9 @@ package events {
 
 	public class RepositoryEvent extends Event {
 		
+		public static const REFRESH_STATUS:String = "REFRESH_STATUS";
+		public static const REFRESH_HISTORY:String = "REFRESH_HISTORY";
+		
 		public static const STATUS_RECEIVED:String = "STATUS_RECEIVED";
 		public static const HISTORY_RECEIVED:String = "HISTORY_RECEIVED";
 		public static const HISTORY_UNAVAILABLE:String = "HISTORY_UNAVAILABLE";	
