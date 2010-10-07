@@ -1,4 +1,5 @@
 package model.git {
+	import events.RepositoryEvent;
 	import events.NativeProcessEvent;
 
 	import model.air.NativeProcessQueue;
@@ -59,7 +60,10 @@ package model.git {
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
 			switch(e.data.method){
-				case 'getUserName' : _userName = e.data.result;		break;				case 'getUserEmail' : _userEmail = e.data.result;	break;
+				case 'getUserName' : _userName = e.data.result;		break;				case 'getUserEmail' : 
+					_userEmail = e.data.result;
+					dispatchEvent(new RepositoryEvent(RepositoryEvent.SET_USERNAME));
+				break;
 			}
 		}			
 		

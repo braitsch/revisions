@@ -3,6 +3,8 @@ package events {
 
 	public class RepositoryEvent extends Event {
 		
+		public static const SET_USERNAME:String = "SET_USERNAME";
+		
 		public static const REFRESH_STATUS:String = "REFRESH_STATUS";
 		public static const REFRESH_HISTORY:String = "REFRESH_HISTORY";
 		
@@ -14,7 +16,6 @@ package events {
 		public static const BOOKMARK_SELECTED:String = "BOOKMARK_SELECTED";
 		
 		public static const BRANCH_LIST_RECEIVED:String = "BRANCH_LIST_RECEIVED";			
-		
 		public var data:Object;
 		
 		public function RepositoryEvent($type:String, $data:Object = null)

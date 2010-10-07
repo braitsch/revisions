@@ -29,6 +29,7 @@ package model.git {
 
 		public function getHistory():void
 		{
+		// should only be called when bookmark is first created & when a new commit is entered	
 			trace("RepositoryHistory.getHistory()");
 			_failed = false;
 			_proxy.call(Vector.<String>([BashMethods.GET_HISTORY]));
@@ -38,9 +39,9 @@ package model.git {
 		{
 			_proxy.call(Vector.<String>([BashMethods.CHECKOUT_COMMIT, $sha1, $stash]));		}
 		
-		public function checkoutMaster():void 
+		public function checkoutMaster($popStash:Boolean):void 
 		{
-			_proxy.call(Vector.<String>([BashMethods.CHECKOUT_MASTER]));
+			_proxy.call(Vector.<String>([BashMethods.CHECKOUT_MASTER, $popStash]));
 		}
 		
 		private function onProcessFailure(e:NativeProcessEvent):void 
