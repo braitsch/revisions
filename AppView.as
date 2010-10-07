@@ -18,7 +18,7 @@ package {
 			addChild(_base);			addChild(_cols);			addChild(_modal);
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
-
+		
 		private function onAddedToStage(e:Event):void 
 		{
 			LayoutManager.stage = this.stage;

@@ -42,7 +42,7 @@ package view.bookmarks {
 			var v:Vector.<ListItem> = new Vector.<ListItem>();
 			for (var i : int = 0; i < d.length; i++) {
 				var b:Bookmark = new Bookmark(d[i].name, d[i].location, 'remote', d[i].active);
-					b.addEventListener(RepositoryEvent.BOOKMARK_READY, onBookmarkReady);				if (b.file.exists) {
+				if (b.file.exists) {
 					v.push(b);
 				}	else{
 					dispatchEvent(new UICommand(UICommand.REPAIR_BOOKMARK, b));
@@ -50,14 +50,9 @@ package view.bookmarks {
 				}
 			}
 			super.redrawList(v);
+			AppModel.bookmark = _list.activeItem as Bookmark;
 		}		
 
-		private function onBookmarkReady(e:RepositoryEvent):void 
-		{
-			if (_list.activeItem == e.target) AppModel.bookmark = _list.activeItem as Bookmark;
-			e.target.removeEventListener(RepositoryEvent.BOOKMARK_READY, onBookmarkReady);
-		}
-		
 	}
 	
 }

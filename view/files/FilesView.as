@@ -42,7 +42,7 @@ package view.files {
 				var a:Array = d.file.getDirectoryListing();
 				for (var i : int = 0; i < a.length; i++) if (validate(a[i])) _files.push(new FileItem(a[i]));
 			}
-		// force a status refresh //
+		// refresh the file view //	
 			AppModel.status.getStatus();
 		}
 		

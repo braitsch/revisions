@@ -1,19 +1,18 @@
 package view.bookmarks {
 	import events.RepositoryEvent;
 
-	import model.git.RepositoryHistory;
-
 	import view.layout.ListItem;
 
 	import flash.filesystem.File;
 
 	public class Bookmark extends ListItem {
 
+		private var _label			:String;
+		private var _local			:String;		private var _remote			:String;
+//		private var _branch			:String;
+		private var _history		:Array;
+		
 		private var _view			:BookmarkItemMC = new BookmarkItemMC();
-		private var _label			:String;		private var _local			:String;
-		private var _remote			:String;
-		private var _proxy			:RepositoryHistory = new RepositoryHistory();		
-		private var _history		:Array = [];
 		private var _initialized	:Boolean = false;
 
 		public function Bookmark($label:String, $local:String, $remote:String, $active:uint)
@@ -30,16 +29,7 @@ package view.bookmarks {
 			_view.mouseEnabled = false;
 			_view.mouseChildren = false;
 			addChild(_view);
-			
-			_proxy.bookmark = this;
-			_proxy.getHistory();
-			_proxy.addEventListener(RepositoryEvent.HISTORY_RECEIVED, onHistoryReceived);	
 		}
-		
-		public function getHistory():void
-		{
-			_proxy.getHistory();	
-		}		
 
 		public function get label():String
 		{
@@ -56,19 +46,19 @@ package view.bookmarks {
 			return _remote;
 		}
 		
+	// history object -- stored locally to avoid unnecessary calls to the proxy //	
+		
+		public function set history(a:Array):void
+		{
+			_history = a;
+			if (!_initialized) dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_READY));
+			_initialized = true;
+		}
+		
 		public function get history():Array
 		{
 			return _history;
 		}
-		
-		private function onHistoryReceived(e:RepositoryEvent):void 
-		{
-			trace("Bookmark.onHistoryReceived(e)");
-			_history = e.data as Array;
-			if (!_initialized) dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_READY));
-			_initialized = true;
-			
-		}		
 		
 	}
 	

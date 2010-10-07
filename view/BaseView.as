@@ -30,7 +30,7 @@ package view {
 			_view.target_txt.text = 'Repository / Branch : NONE';
 			if (_bookmark) {
 				_view.target_txt.text = 'Repository / Branch : ' + _bookmark.label;
-				if (_bookmark.history.length){
+				if (_bookmark.history){
 					onHistoryReceived();
 				}	else{
 					onHistoryUnavailable();

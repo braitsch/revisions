@@ -18,8 +18,12 @@ package model.git{
 		
 	// branch methods //	
 		public static const GET_BRANCHES:String = 'getBranches';
+
+	// history methods //		
+		public static const GET_HISTORY:String = 'getHistory';		public static const CHECKOUT_MASTER:String = 'checkoutMaster';		public static const CHECKOUT_COMMIT:String = 'checkoutCommit';		public static const CHECKOUT_BRANCH:String = 'checkoutBranch';
 		
-	// status methods //			public static const GET_HISTORY:String = 'getHistory';		public static const GET_MODIFIED_FILES:String = 'getModifiedFiles';
+	// status methods //	
+		public static const GET_MODIFIED_FILES:String = 'getModifiedFiles';
 		public static const GET_TRACKED_FILES:String = 'getTrackedFiles';
 		public static const GET_UNTRACKED_FILES:String = 'getUntrackedFiles';
 		public static const GET_IGNORED_FILES:String = 'getIgnoredFiles';

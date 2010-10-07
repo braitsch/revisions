@@ -2,6 +2,7 @@ package model.git {
 	import events.NativeProcessEvent;
 	import events.RepositoryEvent;
 
+	import model.AppModel;
 	import model.air.NativeProcessProxy;
 
 	import view.bookmarks.Bookmark;
@@ -10,8 +11,8 @@ package model.git {
 
 	public class RepositoryHistory extends EventDispatcher {
 		
-		private var _failed	:Boolean;
-		private var _proxy	:NativeProcessProxy;
+		private var _failed		:Boolean;
+		private var _proxy		:NativeProcessProxy;
 
 		public function RepositoryHistory()
 		{
@@ -23,12 +24,23 @@ package model.git {
 		public function set bookmark(b:Bookmark):void 
 		{
 			_proxy.directory = b.local;
+			if (b.history==null) getHistory();
 		}		
 
 		public function getHistory():void
 		{
+			trace("RepositoryHistory.getHistory()");
 			_failed = false;
 			_proxy.call(Vector.<String>([BashMethods.GET_HISTORY]));
+		}
+		
+		public function checkoutCommit($sha1:String, $stash:Boolean):void
+		{
+			_proxy.call(Vector.<String>([BashMethods.CHECKOUT_COMMIT, $sha1, $stash]));		}
+		
+		public function checkoutMaster():void 
+		{
+			_proxy.call(Vector.<String>([BashMethods.CHECKOUT_MASTER]));
 		}
 		
 		private function onProcessFailure(e:NativeProcessEvent):void 
@@ -40,9 +52,9 @@ package model.git {
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
 			if (_failed) return;
-			dispatchEvent(new RepositoryEvent(RepositoryEvent.HISTORY_RECEIVED, e.data.result.split(/[\n\r\t]/g)));
+			var a:Array = e.data.result.split(/[\n\r\t]/g);
+			AppModel.bookmark.history = a;
+			dispatchEvent(new RepositoryEvent(RepositoryEvent.HISTORY_RECEIVED, a));
 		}					
-		
 	}
-	
 }

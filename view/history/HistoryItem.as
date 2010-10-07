@@ -4,7 +4,7 @@ package view.history {
 	public class HistoryItem extends ListItem {
 
 		private var _view			:HistoryItemMC = new HistoryItemMC();
-		private var _sha1			:String;			
+		private var _sha1			:String;
 
 		public function HistoryItem(n:uint, s:String)
 		{
@@ -20,5 +20,7 @@ package view.history {
 		{
 			return _sha1;
 		}
+		
 	}
+	
 }

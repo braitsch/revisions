@@ -5,10 +5,12 @@ package view.history {
 
 		private var _view:HistoryCrumbMC = new HistoryCrumbMC();
 
-		public function HistoryCrumb($label:String)
+		public function HistoryCrumb($name:String)
 		{
 			addChild(_view);
-			_view.label_txt.text = $label;
+			this.name = $name;
+			mouseChildren = false;	
+			_view.label_txt.text = $name;
 		}
 	}
 	

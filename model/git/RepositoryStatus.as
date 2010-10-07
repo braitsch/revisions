@@ -25,13 +25,12 @@ package model.git {
 		public function set bookmark(b:Bookmark):void 
 		{
 			_proxy.directory = b.local;
-		// force a status refresh //
-			getStatus();	
+			getStatus();
 		}		
 		
 		public function getStatus():void
 		{
-		// currently called everytime the file viewer is refreshed ..	
+			trace("RepositoryStatus.getStatus()");
 			_proxy.queue = getTransaction();						}
 		
 		private function onShellQueueComplete(e:NativeProcessEvent):void 
@@ -61,7 +60,7 @@ package model.git {
 				if (!m) i++;
 			}
 			
-		// remove intentially ignored files from the untracked files array //			i = j = 0;
+		// remove intentionally ignored files from the untracked files array //			i = j = 0;
 			while(i < r[U].length){
 				m = false;
 				for (j = 0; j < r[I].length; j++) {
