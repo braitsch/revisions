@@ -13,6 +13,7 @@ package model.git {
 		
 		private var _failed		:Boolean;
 		private var _proxy		:NativeProcessProxy;
+		private var _bookmark	:Bookmark;
 
 		public function RepositoryHistory()
 		{
@@ -23,8 +24,9 @@ package model.git {
 		
 		public function set bookmark(b:Bookmark):void 
 		{
-			_proxy.directory = b.local;
-			if (b.history==null) getHistory();
+			_bookmark = b;
+			_proxy.directory = _bookmark.local;
+			if (_bookmark.master.history==null) getHistory();
 		}		
 
 		public function getHistory():void
@@ -35,36 +37,47 @@ package model.git {
 			_proxy.call(Vector.<String>([BashMethods.GET_HISTORY]));
 		}
 		
-		public function checkoutCommit($sha1:String, $stash:Boolean):void
+		public function checkoutCommit($sha1:String):void
 		{
-			_proxy.call(Vector.<String>([BashMethods.CHECKOUT_COMMIT, $sha1, $stash]));		}
+			_proxy.call(Vector.<String>([BashMethods.CHECKOUT_COMMIT, $sha1, _bookmark.branch.modified]));		}
 		
-		public function checkoutMaster($popStash:Boolean):void 
+		public function checkoutMaster():void 
 		{
-			_proxy.call(Vector.<String>([BashMethods.CHECKOUT_MASTER, $popStash]));
+			_proxy.call(Vector.<String>([BashMethods.CHECKOUT_MASTER, _bookmark.master.modified]));
 		}
 		
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
 			_failed = true;
-			dispatchEvent(new RepositoryEvent(RepositoryEvent.HISTORY_UNAVAILABLE));
+			switch(e.target.method){
+				case BashMethods.CHECKOUT_COMMIT :					trace('local changes');
+				break;
+				case BashMethods.CHECKOUT_MASTER :					trace('local changes');				break;
+				case BashMethods.GET_HISTORY :
+					dispatchEvent(new RepositoryEvent(RepositoryEvent.HISTORY_UNAVAILABLE));
+				break;
+			}
 		}	
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
+			trace("RepositoryHistory.onProcessComplete(e)");
 			switch(e.data.method){
 				case BashMethods.GET_HISTORY : 
 					if (_failed) return;
 					var a:Array = e.data.result.split(/[\n\r\t]/g);
-					AppModel.bookmark.history = a;
-					dispatchEvent(new RepositoryEvent(RepositoryEvent.HISTORY_RECEIVED, a));
-				break;	
+					AppModel.bookmark.branch.history = a;
+					dispatchEvent(new RepositoryEvent(RepositoryEvent.HISTORY_RECEIVED, a));				break;	
 				case BashMethods.CHECKOUT_COMMIT :
-					trace("RepositoryHistory.onProcessComplete(e) > BashMethods.CHECKOUT_COMMIT");
-				break;					
+					_bookmark.branch = _bookmark.detach;
+					dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_CHANGED));					trace("RepositoryHistory.onProcessComplete(e) > BashMethods.CHECKOUT_COMMIT");				break;					
 				case BashMethods.CHECKOUT_MASTER :
+					_bookmark.branch = _bookmark.master;
+					dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_CHANGED));
 					trace("RepositoryHistory.onProcessComplete(e) > BashMethods.CHECKOUT_MASTER");				break;	
 			}
-		}					
+		}	
+						
 	}
+	
 }

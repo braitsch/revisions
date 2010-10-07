@@ -12,7 +12,7 @@ package events {
 		public static const HISTORY_RECEIVED:String = "HISTORY_RECEIVED";
 		public static const HISTORY_UNAVAILABLE:String = "HISTORY_UNAVAILABLE";	
 		
-		public static const BOOKMARK_READY:String = 'BOOKMARK_READY';
+		public static const BRANCH_CHANGED:String = "BRANCH_CHANGED";
 		public static const BOOKMARK_SELECTED:String = "BOOKMARK_SELECTED";
 		
 		public static const BRANCH_LIST_RECEIVED:String = "BRANCH_LIST_RECEIVED";			

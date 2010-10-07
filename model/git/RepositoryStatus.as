@@ -2,6 +2,7 @@ package model.git {
 	import events.NativeProcessEvent;
 	import events.RepositoryEvent;
 
+	import model.AppModel;
 	import model.SystemRules;
 	import model.air.NativeProcessQueue;
 
@@ -71,6 +72,7 @@ package model.git {
 			}						
 			
 		//	for (i = 0; i < 4; i++) trace('result set '+i+' = ', r[i]);
+			AppModel.bookmark.branch.modified = r[M].length!=0;
 			dispatchEvent(new RepositoryEvent(RepositoryEvent.STATUS_RECEIVED, r));
 		}
 

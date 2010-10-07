@@ -25,7 +25,8 @@ package model {
 		public function AppModel() 
 		{
 			_instance = this;
-			_installer.addEventListener(InstallEvent.SET_GIT_VERSION, onGitAvailable);						_editor.addEventListener(RepositoryEvent.REFRESH_STATUS, onRefreshStatus);						_editor.addEventListener(RepositoryEvent.REFRESH_HISTORY, onRefreshHistory);			
+			_installer.addEventListener(InstallEvent.SET_GIT_VERSION, onGitAvailable);						_editor.addEventListener(RepositoryEvent.REFRESH_STATUS, onRefreshStatus);						_editor.addEventListener(RepositoryEvent.REFRESH_HISTORY, onRefreshHistory);
+			_history.addEventListener(RepositoryEvent.BRANCH_CHANGED, onRefreshStatus);			
 		}		
 
 		static public function set bookmark(b:Bookmark):void

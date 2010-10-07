@@ -30,7 +30,7 @@ package view {
 			_view.target_txt.text = 'Repository / Branch : NONE';
 			if (_bookmark) {
 				_view.target_txt.text = 'Repository / Branch : ' + _bookmark.label;
-				if (_bookmark.history){
+				if (_bookmark.branch.history){
 					onHistoryReceived();
 				}	else{
 					onHistoryUnavailable();
@@ -52,9 +52,9 @@ package view {
 
 		private function onHistoryReceived():void 
 		{
-			var a:Array = _bookmark.history[0].split('##');
+			var a:Array = _bookmark.branch.history[0].split('##');
 			if (a[1]=='0 seconds ago') a[1]='Just Now';
-			_view.target_txt.text = 'Repository / Branch : ' + _bookmark.label;							_view.target_txt.appendText(' -- Version '+_bookmark.history.length+' -- Last Saved : '+a[1]+' by '+a[2]);
+			_view.target_txt.text = 'Repository / Branch : ' + _bookmark.label;							_view.target_txt.appendText(' -- Version '+_bookmark.branch.history.length+' -- Last Saved : '+a[1]+' by '+a[2]);
 		}
 		
 		private function onHistoryUnavailable():void 

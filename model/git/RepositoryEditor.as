@@ -67,6 +67,7 @@ package model.git {
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
+			trace("RepositoryEditor.onProcessComplete(e)");
 			switch(e.data.method){
 				case 'commit' : 
 					dispatchEvent(new RepositoryEvent(RepositoryEvent.REFRESH_HISTORY));

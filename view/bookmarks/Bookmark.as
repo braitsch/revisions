@@ -1,6 +1,4 @@
 package view.bookmarks {
-	import events.RepositoryEvent;
-
 	import view.layout.ListItem;
 
 	import flash.filesystem.File;
@@ -9,11 +7,10 @@ package view.bookmarks {
 
 		private var _label			:String;
 		private var _local			:String;		private var _remote			:String;
-//		private var _branch			:String;
-		private var _history		:Array;
-		
+		private var _detach			:Branch;
+		private var _branch			:Branch;
+		private var _branches		:Array = [];
 		private var _view			:BookmarkItemMC = new BookmarkItemMC();
-		private var _initialized	:Boolean = false;
 
 		public function Bookmark($label:String, $local:String, $remote:String, $active:uint)
 		{
@@ -29,6 +26,10 @@ package view.bookmarks {
 			_view.mouseEnabled = false;
 			_view.mouseChildren = false;
 			addChild(_view);
+			
+			_branch = new Branch('master');
+			_detach = new Branch('detach');
+			_branches.push(_branch);
 		}
 
 		public function get label():String
@@ -45,21 +46,27 @@ package view.bookmarks {
 		{
 			return _remote;
 		}
-		
-	// history object -- stored locally to avoid unnecessary calls to the proxy //	
-		
-		public function set history(a:Array):void
+				
+		public function get branch():Branch
 		{
-			_history = a;
-			if (!_initialized) dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_READY));
-			_initialized = true;
+			return _branch;
 		}
 		
-		public function get history():Array
+		public function set branch(b:Branch):void
 		{
-			return _history;
+			_branch = b;
 		}
 		
+		public function get master():Branch
+		{
+			return _branches[0];
+		}
+		
+		public function get detach():Branch
+		{
+			return _detach;
+		}	
+			
 	}
 	
 }
