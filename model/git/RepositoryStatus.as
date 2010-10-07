@@ -1,4 +1,5 @@
 package model.git {
+	import commands.UICommand;
 	import events.NativeProcessEvent;
 	import events.RepositoryEvent;
 
@@ -24,8 +25,8 @@ package model.git {
 		
 		public function set bookmark(b:Bookmark):void 
 		{
+			trace("RepositoryStatus.bookmark(b)");
 			_proxy.directory = b.local;
-			getStatus();
 		}		
 		
 		public function getStatus():void

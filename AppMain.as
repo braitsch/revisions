@@ -4,6 +4,7 @@ package {
 	import view.ui.AirContextMenu;
 
 	import flash.display.Sprite;
+	import flash.display.Stage;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 

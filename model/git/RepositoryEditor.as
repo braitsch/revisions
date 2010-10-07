@@ -71,7 +71,8 @@ package model.git {
 				case 'commit' : 
 					dispatchEvent(new RepositoryEvent(RepositoryEvent.REFRESH_HISTORY));
 				break;
-			}			dispatchEvent(new RepositoryEvent(RepositoryEvent.REFRESH_STATUS));
+			}
+			dispatchEvent(new RepositoryEvent(RepositoryEvent.REFRESH_STATUS));
 	//		trace("RepositoryEditor.onProcessComplete(e)", 'method = '+e.data.method, 'result = '+e.data.result);		
 		}	
 		
