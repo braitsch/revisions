@@ -43,7 +43,6 @@ package view.files {
 				for (var i : int = 0; i < a.length; i++) if (validate(a[i])) _files.push(new FileItem(a[i]));
 			}
 		// refresh the file view //	
-		trace("FilesView.directory(d)");
 			AppModel.status.getStatus();
 		}
 		

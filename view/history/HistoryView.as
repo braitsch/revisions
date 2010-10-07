@@ -53,8 +53,9 @@ package view.history {
 		private function refreshHistory(a:Array):void
 		{
 			var v:Vector.<ListItem> = new Vector.<ListItem>();
+			v.push(new HistoryItem('X', '00##Right Now##You##Current Working Version'));
 			for (var i:int = 0; i < a.length; i++) {
-				v.push(new HistoryItem(a.length-i, a[i]));
+				v.push(new HistoryItem(String(a.length-i), a[i]));
 			}
 			_list.refresh(v);			
 			trace("HistoryView.onBookmarkChange(e)", '# items = '+a.length);			
@@ -68,14 +69,13 @@ package view.history {
 
 		private function onRecordSelection(e:MouseEvent):void 
 		{
+			if (e.target.sha1=='00') return;
 			trace(e.target.sha1, _modified);
 			AppModel.history.checkoutCommit(e.target.sha1, _modified);		}
 		
 		private function onCrumbSelection(e:MouseEvent):void 
 		{
-			if (e.target.name=='HOME'){
-				AppModel.history.checkoutMaster();
-			}
+			if (e.target.name=='HOME') AppModel.history.checkoutMaster();
 		}		
 
 	}

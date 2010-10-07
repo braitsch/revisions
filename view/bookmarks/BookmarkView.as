@@ -1,5 +1,4 @@
 package view.bookmarks {
-	import events.RepositoryEvent;
 	import commands.UICommand;
 
 	import events.DataBaseEvent;

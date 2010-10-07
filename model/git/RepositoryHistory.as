@@ -51,10 +51,19 @@ package model.git {
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
-			if (_failed) return;
-			var a:Array = e.data.result.split(/[\n\r\t]/g);
-			AppModel.bookmark.history = a;
-			dispatchEvent(new RepositoryEvent(RepositoryEvent.HISTORY_RECEIVED, a));
+			switch(e.data.method){
+				case BashMethods.GET_HISTORY : 
+					if (_failed) return;
+					var a:Array = e.data.result.split(/[\n\r\t]/g);
+					AppModel.bookmark.history = a;
+					dispatchEvent(new RepositoryEvent(RepositoryEvent.HISTORY_RECEIVED, a));
+				break;	
+				case BashMethods.CHECKOUT_COMMIT :
+					trace("RepositoryHistory.onProcessComplete(e) > BashMethods.CHECKOUT_COMMIT");
+				break;					
+				case BashMethods.CHECKOUT_MASTER :
+					trace("RepositoryHistory.onProcessComplete(e) > BashMethods.CHECKOUT_MASTER");				break;	
+			}
 		}					
 	}
 }

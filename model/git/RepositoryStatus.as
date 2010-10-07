@@ -1,5 +1,4 @@
 package model.git {
-	import commands.UICommand;
 	import events.NativeProcessEvent;
 	import events.RepositoryEvent;
 
