@@ -24,7 +24,6 @@ package model.git {
 		
 		public function set bookmark(b:Bookmark):void 
 		{
-			trace("RepositoryStatus.bookmark(b)");
 			_proxy.directory = b.local;
 		}		
 		

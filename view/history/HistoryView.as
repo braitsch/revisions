@@ -53,7 +53,7 @@ package view.history {
 		private function refreshHistory(a:Array):void
 		{
 			var v:Vector.<ListItem> = new Vector.<ListItem>();
-			v.push(new HistoryItem('X', '00##Right Now##You##Current Working Version'));
+			v.push(new HistoryItem('X', '00##Right Now##'+AppModel.config.userName+'##Current Working Version'));
 			for (var i:int = 0; i < a.length; i++) {
 				v.push(new HistoryItem(String(a.length-i), a[i]));
 			}

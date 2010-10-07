@@ -1,4 +1,5 @@
 package model {
+	import model.git.Configurator;
 	import events.InstallEvent;
 	import events.RepositoryEvent;
 
@@ -18,7 +19,7 @@ package model {
 		private static var _bookmark	:Bookmark;
 		private static var _status 		:RepositoryStatus = new RepositoryStatus();
 		private static var _history		:RepositoryHistory = new RepositoryHistory();					private static var _editor		:RepositoryEditor = new RepositoryEditor();
-		private static var _database	:AppDataBase = new AppDataBase();
+		private static var _database	:AppDataBase = new AppDataBase();		private static var _config		:Configurator = new Configurator();
 		private static var _installer	:GitInstaller = new GitInstaller();
 
 		public function AppModel() 
@@ -60,6 +61,11 @@ package model {
 			return _editor;
 		}	
 		
+		static public function get config():Configurator
+		{
+			return _config;
+		}		
+		
 		static public function get installer():GitInstaller
 		{
 			return _installer;
@@ -86,7 +92,7 @@ package model {
 		{
 			_history.getHistory();
 		}
-
+		
 	}
 	
 }
