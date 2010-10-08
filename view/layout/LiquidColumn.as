@@ -38,7 +38,6 @@ package view.layout {
 			graphics.clear();
 			graphics.lineStyle(1, 0xff0000);
 			graphics.drawRect(0, 0, $w, $h);
-		//	trace('$w: ' + ($w), $h);
 		}
 
 		private function onAddedToStage(e:Event):void 
@@ -58,7 +57,7 @@ package view.layout {
 
 		private function onListHeightChanged(e:UICommand):void 
 		{
-			_scrollbar.handleListResize();
+			_scrollbar.adjustToNewListHeight();
 		}	
 
 		protected function redrawList($v:Vector.<ListItem>):void

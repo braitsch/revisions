@@ -55,15 +55,15 @@ package view.ui {
 			addChildAt($img, 0);
 		}
 	
-		public function set backgroundColor($c:uint):void
+		public function set backgroundColor($clr:uint):void
 		{
-			drawBackground($c);
+			drawBackground($clr);
 		}	
 		
-		public function set draggerImage($i:Bitmap):void
+		public function set draggerImage($img:Bitmap):void
 		{
 			_dragger.removeChildAt(0);		
-			_dragger.addChild($i);
+			_dragger.addChild($img);
 		// probably need to redraw dragger padding based on size of new image.	
 		}
 		
@@ -84,6 +84,25 @@ package view.ui {
 			TweenLite.to(_target, $hard ? 0 : .5, {y:_homeY, ease:Strong.easeOut, overwrite:false});
 			TweenLite.to(_dragger, $hard ? 0 : .5, {y:0, ease:Strong.easeOut});				
 		}
+		
+		public function adjustToNewListHeight():void 
+		{
+		// show & hide scrollbar based on list height //	
+			if (_target.height <= _mask.height) {
+				this.reset();
+				this.visible = false;
+			}	else{
+				this.visible = true;
+				var m:int = -(_target.height-_mask.height-_homeY);
+				if (_target.y < m){
+		// and reposition target & dragger to max scroll //	
+					TweenLite.to(_target, .3, {y:m});
+					TweenLite.to(_dragger, .3, {y:(_sHeight - _dHeight)});
+				}	else{
+					this.updateDraggerPosition();
+				}
+			}	
+		}			
 	
 	// private methods //	
 		
@@ -145,28 +164,13 @@ package view.ui {
 			stage.removeEventListener(MouseEvent.MOUSE_UP, onDraggerRelease);				
 		}		
 
-		public function updateDraggerPosition():void 
+		private function updateDraggerPosition():void 
 		{
 			var p:Number = (_homeY-_target.y) / (_target.height-_mask.height);
 			TweenLite.to(_dragger, .3, {y:(_sHeight - _dHeight)*p});				
 		}
 
-		public function handleListResize():void 
-		{
-			if (_target.height <= _mask.height) {
-				this.visible = false;
-				this.reset();
-			}	else{
-				this.visible = true;
-				var m:int = -(_target.height-_mask.height-_homeY);
-				if (_target.y < m){
-				// position target & dragger to max scroll //	
-					TweenLite.to(_target, .3, {y:m});					TweenLite.to(_dragger, .3, {y:(_sHeight - _dHeight)});
-				}	else{
-					this.updateDraggerPosition();
-				}
-			}	
-		}
 	}
+	
 }
 
