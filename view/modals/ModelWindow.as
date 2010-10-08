@@ -51,7 +51,7 @@ package view.modals {
 
 		private function stroke():void 
 		{
-			graphics.lineStyle(2, 0xffffff);
+			graphics.lineStyle(2, 0xCCCCCC);
 			graphics.drawRect(-3, -3, this.width+6, this.height+6);
 		}
 		

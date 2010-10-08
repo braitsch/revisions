@@ -42,20 +42,28 @@ package view.history {
 
 		public function set modified(m:Boolean):void 
 		{
-			var changed:Boolean = m!=_modified;			_modified = m;
-			if (_selected) {
-				switchToVersion();
+			if (_selected) {		 
+				checkoutVersion();
 			}	else{
-			// don't draw the detached branch history - confusing to user..	
+			// never draw the detached branch - confuses the user //	
+				var x:Boolean = m!=_modified;				_modified = m;
 				if (AppModel.bookmark.branch.name==Bookmark.DETACH) return;
-				if (!_list.activeItem || changed) rebuildList();
+				if (!_list.activeItem || x==true) rebuildList();
+			}
+		}
+		
+		private function checkoutVersion():void
+		{
+			trace('*****branch name = ',AppModel.bookmark.branch.name, 'modified = ', _modified);
+			if (AppModel.bookmark.branch.name==Bookmark.DETACH && _modified==true){
+				trace('local changes made to prev version - prompt to discard or create new branch');
+			}	else{
+				switchToVersion();
 			}
 		}
 
 		private function rebuildList():void
 		{
-		//	var b:Bookmark = AppModel.bookmark;
-		// show only master and user created branch histories //	
 			var a:Array = AppModel.bookmark.branch.history;
 			var v:Vector.<ListItem> = new Vector.<ListItem>();
 			
@@ -86,6 +94,7 @@ package view.history {
 		
 		private function switchToVersion():void
 		{
+			//TODO _list.getChildIndex(activeItem);
 			if (_list.activeItem == _itemUnsaved) {
 				AppModel.history.checkoutMaster();
 			} else{

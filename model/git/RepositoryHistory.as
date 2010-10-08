@@ -39,6 +39,7 @@ package model.git {
 		
 		public function checkoutCommit($sha1:String):void
 		{
+			trace("RepositoryHistory.checkoutCommit($sha1)", $sha1, _bookmark.branch.modified);
 			_proxy.call(Vector.<String>([BashMethods.CHECKOUT_COMMIT, $sha1, _bookmark.branch.modified]));		}
 		
 		public function checkoutMaster():void 
