@@ -33,7 +33,8 @@ package model {
 		{
 		// set only from BookmarkView //	
 			_bookmark = b;
-			_status.bookmark = _history.bookmark = _editor.bookmark = _database.bookmark = _bookmark;
+			_status.bookmark = _history.bookmark = _bookmark;
+			_editor.bookmark = _database.bookmark = _bookmark;
 			_instance.dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_SELECTED, b));
 		}	
 		

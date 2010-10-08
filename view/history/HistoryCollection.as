@@ -37,5 +37,7 @@ package view.history {
 		{
 			return _branch;
 		}
+		
 	}
+	
 }

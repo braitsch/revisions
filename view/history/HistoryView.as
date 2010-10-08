@@ -2,6 +2,7 @@ package view.history {
 	import events.RepositoryEvent;
 
 	import model.AppModel;
+	import model.git.RepositoryStatus;
 
 	import view.bookmarks.Bookmark;
 	import view.modals.ModelWindow;
@@ -30,7 +31,7 @@ package view.history {
 
 		private function onRepositoryStatus(e:RepositoryEvent):void 
 		{
-			_collection.branch.setRepositoryStatus(e.data);	
+			_collection.branch.modified = e.data[RepositoryStatus.M].length != 0;	
 		}
 
 		private function onBookmarksReady(e:RepositoryEvent):void 

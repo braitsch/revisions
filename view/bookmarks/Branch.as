@@ -34,7 +34,6 @@ package view.bookmarks {
 		public function set modified($m:Boolean):void
 		{
 			_modified = $m;
-			trace("Branch.modified($m) = ", _modified);
 		}
 		
 	}

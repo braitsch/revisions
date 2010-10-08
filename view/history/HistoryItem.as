@@ -3,17 +3,20 @@ package view.history {
 
 	public class HistoryItem extends ListItem {
 
-		private var _view			:HistoryItemMC = new HistoryItemMC();
 		private var _sha1			:String;
+		private var _view			:HistoryItemMC = new HistoryItemMC();
 
-		public function HistoryItem(n:String, s:String)
+		public function HistoryItem(i:String, d:String, a:String, n:String, s:String = 'XX')
 		{
 			super(650, false);
-			var a:Array = s.split('##');
-			_sha1 = a[0];
-			_view.num_txt.text = n;			_view.date_txt.text = a[1]; 			_view.author_txt.text = a[2];			_view.note_txt.text = a[3];
-			mouseChildren = false;
+			_view.num_txt.text = i;
+			_view.date_txt.text = d;			_view.author_txt.text = a;			_view.note_txt.text = n;			_sha1 = s;			mouseChildren = false;
 			addChild(_view);
+		}
+		
+		public function set author(a:String):void
+		{
+			_view.author_txt.text = a;
 		}
 
 		public function get sha1():String

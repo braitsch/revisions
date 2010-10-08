@@ -1,8 +1,5 @@
 package view.history {
-	import events.RepositoryEvent;
-
 	import model.AppModel;
-	import model.git.RepositoryStatus;
 
 	import view.bookmarks.Branch;
 	import view.layout.ListItem;
@@ -16,14 +13,14 @@ package view.history {
 
 	// each one of these represent one branch on a bookmark //
 	
-		private var _view			:HistoryListMC = new HistoryListMC();
-		private var _modified		:Boolean = false;
-		private var _branch			:Branch;
-		private var _selected		:HistoryItem;
-		private var _workingVersion	:HistoryItem;		
+		private var _view				:HistoryListMC = new HistoryListMC();
+		private var _modified			:Boolean;
+		private var _branch				:Branch;
+		private var _selected			:HistoryItem;
+		private var _itemUnsaved		:HistoryItemUnsaved = new HistoryItemUnsaved();	
 		
-		private var _list			:SimpleList = new SimpleList();
-		private var _scrollbar		:UIScrollBar = new UIScrollBar(8, 330, 8, 20);		
+		private var _list				:SimpleList = new SimpleList();
+		private var _scrollbar			:UIScrollBar = new UIScrollBar(8, 330, 8, 20);		
 
 		public function HistoryList($branch:Branch, $xpos:uint)
 		{
@@ -31,33 +28,36 @@ package view.history {
 			_view.tab.x = $xpos * 62;			_view.tab.label_txt.text = $branch.name;
 			_view.addEventListener(MouseEvent.CLICK, onRecordSelection);
 			
+			_list.y = 46;
 			addChild(_view);
-			_view.addChild(_list);
-			_list.y = 46;			
+			addChild(_list);			
 			generateScrollbar();
-			AppModel.config.addEventListener(RepositoryEvent.SET_USERNAME, onUserNameChange);	
 		}
 
-		public function setRepositoryStatus(o:Object):void 
-		{
-			_modified = o[RepositoryStatus.M].length != 0;
-			trace("HistoryList.onRepositoryStatus(e)", _modified);
+		public function set modified(m:Boolean):void 
+		{			_modified = m;
 			if (_selected) {
 				switchToVersion();
 			}	else{
-				refreshList(AppModel.bookmark.master.history);
+				rebuildList();
 			}
 		}
 
-		private function refreshList(a:Array):void
+		private function rebuildList():void
 		{
+			var a:Array = AppModel.bookmark.branch.history;
 			var v:Vector.<ListItem> = new Vector.<ListItem>();
-			if (_modified) v.push(_workingVersion);
-			for (var i:int = 0; i < a.length; i++) v.push(new HistoryItem(String(a.length-i), a[i]));
-			_list.refresh(v);		
+			
+			if (_modified) v.push(_itemUnsaved);
+			for (var i:int = 0; i < a.length; i++) {
+				var n:Array = a[i].split('##');
+				v.push(new HistoryItem(String(a.length-i), n[1], n[2], n[3], n[0]));
+			}
+			_list.refresh(v);
+			
 		// check if we need the scrollbar //	
 			_scrollbar.visible = _list.height > 314;
-			trace("HistoryList.onBookmarkChange(e)", '# items = '+a.length);			
+			trace("HistoryList.rebuildList > ", '# items = '+a.length, '_modified = ', _modified);			
 		}
 
 		private function onRecordSelection(e:MouseEvent):void 
@@ -69,18 +69,13 @@ package view.history {
 		
 		private function switchToVersion():void
 		{
-			if (_selected == _workingVersion) {
+			if (_selected == _itemUnsaved) {
 				AppModel.history.checkoutMaster();
 			} else{
 				AppModel.history.checkoutCommit(_selected.sha1);
 			}		
 			_selected = null;	
-		}
-		
-		private function onUserNameChange(e:RepositoryEvent):void 
-		{
-			_workingVersion = new HistoryItem('X', '00##Right Now##'+AppModel.config.userName+'##Current Working Version');
-		}		
+		}	
 		
 		private function generateScrollbar():void 
 		{

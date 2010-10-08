@@ -46,6 +46,8 @@ package view.bookmarks {
 		{
 			return _remote;
 		}
+		
+	// branches //	
 				
 		public function get branch():Branch
 		{
