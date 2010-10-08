@@ -8,6 +8,7 @@ package view.history {
 		public function HistoryItemUnsaved()
 		{
 			super('X', 'Right Now', 'Unknown Author', 'Current Working Version');
+			super.active = true;
 			AppModel.config.addEventListener(RepositoryEvent.SET_USERNAME, onUserNameChange);	
 		}
 		

@@ -14,9 +14,9 @@ package view.history {
 	// each one of these represent one branch on a bookmark //
 	
 		private var _view				:HistoryListMC = new HistoryListMC();
-		private var _modified			:Boolean;
 		private var _branch				:Branch;
-		private var _selected			:HistoryItem;
+		private var _modified			:Boolean;
+		private var _selected			:Boolean;
 		private var _itemUnsaved		:HistoryItemUnsaved = new HistoryItemUnsaved();	
 		
 		private var _list				:SimpleList = new SimpleList();
@@ -35,11 +35,12 @@ package view.history {
 		}
 
 		public function set modified(m:Boolean):void 
-		{			_modified = m;
+		{
+			var changed:Boolean = m!=_modified;			_modified = m;
 			if (_selected) {
 				switchToVersion();
 			}	else{
-				rebuildList();
+				if (!_list.activeItem || changed) rebuildList();
 			}
 		}
 
@@ -63,18 +64,19 @@ package view.history {
 		private function onRecordSelection(e:MouseEvent):void 
 		{
 			trace('------------------------------');
-			_selected = e.target as HistoryItem;
+			_selected = true;
+		// force refresh the status before checkout of target branch..	
 			AppModel.status.getStatus();		
 		}
 		
 		private function switchToVersion():void
 		{
-			if (_selected == _itemUnsaved) {
+			if (_list.activeItem == _itemUnsaved) {
 				AppModel.history.checkoutMaster();
 			} else{
-				AppModel.history.checkoutCommit(_selected.sha1);
+				AppModel.history.checkoutCommit(HistoryItem(_list.activeItem).sha1);
 			}		
-			_selected = null;	
+			_selected = false;	
 		}	
 		
 		private function generateScrollbar():void 
