@@ -1,5 +1,6 @@
 package view.history {
-	import flash.events.MouseEvent;
+	import commands.UICommand;
+
 	import view.bookmarks.Bookmark;
 
 	import flash.display.Sprite;
@@ -19,13 +20,12 @@ package view.history {
 				if (_bookmark.branches[i]==_bookmark.branch) _branch = list;
 				addChild(list);
 			}
-			addEventListener(MouseEvent.CLICK, onListSelection);
+			addEventListener(UICommand.BRANCH_SELECTED, onBranchSelected);
 		}
 
-		private function onListSelection(e:MouseEvent):void 
+		private function onBranchSelected(e:UICommand):void 
 		{
-			trace("HistoryCollection.onListSelection(e)", e.target);
-			// tab to selected list..
+			_branch = e.target as HistoryList;
 		}
 
 		public function get bookmark():Bookmark

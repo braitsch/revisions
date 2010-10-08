@@ -5,6 +5,10 @@ package view.bookmarks {
 
 	public class Bookmark extends ListItem {
 
+	// branch constants //
+		public static const MASTER	:String = 'master';
+		public static const DETACH	:String = 'detach';
+
 		private var _label			:String;
 		private var _local			:String;		private var _remote			:String;
 		private var _detach			:Branch;
@@ -27,8 +31,8 @@ package view.bookmarks {
 			_view.mouseChildren = false;
 			addChild(_view);
 			
-			_branch = new Branch('master');
-			_detach = new Branch('detach');
+			_branch = new Branch(MASTER);
+			_detach = new Branch(DETACH);
 			_branches.push(_branch);
 		}
 

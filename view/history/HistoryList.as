@@ -1,4 +1,6 @@
 package view.history {
+	import view.bookmarks.Bookmark;
+	import commands.UICommand;
 	import model.AppModel;
 
 	import view.bookmarks.Branch;
@@ -25,12 +27,16 @@ package view.history {
 		public function HistoryList($branch:Branch, $xpos:uint)
 		{
 			_branch = $branch;
-			_view.tab.x = $xpos * 62;			_view.tab.label_txt.text = $branch.name;
-			_view.addEventListener(MouseEvent.CLICK, onRecordSelection);
+			_view.tab.x = $xpos * 62;
+			_view.tab.buttonMode = true;			_view.tab.label_txt.text = $branch.name;
+			_view.tab.label_txt.mouseEnabled = false;
+			_view.mouseEnabled = false;
 			
 			_list.y = 46;
 			addChild(_view);
-			addChild(_list);			
+			addChild(_list);
+			
+			_list.addEventListener(MouseEvent.CLICK, onRecordSelection);			_view.tab.addEventListener(MouseEvent.CLICK, onListTabSelection);			
 			generateScrollbar();
 		}
 
@@ -40,12 +46,16 @@ package view.history {
 			if (_selected) {
 				switchToVersion();
 			}	else{
+			// don't draw the detached branch history - confusing to user..	
+				if (AppModel.bookmark.branch.name==Bookmark.DETACH) return;
 				if (!_list.activeItem || changed) rebuildList();
 			}
 		}
 
 		private function rebuildList():void
 		{
+		//	var b:Bookmark = AppModel.bookmark;
+		// show only master and user created branch histories //	
 			var a:Array = AppModel.bookmark.branch.history;
 			var v:Vector.<ListItem> = new Vector.<ListItem>();
 			
@@ -60,12 +70,17 @@ package view.history {
 			_scrollbar.visible = _list.height > 314;
 			trace("HistoryList.rebuildList > ", '# items = '+a.length, '_modified = ', _modified);			
 		}
+		
+		private function onListTabSelection(e:MouseEvent):void 
+		{
+			dispatchEvent(new UICommand(UICommand.BRANCH_SELECTED));
+		}		
 
 		private function onRecordSelection(e:MouseEvent):void 
 		{
 			trace('------------------------------');
 			_selected = true;
-		// force refresh the status before checkout of target branch..	
+		// always force refresh the status before checkout of target branch..	
 			AppModel.status.getStatus();		
 		}
 		
