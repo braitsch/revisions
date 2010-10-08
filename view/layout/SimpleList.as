@@ -7,14 +7,12 @@ package view.layout {
 
 	public class SimpleList extends Sprite {
 	
-		protected var list			:Sprite;
-		private var _leading		:uint = 2;
-		private var _activeItem		:ListItem;	
+		private static var _leading		:uint = 2;
+		protected var list				:Sprite;
+		private var _activeItem			:ListItem;	
 
 		public function SimpleList()
 		{
-			this.x = 5;
-			this.y = 38;		
 			list = new Sprite();
 			list.addEventListener(MouseEvent.CLICK, onItemSelection);			
 			addChild(list);
@@ -23,9 +21,9 @@ package view.layout {
 		public function refresh(v:Vector.<ListItem>):void
 		{
 			clear();
-			for (var i : int = 0; i < v.length; i++) {
+			for (var i : int = 0; i < v.length;i++) {
 				var n:ListItem = v[i];
-					n.y = (n.height+_leading) * i;
+				n.y = (n.height+_leading) * i;
 				if (n.active==1) this.activeItem = n;
 				list.addChild(n);
 			}

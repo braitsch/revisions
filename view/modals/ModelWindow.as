@@ -20,6 +20,7 @@ package view.modals {
 		protected function set cancel(btn:Sprite):void
 		{
 			stroke();
+			btn.buttonMode = true;
 			btn.addEventListener(MouseEvent.CLICK, onCancelClick);
 		}
 		

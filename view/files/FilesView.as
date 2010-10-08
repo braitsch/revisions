@@ -28,6 +28,7 @@ package view.files {
 			addChild(_view);	
 			addChild(_list);	
 			
+			_list.x = 5;			_list.y = 38;
 			_list.contextMenu = AirContextMenu.menu;
 			_list.addEventListener(UICommand.LIST_ITEM_SELECTED, onListSelection);					
 			

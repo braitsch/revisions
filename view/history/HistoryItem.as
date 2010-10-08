@@ -15,7 +15,7 @@ package view.history {
 			mouseChildren = false;
 			addChild(_view);
 		}
-		
+
 		public function get sha1():String
 		{
 			return _sha1;

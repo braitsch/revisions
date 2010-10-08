@@ -76,7 +76,7 @@ package view.ui {
 			_mask.graphics.endFill();
 			_mask.x = _target.x;
 			_mask.y = _target.y;
-			_target.mask = _mask;		
+			_target.mask = _mask;
 		}
 		
 		public function reset($hard:Boolean = true):void

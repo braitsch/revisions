@@ -23,6 +23,8 @@ package view.bookmarks {
 			_view.addChild(_list);
 			addChild(_view);
 			
+			_list.x = 5;
+			_list.y = 38;	
 			_list.contextMenu = AirContextMenu.menu;
 			_list.addEventListener(UICommand.LIST_ITEM_SELECTED, onListSelection);
 			
@@ -49,6 +51,7 @@ package view.bookmarks {
 				}
 			}
 			super.redrawList(v);
+			AppModel.bookmarks = v;
 			AppModel.bookmark = _list.activeItem as Bookmark;
 		}		
 

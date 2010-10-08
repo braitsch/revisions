@@ -53,7 +53,6 @@ package view.layout {
 			_handle.x = _width - _handle.width/2;
 			_handle.y = _height/2 - _handle.height/2;		
 			_handle.boundaries(new Rectangle(0, _handle.y, stage.stageWidth-20-this.x-20, 0));	
-//			_handle.addEventListener()
 			addChild(_handle);
 		}
 

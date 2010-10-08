@@ -1,23 +1,23 @@
 package model {
-	import model.git.Configurator;
 	import events.InstallEvent;
 	import events.RepositoryEvent;
 
 	import model.db.AppDataBase;
+	import model.git.Configurator;
 	import model.git.GitInstaller;
 	import model.git.RepositoryEditor;
 	import model.git.RepositoryHistory;
 	import model.git.RepositoryStatus;
 
 	import view.bookmarks.Bookmark;
+	import view.layout.ListItem;
 
 	import flash.events.EventDispatcher;
 
 	public class AppModel extends EventDispatcher {
 		
 		private static var _instance	:AppModel;
-		private static var _bookmark	:Bookmark;
-		private static var _status 		:RepositoryStatus = new RepositoryStatus();
+		private static var _bookmark	:Bookmark;		private static var _status 		:RepositoryStatus = new RepositoryStatus();
 		private static var _history		:RepositoryHistory = new RepositoryHistory();					private static var _editor		:RepositoryEditor = new RepositoryEditor();
 		private static var _database	:AppDataBase = new AppDataBase();		private static var _config		:Configurator = new Configurator();
 		private static var _installer	:GitInstaller = new GitInstaller();
@@ -40,7 +40,12 @@ package model {
 		static public function get bookmark():Bookmark
 		{
 			return _bookmark;
-		}	
+		}
+		
+		static public function set bookmarks(b:Vector.<ListItem>):void
+		{
+			_instance.dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARKS_READY, b));			
+		}		
 		
 		static public function getInstance():AppModel
 		{

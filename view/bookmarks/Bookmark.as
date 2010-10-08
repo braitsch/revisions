@@ -65,8 +65,13 @@ package view.bookmarks {
 		public function get detach():Branch
 		{
 			return _detach;
+		}
+		
+		public function get branches():Array
+		{
+			return _branches;
 		}	
-			
+		
 	}
 	
 }
