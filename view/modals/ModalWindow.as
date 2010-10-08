@@ -8,11 +8,11 @@ package view.modals {
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
 
-	public class ModelWindow extends Sprite {
+	public class ModalWindow extends Sprite {
 		
 		private var _inputs:Vector.<TextField>;
 
-		public function ModelWindow()
+		public function ModalWindow()
 		{		
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}

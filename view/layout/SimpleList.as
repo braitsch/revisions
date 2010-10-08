@@ -8,14 +8,11 @@ package view.layout {
 	public class SimpleList extends Sprite {
 	
 		private static var _leading		:uint = 2;
-		protected var list				:Sprite;
 		private var _activeItem			:ListItem;	
 
 		public function SimpleList()
 		{
-			list = new Sprite();
-			list.addEventListener(MouseEvent.CLICK, onItemSelection);			
-			addChild(list);
+			addEventListener(MouseEvent.CLICK, onItemSelection);			
 		}
 		
 		public function refresh(v:Vector.<ListItem>):void
@@ -23,9 +20,9 @@ package view.layout {
 			clear();
 			for (var i : int = 0; i < v.length;i++) {
 				var n:ListItem = v[i];
-				n.y = (n.height+_leading) * i;
+				n.y = (n.height + _leading) * i;
 				if (n.active == 1) this.activeItem = n;
-				list.addChild(n);
+				addChild(n);
 			}
 		}
 		
@@ -46,10 +43,10 @@ package view.layout {
 		private function clear():void
 		{
 			_activeItem = null;			
-			while(list.numChildren) {
-				var i:ListItem = list.getChildAt(0) as ListItem;
+			while(numChildren) {
+				var i:ListItem = getChildAt(0) as ListItem;
 					i.removeEventListener(MouseEvent.CLICK, onItemSelection);
-				list.removeChild(i);
+				removeChild(i);
 			}			
 		}
 		

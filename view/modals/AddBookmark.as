@@ -9,7 +9,7 @@ package view.modals {
 	import flash.filesystem.File;
 	import flash.text.TextField;
 
-	public class AddBookmark extends ModelWindow {
+	public class AddBookmark extends ModalWindow {
 
 		private static var _view		:AddBookmarkMC = new AddBookmarkMC();
 		private static var _browser		:FileBrowser = new FileBrowser();

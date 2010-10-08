@@ -39,6 +39,7 @@ package model.git {
 		
 		public function checkoutCommit($sha1:String):void
 		{
+			if (_bookmark.branch.name!=Bookmark.DETACH) _bookmark.previous = _bookmark.branch;
 			trace("RepositoryHistory.checkoutCommit($sha1)", $sha1, _bookmark.branch.modified);
 			_proxy.call(Vector.<String>([BashMethods.CHECKOUT_COMMIT, $sha1, _bookmark.branch.modified]));		}
 		
@@ -46,6 +47,19 @@ package model.git {
 		{
 			_proxy.call(Vector.<String>([BashMethods.CHECKOUT_MASTER, _bookmark.master.modified]));
 		}
+		
+		public function addBranch($new:String):void
+		{
+			trace("RepositoryHistory.addBranch($new)", $new, AppModel.bookmark.previous.name);
+			_proxy.call(Vector.<String>([BashMethods.ADD_BRANCH, $new, AppModel.bookmark.previous.name]));
+		}	
+		
+		public function discardUnsavedChanges():void
+		{
+			_proxy.call(Vector.<String>([BashMethods.RESET_BRANCH]));
+		}
+		
+	// handlers //					
 		
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
@@ -76,6 +90,9 @@ package model.git {
 					_bookmark.branch = _bookmark.master;
 					dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_CHANGED));
 					trace("RepositoryHistory.onProcessComplete(e) > BashMethods.CHECKOUT_MASTER");				break;	
+				case BashMethods.ADD_BRANCH : 
+					trace('suceess!!');
+				break;				
 			}
 		}	
 						

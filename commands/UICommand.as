@@ -17,10 +17,11 @@ package commands {
 		public static const DELETE_BRANCH:String = "DELETE_BRANCH";
 		public static const CHANGE_BRANCH:String = "CHANGE_BRANCH";
 		public static const MERGE_BRANCH:String = "MERGE_BRANCH";
+		public static const DETACHED_BRANCH_EDITED:String = "DETACHED_BRANCH_EDITED";
 		
 		public static const SAVE_PROJECT:String = "SAVE_PROJECT";			
-		public static const VIEW_HISTORY:String = "VIEW_HISTORY";
-		public static const VIEW_VERSION:String = "VIEW_VERSION";		
+		public static const VIEW_HISTORY:String = "VIEW_HISTORY";		public static const VIEW_VERSION:String = "VIEW_VERSION";
+		
 	// list item selections //	
 		public static const LIST_ITEM_SELECTED:String = "LIST_ITEM_SELECTED";
 		public static const BOOKMARK_SELECTED:String = "BOOKMARK_SELECTED";

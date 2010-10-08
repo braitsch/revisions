@@ -10,7 +10,7 @@ package view.modals {
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
 
-	public class RepairBookmark extends ModelWindow {
+	public class RepairBookmark extends ModalWindow {
 
 		private static var _oldId		:String;
 		private static var _browser		:FileBrowser = new FileBrowser();

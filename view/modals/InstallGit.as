@@ -9,7 +9,7 @@ package view.modals {
 	import flash.desktop.NativeApplication;
 	import flash.events.MouseEvent;
 
-	public class InstallGit extends ModelWindow {
+	public class InstallGit extends ModalWindow {
 
 		private static var _view		:InstallGitMC = new InstallGitMC();
 		private static var _installed	:Boolean;

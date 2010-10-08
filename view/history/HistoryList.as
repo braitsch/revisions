@@ -54,10 +54,11 @@ package view.history {
 		
 		private function checkoutVersion():void
 		{
-			trace('*****branch name = ',AppModel.bookmark.branch.name, 'modified = ', _modified);
-			if (AppModel.bookmark.branch.name==Bookmark.DETACH && _modified==true){
-				trace('local changes made to prev version - prompt to discard or create new branch');
-			}	else{
+		// check the status of the current branch before we shift off of it //	
+			var b:Branch = AppModel.bookmark.branch;
+			if (b.name==Bookmark.DETACH && b.modified==true){
+				dispatchEvent(new UICommand(UICommand.DETACHED_BRANCH_EDITED));
+			} else{
 				switchToVersion();
 			}
 		}
@@ -94,11 +95,11 @@ package view.history {
 		
 		private function switchToVersion():void
 		{
-			//TODO _list.getChildIndex(activeItem);
-			if (_list.activeItem == _itemUnsaved) {
+			var k:HistoryItem = _list.activeItem as HistoryItem;
+			if (_list.getChildIndex(k)==0) {
 				AppModel.history.checkoutMaster();
 			} else{
-				AppModel.history.checkoutCommit(HistoryItem(_list.activeItem).sha1);
+				AppModel.history.checkoutCommit(k.sha1);
 			}		
 			_selected = false;	
 		}	

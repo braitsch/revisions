@@ -5,11 +5,11 @@ package view.history {
 	import model.git.RepositoryStatus;
 
 	import view.bookmarks.Bookmark;
-	import view.modals.ModelWindow;
+	import view.modals.ModalWindow;
 
 	import flash.display.Sprite;
 
-	public class HistoryView extends ModelWindow {
+	public class HistoryView extends ModalWindow {
 
 		private static var _view			:HistoryViewMC = new HistoryViewMC();
 		private static var _container		:Sprite = new Sprite();

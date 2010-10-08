@@ -13,6 +13,7 @@ package view.bookmarks {
 		private var _local			:String;		private var _remote			:String;
 		private var _detach			:Branch;
 		private var _branch			:Branch;
+		private var _previous		:Branch;
 		private var _branches		:Array = [];
 		private var _view			:BookmarkItemMC = new BookmarkItemMC();
 
@@ -33,6 +34,7 @@ package view.bookmarks {
 			
 			_branch = new Branch(MASTER);
 			_detach = new Branch(DETACH);
+			_previous = _branch;
 			_branches.push(_branch);
 		}
 
@@ -63,6 +65,16 @@ package view.bookmarks {
 			_branch = b;
 		}
 		
+		public function get previous():Branch
+		{
+			return _previous;
+		}
+		
+		public function set previous(p:Branch):void
+		{
+			_previous = p;
+		}			
+		
 		public function get master():Branch
 		{
 			return _branches[0];
@@ -76,7 +88,7 @@ package view.bookmarks {
 		public function get branches():Array
 		{
 			return _branches;
-		}	
+		}
 		
 	}
 	

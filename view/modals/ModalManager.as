@@ -27,7 +27,8 @@ package view.modals {
 		private static var _repair			:RepairBookmark = new RepairBookmark();
 		private static var _remove			:RemoveBookmark = new RemoveBookmark();		private static var _commit			:CommitChanges = new CommitChanges();
 		private static var _history			:HistoryView = new HistoryView();		
-		private static var _install			:InstallGit = new InstallGit();	
+		private static var _install			:InstallGit = new InstallGit();
+		private static var _detached		:DetachedBranch = new DetachedBranch();
 
 		public function ModalManager()
 		{
@@ -48,7 +49,7 @@ package view.modals {
 			_dragAndDrop.target = stage;
 			_dragAndDrop.addEventListener(NativeDragEvent.NATIVE_DRAG_COMPLETE, onDragAndDrop);
 			stage.addEventListener(UICommand.NEW_BOOKMARK, addBookmark);			stage.addEventListener(UICommand.EDIT_BOOKMARK, editBookmark);			stage.addEventListener(UICommand.SAVE_PROJECT, addNewCommit);			stage.addEventListener(UICommand.REPAIR_BOOKMARK, repairBookmark);			stage.addEventListener(UICommand.ADD_BRANCH, branchBookmark);			stage.addEventListener(UICommand.DELETE_BOOKMARK, removeBookmark);
-			stage.addEventListener(UICommand.VIEW_HISTORY, viewHistory);			stage.addEventListener(UICommand.VIEW_VERSION, viewVersion);		}	
+			stage.addEventListener(UICommand.VIEW_HISTORY, viewHistory);			stage.addEventListener(UICommand.VIEW_VERSION, viewVersion);			stage.addEventListener(UICommand.DETACHED_BRANCH_EDITED, onDetachedBranchEdited);		}	
 
 		private function onDragAndDrop(e:NativeDragEvent):void 
 		{
@@ -107,11 +108,16 @@ package view.modals {
 		private function viewVersion(e:UICommand):void 
 		{
 			trace("ModalManager.viewVersion(e)");
-		}					
+		}
+		
+		private function onDetachedBranchEdited(e:UICommand):void 
+		{
+			addChild(_detached);	
+		}							
 		
 		private function onCloseModelWindow(e:UICommand):void 
 		{
-			removeChild(e.data as ModelWindow);
+			removeChild(e.data as ModalWindow);
 		}
 			
 	}

@@ -6,7 +6,7 @@ package view.modals {
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
 
-	public class CommitChanges extends ModelWindow {
+	public class CommitChanges extends ModalWindow {
 
 		private static var _view		:CommitMC = new CommitMC();
 
