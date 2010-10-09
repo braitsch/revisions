@@ -2,15 +2,18 @@ package model.git {
 	import events.NativeProcessEvent;
 	import events.RepositoryEvent;
 
+	import model.AppModel;
 	import model.air.NativeProcessProxy;
+
+	import view.bookmarks.Bookmark;
 
 	import flash.events.EventDispatcher;
 
 	public class BranchEditor extends EventDispatcher {
 		
 		private static var _proxy		:NativeProcessProxy;
-		private static var _trim		:RegExp = /^\s+|\s+$/g;				
-		
+		private static var _index		:uint = 0;
+		private static var _bookmark	:Bookmark;		
 		public function BranchEditor()
 		{
 			_proxy = new NativeProcessProxy();	
@@ -18,21 +21,28 @@ package model.git {
 			_proxy.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);
 			_proxy.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);	
 		}
-
-		public function getBranches($dir:String):void
+		
+		public function getBranchesOfBookmarks():void 
 		{
-			_proxy.directory = $dir;
+			_bookmark = AppModel.bookmarks[_index] as Bookmark;
+			_proxy.directory = _bookmark.local;
 			_proxy.call(Vector.<String>([BashMethods.GET_BRANCHES]));			
-		}	
+		}		
 		
 	// response handlers //			
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
-			trace("BranchEditor.onProcessComplete(e)", e.data.method, 'value = '+e.data.value);			 
 			var m:String = String(e.data.method);
 			switch(m){
-				case BashMethods.GET_BRANCHES 	: parseBranchList(e.data.value);	break;
+				case BashMethods.GET_BRANCHES: 
+					_bookmark.branches = e.data.result.split(/[\n\r\t]/g);
+					if (++_index < AppModel.bookmarks.length){
+						getBranchesOfBookmarks();
+					}	else{
+						dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARKS_READY));
+					}
+				break;		
 			}
 		}
 		
@@ -41,16 +51,6 @@ package model.git {
 			trace("BranchEditor.onProcessFailure(e)");
 		}			
 
-		private function parseBranchList($s:String):void
-		{
-		//TODO this probably needs to be redone.	
-		// split on line breaks //	
-			var a:Array = $s.split(/(?:\r|\n)/);	
-		// trim again any outside whitespace //
-			for (var i : int = 0; i < a.length; i++) a[i] = a[i].replace(_trim, '');
-			dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_LIST_RECEIVED));			
-		}		
-		
 	}
 	
 }

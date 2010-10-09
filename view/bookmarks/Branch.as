@@ -9,6 +9,7 @@ package view.bookmarks {
 		public function Branch($n:String) 
 		{
 			_name = $n;
+			trace('new branch created, name='+_name, _name.length);
 		}
 		
 		public function get name():String

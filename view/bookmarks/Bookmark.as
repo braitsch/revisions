@@ -1,4 +1,6 @@
 package view.bookmarks {
+	import utils.StringUtils;
+
 	import view.layout.ListItem;
 
 	import flash.filesystem.File;
@@ -11,13 +13,14 @@ package view.bookmarks {
 
 		private var _label			:String;
 		private var _local			:String;		private var _remote			:String;
-		private var _detach			:Branch;
+		private var _active			:Boolean;
+		private var _master			:Branch;		private var _detach			:Branch = new Branch(DETACH);
 		private var _branch			:Branch;
 		private var _previous		:Branch;
 		private var _branches		:Array = [];
-		private var _view			:BookmarkItemMC = new BookmarkItemMC();
+		private var _view			:BookmarkItemMC = new BookmarkItemMC();	
 
-		public function Bookmark($label:String, $local:String, $remote:String, $active:uint)
+		public function Bookmark($label:String, $local:String, $remote:String, $active:Boolean)
 		{
 			super(190, $active==1);
 			super.file = new File('file://'+$local);
@@ -25,17 +28,14 @@ package view.bookmarks {
 			_label = $label;
 			_local = $local;
 			_remote = $remote;
+			_active = $active;
+			
 			_view.label_txt.autoSize = 'left';
 			_view.label_txt.text = _label;
 			_view.label_txt.selectable = false;
 			_view.mouseEnabled = false;
 			_view.mouseChildren = false;
 			addChild(_view);
-			
-			_branch = new Branch(MASTER);
-			_detach = new Branch(DETACH);
-			_previous = _branch;
-			_branches.push(_branch);
 		}
 
 		public function get label():String
@@ -70,21 +70,37 @@ package view.bookmarks {
 			return _previous;
 		}
 		
-		public function set previous(p:Branch):void
+		public function set previous(b:Branch):void
 		{
-			_previous = p;
-		}			
+			_previous = b;
+		}
+		
+	// special branches //				
 		
 		public function get master():Branch
 		{
-			return _branches[0];
+			return _master;
 		}
 		
 		public function get detach():Branch
 		{
 			return _detach;
 		}
-		
+
+		public function set branches(a:Array):void
+		{
+		//	trace("Bookmark.branches(a)", this.label, a);
+			for (var i:int = 0; i < a.length; i++) {
+				var s:String = a[i];
+				if (s.indexOf('*')==0){
+					_branch = new Branch(StringUtils.trim(s.substr(1)));
+					_branches.push(_branch);
+				}	else{
+					_branches.push(new Branch(StringUtils.trim(s)));
+				}
+			}
+		}
+
 		public function get branches():Array
 		{
 			return _branches;

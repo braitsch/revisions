@@ -26,15 +26,14 @@ package model.git {
 		{
 			_bookmark = b;
 			_proxy.directory = _bookmark.local;
-			if (_bookmark.master.history==null) getHistory();
-		}		
-
+			if (_bookmark.branch.history==null) getHistory();
+		}
+		
 		public function getHistory():void
 		{
 		// should only be called when bookmark is first created & when a new commit is entered	
 			trace("RepositoryHistory.getHistory()");
-			_failed = false;
-			_proxy.call(Vector.<String>([BashMethods.GET_HISTORY]));
+			_failed = false;			_proxy.call(Vector.<String>([BashMethods.GET_HISTORY]));
 		}
 		
 		public function checkoutCommit($sha1:String):void
@@ -63,6 +62,8 @@ package model.git {
 		
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
+			trace("******RepositoryHistory.onProcessFailure(e)", e.target.method);
+			return;
 			_failed = true;
 			switch(e.target.method){
 				case BashMethods.CHECKOUT_COMMIT :					trace('local changes');
@@ -92,10 +93,10 @@ package model.git {
 					trace("RepositoryHistory.onProcessComplete(e) > BashMethods.CHECKOUT_MASTER");				break;	
 				case BashMethods.ADD_BRANCH : 
 					trace('suceess!!');
-				break;				
+				break;							
 			}
 		}	
-						
+		
 	}
 	
 }

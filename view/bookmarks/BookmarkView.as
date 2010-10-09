@@ -1,12 +1,11 @@
 package view.bookmarks {
 	import commands.UICommand;
 
-	import events.DataBaseEvent;
+	import events.RepositoryEvent;
 
 	import model.AppModel;
 
 	import view.layout.LiquidColumn;
-	import view.layout.ListItem;
 	import view.layout.SimpleList;
 	import view.ui.AirContextMenu;
 
@@ -28,32 +27,18 @@ package view.bookmarks {
 			_list.contextMenu = AirContextMenu.menu;
 			_list.addEventListener(UICommand.LIST_ITEM_SELECTED, onListSelection);
 			
-		// refresh view whenever we get an updated list from the database //	
-			AppModel.database.addEventListener(DataBaseEvent.REPOSITORIES, onRepositories);	
+			AppModel.branch.addEventListener(RepositoryEvent.BOOKMARKS_READY, onBookmarksReady);
+		}
+
+		private function onBookmarksReady(e:RepositoryEvent):void 
+		{
+			super.redrawList(AppModel.bookmarks);
 		}
 		
 		private function onListSelection(e:UICommand):void 
 		{
 			AppModel.bookmark = _list.activeItem as Bookmark;
-		}
-		
-		private function onRepositories(e:DataBaseEvent):void 
-		{
-			var d:Array = e.data as Array;
-			var v:Vector.<ListItem> = new Vector.<ListItem>();
-			for (var i : int = 0; i < d.length; i++) {
-				var b:Bookmark = new Bookmark(d[i].name, d[i].location, 'remote', d[i].active);
-				if (b.file.exists) {
-					v.push(b);
-				}	else{
-					dispatchEvent(new UICommand(UICommand.REPAIR_BOOKMARK, b));
-					return;
-				}
-			}
-			super.redrawList(v);
-			AppModel.bookmarks = v;
-			AppModel.bookmark = _list.activeItem as Bookmark;
-		}		
+		}	
 
 	}
 	
