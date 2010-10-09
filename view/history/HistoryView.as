@@ -20,6 +20,7 @@ package view.history {
 		public function HistoryView()
 		{
 			addChild(_view);
+			super.height = 450;
 			super.cancel = _view.close_btn;
 						_container.x = 20;
 			_container.y = 40;
@@ -32,13 +33,11 @@ package view.history {
 
 		private function onRepositoryStatus(e:RepositoryEvent):void 
 		{
-			trace("HistoryView.onRepositoryStatus(e) > > _collection", _collection);
 			_collection.branch.modified = e.data[RepositoryStatus.M].length != 0;	
 		}
 
 		private function onBookmarksReady(e:RepositoryEvent):void 
 		{
-			trace("HistoryView.onBookmarksReady(e)");
 			var a:Vector.<ListItem> = AppModel.bookmarks;
 			for (var i:int = 0;i < a.length; i++) {
 				_collections.push(new HistoryCollection(a[i] as Bookmark));
@@ -47,7 +46,6 @@ package view.history {
 
 		private function onBookmarkSelected(e:RepositoryEvent):void 
 		{
-			trace("HistoryView.onBookmarkSelected(e)", e.data);
 			while(_container.numChildren) _container.removeChildAt(0);
 			for (var i:int = 0; i < _collections.length;i++) {
 				if (_collections[i].bookmark==e.data) {

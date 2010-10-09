@@ -10,13 +10,20 @@ package view.modals {
 
 	public class ModalWindow extends Sprite {
 		
-		private var _inputs:Vector.<TextField>;
+		private var _height		:Number;
+		private var _inputs		:Vector.<TextField>;
 
 		public function ModalWindow()
 		{		
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
-
+		
+		override public function set height(n:Number):void
+		{
+		// masked lists seem to blow out the height and screw up positioning..	
+			_height = n;
+		}			
+		
 		protected function set cancel(btn:Sprite):void
 		{
 			stroke();
@@ -58,7 +65,7 @@ package view.modals {
 		private function onAddedToStage(e:Event):void 
 		{
 			this.x = stage.stageWidth / 2 - this.width / 2;
-			this.y = stage.stageHeight / 2 - this.height / 2;
+			this.y = stage.stageHeight / 2 - (_height || this.height) / 2;
 			
 			if (_inputs) {
 				var txt:TextField = _inputs[0];
@@ -70,8 +77,8 @@ package view.modals {
 		private function onCancelClick(e:MouseEvent):void 
 		{
 			dispatchEvent(new UICommand(UICommand.CLOSE_MODAL_WINDOW, this));
-		}			
-		
+		}
+				
 	}
 	
 }
