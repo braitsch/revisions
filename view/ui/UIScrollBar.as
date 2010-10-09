@@ -20,7 +20,7 @@ package view.ui {
 
 	public class UIScrollBar extends Sprite {
 
-		private var _mask			:Shape;
+		private var _mask			:Shape = new Shape();
 		private var _dragger		:Sprite;
 		private var _target			:DisplayObject;
 		
@@ -35,8 +35,8 @@ package view.ui {
 			_sHeight = $sHeight;
 			_dWidth = $dWidth;			_dHeight = $dHeight;
 			
+			drawBackground();
 			drawDragger(_dWidth, _dHeight);
-			drawBackground();		
 		}
 		
 	// public setters //	
@@ -44,41 +44,39 @@ package view.ui {
 		public function set target($do:DisplayObject):void
 		{
 			_target = $do; 
-			_homeY = $do.y;
+			_mask.x = _target.x;
+			_mask.y = _homeY = _target.y;
+			_target.mask = _mask;			
 			_target.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);	
 			_target.addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);				
 		}
 		
-		public function set backgroundImage($img:Bitmap):void
+		public function set backgroundImage($b:Bitmap):void
 		{
 			this.graphics.clear();
-			addChildAt($img, 0);
+			addChildAt($b, 0);
 		}
 	
-		public function set backgroundColor($clr:uint):void
+		public function set backgroundColor($c:uint):void
 		{
-			drawBackground($clr);
+			drawBackground($c);
 		}	
 		
-		public function set draggerImage($img:Bitmap):void
+		public function set draggerImage($b:Bitmap):void
 		{
 			_dragger.removeChildAt(0);		
-			_dragger.addChild($img);
+			_dragger.addChild($b);
 		// probably need to redraw dragger padding based on size of new image.	
 		}
 		
-		public function drawMask($width:uint, $height:uint):void
+		public function drawMask($w:uint, $h:uint):void
 		{
-			if (!_mask) _mask = new Shape();
 			_mask.graphics.clear();
 			_mask.graphics.beginFill(0xFF00FF, .2);
-			_mask.graphics.drawRect(0, 0, $width, $height);
+			_mask.graphics.drawRect(0, 0, $w, $h);
 			_mask.graphics.endFill();
-			_mask.x = _target.x;
-			_mask.y = _target.y;
-			_target.mask = _mask;
 		}
-		
+
 		public function reset($hard:Boolean = true):void
 		{
 			TweenLite.to(_target, $hard ? 0 : .5, {y:_homeY, ease:Strong.easeOut, overwrite:false});
@@ -133,21 +131,21 @@ package view.ui {
 			this.graphics.endFill();
 		}		
 		
-		private function onDraggerPress(evt:MouseEvent):void
+		private function onDraggerPress(e:MouseEvent):void
 		{
 			var max:uint = _sHeight - _dHeight;
 			_dragger.startDrag(false, new Rectangle(0, 0, 0, max));
 			stage.addEventListener(Event.ENTER_FRAME, trackDraggerPos);		
 		}
 		
-		private function trackDraggerPos(evt:Event):void
+		private function trackDraggerPos(e:Event):void
 		{
 			var p:Number = _dragger.y / (_sHeight-_dHeight);
 			var y:int = _homeY + ((_mask.height-_target.height) * p);
 			TweenLite.to(_target, .3, {y:y});				
 		}
 		
-		private function onDraggerRelease(evt:MouseEvent):void
+		private function onDraggerRelease(e:MouseEvent):void
 		{
 			_dragger.stopDrag();
 			stage.removeEventListener(Event.ENTER_FRAME, trackDraggerPos);			

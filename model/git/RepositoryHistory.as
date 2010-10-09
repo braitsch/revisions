@@ -18,7 +18,7 @@ package model.git {
 		public function RepositoryHistory()
 		{
 			_proxy = new NativeProcessProxy('History.sh');
-			_proxy.debug = true;
+			_proxy.debug = false;
 			_proxy.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);
 			_proxy.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);		}
 		

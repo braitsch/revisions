@@ -1,5 +1,8 @@
 package view.layout {
+	import flash.events.Event;
 	import commands.UICommand;
+
+	import view.ui.UIScrollBar;
 
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
@@ -7,12 +10,35 @@ package view.layout {
 
 	public class SimpleList extends Sprite {
 	
-		private static var _leading		:uint = 2;
-		private var _activeItem			:ListItem;	
+		private var _width				:uint;
+		private var _height 			:uint;		private var _leading			:uint = 2;
+		private var _container			:Sprite;
+		private var _scrollbar			:UIScrollBar;
+		private var _activeItem			:ListItem;
 
 		public function SimpleList()
 		{
-			addEventListener(MouseEvent.CLICK, onItemSelection);			
+			_container = new Sprite();
+			addChild(_container);
+			
+			_scrollbar = new UIScrollBar(8, 330, 8, 20);
+			_scrollbar.visible = false;
+			_scrollbar.target = _container;
+			addChild(_scrollbar);
+			
+			_container.addEventListener(MouseEvent.CLICK, onItemSelection);
+			_container.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			addEventListener(UICommand.TOGGLE_OPEN_DIRECTORY, onListHeightChanged);			
+		}
+
+		private function onAddedToStage(e:Event):void 
+		{
+			_scrollbar.drawMask(_width, _height);
+		}
+
+		public function setSize(w:uint, h:uint):void		{
+			_width = w;
+			_height = h;
 		}
 		
 		public function refresh(v:Vector.<ListItem>):void
@@ -22,8 +48,11 @@ package view.layout {
 				var n:ListItem = v[i];
 				n.y = (n.height + _leading) * i;
 				if (n.active == 1) this.activeItem = n;
-				addChild(n);
+				_container.addChild(n);
 			}
+		// check if we need the scrollbar //	
+			_scrollbar.reset();
+			_scrollbar.visible = _container.height > _height;			
 		}
 		
 		public function get activeItem():ListItem
@@ -38,15 +67,25 @@ package view.layout {
 			_activeItem.active = true;
 		}
 		
+		public function get container():Sprite
+		{
+			return _container;
+		}		
+		
+		public function get scrollbar():UIScrollBar
+		{
+			return _scrollbar;
+		}
+		
 	// private methods //	
 		
 		private function clear():void
 		{
 			_activeItem = null;			
-			while(numChildren) {
-				var i:ListItem = getChildAt(0) as ListItem;
+			while(_container.numChildren) {
+				var i:ListItem = _container.getChildAt(0) as ListItem;
 					i.removeEventListener(MouseEvent.CLICK, onItemSelection);
-				removeChild(i);
+				_container.removeChild(i);
 			}			
 		}
 		
@@ -60,6 +99,11 @@ package view.layout {
 			this.activeItem = k as ListItem;
 			dispatchEvent(new UICommand(UICommand.LIST_ITEM_SELECTED));
 		}
+		
+		private function onListHeightChanged(e:UICommand):void 
+		{
+			_scrollbar.adjustToNewListHeight();
+		}		
 		
 	}
 	

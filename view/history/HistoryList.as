@@ -1,12 +1,12 @@
 package view.history {
-	import view.bookmarks.Bookmark;
 	import commands.UICommand;
+
 	import model.AppModel;
 
+	import view.bookmarks.Bookmark;
 	import view.bookmarks.Branch;
 	import view.layout.ListItem;
 	import view.layout.SimpleList;
-	import view.ui.UIScrollBar;
 
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -15,14 +15,12 @@ package view.history {
 
 	// each one of these represent one branch on a bookmark //
 	
+		private var _list				:SimpleList = new SimpleList();
 		private var _view				:HistoryListMC = new HistoryListMC();
 		private var _branch				:Branch;
 		private var _modified			:Boolean;
 		private var _selected			:Boolean;
 		private var _itemUnsaved		:HistoryItemUnsaved = new HistoryItemUnsaved();	
-		
-		private var _list				:SimpleList = new SimpleList();
-		private var _scrollbar			:UIScrollBar = new UIScrollBar(8, 330, 8, 20);		
 
 		public function HistoryList($branch:Branch, $xpos:uint)
 		{
@@ -33,12 +31,13 @@ package view.history {
 			_view.mouseEnabled = false;
 			
 			_list.y = 46;
+			_list.setSize(650, 308);
+			_list.scrollbar.y = -22;
+			_list.scrollbar.x = 655;
 			addChild(_view);
 			addChild(_list);
 			
-			_list.addEventListener(MouseEvent.CLICK, onRecordSelection);			_view.tab.addEventListener(MouseEvent.CLICK, onListTabSelection);			
-			generateScrollbar();
-		}
+			_list.addEventListener(MouseEvent.CLICK, onRecordSelection);			_view.tab.addEventListener(MouseEvent.CLICK, onListTabSelection);		}
 
 		public function set modified(m:Boolean):void 
 		{
@@ -74,9 +73,6 @@ package view.history {
 				v.push(new HistoryItem(String(a.length-i), n[1], n[2], n[3], n[0]));
 			}
 			_list.refresh(v);
-			
-		// check if we need the scrollbar //	
-			_scrollbar.visible = _list.height > 314;
 			trace("HistoryList.rebuildList > ", '# items = '+a.length, '_modified = ', _modified);			
 		}
 		
@@ -104,16 +100,6 @@ package view.history {
 			_selected = false;	
 		}	
 		
-		private function generateScrollbar():void 
-		{
-			_scrollbar.y = 24;
-			_scrollbar.x = 655;
-			_scrollbar.target = _list;
-			_scrollbar.drawMask(650, 308);
-			_scrollbar.visible = false;
-			addChild(_scrollbar);	
-		}			
-
 	}
 	
 }

@@ -21,10 +21,11 @@ package view.files {
 
 		public function FilesView()
 		{
-			super.list = _list;
 			super.width = 450;
 						
 			_list.x = 5;			_list.y = 38;
+			_list.setSize(450, 450);
+			_list.scrollbar.x = 438;
 			_list.contextMenu = AirContextMenu.menu;
 			_list.addEventListener(UICommand.LIST_ITEM_SELECTED, onListSelection);					
 			
@@ -68,7 +69,7 @@ package view.files {
 					}
 				}
 			}
-			super.redrawList(_files);			
+			_list.refresh(_files);	
 		}		
 
 		private function validate(f:File):Boolean 

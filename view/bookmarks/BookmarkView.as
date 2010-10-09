@@ -17,13 +17,14 @@ package view.bookmarks {
 		public function BookmarkView()
 		{
 			super.width = 200;
-			super.list = _list;
 			
 			_view.addChild(_list);
 			addChild(_view);
 			
 			_list.x = 5;
-			_list.y = 38;	
+			_list.y = 38;
+			_list.scrollbar.x = 188;
+			_list.setSize(200, 450);
 			_list.contextMenu = AirContextMenu.menu;
 			_list.addEventListener(UICommand.LIST_ITEM_SELECTED, onListSelection);
 			
@@ -32,7 +33,7 @@ package view.bookmarks {
 
 		private function onBookmarksReady(e:RepositoryEvent):void 
 		{
-			super.redrawList(AppModel.bookmarks);
+			_list.refresh(AppModel.bookmarks);
 		}
 		
 		private function onListSelection(e:UICommand):void 

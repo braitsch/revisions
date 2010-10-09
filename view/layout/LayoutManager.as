@@ -43,7 +43,7 @@ package view.layout {
 			var h:DragHandle = e.target as DragHandle;
 			var p:LiquidColumn = e.target.parent as LiquidColumn;
 			var o:Number = h.width/2; // half the handle width //
-				p.setSize(h.x+o);
+				p.drawRedRect(h.x+o);
 			_columns[1].x = _columns[0].x + _columns[0].width + 10 - o;
 			_columns[2].x = _columns[1].x + _columns[1].width + 10 - o;
 		}			

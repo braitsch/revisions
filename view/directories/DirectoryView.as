@@ -21,13 +21,14 @@ package view.directories {
 		public function DirectoryView()
 		{
 			super.width = 290;			
-			super.list = _list;
 			
 			addChild(_view);
 			addChild(_list);
 			
 			_list.x = 5;
-			_list.y = 38;			
+			_list.y = 38;
+			_list.scrollbar.x = 278;
+			_list.setSize(290, 450);	
 			_list.contextMenu = AirContextMenu.menu;
 			_list.addEventListener(UICommand.LIST_ITEM_SELECTED, onListSelection);
 			
@@ -42,7 +43,7 @@ package view.directories {
 				var a:Array = b.file.getDirectoryListing();
 				for (var i : int = 0; i < a.length; i++) if (validate(a[i])) v.push(new Directory(a[i]));
 			}
-			super.redrawList(v);
+			_list.refresh(v);
 		}		
 
 		private function validate(f:File):Boolean 
