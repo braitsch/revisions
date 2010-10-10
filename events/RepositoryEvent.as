@@ -16,7 +16,9 @@ package events {
 		public static const BOOKMARKS_READY:String = "BOOKMARKS_READY";
 		public static const BOOKMARK_SELECTED:String = "BOOKMARK_SELECTED";
 		
+		public static const BRANCH_UPDATED:String = "BRANCH_UPDATED";
 		public static const BRANCH_LIST_RECEIVED:String = "BRANCH_LIST_RECEIVED";			
+		
 		public var data:Object;
 		
 		public function RepositoryEvent($type:String, $data:Object = null)

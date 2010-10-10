@@ -30,8 +30,9 @@ package model.git {
 		
 		public function getHistoryOfBranch($n:String = ''):void
 		{
-			trace("RepositoryHistory.getHistory()");
-			_failed = false;			_proxy.call(Vector.<String>([BashMethods.GET_HISTORY, $n || _bookmark.branch.name]));
+			if ($n=='') $n = _bookmark.branch.name;
+			trace("RepositoryHistory.getHistory()", _bookmark.label, $n);
+			_failed = false;			_proxy.call(Vector.<String>([BashMethods.GET_HISTORY, $n]));
 		}
 		
 		public function checkoutCommit($sha1:String):void

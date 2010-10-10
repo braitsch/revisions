@@ -1,6 +1,8 @@
 package view.bookmarks {
+	import events.RepositoryEvent;
+	import flash.events.EventDispatcher;
 
-	public class Branch {
+	public class Branch extends EventDispatcher{
 
 		private var _name		:String;
 		private var _history	:Array;
@@ -34,6 +36,9 @@ package view.bookmarks {
 		public function set modified($m:Boolean):void
 		{
 			_modified = $m;
+			if ($m!=_modified && history!=null){
+				dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_UPDATED));
+			}
 		}
 		
 	}

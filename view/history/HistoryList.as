@@ -1,4 +1,5 @@
 package view.history {
+	import events.RepositoryEvent;
 	import commands.UICommand;
 
 	import model.AppModel;
@@ -25,10 +26,11 @@ package view.history {
 		public function HistoryList($branch:Branch, $xpos:uint)
 		{
 			_branch = $branch;
+			
 			_view.tab.x = $xpos * 62;
 			_view.tab.buttonMode = true;
-			_view.tab.alpha = .6;			_view.tab.label_txt.text = $branch.name;
-			_view.tab.label_txt.mouseEnabled = false;
+			_view.tab.alpha = .6;
+			_view.tab.label_txt.text = $branch.name;			_view.tab.label_txt.mouseEnabled = false;
 			_view.mouseEnabled = false;
 			
 			_list.y = 46;
@@ -38,7 +40,26 @@ package view.history {
 			addChild(_view);
 			addChild(_list);
 			
-			_list.addEventListener(MouseEvent.CLICK, onRecordSelection);			_view.tab.addEventListener(MouseEvent.CLICK, onListTabSelection);
+			_list.addEventListener(MouseEvent.CLICK, onRecordSelection);
+			_view.tab.addEventListener(MouseEvent.CLICK, onListTabSelection);			_branch.addEventListener(RepositoryEvent.BRANCH_UPDATED, onBranchUpdated);
+		}
+
+		private function onBranchUpdated(e:RepositoryEvent):void 
+		{
+			trace("HistoryList.onBranchUpdated(e)", e);
+			return;			
+		// rebuild the list //	
+			_modified = AppModel.bookmark.branch.modified;
+			var a:Array = AppModel.bookmark.branch.history;
+			var v:Vector.<ListItem> = new Vector.<ListItem>();
+			
+			if (_modified) v.push(_itemUnsaved);
+			for (var i:int = 0; i < a.length; i++) {
+				var n:Array = a[i].split('##');
+				v.push(new HistoryItem(String(a.length-i), n[1], n[2], n[3], n[0]));
+			}
+			_list.refresh(v);
+			trace("HistoryList.rebuildList > ", '# items = '+a.length, '_modified = ', _modified);				
 		}
 
 		public function set active(b:Boolean):void
@@ -48,20 +69,17 @@ package view.history {
 
 		public function onStatusReceived():void 
 		{	
-			if (_branch.history==null){
-				AppModel.history.getHistoryOfBranch(_branch.name);
+			if (_branch.history==null) return;
+
+			if (_selected) {		 
+				checkoutVersion();
 			}	else{
-				if (_selected) {		 
-					checkoutVersion();
-				}	else{
-					if (!_list.activeItem || _modified!=_branch.modified) onHistoryReceived();
-				}				
+				if (!_list.activeItem || _modified!=_branch.modified) onHistoryReceived();
 			}
 		}
 
 		public function onHistoryReceived():void
 		{
-		// rebuild the list //	
 			_modified = AppModel.bookmark.branch.modified;
 			var a:Array = AppModel.bookmark.branch.history;
 			var v:Vector.<ListItem> = new Vector.<ListItem>();

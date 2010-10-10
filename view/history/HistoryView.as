@@ -35,6 +35,7 @@ package view.history {
 		{
 			trace("HistoryView.onHistoryReceived(e)");
 			_collection.list.onHistoryReceived();
+			AppModel.status.getStatus();
 		}
 
 		private function onStatusReceived(e:RepositoryEvent):void 
@@ -60,9 +61,11 @@ package view.history {
 		// set active collection object //	
 			while(_container.numChildren) _container.removeChildAt(0);
 			for (var i:int = 0; i < _collections.length;i++) {
-				if (_collections[i].bookmark==e.data) {
-					_collection = _collections[i];
-					_container.addChild(_collection);
+				var k:HistoryCollection = _collections[i];
+				if (k.bookmark == e.data) {
+					_collection = k;
+					_container.addChild(k);
+					_collection.branch = k.bookmark.branch;
 				}
 			}
 		}
