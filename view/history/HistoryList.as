@@ -44,9 +44,12 @@ package view.history {
 			_branch.addEventListener(RepositoryEvent.BRANCH_UPDATED, rebuildList);
 		}
 
-		public function set active(b:Boolean):void
+		public function set active(on:Boolean):void
 		{
-			_view.tab.alpha = b ? 1 : .6;
+			_view.tab.alpha = on ? 1 : .6;
+			if (on==true && _branch.history==null) {
+				AppModel.history.getHistoryOfBranch(_branch);			
+			}
 		}
 		
 		public function get branch():Branch

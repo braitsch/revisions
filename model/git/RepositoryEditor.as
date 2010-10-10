@@ -67,14 +67,14 @@ package model.git {
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
+			trace("RepositoryEditor.onProcessComplete(e)", 'method = '+e.data.method, 'result = '+e.data.result);
 			switch(e.data.method){
 				case BashMethods.COMMIT : 
-					AppModel.history.getHistoryOfBranch();
-				break;				case BashMethods.TRACK_FILE : 					AppModel.status.getStatusOfBranch();				break;				case BashMethods.UNTRACK_FILE : 
+					AppModel.history.getHistoryOfBranch();				break;				case BashMethods.TRACK_FILE : 					AppModel.status.getStatusOfBranch();				break;
+				case BashMethods.UNTRACK_FILE : 
 					AppModel.status.getStatusOfBranch();
 				break;
 			}
-			trace("RepositoryEditor.onProcessComplete(e)", 'method = '+e.data.method, 'result = '+e.data.result);		
 		}	
 		
 		private function onProcessFailure(e:NativeProcessEvent):void 

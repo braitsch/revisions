@@ -14,7 +14,7 @@ package view.history {
 		private static var _view			:HistoryViewMC = new HistoryViewMC();
 		private static var _container		:Sprite = new Sprite();
 		private static var _collection		:HistoryCollection;
-		private static var _collections		:Array = [];
+		private static var _collections		:Vector.<HistoryCollection> = new Vector.<HistoryCollection>();
 
 		public function HistoryView()
 		{
@@ -52,12 +52,11 @@ package view.history {
 			while(_container.numChildren) _container.removeChildAt(0);
 			for (var i:int = 0; i < _collections.length;i++) {
 				var k:HistoryCollection = _collections[i];
-				if (k.bookmark == e.data) {
-					_collection = k;
-					_container.addChild(k);
-					_collection.branch = k.bookmark.branch;
-				}
+				if (k.bookmark == e.data) _collection = k;
 			}
+			_container.addChild(_collection);
+		// should be set from dispatched branch-selected event //	
+			_collection.branch = _collection.bookmark.branch;
 		}
 
 	}
