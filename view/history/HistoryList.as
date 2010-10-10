@@ -1,4 +1,5 @@
 package view.history {
+	import events.RepositoryEvent;
 	import commands.UICommand;
 
 	import model.AppModel;
@@ -39,15 +40,13 @@ package view.history {
 			
 			_list.addEventListener(MouseEvent.CLICK, onRecordSelection);			_view.tab.addEventListener(MouseEvent.CLICK, onListTabSelection);		}
 
-		public function set modified(m:Boolean):void 
-		{
+		public function onStatusUpdated():void 
+		{	
+			trace("HistoryList.onStatusUpdated()");
 			if (_selected) {		 
 				checkoutVersion();
 			}	else{
-			// never draw the detached branch - confuses the user //	
-				var x:Boolean = m!=_modified;				_modified = m;
-				if (AppModel.bookmark.branch.name==Bookmark.DETACH) return;
-				if (!_list.activeItem || x==true) rebuildList();
+				if (!_list.activeItem || _modified!=_branch.modified) rebuildList();
 			}
 		}
 		
@@ -61,9 +60,10 @@ package view.history {
 				switchToVersion();
 			}
 		}
-
-		private function rebuildList():void
+		
+		public function rebuildList():void
 		{
+			_modified = AppModel.bookmark.branch.modified;
 			var a:Array = AppModel.bookmark.branch.history;
 			var v:Vector.<ListItem> = new Vector.<ListItem>();
 			
@@ -78,6 +78,7 @@ package view.history {
 		
 		private function onListTabSelection(e:MouseEvent):void 
 		{
+			AppModel.bookmark.branch = _branch;
 			dispatchEvent(new UICommand(UICommand.BRANCH_SELECTED));
 		}		
 

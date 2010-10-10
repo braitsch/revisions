@@ -29,11 +29,10 @@ package view.files {
 			_list.contextMenu = AirContextMenu.menu;
 			_list.addEventListener(UICommand.LIST_ITEM_SELECTED, onListSelection);					
 			
-			addChild(_view);	
-			addChild(_list);				
+			addChild(_view);
+			addChild(_list);
 			
 			AppModel.status.addEventListener(RepositoryEvent.STATUS_RECEIVED, onRepositoryStatus);
-			AppModel.getInstance().addEventListener(RepositoryEvent.BOOKMARK_SELECTED, onBookmarkChange);
 		}
 		
 		public function set directory(d:ListItem):void
@@ -43,18 +42,11 @@ package view.files {
 				var a:Array = d.file.getDirectoryListing();
 				for (var i : int = 0; i < a.length; i++) if (validate(a[i])) _files.push(new FileItem(a[i]));
 			}
-		// force status refresh whenever the file viewer is refreshed //	
-			AppModel.status.getStatus();
-		}
-		
-		private function onBookmarkChange(e:RepositoryEvent):void 
-		{
-			directory = e.data as ListItem;
 		}
 
 		private function onRepositoryStatus(e:RepositoryEvent):void 
 		{
-		// we receive the status of everything in the repository //	
+		// we receive the status of everything in the branch //	
 			var s:Array = e.data as Array;
 			var i:uint;
 			file: for (i = 0; i < _files.length; i++) {

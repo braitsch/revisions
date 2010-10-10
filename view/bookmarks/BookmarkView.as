@@ -28,17 +28,18 @@ package view.bookmarks {
 			_list.contextMenu = AirContextMenu.menu;
 			_list.addEventListener(UICommand.LIST_ITEM_SELECTED, onListSelection);
 			
-			AppModel.branch.addEventListener(RepositoryEvent.BOOKMARKS_READY, onBookmarksReady);
+			AppModel.branch.addEventListener(RepositoryEvent.BOOKMARKS_READY, onBookmarksReady, false, 1);
 		}
 
 		private function onBookmarksReady(e:RepositoryEvent):void 
 		{
+			trace("BookmarkView.onBookmarksReady(e)");
 			_list.refresh(AppModel.bookmarks);
+			dispatchEvent(new UICommand(UICommand.BOOKMARK_SELECTED, _list.activeItem as Bookmark));
 		}
 		
 		private function onListSelection(e:UICommand):void 
-		{
-			AppModel.bookmark = _list.activeItem as Bookmark;
+		{			dispatchEvent(new UICommand(UICommand.BOOKMARK_SELECTED, _list.activeItem as Bookmark));
 		}	
 
 	}

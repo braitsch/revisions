@@ -19,8 +19,8 @@ package model.git {
 		public function RepositoryStatus()
 		{
 			_proxy = new NativeProcessQueue('Status.sh');
+			_proxy.addEventListener(NativeProcessEvent.QUEUE_COMPLETE, onStatusComplete);
 			_proxy.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);
-			_proxy.addEventListener(NativeProcessEvent.QUEUE_COMPLETE, onShellQueueComplete);
 		}
 		
 		public function set bookmark(b:Bookmark):void 
@@ -33,8 +33,9 @@ package model.git {
 			trace("RepositoryStatus.getStatus()");
 			_proxy.queue = getTransaction();						}
 		
-		private function onShellQueueComplete(e:NativeProcessEvent):void 
+		private function onStatusComplete(e:NativeProcessEvent):void 
 		{
+			trace("RepositoryStatus.StatusComplete(e)");
 			var i:int = 0, j:int = 0; 
 			var m:Boolean = false;
 			var r:Array = e.data as Array;
@@ -72,7 +73,7 @@ package model.git {
 			}						
 			
 		//	for (i = 0; i < 4; i++) trace('result set '+i+' = ', r[i]);
-			AppModel.bookmark.branch.modified = r[M].length!=0;
+			AppModel.bookmark.branch.modified = r[M].length != 0;
 			dispatchEvent(new RepositoryEvent(RepositoryEvent.STATUS_RECEIVED, r));
 		}
 

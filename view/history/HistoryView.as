@@ -26,18 +26,34 @@ package view.history {
 			_container.y = 40;
 			_view.addChild(_container);
 
+			AppModel.branch.addEventListener(RepositoryEvent.BOOKMARKS_READY, onBookmarksReady, false, 2);
 			AppModel.status.addEventListener(RepositoryEvent.STATUS_RECEIVED, onRepositoryStatus);
-			AppModel.getInstance().addEventListener(RepositoryEvent.BOOKMARKS_READY, onBookmarksReady);
+			AppModel.history.addEventListener(RepositoryEvent.HISTORY_RECEIVED, onHistoryReceived);
 			AppModel.getInstance().addEventListener(RepositoryEvent.BOOKMARK_SELECTED, onBookmarkSelected);
 		}
 
-		private function onRepositoryStatus(e:RepositoryEvent):void 
+		private function onHistoryReceived(e:RepositoryEvent):void 
 		{
-			_collection.branch.modified = e.data[RepositoryStatus.M].length != 0;	
+			trace("HistoryView.onHistoryReceived(e)");
+			_collection.branch.rebuildList();
+		}
+
+		private function onRepositoryStatus(e:RepositoryEvent):void 
+		{	
+		// never draw the detached branch - confuses the user //
+			if (AppModel.bookmark.branch.name==Bookmark.DETACH) return;
+			
+			trace("HistoryView.onRepositoryStatus(e)");
+			if (AppModel.bookmark.branch.history==null){
+				AppModel.history.getHistory();
+			}	else{
+				_collection.branch.onStatusUpdated();
+			}
 		}
 
 		private function onBookmarksReady(e:RepositoryEvent):void 
 		{
+			trace("HistoryView.onBookmarksReady(e)");
 			var a:Vector.<ListItem> = AppModel.bookmarks;
 			for (var i:int = 0;i < a.length; i++) {
 				_collections.push(new HistoryCollection(a[i] as Bookmark));
@@ -46,6 +62,7 @@ package view.history {
 
 		private function onBookmarkSelected(e:RepositoryEvent):void 
 		{
+			trace("HistoryView.onBookmarkSelected(e)");
 			while(_container.numChildren) _container.removeChildAt(0);
 			for (var i:int = 0; i < _collections.length;i++) {
 				if (_collections[i].bookmark==e.data) {

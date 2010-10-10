@@ -109,7 +109,7 @@ package model.db {
 					dispatchEvent(new DataBaseEvent(DataBaseEvent.REPOSITORIES, _repositories));
 				break;	
 				case _setActive:	
-					trace("GitMeDataBase.onTransactionComplete(e) : setActiveBookmark");
+				//	trace("GitMeDataBase.onTransactionComplete(e) : setActiveBookmark");
 				break;					
 			}
 		}			

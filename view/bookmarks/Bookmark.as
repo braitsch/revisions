@@ -13,7 +13,6 @@ package view.bookmarks {
 
 		private var _label			:String;
 		private var _local			:String;		private var _remote			:String;
-		private var _active			:Boolean;
 		private var _master			:Branch;		private var _detach			:Branch = new Branch(DETACH);
 		private var _branch			:Branch;
 		private var _previous		:Branch;
@@ -22,13 +21,12 @@ package view.bookmarks {
 
 		public function Bookmark($label:String, $local:String, $remote:String, $active:Boolean)
 		{
-			super(190, $active==1);
+			super(190, $active);
 			super.file = new File('file://'+$local);
 			
 			_label = $label;
 			_local = $local;
 			_remote = $remote;
-			_active = $active;
 			
 			_view.label_txt.autoSize = 'left';
 			_view.label_txt.text = _label;

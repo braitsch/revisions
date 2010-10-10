@@ -1,6 +1,9 @@
 package view {
 	import commands.UICommand;
 
+	import model.AppModel;
+
+	import view.bookmarks.Bookmark;
 	import view.bookmarks.BookmarkView;
 	import view.directories.DirectoryView;
 	import view.files.FilesView;
@@ -11,28 +14,39 @@ package view {
 
 	public class ColumnView extends Sprite {
 
-		private static var _files		:FilesView = new FilesView();
-		private static var _bookmarks	:BookmarkView = new BookmarkView();
-		private static var _directories	:DirectoryView = new DirectoryView();
+		private static var _bkmks	:BookmarkView = new BookmarkView();
+		private static var _dirs	:DirectoryView = new DirectoryView();
+		private static var _files	:FilesView = new FilesView();
 		
 		public function ColumnView()
 		{
 			this.x = 20;
 			this.y = 100;	
-			addChild(_bookmarks);
+			
+			addChild(_bkmks);
+			addChild(_dirs);			
 			addChild(_files);
-			addChild(_directories);					
+					
+			addEventListener(UICommand.BOOKMARK_SELECTED, onBookmarkSelected);
 			addEventListener(UICommand.DIRECTORY_SELECTED, onDirectorySelection);
 		}
 
 		public function get columns():Vector.<LiquidColumn>
 		{
-			return Vector.<LiquidColumn>([_bookmarks, _directories, _files]);		
+			return Vector.<LiquidColumn>([_bkmks, _dirs, _files]);		
 		}
 		
-		private function onDirectorySelection(e:UICommand):void 
+		private function onBookmarkSelected(e:UICommand):void 
 		{
+			AppModel.bookmark = e.data as Bookmark;
+			AppModel.status.getStatus();
+			
+			_dirs.directory = e.data as ListItem;
 			_files.directory = e.data as ListItem;
+		}		
+		
+		private function onDirectorySelection(e:UICommand):void 
+		{			AppModel.status.getStatus();			_files.directory = e.data as ListItem;
 		}
 		
 	}

@@ -1,11 +1,9 @@
 package view.directories {
 	import commands.UICommand;
 
-	import events.RepositoryEvent;
-
-	import model.AppModel;
 	import model.SystemRules;
 
+	import view.bookmarks.Bookmark;
 	import view.layout.LiquidColumn;
 	import view.layout.ListItem;
 	import view.layout.NestedList;
@@ -31,13 +29,10 @@ package view.directories {
 			_list.setSize(290, 450);	
 			_list.contextMenu = AirContextMenu.menu;
 			_list.addEventListener(UICommand.LIST_ITEM_SELECTED, onListSelection);
-			
-			AppModel.getInstance().addEventListener(RepositoryEvent.BOOKMARK_SELECTED, onBookmarkChange);			
 		}
 
-		private function onBookmarkChange(e:RepositoryEvent):void 
+		public function set directory(b:ListItem):void 
 		{
-			var b:ListItem = e.data as ListItem;
 			var v:Vector.<ListItem> = new Vector.<ListItem>();
 			if (b!=null){
 				var a:Array = b.file.getDirectoryListing();

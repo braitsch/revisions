@@ -32,15 +32,14 @@ package model {
 		public function AppModel() 
 		{
 			_instance = this;
-			_installer.addEventListener(InstallEvent.SET_GIT_VERSION, onGitAvailable);						_editor.addEventListener(RepositoryEvent.REFRESH_STATUS, onRefreshStatus);						_editor.addEventListener(RepositoryEvent.REFRESH_HISTORY, onRefreshHistory);
-			_history.addEventListener(RepositoryEvent.BRANCH_CHANGED, onRefreshStatus);	
 			_database.addEventListener(DataBaseEvent.REPOSITORIES, onRepositories);
-			_branch.addEventListener(RepositoryEvent.BOOKMARKS_READY, onBookmarksReady);
+			_installer.addEventListener(InstallEvent.SET_GIT_VERSION, onGitAvailable);
 		}		
 
 		static public function set bookmark(b:Bookmark):void
 		{
-		// set only from BookmarkView //	
+			trace("AppModel.bookmark(b)", b, b.branch);
+		// set only from ColumnView //	
 			_bookmark = b;
 			_status.bookmark = _history.bookmark = _bookmark;
 			_editor.bookmark = _database.bookmark = _bookmark;
@@ -104,16 +103,6 @@ package model {
 			_database.init();
 		}		
 		
-		private function onRefreshStatus(e:RepositoryEvent):void 
-		{
-			_status.getStatus();	
-		}
-		
-		private function onRefreshHistory(e:RepositoryEvent):void 
-		{
-			_history.getHistory();
-		}
-		
 		private function onRepositories(e:DataBaseEvent):void 
 		{
 			var d:Array = e.data as Array;
@@ -130,12 +119,6 @@ package model {
 			}
 			_bookmarks = v;
 			_branch.getBranchesOfBookmarks();			
-		}	
-		
-		private function onBookmarksReady(e:RepositoryEvent):void 
-		{
-			dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARKS_READY));
-			for (var i:int = 0; i < _bookmarks.length; i++) if (_bookmarks[i].active) AppModel.bookmark = _bookmarks[i] as Bookmark;
 		}				
 		
 	}

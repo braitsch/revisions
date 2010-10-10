@@ -25,7 +25,9 @@ package view.history {
 
 		private function onBranchSelected(e:UICommand):void 
 		{
+			trace("HistoryCollection.onBranchSelected(e)");
 			_branch = e.target as HistoryList;
+			setChildIndex(_branch, numChildren-1);
 		}
 
 		public function get bookmark():Bookmark

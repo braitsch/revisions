@@ -1,7 +1,7 @@
 package model.git {
 	import events.NativeProcessEvent;
-	import events.RepositoryEvent;
 
+	import model.AppModel;
 	import model.air.NativeProcessProxy;
 
 	import view.bookmarks.Bookmark;
@@ -67,14 +67,14 @@ package model.git {
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
-			trace("RepositoryEditor.onProcessComplete(e)");
 			switch(e.data.method){
-				case 'commit' : 
-					dispatchEvent(new RepositoryEvent(RepositoryEvent.REFRESH_HISTORY));
+				case BashMethods.COMMIT : 
+				//	AppModel.history.getHistory();
+				break;				case BashMethods.TRACK_FILE : 					AppModel.status.getStatus();									break;				case BashMethods.UNTRACK_FILE : 
+					AppModel.status.getStatus();					
 				break;
 			}
-			dispatchEvent(new RepositoryEvent(RepositoryEvent.REFRESH_STATUS));
-	//		trace("RepositoryEditor.onProcessComplete(e)", 'method = '+e.data.method, 'result = '+e.data.result);		
+			trace("RepositoryEditor.onProcessComplete(e)", 'method = '+e.data.method, 'result = '+e.data.result);		
 		}	
 		
 		private function onProcessFailure(e:NativeProcessEvent):void 
