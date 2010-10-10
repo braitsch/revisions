@@ -3,7 +3,6 @@ package view.directories {
 
 	import model.SystemRules;
 
-	import view.bookmarks.Bookmark;
 	import view.layout.LiquidColumn;
 	import view.layout.ListItem;
 	import view.layout.NestedList;

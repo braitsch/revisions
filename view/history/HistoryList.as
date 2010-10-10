@@ -1,5 +1,4 @@
 package view.history {
-	import events.RepositoryEvent;
 	import commands.UICommand;
 
 	import model.AppModel;
@@ -27,7 +26,8 @@ package view.history {
 		{
 			_branch = $branch;
 			_view.tab.x = $xpos * 62;
-			_view.tab.buttonMode = true;			_view.tab.label_txt.text = $branch.name;
+			_view.tab.buttonMode = true;
+			_view.tab.alpha = .6;			_view.tab.label_txt.text = $branch.name;
 			_view.tab.label_txt.mouseEnabled = false;
 			_view.mouseEnabled = false;
 			
@@ -38,31 +38,30 @@ package view.history {
 			addChild(_view);
 			addChild(_list);
 			
-			_list.addEventListener(MouseEvent.CLICK, onRecordSelection);			_view.tab.addEventListener(MouseEvent.CLICK, onListTabSelection);		}
+			_list.addEventListener(MouseEvent.CLICK, onRecordSelection);			_view.tab.addEventListener(MouseEvent.CLICK, onListTabSelection);
+		}
 
-		public function onStatusUpdated():void 
+		public function set active(b:Boolean):void
+		{
+			_view.tab.alpha = b ? 1 : .6;
+		}
+
+		public function onStatusReceived():void 
 		{	
-			trace("HistoryList.onStatusUpdated()");
-			if (_selected) {		 
-				checkoutVersion();
+			if (_branch.history==null){
+				AppModel.history.getHistoryOfBranch(_branch.name);
 			}	else{
-				if (!_list.activeItem || _modified!=_branch.modified) rebuildList();
+				if (_selected) {		 
+					checkoutVersion();
+				}	else{
+					if (!_list.activeItem || _modified!=_branch.modified) onHistoryReceived();
+				}				
 			}
 		}
-		
-		private function checkoutVersion():void
+
+		public function onHistoryReceived():void
 		{
-		// check the status of the current branch before we shift off of it //	
-			var b:Branch = AppModel.bookmark.branch;
-			if (b.name==Bookmark.DETACH && b.modified==true){
-				dispatchEvent(new UICommand(UICommand.DETACHED_BRANCH_EDITED));
-			} else{
-				switchToVersion();
-			}
-		}
-		
-		public function rebuildList():void
-		{
+		// rebuild the list //	
 			_modified = AppModel.bookmark.branch.modified;
 			var a:Array = AppModel.bookmark.branch.history;
 			var v:Vector.<ListItem> = new Vector.<ListItem>();
@@ -76,6 +75,8 @@ package view.history {
 			trace("HistoryList.rebuildList > ", '# items = '+a.length, '_modified = ', _modified);			
 		}
 		
+	// click events //	
+		
 		private function onListTabSelection(e:MouseEvent):void 
 		{
 			AppModel.bookmark.branch = _branch;
@@ -84,11 +85,25 @@ package view.history {
 
 		private function onRecordSelection(e:MouseEvent):void 
 		{
+			return;
 			trace('------------------------------');
 			_selected = true;
 		// always force refresh the status before checkout of target branch..	
 			AppModel.status.getStatus();		
 		}
+		
+	// checkouts //	
+		
+		private function checkoutVersion():void
+		{
+		// check the status of the current branch before we shift off of it //	
+			var b:Branch = AppModel.bookmark.branch;
+			if (b.name==Bookmark.DETACH && b.modified==true){
+				dispatchEvent(new UICommand(UICommand.DETACHED_BRANCH_EDITED));
+			} else{
+				switchToVersion();
+			}
+		}		
 		
 		private function switchToVersion():void
 		{
@@ -99,8 +114,12 @@ package view.history {
 				AppModel.history.checkoutCommit(k.sha1);
 			}		
 			_selected = false;	
-		}	
+		}
 		
+		public function get branch():Branch
+		{
+			return _branch;
+		}	
 	}
 	
 }

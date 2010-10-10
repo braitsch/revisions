@@ -33,7 +33,6 @@ package view.bookmarks {
 
 		private function onBookmarksReady(e:RepositoryEvent):void 
 		{
-			trace("BookmarkView.onBookmarksReady(e)");
 			_list.refresh(AppModel.bookmarks);
 			dispatchEvent(new UICommand(UICommand.BOOKMARK_SELECTED, _list.activeItem as Bookmark));
 		}

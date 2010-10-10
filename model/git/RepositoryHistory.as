@@ -28,10 +28,10 @@ package model.git {
 			_proxy.directory = _bookmark.local;
 		}
 		
-		public function getHistory():void
+		public function getHistoryOfBranch($n:String = ''):void
 		{
 			trace("RepositoryHistory.getHistory()");
-			_failed = false;			_proxy.call(Vector.<String>([BashMethods.GET_HISTORY]));
+			_failed = false;			_proxy.call(Vector.<String>([BashMethods.GET_HISTORY, $n || _bookmark.branch.name]));
 		}
 		
 		public function checkoutCommit($sha1:String):void

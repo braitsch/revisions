@@ -2,7 +2,6 @@ package view.history {
 	import events.RepositoryEvent;
 
 	import model.AppModel;
-	import model.git.RepositoryStatus;
 
 	import view.bookmarks.Bookmark;
 	import view.layout.ListItem;
@@ -26,34 +25,30 @@ package view.history {
 			_container.y = 40;
 			_view.addChild(_container);
 
+			AppModel.status.addEventListener(RepositoryEvent.STATUS_RECEIVED, onStatusReceived);
+			AppModel.history.addEventListener(RepositoryEvent.HISTORY_RECEIVED, onHistoryReceived);				
 			AppModel.branch.addEventListener(RepositoryEvent.BOOKMARKS_READY, onBookmarksReady, false, 2);
-			AppModel.status.addEventListener(RepositoryEvent.STATUS_RECEIVED, onRepositoryStatus);
-			AppModel.history.addEventListener(RepositoryEvent.HISTORY_RECEIVED, onHistoryReceived);
 			AppModel.getInstance().addEventListener(RepositoryEvent.BOOKMARK_SELECTED, onBookmarkSelected);
 		}
 
 		private function onHistoryReceived(e:RepositoryEvent):void 
 		{
 			trace("HistoryView.onHistoryReceived(e)");
-			_collection.branch.rebuildList();
+			_collection.list.onHistoryReceived();
 		}
 
-		private function onRepositoryStatus(e:RepositoryEvent):void 
+		private function onStatusReceived(e:RepositoryEvent):void 
 		{	
 		// never draw the detached branch - confuses the user //
 			if (AppModel.bookmark.branch.name==Bookmark.DETACH) return;
 			
-			trace("HistoryView.onRepositoryStatus(e)");
-			if (AppModel.bookmark.branch.history==null){
-				AppModel.history.getHistory();
-			}	else{
-				_collection.branch.onStatusUpdated();
-			}
+			trace("HistoryView.onStatusReceived(e)");
+			_collection.list.onStatusReceived();
 		}
 
 		private function onBookmarksReady(e:RepositoryEvent):void 
 		{
-			trace("HistoryView.onBookmarksReady(e)");
+		// create collection object //	
 			var a:Vector.<ListItem> = AppModel.bookmarks;
 			for (var i:int = 0;i < a.length; i++) {
 				_collections.push(new HistoryCollection(a[i] as Bookmark));
@@ -62,7 +57,7 @@ package view.history {
 
 		private function onBookmarkSelected(e:RepositoryEvent):void 
 		{
-			trace("HistoryView.onBookmarkSelected(e)");
+		// set active collection object //	
 			while(_container.numChildren) _container.removeChildAt(0);
 			for (var i:int = 0; i < _collections.length;i++) {
 				if (_collections[i].bookmark==e.data) {
