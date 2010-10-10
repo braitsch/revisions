@@ -19,7 +19,6 @@ package view.history {
 		private var _list				:SimpleList = new SimpleList();
 		private var _view				:HistoryListMC = new HistoryListMC();
 		private var _branch				:Branch;
-		private var _modified			:Boolean;
 		private var _selected			:Boolean;
 		private var _itemUnsaved		:HistoryItemUnsaved = new HistoryItemUnsaved();	
 
@@ -41,56 +40,38 @@ package view.history {
 			addChild(_list);
 			
 			_list.addEventListener(MouseEvent.CLICK, onRecordSelection);
-			_view.tab.addEventListener(MouseEvent.CLICK, onListTabSelection);			_branch.addEventListener(RepositoryEvent.BRANCH_UPDATED, onBranchUpdated);
-		}
-
-		private function onBranchUpdated(e:RepositoryEvent):void 
-		{
-			trace("HistoryList.onBranchUpdated(e)", e);
-			return;			
-		// rebuild the list //	
-			_modified = AppModel.bookmark.branch.modified;
-			var a:Array = AppModel.bookmark.branch.history;
-			var v:Vector.<ListItem> = new Vector.<ListItem>();
-			
-			if (_modified) v.push(_itemUnsaved);
-			for (var i:int = 0; i < a.length; i++) {
-				var n:Array = a[i].split('##');
-				v.push(new HistoryItem(String(a.length-i), n[1], n[2], n[3], n[0]));
-			}
-			_list.refresh(v);
-			trace("HistoryList.rebuildList > ", '# items = '+a.length, '_modified = ', _modified);				
+			_view.tab.addEventListener(MouseEvent.CLICK, onListTabSelection);
+			_branch.addEventListener(RepositoryEvent.BRANCH_UPDATED, rebuildList);
 		}
 
 		public function set active(b:Boolean):void
 		{
 			_view.tab.alpha = b ? 1 : .6;
 		}
+		
+		public function get branch():Branch
+		{
+			return _branch;
+		}			
 
 		public function onStatusReceived():void 
 		{	
-			if (_branch.history==null) return;
+			if (_selected) checkoutVersion();		}
+		
+	// private //	
 
-			if (_selected) {		 
-				checkoutVersion();
-			}	else{
-				if (!_list.activeItem || _modified!=_branch.modified) onHistoryReceived();
-			}
-		}
-
-		public function onHistoryReceived():void
+		private function rebuildList(e:RepositoryEvent):void
 		{
-			_modified = AppModel.bookmark.branch.modified;
-			var a:Array = AppModel.bookmark.branch.history;
+			var a:Array = _branch.history;
 			var v:Vector.<ListItem> = new Vector.<ListItem>();
 			
-			if (_modified) v.push(_itemUnsaved);
+			if (_branch.modified) v.push(_itemUnsaved);
 			for (var i:int = 0; i < a.length; i++) {
 				var n:Array = a[i].split('##');
 				v.push(new HistoryItem(String(a.length-i), n[1], n[2], n[3], n[0]));
 			}
 			_list.refresh(v);
-			trace("HistoryList.rebuildList > ", '# items = '+a.length, '_modified = ', _modified);			
+			trace("HistoryList.rebuildList > ", '# items = '+a.length, '_modified = ', _branch.modified);			
 		}
 		
 	// click events //	
@@ -107,7 +88,7 @@ package view.history {
 			trace('------------------------------');
 			_selected = true;
 		// always force refresh the status before checkout of target branch..	
-			AppModel.status.getStatus();		
+			AppModel.status.getStatusOfBranch();		
 		}
 		
 	// checkouts //	
@@ -134,10 +115,6 @@ package view.history {
 			_selected = false;	
 		}
 		
-		public function get branch():Branch
-		{
-			return _branch;
-		}	
 	}
 	
 }

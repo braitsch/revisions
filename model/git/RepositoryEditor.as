@@ -70,8 +70,8 @@ package model.git {
 			switch(e.data.method){
 				case BashMethods.COMMIT : 
 					AppModel.history.getHistoryOfBranch();
-				break;				case BashMethods.TRACK_FILE : 					AppModel.status.getStatus();				break;				case BashMethods.UNTRACK_FILE : 
-					AppModel.status.getStatus();
+				break;				case BashMethods.TRACK_FILE : 					AppModel.status.getStatusOfBranch();				break;				case BashMethods.UNTRACK_FILE : 
+					AppModel.status.getStatusOfBranch();
 				break;
 			}
 			trace("RepositoryEditor.onProcessComplete(e)", 'method = '+e.data.method, 'result = '+e.data.result);		

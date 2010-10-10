@@ -6,14 +6,16 @@ package model.git {
 	import model.air.NativeProcessProxy;
 
 	import view.bookmarks.Bookmark;
+	import view.bookmarks.Branch;
 
 	import flash.events.EventDispatcher;
 
 	public class RepositoryHistory extends EventDispatcher {
 		
-		private var _failed		:Boolean;
-		private var _proxy		:NativeProcessProxy;
-		private var _bookmark	:Bookmark;
+		private static var _failed		:Boolean;
+		private static var _proxy		:NativeProcessProxy;
+		private static var _branch		:Branch;
+		private static var _bookmark	:Bookmark;
 
 		public function RepositoryHistory()
 		{
@@ -28,11 +30,11 @@ package model.git {
 			_proxy.directory = _bookmark.local;
 		}
 		
-		public function getHistoryOfBranch($n:String = ''):void
+		public function getHistoryOfBranch($b:Branch = null):void
 		{
-			if ($n=='') $n = _bookmark.branch.name;
-			trace("RepositoryHistory.getHistory()", _bookmark.label, $n);
-			_failed = false;			_proxy.call(Vector.<String>([BashMethods.GET_HISTORY, $n]));
+			_branch = $b || _bookmark.branch;
+			_failed = false;
+			trace("RepositoryHistory.getHistory()", _bookmark.label, _branch.name);			_proxy.call(Vector.<String>([BashMethods.GET_HISTORY, _branch.name]));
 		}
 		
 		public function checkoutCommit($sha1:String):void
@@ -79,9 +81,8 @@ package model.git {
 			switch(e.data.method){
 				case BashMethods.GET_HISTORY : 
 					if (_failed) return;
-					var a:Array = e.data.result.split(/[\n\r\t]/g);
-					AppModel.bookmark.branch.history = a;
-					dispatchEvent(new RepositoryEvent(RepositoryEvent.HISTORY_RECEIVED, a));				break;	
+					_branch.history = e.data.result.split(/[\n\r\t]/g);
+				break;	
 				case BashMethods.CHECKOUT_COMMIT :
 					_bookmark.branch = _bookmark.detach;
 					dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_CHANGED));					trace("RepositoryHistory.onProcessComplete(e) > BashMethods.CHECKOUT_COMMIT");				break;					

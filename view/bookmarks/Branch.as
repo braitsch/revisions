@@ -1,5 +1,8 @@
 package view.bookmarks {
 	import events.RepositoryEvent;
+
+	import model.AppModel;
+
 	import flash.events.EventDispatcher;
 
 	public class Branch extends EventDispatcher{
@@ -26,6 +29,10 @@ package view.bookmarks {
 		public function set history($a:Array):void
 		{
 			_history = $a;
+			trace("Branch.history($a) SET on ", this.name);
+					// always force a status refresh when we get a branch's history //	
+		//TODO still need a better place to call this..
+			AppModel.status.getStatusOfBranch(this);			
 		}
 		
 		public function get modified():Boolean
@@ -36,11 +43,9 @@ package view.bookmarks {
 		public function set modified($m:Boolean):void
 		{
 			_modified = $m;
-			if ($m!=_modified && history!=null){
-				dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_UPDATED));
-			}
+			trace("Branch.modified($m) SET on ", this.name);
+			if (history!=null) dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_UPDATED));
 		}
-		
 	}
 	
 }

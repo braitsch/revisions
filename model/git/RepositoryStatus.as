@@ -2,11 +2,11 @@ package model.git {
 	import events.NativeProcessEvent;
 	import events.RepositoryEvent;
 
-	import model.AppModel;
 	import model.SystemRules;
 	import model.air.NativeProcessQueue;
 
 	import view.bookmarks.Bookmark;
+	import view.bookmarks.Branch;
 
 	import flash.events.EventDispatcher;
 
@@ -14,7 +14,9 @@ package model.git {
 
 		public static const	M		:uint = 0; // modified
 		public static const	T		:uint = 1; // tracked		public static const	U		:uint = 2; // untracked		public static const	I		:uint = 3; // ignored
-				private static var _proxy	:NativeProcessQueue;
+				private static var _proxy		:NativeProcessQueue;
+		private static var _branch		:Branch;
+		private static var _bookmark	:Bookmark;
 
 		public function RepositoryStatus()
 		{
@@ -25,17 +27,19 @@ package model.git {
 		
 		public function set bookmark(b:Bookmark):void 
 		{
-			_proxy.directory = b.local;
+			_bookmark = b;
+			_proxy.directory = _bookmark.local;
 		}		
 		
-		public function getStatus():void
+		public function getStatusOfBranch($b:Branch = null):void
 		{
-			trace("RepositoryStatus.getStatus()");
+			_branch = $b || _bookmark.branch;			
+			trace("RepositoryStatus.getStatusOfBranch()", _bookmark.label, _branch.name);
 			_proxy.queue = getTransaction();						}
 		
 		private function onStatusComplete(e:NativeProcessEvent):void 
 		{
-			trace("RepositoryStatus.StatusComplete(e)");
+			trace("RepositoryStatus.StatusComplete(e)", _bookmark.label, _branch.name);
 			var i:int = 0, j:int = 0; 
 			var m:Boolean = false;
 			var r:Array = e.data as Array;
@@ -73,7 +77,7 @@ package model.git {
 			}						
 			
 		//	for (i = 0; i < 4; i++) trace('result set '+i+' = ', r[i]);
-			AppModel.bookmark.branch.modified = r[M].length != 0;
+			_branch.modified = r[M].length != 0;
 			dispatchEvent(new RepositoryEvent(RepositoryEvent.STATUS_RECEIVED, r));
 		}
 
@@ -105,9 +109,9 @@ package model.git {
 		
 		private function getTransaction():Array
 		{
-			return [	Vector.<String>([BashMethods.GET_MODIFIED_FILES]),
-						Vector.<String>([BashMethods.GET_TRACKED_FILES]), 
-						Vector.<String>([BashMethods.GET_UNTRACKED_FILES]),																		Vector.<String>([BashMethods.GET_IGNORED_FILES])];											
+			return [	Vector.<String>([BashMethods.GET_MODIFIED_FILES, _branch.name]),
+						Vector.<String>([BashMethods.GET_TRACKED_FILES, _branch.name]), 
+						Vector.<String>([BashMethods.GET_UNTRACKED_FILES, _branch.name]),																		Vector.<String>([BashMethods.GET_IGNORED_FILES, _branch.name])];											
 		}			
 		
 	}

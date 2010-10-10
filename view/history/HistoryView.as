@@ -26,24 +26,14 @@ package view.history {
 			_view.addChild(_container);
 
 			AppModel.status.addEventListener(RepositoryEvent.STATUS_RECEIVED, onStatusReceived);
-			AppModel.history.addEventListener(RepositoryEvent.HISTORY_RECEIVED, onHistoryReceived);				
 			AppModel.branch.addEventListener(RepositoryEvent.BOOKMARKS_READY, onBookmarksReady, false, 2);
 			AppModel.getInstance().addEventListener(RepositoryEvent.BOOKMARK_SELECTED, onBookmarkSelected);
-		}
-
-		private function onHistoryReceived(e:RepositoryEvent):void 
-		{
-			trace("HistoryView.onHistoryReceived(e)");
-			_collection.list.onHistoryReceived();
-			AppModel.status.getStatus();
 		}
 
 		private function onStatusReceived(e:RepositoryEvent):void 
 		{	
 		// never draw the detached branch - confuses the user //
 			if (AppModel.bookmark.branch.name==Bookmark.DETACH) return;
-			
-			trace("HistoryView.onStatusReceived(e)");
 			_collection.list.onStatusReceived();
 		}
 

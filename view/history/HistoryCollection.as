@@ -38,9 +38,7 @@ package view.history {
 					setChildIndex(_list, numChildren-1);
 				}
 			}
-			if (_list.branch.history==null) {
-				AppModel.history.getHistoryOfBranch(_list.branch.name);
-			}
+			if (_list.branch.history==null) AppModel.history.getHistoryOfBranch(_list.branch);
 		}
 
 		private function onBranchSelected(e:UICommand):void 		{

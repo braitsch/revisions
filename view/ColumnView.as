@@ -39,14 +39,14 @@ package view {
 		private function onBookmarkSelected(e:UICommand):void 
 		{
 			AppModel.bookmark = e.data as Bookmark;
-			if (AppModel.bookmark.branch.history) AppModel.status.getStatus();			
+			if (AppModel.bookmark.branch.history) AppModel.status.getStatusOfBranch();			
 			_dirs.directory = e.data as ListItem;
 			_files.directory = e.data as ListItem;
 		}		
 		
 		private function onDirectorySelection(e:UICommand):void 
 		{
-			if (AppModel.bookmark.branch.history) AppModel.status.getStatus();			_files.directory = e.data as ListItem;
+			if (AppModel.bookmark.branch.history) AppModel.status.getStatusOfBranch();			_files.directory = e.data as ListItem;
 		}
 		
 	}
