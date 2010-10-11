@@ -32,9 +32,14 @@ package view.files {
 			addChild(_view);
 			addChild(_list);
 			
-			AppModel.status.addEventListener(RepositoryEvent.BRANCH_STATUS, onRepositoryStatus);
+			AppModel.getInstance().addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkChange);
 		}
 		
+		private function onBookmarkChange(e:RepositoryEvent):void 
+		{
+			AppModel.bookmark.branch.addEventListener(RepositoryEvent.BRANCH_STATUS, onRepositoryStatus);
+		}
+
 		public function set directory(d:ListItem):void
 		{
 			_files = new Vector.<ListItem>();
@@ -46,9 +51,8 @@ package view.files {
 
 		private function onRepositoryStatus(e:RepositoryEvent):void 
 		{
-		// we receive the status of everything in the branch //	
-			var s:Array = e.data as Array;
-			var i:uint;
+			var i:int;
+			var s:Array = AppModel.bookmark.branch.status;
 			file: for (i = 0; i < _files.length; i++) {
 		// slice off the root path of the bookmark since git returns an abbreviated path //
 				var p:String = _files[i].file.nativePath.replace(AppModel.bookmark.local+'/', '');
@@ -77,7 +81,6 @@ package view.files {
 		private function onListSelection(e:UICommand):void 
 		{
 			var f:FileItem = _list.activeItem as FileItem;
-		//TODO may need to dispatch event here to track the selected file...	
 			trace("FilesView.onListSelection(e)", f.file.nativePath);
 		}			
 		

@@ -63,7 +63,8 @@ package model.air {
 		
 		private function onDataReceived(e:ProgressEvent):void 
 		{
-			_result = StringUtils.trim(_np.standardOutput.readUTFBytes(_np.standardOutput.bytesAvailable));
+			if (_result!='') _result+='\n';
+			_result += StringUtils.trim(_np.standardOutput.readUTFBytes(_np.standardOutput.bytesAvailable));
             log('DataReceived @ '+_method+ ' :: Response = '+_result);		}
 		
 		private function onDataError(e:ProgressEvent):void 

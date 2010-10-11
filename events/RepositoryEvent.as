@@ -4,11 +4,11 @@ package events {
 	public class RepositoryEvent extends Event {
 		
 		public static const SET_USERNAME		:String = "SET_USERNAME";
-				
 		public static const BOOKMARKS_READY		:String = "BOOKMARKS_READY";
-		public static const BOOKMARK_SELECTED	:String = "BOOKMARK_SELECTED";
 		
-		public static const BRANCH_SELECTED		:String = "BRANCH_SELECTED";
+		public static const BOOKMARK_SET		:String = "BOOKMARK_SET";
+		public static const BRANCH_SET			:String = "BRANCH_SET";
+		
 		public static const BRANCH_STATUS		:String = "BRANCH_STATUS";
 		public static const BRANCH_MODIFIED		:String = "BRANCH_MODIFIED";
 		public static const BRANCH_HISTORY		:String = "HISTORY_RECEIVED";

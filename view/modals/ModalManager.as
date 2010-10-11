@@ -1,8 +1,7 @@
 package view.modals {
-	import events.InstallEvent;
 	import commands.UICommand;
 
-	import events.RepositoryEvent;
+	import events.InstallEvent;
 
 	import model.AppModel;
 
@@ -18,7 +17,6 @@ package view.modals {
 
 	public class ModalManager extends Sprite {
 
-		private static var _bookmark		:Bookmark;
 		private static var _dragAndDrop		:DragAndDropListener = new DragAndDropListener();	
 		
 	// modal windows //	
@@ -36,12 +34,6 @@ package view.modals {
 			addEventListener(UICommand.CLOSE_MODAL_WINDOW, onCloseModelWindow);	
 			
 			AppModel.installer.addEventListener(InstallEvent.GIT_UNAVAILABLE, installGit);
-			AppModel.getInstance().addEventListener(RepositoryEvent.BOOKMARK_SELECTED, onBookmarkChange);										
-		}
-
-		private function onBookmarkChange(e:RepositoryEvent):void 
-		{
-			_bookmark = e.data as Bookmark;
 		}
 
 		private function onAddedToStage(e:Event):void 
@@ -73,8 +65,8 @@ package view.modals {
 
 		private function editBookmark(e:UICommand):void
 		{
-			if (!_bookmark) return;
-			_edit.bookmark = _bookmark;
+			if (!AppModel.bookmark) return;
+			_edit.bookmark = AppModel.bookmark;
 			addChild(_edit);
 		}
 		
@@ -91,7 +83,7 @@ package view.modals {
 		
 		private function removeBookmark(e:UICommand):void
 		{
-			_remove.bookmark = _bookmark;
+			_remove.bookmark = AppModel.bookmark;
 			addChild(_remove);
 		}
 		

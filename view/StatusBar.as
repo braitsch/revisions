@@ -16,14 +16,20 @@ package view {
 			this.x = 740;			
 			addChild(_view);
 			
-			AppModel.status.addEventListener(RepositoryEvent.BRANCH_STATUS, onStatusReceived);
+			AppModel.getInstance().addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkChanged);
+		}
+
+		private function onBookmarkChanged(e:RepositoryEvent):void 
+		{
+			AppModel.bookmark.branch.addEventListener(RepositoryEvent.BRANCH_STATUS, onStatusReceived);
 		}
 
 		private function onStatusReceived(e:RepositoryEvent):void 
 		{
-			_view.tracked_txt.text = String(e.data[RepositoryStatus.T].length);			_view.untracked_txt.text = String(e.data[RepositoryStatus.U].length);
-			_view.modified_txt.text = String(e.data[RepositoryStatus.M].length);
-			_view.ignored_txt.text = String(e.data[RepositoryStatus.I].length);
+			var a:Array = AppModel.bookmark.branch.status;
+			_view.tracked_txt.text = String(a[RepositoryStatus.T].length);			_view.untracked_txt.text = String(a[RepositoryStatus.U].length);
+			_view.modified_txt.text = String(a[RepositoryStatus.M].length);
+			_view.ignored_txt.text = String(a[RepositoryStatus.I].length);
 		}
 		
 	}

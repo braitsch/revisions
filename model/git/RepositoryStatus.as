@@ -1,6 +1,5 @@
 package model.git {
 	import events.NativeProcessEvent;
-	import events.RepositoryEvent;
 
 	import model.SystemRules;
 	import model.air.NativeProcessQueue;
@@ -77,8 +76,7 @@ package model.git {
 			}						
 			
 		//	for (i = 0; i < 4; i++) trace('result set '+i+' = ', r[i]);
-			_branch.modified = r[M].length;
-			dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_STATUS, r));
+			_branch.status = r;
 		}
 
 		private function purgeForbiddenFiles(r:Array):void 

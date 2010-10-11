@@ -43,7 +43,8 @@ package model {
 			_bookmark = b;
 			_status.bookmark = _history.bookmark = _bookmark;
 			_editor.bookmark = _database.bookmark = _bookmark;
-			_instance.dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_SELECTED, b));			
+			
+			_instance.dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_SET, _bookmark));			
 		}
 		
 		static public function get bookmark():Bookmark

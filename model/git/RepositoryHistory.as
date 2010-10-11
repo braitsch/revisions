@@ -77,7 +77,7 @@ package model.git {
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
-			trace("RepositoryHistory.onProcessComplete(e)", 'method = '+e.data.method);		
+			trace("RepositoryHistory.onProcessComplete(e)", 'method = '+e.data.method);
 			switch(e.data.method){
 				case BashMethods.GET_HISTORY : 
 					if (_failed) return;
@@ -85,10 +85,10 @@ package model.git {
 				break;	
 				case BashMethods.CHECKOUT_COMMIT :
 					_bookmark.branch = _bookmark.detach;
-					dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_SELECTED));					trace("RepositoryHistory.onProcessComplete(e) > BashMethods.CHECKOUT_COMMIT");				break;					
+					dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_SET));					trace("RepositoryHistory.onProcessComplete(e) > BashMethods.CHECKOUT_COMMIT");				break;					
 				case BashMethods.CHECKOUT_MASTER :
 					_bookmark.branch = _bookmark.master;
-					dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_SELECTED));
+					dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_SET));
 					trace("RepositoryHistory.onProcessComplete(e) > BashMethods.CHECKOUT_MASTER");				break;	
 				case BashMethods.ADD_BRANCH : 
 					trace('suceess!!');

@@ -84,10 +84,11 @@ package view.bookmarks {
 		{
 			return _detach;
 		}
+		
+	// set from AppModel after bookmarks are first created //	
 
 		public function set branches(a:Array):void
 		{
-		//	trace("Bookmark.branches(a)", this.label, a);
 			for (var i:int = 0; i < a.length; i++) {
 				var s:String = a[i];
 				if (s.indexOf('*')==0){

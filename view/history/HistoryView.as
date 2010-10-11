@@ -26,7 +26,7 @@ package view.history {
 			_view.addChild(_container);
 
 			AppModel.branch.addEventListener(RepositoryEvent.BOOKMARKS_READY, onBookmarksReady, false, 2);
-			AppModel.getInstance().addEventListener(RepositoryEvent.BOOKMARK_SELECTED, onBookmarkSelected);
+			AppModel.getInstance().addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkSelected);
 		}
 
 		private function onBookmarksReady(e:RepositoryEvent):void 
@@ -48,7 +48,7 @@ package view.history {
 			}
 			_container.addChild(_collection);
 		// should be set from dispatched branch-selected event //	
-			_collection.branch = _collection.bookmark.branch;
+		//	_collection.branch = _collection.bookmark.branch;
 		}
 
 	}

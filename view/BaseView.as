@@ -17,17 +17,16 @@ package view {
 
 		public function BaseView()
 		{
-			addChild(_view);
-			_view.target_txt.autoSize = 'left';			_view.addChild(_status);			_view.addChild(_toolbar);
+			_view.target_txt.autoSize = 'left';
+			_view.addChild(_status);			_view.addChild(_toolbar);			addChild(_view);
 
 			AppModel.installer.addEventListener(InstallEvent.SET_GIT_VERSION, onGitVersion);			
-			AppModel.getInstance().addEventListener(RepositoryEvent.BOOKMARK_SELECTED, onBookmarkChange);										
+			AppModel.getInstance().addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkChange);									
 		}
 
 		private function onBookmarkChange(e:RepositoryEvent):void 
 		{
 			_bookmark = e.data as Bookmark;
-			_view.target_txt.text = 'Repository / Branch : NONE';
 			if (_bookmark) {
 				_view.target_txt.text = 'Repository / Branch : ' + _bookmark.label;
 				if (_bookmark.branch.history){
@@ -35,7 +34,9 @@ package view {
 				}	else{
 					onHistoryUnavailable();
 				}
-			}	
+			}	else{
+				_view.target_txt.text = 'Repository / Branch : NONE';
+			}
 		}
 
 		public function get view():BaseViewMC

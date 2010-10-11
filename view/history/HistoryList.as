@@ -55,6 +55,7 @@ package view.history {
 
 		public function set active(on:Boolean):void
 		{
+			trace("HistoryList.active(on)");
 			_view.tab.alpha = on ? 1 : .6;
 			if (on) AppModel.status.getStatusOfBranch(_branch);		
 		}

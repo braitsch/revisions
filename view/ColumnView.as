@@ -39,15 +39,15 @@ package view {
 		private function onBookmarkSelected(e:UICommand):void 
 		{
 			AppModel.bookmark = e.data as Bookmark;
-			AppModel.status.getStatusOfBranch();
+			AppModel.bookmark.branch.getStatus();
 			
 			_dirs.directory = e.data as ListItem;
 			_files.directory = e.data as ListItem;
-		}		
+		}			
 		
 		private function onDirectorySelection(e:UICommand):void 
 		{
-			AppModel.status.getStatusOfBranch();			_files.directory = e.data as ListItem;
+			AppModel.bookmark.branch.getStatus();			_files.directory = e.data as ListItem;
 		}
 		
 	}
