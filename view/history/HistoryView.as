@@ -25,21 +25,13 @@ package view.history {
 			_container.y = 40;
 			_view.addChild(_container);
 
-			AppModel.status.addEventListener(RepositoryEvent.STATUS_RECEIVED, onStatusReceived);
 			AppModel.branch.addEventListener(RepositoryEvent.BOOKMARKS_READY, onBookmarksReady, false, 2);
 			AppModel.getInstance().addEventListener(RepositoryEvent.BOOKMARK_SELECTED, onBookmarkSelected);
 		}
 
-		private function onStatusReceived(e:RepositoryEvent):void 
-		{	
-		// never draw the detached branch - confuses the user //
-			if (AppModel.bookmark.branch.name==Bookmark.DETACH) return;
-			_collection.list.onStatusReceived();
-		}
-
 		private function onBookmarksReady(e:RepositoryEvent):void 
 		{
-		// create collection object //	
+		// create a collection object for each bookmark //	
 			var a:Vector.<ListItem> = AppModel.bookmarks;
 			for (var i:int = 0;i < a.length; i++) {
 				_collections.push(new HistoryCollection(a[i] as Bookmark));
@@ -48,7 +40,7 @@ package view.history {
 
 		private function onBookmarkSelected(e:RepositoryEvent):void 
 		{
-		// set active collection object //	
+		// set the active collection object //	
 			while(_container.numChildren) _container.removeChildAt(0);
 			for (var i:int = 0; i < _collections.length;i++) {
 				var k:HistoryCollection = _collections[i];

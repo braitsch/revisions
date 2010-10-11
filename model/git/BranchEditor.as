@@ -24,6 +24,7 @@ package model.git {
 		
 		public function getBranchesOfBookmarks():void 
 		{
+			trace("BranchEditor.getBranchesOfBookmarks()");	
 			_bookmark = AppModel.bookmarks[_index] as Bookmark;
 			_proxy.directory = _bookmark.local;
 			_proxy.call(Vector.<String>([BashMethods.GET_BRANCHES]));			
@@ -40,6 +41,7 @@ package model.git {
 					if (++_index < AppModel.bookmarks.length){
 						getBranchesOfBookmarks();
 					}	else{
+						trace("BranchEditor.onProcessComplete(e)");
 						dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARKS_READY));
 					}
 				break;		

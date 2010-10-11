@@ -85,10 +85,10 @@ package model.git {
 				break;	
 				case BashMethods.CHECKOUT_COMMIT :
 					_bookmark.branch = _bookmark.detach;
-					dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_CHANGED));					trace("RepositoryHistory.onProcessComplete(e) > BashMethods.CHECKOUT_COMMIT");				break;					
+					dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_SELECTED));					trace("RepositoryHistory.onProcessComplete(e) > BashMethods.CHECKOUT_COMMIT");				break;					
 				case BashMethods.CHECKOUT_MASTER :
 					_bookmark.branch = _bookmark.master;
-					dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_CHANGED));
+					dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_SELECTED));
 					trace("RepositoryHistory.onProcessComplete(e) > BashMethods.CHECKOUT_MASTER");				break;	
 				case BashMethods.ADD_BRANCH : 
 					trace('suceess!!');

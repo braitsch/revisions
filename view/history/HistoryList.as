@@ -20,6 +20,7 @@ package view.history {
 		private var _view				:HistoryListMC = new HistoryListMC();
 		private var _branch				:Branch;
 		private var _selected			:Boolean;
+		private var _modified			:uint;
 		private var _itemUnsaved		:HistoryItemUnsaved = new HistoryItemUnsaved();	
 
 		public function HistoryList($branch:Branch, $xpos:uint)
@@ -41,15 +42,21 @@ package view.history {
 			
 			_list.addEventListener(MouseEvent.CLICK, onRecordSelection);
 			_view.tab.addEventListener(MouseEvent.CLICK, onListTabSelection);
-			_branch.addEventListener(RepositoryEvent.BRANCH_UPDATED, rebuildList);
+			
+			_branch.addEventListener(RepositoryEvent.BRANCH_HISTORY, rebuildList);			_branch.addEventListener(RepositoryEvent.BRANCH_MODIFIED, onBranchModified);
+		}
+
+		private function onBranchModified(e:RepositoryEvent):void 
+		{
+		// only rebuild if the # modified has changed //
+			if (_modified != _branch.modified) rebuildList();
+			_modified = _branch.modified;
 		}
 
 		public function set active(on:Boolean):void
 		{
 			_view.tab.alpha = on ? 1 : .6;
-			if (on==true && _branch.history==null) {
-				AppModel.history.getHistoryOfBranch(_branch);			
-			}
+			if (on) AppModel.status.getStatusOfBranch(_branch);		
 		}
 		
 		public function get branch():Branch
@@ -58,12 +65,12 @@ package view.history {
 		}			
 
 		public function onStatusReceived():void 
-		{	
-			if (_selected) checkoutVersion();		}
+		{				if (_selected) checkoutVersion();
+		}
 		
 	// private //	
 
-		private function rebuildList(e:RepositoryEvent):void
+		private function rebuildList(e:RepositoryEvent = null):void
 		{
 			var a:Array = _branch.history;
 			var v:Vector.<ListItem> = new Vector.<ListItem>();
@@ -74,7 +81,7 @@ package view.history {
 				v.push(new HistoryItem(String(a.length-i), n[1], n[2], n[3], n[0]));
 			}
 			_list.refresh(v);
-			trace("HistoryList.rebuildList > ", '# items = '+a.length, '_modified = ', _branch.modified);			
+			trace("HistoryList.rebuildList > ", '# items = '+a.length, '# modified = ', _branch.modified);			
 		}
 		
 	// click events //	
@@ -90,8 +97,7 @@ package view.history {
 			return;
 			trace('------------------------------');
 			_selected = true;
-		// always force refresh the status before checkout of target branch..	
-			AppModel.status.getStatusOfBranch();		
+		// always force refresh the status before checkout of target branch..				AppModel.status.getStatusOfBranch(_branch);		
 		}
 		
 	// checkouts //	

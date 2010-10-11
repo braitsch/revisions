@@ -16,7 +16,7 @@ package view {
 			this.x = 740;			
 			addChild(_view);
 			
-			AppModel.status.addEventListener(RepositoryEvent.STATUS_RECEIVED, onStatusReceived);
+			AppModel.status.addEventListener(RepositoryEvent.BRANCH_STATUS, onStatusReceived);
 		}
 
 		private function onStatusReceived(e:RepositoryEvent):void 

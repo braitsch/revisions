@@ -32,7 +32,7 @@ package view.files {
 			addChild(_view);
 			addChild(_list);
 			
-			AppModel.status.addEventListener(RepositoryEvent.STATUS_RECEIVED, onRepositoryStatus);
+			AppModel.status.addEventListener(RepositoryEvent.BRANCH_STATUS, onRepositoryStatus);
 		}
 		
 		public function set directory(d:ListItem):void

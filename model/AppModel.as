@@ -105,7 +105,7 @@ package model {
 		
 		private function onRepositories(e:DataBaseEvent):void 
 		{
-			var d:Array = e.data as Array;
+			trace("AppModel.onRepositories(e) > creating bookmarks from database data");			var d:Array = e.data as Array;
 			var v:Vector.<ListItem> = new Vector.<ListItem>();
 			
 			for (var i : int = 0; i < d.length; i++) {
@@ -117,6 +117,7 @@ package model {
 					return;
 				}
 			}
+			trace("AppModel.onRepositories(e) > bookmark objects created");
 			_bookmarks = v;
 			_branch.getBranchesOfBookmarks();			
 		}				

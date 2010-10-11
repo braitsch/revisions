@@ -33,7 +33,7 @@ package model.git {
 		
 		public function getStatusOfBranch($b:Branch = null):void
 		{
-			_branch = $b || _bookmark.branch;			
+			_branch = $b || _bookmark.branch;
 			trace("RepositoryStatus.getStatusOfBranch()", _bookmark.label, _branch.name);
 			_proxy.queue = getTransaction();						}
 		
@@ -77,8 +77,8 @@ package model.git {
 			}						
 			
 		//	for (i = 0; i < 4; i++) trace('result set '+i+' = ', r[i]);
-			_branch.modified = r[M].length != 0;
-			dispatchEvent(new RepositoryEvent(RepositoryEvent.STATUS_RECEIVED, r));
+			_branch.modified = r[M].length;
+			dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_STATUS, r));
 		}
 
 		private function purgeForbiddenFiles(r:Array):void 

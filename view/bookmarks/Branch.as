@@ -9,7 +9,7 @@ package view.bookmarks {
 
 		private var _name		:String;
 		private var _history	:Array;
-		private var _modified	:Boolean;
+		private var _modified	:uint;
 
 		public function Branch($n:String) 
 		{
@@ -20,32 +20,32 @@ package view.bookmarks {
 		{
 			return _name;
 		}		
+				
+		public function set history($a:Array):void
+		{
+			_history = $a;
+			dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_HISTORY));
+		}
 		
 		public function get history():Array
 		{
 			return _history;
 		}
 		
-		public function set history($a:Array):void
+		public function set modified($n:uint):void
 		{
-			_history = $a;
-			trace("Branch.history($a) SET on ", this.name);
-					// always force a status refresh when we get a branch's history //	
-		//TODO still need a better place to call this..
-			AppModel.status.getStatusOfBranch(this);			
+			_modified = $n;
+			if (history==null) {
+				AppModel.history.getHistoryOfBranch(this);
+			}	else{				dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_MODIFIED));
+			}
 		}
 		
-		public function get modified():Boolean
+		public function get modified():uint
 		{
 			return _modified;
 		}
 		
-		public function set modified($m:Boolean):void
-		{
-			_modified = $m;
-			trace("Branch.modified($m) SET on ", this.name);
-			if (history!=null) dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_UPDATED));
-		}
 	}
 	
 }
