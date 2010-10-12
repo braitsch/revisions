@@ -1,4 +1,5 @@
 package view.bookmarks {
+	import events.RepositoryEvent;
 	import utils.StringUtils;
 
 	import view.layout.ListItem;
@@ -61,8 +62,9 @@ package view.bookmarks {
 		public function set branch(b:Branch):void
 		{
 			_branch = b;
+			dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_SET));
 		}
-		
+
 		public function get previous():Branch
 		{
 			return _previous;

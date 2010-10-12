@@ -120,7 +120,7 @@ package model {
 			}
 			trace("AppModel.onRepositories(e) > bookmark objects created");
 			_bookmarks = v;
-			_branch.getBranchesOfBookmarks();			
+			_branch.getBranchesOfAllBookmarks();			
 		}				
 		
 	}

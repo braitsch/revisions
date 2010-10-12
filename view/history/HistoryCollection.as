@@ -1,4 +1,5 @@
 package view.history {
+	import events.RepositoryEvent;
 	import commands.UICommand;
 
 	import view.bookmarks.Bookmark;
@@ -17,38 +18,41 @@ package view.history {
 		{
 			_bkmk = $b;
 			var a:Array = _bkmk.branches;
-			for (var i:int = 0; i < a.length; i++) {
-				var k:HistoryList = new HistoryList(a[i], i);
-				if (a[i]==_bkmk.branch) _list = k;
-				addChild(k);
-			}
-			addEventListener(UICommand.BRANCH_SELECTED, onBranchSelected);
+			for (var i:int = 0; i < a.length; i++) addChild(new HistoryList(a[i], i));
+			
+			onBranchChange();
+			
+			addEventListener(UICommand.HISTORY_TAB_SELECTED, onTabSelected);
+			_bkmk.addEventListener(RepositoryEvent.BRANCH_SET, onBranchChange);
 		}
-
-		public function set branch(b:Branch):void
-		{
-			_list.active = false;
-			for (var i:int = 0; i < numChildren; i++) {
-				var k:HistoryList = getChildAt(i) as HistoryList;
-				if (k.branch == b) _list = k;
-			}
-			_list.active = true;
-			setChildIndex(_list, numChildren-1);
-		}
-		
-		public function get list():HistoryList
-		{
-			return _list;
-		}		
 		
 		public function get bookmark():Bookmark
 		{
 			return _bkmk;
+		}		
+
+		private function set list(l:HistoryList):void
+		{
+			if (_list) _list.active = false;
+			_list = l;
+			_list.active = true;
+			setChildIndex(_list, numChildren-1);
 		}
 		
-		private function onBranchSelected(e:UICommand):void 		{
-			this.branch = e.target.branch;
+		private function onTabSelected(e:UICommand):void 		{
+			this.list = e.target as HistoryList;
 		}
+		
+		private function onBranchChange(e:RepositoryEvent = null):void 
+		{
+		// trace("HistoryCollection.onBranchChange(e)");
+		// automatically highlight the tab associated w/ the new branch	
+			for (var i:int = 0; i < numChildren; i++) {
+				var k:HistoryList = getChildAt(i) as HistoryList;
+				if (k.branch == _bkmk.branch) break;
+			}
+			this.list = k;
+		}		
 		
 	}
 	

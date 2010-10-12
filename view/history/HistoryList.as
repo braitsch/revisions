@@ -55,9 +55,7 @@ package view.history {
 
 		public function set active(on:Boolean):void
 		{
-			trace("HistoryList.active(on)");
 			_view.tab.alpha = on ? 1 : .6;
-			if (on) AppModel.status.getStatusOfBranch(_branch);		
 		}
 		
 		public function get branch():Branch
@@ -89,8 +87,12 @@ package view.history {
 		
 		private function onListTabSelection(e:MouseEvent):void 
 		{
-			AppModel.bookmark.branch = _branch;
-			dispatchEvent(new UICommand(UICommand.BRANCH_SELECTED));
+		// this action DOES NOT set the branch of the active bookmark //
+		//	!!!AppModel.bookmark.branch = _branch;
+		// it does however, refresh the status & history(if needed) of the branch associated with this tab
+			_branch.getStatus();
+			dispatchEvent(new UICommand(UICommand.HISTORY_TAB_SELECTED));
+			
 		}		
 
 		private function onRecordSelection(e:MouseEvent):void 

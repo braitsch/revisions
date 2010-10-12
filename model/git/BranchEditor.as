@@ -13,7 +13,8 @@ package model.git {
 		
 		private static var _proxy		:NativeProcessProxy;
 		private static var _index		:uint = 0;
-		private static var _bookmark	:Bookmark;		
+		private static var _bookmark 	:Bookmark;
+
 		public function BranchEditor()
 		{
 			_proxy = new NativeProcessProxy();	
@@ -22,13 +23,18 @@ package model.git {
 			_proxy.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);	
 		}
 		
-		public function getBranchesOfBookmarks():void 
+		public function getBranchesOfAllBookmarks():void 
 		{
-			trace("BranchEditor.getBranchesOfBookmarks()");	
-			_bookmark = AppModel.bookmarks[_index] as Bookmark;
+			getBranchesOfBookmark(AppModel.bookmarks[_index] as Bookmark);
+		}	
+		
+		public function getBranchesOfBookmark(b:Bookmark):void
+		{
+			trace("BranchEditor.getBranchesOfBookmark(b)", b.label);
+			_bookmark = b;
 			_proxy.directory = _bookmark.local;
 			_proxy.call(Vector.<String>([BashMethods.GET_BRANCHES]));			
-		}		
+		}
 		
 	// response handlers //			
 		
@@ -39,7 +45,7 @@ package model.git {
 				case BashMethods.GET_BRANCHES: 
 					_bookmark.branches = e.data.result.split(/[\n\r\t]/g);
 					if (++_index < AppModel.bookmarks.length){
-						getBranchesOfBookmarks();
+						getBranchesOfBookmark(AppModel.bookmarks[_index] as Bookmark);
 					}	else{
 						trace("BranchEditor.onProcessComplete(e)");
 						dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARKS_READY));

@@ -5,7 +5,6 @@ package view.bookmarks {
 	import model.git.RepositoryStatus;
 
 	import flash.events.EventDispatcher;
-	import flash.utils.setTimeout;
 
 	public class Branch extends EventDispatcher{
 
@@ -26,7 +25,6 @@ package view.bookmarks {
 		public function set history($a:Array):void
 		{
 			_history = $a;
-			trace("Branch.history($a)");
 			dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_HISTORY));
 		}
 		
@@ -55,7 +53,7 @@ package view.bookmarks {
 	
 		public function getHistory():void
 		{
-			setTimeout(AppModel.history.getHistoryOfBranch, 1000, this);		
+			AppModel.history.getHistoryOfBranch(this);		
 		}
 
 		public function getStatus():void 

@@ -63,7 +63,7 @@ package model.air {
 		
 		private function onDataReceived(e:ProgressEvent):void 
 		{
-			if (_result!='') _result+='\n';
+			if (_result!='') _result+='\n'; // linebreak between batches of data received //
 			_result += StringUtils.trim(_np.standardOutput.readUTFBytes(_np.standardOutput.bytesAvailable));
             log('DataReceived @ '+_method+ ' :: Response = '+_result);		}
 		

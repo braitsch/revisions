@@ -47,8 +47,6 @@ package view.history {
 				if (k.bookmark == e.data) _collection = k;
 			}
 			_container.addChild(_collection);
-		// should be set from dispatched branch-selected event //	
-		//	_collection.branch = _collection.bookmark.branch;
 		}
 
 	}
