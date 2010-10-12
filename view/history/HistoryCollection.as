@@ -50,7 +50,7 @@ package view.history {
 				if (HistoryList(getChildAt(i)).branch ==_bkmk.branch) break;
 			}
 			this.list = getChildAt(i) as HistoryList;
-		}		
+		}
 		
 	}
 	

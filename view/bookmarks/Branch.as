@@ -64,7 +64,7 @@ package view.bookmarks {
 		public function getStatusAndHistory():void
 		{
 			_getHistory = true;
-			AppModel.status.getStatusOfBranch(this);		
+			getStatus();
 		}
 		
 	}
