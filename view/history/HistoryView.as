@@ -1,4 +1,6 @@
 package view.history {
+	import commands.UICommand;
+
 	import events.RepositoryEvent;
 
 	import model.AppModel;
@@ -12,6 +14,7 @@ package view.history {
 	public class HistoryView extends ModalWindow {
 
 		private static var _view			:HistoryViewMC = new HistoryViewMC();
+		private static var _selectedItem	:HistoryItem;
 		private static var _container		:Sprite = new Sprite();
 		private static var _collection		:HistoryCollection;
 		private static var _collections		:Vector.<HistoryCollection> = new Vector.<HistoryCollection>();
@@ -25,8 +28,11 @@ package view.history {
 			_container.y = 40;
 			_view.addChild(_container);
 
-			AppModel.branch.addEventListener(RepositoryEvent.BOOKMARKS_READY, onBookmarksReady, false, 2);
+			addEventListener(UICommand.HISTORY_ITEM_SELECTED, onHistoryItemSelection);
+			
 			AppModel.getInstance().addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkSelected);
+			AppModel.status.addEventListener(RepositoryEvent.BRANCH_MODIFIED, onModifiedReceived);
+			AppModel.branch.addEventListener(RepositoryEvent.BOOKMARKS_READY, onBookmarksReady, false, 2);
 		}
 
 		private function onBookmarksReady(e:RepositoryEvent):void 
@@ -48,6 +54,30 @@ package view.history {
 			}
 			_container.addChild(_collection);
 		}
+		
+	// checkouts //	
+	
+		private function onHistoryItemSelection(e:UICommand):void 
+		{
+			trace('------------------------------');
+			_selectedItem = e.data as HistoryItem;
+		// always force refresh the status of the current branch before attempting a checkout	
+			AppModel.status.getActiveBranchIsModified();			
+		}	
+		
+		private function onModifiedReceived(e:RepositoryEvent):void 
+		{
+			trace("HistoryView.onModified(e) > active branch modified = ", e.data);
+			if (AppModel.bookmark.branch.name==Bookmark.DETACH && e.data == true){
+				trace('local modifications on the detached branch');
+			//	stage.dispatchEvent(new UICommand(UICommand.DETACHED_BRANCH_EDITED));				
+			}	else if (_selectedItem.index == 0){
+				trace('no local changes - checking out master');			//	AppModel.history.checkoutMaster();
+			}	else{
+				trace('no local changes - checking out commit > ', _selectedItem.sha1);
+			//	AppModel.history.checkoutCommit(_selectedItem.sha1);
+			}
+		}		
 
 	}
 	

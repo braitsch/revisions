@@ -37,11 +37,12 @@ package model.git {
 			trace("RepositoryHistory.getHistory()", _bookmark.label, _branch.name);			_proxy.call(Vector.<String>([BashMethods.GET_HISTORY, _branch.name]));
 		}
 		
-		public function checkoutCommit($sha1:String):void
+		public function checkoutCommit($sha1:String, $stash:Boolean):void
 		{
 			if (_bookmark.branch.name!=Bookmark.DETACH) _bookmark.previous = _bookmark.branch;
-			trace("RepositoryHistory.checkoutCommit($sha1)", $sha1, _bookmark.branch.modified);
-			_proxy.call(Vector.<String>([BashMethods.CHECKOUT_COMMIT, $sha1, _bookmark.branch.modified]));		}
+			
+			trace("RepositoryHistory.checkoutCommit($sha1, $stash)", $sha1, $stash);
+			_proxy.call(Vector.<String>([BashMethods.CHECKOUT_COMMIT, $sha1, $stash]));		}
 		
 		public function checkoutMaster():void 
 		{

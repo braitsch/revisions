@@ -53,6 +53,11 @@ package view.layout {
 			_active = $on;
 			TweenLite.to(_bkgd, .3, {alpha:_active ? 1 : .5});		
 		}
+		
+		public function get index():uint
+		{
+			return this.parent.getChildIndex(this);
+		}
 	
 	// mouse events //
 

@@ -44,9 +44,15 @@ package model {
 			_status.bookmark = _history.bookmark = _bookmark;
 			_editor.bookmark = _database.bookmark = _bookmark;
 			
+			_bookmark.branch.addEventListener(RepositoryEvent.BRANCH_STATUS, onBranchStatus);
 			_instance.dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_SET, _bookmark));			
 		}
-		
+
+		static private function onBranchStatus(e:RepositoryEvent):void 
+		{
+			trace("&&&&&&&&&&AppModel.onBranchStatus(e)");
+		}
+
 		static public function get bookmark():Bookmark
 		{
 			return _bookmark;

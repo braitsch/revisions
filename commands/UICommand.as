@@ -24,6 +24,7 @@ package commands {
 		
 	// list item selections //	
 		public static const LIST_ITEM_SELECTED:String = "LIST_ITEM_SELECTED";
+		public static const HISTORY_ITEM_SELECTED:String = "HISTORY_ITEM_SELECTED";
 		public static const BOOKMARK_SELECTED:String = "BOOKMARK_SELECTED";
 		public static const HISTORY_TAB_SELECTED:String = "BRANCH_SELECTED";
 		public static const DIRECTORY_SELECTED:String = "DIRECTORY_SELECTED";

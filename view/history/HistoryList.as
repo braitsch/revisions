@@ -1,10 +1,10 @@
 package view.history {
-	import events.RepositoryEvent;
 	import commands.UICommand;
+
+	import events.RepositoryEvent;
 
 	import model.AppModel;
 
-	import view.bookmarks.Bookmark;
 	import view.bookmarks.Branch;
 	import view.layout.ListItem;
 	import view.layout.SimpleList;
@@ -19,7 +19,6 @@ package view.history {
 		private var _list				:SimpleList = new SimpleList();
 		private var _view				:HistoryListMC = new HistoryListMC();
 		private var _branch				:Branch;
-		private var _selected			:Boolean;
 		private var _modified			:uint;		// record the last modified value //
 		private var _itemUnsaved		:HistoryItemUnsaved = new HistoryItemUnsaved();	
 
@@ -58,19 +57,14 @@ package view.history {
 			return _branch;
 		}			
 
-		public function onStatusReceived():void 
-		{				if (_selected) checkoutVersion();
-		}
-		
 	// private //	
 	
 		private function onStatus(e:RepositoryEvent):void 
 		{
-			if (_branch.history == null) return;
 		// only rebuild if the modified # has changed //
 			if (_modified != _branch.modified) {
 				_modified = _branch.modified;
-				drawList();
+				if (_branch.history != null) drawList();
 			}
 		}			
 
@@ -106,35 +100,7 @@ package view.history {
 
 		private function onRecordSelection(e:MouseEvent):void 
 		{
-			return;
-			trace('------------------------------');
-			_selected = true;
-		// always force refresh the status before checkout of target branch..				AppModel.status.getStatusOfBranch(_branch);		
-		}
-		
-	// checkouts //	
-		
-		private function checkoutVersion():void
-		{
-		// check the status of the current branch before we shift off of it //	
-			var b:Branch = AppModel.bookmark.branch;
-			if (b.name==Bookmark.DETACH && b.modified==true){
-				dispatchEvent(new UICommand(UICommand.DETACHED_BRANCH_EDITED));
-			} else{
-				switchToVersion();
-			}
-		}		
-		
-		private function switchToVersion():void
-		{
-			var k:HistoryItem = _list.activeItem as HistoryItem;
-			if (_list.getChildIndex(k)==0) {
-				AppModel.history.checkoutMaster();
-			} else{
-				AppModel.history.checkoutCommit(k.sha1);
-			}		
-			_selected = false;	
-		}
+			dispatchEvent(new UICommand(UICommand.HISTORY_ITEM_SELECTED, _list.activeItem));		}
 		
 	}
 	
