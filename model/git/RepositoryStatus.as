@@ -33,7 +33,6 @@ package model.git {
 		public function getStatusOfBranch($b:Branch = null):void
 		{
 			_branch = $b || _bookmark.branch;
-			trace("RepositoryStatus.getStatusOfBranch()", _bookmark.label, _branch.name);
 			_proxy.queue = getTransaction();						}
 		
 		private function onStatusComplete(e:NativeProcessEvent):void 

@@ -11,6 +11,7 @@ package view.bookmarks {
 		private var _name		:String;
 		private var _status		:Array;
 		private var _history	:Array;
+		private var _getHistory	:Boolean;
 
 		public function Branch($n:String) 
 		{
@@ -35,7 +36,7 @@ package view.bookmarks {
 		
 		public function set status(a:Array):void
 		{
-			_status = a;			if (_history==null) getHistory();				
+			_status = a;			if (_history==null || _getHistory==true) getHistory();				
 			dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_STATUS));
 		}
 		
@@ -58,8 +59,13 @@ package view.bookmarks {
 
 		public function getStatus():void 
 		{
+			AppModel.status.getStatusOfBranch(this);				}
+		
+		public function getStatusAndHistory():void
+		{
+			_getHistory = true;
 			AppModel.status.getStatusOfBranch(this);		
-		}		
+		}
 		
 	}
 	

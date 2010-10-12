@@ -1,9 +1,9 @@
 package view.history {
-	import events.RepositoryEvent;
 	import commands.UICommand;
 
+	import events.RepositoryEvent;
+
 	import view.bookmarks.Bookmark;
-	import view.bookmarks.Branch;
 
 	import flash.display.Sprite;
 
@@ -17,13 +17,13 @@ package view.history {
 		public function HistoryCollection($b:Bookmark)
 		{
 			_bkmk = $b;
+			_bkmk.addEventListener(RepositoryEvent.BRANCH_SET, onBranchChange);
+			
 			var a:Array = _bkmk.branches;
 			for (var i:int = 0; i < a.length; i++) addChild(new HistoryList(a[i], i));
 			
 			onBranchChange();
-			
 			addEventListener(UICommand.HISTORY_TAB_SELECTED, onTabSelected);
-			_bkmk.addEventListener(RepositoryEvent.BRANCH_SET, onBranchChange);
 		}
 		
 		public function get bookmark():Bookmark
@@ -45,13 +45,11 @@ package view.history {
 		
 		private function onBranchChange(e:RepositoryEvent = null):void 
 		{
-		// trace("HistoryCollection.onBranchChange(e)");
 		// automatically highlight the tab associated w/ the new branch	
 			for (var i:int = 0; i < numChildren; i++) {
-				var k:HistoryList = getChildAt(i) as HistoryList;
-				if (k.branch == _bkmk.branch) break;
+				if (HistoryList(getChildAt(i)).branch ==_bkmk.branch) break;
 			}
-			this.list = k;
+			this.list = getChildAt(i) as HistoryList;
 		}		
 		
 	}
