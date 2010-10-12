@@ -20,7 +20,7 @@ package view.history {
 		private var _view				:HistoryListMC = new HistoryListMC();
 		private var _branch				:Branch;
 		private var _selected			:Boolean;
-		private var _modified			:uint;
+		private var _modified			:uint;		// record the last modified value //
 		private var _itemUnsaved		:HistoryItemUnsaved = new HistoryItemUnsaved();	
 
 		public function HistoryList($branch:Branch, $xpos:uint)
@@ -43,15 +43,10 @@ package view.history {
 			_list.addEventListener(MouseEvent.CLICK, onRecordSelection);
 			_view.tab.addEventListener(MouseEvent.CLICK, onListTabSelection);
 			
-			_branch.addEventListener(RepositoryEvent.BRANCH_HISTORY, rebuildList);			_branch.addEventListener(RepositoryEvent.BRANCH_MODIFIED, onBranchModified);
+			_branch.addEventListener(RepositoryEvent.BRANCH_STATUS, onStatus);			_branch.addEventListener(RepositoryEvent.BRANCH_HISTORY, drawList);
 		}
-
-		private function onBranchModified(e:RepositoryEvent):void 
-		{
-		// only rebuild if the # modified has changed //
-			if (_modified != _branch.modified) rebuildList();
-			_modified = _branch.modified;
-		}
+		
+	// public //	
 
 		public function set active(on:Boolean):void
 		{
@@ -68,31 +63,45 @@ package view.history {
 		}
 		
 	// private //	
+	
+		private function onStatus(e:RepositoryEvent):void 
+		{
+			if (_branch.history == null) return;
+		// only rebuild if the modified # has changed //
+			if (_modified != _branch.modified) {
+				_modified = _branch.modified;
+				drawList();
+			}
+		}			
 
-		private function rebuildList(e:RepositoryEvent = null):void
+		private function drawList(e:RepositoryEvent = null):void
 		{
 			var a:Array = _branch.history;
 			var v:Vector.<ListItem> = new Vector.<ListItem>();
 			
-			if (_branch.modified) v.push(_itemUnsaved);
+		// only show unsaved item for the current branch 
+		// since you cannot checkout another branch if you have local changes	
+			if (_branch==AppModel.bookmark.branch) {
+				if (_branch.modified) v.push(_itemUnsaved);
+			}
+			
 			for (var i:int = 0; i < a.length; i++) {
 				var n:Array = a[i].split('##');
 				v.push(new HistoryItem(String(a.length-i), n[1], n[2], n[3], n[0]));
 			}
 			_list.refresh(v);
-			trace("HistoryList.rebuildList > ", '# items = '+a.length, '# modified = ', _branch.modified);			
+			trace("HistoryList.rebuildList > ", '# items = '+a.length);			
 		}
 		
 	// click events //	
 		
 		private function onListTabSelection(e:MouseEvent):void 
 		{
-		// this action DOES NOT set the branch of the active bookmark //
-		//	!!!AppModel.bookmark.branch = _branch;
-		// it does however, refresh the status & history(if needed) of the branch associated with this tab
-			_branch.getStatus();
+		// this action DOES NOT changes branches //
+		// here is where we load the history of a branch 
+		// the first time it is selected in the tab view
+			if (_branch.history==null) _branch.getHistory();	
 			dispatchEvent(new UICommand(UICommand.HISTORY_TAB_SELECTED));
-			
 		}		
 
 		private function onRecordSelection(e:MouseEvent):void 

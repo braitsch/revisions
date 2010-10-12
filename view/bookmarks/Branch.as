@@ -26,6 +26,7 @@ package view.bookmarks {
 		public function set history($a:Array):void
 		{
 			_history = $a;
+			_getHistory = false;	
 			dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_HISTORY));
 		}
 		
@@ -35,8 +36,8 @@ package view.bookmarks {
 		}
 		
 		public function set status(a:Array):void
-		{
-			_status = a;			if (_history==null || _getHistory==true) getHistory();				
+		{			_status = a;
+			if (_history==null || _getHistory==true) getHistory();
 			dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_STATUS));
 		}
 		
