@@ -32,7 +32,6 @@ package model.git.repo {
 		{
 			_bookmark = b;
 			_status.bookmark = _history.bookmark = _editor.bookmark = _bookmark;
-		//	_bookmark.branch.addEventListener(RepositoryEvent.BRANCH_STATUS, onBranchStatus);
 			dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_SET, _bookmark));			
 		}
 		
@@ -68,13 +67,12 @@ package model.git.repo {
 			return _checkout;
 		}		
 		
-		
 	// private event handlers //
 		
 		private function onBookmarksReady(e:RepositoryEvent):void 
 		{
 			_bookmarks = e.data as Vector.<Bookmark>;
-			trace("RepositoryModel.onBookmarksReady(e)");
+			trace("RepositoryProxy.onBookmarksReady(e)");
 			dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARKS_READY, _bookmarks));
 		}
 		
