@@ -12,9 +12,9 @@ package view.bookmarks {
 		private var _history	:Array;
 		private var _modified	:uint;
 
-		public function Branch($n:String) 
+		public function Branch(n:String) 
 		{
-			_name = $n;
+			_name = n;
 		}
 		
 		public function get name():String
@@ -22,27 +22,24 @@ package view.bookmarks {
 			return _name;
 		}		
 				
-		public function set history($a:Array):void
+		public function set history(a:Array):void
 		{
-			_history = $a;
+			_history = [];
+			for (var i:int = 0; i < a.length; i++) _history.push(a[i].split('##'));
+			if (_history[0][1] == '0 seconds ago') _history[0][1] = 'Just Now';
 			dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_HISTORY));
 		}
 		
 		public function get history():Array
 		{
 			return _history;
-		}
+		}		
 		
 		public function set status(a:Array):void
 		{			_status = a;
 			if (_history==null) getHistory();
-			dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_STATUS));
-		}
-		
-		public function get status():Array
-		{
-			return _status;
-		}		
+			dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_STATUS, _status));
+		}	
 
 		public function set modified(n:uint):void
 		{

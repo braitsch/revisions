@@ -58,7 +58,7 @@ package view.history {
 			return _branch;
 		}			
 
-	// private //	
+	// private //
 	
 		private function onStatus(e:RepositoryEvent):void 
 		{
@@ -67,27 +67,26 @@ package view.history {
 				_modified = _branch.modified;
 				if (_branch.history != null) drawList();
 			}
-		}			
-
+		}
+		
 		private function drawList(e:RepositoryEvent = null):void
 		{
-			var a:Array = _branch.history;
 			var v:Vector.<ListItem> = new Vector.<ListItem>();
 			
 		// only show unsaved item for the current branch 
 		// since you cannot checkout another branch if you have local changes	
-			if (_branch==AppModel.branch) {
+			if (_branch == AppModel.branch) {
 				if (_branch.modified) v.push(_itemUnsaved);
 			}
 			
+			var a:Array = _branch.history;
 			for (var i:int = 0; i < a.length; i++) {
-				var n:Array = a[i].split('##');
 				var o:Object = {	index : String(a.length-i),
-									date : n[1], 
-									author : n[2], 
-									note : n[3], 
-									sha1 : n[0],	
-									name : _branch.name	};
+									date 	: a[i][1], 
+									author 	: a[i][2], 
+									note 	: a[i][3], 
+									sha1 	: a[i][0],	
+									name 	: _branch.name	};
 				v.push(new HistoryItem(o));
 			}
 			_list.refresh(v);
@@ -101,7 +100,7 @@ package view.history {
 		// this action DOES NOT changes branches //
 		// here is where we load the history of a branch 
 		// the first time it is selected in the tab view
-			if (_branch.history==null) _branch.getHistory();	
+			if (_branch.history == null) _branch.getHistory();	
 			dispatchEvent(new UICommand(UICommand.HISTORY_TAB_SELECTED));
 		}		
 

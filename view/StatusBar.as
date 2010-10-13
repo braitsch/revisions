@@ -26,7 +26,8 @@ package view {
 
 		private function onStatusReceived(e:RepositoryEvent):void 
 		{
-			var a:Array = AppModel.branch.status;
+		// we receive the full status of the active branch //	
+			var a:Array = e.data as Array;
 			_view.tracked_txt.text = String(a[StatusProxy.T].length);			_view.untracked_txt.text = String(a[StatusProxy.U].length);
 			_view.modified_txt.text = String(a[StatusProxy.M].length);
 			_view.ignored_txt.text = String(a[StatusProxy.I].length);

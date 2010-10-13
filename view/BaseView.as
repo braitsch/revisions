@@ -20,49 +20,42 @@ package view {
 			_view.target_txt.autoSize = 'left';
 			_view.addChild(_status);			_view.addChild(_toolbar);			addChild(_view);
 
-			AppModel.installer.addEventListener(InstallEvent.SET_GIT_VERSION, onGitVersion);			
-			AppModel.proxy.addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkChange);									
+			AppModel.installer.addEventListener(InstallEvent.SET_GIT_VERSION, onGitVersion);
+			AppModel.proxy.addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkChanged);
 		}
-
-		private function onBookmarkChange(e:RepositoryEvent):void 
+		
+		public function get view():BaseViewMC
+		{
+			return _view;
+		}		
+		
+		private function onBookmarkChanged(e:RepositoryEvent):void 
 		{
 			_bookmark = e.data as Bookmark;
 			if (_bookmark) {
 				_view.target_txt.text = 'Repository / Branch : ' + _bookmark.label;
-				if (_bookmark.branch.history){
-					onHistoryReceived();
-				}	else{
-					onHistoryUnavailable();
-				}
 			}	else{
 				_view.target_txt.text = 'Repository / Branch : NONE';
 			}
-		}
+			if (AppModel.bookmark.branch.history) onHistoryReceived(e);
+			_bookmark.branch.addEventListener(RepositoryEvent.BRANCH_HISTORY, onHistoryReceived);
+		}		
 
-		public function get view():BaseViewMC
+		private function onHistoryReceived(e:RepositoryEvent):void
 		{
-			return _view;
+			var a:Array = AppModel.bookmark.branch.history;
+			if (a.length != 0){
+				_view.target_txt.text = 'Repository / Branch : ' + _bookmark.label;								_view.target_txt.appendText(' -- Version '+a.length+' -- Last Saved : '+a[0][1]+' by '+a[0][2]);
+			}	else{
+				_view.target_txt.text = 'Repository / Branch : ' + _bookmark.label;				
+				_view.target_txt.appendText(' -- Last Saved : Unavailable');				
+			}
 		}
-		
-	// private //	
 		
 		private function onGitVersion(e:InstallEvent):void 
 		{
 			_view.version_txt.text = 'git : '+e.data as String;
-		}		
-
-		private function onHistoryReceived():void 
-		{
-			var a:Array = _bookmark.branch.history[0].split('##');
-			if (a[1]=='0 seconds ago') a[1]='Just Now';
-			_view.target_txt.text = 'Repository / Branch : ' + _bookmark.label;							_view.target_txt.appendText(' -- Version '+_bookmark.branch.history.length+' -- Last Saved : '+a[1]+' by '+a[2]);
 		}
-		
-		private function onHistoryUnavailable():void 
-		{
-			_view.target_txt.text = 'Repository / Branch : ' + _bookmark.label;				
-			_view.target_txt.appendText(' -- Last Saved : Unavailable');				
-		}		
 		
 	}
 	
