@@ -1,12 +1,12 @@
 package view.bookmarks {
 	import events.RepositoryEvent;
+
 	import utils.StringUtils;
 
-	import view.layout.ListItem;
-
+	import flash.events.EventDispatcher;
 	import flash.filesystem.File;
 
-	public class Bookmark extends ListItem {
+	public class Bookmark extends EventDispatcher {
 
 	// branch constants //
 		public static const DETACH	:String = 'detach';
@@ -17,23 +17,16 @@ package view.bookmarks {
 		private var _branch			:Branch;
 		private var _previous		:Branch;
 		private var _branches		:Array = [];
-		private var _view			:BookmarkItemMC = new BookmarkItemMC();	
+		private var _active			:Boolean;
+		private var _file			:File;
 
 		public function Bookmark($label:String, $local:String, $remote:String, $active:Boolean)
 		{
-			super(190, $active);
-			super.file = new File('file://'+$local);
-			
 			_label = $label;
 			_local = $local;
 			_remote = $remote;
-			
-			_view.label_txt.autoSize = 'left';
-			_view.label_txt.text = _label;
-			_view.label_txt.selectable = false;
-			_view.mouseEnabled = false;
-			_view.mouseChildren = false;
-			addChild(_view);
+			_active = $active;
+			_file = new File('file://' + $local);			
 		}
 
 		public function get label():String
@@ -51,6 +44,16 @@ package view.bookmarks {
 			return _remote;
 		}
 		
+		public function get active():Boolean
+		{
+			return _active;
+		}	
+		
+		public function get file():File
+		{
+			return _file;
+		}			
+		
 	// branches //	
 				
 		public function get branch():Branch
@@ -61,8 +64,7 @@ package view.bookmarks {
 		public function set branch(b:Branch):void
 		{
 			_branch = b;
-			trace("Bookmark.branch(b)", _branch.name);
-			dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_SET));
+			if (_branch.name != DETACH) dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_SET));
 		}
 
 		public function get previous():Branch
@@ -82,19 +84,22 @@ package view.bookmarks {
 			return _detach;
 		}
 		
-	// set from AppModel after bookmarks are first created //	
+	// set from RepositoryModel > proxy after bookmarks are first created //	
 
-		public function set branches(a:Array):void
+		public function attachBranches(a:Array):Boolean
 		{
 			for (var i:int = 0; i < a.length; i++) {
 				var s:String = a[i];
-				if (s.indexOf('*')==0){
-					_branch = new Branch(StringUtils.trim(s.substr(1)));
+				if (s.indexOf('*') == 0){
+					s = StringUtils.trim(s.substr(1));
+					if (s != '(no branch)') _branch = new Branch(s);
 					_branches.push(_branch);
 				}	else{
-					_branches.push(new Branch(StringUtils.trim(s)));
+					s = StringUtils.trim(s);
+					_branches.push(new Branch(s));
 				}
 			}
+			return _branch != null;
 		}
 
 		public function get branches():Array

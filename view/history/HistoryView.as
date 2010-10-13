@@ -6,7 +6,6 @@ package view.history {
 	import model.AppModel;
 
 	import view.bookmarks.Bookmark;
-	import view.layout.ListItem;
 	import view.modals.ModalWindow;
 
 	import flash.display.Sprite;
@@ -30,18 +29,16 @@ package view.history {
 
 			addEventListener(UICommand.HISTORY_ITEM_SELECTED, onHistoryItemSelection);
 			
-			AppModel.getInstance().addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkSelected);
-			AppModel.status.addEventListener(RepositoryEvent.BRANCH_MODIFIED, onModifiedReceived);
-			AppModel.branch.addEventListener(RepositoryEvent.BOOKMARKS_READY, onBookmarksReady, false, 2);
+			AppModel.repos.addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkSelected);
+			AppModel.repos.addEventListener(RepositoryEvent.BOOKMARKS_READY, onBookmarksReady, false, 2);
+			AppModel.repos.addEventListener(RepositoryEvent.BRANCH_MODIFIED, onModifiedReceived);
 		}
 
 		private function onBookmarksReady(e:RepositoryEvent):void 
 		{
 		// create a collection object for each bookmark //	
-			var a:Vector.<ListItem> = AppModel.bookmarks;
-			for (var i:int = 0;i < a.length; i++) {
-				_collections.push(new HistoryCollection(a[i] as Bookmark));
-			}
+			var a:Vector.<Bookmark> = e.data as Vector.<Bookmark>;
+			for (var i:int = 0;i < a.length; i++) _collections.push(new HistoryCollection(a[i]));
 		}
 
 		private function onBookmarkSelected(e:RepositoryEvent):void 
@@ -62,17 +59,17 @@ package view.history {
 			trace('------------------------------');
 			_selectedItem = e.data as HistoryItem;
 		// always force refresh the status of the current branch before attempting a checkout	
-			AppModel.status.getActiveBranchIsModified();			
+			AppModel.repos.status.getActiveBranchIsModified();			
 		}	
 		
 		private function onModifiedReceived(e:RepositoryEvent):void 
 		{
 			trace("HistoryView.onModified(e) > active branch modified = ", e.data);
-			if (AppModel.bookmark.branch.name==Bookmark.DETACH && e.data == true){
+			if (AppModel.repos.bookmark.branch.name==Bookmark.DETACH && e.data == true){
 				trace('local modifications on the detached branch');
 			//	stage.dispatchEvent(new UICommand(UICommand.DETACHED_BRANCH_EDITED));				
 			}	else {
-				AppModel.history.checkout(_selectedItem);
+				AppModel.repos.history.checkout(_selectedItem);
 			}
 		}		
 

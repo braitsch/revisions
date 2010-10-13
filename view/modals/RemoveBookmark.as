@@ -37,9 +37,11 @@ package view.modals {
 		
 		private function onDelete(e:MouseEvent):void 
 		{
-			var o:Object = {label:_view.name_txt.text, local:_view.local_txt.text, killGit:_check1.selected, trash:_check2.selected};		
-			AppModel.editor.deleteRepository(o);			
-			AppModel.database.deleteRepository(_view.name_txt.text);			
+			var o:Object = {label:_view.name_txt.text, local:_view.local_txt.text, killGit:_check1.selected, trash:_check2.selected};
+			
+			AppModel.repos.editor.deleteRepository(o);			
+			AppModel.database.deleteRepository(_view.name_txt.text);
+			
 			dispatchEvent(new UICommand(UICommand.CLOSE_MODAL_WINDOW, this));			
 		}
 		

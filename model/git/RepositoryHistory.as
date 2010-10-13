@@ -1,6 +1,5 @@
 package model.git {
 	import events.NativeProcessEvent;
-	import events.RepositoryEvent;
 
 	import model.AppModel;
 	import model.air.NativeProcessProxy;
@@ -13,7 +12,6 @@ package model.git {
 
 	public class RepositoryHistory extends EventDispatcher {
 		
-		private static var _failed		:Boolean;
 		private static var _proxy		:NativeProcessProxy;
 		private static var _branch		:Branch;
 		private static var _bookmark	:Bookmark;
@@ -34,28 +32,27 @@ package model.git {
 		public function getHistoryOfBranch(b:Branch):void
 		{
 			_branch = b;
-			_failed = false;
-			trace("RepositoryHistory.getHistory()", _bookmark.label, _branch.name);			_proxy.call(Vector.<String>([BashMethods.GET_HISTORY, _branch.name]));
+			_proxy.call(Vector.<String>([BashMethods.GET_HISTORY, _branch.name]));
 		}
 		
 		public function checkout(n:HistoryItem):void 
 		{
 			trace("RepositoryHistory.checkout(sha1, index, mod)", n.sha1, n.name, n.index, 'mod = ',_bookmark.branch.modified);
+			
+		// record where we are before we detach the head //	
+			if (_bookmark.branch.name != Bookmark.DETACH) _bookmark.previous = _bookmark.branch;
+			
 			if (n.index==0){
-				trace('_bookmark.previous.modified: ' + (_bookmark.previous.modified));
 				_proxy.call(Vector.<String>([BashMethods.CHECKOUT_BRANCH, n.name, _bookmark.previous.modified]));
 			} else{
-			// record where we were before we detach the head //	
-				if (_bookmark.branch.name!='detach') _bookmark.previous = _bookmark.branch;
-				trace('setting previous to :', _bookmark.previous.name, _bookmark.previous.modified);
 				_proxy.call(Vector.<String>([BashMethods.CHECKOUT_COMMIT, n.sha1, _bookmark.branch.modified]));
 			}
 		}		
 		
-		public function addBranch($new:String):void
+		public function addBranch($name:String):void
 		{
-			trace("RepositoryHistory.addBranch($new)", $new, AppModel.bookmark.previous.name);
-			_proxy.call(Vector.<String>([BashMethods.ADD_BRANCH, $new, AppModel.bookmark.previous.name]));
+			trace("RepositoryHistory.addBranch($new)", $name, AppModel.repos.bookmark.previous.name);
+			_proxy.call(Vector.<String>([BashMethods.ADD_BRANCH, $name, AppModel.repos.bookmark.previous.name]));
 		}	
 		
 		public function discardUnsavedChanges():void
@@ -67,35 +64,30 @@ package model.git {
 		
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
-			trace("******RepositoryHistory.onProcessFailure(e)", e.data.method, e.data.result);
-			_failed = true;
+			trace("RepositoryHistory.onProcessFailure(e)", e.data.method, e.data.result);
 			switch(e.data.method){
-				case BashMethods.CHECKOUT_COMMIT :					trace('local changes');
-				break;
-				case BashMethods.CHECKOUT_BRANCH :					trace('local changes');				break;
 				case BashMethods.GET_HISTORY :
-					dispatchEvent(new RepositoryEvent(RepositoryEvent.HISTORY_UNAVAILABLE));
+					_branch.history = null;
+				break;				case BashMethods.CHECKOUT_COMMIT :
+				break;				case BashMethods.CHECKOUT_BRANCH :
 				break;
 			}
 		}	
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
-			trace("RepositoryHistory.onProcessComplete(e)", 'method = '+e.data.method);
+			trace("RepositoryHistory.onProcessComplete(e)", e.data.method);
 			switch(e.data.method){
 				case BashMethods.GET_HISTORY : 
-					if (_failed) return;
 					_branch.history = e.data.result.split(/[\n\r\t]/g);
 				break;	
 				case BashMethods.CHECKOUT_COMMIT :
 					_bookmark.branch = _bookmark.detach;
-					dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_SET));					trace("RepositoryHistory.onProcessComplete(e) > BashMethods.CHECKOUT_COMMIT");				break;					
+				break;					
 				case BashMethods.CHECKOUT_BRANCH :
 					_bookmark.branch = _bookmark.previous;
-					dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_SET));
-					trace("RepositoryHistory.onProcessComplete(e) > BashMethods.CHECKOUT_BRANCH");				break;	
+				break;	
 				case BashMethods.ADD_BRANCH : 
-					trace('suceess!!');
 				break;							
 			}
 		}	

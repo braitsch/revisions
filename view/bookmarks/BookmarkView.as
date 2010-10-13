@@ -6,6 +6,7 @@ package view.bookmarks {
 	import model.AppModel;
 
 	import view.layout.LiquidColumn;
+	import view.layout.ListItem;
 	import view.layout.SimpleList;
 	import view.ui.AirContextMenu;
 
@@ -28,17 +29,22 @@ package view.bookmarks {
 			_list.contextMenu = AirContextMenu.menu;
 			_list.addEventListener(UICommand.LIST_ITEM_SELECTED, onListSelection);
 			
-			AppModel.branch.addEventListener(RepositoryEvent.BOOKMARKS_READY, onBookmarksReady, false, 1);
+			AppModel.repos.addEventListener(RepositoryEvent.BOOKMARKS_READY, onBookmarksReady, false, 1);
 		}
 
 		private function onBookmarksReady(e:RepositoryEvent):void 
 		{
-			_list.refresh(AppModel.bookmarks);
-			dispatchEvent(new UICommand(UICommand.BOOKMARK_SELECTED, _list.activeItem as Bookmark));
+			var v:Vector.<Bookmark> = e.data as Vector.<Bookmark>;
+			var a:Vector.<ListItem> = new Vector.<ListItem>();
+			
+			for (var i:int = 0; i < v.length; i++) a.push(new BookmarkItem(v[i]));
+			_list.refresh(a);
+			
+			dispatchEvent(new UICommand(UICommand.BOOKMARK_SELECTED, _list.activeItem));
 		}
 		
 		private function onListSelection(e:UICommand):void 
-		{			dispatchEvent(new UICommand(UICommand.BOOKMARK_SELECTED, _list.activeItem as Bookmark));
+		{			dispatchEvent(new UICommand(UICommand.BOOKMARK_SELECTED, _list.activeItem));
 		}	
 
 	}

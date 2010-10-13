@@ -42,7 +42,7 @@ package model.git {
 		public function getActiveBranchIsModified():void 
 		{
 		// this is only called prior to a checkout attempt > in history viewer //	
-			_branch = AppModel.bookmark.branch;
+			_branch = AppModel.repos.bookmark.branch;
 			_proxy.queue = [	Vector.<String>([BashMethods.GET_MODIFIED_FILES])	];				
 		}
 		

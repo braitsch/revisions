@@ -32,12 +32,12 @@ package view.files {
 			addChild(_view);
 			addChild(_list);
 			
-			AppModel.getInstance().addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkChange);
+			AppModel.repos.addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkChange);
 		}
 		
 		private function onBookmarkChange(e:RepositoryEvent):void 
 		{
-			AppModel.bookmark.branch.addEventListener(RepositoryEvent.BRANCH_STATUS, onRepositoryStatus);
+			AppModel.repos.bookmark.branch.addEventListener(RepositoryEvent.BRANCH_STATUS, onRepositoryStatus);
 		}
 
 		public function set directory(d:ListItem):void
@@ -52,10 +52,10 @@ package view.files {
 		private function onRepositoryStatus(e:RepositoryEvent):void 
 		{
 			var i:int;
-			var s:Array = AppModel.bookmark.branch.status;
+			var s:Array = AppModel.repos.bookmark.branch.status;
 			file: for (i = 0; i < _files.length; i++) {
 		// slice off the root path of the bookmark since git returns an abbreviated path //
-				var p:String = _files[i].file.nativePath.replace(AppModel.bookmark.local+'/', '');
+				var p:String = _files[i].file.nativePath.replace(AppModel.repos.bookmark.local+'/', '');
 				for (var j:int = 0; j < s.length; j++) {
 					for (var k:int = 0; k < s[j].length; k++) {
 						if (p==s[j][k]){
@@ -65,7 +65,7 @@ package view.files {
 					}
 				}
 			}
-			_list.refresh(_files);	
+			_list.refresh(_files);
 		}		
 
 		private function validate(f:File):Boolean 

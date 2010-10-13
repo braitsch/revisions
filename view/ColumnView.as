@@ -4,6 +4,7 @@ package view {
 	import model.AppModel;
 
 	import view.bookmarks.Bookmark;
+	import view.bookmarks.BookmarkItem;
 	import view.bookmarks.BookmarkView;
 	import view.directories.DirectoryView;
 	import view.files.FilesView;
@@ -38,8 +39,9 @@ package view {
 		
 		private function onBookmarkSelected(e:UICommand):void 
 		{
-			AppModel.bookmark = e.data as Bookmark;
-			AppModel.bookmark.branch.getStatus();
+			var b:Bookmark = BookmarkItem(e.data as ListItem).bookmark;
+			AppModel.repos.bookmark = b;
+			AppModel.repos.bookmark.branch.getStatus();
 			
 			_dirs.directory = e.data as ListItem;
 			_files.directory = e.data as ListItem;
@@ -47,7 +49,7 @@ package view {
 		
 		private function onDirectorySelection(e:UICommand):void 
 		{
-			AppModel.bookmark.branch.getStatus();			_files.directory = e.data as ListItem;
+			AppModel.repos.bookmark.branch.getStatus();			_files.directory = e.data as ListItem;
 		}
 		
 	}

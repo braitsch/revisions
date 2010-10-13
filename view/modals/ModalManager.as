@@ -41,7 +41,7 @@ package view.modals {
 			_dragAndDrop.target = stage;
 			_dragAndDrop.addEventListener(NativeDragEvent.NATIVE_DRAG_COMPLETE, onDragAndDrop);
 			stage.addEventListener(UICommand.NEW_BOOKMARK, addBookmark);			stage.addEventListener(UICommand.EDIT_BOOKMARK, editBookmark);			stage.addEventListener(UICommand.SAVE_PROJECT, addNewCommit);			stage.addEventListener(UICommand.REPAIR_BOOKMARK, repairBookmark);			stage.addEventListener(UICommand.ADD_BRANCH, branchBookmark);			stage.addEventListener(UICommand.DELETE_BOOKMARK, removeBookmark);
-			stage.addEventListener(UICommand.VIEW_HISTORY, viewHistory);			stage.addEventListener(UICommand.VIEW_VERSION, viewVersion);			stage.addEventListener(UICommand.DETACHED_BRANCH_EDITED, onDetachedBranchEdited);		}	
+			stage.addEventListener(UICommand.VIEW_HISTORY, viewHistory);			stage.addEventListener(UICommand.DETACHED_BRANCH_EDITED, onDetachedBranchEdited);		}	
 
 		private function onDragAndDrop(e:NativeDragEvent):void 
 		{
@@ -65,8 +65,8 @@ package view.modals {
 
 		private function editBookmark(e:UICommand):void
 		{
-			if (!AppModel.bookmark) return;
-			_edit.bookmark = AppModel.bookmark;
+			if (!AppModel.repos.bookmark) return;
+			_edit.bookmark = AppModel.repos.bookmark;
 			addChild(_edit);
 		}
 		
@@ -83,7 +83,7 @@ package view.modals {
 		
 		private function removeBookmark(e:UICommand):void
 		{
-			_remove.bookmark = AppModel.bookmark;
+			_remove.bookmark = AppModel.repos.bookmark;
 			addChild(_remove);
 		}
 		
@@ -96,11 +96,6 @@ package view.modals {
 		{
 			addChild(_history);
 		}	
-		
-		private function viewVersion(e:UICommand):void 
-		{
-			trace("ModalManager.viewVersion(e)");
-		}
 		
 		private function onDetachedBranchEdited(e:UICommand):void 
 		{

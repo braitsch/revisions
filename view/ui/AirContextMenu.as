@@ -55,7 +55,9 @@ package view.ui {
 			switch(cmi.label){
 				case 'Save' : _stage.dispatchEvent(new UICommand(UICommand.SAVE_PROJECT));		break;				case 'Edit' : _stage.dispatchEvent(new UICommand(UICommand.EDIT_BOOKMARK));		break;				case 'Delete' : _stage.dispatchEvent(new UICommand(UICommand.DELETE_BOOKMARK));	break;
 				
-				case 'Track Item' : AppModel.editor.trackFile(getListItem(e.mouseTarget).file);	break;				case 'UnTrack Item' : AppModel.editor.unTrackFile(getListItem(e.mouseTarget).file);	break;
+				case 'Track Item' : 
+					AppModel.repos.editor.trackFile(getListItem(e.mouseTarget).file);	break;				case 'UnTrack Item' : 
+					AppModel.repos.editor.unTrackFile(getListItem(e.mouseTarget).file);	break;
 			}
 		//	trace("AirContextMenu.onContextMenuItemSelect(e)", e.mouseTarget, cmi.label);
 		}

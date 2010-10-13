@@ -1,5 +1,6 @@
 package view.modals {
 	import commands.UICommand;
+
 	import model.AppModel;
 
 	import flash.events.MouseEvent;
@@ -21,11 +22,11 @@ package view.modals {
 
 		private function onBranch(e:MouseEvent):void 
 		{
-			AppModel.history.addBranch(_view.name_txt.text);
+			AppModel.repos.history.addBranch(_view.name_txt.text);
 			dispatchEvent(new UICommand(UICommand.CLOSE_MODAL_WINDOW, this));		}
 		private function onDiscard(e:MouseEvent):void 
 		{
-		//	AppModel.history.discardUnsavedChanges();
+		//	AppModel.repos.history.discardUnsavedChanges();
 			dispatchEvent(new UICommand(UICommand.CLOSE_MODAL_WINDOW, this));
 		}
 		

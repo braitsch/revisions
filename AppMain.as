@@ -12,7 +12,7 @@ package {
 
 	public class AppMain extends Sprite {
 	
-		private static var _model		:AppModel = new AppModel();	
+		private static var _model		:AppModel = new AppModel();
 		private static var _view		:AppView = new AppView();
 		
 		public function AppMain()

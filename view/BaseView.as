@@ -21,7 +21,7 @@ package view {
 			_view.addChild(_status);			_view.addChild(_toolbar);			addChild(_view);
 
 			AppModel.installer.addEventListener(InstallEvent.SET_GIT_VERSION, onGitVersion);			
-			AppModel.getInstance().addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkChange);									
+			AppModel.repos.addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkChange);									
 		}
 
 		private function onBookmarkChange(e:RepositoryEvent):void 

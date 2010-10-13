@@ -5,7 +5,6 @@ package commands {
 	public class UICommand extends Event {
 		
 	// modal window events //	
-		public static const INSTALL_GIT:String = "INSTALL_GIT";
 		public static const CLOSE_MODAL_WINDOW:String = "CLOSE_MODAL_WINDOW";
 		public static const FILE_BROWSER_SELECTION:String = "FILE_BROWSER_SELECTION";
 		
@@ -20,8 +19,7 @@ package commands {
 		public static const DETACHED_BRANCH_EDITED:String = "DETACHED_BRANCH_EDITED";
 		
 		public static const SAVE_PROJECT:String = "SAVE_PROJECT";			
-		public static const VIEW_HISTORY:String = "VIEW_HISTORY";		public static const VIEW_VERSION:String = "VIEW_VERSION";
-		
+		public static const VIEW_HISTORY:String = "VIEW_HISTORY";		
 	// list item selections //	
 		public static const LIST_ITEM_SELECTED:String = "LIST_ITEM_SELECTED";
 		public static const HISTORY_ITEM_SELECTED:String = "HISTORY_ITEM_SELECTED";
@@ -31,6 +29,7 @@ package commands {
 		public static const TOGGLE_OPEN_DIRECTORY:String = "TOGGLE_OPEN_DIRECTORY";
 		
 		public static const COLUMN_RESIZED:String = "COLUMN_RESIZED";
+		
 		public var data:Object;
 
 		public function UICommand($type:String, $data:Object = null)

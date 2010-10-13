@@ -60,12 +60,12 @@ package view.bookmarks {
 	
 		public function getHistory():void
 		{
-			AppModel.history.getHistoryOfBranch(this);		
+			AppModel.repos.history.getHistoryOfBranch(this);		
 		}
 
 		public function getStatus():void 
 		{
-			AppModel.status.getStatusOfBranch(this);				}
+			AppModel.repos.status.getStatusOfBranch(this);				}
 		
 		public function getStatusAndHistory():void
 		{
