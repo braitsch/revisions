@@ -32,7 +32,7 @@ package view.files {
 			addChild(_view);
 			addChild(_list);
 			
-			AppModel.repos.addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkChange);
+			AppModel.proxy.addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkChange);
 		}
 		
 		private function onBookmarkChange(e:RepositoryEvent):void 

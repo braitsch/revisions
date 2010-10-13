@@ -2,7 +2,7 @@ package view {
 	import events.RepositoryEvent;
 
 	import model.AppModel;
-	import model.git.RepositoryStatus;
+	import model.git.repo.StatusProxy;
 
 	import flash.display.Sprite;
 
@@ -16,7 +16,7 @@ package view {
 			this.x = 740;			
 			addChild(_view);
 			
-			AppModel.repos.addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkChanged);
+			AppModel.proxy.addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkChanged);
 		}
 
 		private function onBookmarkChanged(e:RepositoryEvent):void 
@@ -27,9 +27,9 @@ package view {
 		private function onStatusReceived(e:RepositoryEvent):void 
 		{
 			var a:Array = AppModel.branch.status;
-			_view.tracked_txt.text = String(a[RepositoryStatus.T].length);			_view.untracked_txt.text = String(a[RepositoryStatus.U].length);
-			_view.modified_txt.text = String(a[RepositoryStatus.M].length);
-			_view.ignored_txt.text = String(a[RepositoryStatus.I].length);
+			_view.tracked_txt.text = String(a[StatusProxy.T].length);			_view.untracked_txt.text = String(a[StatusProxy.U].length);
+			_view.modified_txt.text = String(a[StatusProxy.M].length);
+			_view.ignored_txt.text = String(a[StatusProxy.I].length);
 		}
 		
 	}

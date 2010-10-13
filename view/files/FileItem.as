@@ -1,5 +1,5 @@
 package view.files {
-	import model.git.RepositoryStatus;
+	import model.git.repo.StatusProxy;
 
 	import view.layout.ListItem;
 
@@ -32,9 +32,9 @@ package view.files {
 		{
 			if (_icon) _icon == null;
 			var bmd:BitmapData;
-			if (s==RepositoryStatus.M) bmd = orange as BitmapData; 
-			if (s==RepositoryStatus.T) bmd = green as BitmapData;			if (s==RepositoryStatus.U) bmd = grey as BitmapData; 			
-			if (s==RepositoryStatus.I) bmd = blue as BitmapData; 
+			if (s==StatusProxy.M) bmd = orange as BitmapData; 
+			if (s==StatusProxy.T) bmd = green as BitmapData;			if (s==StatusProxy.U) bmd = grey as BitmapData; 			
+			if (s==StatusProxy.I) bmd = blue as BitmapData; 
 			_icon = new Bitmap(bmd);
 			_icon.x = 4;			_icon.y = 2.5;
 			addChild(_icon);

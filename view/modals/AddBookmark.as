@@ -49,7 +49,7 @@ package view.modals {
 		private function onAddRepository(e:MouseEvent):void 
 		{	
 			if (!validate()) return;
-			AppModel.repos.editor.initRepository(_view.local_txt.text);				
+			AppModel.proxy.editor.initRepository(_view.local_txt.text);				
 			AppModel.database.addRepository(_view.name_txt.text, _view.local_txt.text);					
 			dispatchEvent(new UICommand(UICommand.CLOSE_MODAL_WINDOW, this));
 		}	

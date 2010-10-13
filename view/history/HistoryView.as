@@ -29,9 +29,9 @@ package view.history {
 
 			addEventListener(UICommand.HISTORY_ITEM_SELECTED, onHistoryItemSelection);
 			
-			AppModel.repos.addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkSelected);
-			AppModel.repos.addEventListener(RepositoryEvent.BOOKMARKS_READY, onBookmarksReady, false, 2);
-			AppModel.repos.addEventListener(RepositoryEvent.BRANCH_MODIFIED, onModifiedReceived);
+			AppModel.proxy.addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkSelected);
+			AppModel.proxy.addEventListener(RepositoryEvent.BOOKMARKS_READY, onBookmarksReady, false, 2);
+			AppModel.proxy.addEventListener(RepositoryEvent.BRANCH_MODIFIED, onModifiedReceived);
 		}
 
 		private function onBookmarksReady(e:RepositoryEvent):void 
@@ -59,7 +59,7 @@ package view.history {
 			trace('------------------------------');
 			_selectedItem = e.data as HistoryItem;
 		// always force refresh the status of the current branch before attempting a checkout	
-			AppModel.repos.status.getActiveBranchIsModified();			
+			AppModel.proxy.status.getActiveBranchIsModified();			
 		}	
 		
 		private function onModifiedReceived(e:RepositoryEvent):void 
@@ -69,7 +69,7 @@ package view.history {
 				trace('local modifications on the detached branch');
 			//	stage.dispatchEvent(new UICommand(UICommand.DETACHED_BRANCH_EDITED));				
 			}	else {
-				AppModel.repos.history.checkout(_selectedItem);
+				AppModel.proxy.checkout.checkout(_selectedItem);
 			}
 		}		
 

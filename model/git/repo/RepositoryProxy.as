@@ -1,31 +1,31 @@
-package model.git {
+package model.git.repo {
 	import events.RepositoryEvent;
 
 	import view.bookmarks.Bookmark;
 
 	import flash.events.EventDispatcher;
 
-	public class RepositoryModel extends EventDispatcher {
+	public class RepositoryProxy extends EventDispatcher {
 		
-		private static var _proxy		:RepositoryProxy = new RepositoryProxy();
-		private static var _editor		:RepositoryEditor = new RepositoryEditor();
-		private static var _status 		:RepositoryStatus = new RepositoryStatus();
-		private static var _history		:RepositoryHistory = new RepositoryHistory();			
+		private static var _branch		:BranchProxy = new BranchProxy();
+		private static var _editor		:EditorProxy = new EditorProxy();
+		private static var _status 		:StatusProxy = new StatusProxy();
+		private static var _history		:HistoryProxy = new HistoryProxy();	
+		private static var _checkout	:CheckoutProxy = new CheckoutProxy();		
 
 		private static var _bookmark	:Bookmark;
 		private static var _bookmarks	:Vector.<Bookmark>;
 
-		public function RepositoryModel()
+		public function RepositoryProxy()
 		{
-			_proxy.addEventListener(RepositoryEvent.BOOKMARKS_READY, onBookmarksReady);
-			_proxy.addEventListener(RepositoryEvent.BRANCH_DETACHED, onBranchDetached);
+			_branch.addEventListener(RepositoryEvent.BOOKMARKS_READY, onBookmarksReady);
 		}
 
 	// public setters //
 
 		public function set repositories(a:Array):void
 		{
-			_proxy.repositories = a;
+			_branch.repositories = a;
 		}
 		
 		public function set bookmark(b:Bookmark):void
@@ -43,20 +43,31 @@ package model.git {
 			return _bookmark;
 		}			
 		
-		public function get editor():RepositoryEditor
+		public function get editor():EditorProxy
 		{
 			return _editor;
 		}
+
+		public function get branch():BranchProxy
+		{
+			return _branch;
+		}
 		
-		public function get status():RepositoryStatus
+		public function get status():StatusProxy
 		{
 			return _status;
 		}
 		
-		public function get history():RepositoryHistory
+		public function get history():HistoryProxy
 		{
 			return _history;
-		}	
+		}
+		
+		public function get checkout():CheckoutProxy
+		{
+			return _checkout;
+		}		
+		
 		
 	// private event handlers //
 		
@@ -65,13 +76,6 @@ package model.git {
 			_bookmarks = e.data as Vector.<Bookmark>;
 			trace("RepositoryModel.onBookmarksReady(e)");
 			dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARKS_READY, _bookmarks));
-		}
-		
-		private function onBranchDetached(e:RepositoryEvent):void 
-		{
-			var b:Bookmark = e.data as Bookmark;
-			trace("RepositoryModel.onBranchDetached(e) >> ", b.label);
-			// dispatch some event to show modal window...
 		}
 		
 	}

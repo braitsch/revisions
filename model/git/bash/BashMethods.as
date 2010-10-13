@@ -1,4 +1,4 @@
-package model.git{
+package model.git.bash{
 
 	public class BashMethods {
 		

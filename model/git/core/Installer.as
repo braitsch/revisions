@@ -1,4 +1,5 @@
-package model.git {
+package model.git.core {
+	import model.git.bash.BashMethods;
 	import events.InstallEvent;
 	import events.NativeProcessEvent;
 
@@ -9,12 +10,12 @@ package model.git {
 
 	// installs & updates git if user does not have minimum required version installed.
 
-	public class GitInstaller extends EventDispatcher {
+	public class Installer extends EventDispatcher {
 
 		private static var _proxy			:NativeProcessProxy;
 		private static var _gitNotInstalled	:Boolean;
 
-		public function GitInstaller()
+		public function Installer()
 		{
 			_proxy = new NativeProcessProxy();
 			_proxy.executable = 'Install.sh';			_proxy.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);

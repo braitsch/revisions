@@ -1,4 +1,4 @@
-package model.git {
+package model.git.core {
 	import events.RepositoryEvent;
 	import events.NativeProcessEvent;
 

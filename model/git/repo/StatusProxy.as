@@ -1,49 +1,54 @@
-package model.git {
-	import model.AppModel;
-	import events.RepositoryEvent;
+package model.git.repo {
 	import events.NativeProcessEvent;
+	import events.RepositoryEvent;
 
+	import model.AppModel;
 	import model.SystemRules;
 	import model.air.NativeProcessQueue;
+	import model.git.bash.BashMethods;
 
 	import view.bookmarks.Bookmark;
 	import view.bookmarks.Branch;
 
-	import flash.events.EventDispatcher;
-
-	public class RepositoryStatus extends EventDispatcher {
+	public class StatusProxy extends NativeProcessQueue {
 
 		public static const	M		:uint = 0; // modified
 		public static const	T		:uint = 1; // tracked		public static const	U		:uint = 2; // untracked		public static const	I		:uint = 3; // ignored
-				private static var _proxy		:NativeProcessQueue;
-		private static var _branch		:Branch;
+				private static var _branch		:Branch;
 		private static var _bookmark	:Bookmark;
+		private static var _getHistory	:Boolean;
 
-		public function RepositoryStatus()
+		public function StatusProxy()
 		{
-			_proxy = new NativeProcessQueue('Status.sh');
-			_proxy.addEventListener(NativeProcessEvent.QUEUE_COMPLETE, onQueueComplete);
-			_proxy.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);
+			super.executable = 'Status.sh';
+			super.addEventListener(NativeProcessEvent.QUEUE_COMPLETE, onQueueComplete);
+			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);
 		}
-		
-	// public methods //	
 		
 		public function set bookmark(b:Bookmark):void 
 		{
 			_bookmark = b;
-			_proxy.directory = _bookmark.local;
+			super.directory = _bookmark.local;
 		}		
+		
+	// public methods //	
 		
 		public function getStatusOfBranch($b:Branch):void
 		{
 			_branch = $b;
-			_proxy.queue = getStatusTransaction();						}
+			super.queue = getStatusTransaction();						}
+		
+		public function getStatusAndHistory():void
+		{
+			_getHistory = true;
+			getStatusOfBranch(AppModel.branch);
+		}		
 		
 		public function getActiveBranchIsModified():void 
 		{
 		// this is only called prior to a checkout attempt > in history viewer //	
 			_branch = AppModel.branch;
-			_proxy.queue = [	Vector.<String>([BashMethods.GET_MODIFIED_FILES])	];				
+			super.queue = [	Vector.<String>([BashMethods.GET_MODIFIED_FILES])	];				
 		}
 		
 	// private handlers //
@@ -51,12 +56,18 @@ package model.git {
 		private function onQueueComplete(e:NativeProcessEvent):void
 		{
 			var a:Array = e.data as Array;
-			trace("RepositoryStatus.onQueueComplete(e)", _bookmark.label, _branch.name);
 			switch(a.length){
-				case 1 : parseModifiedFiles(a);		break;				case 4 : parseFullBranchStatus(a);	break;
-			}
+				case 1 : parseModifiedFiles(a);		break;
+				case 4 : parseFullBranchStatus(a);	break;			}
 			_branch.modified = a[M].length;
-			trace('modifed set on ', _bookmark.label, _branch.name, 'to:', _branch.modified);
+			trace("StatusProxy.onQueueComplete(e)", _bookmark.label, _branch.name, 'modifed set to >', _branch.modified);
+			
+		// also force refresh the history on commit //	
+			if (_getHistory == true){
+				_getHistory = false;
+				AppModel.proxy.history.getHistoryOfBranch(AppModel.branch);
+			}
+			
 		}
 
 		private function parseModifiedFiles(a:Array):void 
@@ -136,7 +147,7 @@ package model.git {
 		
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
-			trace("RepositoryStatus.onProcessFailure(e)");
+			trace("StatusProxy.onProcessFailure(e)");
 		}
 		
 		private function getStatusTransaction():Array

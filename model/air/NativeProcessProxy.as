@@ -20,7 +20,7 @@ package model.air {
 		private var _method			:String;
 		private var _result			:String;
 		
-		public function NativeProcessProxy($exec:String='')
+		public function NativeProcessProxy($exec:String = '')
 		{
 			if (NativeProcess.isSupported){
 				init();

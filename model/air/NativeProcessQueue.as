@@ -9,7 +9,7 @@ package model.air {
 		private var _failed			:Boolean;
 		private var _dieOnFailure	:Boolean = true;
 
-		public function NativeProcessQueue($exec:String)
+		public function NativeProcessQueue($exec:String = '')
 		{
 			super($exec);
 			addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);			addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);		}

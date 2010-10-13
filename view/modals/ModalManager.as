@@ -1,4 +1,5 @@
 package view.modals {
+	import events.RepositoryEvent;
 	import commands.UICommand;
 
 	import events.InstallEvent;
@@ -34,14 +35,16 @@ package view.modals {
 			addEventListener(UICommand.CLOSE_MODAL_WINDOW, onCloseModelWindow);	
 			
 			AppModel.installer.addEventListener(InstallEvent.GIT_UNAVAILABLE, installGit);
+			AppModel.proxy.branch.addEventListener(RepositoryEvent.BRANCH_DETACHED, onBranchDetached);
+			AppModel.proxy.checkout.addEventListener(RepositoryEvent.DETACHED_MODIFIED, onDetachedModified);
 		}
 
 		private function onAddedToStage(e:Event):void 
 		{
 			_dragAndDrop.target = stage;
 			_dragAndDrop.addEventListener(NativeDragEvent.NATIVE_DRAG_COMPLETE, onDragAndDrop);
-			stage.addEventListener(UICommand.NEW_BOOKMARK, addBookmark);			stage.addEventListener(UICommand.EDIT_BOOKMARK, editBookmark);			stage.addEventListener(UICommand.SAVE_PROJECT, addNewCommit);			stage.addEventListener(UICommand.REPAIR_BOOKMARK, repairBookmark);			stage.addEventListener(UICommand.ADD_BRANCH, branchBookmark);			stage.addEventListener(UICommand.DELETE_BOOKMARK, removeBookmark);
-			stage.addEventListener(UICommand.VIEW_HISTORY, viewHistory);			stage.addEventListener(UICommand.DETACHED_BRANCH_EDITED, onDetachedBranchEdited);		}	
+						stage.addEventListener(UICommand.NEW_BOOKMARK, addBookmark);			stage.addEventListener(UICommand.EDIT_BOOKMARK, editBookmark);			stage.addEventListener(UICommand.SAVE_PROJECT, addNewCommit);			stage.addEventListener(UICommand.REPAIR_BOOKMARK, repairBookmark);			stage.addEventListener(UICommand.ADD_BRANCH, branchBookmark);
+			stage.addEventListener(UICommand.DELETE_BOOKMARK, removeBookmark);			stage.addEventListener(UICommand.VIEW_HISTORY, viewHistory);		}	
 
 		private function onDragAndDrop(e:NativeDragEvent):void 
 		{
@@ -95,9 +98,14 @@ package view.modals {
 		private function viewHistory(e:UICommand):void 
 		{
 			addChild(_history);
-		}	
+		}
 		
-		private function onDetachedBranchEdited(e:UICommand):void 
+		private function onBranchDetached(e:RepositoryEvent):void 
+		{
+			trace("ModalManager.onBranchDetached(e) >> ", e.data.label);
+		}		
+		
+		private function onDetachedModified(e:RepositoryEvent):void 
 		{
 			addChild(_detached);	
 		}							

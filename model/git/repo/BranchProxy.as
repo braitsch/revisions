@@ -1,30 +1,28 @@
-package model.git {
+package model.git.repo {
 	import events.NativeProcessEvent;
 	import events.RepositoryEvent;
 
+	import model.AppModel;
 	import model.air.NativeProcessProxy;
+	import model.git.bash.BashMethods;
 
 	import view.bookmarks.Bookmark;
 
-	import flash.events.EventDispatcher;
+	public class BranchProxy extends NativeProcessProxy{
 
-	public class RepositoryProxy extends EventDispatcher{
-
-		private static var _proxy		:NativeProcessProxy;
 		private static var _index		:uint = 0;
 		private static var _bookmarks 	:Vector.<Bookmark>;
 
-		public function RepositoryProxy() 
+		public function BranchProxy() 
 		{	
-			_proxy = new NativeProcessProxy();	
-			_proxy.executable = 'Branch.sh';
-			_proxy.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);
-			_proxy.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
+			super.executable = 'Branch.sh';
+			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);
+			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 		}	
 		
 		public function set repositories(a:Array):void
 		{
-			trace("RepositoryProxy.onRepositories(e) > creating bookmarks from database data");
+			trace("BranchProxy.onRepositories(e) > creating bookmarks from database data");
 			var v:Vector.<Bookmark> = new Vector.<Bookmark>();
 			
 			for (var i : int = 0; i < a.length; i++) {
@@ -37,17 +35,24 @@ package model.git {
 					return;
 				}
 			}
-			trace("RepositoryProxy.onRepositories(e) > bookmark objects created");
+			trace("BranchProxy.onRepositories(e) > bookmark objects created");
 			_bookmarks = v;
 			getBranchesOfBookmark(_bookmarks[_index]);			
 		}
 
+		public function addBranch($name:String):void
+		{
+			trace("BranchProxy.addBranch($new)", $name, AppModel.bookmark.previous.name);
+			super.call(Vector.<String>([BashMethods.ADD_BRANCH, $name, AppModel.bookmark.previous.name]));
+		}
+		
+	// private methods //	
 		
 		private function getBranchesOfBookmark(b:Bookmark):void
 		{
-			trace("RepositoryProxy.getBranchesOfBookmark(b) > ", b.label);
-			_proxy.directory = b.local;
-			_proxy.call(Vector.<String>([BashMethods.GET_BRANCHES]));			
+			trace("BranchProxy.getBranchesOfBookmark(b) > ", b.label);
+			super.directory = b.local;
+			super.call(Vector.<String>([BashMethods.GET_BRANCHES]));			
 		}
 		
 	// response handlers //			
@@ -84,6 +89,6 @@ package model.git {
 			trace("BranchEditor.onProcessFailure(e)");
 		}		
 		
-		
 	}
+	
 }

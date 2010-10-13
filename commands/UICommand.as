@@ -16,7 +16,6 @@ package commands {
 		public static const DELETE_BRANCH:String = "DELETE_BRANCH";
 		public static const CHANGE_BRANCH:String = "CHANGE_BRANCH";
 		public static const MERGE_BRANCH:String = "MERGE_BRANCH";
-		public static const DETACHED_BRANCH_EDITED:String = "DETACHED_BRANCH_EDITED";
 		
 		public static const SAVE_PROJECT:String = "SAVE_PROJECT";			
 		public static const VIEW_HISTORY:String = "VIEW_HISTORY";		

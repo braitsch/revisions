@@ -3,9 +3,9 @@ package model {
 	import events.InstallEvent;
 
 	import model.db.AppDataBase;
-	import model.git.Configurator;
-	import model.git.GitInstaller;
-	import model.git.RepositoryModel;
+	import model.git.core.Configurator;
+	import model.git.core.Installer;
+	import model.git.repo.RepositoryProxy;
 
 	import view.bookmarks.Bookmark;
 	import view.bookmarks.Branch;
@@ -15,9 +15,9 @@ package model {
 	public class AppModel extends EventDispatcher {
 		
 		private static var _database	:AppDataBase = new AppDataBase();
-		private static var _repos		:RepositoryModel = new RepositoryModel();		
+		private static var _proxy		:RepositoryProxy = new RepositoryProxy();		
 		private static var _config		:Configurator = new Configurator();
-		private static var _installer	:GitInstaller = new GitInstaller();
+		private static var _installer	:Installer = new Installer();
 
 		public function AppModel() 
 		{
@@ -29,19 +29,19 @@ package model {
 		
 		static public function get bookmark():Bookmark
 		{
-			return _repos.bookmark;	
+			return _proxy.bookmark;	
 		}
 		
 		static public function get branch():Branch
 		{
-			return _repos.bookmark.branch;	
+			return _proxy.bookmark.branch;	
 		}
 		
 	// public getters //			
 
-		static public function get repos():RepositoryModel
+		static public function get proxy():RepositoryProxy
 		{
-			return _repos;
+			return _proxy;
 		}																			
 		
 		static public function get config():Configurator
@@ -49,7 +49,7 @@ package model {
 			return _config;
 		}		
 		
-		static public function get installer():GitInstaller
+		static public function get installer():Installer
 		{
 			return _installer;
 		}	
@@ -68,7 +68,7 @@ package model {
 		
 		private function onRepositories(e:DataBaseEvent):void 
 		{
-			_repos.repositories = e.data as Array;	
+			_proxy.repositories = e.data as Array;	
 		}	
 		
 	}
