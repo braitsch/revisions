@@ -76,7 +76,7 @@ package view.history {
 			
 		// only show unsaved item for the current branch 
 		// since you cannot checkout another branch if you have local changes	
-			if (_branch==AppModel.repos.bookmark.branch) {
+			if (_branch==AppModel.branch) {
 				if (_branch.modified) v.push(_itemUnsaved);
 			}
 			

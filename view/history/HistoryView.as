@@ -65,7 +65,7 @@ package view.history {
 		private function onModifiedReceived(e:RepositoryEvent):void 
 		{
 			trace("HistoryView.onModified(e) > active branch modified = ", e.data);
-			if (AppModel.repos.bookmark.branch.name==Bookmark.DETACH && e.data == true){
+			if (AppModel.branch.name==Bookmark.DETACH && e.data == true){
 				trace('local modifications on the detached branch');
 			//	stage.dispatchEvent(new UICommand(UICommand.DETACHED_BRANCH_EDITED));				
 			}	else {

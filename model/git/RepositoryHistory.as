@@ -51,8 +51,8 @@ package model.git {
 		
 		public function addBranch($name:String):void
 		{
-			trace("RepositoryHistory.addBranch($new)", $name, AppModel.repos.bookmark.previous.name);
-			_proxy.call(Vector.<String>([BashMethods.ADD_BRANCH, $name, AppModel.repos.bookmark.previous.name]));
+			trace("RepositoryHistory.addBranch($new)", $name, AppModel.bookmark.previous.name);
+			_proxy.call(Vector.<String>([BashMethods.ADD_BRANCH, $name, AppModel.bookmark.previous.name]));
 		}	
 		
 		public function discardUnsavedChanges():void

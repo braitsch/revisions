@@ -7,6 +7,9 @@ package model {
 	import model.git.GitInstaller;
 	import model.git.RepositoryModel;
 
+	import view.bookmarks.Bookmark;
+	import view.bookmarks.Branch;
+
 	import flash.events.EventDispatcher;
 
 	public class AppModel extends EventDispatcher {
@@ -20,7 +23,21 @@ package model {
 		{
 			_database.addEventListener(DataBaseEvent.REPOSITORIES, onRepositories);
 			_installer.addEventListener(InstallEvent.SET_GIT_VERSION, onGitAvailable);
-		}		
+		}
+		
+	// shortcuts -- need to be implemented //	
+		
+		static public function get bookmark():Bookmark
+		{
+			return _repos.bookmark;	
+		}
+		
+		static public function get branch():Branch
+		{
+			return _repos.bookmark.branch;	
+		}
+		
+	// public getters //			
 
 		static public function get repos():RepositoryModel
 		{
@@ -44,15 +61,15 @@ package model {
 		
 	// event handlers //	
 	
-		private function onRepositories(e:DataBaseEvent):void 
-		{
-			_repos.repositories = e.data as Array;	
-		}	
-	
 		private function onGitAvailable(e:InstallEvent):void 
 		{
 			_database.init();
 		}			
+		
+		private function onRepositories(e:DataBaseEvent):void 
+		{
+			_repos.repositories = e.data as Array;	
+		}	
 		
 	}
 	

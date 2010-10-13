@@ -65,8 +65,8 @@ package view.modals {
 
 		private function editBookmark(e:UICommand):void
 		{
-			if (!AppModel.repos.bookmark) return;
-			_edit.bookmark = AppModel.repos.bookmark;
+			if (!AppModel.bookmark) return;
+			_edit.bookmark = AppModel.bookmark;
 			addChild(_edit);
 		}
 		
@@ -83,7 +83,7 @@ package view.modals {
 		
 		private function removeBookmark(e:UICommand):void
 		{
-			_remove.bookmark = AppModel.repos.bookmark;
+			_remove.bookmark = AppModel.bookmark;
 			addChild(_remove);
 		}
 		

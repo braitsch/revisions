@@ -40,8 +40,9 @@ package view {
 		private function onBookmarkSelected(e:UICommand):void 
 		{
 			var b:Bookmark = BookmarkItem(e.data as ListItem).bookmark;
+		// the only place in the application that sets the bookmark //	
 			AppModel.repos.bookmark = b;
-			AppModel.repos.bookmark.branch.getStatus();
+			AppModel.branch.getStatus();
 			
 			_dirs.directory = e.data as ListItem;
 			_files.directory = e.data as ListItem;
@@ -49,7 +50,7 @@ package view {
 		
 		private function onDirectorySelection(e:UICommand):void 
 		{
-			AppModel.repos.bookmark.branch.getStatus();			_files.directory = e.data as ListItem;
+			AppModel.branch.getStatus();			_files.directory = e.data as ListItem;
 		}
 		
 	}

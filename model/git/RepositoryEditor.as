@@ -69,11 +69,11 @@ package model.git {
 		{
 			trace("RepositoryEditor.onProcessComplete(e)", 'method = '+e.data.method, 'result = '+e.data.result);
 			switch(e.data.method){
-				case BashMethods.TRACK_FILE : 					AppModel.repos.bookmark.branch.getStatus();				break;				case BashMethods.UNTRACK_FILE : 
-					AppModel.repos.bookmark.branch.getStatus();
+				case BashMethods.TRACK_FILE : 					AppModel.branch.getStatus();				break;				case BashMethods.UNTRACK_FILE : 
+					AppModel.branch.getStatus();
 				break;
 				case BashMethods.COMMIT : 
-					AppModel.repos.bookmark.branch.getStatusAndHistory();				break;
+					AppModel.branch.getStatusAndHistory();				break;
 			}
 		}	
 		

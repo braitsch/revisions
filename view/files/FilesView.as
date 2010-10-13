@@ -37,7 +37,7 @@ package view.files {
 		
 		private function onBookmarkChange(e:RepositoryEvent):void 
 		{
-			AppModel.repos.bookmark.branch.addEventListener(RepositoryEvent.BRANCH_STATUS, onRepositoryStatus);
+			AppModel.branch.addEventListener(RepositoryEvent.BRANCH_STATUS, onRepositoryStatus);
 		}
 
 		public function set directory(d:ListItem):void
@@ -52,10 +52,10 @@ package view.files {
 		private function onRepositoryStatus(e:RepositoryEvent):void 
 		{
 			var i:int;
-			var s:Array = AppModel.repos.bookmark.branch.status;
+			var s:Array = AppModel.branch.status;
 			file: for (i = 0; i < _files.length; i++) {
 		// slice off the root path of the bookmark since git returns an abbreviated path //
-				var p:String = _files[i].file.nativePath.replace(AppModel.repos.bookmark.local+'/', '');
+				var p:String = _files[i].file.nativePath.replace(AppModel.bookmark.local+'/', '');
 				for (var j:int = 0; j < s.length; j++) {
 					for (var k:int = 0; k < s[j].length; k++) {
 						if (p==s[j][k]){
