@@ -9,12 +9,11 @@ package view.bookmarks {
 	public class Bookmark extends ListItem {
 
 	// branch constants //
-		public static const MASTER	:String = 'master';
 		public static const DETACH	:String = 'detach';
 
 		private var _label			:String;
 		private var _local			:String;		private var _remote			:String;
-		private var _master			:Branch;		private var _detach			:Branch = new Branch(DETACH);
+		private var _detach			:Branch = new Branch(DETACH);
 		private var _branch			:Branch;
 		private var _previous		:Branch;
 		private var _branches		:Array = [];
@@ -62,6 +61,7 @@ package view.bookmarks {
 		public function set branch(b:Branch):void
 		{
 			_branch = b;
+			trace("Bookmark.branch(b)", _branch.name);
 			dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_SET));
 		}
 
@@ -76,11 +76,6 @@ package view.bookmarks {
 		}
 		
 	// special branches //				
-		
-		public function get master():Branch
-		{
-			return _master;
-		}
 		
 		public function get detach():Branch
 		{

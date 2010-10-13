@@ -2,7 +2,6 @@ package view.bookmarks {
 	import events.RepositoryEvent;
 
 	import model.AppModel;
-	import model.git.RepositoryStatus;
 
 	import flash.events.EventDispatcher;
 
@@ -11,6 +10,7 @@ package view.bookmarks {
 		private var _name		:String;
 		private var _status		:Array;
 		private var _history	:Array;
+		private var _modified	:uint;
 		private var _getHistory	:Boolean;
 
 		public function Branch($n:String) 
@@ -45,10 +45,15 @@ package view.bookmarks {
 		{
 			return _status;
 		}		
+
+		public function set modified(n:uint):void
+		{
+			_modified = n;
+		}
 		
 		public function get modified():uint
 		{
-			return _status[RepositoryStatus.M].length;
+			return _modified;
 		}
 		
 	// methods //

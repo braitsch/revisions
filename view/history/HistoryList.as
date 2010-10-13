@@ -20,11 +20,12 @@ package view.history {
 		private var _view				:HistoryListMC = new HistoryListMC();
 		private var _branch				:Branch;
 		private var _modified			:uint;		// record the last modified value //
-		private var _itemUnsaved		:HistoryItemUnsaved = new HistoryItemUnsaved();	
+		private var _itemUnsaved		:HistoryItemUnsaved;
 
 		public function HistoryList($branch:Branch, $xpos:uint)
 		{
 			_branch = $branch;
+			_itemUnsaved = new HistoryItemUnsaved(_branch.name);
 			
 			_view.tab.x = $xpos * 62;
 			_view.tab.buttonMode = true;
@@ -81,7 +82,13 @@ package view.history {
 			
 			for (var i:int = 0; i < a.length; i++) {
 				var n:Array = a[i].split('##');
-				v.push(new HistoryItem(String(a.length-i), n[1], n[2], n[3], n[0]));
+				var o:Object = {	index : String(a.length-i),
+									date : n[1], 
+									author : n[2], 
+									note : n[3], 
+									sha1 : n[0],	
+									name : _branch.name	};
+				v.push(new HistoryItem(o));
 			}
 			_list.refresh(v);
 			trace("HistoryList.rebuildList > ", '# items = '+a.length);			

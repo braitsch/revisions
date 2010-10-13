@@ -71,11 +71,8 @@ package view.history {
 			if (AppModel.bookmark.branch.name==Bookmark.DETACH && e.data == true){
 				trace('local modifications on the detached branch');
 			//	stage.dispatchEvent(new UICommand(UICommand.DETACHED_BRANCH_EDITED));				
-			}	else if (_selectedItem.index == 0){
-				trace('no local changes - checking out master');			//	AppModel.history.checkoutMaster();
-			}	else{
-				trace('no local changes - checking out commit > ', _selectedItem.sha1);
-			//	AppModel.history.checkoutCommit(_selectedItem.sha1);
+			}	else {
+				AppModel.history.checkout(_selectedItem);
 			}
 		}		
 

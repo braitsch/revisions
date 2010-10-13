@@ -45,6 +45,9 @@ package view.history {
 		
 		private function onBranchChange(e:RepositoryEvent = null):void 
 		{
+		//TODO need to not get this event when working with the detached head	
+			trace("HistoryCollection.onBranchChange(e) > ", _bkmk.label, _bkmk.branch.name);
+			if (_bkmk.branch.name=='detach') return;
 		// automatically highlight the tab associated w/ the new branch	
 			for (var i:int = 0; i < numChildren; i++) {
 				if (HistoryList(getChildAt(i)).branch ==_bkmk.branch) break;

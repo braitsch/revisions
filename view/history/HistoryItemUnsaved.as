@@ -5,10 +5,15 @@ package view.history {
 
 	public class HistoryItemUnsaved extends HistoryItem {
 		
-		public function HistoryItemUnsaved()
+		public function HistoryItemUnsaved($branchName:String)
 		{
-			var n:String = AppModel.config.userName || 'Unknown Author';
-			super('XX', '- Right Now -', n, 'Working Version (Not Saved)');
+			var o:Object = {	index :'XX', 	
+								date :'- Right Now -',
+								author : AppModel.config.userName || 'Unknown Author',
+								note : 'Working Version (Not Saved)',
+								name : $branchName	};
+								
+			super(o);								
 			super.active = true;
 			AppModel.config.addEventListener(RepositoryEvent.SET_USERNAME, onUserNameChange);	
 		}

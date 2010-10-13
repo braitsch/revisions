@@ -1,4 +1,5 @@
 package model.git {
+	import model.AppModel;
 	import events.RepositoryEvent;
 	import events.NativeProcessEvent;
 
@@ -25,72 +26,91 @@ package model.git {
 			_proxy.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);
 		}
 		
+	// public methods //	
+		
 		public function set bookmark(b:Bookmark):void 
 		{
 			_bookmark = b;
 			_proxy.directory = _bookmark.local;
 		}		
 		
-		public function getStatusOfBranch($b:Branch = null):void
+		public function getStatusOfBranch($b:Branch):void
 		{
-			_branch = $b || _bookmark.branch;
+			_branch = $b;
 			_proxy.queue = getStatusTransaction();						}
 		
 		public function getActiveBranchIsModified():void 
 		{
+		// this is only called prior to a checkout attempt > in history viewer //	
+			_branch = AppModel.bookmark.branch;
 			_proxy.queue = [	Vector.<String>([BashMethods.GET_MODIFIED_FILES])	];				
-		}		
+		}
+		
+	// private handlers //
 		
 		private function onQueueComplete(e:NativeProcessEvent):void
 		{
 			var a:Array = e.data as Array;
-			if (a.length==4) {
-				parseBranchStatus(a);
-			}	else{
-				dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_MODIFIED, a[M]!=0));				
+			trace("RepositoryStatus.onQueueComplete(e)", _bookmark.label, _branch.name);
+			switch(a.length){
+				case 1 : parseModifiedFiles(a);		break;				case 4 : parseFullBranchStatus(a);	break;
 			}
+			_branch.modified = a[M].length;
+			trace('modifed set on ', _bookmark.label, _branch.name, 'to:', _branch.modified);
 		}
 
-		private function parseBranchStatus(r:Array):void 
+		private function parseModifiedFiles(a:Array):void 
 		{
-			trace("RepositoryStatus.StatusComplete(e)", _bookmark.label, _branch.name);
+			splitAndPurge(a);	
+			dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_MODIFIED, a[M]!=0));				
+		}
+
+		private function parseFullBranchStatus(a:Array):void 
+		{
 			var i:int = 0, j:int = 0; 
 			var m:Boolean = false;
-		// first split the four returned strings into four arrays //	
-			for (i = 0; i < 4; i++) {				if (r[i]=='') {
-					r[i] = [];
-				}	else{
-					r[i] = r[i].split(/[\n\r\t]/g);
-		// remove any forbidden and / or hidden files //
-					purgeForbiddenFiles(r[i]);
-				}
-			}
+			
+			splitAndPurge(a);
 			
 		// remove modified files from the all tracked files array //
 			i = j = 0;
-			while(i < r[T].length){
+			while(i < a[T].length){
 				m = false;
-				for (j = 0; j < r[M].length; j++) {
-					if (r[T][i]==r[M][j]) {
-						r[T].splice(i, 1); m=true; break;
+				for (j = 0; j < a[M].length; j++) {
+					if (a[T][i] == a[M][j]) {
+						a[T].splice(i, 1); m=true; break;
 					}
 				}
 				if (!m) i++;
 			}
 			
 		// remove intentionally ignored files from the untracked files array //			i = j = 0;
-			while(i < r[U].length){
+			while(i < a[U].length){
 				m = false;
-				for (j = 0; j < r[I].length; j++) {
-					if (r[U][i]==r[I][j]){
-						 r[U].splice(i, 1); m=true; break;
+				for (j = 0; j < a[I].length; j++) {
+					if (a[U][i] == a[I][j]){
+						 a[U].splice(i, 1); m=true; break;
 					}
 				}
 				if (!m) i++;
 			}						
 			
 		//	for (i = 0; i < 4; i++) trace('result set '+i+' = ', r[i]);
-			_branch.status = r;
+			_branch.status = a;
+		}
+		
+		private function splitAndPurge(a:Array):void
+		{
+		// first split the four returned strings into four arrays //	
+			for (var i:int = 0; i < a.length; i++) {
+				if (a[i]=='') {
+					a[i] = [];
+				}	else{
+					a[i] = a[i].split(/[\n\r\t]/g);
+		// remove any forbidden and / or hidden files //
+					purgeForbiddenFiles(a[i]);
+				}
+			}			
 		}
 
 		private function purgeForbiddenFiles(r:Array):void 

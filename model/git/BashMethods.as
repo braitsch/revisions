@@ -20,8 +20,7 @@ package model.git{
 		public static const RESET_BRANCH:String = 'resetBranch';
 		public static const ADD_BRANCH:String = 'addBranch';
 		public static const GET_BRANCHES:String = 'getBranches';
-	// history methods //				public static const GET_HISTORY:String = 'getHistory';		public static const CHECKOUT_MASTER:String = 'checkoutMaster';
-		public static const CHECKOUT_COMMIT:String = 'checkoutCommit';
+	// history methods //				public static const GET_HISTORY:String = 'getHistory';		public static const CHECKOUT_COMMIT:String = 'checkoutCommit';
 		public static const CHECKOUT_BRANCH:String = 'checkoutBranch';
 		
 	// status methods //	
