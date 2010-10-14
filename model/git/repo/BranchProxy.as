@@ -2,7 +2,6 @@ package model.git.repo {
 	import events.NativeProcessEvent;
 	import events.RepositoryEvent;
 
-	import model.AppModel;
 	import model.air.NativeProcessProxy;
 	import model.git.bash.BashMethods;
 
@@ -30,8 +29,7 @@ package model.git.repo {
 				if (b.file.exists) {
 					v.push(b);
 				}	else{
-			//		dispatchEvent(new UICommand(UICommand.REPAIR_BOOKMARK, b));
-					dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_PATH_ERROR));
+					dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_ERROR));
 					return;
 				}
 			}
@@ -42,8 +40,8 @@ package model.git.repo {
 
 		public function addBranch($name:String):void
 		{
-			trace("BranchProxy.addBranch($new)", $name, AppModel.bookmark.previous.name);
-			super.call(Vector.<String>([BashMethods.ADD_BRANCH, $name, AppModel.bookmark.previous.name]));
+//			trace("BranchProxy.addBranch($new)", $name, AppModel.bookmark.previous.name);
+//			super.call(Vector.<String>([BashMethods.ADD_BRANCH, $name, AppModel.bookmark.previous.name]));
 		}
 		
 	// private methods //	

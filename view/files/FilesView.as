@@ -32,14 +32,9 @@ package view.files {
 			addChild(_view);
 			addChild(_list);
 			
-			AppModel.proxy.addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkChange);
+			AppModel.proxy.status.addEventListener(RepositoryEvent.BRANCH_STATUS, onStatusReceived);
 		}
 		
-		private function onBookmarkChange(e:RepositoryEvent):void 
-		{
-			AppModel.branch.addEventListener(RepositoryEvent.BRANCH_STATUS, onStatusReceived);
-		}
-
 		public function set directory(d:ListItem):void
 		{
 			_files = new Vector.<ListItem>();

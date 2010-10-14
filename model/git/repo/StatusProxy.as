@@ -30,7 +30,7 @@ package model.git.repo {
 			_bookmark = b;
 			super.directory = _bookmark.local;
 		}		
-		
+
 	// public methods //	
 		
 		public function getStatusOfBranch($b:Branch):void
@@ -67,13 +67,12 @@ package model.git.repo {
 				_getHistory = false;
 				AppModel.proxy.history.getHistoryOfBranch(AppModel.branch);
 			}
-			
 		}
 
 		private function parseModifiedFiles(a:Array):void 
 		{
 			splitAndPurge(a);	
-			dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_MODIFIED, a[M]!=0));				
+			dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_MODIFIED, a[M].length));				
 		}
 
 		private function parseFullBranchStatus(a:Array):void 
@@ -107,9 +106,11 @@ package model.git.repo {
 			}						
 			
 		//	for (i = 0; i < 4; i++) trace('result set '+i+' = ', r[i]);
-			_branch.status = a;
+		// TODO would like to have this handled someway else..
+			if (_branch.history == null && _branch.name != Bookmark.DETACH) _branch.getHistory();
+			dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_STATUS, a));
 		}
-		
+
 		private function splitAndPurge(a:Array):void
 		{
 		// first split the four returned strings into four arrays //	

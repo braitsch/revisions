@@ -16,16 +16,12 @@ package view {
 			this.x = 740;			
 			addChild(_view);
 			
-			AppModel.proxy.addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkChanged);
-		}
-
-		private function onBookmarkChanged(e:RepositoryEvent):void 
-		{
-			AppModel.branch.addEventListener(RepositoryEvent.BRANCH_STATUS, onStatusReceived);
+			AppModel.proxy.status.addEventListener(RepositoryEvent.BRANCH_STATUS, onStatusReceived);
 		}
 
 		private function onStatusReceived(e:RepositoryEvent):void 
 		{
+			trace("StatusBar.onStatusReceived(e)*****************");
 		// we receive the full status of the active branch //	
 			var a:Array = e.data as Array;
 			_view.tracked_txt.text = String(a[StatusProxy.T].length);			_view.untracked_txt.text = String(a[StatusProxy.U].length);

@@ -43,7 +43,7 @@ package view.history {
 			_list.addEventListener(MouseEvent.CLICK, onRecordSelection);
 			_view.tab.addEventListener(MouseEvent.CLICK, onListTabSelection);
 			
-			_branch.addEventListener(RepositoryEvent.BRANCH_STATUS, onStatus);			_branch.addEventListener(RepositoryEvent.BRANCH_HISTORY, drawList);
+			_branch.addEventListener(RepositoryEvent.BRANCH_HISTORY, drawList);			AppModel.proxy.status.addEventListener(RepositoryEvent.BRANCH_STATUS, onStatus);
 		}
 		
 	// public //	

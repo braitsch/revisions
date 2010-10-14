@@ -11,7 +11,7 @@ package model.git.repo {
 		private static var _editor		:EditorProxy = new EditorProxy();
 		private static var _status 		:StatusProxy = new StatusProxy();
 		private static var _history		:HistoryProxy = new HistoryProxy();	
-		private static var _checkout	:CheckoutProxy = new CheckoutProxy();		
+		private static var _checkout	:CheckoutProxy = new CheckoutProxy(_status);		
 
 		private static var _bookmark	:Bookmark;
 		private static var _bookmarks	:Vector.<Bookmark>;
@@ -21,7 +21,7 @@ package model.git.repo {
 			_branch.addEventListener(RepositoryEvent.BOOKMARKS_READY, onBookmarksReady);
 		}
 
-	// public setters //
+		// public setters //
 
 		public function set repositories(a:Array):void
 		{
@@ -31,7 +31,8 @@ package model.git.repo {
 		public function set bookmark(b:Bookmark):void
 		{
 			_bookmark = b;
-			_status.bookmark = _history.bookmark = _editor.bookmark = _bookmark;
+			_status.bookmark = _history.bookmark = _bookmark;
+			_checkout.bookmark = _editor.bookmark = _bookmark;
 			dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_SET, _bookmark));			
 		}
 		

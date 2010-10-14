@@ -45,7 +45,8 @@ package view.history {
 		
 		private function onBranchChange(e:RepositoryEvent = null):void 
 		{
-		//TODO need to not get this event when working with the detached head	
+			if (_bkmk.branch.name == Bookmark.DETACH) return;
+						
 			trace("HistoryCollection.onBranchChange(e) > ", _bkmk.label, _bkmk.branch.name);
 		// automatically highlight the tab associated w/ the new branch	
 			for (var i:int = 0; i < numChildren; i++) {

@@ -13,7 +13,6 @@ package view.history {
 	public class HistoryView extends ModalWindow {
 
 		private static var _view			:HistoryViewMC = new HistoryViewMC();
-		private static var _selectedItem	:HistoryItem;
 		private static var _container		:Sprite = new Sprite();
 		private static var _collection		:HistoryCollection;
 		private static var _collections		:Vector.<HistoryCollection> = new Vector.<HistoryCollection>();
@@ -31,7 +30,6 @@ package view.history {
 			
 			AppModel.proxy.addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkSelected);
 			AppModel.proxy.addEventListener(RepositoryEvent.BOOKMARKS_READY, onBookmarksReady, false, 2);
-			AppModel.proxy.addEventListener(RepositoryEvent.BRANCH_MODIFIED, onModifiedReceived);
 		}
 
 		private function onBookmarksReady(e:RepositoryEvent):void 
@@ -56,23 +54,9 @@ package view.history {
 	
 		private function onHistoryItemSelection(e:UICommand):void 
 		{
-			trace('------------------------------');
-			_selectedItem = e.data as HistoryItem;
-		// always force refresh the status of the current branch before attempting a checkout	
-			AppModel.proxy.status.getActiveBranchIsModified();			
+			AppModel.proxy.checkout.checkout(e.data as HistoryItem);
 		}	
 		
-		private function onModifiedReceived(e:RepositoryEvent):void 
-		{
-			trace("HistoryView.onModified(e) > active branch modified = ", e.data);
-			if (AppModel.branch.name==Bookmark.DETACH && e.data == true){
-				trace('local modifications on the detached branch');
-			//	stage.dispatchEvent(new UICommand(UICommand.DETACHED_BRANCH_EDITED));				
-			}	else {
-				AppModel.proxy.checkout.checkout(_selectedItem);
-			}
-		}		
-
 	}
 	
 }

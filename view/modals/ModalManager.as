@@ -27,7 +27,7 @@ package view.modals {
 		private static var _remove			:RemoveBookmark = new RemoveBookmark();		private static var _commit			:CommitChanges = new CommitChanges();
 		private static var _history			:HistoryView = new HistoryView();		
 		private static var _install			:InstallGit = new InstallGit();
-		private static var _detached		:DetachedBranch = new DetachedBranch();
+		private static var _modified		:DetachedBranch = new DetachedBranch();
 
 		public function ModalManager()
 		{
@@ -36,14 +36,14 @@ package view.modals {
 			
 			AppModel.installer.addEventListener(InstallEvent.GIT_UNAVAILABLE, installGit);
 			AppModel.proxy.branch.addEventListener(RepositoryEvent.BRANCH_DETACHED, onBranchDetached);
-			AppModel.proxy.checkout.addEventListener(RepositoryEvent.DETACHED_MODIFIED, onDetachedModified);
+			AppModel.proxy.branch.addEventListener(RepositoryEvent.BOOKMARK_ERROR, repairBookmark);
+			AppModel.proxy.checkout.addEventListener(RepositoryEvent.COMMIT_MODIFIED, onCommitModified);
 		}
 
 		private function onAddedToStage(e:Event):void 
 		{
 			_dragAndDrop.target = stage;
-			_dragAndDrop.addEventListener(NativeDragEvent.NATIVE_DRAG_COMPLETE, onDragAndDrop);
-						stage.addEventListener(UICommand.NEW_BOOKMARK, addBookmark);			stage.addEventListener(UICommand.EDIT_BOOKMARK, editBookmark);			stage.addEventListener(UICommand.SAVE_PROJECT, addNewCommit);			stage.addEventListener(UICommand.REPAIR_BOOKMARK, repairBookmark);			stage.addEventListener(UICommand.ADD_BRANCH, branchBookmark);
+			_dragAndDrop.addEventListener(NativeDragEvent.NATIVE_DRAG_COMPLETE, onDragAndDrop);						stage.addEventListener(UICommand.NEW_BOOKMARK, addBookmark);			stage.addEventListener(UICommand.EDIT_BOOKMARK, editBookmark);			stage.addEventListener(UICommand.SAVE_PROJECT, addNewCommit);			stage.addEventListener(UICommand.ADD_BRANCH, branchBookmark);
 			stage.addEventListener(UICommand.DELETE_BOOKMARK, removeBookmark);			stage.addEventListener(UICommand.VIEW_HISTORY, viewHistory);		}	
 
 		private function onDragAndDrop(e:NativeDragEvent):void 
@@ -53,7 +53,7 @@ package view.modals {
 			NativeApplication.nativeApplication.activate();
 		}		
 		
-	// modal windows //		
+	// commands //		
 
 		private function installGit(e:InstallEvent):void 
 		{
@@ -71,12 +71,6 @@ package view.modals {
 			if (!AppModel.bookmark) return;
 			_edit.bookmark = AppModel.bookmark;
 			addChild(_edit);
-		}
-		
-		private function repairBookmark(e:UICommand):void
-		{
-			_repair.bookmark = e.data as Bookmark;
-			addChild(_repair);
 		}
 		
 		private function branchBookmark(e:UICommand):void 
@@ -100,14 +94,22 @@ package view.modals {
 			addChild(_history);
 		}
 		
+	// alerts //	
+	
+		private function repairBookmark(e:RepositoryEvent):void
+		{
+			_repair.bookmark = e.data as Bookmark;
+			addChild(_repair);
+		}	
+		
 		private function onBranchDetached(e:RepositoryEvent):void 
 		{
-			trace("ModalManager.onBranchDetached(e) >> ", e.data.label);
-		}		
+			trace("ModalManager.onBranchDetached(e) >> ", e.data.label);		}		
 		
-		private function onDetachedModified(e:RepositoryEvent):void 
+		private function onCommitModified(e:RepositoryEvent):void 
 		{
-			addChild(_detached);	
+			trace("ModalManager.onCommitModified(e)");
+			addChild(_modified);	
 		}							
 		
 		private function onCloseModelWindow(e:UICommand):void 

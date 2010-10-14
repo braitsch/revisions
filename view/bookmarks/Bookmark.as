@@ -15,7 +15,6 @@ package view.bookmarks {
 		private var _local			:String;		private var _remote			:String;
 		private var _detach			:Branch = new Branch(DETACH);
 		private var _branch			:Branch;
-		private var _previous		:Branch;
 		private var _branches		:Array = [];
 		private var _active			:Boolean;
 		private var _file			:File;
@@ -64,26 +63,27 @@ package view.bookmarks {
 		public function set branch(b:Branch):void
 		{
 			_branch = b;
-			if (_branch.name != DETACH) dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_SET));
+			dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_SET));
+		}
+		
+		public function get branches():Array
+		{
+			return _branches;
 		}
 
-		public function get previous():Branch
+		public function getBranchByName(n:String):Branch 
 		{
-			return _previous;
-		}
-		
-		public function set previous(b:Branch):void
-		{
-			_previous = b;
-		}
-		
-	// special branches //				
+			for (var i:int = 0;i < _branches.length; i++) if (n == _branches[i].name) break;
+			return _branches[i];
+		}	
 		
 		public function get detach():Branch
 		{
 			return _detach;
-		}
+		}			
+	
 		
+	// TODO this maybe should be private called from an event handler	
 	// set from RepositoryModel > proxy after bookmarks are first created //	
 
 		public function attachBranches(a:Array):Boolean
@@ -100,11 +100,6 @@ package view.bookmarks {
 				}
 			}
 			return _branch != null;
-		}
-
-		public function get branches():Array
-		{
-			return _branches;
 		}
 		
 	}

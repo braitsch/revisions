@@ -8,7 +8,6 @@ package view.bookmarks {
 	public class Branch extends EventDispatcher{
 
 		private var _name		:String;
-		private var _status		:Array;
 		private var _history	:Array;
 		private var _modified	:uint;
 
@@ -35,12 +34,6 @@ package view.bookmarks {
 			return _history;
 		}		
 		
-		public function set status(a:Array):void
-		{			_status = a;
-			if (_history==null) getHistory();
-			dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_STATUS, _status));
-		}	
-
 		public function set modified(n:uint):void
 		{
 			_modified = n;

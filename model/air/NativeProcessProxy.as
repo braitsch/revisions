@@ -13,12 +13,13 @@ package model.air {
 
 	public class NativeProcessProxy extends EventDispatcher {
 		
-		public var debug			:Boolean = false;
 		private var _np				:NativeProcess = new NativeProcess();
 		private var _npi			:NativeProcessStartupInfo = new NativeProcessStartupInfo();
 		private var _dir			:String = File.desktopDirectory.resolvePath('git-test').nativePath;
 		private var _method			:String;
 		private var _result			:String;
+		private var _failed			:Boolean = false;	
+		public var debug			:Boolean = false;
 		
 		public function NativeProcessProxy($exec:String = '')
 		{
@@ -36,13 +37,19 @@ package model.air {
 		public function set directory($dir:String):void
 		{
 			_dir = $dir;
-		}		
+		}	
+		
+		public function get failed():Boolean
+		{
+			return _failed;
+		}			
 		
 		public function call(v:Vector.<String>):void
 		{
 			v.push(_dir);
 			_method = v[0];
 			_result = '';
+			_failed = false;
 			_npi.arguments = v;
 			log('Attempting to Call Method :: '+_method);
 			if(!_np.running){				log('Calling Method :: '+_method);
@@ -69,11 +76,13 @@ package model.air {
 		
 		private function onDataError(e:ProgressEvent):void 
 		{
+			_failed = true;
             _result = StringUtils.trim(_np.standardError.readUTFBytes(_np.standardError.bytesAvailable));            log('DataError @ '+_method+ ' :: Response = '+_result);			dispatchEvent(new NativeProcessEvent(NativeProcessEvent.PROCESS_FAILURE, {method:_method, result:_result}));
 		}	
 		
 		private function onIOError(e:IOErrorEvent):void 
 		{
+			_failed = true;
 			log('IOError @ '+_method+ ' :: Response = '+e.toString());
 			dispatchEvent(new NativeProcessEvent(NativeProcessEvent.PROCESS_FAILURE, {method:_method}));
 		}				
@@ -81,7 +90,7 @@ package model.air {
 		private function onProcessExit(e:NativeProcessExitEvent):void 
 		{
 			log("NativeProcessProxy :: Process Complete");
-			dispatchEvent(new NativeProcessEvent(NativeProcessEvent.PROCESS_COMPLETE, {method:_method, result:_result}));
+			if (!_failed) dispatchEvent(new NativeProcessEvent(NativeProcessEvent.PROCESS_COMPLETE, {method:_method, result:_result}));
 		}
 		
 		private function log(...args):void
