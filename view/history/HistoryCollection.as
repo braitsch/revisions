@@ -17,42 +17,49 @@ package view.history {
 		public function HistoryCollection($b:Bookmark)
 		{
 			_bkmk = $b;
-			_bkmk.addEventListener(RepositoryEvent.BRANCH_SET, onBranchChange);
+			_bkmk.addEventListener(RepositoryEvent.BRANCH_SET, switchToActiveBranch);
 			
 			var a:Array = _bkmk.branches;
 			for (var i:int = 0; i < a.length; i++) addChild(new HistoryList(a[i], i));
 			
-			onBranchChange();
+			switchToActiveBranch();
 			addEventListener(UICommand.HISTORY_TAB_SELECTED, onTabSelected);
+		}
+		
+		public function get list():HistoryList
+		{
+			return _list;	
 		}
 		
 		public function get bookmark():Bookmark
 		{
 			return _bkmk;
-		}		
+		}
+		
+	// private //	
 
-		private function set list(l:HistoryList):void
+		private function setActiveTab(k:HistoryList):void
 		{
 			if (_list) _list.active = false;
-			_list = l;
+			_list = k;
 			_list.active = true;
 			setChildIndex(_list, numChildren-1);
 		}
 		
 		private function onTabSelected(e:UICommand):void 		{
-			this.list = e.target as HistoryList;
+			setActiveTab(e.target as HistoryList);
 		}
 		
-		private function onBranchChange(e:RepositoryEvent = null):void 
+		private function switchToActiveBranch(e:RepositoryEvent = null):void 
 		{
+		// ignore detached since it is not represented with a tab (collection) //	
 			if (_bkmk.branch.name == Bookmark.DETACH) return;
 						
-			trace("HistoryCollection.onBranchChange(e) > ", _bkmk.label, _bkmk.branch.name);
-		// automatically highlight the tab associated w/ the new branch	
+			trace("HistoryCollection.switchToActiveBranch(e) > ", _bkmk.label, _bkmk.branch.name);
 			for (var i:int = 0; i < numChildren; i++) {
-				if (HistoryList(getChildAt(i)).branch ==_bkmk.branch) break;
+				if (HistoryList(getChildAt(i)).branch == _bkmk.branch) break;
 			}
-			this.list = getChildAt(i) as HistoryList;
+			setActiveTab(getChildAt(i) as HistoryList);
 		}
 		
 	}

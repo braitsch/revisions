@@ -1,6 +1,4 @@
 package view.history {
-	import commands.UICommand;
-
 	import events.RepositoryEvent;
 
 	import model.AppModel;
@@ -26,10 +24,16 @@ package view.history {
 			_container.y = 40;
 			_view.addChild(_container);
 
-			addEventListener(UICommand.HISTORY_ITEM_SELECTED, onHistoryItemSelection);
-			
 			AppModel.proxy.addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkSelected);
 			AppModel.proxy.addEventListener(RepositoryEvent.BOOKMARKS_READY, onBookmarksReady, false, 2);
+			AppModel.proxy.status.addEventListener(RepositoryEvent.BRANCH_STATUS, onBranchStatus);
+		}
+
+		private function onBranchStatus(e:RepositoryEvent):void 
+		{
+		// never refresh the list if the head is detached //	
+			if (AppModel.branch.name == Bookmark.DETACH) return;
+			_collection.list.onStatusRefresh();
 		}
 
 		private function onBookmarksReady(e:RepositoryEvent):void 
@@ -49,13 +53,6 @@ package view.history {
 			}
 			_container.addChild(_collection);
 		}
-		
-	// checkouts //	
-	
-		private function onHistoryItemSelection(e:UICommand):void 
-		{
-			AppModel.proxy.checkout.checkout(e.data as HistoryItem);
-		}	
 		
 	}
 	
