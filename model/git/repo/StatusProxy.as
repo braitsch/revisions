@@ -36,6 +36,7 @@ package model.git.repo {
 		public function getStatusOfBranch($b:Branch):void
 		{
 			_branch = $b;
+			trace("StatusProxy.getStatusOfBranch($b) >> requesting status of ", _branch.name);
 			super.queue = getStatusTransaction();						}
 		
 		public function getStatusAndHistory():void
@@ -55,12 +56,12 @@ package model.git.repo {
 		
 		private function onQueueComplete(e:NativeProcessEvent):void
 		{
+			trace("StatusProxy.onQueueComplete(e)", _bookmark.label, _branch.name);
 			var a:Array = e.data as Array;
 			switch(a.length){
-				case 1 : parseModifiedFiles(a);		break;
-				case 4 : parseFullBranchStatus(a);	break;			}
+				case 1 : parseModifiedFiles(a);		break;				case 4 : parseFullBranchStatus(a);	break;
+			}
 			_branch.modified = a[M].length;
-			trace("StatusProxy.onQueueComplete(e)", _bookmark.label, _branch.name, 'modifed set to >', _branch.modified);
 			
 		// also force refresh the history on commit //	
 			if (_getHistory == true){

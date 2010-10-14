@@ -34,7 +34,7 @@ package model.git.repo {
 		{
 			_target = n;
 			trace('--------------------------------------');
-			trace("RepositoryHistory.checkout >> Attempting to checkout >>", _target.sha1, 'on branch : '+_target.name);
+			trace("CheckoutProxy.checkout >> Attempting to checkout >>", _target.sha1, 'on branch : '+_target.name);
 		// always force refresh the status of the current branch before attempting a checkout	
 			_status.getActiveBranchIsModified();	
 		}	
@@ -42,7 +42,7 @@ package model.git.repo {
 		private function onModifiedReceived(e:RepositoryEvent):void 
 		{
 			var n:uint = e.data as uint;
-			trace("CheckoutProxy.onModifiedReceived(e)", n);
+			trace("CheckoutProxy.onModifiedReceived(e)", AppModel.branch.name, 'modified = ', n);
 			if (AppModel.branch.name == Bookmark.DETACH && n != 0){
 				dispatchEvent(new RepositoryEvent(RepositoryEvent.COMMIT_MODIFIED));		
 			}	else {
@@ -52,7 +52,7 @@ package model.git.repo {
 
 		private function allowCheckout(n:uint):void 
 		{
-			trace("CheckoutProxy.allowCheckout(m) >> previous = ", AppModel.branch.name);
+			trace("CheckoutProxy.allowCheckout(m) >> precheck-out = ", AppModel.branch.name);
 			
 			if (_target.index == 0){
 			// temp //	

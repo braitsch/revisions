@@ -1,4 +1,5 @@
 package view.history {
+	import view.bookmarks.Bookmark;
 	import commands.UICommand;
 
 	import events.RepositoryEvent;
@@ -62,9 +63,12 @@ package view.history {
 	
 		private function onStatus(e:RepositoryEvent):void 
 		{
+			if (AppModel.branch.name == Bookmark.DETACH) return;	
+			
 		// only rebuild if the modified # has changed //
 			if (_modified != _branch.modified) {
 				_modified = _branch.modified;
+				trace("HistoryList.onStatus(e) ********* we are now on ", _branch.name, _modified);
 				if (_branch.history != null) drawList();
 			}
 		}
