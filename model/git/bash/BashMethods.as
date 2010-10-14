@@ -28,5 +28,6 @@ package model.git.bash{
 		public static const GET_TRACKED_FILES:String = 'getTrackedFiles';
 		public static const GET_UNTRACKED_FILES:String = 'getUntrackedFiles';
 		public static const GET_IGNORED_FILES:String = 'getIgnoredFiles';
+		public static const POP_STASH:String = 'popStash';
 	}
 }
