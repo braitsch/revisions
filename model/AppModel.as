@@ -23,6 +23,7 @@ package model {
 		static public function set bookmark(b:Bookmark):void
 		{
 			_proxies.bookmark = b;
+			_database.bookmark = b;
 			_bookmarks.bookmark = b;
 		}	
 		
