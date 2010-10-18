@@ -2,7 +2,7 @@ package view {
 	import events.RepositoryEvent;
 
 	import model.AppModel;
-	import model.git.repo.StatusProxy;
+	import model.proxies.StatusProxy;
 
 	import flash.display.Sprite;
 

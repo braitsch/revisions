@@ -3,7 +3,7 @@ package model {
 	import events.RepositoryEvent;
 
 	import model.db.AppDatabase;
-	import model.git.repo.AppProxies;
+	import model.proxies.AppProxies;
 
 	import view.bookmarks.Bookmark;
 
@@ -22,7 +22,7 @@ package model {
 			_database.addEventListener(DataBaseEvent.REPOSITORIES, generateBookmarks);
 			
 			_proxies = p;
-			_proxies.branch.addEventListener(RepositoryEvent.BOOKMARKS_READY, onBookmarksReady);			
+			_proxies.branch.addEventListener(RepositoryEvent.QUEUE_BRANCHES_READ, onQueueBranchesRead);			
 		}
 
 	// bookmark //
@@ -40,9 +40,9 @@ package model {
 
 	// public methods //
 	
-		public function addBookmark():void
+		public function addBookmark(b:Bookmark):void
 		{
-			
+				
 		}
 		
 		public function removeBookmark():void
@@ -59,7 +59,7 @@ package model {
 			
 			var a:Array = e.data as Array;
 			for (var i:int = 0; i < a.length; i++) {
-				var b:Bookmark = new Bookmark(a[i].name, a[i].location, 'remote', a[i].active==1);
+				var b:Bookmark = new Bookmark(a[i].name, a[i].location, a[i].active == 1);
 				bkmk.push(b);
 				if (b.file.exists == false) fail.push(b); 
 			}
@@ -74,10 +74,9 @@ package model {
 			
 		}			
 		
-		private function onBookmarksReady(e:RepositoryEvent):void 
+		private function onQueueBranchesRead(e:RepositoryEvent):void 
 		{
-			_bookmarks = e.data as Vector.<Bookmark>;
-			trace("RepositoryProxy.onBookmarksReady(e)");
+			trace("BookmarkModel.onBookmarksReady(e)");
 			dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARKS_READY, _bookmarks));
 		}			
 		

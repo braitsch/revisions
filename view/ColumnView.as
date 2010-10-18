@@ -41,7 +41,7 @@ package view {
 		{
 			var b:Bookmark = BookmarkItem(e.data as ListItem).bookmark;
 		// the only place in the application that sets the bookmark //	
-			AppModel.proxies.bookmark = b;
+			AppModel.bookmark = b;
 			AppModel.branch.getStatus();
 			
 			_dirs.directory = e.data as ListItem;

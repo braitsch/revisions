@@ -5,6 +5,8 @@ package view.modals {
 
 	import utils.FileBrowser;
 
+	import view.bookmarks.Bookmark;
+
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
 	import flash.text.TextField;
@@ -49,8 +51,8 @@ package view.modals {
 		private function onAddRepository(e:MouseEvent):void 
 		{	
 			if (!validate()) return;
-			AppModel.proxies.editor.initRepository(_view.local_txt.text);				
-			AppModel.database.addRepository(_view.name_txt.text, _view.local_txt.text);					
+			AppModel.proxies.editor.addBookmark(new Bookmark(_view.name_txt.text, _view.local_txt.text, true));
+	//		AppModel.database.addRepository(_view.name_txt.text, _view.local_txt.text);					
 			dispatchEvent(new UICommand(UICommand.CLOSE_MODAL_WINDOW, this));
 		}	
 		

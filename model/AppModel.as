@@ -2,7 +2,7 @@ package model {
 	import events.InstallEvent;
 
 	import model.db.AppDatabase;
-	import model.git.repo.AppProxies;
+	import model.proxies.AppProxies;
 
 	import view.bookmarks.Bookmark;
 	import view.bookmarks.Branch;
@@ -36,6 +36,8 @@ package model {
 			return _bookmarks.bookmark.branch;	
 		}
 		
+	// model object //	
+		
 		static public function get proxies():AppProxies
 		{
 			return _proxies;
@@ -46,12 +48,18 @@ package model {
 			return _database;
 		}
 		
+		static public function get bookmarks():BookmarkModel
+		{
+			return _bookmarks;
+		}	
+		
+		
 	// event handlers //	
 	
 		private function onGitAvailable(e:InstallEvent):void 
 		{
 			_database.init();
-		}					
+		}
 		
 	}
 	

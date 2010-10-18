@@ -36,8 +36,8 @@ package model.db {
 		{
 			if (_ready){
 				_init = new Vector.<SQLStatement>();	
-				_init.push(GitMeSQLQuery.INIT_DATABASE);	
-				_init.push(GitMeSQLQuery.READ_REPOSITORIES);	
+				_init.push(AppSQLQuery.INIT_DATABASE);	
+				_init.push(AppSQLQuery.READ_REPOSITORIES);	
 				_db.execute(_init, true);
 			}	else{
 				trace('ERROR - DataBase Not Yet Initialized');
@@ -47,8 +47,8 @@ package model.db {
 		public function addRepository($label:String, $local:String):void
 		{
 			_add = new Vector.<SQLStatement>();
-			_add.push(GitMeSQLQuery.CLEAR_ACTIVE);				_add.push(GitMeSQLQuery.INSERT($label, $local));	
-			_add.push(GitMeSQLQuery.READ_REPOSITORIES);
+			_add.push(AppSQLQuery.CLEAR_ACTIVE);				_add.push(AppSQLQuery.INSERT($label, $local));	
+			_add.push(AppSQLQuery.READ_REPOSITORIES);
 			_db.execute(_add, true);	
 		}
 		
@@ -56,23 +56,23 @@ package model.db {
 		{
 			var n:String = getNextActiveRepository($label);
 			_delete = new Vector.<SQLStatement>();	
-			_delete.push(GitMeSQLQuery.DELETE($label));									_delete.push(GitMeSQLQuery.SET_ACTIVE(n));
-			_delete.push(GitMeSQLQuery.READ_REPOSITORIES);
+			_delete.push(AppSQLQuery.DELETE($label));									_delete.push(AppSQLQuery.SET_ACTIVE(n));
+			_delete.push(AppSQLQuery.READ_REPOSITORIES);
 			_db.execute(_delete, true);
 		}	
 
 		public function editRepository($oldId:String, $newId:String, $local:String):void 
 		{
 			_edit = new Vector.<SQLStatement>();	
-			_edit.push(GitMeSQLQuery.EDIT($oldId, $newId, $local));						
-			_edit.push(GitMeSQLQuery.READ_REPOSITORIES);
+			_edit.push(AppSQLQuery.EDIT($oldId, $newId, $local));						
+			_edit.push(AppSQLQuery.READ_REPOSITORIES);
 			_db.execute(_edit, true);			
 		}		
 		
 		private function setActiveBookmark(label:String):void
 		{
 			_setActive = new Vector.<SQLStatement>();
-			_setActive.push(GitMeSQLQuery.CLEAR_ACTIVE);				_setActive.push(GitMeSQLQuery.SET_ACTIVE(label));	
+			_setActive.push(AppSQLQuery.CLEAR_ACTIVE);				_setActive.push(AppSQLQuery.SET_ACTIVE(label));	
 			_db.execute(_setActive, true);	
 		}			
 			//	private methods //	

@@ -29,7 +29,7 @@ package view.bookmarks {
 			_list.contextMenu = AirContextMenu.menu;
 			_list.addEventListener(UICommand.LIST_ITEM_SELECTED, onListSelection);
 			
-			AppModel.proxies.addEventListener(RepositoryEvent.BOOKMARKS_READY, onBookmarksReady, false, 1);
+			AppModel.bookmarks.addEventListener(RepositoryEvent.BOOKMARKS_READY, onBookmarksReady, false, 1);
 		}
 
 		private function onBookmarksReady(e:RepositoryEvent):void 

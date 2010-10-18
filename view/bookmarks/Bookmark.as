@@ -19,12 +19,12 @@ package view.bookmarks {
 		private var _active			:Boolean;
 		private var _file			:File;
 
-		public function Bookmark($label:String, $local:String, $remote:String, $active:Boolean)
+		public function Bookmark($label:String, $local:String, $active:Boolean = false, $remote:String = '')
 		{
 			_label = $label;
 			_local = $local;
-			_remote = $remote;
 			_active = $active;
+			_remote = $remote;
 			_file = new File('file://' + $local);			
 		}
 

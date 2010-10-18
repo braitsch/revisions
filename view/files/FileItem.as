@@ -1,5 +1,5 @@
 package view.files {
-	import model.git.repo.StatusProxy;
+	import model.proxies.StatusProxy;
 
 	import view.layout.ListItem;
 

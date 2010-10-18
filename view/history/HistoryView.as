@@ -24,9 +24,10 @@ package view.history {
 			_container.y = 40;
 			_view.addChild(_container);
 
-			AppModel.proxies.addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkSelected);
-			AppModel.proxies.addEventListener(RepositoryEvent.BOOKMARKS_READY, onBookmarksReady, false, 2);
 			AppModel.proxies.status.addEventListener(RepositoryEvent.BRANCH_STATUS, onBranchStatus);
+			
+			AppModel.bookmarks.addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkSelected);
+			AppModel.bookmarks.addEventListener(RepositoryEvent.BOOKMARKS_READY, onBookmarksReady, false, 2);
 		}
 
 		private function onBranchStatus(e:RepositoryEvent):void 
