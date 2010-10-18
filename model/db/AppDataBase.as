@@ -98,16 +98,14 @@ package model.db {
 				break;				case _add:	
 					trace("GitMeDataBase.onTransactionComplete(e) : addRepository", e.data.result);
 					_repositories = e.data.result[2].data || [];
-					dispatchEvent(new DataBaseEvent(DataBaseEvent.REPOSITORIES, _repositories));				break;
+				break;
 				case _edit:	
 					trace("GitMeDataBase.onTransactionComplete(e) : editRepository", e.data.result);
 					_repositories = e.data.result[1].data || [];
-					dispatchEvent(new DataBaseEvent(DataBaseEvent.REPOSITORIES, _repositories));
 				break;				
 				case _delete:	
 					trace("GitMeDataBase.onTransactionComplete(e) : deleteRepository", e.data.result);
 					_repositories = e.data.result[2].data || [];
-					dispatchEvent(new DataBaseEvent(DataBaseEvent.REPOSITORIES, _repositories));
 				break;	
 				case _setActive:	
 				//	trace("GitMeDataBase.onTransactionComplete(e) : setActiveBookmark");

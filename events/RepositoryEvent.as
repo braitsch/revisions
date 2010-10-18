@@ -4,7 +4,8 @@ package events {
 	public class RepositoryEvent extends Event {
 		
 		public static const SET_USERNAME					:String = "SET_USERNAME";
-		public static const BOOKMARK_ADDED					:String = "BOOKMARK_ADDED";		public static const BOOKMARKS_READY					:String = "BOOKMARKS_READY";		public static const BRANCHES_READ					:String = "BRANCHES_READ";
+		public static const BOOKMARK_ADDED					:String = "BOOKMARK_ADDED";		public static const BOOKMARK_DELETED				:String = "BOOKMARK_DELETED";		public static const BOOKMARKS_READY					:String = "BOOKMARKS_READY";
+		public static const BRANCHES_READ					:String = "BRANCHES_READ";
 		public static const QUEUE_BRANCHES_READ				:String = "QUEUE_BRANCHES_READ";
 		
 		public static const BOOKMARK_SET					:String = "BOOKMARK_SET";

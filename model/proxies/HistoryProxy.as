@@ -17,7 +17,8 @@ package model.proxies {
 			super.debug = false;
 			super.executable = 'History.sh';
 			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);
-			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);		}
+			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
+		}
 		
 		public function set bookmark(b:Bookmark):void 
 		{
@@ -36,11 +37,6 @@ package model.proxies {
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
 			trace("HistoryProxy.onProcessFailure(e)", e.data.method, e.data.result);
-			switch(e.data.method){
-				case BashMethods.GET_HISTORY :
-					_branch.history = null;
-				break;
-			}
 		}	
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 

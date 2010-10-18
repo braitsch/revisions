@@ -13,6 +13,7 @@ package view.modals {
 
 		private static var _view		:RemoveBookmarkMC = new RemoveBookmarkMC();
 		private static var _check1		:SimpleCheckBox;		private static var _check2		:SimpleCheckBox = new SimpleCheckBox();
+		private static var _bookmark	:Bookmark;
 
 		public function RemoveBookmark()
 		{
@@ -31,17 +32,14 @@ package view.modals {
 		}				
 		public function set bookmark($b:Bookmark):void
 		{
+			_bookmark = $b;
 			_view.name_txt.text = $b.label;
 			_view.local_txt.text = $b.local;			
 		}
 		
 		private function onDelete(e:MouseEvent):void 
 		{
-			var o:Object = {label:_view.name_txt.text, local:_view.local_txt.text, killGit:_check1.selected, trash:_check2.selected};
-			
-			AppModel.proxies.editor.deleteRepository(o);			
-			AppModel.database.deleteRepository(_view.name_txt.text);
-			
+			AppModel.proxies.editor.deleteBookmark({bookmark:_bookmark, killGit:_check1.selected, trash:_check2.selected});			
 			dispatchEvent(new UICommand(UICommand.CLOSE_MODAL_WINDOW, this));			
 		}
 		

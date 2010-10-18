@@ -48,12 +48,13 @@ package model.proxies {
 		public function addBookmark(b:Bookmark):void 
 		{
 			_bookmark = b;
-			super.call(Vector.<String>([BashMethods.INIT_REPOSITORY, b.local]));				
+			super.call(Vector.<String>([BashMethods.INIT_REPOSITORY, _bookmark.local]));				
 		}	
 		
-		public function deleteRepository($o:Object):void 
+		public function deleteBookmark($o:Object):void 
 		{
-			super.call(Vector.<String>([BashMethods.DELETE_REPOSITORY, $o.local, $o.killGit, $o.trash]));				
+			_bookmark = $o.bookmark;
+			super.call(Vector.<String>([BashMethods.DELETE_REPOSITORY, _bookmark.local, $o.killGit, $o.trash]));				
 		}						
 		
 	// response handlers //			
@@ -69,7 +70,10 @@ package model.proxies {
 					AppModel.proxies.status.getStatusAndHistory();				break;
 				case BashMethods.INIT_REPOSITORY : 
 					_branch.getBranchesOfBookmark(_bookmark);
-				break;				
+				break;	
+				case BashMethods.DELETE_REPOSITORY : 
+					onRepositoryDeleted();
+				break;					
 			}
 		}
 		
@@ -77,7 +81,13 @@ package model.proxies {
 		{
 			trace("EditorProxy.onBranchesRead(e)");	
 			dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_ADDED, _bookmark));
-		}			
+		}	
+		
+		private function onRepositoryDeleted():void 
+		{
+			trace("EditorProxy.onRepositoryDeleted()");
+			dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_DELETED, _bookmark));
+		}					
 		
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{

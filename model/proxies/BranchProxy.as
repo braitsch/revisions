@@ -73,7 +73,7 @@ package model.proxies {
 
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
-			trace("BranchEditor.onProcessFailure(e)");
+			trace("BranchProxy.onProcessFailure(e)", e.data.method, e.data.result);
 		}	
 		
 	}

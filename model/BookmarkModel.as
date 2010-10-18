@@ -22,7 +22,7 @@ package model {
 			_database.addEventListener(DataBaseEvent.REPOSITORIES, generateBookmarks);
 			
 			_proxies = p;
-			_proxies.editor.addEventListener(RepositoryEvent.BOOKMARK_ADDED, onNewBookmarkAdded);
+			_proxies.editor.addEventListener(RepositoryEvent.BOOKMARK_ADDED, onNewBookmarkAdded);			_proxies.editor.addEventListener(RepositoryEvent.BOOKMARK_DELETED, onBookmarkRemoved);
 			_proxies.branch.addEventListener(RepositoryEvent.QUEUE_BRANCHES_READ, onQueueBranchesRead);			
 		}
 
@@ -70,11 +70,21 @@ package model {
 		
 		private function onNewBookmarkAdded(e:RepositoryEvent):void 
 		{
+			var b:Bookmark = e.data as Bookmark;			_bookmarks.push(b);
+			AppModel.database.addRepository(b.label, b.local);			dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARKS_READY, _bookmarks));
+		}			
+		private function onBookmarkRemoved(e:RepositoryEvent):void 
+		{
 			var b:Bookmark = e.data as Bookmark;
-			_bookmarks.push(b);
-			AppModel.database.addRepository(b.label, b.local);
+			for (var i:int = 0;i < _bookmarks.length; i++) {
+				if (_bookmarks[i] == b){
+					_bookmarks.splice(i, 1);
+					break;
+				}
+			}
+			AppModel.database.deleteRepository(b.label);
 			dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARKS_READY, _bookmarks));
-		}				
+		}					
 		
 	}
 	
