@@ -40,9 +40,6 @@ package model.git.repo {
 //			super.call(Vector.<String>([BashMethods.ADD_BRANCH, $name, AppModel.bookmark.previous.name]));
 		}
 		
-	// private methods //	
-		
-		
 	// response handlers //			
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
@@ -50,31 +47,35 @@ package model.git.repo {
 			var m:String = String(e.data.method);
 			switch(m){
 				case BashMethods.GET_BRANCHES:
-					var k:Boolean = _bookmark.attachBranches(e.data.result.split(/[\n\r\t]/g));
-					
-					if (k == true){
-						getBranchesOfNextBookmark();
+					var ok:Boolean = _bookmark.attachBranches(e.data.result.split(/[\n\r\t]/g));
+					if (ok == true){
+						onBranchesValidate();
 					}	else{
-						dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_DETACHED, _bookmarks[_index]));
+						dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_DETACHED, _bookmark));
 					}
-					
 				break;		
 			}
 		}
-
-		private function getBranchesOfNextBookmark():void 
+		
+		private function onBranchesValidate():void
 		{
-			if (++_index < _bookmarks.length){
-				getBranchesOfBookmark(_bookmarks[_index]);
+			if (_queue == null){
+				dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCHES_READ));
 			}	else{
-				dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARKS_READY, _bookmarks));
-			}			
+				if (++_index < _queue.length){
+					getBranchesOfBookmark(_queue[_index]);	
+				}	else{
+					_queue = null;
+					trace("BranchProxy.onBranchesValidate()", _queue);
+					dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARKS_READY));
+				}
+			}
 		}
 
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
 			trace("BranchEditor.onProcessFailure(e)");
-		}		
+		}	
 		
 	}
 	
