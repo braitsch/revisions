@@ -92,7 +92,7 @@ package view.history {
 		
 		private function onListTabSelection(e:MouseEvent):void 
 		{
-			if (_branch.history == null) _branch.getHistory();	
+			if (_branch.history == null) AppModel.proxies.history.getHistoryOfBranch(_branch);
 			dispatchEvent(new UICommand(UICommand.HISTORY_TAB_SELECTED));
 		}		
 

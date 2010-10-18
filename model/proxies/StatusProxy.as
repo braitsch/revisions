@@ -66,7 +66,7 @@ package model.proxies {
 		// also force refresh the history on commit //	
 			if (_getHistory == true){
 				_getHistory = false;
-				AppModel.proxies.history.getHistoryOfBranch(AppModel.branch);
+				AppModel.proxies.history.getHistoryOfBranch(_branch);			//	AppModel.proxies.history.getHistoryOfBranch(AppModel.branch);
 			}
 		}
 
@@ -108,7 +108,9 @@ package model.proxies {
 			
 		//	for (i = 0; i < 4; i++) trace('result set '+i+' = ', r[i]);
 		// TODO would like to have this handled someway else..
-			if (_branch.history == null && _branch.name != Bookmark.DETACH) _branch.getHistory();
+			if (_branch.history == null && _branch.name != Bookmark.DETACH) {
+				AppModel.proxies.history.getHistoryOfBranch(_branch);
+			}
 			dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_STATUS, a));
 		}
 

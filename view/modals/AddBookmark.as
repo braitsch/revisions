@@ -51,7 +51,7 @@ package view.modals {
 		private function onAddRepository(e:MouseEvent):void 
 		{	
 			if (!validate()) return;
-			AppModel.proxies.editor.addBookmark(new Bookmark(_view.name_txt.text, _view.local_txt.text, true));
+			AppModel.bookmarks.addBookmark(new Bookmark(_view.name_txt.text, _view.local_txt.text, true));
 			dispatchEvent(new UICommand(UICommand.CLOSE_MODAL_WINDOW, this));
 		}	
 		

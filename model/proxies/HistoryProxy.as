@@ -1,6 +1,7 @@
 package model.proxies {
 	import events.NativeProcessEvent;
 
+	import model.AppModel;
 	import model.air.NativeProcessProxy;
 	import model.bash.BashMethods;
 
@@ -28,16 +29,12 @@ package model.proxies {
 		
 		public function getHistoryOfBranch(b:Branch):void
 		{
+			if (AppModel.bookmark.initialized == false) return;
 			_branch = b;
 			super.call(Vector.<String>([BashMethods.GET_HISTORY, _branch.name]));
 		}
 		
-	// handlers //					
-		
-		private function onProcessFailure(e:NativeProcessEvent):void 
-		{
-			trace("HistoryProxy.onProcessFailure(e)", e.data.method, e.data.result);
-		}	
+	// handlers //						
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
@@ -47,7 +44,12 @@ package model.proxies {
 					_branch.history = e.data.result.split(/[\n\r\t]/g);
 				break;							
 			}
-		}	
+		}
+		
+		private function onProcessFailure(e:NativeProcessEvent):void 
+		{
+			trace("HistoryProxy.onProcessFailure(e)", e.data.method, e.data.result);
+		}			
 
 	}
 	

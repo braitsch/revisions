@@ -46,6 +46,7 @@ package model.db {
 
 		public function addRepository($label:String, $local:String):void
 		{
+			trace("AppDatabase.addRepository($label, $local)", $label, $local);
 			_add = new Vector.<SQLStatement>();
 			_add.push(AppSQLQuery.CLEAR_ACTIVE);				_add.push(AppSQLQuery.INSERT($label, $local));	
 			_add.push(AppSQLQuery.READ_REPOSITORIES);
@@ -90,22 +91,21 @@ package model.db {
 
 		private function onTransactionComplete(e:DataBaseEvent):void 
 		{
+			trace("AppDatabase.onTransactionComplete(e) WHAT THE FUCK?", e.data.transaction);
 			switch(e.data.transaction as Vector.<SQLStatement>){
 				case _init:	
 					trace("GitMeDataBase.onTransactionComplete(e) : initDataBase", e.data.result);
 					_repositories = e.data.result[1].data || [];
-					dispatchEvent(new DataBaseEvent(DataBaseEvent.REPOSITORIES, _repositories));
-				break;				case _add:	
-					trace("GitMeDataBase.onTransactionComplete(e) : addRepository", e.data.result);
-					_repositories = e.data.result[2].data || [];
-				break;
+					dispatchEvent(new DataBaseEvent(DataBaseEvent.REPOSITORIES, _repositories));				break;
+				case _add:						trace("GitMeDataBase.onTransactionComplete(e) : addRepository", e.data.result);
+					dispatchEvent(new DataBaseEvent(DataBaseEvent.BOOKMARK_ADDED));				break;
 				case _edit:	
 					trace("GitMeDataBase.onTransactionComplete(e) : editRepository", e.data.result);
 					_repositories = e.data.result[1].data || [];
 				break;				
 				case _delete:	
+					dispatchEvent(new DataBaseEvent(DataBaseEvent.BOOKMARK_DELETED));
 					trace("GitMeDataBase.onTransactionComplete(e) : deleteRepository", e.data.result);
-					_repositories = e.data.result[2].data || [];
 				break;	
 				case _setActive:	
 				//	trace("GitMeDataBase.onTransactionComplete(e) : setActiveBookmark");

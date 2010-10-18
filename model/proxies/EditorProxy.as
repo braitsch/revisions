@@ -12,17 +12,13 @@ package model.proxies {
 
 	public class EditorProxy extends NativeProcessProxy {
 
-		private static var _branch		:BranchProxy;
 		private static var _bookmark	:Bookmark;
 
-		public function EditorProxy(p:BranchProxy)
+		public function EditorProxy()
 		{
 			super.executable = 'Editor.sh';
 			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);					
-			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
-			
-			_branch = p;
-			_branch.addEventListener(RepositoryEvent.BRANCHES_READ, onBranchesRead);				
+			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);			
 		}
 
 		public function set bookmark(b:Bookmark):void 
@@ -51,10 +47,10 @@ package model.proxies {
 			super.call(Vector.<String>([BashMethods.INIT_REPOSITORY, _bookmark.local]));				
 		}	
 		
-		public function deleteBookmark($o:Object):void 
+		public function deleteBookmark(b:Bookmark, args:Object):void 
 		{
-			_bookmark = $o.bookmark;
-			super.call(Vector.<String>([BashMethods.DELETE_REPOSITORY, _bookmark.local, $o.killGit, $o.trash]));				
+			_bookmark = b;
+			super.call(Vector.<String>([BashMethods.DELETE_REPOSITORY, _bookmark.local, args.killGit, args.trash]));				
 		}						
 		
 	// response handlers //			
@@ -63,31 +59,18 @@ package model.proxies {
 		{
 			trace("EditorProxy.onProcessComplete(e)", 'method = '+e.data.method, 'result = '+e.data.result);
 			switch(e.data.method){
-				case BashMethods.TRACK_FILE : 					AppModel.branch.getStatus();				break;				case BashMethods.UNTRACK_FILE : 
-					AppModel.branch.getStatus();
+				case BashMethods.TRACK_FILE : 					AppModel.proxies.status.getStatusOfBranch(AppModel.branch);				break;				case BashMethods.UNTRACK_FILE : 					AppModel.proxies.status.getStatusOfBranch(AppModel.branch);
 				break;
 				case BashMethods.COMMIT : 
 					AppModel.proxies.status.getStatusAndHistory();				break;
 				case BashMethods.INIT_REPOSITORY : 
-					_branch.getBranchesOfBookmark(_bookmark);
+					dispatchEvent(new RepositoryEvent(RepositoryEvent.INITIALIZED));
 				break;	
 				case BashMethods.DELETE_REPOSITORY : 
-					onRepositoryDeleted();
+					dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_DELETED));
 				break;					
 			}
 		}
-		
-		private function onBranchesRead(e:RepositoryEvent):void 
-		{
-			trace("EditorProxy.onBranchesRead(e)");	
-			dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_ADDED, _bookmark));
-		}	
-		
-		private function onRepositoryDeleted():void 
-		{
-			trace("EditorProxy.onRepositoryDeleted()");
-			dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_DELETED, _bookmark));
-		}					
 		
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{

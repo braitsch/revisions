@@ -1,8 +1,6 @@
 package view.bookmarks {
 	import events.RepositoryEvent;
 
-	import model.AppModel;
-
 	import flash.events.EventDispatcher;
 
 	public class Branch extends EventDispatcher{
@@ -42,18 +40,6 @@ package view.bookmarks {
 		public function get modified():uint
 		{
 			return _modified;
-		}
-		
-	// methods //
-	
-		public function getHistory():void
-		{
-			AppModel.proxies.history.getHistoryOfBranch(this);		
-		}
-
-		public function getStatus():void 
-		{
-			AppModel.proxies.status.getStatusOfBranch(this);		
 		}
 		
 	}

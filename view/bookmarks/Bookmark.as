@@ -13,12 +13,14 @@ package view.bookmarks {
 
 		private var _label			:String;
 		private var _local			:String;
-		private var _remote			:String;
-		private var _detach			:Branch = new Branch(DETACH);
-		private var _branch			:Branch;
-		private var _branches		:Array = [];
 		private var _active			:Boolean;
+		private var _remote			:String;
+		
+		private var _branch			:Branch;
+		private var _detach			:Branch = new Branch(DETACH);
+		private var _branches		:Array = [];
 		private var _file			:File;
+		private var _initialized	:Boolean = false;
 
 		public function Bookmark($label:String, $local:String, $active:Boolean, $remote:String = '')
 		{
@@ -52,6 +54,16 @@ package view.bookmarks {
 		public function get file():File
 		{
 			return _file;
+		}		
+		
+		public function get initialized():Boolean
+		{
+			return _initialized;
+		}
+		
+		public function set initialized(n:Boolean):void
+		{
+			_initialized = n;
 		}			
 		
 	// branches //	
@@ -83,33 +95,29 @@ package view.bookmarks {
 			return _detach;
 		}			
 	
-		
-	// TODO this maybe should be private called from an event handler	
-	// set from RepositoryModel > proxy after bookmarks are first created //	
-
 		public function attachBranches(a:Array):Boolean
 		{
 	// new repositories don't return a branch name before first commit //		
-			if (a[0]==''){
+			if (a[0] == ''){
+				_initialized = false;
 				_branch = new Branch('master');
 				_branches.push(_branch);
-				return true;
-			}
-			
-			for (var i:int = 0; i < a.length; i++) {
-				var s:String = a[i];
-				if (s.indexOf('*') == 0){
-					s = StringUtils.trim(s.substr(1));
-					if (s != '(no branch)') _branch = new Branch(s);
-					_branches.push(_branch);
-				}	else{
-					s = StringUtils.trim(s);
-					_branches.push(new Branch(s));
+			}	else{				_initialized = true;
+				for (var i:int = 0; i < a.length; i++) {
+					var s:String = a[i];
+					if (s.indexOf('*') == 0){
+						s = StringUtils.trim(s.substr(1));
+						if (s != '(no branch)') _branch = new Branch(s);
+						_branches.push(_branch);
+					}	else{
+						s = StringUtils.trim(s);
+						_branches.push(new Branch(s));
+					}
 				}
 			}
-			return _branch != null;
+			return _branch != null;				
 		}
-		
+
 	}
 	
 }

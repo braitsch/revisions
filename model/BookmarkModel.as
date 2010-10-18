@@ -12,6 +12,7 @@ package model {
 	public class BookmarkModel extends EventDispatcher {
 		
 		private static var _proxies		:AppProxies;		private static var _database	:AppDatabase;
+		private static var _engine		:BookmarkEngine = new BookmarkEngine();
 		
 		private static var _bookmark	:Bookmark;
 		private static var _bookmarks	:Vector.<Bookmark>;	
@@ -22,11 +23,12 @@ package model {
 			_database.addEventListener(DataBaseEvent.REPOSITORIES, generateBookmarks);
 			
 			_proxies = p;
-			_proxies.editor.addEventListener(RepositoryEvent.BOOKMARK_ADDED, onNewBookmarkAdded);			_proxies.editor.addEventListener(RepositoryEvent.BOOKMARK_DELETED, onBookmarkRemoved);
 			_proxies.branch.addEventListener(RepositoryEvent.QUEUE_BRANCHES_READ, onQueueBranchesRead);			
+						_engine.addEventListener(RepositoryEvent.BOOKMARK_ADDED, onBookmarkAdded);
+			_engine.addEventListener(RepositoryEvent.BOOKMARK_DELETED, onBookmarkRemoved);
 		}
 
-		// bookmark //
+	// bookmark //
 
 		public function set bookmark(b:Bookmark):void
 		{
@@ -38,6 +40,18 @@ package model {
 		{
 			return _bookmark;
 		}	
+		
+	// add / delete //
+	
+		public function addBookmark(b:Bookmark):void
+		{
+			_engine.addBookmark(b);	
+		}
+		
+		public function deleteBookmark(b:Bookmark, args:Object):void
+		{
+			_engine.deleteBookmark(b, args);
+		}
 		
 	// private methods //	
 		
@@ -68,13 +82,15 @@ package model {
 			trace("BookmarkModel.onBookmarksReady(e)");
 			dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARKS_READY, _bookmarks));		}	
 		
-		private function onNewBookmarkAdded(e:RepositoryEvent):void 
+		private function onBookmarkAdded(e:RepositoryEvent):void 
 		{
-			var b:Bookmark = e.data as Bookmark;			_bookmarks.push(b);
-			AppModel.database.addRepository(b.label, b.local);			dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARKS_READY, _bookmarks));
+			trace("BookmarkModel.onBookmarkAdded(e)");
+			_bookmarks.push(e.data as Bookmark);
+			dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARKS_READY, _bookmarks));
 		}			
 		private function onBookmarkRemoved(e:RepositoryEvent):void 
 		{
+			trace("BookmarkModel.onBookmarkRemoved(e)");
 			var b:Bookmark = e.data as Bookmark;
 			for (var i:int = 0;i < _bookmarks.length; i++) {
 				if (_bookmarks[i] == b){
@@ -82,7 +98,6 @@ package model {
 					break;
 				}
 			}
-			AppModel.database.deleteRepository(b.label);
 			dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARKS_READY, _bookmarks));
 		}					
 		

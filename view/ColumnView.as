@@ -42,15 +42,14 @@ package view {
 			var b:Bookmark = BookmarkItem(e.data as ListItem).bookmark;
 		// the only place in the application that sets the bookmark //	
 			AppModel.bookmark = b;
-			AppModel.branch.getStatus();
-			
+			AppModel.proxies.status.getStatusOfBranch(AppModel.branch);			
 			_dirs.directory = e.data as ListItem;
 			_files.directory = e.data as ListItem;
 		}			
 		
 		private function onDirectorySelection(e:UICommand):void 
 		{
-			AppModel.branch.getStatus();			_files.directory = e.data as ListItem;
+			AppModel.proxies.status.getStatusOfBranch(AppModel.branch);			_files.directory = e.data as ListItem;
 		}
 		
 	}

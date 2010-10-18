@@ -10,7 +10,7 @@ package model.proxies {
 		private static var _branch		:BranchProxy = new BranchProxy();
 		private static var _status 		:StatusProxy = new StatusProxy();
 		private static var _history		:HistoryProxy = new HistoryProxy();	
-		private static var _editor		:EditorProxy = new EditorProxy(_branch);
+		private static var _editor		:EditorProxy = new EditorProxy();
 		private static var _checkout	:CheckoutProxy = new CheckoutProxy(_status);
 
 		public function set bookmark(b:Bookmark):void
