@@ -10,7 +10,8 @@ package model.git.repo {
 	public class BranchProxy extends NativeProcessProxy{
 
 		private static var _index		:uint = 0;
-		private static var _bookmarks 	:Vector.<Bookmark>;
+		private static var _queue		:Vector.<Bookmark>;
+		private static var _bookmark	:Bookmark;
 
 		public function BranchProxy() 
 		{	
@@ -19,25 +20,20 @@ package model.git.repo {
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 		}	
 		
-		public function set repositories(a:Array):void
+		public function getBranchesOfBookmarkQueue(v:Vector.<Bookmark>):void
 		{
-			trace("BranchProxy.onRepositories(e) > creating bookmarks from database data");
-			var v:Vector.<Bookmark> = new Vector.<Bookmark>();
-			
-			for (var i : int = 0; i < a.length; i++) {
-				var b:Bookmark = new Bookmark(a[i].name, a[i].location, 'remote', a[i].active==1);
-				if (b.file.exists) {
-					v.push(b);
-				}	else{
-					dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_ERROR));
-					return;
-				}
-			}
-			trace("BranchProxy.onRepositories(e) > bookmark objects created");
-			_bookmarks = v;
-			getBranchesOfBookmark(_bookmarks[_index]);			
+			_queue = v;
+			getBranchesOfBookmark(_queue[_index]);			
 		}
 
+		public function getBranchesOfBookmark(b:Bookmark):void
+		{
+			_bookmark = b;
+			trace("BranchProxy.getBranchesOfBookmark(b) > ", b.label);
+			super.directory = b.local;
+			super.call(Vector.<String>([BashMethods.GET_BRANCHES]));			
+		}
+		
 		public function addBranch($name:String):void
 		{
 //			trace("BranchProxy.addBranch($new)", $name, AppModel.bookmark.previous.name);
@@ -46,12 +42,6 @@ package model.git.repo {
 		
 	// private methods //	
 		
-		private function getBranchesOfBookmark(b:Bookmark):void
-		{
-			trace("BranchProxy.getBranchesOfBookmark(b) > ", b.label);
-			super.directory = b.local;
-			super.call(Vector.<String>([BashMethods.GET_BRANCHES]));			
-		}
 		
 	// response handlers //			
 		
@@ -60,8 +50,7 @@ package model.git.repo {
 			var m:String = String(e.data.method);
 			switch(m){
 				case BashMethods.GET_BRANCHES:
-					var a:Array = e.data.result.split(/[\n\r\t]/g);
-					var k:Boolean = _bookmarks[_index].attachBranches(a);
+					var k:Boolean = _bookmark.attachBranches(e.data.result.split(/[\n\r\t]/g));
 					
 					if (k == true){
 						getBranchesOfNextBookmark();

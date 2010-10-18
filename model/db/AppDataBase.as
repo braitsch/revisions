@@ -6,14 +6,15 @@ package model.db {
 	import flash.data.SQLStatement;
 	import flash.events.EventDispatcher;
 
-	public class AppDataBase extends EventDispatcher {
+	public class AppDatabase extends EventDispatcher {
 	
 		private static var _db					:SQLLiteDataBase;
 		private static var _init				:Vector.<SQLStatement>;		private static var _add					:Vector.<SQLStatement>;
 		private static var _edit				:Vector.<SQLStatement>;		private static var _delete				:Vector.<SQLStatement>;		private static var _setActive			:Vector.<SQLStatement>;
 		private static var _ready				:Boolean = false;
-		private static var _repositories		:Array;		
-		public function AppDataBase()
+		private static var _repositories		:Array;
+		
+		public function AppDatabase()
 		{
 			_db = new SQLLiteDataBase('GitMe.db');
 			_db.addEventListener(DataBaseEvent.DATABASE_READY, onDataBaseReady);			_db.addEventListener(DataBaseEvent.TRANSACTION_COMPLETE, onTransactionComplete);
@@ -112,7 +113,8 @@ package model.db {
 				//	trace("GitMeDataBase.onTransactionComplete(e) : setActiveBookmark");
 				break;					
 			}
-		}			
-
+		}
+		
 	}
+	
 }

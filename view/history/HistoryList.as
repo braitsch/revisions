@@ -98,7 +98,7 @@ package view.history {
 
 		private function onRecordSelection(e:MouseEvent):void 
 		{
-			AppModel.proxy.checkout.checkout(_list.activeItem as HistoryItem);			
+			AppModel.proxies.checkout.checkout(_list.activeItem as HistoryItem);			
 		}
 		
 	}

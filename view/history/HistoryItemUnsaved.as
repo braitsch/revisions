@@ -9,18 +9,18 @@ package view.history {
 		{
 			var o:Object = {	index :'XX', 	
 								date :'- Right Now -',
-								author : AppModel.config.userName || 'Unknown Author',
+								author : AppModel.proxies.config.userName || 'Unknown Author',
 								note : 'Working Version (Not Saved)',
 								name : $branchName	};
 								
 			super(o);								
 			super.active = true;
-			AppModel.config.addEventListener(RepositoryEvent.SET_USERNAME, onUserNameChange);	
+			AppModel.proxies.config.addEventListener(RepositoryEvent.SET_USERNAME, onUserNameChange);	
 		}
 		
 		private function onUserNameChange(e:RepositoryEvent):void 
 		{
-			super.author = AppModel.config.userName;
+			super.author = AppModel.proxies.config.userName;
 		}			
 		
 	}

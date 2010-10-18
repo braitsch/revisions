@@ -66,7 +66,7 @@ package model.git.repo {
 		// also force refresh the history on commit //	
 			if (_getHistory == true){
 				_getHistory = false;
-				AppModel.proxy.history.getHistoryOfBranch(AppModel.branch);
+				AppModel.proxies.history.getHistoryOfBranch(AppModel.branch);
 			}
 		}
 

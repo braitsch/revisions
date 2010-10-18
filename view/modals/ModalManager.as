@@ -34,10 +34,10 @@ package view.modals {
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);	
 			addEventListener(UICommand.CLOSE_MODAL_WINDOW, onCloseModelWindow);	
 			
-			AppModel.installer.addEventListener(InstallEvent.GIT_UNAVAILABLE, installGit);
-			AppModel.proxy.branch.addEventListener(RepositoryEvent.BRANCH_DETACHED, onBranchDetached);
-			AppModel.proxy.branch.addEventListener(RepositoryEvent.BOOKMARK_ERROR, repairBookmark);
-			AppModel.proxy.checkout.addEventListener(RepositoryEvent.COMMIT_MODIFIED, onCommitModified);
+			AppModel.proxies.installer.addEventListener(InstallEvent.GIT_UNAVAILABLE, installGit);
+			AppModel.proxies.branch.addEventListener(RepositoryEvent.BRANCH_DETACHED, onBranchDetached);
+			AppModel.proxies.branch.addEventListener(RepositoryEvent.BOOKMARK_ERROR, repairBookmark);
+			AppModel.proxies.checkout.addEventListener(RepositoryEvent.COMMIT_MODIFIED, onCommitModified);
 		}
 
 		private function onAddedToStage(e:Event):void 

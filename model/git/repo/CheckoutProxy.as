@@ -92,10 +92,10 @@ package model.git.repo {
 		
 		private function setBranch(b:Branch):void
 		{
-			AppModel.proxy.bookmark.branch = b;
+			AppModel.bookmark.branch = b;
 		// run a status request to update file view & history view with the active branch status //
-			AppModel.proxy.status.getStatusOfBranch(AppModel.branch);
-			trace('>> current branch = ', AppModel.proxy.bookmark.branch.name, '>> current tab = ', _target.name);					
+			AppModel.proxies.status.getStatusOfBranch(AppModel.branch);
+			trace('>> current branch = ', AppModel.branch.name, '>> current tab = ', _target.name);					
 		}
 		
 		private function checkIfBranchIsSavedInStash():void 

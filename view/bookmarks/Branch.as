@@ -48,12 +48,12 @@ package view.bookmarks {
 	
 		public function getHistory():void
 		{
-			AppModel.proxy.history.getHistoryOfBranch(this);		
+			AppModel.proxies.history.getHistoryOfBranch(this);		
 		}
 
 		public function getStatus():void 
 		{
-			AppModel.proxy.status.getStatusOfBranch(this);				}
+			AppModel.proxies.status.getStatusOfBranch(this);				}
 		
 	}
 	

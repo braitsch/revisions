@@ -58,7 +58,7 @@ package model.git.repo {
 					AppModel.branch.getStatus();
 				break;
 				case BashMethods.COMMIT : 
-					AppModel.proxy.status.getStatusAndHistory();				break;
+					AppModel.proxies.status.getStatusAndHistory();				break;
 			}
 		}	
 		

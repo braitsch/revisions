@@ -20,14 +20,14 @@ package view.modals {
 			super.addButtons([_view.ok_btn, _view.quit_btn]);
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onButtonOK);			_view.quit_btn.addEventListener(MouseEvent.CLICK, onButtonQuit);
 			
-			AppModel.installer.addEventListener(InstallEvent.GIT_INSTALL_COMPLETE, onInstallComplete);				
+			AppModel.proxies.installer.addEventListener(InstallEvent.GIT_INSTALL_COMPLETE, onInstallComplete);				
 		}
 
 		public function set version(s:String):void
 		{
 			_installed = false;
 			if (s=='0'){
-				_view.message_txt.htmlText = 'To2 start using GitMe,<br>I need to first install the underlying Git program on this computer.';	
+				_view.message_txt.htmlText = 'To start using GitMe,<br>I need to first install the underlying Git program on this computer.';	
 			} else{
 				_view.message_txt.htmlText = 'I need to update your Git version of '+s+' to '+SystemRules.MIN_GIT_VERSION+'<br>Is that OK?';
 			}
@@ -38,7 +38,7 @@ package view.modals {
 			if (!_installed){
 				_view.message_txt.text = 'Installing Git - This will take a few seconds..';
 				_view.ok_btn.visible = false;
-				_view.quit_btn.visible = false;				AppModel.installer.install();
+				_view.quit_btn.visible = false;				AppModel.proxies.installer.install();
 			}	else{	
 				dispatchEvent(new UICommand(UICommand.CLOSE_MODAL_WINDOW, this));
 			}

@@ -16,7 +16,7 @@ package view {
 			this.x = 740;			
 			addChild(_view);
 			
-			AppModel.proxy.status.addEventListener(RepositoryEvent.BRANCH_STATUS, onStatusReceived);
+			AppModel.proxies.status.addEventListener(RepositoryEvent.BRANCH_STATUS, onStatusReceived);
 		}
 
 		private function onStatusReceived(e:RepositoryEvent):void 

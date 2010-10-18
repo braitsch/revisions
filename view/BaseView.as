@@ -20,8 +20,8 @@ package view {
 			_view.target_txt.autoSize = 'left';
 			_view.addChild(_status);			_view.addChild(_toolbar);			addChild(_view);
 
-			AppModel.installer.addEventListener(InstallEvent.SET_GIT_VERSION, onGitVersion);
-			AppModel.proxy.addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkChanged);
+			AppModel.proxies.installer.addEventListener(InstallEvent.SET_GIT_VERSION, onGitVersion);
+			AppModel.proxies.addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkChanged);
 		}
 		
 		public function get view():BaseViewMC
