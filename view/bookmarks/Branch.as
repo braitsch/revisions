@@ -25,7 +25,7 @@ package view.bookmarks {
 		{
 			_history = [];
 			for (var i:int = 0; i < a.length; i++) _history.push(a[i].split('##'));
-			if (_history[0][1] == '0 seconds ago') _history[0][1] = 'Just Now';
+			if (_history[0][1] == '0 seconds ago') _history[0][1] = 'Just Now';	
 			dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_HISTORY));
 		}
 		
@@ -53,7 +53,8 @@ package view.bookmarks {
 
 		public function getStatus():void 
 		{
-			AppModel.proxies.status.getStatusOfBranch(this);				}
+			AppModel.proxies.status.getStatusOfBranch(this);		
+		}
 		
 	}
 	

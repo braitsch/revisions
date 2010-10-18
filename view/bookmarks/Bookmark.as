@@ -12,14 +12,15 @@ package view.bookmarks {
 		public static const DETACH	:String = 'detach';
 
 		private var _label			:String;
-		private var _local			:String;		private var _remote			:String;
+		private var _local			:String;
+		private var _remote			:String;
 		private var _detach			:Branch = new Branch(DETACH);
 		private var _branch			:Branch;
 		private var _branches		:Array = [];
 		private var _active			:Boolean;
 		private var _file			:File;
 
-		public function Bookmark($label:String, $local:String, $active:Boolean = false, $remote:String = '')
+		public function Bookmark($label:String, $local:String, $active:Boolean, $remote:String = '')
 		{
 			_label = $label;
 			_local = $local;
@@ -88,6 +89,13 @@ package view.bookmarks {
 
 		public function attachBranches(a:Array):Boolean
 		{
+	// new repositories don't return a branch name before first commit //		
+			if (a[0]==''){
+				_branch = new Branch('master');
+				_branches.push(_branch);
+				return true;
+			}
+			
 			for (var i:int = 0; i < a.length; i++) {
 				var s:String = a[i];
 				if (s.indexOf('*') == 0){

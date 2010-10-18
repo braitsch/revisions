@@ -22,10 +22,11 @@ package model {
 			_database.addEventListener(DataBaseEvent.REPOSITORIES, generateBookmarks);
 			
 			_proxies = p;
+			_proxies.editor.addEventListener(RepositoryEvent.BOOKMARK_ADDED, onNewBookmarkAdded);
 			_proxies.branch.addEventListener(RepositoryEvent.QUEUE_BRANCHES_READ, onQueueBranchesRead);			
 		}
 
-	// bookmark //
+		// bookmark //
 
 		public function set bookmark(b:Bookmark):void
 		{
@@ -37,18 +38,6 @@ package model {
 		{
 			return _bookmark;
 		}	
-
-	// public methods //
-	
-		public function addBookmark(b:Bookmark):void
-		{
-				
-		}
-		
-		public function removeBookmark():void
-		{
-			
-		}
 		
 	// private methods //	
 		
@@ -77,8 +66,15 @@ package model {
 		private function onQueueBranchesRead(e:RepositoryEvent):void 
 		{
 			trace("BookmarkModel.onBookmarksReady(e)");
+			dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARKS_READY, _bookmarks));		}	
+		
+		private function onNewBookmarkAdded(e:RepositoryEvent):void 
+		{
+			var b:Bookmark = e.data as Bookmark;
+			_bookmarks.push(b);
+			AppModel.database.addRepository(b.label, b.local);
 			dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARKS_READY, _bookmarks));
-		}			
+		}				
 		
 	}
 	

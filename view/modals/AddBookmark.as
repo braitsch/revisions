@@ -52,13 +52,12 @@ package view.modals {
 		{	
 			if (!validate()) return;
 			AppModel.proxies.editor.addBookmark(new Bookmark(_view.name_txt.text, _view.local_txt.text, true));
-	//		AppModel.database.addRepository(_view.name_txt.text, _view.local_txt.text);					
 			dispatchEvent(new UICommand(UICommand.CLOSE_MODAL_WINDOW, this));
 		}	
 		
 		private function validate():Boolean
 		{
-			//TODO need to check against existing repo names and locations to prevent duplicates 
+		//TODO need to check against existing repo names and locations to prevent duplicates 
 			var b:Boolean = true;
 			if (_view.name_txt.text=='' || _view.name_txt.text=='Please Enter A Name'){
 				_view.name_txt.text = 'Please Enter A Name';

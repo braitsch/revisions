@@ -76,6 +76,7 @@ package model.proxies {
 		private function onBranchesRead(e:RepositoryEvent):void 
 		{
 			trace("EditorProxy.onBranchesRead(e)");	
+			dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_ADDED, _bookmark));
 		}			
 		
 		private function onProcessFailure(e:NativeProcessEvent):void 
