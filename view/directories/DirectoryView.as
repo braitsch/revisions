@@ -29,11 +29,16 @@ package view.directories {
 			_list.contextMenu = AirContextMenu.menu;
 			_list.addEventListener(UICommand.LIST_ITEM_SELECTED, onListSelection);
 		}
-
+		
+		public function get list():NestedList
+		{
+			return _list;
+		}			
+		
 		public function set directory(b:ListItem):void 
 		{
 			var v:Vector.<ListItem> = new Vector.<ListItem>();
-			if (b!=null){
+			if (b != null){
 				var a:Array = b.file.getDirectoryListing();
 				for (var i : int = 0; i < a.length; i++) if (validate(a[i])) v.push(new Directory(a[i]));
 			}

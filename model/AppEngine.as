@@ -67,13 +67,18 @@ package model {
 
 		private function removeBookmarkFromList():void 
 		{
-			for (var i:int = 0;i < _bookmarks.length; i++) {
+			trace("AppEngine.removeBookmarkFromList()");
+			for (var i:int = 0; i < _bookmarks.length; i++) {
 				if (_bookmarks[i] == _bookmark){
 					_bookmarks.splice(i, 1);
 					break;
 				}
 			}
-			dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARKS_READY, _bookmarks));			
+			if (_bookmarks.length == 0){
+				dispatchEvent(new RepositoryEvent(RepositoryEvent.NO_BOOKMARKS));
+			}	else{
+				dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARKS_READY, _bookmarks));			
+			}
 		}
 
 	// generate bookmarks from database records //		

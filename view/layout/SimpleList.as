@@ -30,16 +30,31 @@ package view.layout {
 			_container.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(UICommand.TOGGLE_OPEN_DIRECTORY, onListHeightChanged);			
 		}
-
-		private function onAddedToStage(e:Event):void 
+		
+		public function get container():Sprite
 		{
-			_scrollbar.drawMask(_width, _height);
-		}
+			return _container;
+		}		
+		
+		public function get scrollbar():UIScrollBar
+		{
+			return _scrollbar;
+		}		
 
 		public function setSize(w:uint, h:uint):void		{
 			_width = w;
 			_height = h;
 		}
+		
+		public function clear():void
+		{
+			_activeItem = null;			
+			while(_container.numChildren) {
+				var i:ListItem = _container.getChildAt(0) as ListItem;
+					i.removeEventListener(MouseEvent.CLICK, onItemSelection);
+				_container.removeChild(i);
+			}			
+		}		
 		
 		public function refresh(v:Vector.<ListItem>):void
 		{
@@ -67,26 +82,12 @@ package view.layout {
 			_activeItem.active = true;
 		}
 		
-		public function get container():Sprite
-		{
-			return _container;
-		}		
-		
-		public function get scrollbar():UIScrollBar
-		{
-			return _scrollbar;
-		}
 		
 	// private methods //	
-		
-		private function clear():void
+
+		private function onAddedToStage(e:Event):void 
 		{
-			_activeItem = null;			
-			while(_container.numChildren) {
-				var i:ListItem = _container.getChildAt(0) as ListItem;
-					i.removeEventListener(MouseEvent.CLICK, onItemSelection);
-				_container.removeChild(i);
-			}			
+			_scrollbar.drawMask(_width, _height);
 		}
 		
 		private function onItemSelection(e:MouseEvent):void 

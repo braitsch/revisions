@@ -81,7 +81,7 @@ package model.db {
 		private function getNextActiveRepository($old:String):String 
 		{
 			if (_repositories.length == 1) return '';
-			for (var i : int = 0; i < _repositories.length; i++) if (_repositories[i].name==$old) break;
+			for (var i : int = 0; i < _repositories.length; i++) if (_repositories[i].name == $old) break;
 			if (i == 0) {
 				return _repositories[1].name; 
 			}	else{
@@ -94,16 +94,16 @@ package model.db {
 			switch(e.data.transaction as Vector.<SQLStatement>){
 				case _init:	
 					trace("AppDatabase.onTransactionComplete(e) : initDataBase", e.data.result);
-					_repositories = e.data.result[1].data || [];
-					dispatchEvent(new DataBaseEvent(DataBaseEvent.BOOKMARKS_READ, _repositories));				break;
-				case _add:						trace("AppDatabase.onTransactionComplete(e) : addRepository");
-					dispatchEvent(new DataBaseEvent(DataBaseEvent.BOOKMARK_ADDED));				break;				case _edit:	
-					trace("AppDatabase.onTransactionComplete(e) : editRepository");
+					_repositories = e.data.result[1].data || [];					dispatchEvent(new DataBaseEvent(DataBaseEvent.BOOKMARKS_READ, _repositories));
+				break;				case _add:	
+					trace("AppDatabase.onTransactionComplete(e) : addRepository");					_repositories = e.data.result[2].data || [];					dispatchEvent(new DataBaseEvent(DataBaseEvent.BOOKMARK_ADDED));
+				break;				case _edit:						trace("AppDatabase.onTransactionComplete(e) : editRepository");
 					_repositories = e.data.result[1].data || [];
 					dispatchEvent(new DataBaseEvent(DataBaseEvent.BOOKMARK_EDITED, _repositories));
 				break;				
 				case _delete:	
 					dispatchEvent(new DataBaseEvent(DataBaseEvent.BOOKMARK_DELETED));
+					_repositories = e.data.result[2].data || [];
 					trace("AppDatabase.onTransactionComplete(e) : deleteRepository");
 				break;	
 				case _setActive:	

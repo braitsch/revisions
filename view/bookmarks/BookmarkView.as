@@ -32,6 +32,11 @@ package view.bookmarks {
 			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARKS_READY, onBookmarksReady, false, 1);
 		}
 
+		public function get list():SimpleList
+		{
+			return _list;
+		}	
+		
 		private function onBookmarksReady(e:RepositoryEvent):void 
 		{
 			var v:Vector.<Bookmark> = e.data as Vector.<Bookmark>;
@@ -39,14 +44,13 @@ package view.bookmarks {
 			
 			for (var i:int = 0; i < v.length; i++) a.push(new BookmarkItem(v[i]));
 			_list.refresh(a);
-			
-			if (a.length > 0) dispatchEvent(new UICommand(UICommand.BOOKMARK_SELECTED, _list.activeItem));
+						dispatchEvent(new UICommand(UICommand.BOOKMARK_SELECTED, _list.activeItem));
 		}
 		
-		private function onListSelection(e:UICommand):void 
-		{			dispatchEvent(new UICommand(UICommand.BOOKMARK_SELECTED, _list.activeItem));
-		}	
-
+		private function onListSelection(e:UICommand):void 		{
+			dispatchEvent(new UICommand(UICommand.BOOKMARK_SELECTED, _list.activeItem));
+		}
+		
 	}
 	
 }

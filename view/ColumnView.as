@@ -1,9 +1,10 @@
 package view {
 	import commands.UICommand;
 
+	import events.RepositoryEvent;
+
 	import model.AppModel;
 
-	import view.bookmarks.Bookmark;
 	import view.bookmarks.BookmarkItem;
 	import view.bookmarks.BookmarkView;
 	import view.directories.DirectoryView;
@@ -30,6 +31,13 @@ package view {
 					
 			addEventListener(UICommand.BOOKMARK_SELECTED, onBookmarkSelected);
 			addEventListener(UICommand.DIRECTORY_SELECTED, onDirectorySelection);
+			
+			AppModel.engine.addEventListener(RepositoryEvent.NO_BOOKMARKS, clearAllColumns);
+		}
+
+		private function clearAllColumns(e:RepositoryEvent):void 
+		{
+			_bkmks.list.clear();			_dirs.list.clear();			_files.list.clear();
 		}
 
 		public function get columns():Vector.<LiquidColumn>
@@ -39,9 +47,8 @@ package view {
 		
 		private function onBookmarkSelected(e:UICommand):void 
 		{
-			var b:Bookmark = BookmarkItem(e.data as ListItem).bookmark;
 		// the only place in the application that sets the bookmark //	
-			AppModel.bookmark = b;
+			AppModel.bookmark = BookmarkItem(e.data as ListItem).bookmark;
 			AppModel.proxies.status.getStatusOfBranch(AppModel.branch);			
 			_dirs.directory = e.data as ListItem;
 			_files.directory = e.data as ListItem;
