@@ -7,12 +7,11 @@ package view.bookmarks {
 
 	import view.layout.LiquidColumn;
 	import view.layout.ListItem;
-	import view.layout.SimpleList;
 	import view.ui.AirContextMenu;
 
 	public class BookmarkView extends LiquidColumn {
 		
-		private static var _list			:SimpleList = new SimpleList();
+		private static var _list			:BookmarkList = new BookmarkList();
 		private static var _view			:BookmarkViewMC = new BookmarkViewMC();
 
 		public function BookmarkView()
@@ -36,11 +35,7 @@ package view.bookmarks {
 
 		private function onBookmarkSet(e:RepositoryEvent):void 
 		{
-			if (e.data == null) return;
-			for (var i:int = 0; i < _list.container.numChildren; i++) {
-				var k:ListItem = _list.container.getChildAt(i) as ListItem;
-				if (k.file == e.data.file) _list.activeItem = k;
-			}
+			if (e.data != null) _list.setActiveBookmark(e.data as Bookmark);
 		}
 
 		private function onBookmarkList(e:RepositoryEvent):void 

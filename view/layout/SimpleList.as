@@ -31,12 +31,7 @@ package view.layout {
 			addEventListener(UICommand.TOGGLE_OPEN_DIRECTORY, onListHeightChanged);			
 		}
 		
-	// getters / setters //	
-		
-		public function get container():Sprite
-		{
-			return _container;
-		}		
+	// public getters / setters //	
 		
 		public function get scrollbar():UIScrollBar
 		{
@@ -60,27 +55,19 @@ package view.layout {
 			_height = h;
 		}
 		
+	// protected getters //	
+		
+		protected function get leading():uint
+		{
+			return _leading;
+		}				
+		
+		protected function get container():Sprite
+		{
+			return _container;
+		}		
+		
 	// methods //
-		
-		public function addItem(n:ListItem):void 
-		{
-			n.y = (n.height + _leading) * _container.numChildren;
-			_container.addChild(n);
-		}
-		
-		public function removeItem(n:ListItem):void 
-		{
-			var i:int;
-			var k:ListItem;
-			for (i = 0; i < _container.numChildren; i++) {
-				k = _container.getChildAt(i) as ListItem;				if (k.file == n.file) break;
-			}
-			_container.removeChildAt(i);
-			for (i = 0; i < _container.numChildren; i++) {
-				k = _container.getChildAt(i) as ListItem;
-				k.y = (k.height + _leading) * i;
-			}
-		}
 		
 		public function clear():void
 		{
