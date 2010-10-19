@@ -48,13 +48,12 @@ package view.history {
 			
 		private function onBookmarkDeleted(e:RepositoryEvent):void 
 		{
+			trace("HistoryView.onBookmarkDeleted(e)");
 			for (var i:int = 0;i < _collections.length; i++) {
-				var k:HistoryCollection = _collections[i];
-				if (k.bookmark == e.data) {
-					_collections.splice(i, 1);
-					k = null;
-				}
+				if (_collections[i].bookmark == e.data) break;
 			}
+			_collections[i] = null;
+			_collections.splice(i, 1);
 		}
 		
 	// status / selection events //	
@@ -70,17 +69,14 @@ package view.history {
 		private function onBookmarkSet(e:RepositoryEvent):void 
 		{
 			trace("HistoryView.onBookmarkSet(e)");
+			while(_container.numChildren) _container.removeChildAt(0);
+			if (e.data == null) return;		
+				
 		// set the active collection object //	
 			for (var i:int = 0; i < _collections.length; i++) {
-				var k:HistoryCollection = _collections[i];
-				if (k.bookmark == e.data) this.collection = k;
+				if (_collections[i].bookmark == e.data) break;
 			}
-		}
-		
-		private function set collection(k:HistoryCollection):void
-		{
-			_collection = k;
-			while(_container.numChildren) _container.removeChildAt(0);
+			_collection = _collections[i];
 			_container.addChild(_collection);
 		}
 		
