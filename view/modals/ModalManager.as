@@ -43,8 +43,8 @@ package view.modals {
 		private function onAddedToStage(e:Event):void 
 		{
 			_dragAndDrop.target = stage;
-			_dragAndDrop.addEventListener(NativeDragEvent.NATIVE_DRAG_COMPLETE, onDragAndDrop);						stage.addEventListener(UICommand.NEW_BOOKMARK, addBookmark);			stage.addEventListener(UICommand.EDIT_BOOKMARK, editBookmark);			stage.addEventListener(UICommand.SAVE_PROJECT, addNewCommit);			stage.addEventListener(UICommand.ADD_BRANCH, branchBookmark);
-			stage.addEventListener(UICommand.DELETE_BOOKMARK, removeBookmark);			stage.addEventListener(UICommand.VIEW_HISTORY, viewHistory);		}	
+			_dragAndDrop.addEventListener(NativeDragEvent.NATIVE_DRAG_COMPLETE, onDragAndDrop);						stage.addEventListener(UICommand.ADD_BOOKMARK, addBookmark);			stage.addEventListener(UICommand.EDIT_BOOKMARK, editBookmark);			stage.addEventListener(UICommand.SAVE_PROJECT, addNewCommit);			stage.addEventListener(UICommand.ADD_BRANCH, branchBookmark);
+			stage.addEventListener(UICommand.DELETE_BOOKMARK, removeBookmark);			stage.addEventListener(UICommand.OPEN_HISTORY, viewHistory);		}	
 
 		private function onDragAndDrop(e:NativeDragEvent):void 
 		{

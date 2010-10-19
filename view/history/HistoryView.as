@@ -24,14 +24,14 @@ package view.history {
 			_container.y = 40;
 			_view.addChild(_container);
 
-			AppModel.proxies.status.addEventListener(RepositoryEvent.BRANCH_STATUS, onBranchStatus);
-			
 			AppModel.getInstance().addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkSelected);
+			AppModel.proxies.status.addEventListener(RepositoryEvent.BRANCH_STATUS, onBranchStatus);
 			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARKS_READY, onBookmarksReady, false, 2);
 		}
 
 		private function onBranchStatus(e:RepositoryEvent):void 
 		{
+			trace("HistoryView.onBranchStatus(e)");
 		// never refresh the list if the head is detached //	
 			if (AppModel.branch.name == Bookmark.DETACH) return;
 			_collection.list.onStatusRefresh();
@@ -39,6 +39,7 @@ package view.history {
 
 		private function onBookmarksReady(e:RepositoryEvent):void 
 		{
+			trace("HistoryView.onBookmarksReady(e)");
 		// create a collection object for each bookmark //	
 			var a:Vector.<Bookmark> = e.data as Vector.<Bookmark>;
 			for (var i:int = 0;i < a.length; i++) _collections.push(new HistoryCollection(a[i]));
@@ -46,6 +47,7 @@ package view.history {
 
 		private function onBookmarkSelected(e:RepositoryEvent):void 
 		{
+			trace("HistoryView.onBookmarkSelected(e)");
 		// set the active collection object //	
 			while(_container.numChildren) _container.removeChildAt(0);
 			for (var i:int = 0; i < _collections.length;i++) {

@@ -40,7 +40,7 @@ package view.bookmarks {
 			for (var i:int = 0; i < v.length; i++) a.push(new BookmarkItem(v[i]));
 			_list.refresh(a);
 			
-			dispatchEvent(new UICommand(UICommand.BOOKMARK_SELECTED, _list.activeItem));
+			if (a.length > 0) dispatchEvent(new UICommand(UICommand.BOOKMARK_SELECTED, _list.activeItem));
 		}
 		
 		private function onListSelection(e:UICommand):void 

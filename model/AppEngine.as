@@ -11,7 +11,7 @@ package model {
 	public class AppEngine extends EventDispatcher {
 		
 		private static var _bookmark	:Bookmark;
-		private static var _bookmarks	:Vector.<Bookmark>;	
+		private static var _bookmarks	:Vector.<Bookmark> = new Vector.<Bookmark>();
 		
 	// sequence to initalize a new bookmark //
 
@@ -80,22 +80,25 @@ package model {
 		
 		public function generateBookmarks(e:DataBaseEvent):void 
 		{
-			var bkmk:Vector.<Bookmark> = new Vector.<Bookmark>();
-			var fail:Vector.<Bookmark> = new Vector.<Bookmark>();
-			
 			var a:Array = e.data as Array;
+			var x:Vector.<Bookmark> = new Vector.<Bookmark>();
+			
+			if (a.length == 0) {
+				trace('-- no bookmarks in database, show welcome screen --');
+				return;
+			}
+			
 			for (var i:int = 0; i < a.length; i++) {
 				var b:Bookmark = new Bookmark(a[i].name, a[i].location, a[i].active == 1);
-				bkmk.push(b);
-				if (b.file.exists == false) fail.push(b); 
+				_bookmarks.push(b);
+				if (b.file.exists == false) x.push(b); 
 			}
-			_bookmarks = bkmk;
 			trace("BookmarkModel.generateBookmarks(e)", _bookmarks.length, '> bookmark objects created');
 			
-			if (fail.length == 0) {
+			if (x.length == 0) {
 				AppModel.proxies.branch.getBranchesOfBookmarkQueue(_bookmarks);
 				AppModel.proxies.branch.addEventListener(RepositoryEvent.QUEUE_BRANCHES_READ, onQueueBranchesRead);			}	else{
-				dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_ERROR, fail));
+				dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_ERROR, x));
 			}
 			
 		}			

@@ -12,11 +12,10 @@ package model.proxies {
 
 	public class EditorProxy extends NativeProcessProxy {
 
-		private static var _bookmark	:Bookmark;
-
 		public function EditorProxy()
 		{
 			super.executable = 'Editor.sh';
+			super.debug = true;
 			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);					
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);			
 		}
@@ -43,14 +42,13 @@ package model.proxies {
 		
 		public function addBookmark(b:Bookmark):void 
 		{
-			_bookmark = b;
-			super.call(Vector.<String>([BashMethods.INIT_REPOSITORY, _bookmark.local]));				
+			super.directory = b.local;			super.call(Vector.<String>([BashMethods.INIT_REPOSITORY, b.local]));				
 		}	
 		
 		public function deleteBookmark(b:Bookmark, args:Object):void 
 		{
-			_bookmark = b;
-			super.call(Vector.<String>([BashMethods.DELETE_REPOSITORY, _bookmark.local, args.killGit, args.trash]));				
+			super.directory = b.local;
+			super.call(Vector.<String>([BashMethods.DELETE_REPOSITORY, b.local, args.killGit, args.trash]));				
 		}						
 		
 	// response handlers //			
@@ -59,10 +57,10 @@ package model.proxies {
 		{
 			trace("EditorProxy.onProcessComplete(e)", 'method = '+e.data.method, 'result = '+e.data.result);
 			switch(e.data.method){
-				case BashMethods.TRACK_FILE : 					AppModel.proxies.status.getStatusOfBranch(AppModel.branch);				break;				case BashMethods.UNTRACK_FILE : 					AppModel.proxies.status.getStatusOfBranch(AppModel.branch);
-				break;
 				case BashMethods.COMMIT : 
-					AppModel.proxies.status.getStatusAndHistory();				break;
+					AppModel.proxies.status.getStatusAndHistory();				break;				case BashMethods.TRACK_FILE : 					AppModel.proxies.status.getStatusOfBranch(AppModel.branch);				break;				case BashMethods.UNTRACK_FILE : 
+					AppModel.proxies.status.getStatusOfBranch(AppModel.branch);
+				break;
 				case BashMethods.INIT_REPOSITORY : 
 					dispatchEvent(new RepositoryEvent(RepositoryEvent.INITIALIZED));
 				break;	

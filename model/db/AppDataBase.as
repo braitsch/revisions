@@ -80,7 +80,7 @@ package model.db {
 		
 		private function getNextActiveRepository($old:String):String 
 		{
-			if (_repositories.length==1) return '';
+			if (_repositories.length == 1) return '';
 			for (var i : int = 0; i < _repositories.length; i++) if (_repositories[i].name==$old) break;
 			if (i == 0) {
 				return _repositories[1].name; 
