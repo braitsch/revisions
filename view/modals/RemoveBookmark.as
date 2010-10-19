@@ -39,7 +39,7 @@ package view.modals {
 		
 		private function onDelete(e:MouseEvent):void 
 		{
-			AppModel.bookmarks.deleteBookmark(_bookmark, {killGit:_check1.selected, trash:_check2.selected});			
+			AppModel.engine.deleteBookmark(_bookmark, {killGit:_check1.selected, trash:_check2.selected});			
 			dispatchEvent(new UICommand(UICommand.CLOSE_MODAL_WINDOW, this));			
 		}
 		

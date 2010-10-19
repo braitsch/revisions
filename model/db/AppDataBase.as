@@ -91,7 +91,6 @@ package model.db {
 
 		private function onTransactionComplete(e:DataBaseEvent):void 
 		{
-			trace("AppDatabase.onTransactionComplete(e) WHAT THE FUCK?", e.data.transaction);
 			switch(e.data.transaction as Vector.<SQLStatement>){
 				case _init:	
 					trace("GitMeDataBase.onTransactionComplete(e) : initDataBase", e.data.result);

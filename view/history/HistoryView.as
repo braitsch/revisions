@@ -26,8 +26,8 @@ package view.history {
 
 			AppModel.proxies.status.addEventListener(RepositoryEvent.BRANCH_STATUS, onBranchStatus);
 			
-			AppModel.bookmarks.addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkSelected);
-			AppModel.bookmarks.addEventListener(RepositoryEvent.BOOKMARKS_READY, onBookmarksReady, false, 2);
+			AppModel.getInstance().addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkSelected);
+			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARKS_READY, onBookmarksReady, false, 2);
 		}
 
 		private function onBranchStatus(e:RepositoryEvent):void 

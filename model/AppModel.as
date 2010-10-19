@@ -1,5 +1,7 @@
 package model {
+	import events.DataBaseEvent;
 	import events.InstallEvent;
+	import events.RepositoryEvent;
 
 	import model.db.AppDatabase;
 	import model.proxies.AppProxies;
@@ -10,34 +12,48 @@ package model {
 	import flash.events.EventDispatcher;
 
 	public class AppModel extends EventDispatcher {
-		
+
+		private static var _instance	:AppModel;		
+		private static var _bookmark	:Bookmark; // the active bookmark //
+
+		private static var _engine		:AppEngine = new AppEngine();	
 		private static var _proxies		:AppProxies = new AppProxies();		
 		private static var _database	:AppDatabase = new AppDatabase();
-		private static var _bookmarks	:BookmarkModel = new BookmarkModel(_proxies, _database);	
 
 		public function AppModel() 
 		{
+			_instance = this;
 			_proxies.installer.addEventListener(InstallEvent.SET_GIT_VERSION, onGitAvailable);			
+			_database.addEventListener(DataBaseEvent.REPOSITORIES, _engine.generateBookmarks);	
 		}
 		
 		static public function set bookmark(b:Bookmark):void
 		{
-			_proxies.bookmark = b;
-			_database.bookmark = b;
-			_bookmarks.bookmark = b;
+			_bookmark = _proxies.bookmark = _database.bookmark = b;
+			_instance.dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_SET, _bookmark));			
 		}	
 		
 		static public function get bookmark():Bookmark
 		{
-			return _bookmarks.bookmark;	
+			return _bookmark;	
 		}
 		
 		static public function get branch():Branch
 		{
-			return _bookmarks.bookmark.branch;	
+			return _bookmark.branch;	
 		}
 		
 	// model object //	
+	
+		static public function getInstance():AppModel
+		{
+			return _instance;
+		}
+		
+		static public function get engine():AppEngine
+		{
+			return _engine;
+		}	
 		
 		static public function get proxies():AppProxies
 		{
@@ -48,12 +64,6 @@ package model {
 		{
 			return _database;
 		}
-		
-		static public function get bookmarks():BookmarkModel
-		{
-			return _bookmarks;
-		}	
-		
 		
 	// event handlers //	
 	
