@@ -46,7 +46,7 @@ package model.db {
 
 		public function addRepository($label:String, $local:String):void
 		{
-			trace("AppDatabase.addRepository($label, $local)", $label, $local);
+			trace("AppDatabase.addRepository > ", $label, $local);
 			_add = new Vector.<SQLStatement>();
 			_add.push(AppSQLQuery.CLEAR_ACTIVE);				_add.push(AppSQLQuery.INSERT($label, $local));	
 			_add.push(AppSQLQuery.READ_REPOSITORIES);
@@ -93,21 +93,21 @@ package model.db {
 		{
 			switch(e.data.transaction as Vector.<SQLStatement>){
 				case _init:	
-					trace("GitMeDataBase.onTransactionComplete(e) : initDataBase", e.data.result);
+					trace("AppDatabase.onTransactionComplete(e) : initDataBase", e.data.result);
 					_repositories = e.data.result[1].data || [];
-					dispatchEvent(new DataBaseEvent(DataBaseEvent.REPOSITORIES, _repositories));				break;
-				case _add:						trace("GitMeDataBase.onTransactionComplete(e) : addRepository", e.data.result);
-					dispatchEvent(new DataBaseEvent(DataBaseEvent.BOOKMARK_ADDED));				break;
-				case _edit:	
-					trace("GitMeDataBase.onTransactionComplete(e) : editRepository", e.data.result);
+					dispatchEvent(new DataBaseEvent(DataBaseEvent.BOOKMARKS_READ, _repositories));				break;
+				case _add:						trace("AppDatabase.onTransactionComplete(e) : addRepository");
+					dispatchEvent(new DataBaseEvent(DataBaseEvent.BOOKMARK_ADDED));				break;				case _edit:	
+					trace("AppDatabase.onTransactionComplete(e) : editRepository");
 					_repositories = e.data.result[1].data || [];
+					dispatchEvent(new DataBaseEvent(DataBaseEvent.BOOKMARK_EDITED, _repositories));
 				break;				
 				case _delete:	
 					dispatchEvent(new DataBaseEvent(DataBaseEvent.BOOKMARK_DELETED));
-					trace("GitMeDataBase.onTransactionComplete(e) : deleteRepository", e.data.result);
+					trace("AppDatabase.onTransactionComplete(e) : deleteRepository");
 				break;	
 				case _setActive:	
-				//	trace("GitMeDataBase.onTransactionComplete(e) : setActiveBookmark");
+				//	trace("AppDatabase.onTransactionComplete(e) : setActiveBookmark");
 				break;					
 			}
 		}

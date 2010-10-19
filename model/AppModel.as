@@ -24,7 +24,7 @@ package model {
 		{
 			_instance = this;
 			_proxies.installer.addEventListener(InstallEvent.SET_GIT_VERSION, onGitAvailable);			
-			_database.addEventListener(DataBaseEvent.REPOSITORIES, _engine.generateBookmarks);	
+			_database.addEventListener(DataBaseEvent.BOOKMARKS_READ, _engine.generateBookmarks);	
 		}
 		
 		static public function set bookmark(b:Bookmark):void

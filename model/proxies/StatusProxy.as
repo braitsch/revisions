@@ -36,7 +36,7 @@ package model.proxies {
 		public function getStatusOfBranch($b:Branch):void
 		{
 			_branch = $b;
-			trace("StatusProxy.getStatusOfBranch($b) >> requesting status of ", _branch.name);
+			trace("StatusProxy.getStatusOfBranch($b) >> requesting status of > ", _bookmark.label, _branch.name);
 			super.queue = getStatusTransaction();						}
 		
 		public function getStatusAndHistory():void
@@ -56,7 +56,7 @@ package model.proxies {
 		
 		private function onQueueComplete(e:NativeProcessEvent):void
 		{
-			trace("StatusProxy.onQueueComplete(e)", _bookmark.label, _branch.name);
+			trace("StatusProxy.onQueueComplete(e)");
 			var a:Array = e.data as Array;
 			switch(a.length){
 				case 1 : parseModifiedFiles(a);		break;				case 4 : parseFullBranchStatus(a);	break;

@@ -49,6 +49,7 @@ package model.proxies {
 				case BashMethods.GET_BRANCHES:
 					var ok:Boolean = _bookmark.attachBranches(e.data.result.split(/[\n\r\t]/g));
 					if (ok == true){
+						trace("BranchProxy.onBranchesValidate() :::::::");
 						onBranchesValidate();
 					}	else{
 						dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_DETACHED, _bookmark));
@@ -60,7 +61,6 @@ package model.proxies {
 		private function onBranchesValidate():void
 		{
 			if (_queue == null){
-				trace("BranchProxy.onBranchesValidate() BRANCHES_READ");
 				dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCHES_READ));
 			}	else{
 				if (++_index < _queue.length){

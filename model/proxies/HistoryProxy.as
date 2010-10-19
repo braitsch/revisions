@@ -31,6 +31,7 @@ package model.proxies {
 		{
 			if (AppModel.bookmark.initialized == false) return;
 			_branch = b;
+			trace("HistoryProxy.getHistoryOfBranch(b) > ", _bookmark.label, _branch.name);
 			super.call(Vector.<String>([BashMethods.GET_HISTORY, _branch.name]));
 		}
 		

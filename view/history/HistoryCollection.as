@@ -17,12 +17,12 @@ package view.history {
 		public function HistoryCollection($b:Bookmark)
 		{
 			_bkmk = $b;
-			_bkmk.addEventListener(RepositoryEvent.BRANCH_SET, switchToActiveBranch);
+			_bkmk.addEventListener(RepositoryEvent.BRANCH_SET, setActiveBranch);
 			
 			var a:Array = _bkmk.branches;
 			for (var i:int = 0; i < a.length; i++) addChild(new HistoryList(a[i], i));
 			
-			switchToActiveBranch();
+			setActiveBranch();
 			addEventListener(UICommand.HISTORY_TAB_SELECTED, onTabSelected);
 		}
 		
@@ -50,12 +50,12 @@ package view.history {
 			setActiveTab(e.target as HistoryList);
 		}
 		
-		private function switchToActiveBranch(e:RepositoryEvent = null):void 
+		private function setActiveBranch(e:RepositoryEvent = null):void 
 		{
 		// ignore detached since it is not represented with a tab (collection) //	
 			if (_bkmk.branch.name == Bookmark.DETACH) return;
 						
-			trace("HistoryCollection.switchToActiveBranch(e) > ", _bkmk.label, _bkmk.branch.name);
+			trace("HistoryCollection.setActiveBranch(e) > ", _bkmk.label, _bkmk.branch.name);
 			for (var i:int = 0; i < numChildren; i++) {
 				if (HistoryList(getChildAt(i)).branch == _bkmk.branch) break;
 			}
