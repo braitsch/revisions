@@ -13,7 +13,6 @@ package model {
 
 	public class AppModel extends EventDispatcher {
 
-		private static var _instance	:AppModel;		
 		private static var _bookmark	:Bookmark; // the active bookmark //
 
 		private static var _engine		:AppEngine = new AppEngine();	
@@ -22,15 +21,17 @@ package model {
 
 		public function AppModel() 
 		{
-			_instance = this;
+			_engine.addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkSet);	
 			_proxies.installer.addEventListener(InstallEvent.SET_GIT_VERSION, onGitAvailable);			
-			_database.addEventListener(DataBaseEvent.BOOKMARKS_READ, _engine.generateBookmarks);	
+			_database.addEventListener(DataBaseEvent.BOOKMARKS_READ, _engine.generateBookmarks);
 		}
-		
-		static public function set bookmark(b:Bookmark):void
+
+		static public function onBookmarkSet(e:RepositoryEvent):void
 		{
-			_bookmark = _proxies.bookmark = _database.bookmark = b;
-			_instance.dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_SET, _bookmark));			
+			_bookmark = e.data as Bookmark;
+			if (_bookmark == null) return; 
+			_proxies.bookmark = _database.bookmark = _bookmark;
+			AppModel.proxies.status.getStatusOfBranch(_bookmark.branch);
 		}	
 		
 		static public function get bookmark():Bookmark
@@ -45,11 +46,6 @@ package model {
 		
 	// model object //	
 	
-		static public function getInstance():AppModel
-		{
-			return _instance;
-		}
-		
 		static public function get engine():AppEngine
 		{
 			return _engine;

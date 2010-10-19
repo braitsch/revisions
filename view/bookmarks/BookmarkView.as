@@ -29,26 +29,44 @@ package view.bookmarks {
 			_list.contextMenu = AirContextMenu.menu;
 			_list.addEventListener(UICommand.LIST_ITEM_SELECTED, onListSelection);
 			
-			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARKS_READY, onBookmarksReady, false, 1);
+			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkSet);			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARK_LIST, onBookmarkList);
+			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARK_ADDED, onBookmarkAdded);
+			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARK_DELETED, onBookmarkDeleted);			
 		}
 
-		public function get list():SimpleList
+		private function onBookmarkSet(e:RepositoryEvent):void 
 		{
-			return _list;
-		}	
-		
-		private function onBookmarksReady(e:RepositoryEvent):void 
+			if (e.data == null) return;
+			for (var i:int = 0; i < _list.container.numChildren; i++) {
+				var k:ListItem = _list.container.getChildAt(i) as ListItem;
+				if (k.file == e.data.file) _list.activeItem = k;
+			}
+		}
+
+		private function onBookmarkList(e:RepositoryEvent):void 
 		{
+			trace("BookmarkView.onBookmarkList(e)");
 			var v:Vector.<Bookmark> = e.data as Vector.<Bookmark>;
 			var a:Vector.<ListItem> = new Vector.<ListItem>();
 			
 			for (var i:int = 0; i < v.length; i++) a.push(new BookmarkItem(v[i]));
 			_list.refresh(a);
-						dispatchEvent(new UICommand(UICommand.BOOKMARK_SELECTED, _list.activeItem));
+		}
+
+		private function onBookmarkAdded(e:RepositoryEvent):void 
+		{
+			trace("BookmarkView.onBookmarkAdded(e)");
+			_list.addItem(new BookmarkItem(e.data as Bookmark));
+		}
+		
+		private function onBookmarkDeleted(e:RepositoryEvent):void 
+		{
+			trace("BookmarkView.onBookmarkDeleted(e)");
+			_list.removeItem(new BookmarkItem(e.data as Bookmark));
 		}
 		
 		private function onListSelection(e:UICommand):void 		{
-			dispatchEvent(new UICommand(UICommand.BOOKMARK_SELECTED, _list.activeItem));
+			dispatchEvent(new UICommand(UICommand.BOOKMARK_SELECTED, BookmarkItem(_list.activeItem).bookmark));
 		}
 		
 	}

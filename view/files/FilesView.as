@@ -35,18 +35,14 @@ package view.files {
 			AppModel.proxies.status.addEventListener(RepositoryEvent.BRANCH_STATUS, onStatusReceived);
 		}
 		
-		public function get list():SimpleList
+		public function set directory(f:File):void
 		{
-			return _list;
-		}			
-		
-		public function set directory(d:ListItem):void
-		{
+			_list.clear();
+			if (f == null) return;
+			
 			_files = new Vector.<ListItem>();
-			if (d != null){
-				var a:Array = d.file.getDirectoryListing();
-				for (var i : int = 0; i < a.length; i++) if (validate(a[i])) _files.push(new FileItem(a[i]));
-			}
+			var a:Array = f.getDirectoryListing();
+			for (var i : int = 0; i < a.length; i++) if (validate(a[i])) _files.push(new FileItem(a[i]));
 		}
 
 		private function onStatusReceived(e:RepositoryEvent):void 

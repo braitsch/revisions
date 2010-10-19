@@ -15,7 +15,6 @@ package model.proxies {
 		public function EditorProxy()
 		{
 			super.executable = 'Editor.sh';
-			super.debug = true;
 			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);					
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);			
 		}

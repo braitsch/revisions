@@ -5,7 +5,7 @@ package view {
 
 	import model.AppModel;
 
-	import view.bookmarks.BookmarkItem;
+	import view.bookmarks.Bookmark;
 	import view.bookmarks.BookmarkView;
 	import view.directories.DirectoryView;
 	import view.files.FilesView;
@@ -13,6 +13,7 @@ package view {
 	import view.layout.ListItem;
 
 	import flash.display.Sprite;
+	import flash.filesystem.File;
 
 	public class ColumnView extends Sprite {
 
@@ -31,32 +32,49 @@ package view {
 					
 			addEventListener(UICommand.BOOKMARK_SELECTED, onBookmarkSelected);
 			addEventListener(UICommand.DIRECTORY_SELECTED, onDirectorySelection);
-			
-			AppModel.engine.addEventListener(RepositoryEvent.NO_BOOKMARKS, clearAllColumns);
-		}
-
-		private function clearAllColumns(e:RepositoryEvent):void 
-		{
-			_bkmks.list.clear();			_dirs.list.clear();			_files.list.clear();
-		}
+			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkSet);		}
 
 		public function get columns():Vector.<LiquidColumn>
 		{
 			return Vector.<LiquidColumn>([_bkmks, _dirs, _files]);		
 		}
 		
+		private function onBookmarkSet(e:RepositoryEvent):void 
+		{
+			if (e.data == null){
+				clearDirectoryAndFiles();
+			}	else{
+				setDirectoryAndFiles(e.data.file);
+			}
+		}
+		
 		private function onBookmarkSelected(e:UICommand):void 
 		{
-		// the only place in the application that sets the bookmark //	
-			AppModel.bookmark = BookmarkItem(e.data as ListItem).bookmark;
-			AppModel.proxies.status.getStatusOfBranch(AppModel.branch);			
-			_dirs.directory = e.data as ListItem;
-			_files.directory = e.data as ListItem;
-		}			
+			setDirectoryAndFiles(e.data.file);
+			setGlobalActiveBookmark(e.data as Bookmark);
+		}		
 		
 		private function onDirectorySelection(e:UICommand):void 
 		{
-			AppModel.proxies.status.getStatusOfBranch(AppModel.branch);			_files.directory = e.data as ListItem;
+			_files.directory = ListItem(e.data).file;
+			AppModel.proxies.status.getStatusOfBranch(AppModel.branch);		}
+		
+		private function setDirectoryAndFiles(f:File):void
+		{
+			_dirs.directory = f;
+			_files.directory = f;						
+		}
+		
+		private function clearDirectoryAndFiles():void
+		{
+			_dirs.directory = null;
+			_files.directory = null;			
+		}		
+		
+	// -- once dispatched this updates everything in the application -- //	
+		private function setGlobalActiveBookmark(n:Bookmark):void
+		{
+			AppModel.engine.dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_SET, n));			
 		}
 		
 	}

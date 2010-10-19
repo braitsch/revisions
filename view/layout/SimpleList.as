@@ -1,11 +1,11 @@
 package view.layout {
-	import flash.events.Event;
 	import commands.UICommand;
 
 	import view.ui.UIScrollBar;
 
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 
 	public class SimpleList extends Sprite {
@@ -31,6 +31,8 @@ package view.layout {
 			addEventListener(UICommand.TOGGLE_OPEN_DIRECTORY, onListHeightChanged);			
 		}
 		
+	// getters / setters //	
+		
 		public function get container():Sprite
 		{
 			return _container;
@@ -39,36 +41,7 @@ package view.layout {
 		public function get scrollbar():UIScrollBar
 		{
 			return _scrollbar;
-		}		
-
-		public function setSize(w:uint, h:uint):void		{
-			_width = w;
-			_height = h;
-		}
-		
-		public function clear():void
-		{
-			_activeItem = null;			
-			while(_container.numChildren) {
-				var i:ListItem = _container.getChildAt(0) as ListItem;
-					i.removeEventListener(MouseEvent.CLICK, onItemSelection);
-				_container.removeChild(i);
-			}			
-		}		
-		
-		public function refresh(v:Vector.<ListItem>):void
-		{
-			clear();
-			for (var i : int = 0; i < v.length;i++) {
-				var n:ListItem = v[i];
-				n.y = (n.height + _leading) * i;
-				if (n.active == 1) this.activeItem = n;
-				_container.addChild(n);
-			}
-		// check if we need the scrollbar //	
-			_scrollbar.reset();
-			_scrollbar.visible = _container.height > _height;			
-		}
+		}	
 		
 		public function get activeItem():ListItem
 		{
@@ -80,6 +53,56 @@ package view.layout {
 			if (_activeItem) _activeItem.active = false;
 			_activeItem = $n;
 			_activeItem.active = true;
+		}			
+
+		public function setSize(w:uint, h:uint):void		{
+			_width = w;
+			_height = h;
+		}
+		
+	// methods //
+		
+		public function addItem(n:ListItem):void 
+		{
+			n.y = (n.height + _leading) * _container.numChildren;
+			_container.addChild(n);
+		}
+		
+		public function removeItem(n:ListItem):void 
+		{
+			var i:int;
+			var k:ListItem;
+			for (i = 0; i < _container.numChildren; i++) {
+				k = _container.getChildAt(i) as ListItem;				if (k.file == n.file) break;
+			}
+			_container.removeChildAt(i);
+			for (i = 0; i < _container.numChildren; i++) {
+				k = _container.getChildAt(i) as ListItem;
+				k.y = (k.height + _leading) * i;
+			}
+		}
+		
+		public function clear():void
+		{
+			_activeItem = null;			
+			while(_container.numChildren) {
+				var i:ListItem = _container.getChildAt(0) as ListItem;
+					i.removeEventListener(MouseEvent.CLICK, onItemSelection);
+				_container.removeChild(i);
+			}			
+		}							
+		
+		public function refresh(v:Vector.<ListItem>):void
+		{
+			for (var i : int = 0; i < v.length; i++) {
+				var k:ListItem = v[i];
+					k.y = (k.height + _leading) * i;
+				if (k.active == 1) this.activeItem = k;
+				_container.addChild(k);
+			}
+		// check if we need the scrollbar //	
+			_scrollbar.reset();
+			_scrollbar.visible = _container.height > _height;			
 		}
 		
 		
@@ -105,7 +128,7 @@ package view.layout {
 		{
 			_scrollbar.adjustToNewListHeight();
 		}		
-		
+
 	}
 	
 }

@@ -96,14 +96,14 @@ package model.db {
 					trace("AppDatabase.onTransactionComplete(e) : initDataBase", e.data.result);
 					_repositories = e.data.result[1].data || [];					dispatchEvent(new DataBaseEvent(DataBaseEvent.BOOKMARKS_READ, _repositories));
 				break;				case _add:	
-					trace("AppDatabase.onTransactionComplete(e) : addRepository");					_repositories = e.data.result[2].data || [];					dispatchEvent(new DataBaseEvent(DataBaseEvent.BOOKMARK_ADDED));
+					trace("AppDatabase.onTransactionComplete(e) : addRepository");					_repositories = e.data.result[2].data || [];					dispatchEvent(new DataBaseEvent(DataBaseEvent.BOOKMARK_ADDED, _repositories));
 				break;				case _edit:						trace("AppDatabase.onTransactionComplete(e) : editRepository");
 					_repositories = e.data.result[1].data || [];
 					dispatchEvent(new DataBaseEvent(DataBaseEvent.BOOKMARK_EDITED, _repositories));
 				break;				
 				case _delete:	
-					dispatchEvent(new DataBaseEvent(DataBaseEvent.BOOKMARK_DELETED));
 					_repositories = e.data.result[2].data || [];
+					dispatchEvent(new DataBaseEvent(DataBaseEvent.BOOKMARK_DELETED, _repositories));
 					trace("AppDatabase.onTransactionComplete(e) : deleteRepository");
 				break;	
 				case _setActive:	

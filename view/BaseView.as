@@ -20,8 +20,8 @@ package view {
 			_view.target_txt.autoSize = 'left';
 			_view.addChild(_status);			_view.addChild(_toolbar);			addChild(_view);
 
+			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkChanged);
 			AppModel.proxies.installer.addEventListener(InstallEvent.SET_GIT_VERSION, onGitVersion);
-			AppModel.getInstance().addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkChanged);
 		}
 		
 		public function get view():BaseViewMC
@@ -32,13 +32,13 @@ package view {
 		private function onBookmarkChanged(e:RepositoryEvent):void 
 		{
 			_bookmark = e.data as Bookmark;
-			if (_bookmark) {
-				_view.target_txt.text = 'Repository / Branch : ' + _bookmark.label;
-			}	else{
+			if (_bookmark == null) {
 				_view.target_txt.text = 'Repository / Branch : NONE';
+			}	else{
+				_view.target_txt.text = 'Repository / Branch : ' + _bookmark.label;
+				if (AppModel.branch.history) onHistoryReceived(e);
+				_bookmark.branch.addEventListener(RepositoryEvent.BRANCH_HISTORY, onHistoryReceived);
 			}
-			if (AppModel.bookmark.branch.history) onHistoryReceived(e);
-			_bookmark.branch.addEventListener(RepositoryEvent.BRANCH_HISTORY, onHistoryReceived);
 		}		
 
 		private function onHistoryReceived(e:RepositoryEvent):void

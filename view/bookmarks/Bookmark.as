@@ -46,14 +46,19 @@ package view.bookmarks {
 			return _remote;
 		}
 		
+		public function get file():File
+		{
+			return _file;
+		}		
+		
 		public function get active():Boolean
 		{
 			return _active;
 		}	
 		
-		public function get file():File
+		public function set active(b:Boolean):void
 		{
-			return _file;
+			_active = b;
 		}		
 		
 		public function get initialized():Boolean

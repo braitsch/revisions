@@ -30,18 +30,14 @@ package view.directories {
 			_list.addEventListener(UICommand.LIST_ITEM_SELECTED, onListSelection);
 		}
 		
-		public function get list():NestedList
+		public function set directory(f:File):void 
 		{
-			return _list;
-		}			
-		
-		public function set directory(b:ListItem):void 
-		{
+			_list.clear();
+			if (f == null) return;
+			
 			var v:Vector.<ListItem> = new Vector.<ListItem>();
-			if (b != null){
-				var a:Array = b.file.getDirectoryListing();
-				for (var i : int = 0; i < a.length; i++) if (validate(a[i])) v.push(new Directory(a[i]));
-			}
+			var a:Array = f.getDirectoryListing();
+			for (var i : int = 0; i < a.length; i++) if (validate(a[i])) v.push(new Directory(a[i]));
 			_list.refresh(v);
 		}		
 

@@ -13,18 +13,20 @@ package model {
 		private static var _bookmark	:Bookmark;
 		private static var _bookmarks	:Vector.<Bookmark> = new Vector.<Bookmark>();
 		
+		
 	// sequence to initalize a new bookmark //
 
 		public function addBookmark(b:Bookmark):void
 		{
 			_bookmark = b;
+			for (var i:int = 0; i < _bookmarks.length; i++) _bookmarks[i].active = false;
 			AppModel.proxies.editor.addBookmark(b);
-			AppModel.proxies.editor.addEventListener(RepositoryEvent.INITIALIZED, onBookmarkAdded);
+			AppModel.proxies.editor.addEventListener(RepositoryEvent.INITIALIZED, onBookmarkInitialized);
 		}
 
-		private function onBookmarkAdded(e:RepositoryEvent):void 
+		private function onBookmarkInitialized(e:RepositoryEvent):void 
 		{
-			AppModel.proxies.editor.removeEventListener(RepositoryEvent.INITIALIZED, onBookmarkAdded);
+			AppModel.proxies.editor.removeEventListener(RepositoryEvent.INITIALIZED, onBookmarkInitialized);
 			AppModel.proxies.branch.getBranchesOfBookmark(_bookmark);
 			AppModel.proxies.branch.addEventListener(RepositoryEvent.BRANCHES_READ, onBranchesRead);
 		}
@@ -40,11 +42,11 @@ package model {
 		{
 			_bookmarks.push(_bookmark);
 			AppModel.database.removeEventListener(DataBaseEvent.BOOKMARK_ADDED, onAddedToDatabase);
-			dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARKS_READY, _bookmarks));			
+			dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_ADDED, _bookmark));
+			dispatchActiveBookmark();
 		}
-		
-		
-	// sequence to remove a bookmark //	
+
+		// sequence to remove a bookmark //	
 
 		public function deleteBookmark(b:Bookmark, args:Object):void
 		{
@@ -62,23 +64,17 @@ package model {
 		private function onRemovedFromDatabase(e:DataBaseEvent):void 
 		{
 			AppModel.database.removeEventListener(DataBaseEvent.BOOKMARK_DELETED, onRemovedFromDatabase);
-			removeBookmarkFromList();
+			removeBookmarkFromList(e.data as Array);
 		}
 
-		private function removeBookmarkFromList():void 
+		private function removeBookmarkFromList(a:Array):void 
 		{
 			trace("AppEngine.removeBookmarkFromList()");
-			for (var i:int = 0; i < _bookmarks.length; i++) {
-				if (_bookmarks[i] == _bookmark){
-					_bookmarks.splice(i, 1);
-					break;
-				}
-			}
-			if (_bookmarks.length == 0){
-				dispatchEvent(new RepositoryEvent(RepositoryEvent.NO_BOOKMARKS));
-			}	else{
-				dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARKS_READY, _bookmarks));			
-			}
+			for (var i:int = 0; i < _bookmarks.length; i++) if (_bookmarks[i] == _bookmark) _bookmarks.splice(i, 1);
+			for (var j:int = 0; j < a.length; j++) _bookmarks[j].active = a[j].active;
+				
+			dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_DELETED, _bookmark));
+			dispatchActiveBookmark();
 		}
 
 	// generate bookmarks from database records //		
@@ -112,7 +108,18 @@ package model {
 		{
 			trace("BookmarkModel.onQueueBranchesRead(e)");
 			AppModel.proxies.branch.removeEventListener(RepositoryEvent.QUEUE_BRANCHES_READ, onQueueBranchesRead);
-			dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARKS_READY, _bookmarks));		}					
+			dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_LIST, _bookmarks));
+			dispatchActiveBookmark();		}	
+		
+		private function dispatchActiveBookmark():void 
+		{
+			if (_bookmarks.length == 0){
+				dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_SET, null));
+			} else{
+				for (var i:int = 0; i < _bookmarks.length; i++) if (_bookmarks[i].active == true) break;
+				dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_SET, _bookmarks[i]));
+			}
+		}						
 		
 	}
 	

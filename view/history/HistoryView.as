@@ -24,36 +24,63 @@ package view.history {
 			_container.y = 40;
 			_view.addChild(_container);
 
-			AppModel.getInstance().addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkSelected);
-			AppModel.proxies.status.addEventListener(RepositoryEvent.BRANCH_STATUS, onBranchStatus);
-			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARKS_READY, onBookmarksReady, false, 2);
+			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkSet);
+			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARK_LIST, onBookmarkList);
+			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARK_ADDED, onBookmarkAdded);			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARK_DELETED, onBookmarkDeleted);			AppModel.proxies.status.addEventListener(RepositoryEvent.BRANCH_STATUS, onBranchStatus);
 		}
 
+	// list editing //
+
+		private function onBookmarkList(e:RepositoryEvent):void 
+		{
+			trace("HistoryView.onBookmarkList(e)");
+		// create a collection object for each bookmark we receive //	
+			var a:Vector.<Bookmark> = e.data as Vector.<Bookmark>;
+			for (var i:int = 0;i < a.length; i++) _collections.push(new HistoryCollection(a[i]));
+		}
+		
+		private function onBookmarkAdded(e:RepositoryEvent):void 
+		{
+			trace("HistoryView.onBookmarkAdded(e)");
+			var k:HistoryCollection = new HistoryCollection(e.data as Bookmark);
+			_collections.push(k);
+		}	
+			
+		private function onBookmarkDeleted(e:RepositoryEvent):void 
+		{
+			for (var i:int = 0;i < _collections.length; i++) {
+				var k:HistoryCollection = _collections[i];
+				if (k.bookmark == e.data) {
+					_collections.splice(i, 1);
+					k = null;
+				}
+			}
+		}
+		
+	// status / selection events //	
+		
 		private function onBranchStatus(e:RepositoryEvent):void 
 		{
 			trace("HistoryView.onBranchStatus(e)");
 		// never refresh the list if the head is detached //	
 			if (AppModel.branch.name == Bookmark.DETACH) return;
 			_collection.list.onStatusRefresh();
-		}
+		}		
 
-		private function onBookmarksReady(e:RepositoryEvent):void 
+		private function onBookmarkSet(e:RepositoryEvent):void 
 		{
-			trace("HistoryView.onBookmarksReady(e)");
-		// create a collection object for each bookmark //	
-			var a:Vector.<Bookmark> = e.data as Vector.<Bookmark>;
-			for (var i:int = 0;i < a.length; i++) _collections.push(new HistoryCollection(a[i]));
-		}
-
-		private function onBookmarkSelected(e:RepositoryEvent):void 
-		{
-			trace("HistoryView.onBookmarkSelected(e)");
+			trace("HistoryView.onBookmarkSet(e)");
 		// set the active collection object //	
-			while(_container.numChildren) _container.removeChildAt(0);
-			for (var i:int = 0; i < _collections.length;i++) {
+			for (var i:int = 0; i < _collections.length; i++) {
 				var k:HistoryCollection = _collections[i];
-				if (k.bookmark == e.data) _collection = k;
+				if (k.bookmark == e.data) this.collection = k;
 			}
+		}
+		
+		private function set collection(k:HistoryCollection):void
+		{
+			_collection = k;
+			while(_container.numChildren) _container.removeChildAt(0);
 			_container.addChild(_collection);
 		}
 		
