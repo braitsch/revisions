@@ -34,6 +34,11 @@ package model.proxies {
 			super.call(Vector.<String>([BashMethods.GET_BRANCHES]));			
 		}
 		
+		public function getStashList():void
+		{
+			
+		}
+		
 		public function addBranch($name:String):void
 		{
 //			trace("BranchProxy.addBranch($new)", $name, AppModel.bookmark.previous.name);

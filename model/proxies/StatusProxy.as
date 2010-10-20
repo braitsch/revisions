@@ -105,7 +105,6 @@ package model.proxies {
 				}
 				if (!m) i++;
 			}						
-			trace('staged = '+a[S]);
 		//	for (i = 0; i < 4; i++) trace('result set '+i+' = ', r[i]);
 			_branch.modified = a[M].length;
 			dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_STATUS, a));
