@@ -61,7 +61,7 @@ package view.files {
 					}
 				}
 			}
-			_list.refresh(_files);
+			_list.build(_files);
 		}		
 
 		private function validate(f:File):Boolean 

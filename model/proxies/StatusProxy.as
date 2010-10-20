@@ -61,18 +61,18 @@ package model.proxies {
 			switch(a.length){
 				case 1 : parseModifiedFiles(a);		break;				case 4 : parseFullBranchStatus(a);	break;
 			}
-			_branch.modified = a[M].length;
 			
 		// also force refresh the history on commit //	
 			if (_getHistory == true){
 				_getHistory = false;
-				AppModel.proxies.history.getHistoryOfBranch(_branch);			//	AppModel.proxies.history.getHistoryOfBranch(AppModel.branch);
+				AppModel.proxies.history.getHistoryOfBranch(_branch);
 			}
 		}
 
 		private function parseModifiedFiles(a:Array):void 
 		{
 			splitAndPurge(a);	
+			_branch.modified = a[M].length;
 			dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_MODIFIED, a[M].length));				
 		}
 
@@ -107,10 +107,7 @@ package model.proxies {
 			}						
 			
 		//	for (i = 0; i < 4; i++) trace('result set '+i+' = ', r[i]);
-		// TODO would like to have this handled someway else..
-			if (_branch.history == null && _branch.name != Bookmark.DETACH) {
-				AppModel.proxies.history.getHistoryOfBranch(_branch);
-			}
+			_branch.modified = a[M].length;
 			dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_STATUS, a));
 		}
 

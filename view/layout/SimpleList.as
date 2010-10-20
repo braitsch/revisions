@@ -79,7 +79,7 @@ package view.layout {
 			}			
 		}							
 		
-		public function refresh(v:Vector.<ListItem>):void
+		public function build(v:Vector.<ListItem>):void
 		{
 			for (var i : int = 0; i < v.length; i++) {
 				var k:ListItem = v[i];

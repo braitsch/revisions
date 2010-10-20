@@ -59,10 +59,9 @@ package view.history {
 		
 		public function onStatusRefresh():void
 		{
-		// only rebuild if the modified # has changed & we have a history //
-			if (_branch.history == null) return;
-			if (_branch.modified == _cached) return;
-			drawList();
+			trace("HistoryList.onStatusRefresh() _cached =", _cached, '_modified =', _branch.modified);
+		// only rebuild if the modified # has changed //
+			if (_branch.modified != _cached) drawList();
 		}
 
 	// private //
@@ -84,7 +83,8 @@ package view.history {
 									name 	: _branch.name	};
 				v.push(new HistoryItem(o));
 			}
-			_list.refresh(v);
+			_list.clear();
+			_list.build(v);
 			trace("HistoryList.rebuildList > ", '# items = '+a.length);			
 		}
 		

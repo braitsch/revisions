@@ -40,23 +40,20 @@ package view.bookmarks {
 
 		private function onBookmarkList(e:RepositoryEvent):void 
 		{
-			trace("BookmarkView.onBookmarkList(e)");
 			var v:Vector.<Bookmark> = e.data as Vector.<Bookmark>;
 			var a:Vector.<ListItem> = new Vector.<ListItem>();
 			
 			for (var i:int = 0; i < v.length; i++) a.push(new BookmarkItem(v[i]));
-			_list.refresh(a);
+			_list.build(a);
 		}
 
 		private function onBookmarkAdded(e:RepositoryEvent):void 
 		{
-			trace("BookmarkView.onBookmarkAdded(e)");
 			_list.addItem(new BookmarkItem(e.data as Bookmark));
 		}
 		
 		private function onBookmarkDeleted(e:RepositoryEvent):void 
 		{
-			trace("BookmarkView.onBookmarkDeleted(e)");
 			_list.removeItem(new BookmarkItem(e.data as Bookmark));
 		}
 		

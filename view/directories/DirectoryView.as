@@ -38,7 +38,7 @@ package view.directories {
 			var v:Vector.<ListItem> = new Vector.<ListItem>();
 			var a:Array = f.getDirectoryListing();
 			for (var i : int = 0; i < a.length; i++) if (validate(a[i])) v.push(new Directory(a[i]));
-			_list.refresh(v);
+			_list.build(v);
 		}		
 
 		private function validate(f:File):Boolean 

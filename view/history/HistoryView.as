@@ -60,10 +60,14 @@ package view.history {
 		
 		private function onBranchStatus(e:RepositoryEvent):void 
 		{
-			trace("HistoryView.onBranchStatus(e)");
+			trace("HistoryView.onBranchStatus(e)", AppModel.branch.name);
 		// never refresh the list if the head is detached //	
 			if (AppModel.branch.name == Bookmark.DETACH) return;
-			_collection.list.onStatusRefresh();
+			if (AppModel.branch.history){
+				_collection.list.onStatusRefresh();
+			}	else{
+				AppModel.proxies.history.getHistoryOfBranch(AppModel.branch);
+			}
 		}		
 
 		private function onBookmarkSet(e:RepositoryEvent):void 
