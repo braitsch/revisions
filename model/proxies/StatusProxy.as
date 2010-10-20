@@ -12,8 +12,8 @@ package model.proxies {
 
 	public class StatusProxy extends NativeProcessQueue {
 
-		public static const	M		:uint = 0; // modified
-		public static const	T		:uint = 1; // tracked		public static const	U		:uint = 2; // untracked		public static const	I		:uint = 3; // ignored
+		public static const	T		:uint = 0; // tracked
+		public static const	U		:uint = 1; // untracked		public static const	M		:uint = 2; // modified		public static const	S		:uint = 3; // staged		public static const	I		:uint = 4; // ignored
 				private static var _branch		:Branch;
 		private static var _bookmark	:Bookmark;
 		private static var _getHistory	:Boolean;
@@ -59,7 +59,7 @@ package model.proxies {
 			trace("StatusProxy.onQueueComplete(e)");
 			var a:Array = e.data as Array;
 			switch(a.length){
-				case 1 : parseModifiedFiles(a);		break;				case 4 : parseFullBranchStatus(a);	break;
+				case 1 : parseModifiedFiles(a);		break;				case 5 : parseFullBranchStatus(a);	break;
 			}
 			
 		// also force refresh the history on commit //	
@@ -153,9 +153,9 @@ package model.proxies {
 		
 		private function getStatusTransaction():Array
 		{
-			return [	Vector.<String>([BashMethods.GET_MODIFIED_FILES]),
-						Vector.<String>([BashMethods.GET_TRACKED_FILES]), 
-						Vector.<String>([BashMethods.GET_UNTRACKED_FILES]),																		Vector.<String>([BashMethods.GET_IGNORED_FILES])];											
+			return [	Vector.<String>([BashMethods.GET_TRACKED_FILES]), 
+						Vector.<String>([BashMethods.GET_UNTRACKED_FILES]),
+						Vector.<String>([BashMethods.GET_MODIFIED_FILES]),							Vector.<String>([BashMethods.GET_STAGED_FILES]),							Vector.<String>([BashMethods.GET_IGNORED_FILES])];											
 		}			
 
 	}

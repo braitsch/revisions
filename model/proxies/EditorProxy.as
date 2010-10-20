@@ -57,6 +57,7 @@ package model.proxies {
 			trace("EditorProxy.onProcessComplete(e)", 'method = '+e.data.method, 'result = '+e.data.result);
 			switch(e.data.method){
 				case BashMethods.COMMIT : 
+					AppModel.bookmark.initialized = true;
 					AppModel.proxies.status.getStatusAndHistory();				break;				case BashMethods.TRACK_FILE : 					AppModel.proxies.status.getStatusOfBranch(AppModel.branch);				break;				case BashMethods.UNTRACK_FILE : 
 					AppModel.proxies.status.getStatusOfBranch(AppModel.branch);
 				break;

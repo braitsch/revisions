@@ -1,5 +1,10 @@
 package view {
+	import model.proxies.StatusProxy;
 	import commands.UICommand;
+
+	import events.RepositoryEvent;
+
+	import model.AppModel;
 
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -17,6 +22,21 @@ package view {
 			addEventListener(MouseEvent.CLICK, onButtonSelection);
 			for (var i:int = 0; i < _view.numChildren; i++) Sprite(_view.getChildAt(i)).buttonMode = true;
 			disable([_view.branch_btn, _view.pull_btn, _view.push_btn, _view.ignore_btn]);
+			
+			AppModel.proxies.status.addEventListener(RepositoryEvent.BRANCH_STATUS, onStatusReceived);
+		}
+
+		private function onStatusReceived(e:RepositoryEvent):void 
+		{
+			trace("Toolbar.onStatusReceived(e)");
+			var a:Array = e.data as Array;
+			for (var i:int = 0; i < a.length; i++) {
+				trace(a[i].length);				
+			}
+			if (a[StatusProxy.S].length == 0){
+				_view.save_btn.alpha = .5;				_view.save_btn.mouseEnabled = false;			}	else{
+				_view.save_btn.alpha = 1;				_view.save_btn.mouseEnabled = true;
+			}
 		}
 
 		private function onButtonSelection(e:MouseEvent):void 
