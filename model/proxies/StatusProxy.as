@@ -71,9 +71,9 @@ package model.proxies {
 
 		private function parseModifiedFiles(a:Array):void 
 		{
-			splitAndPurge(a);	
-			_branch.modified = a[M].length;
-			dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_MODIFIED, a[M].length));				
+			splitAndPurge(a);
+			_branch.modified = a[0].length;
+			dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_MODIFIED, a[0].length));				
 		}
 
 		private function parseFullBranchStatus(a:Array):void 

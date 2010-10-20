@@ -12,9 +12,9 @@ package model.proxies {
 
 	public class CheckoutProxy extends NativeProcessProxy {
 
-		private static var _stash		:Array = [];
 		private static var _status		:StatusProxy;
 		private static var _target		:HistoryItem;
+		private static var _bookmark	:Bookmark;
 
 		public function CheckoutProxy(s:StatusProxy)
 		{
@@ -26,10 +26,9 @@ package model.proxies {
 			_status.addEventListener(RepositoryEvent.BRANCH_MODIFIED, onModifiedReceived);	
 		}
 		
-	//TODO need to create a method that reads in the stash of each bookmark when app initializes..
-
 		public function set bookmark(b:Bookmark):void 
 		{
+			_bookmark = b;
 			super.directory = b.local;
 		}
 		
@@ -57,7 +56,7 @@ package model.proxies {
 		{
 			trace("CheckoutProxy.allowCheckout(m) >> precheck-out branch = ", AppModel.branch.name);
 			
-			if (m > 0) _stash.unshift(AppModel.branch.name);
+			if (m > 0) _bookmark.stash.unshift(AppModel.branch.name);
 			
 			if (_target.index == 0){
 			// temp //	
@@ -95,15 +94,15 @@ package model.proxies {
 			AppModel.bookmark.branch = b;
 		// run a status request to update file view & history view with the active branch status //
 			AppModel.proxies.status.getStatusOfBranch(AppModel.branch);
-			trace('>> current branch = ', AppModel.branch.name, '>> current tab = ', _target.name);					
+			trace('>> current branch = ', AppModel.branch.name, '>> current tab = ', _target.name);
 		}
 		
 		private function checkIfBranchIsSavedInStash():void 
 		{
 			var stashed:Boolean;
-			for (var i:int = 0; i < _stash.length; i++) {
-				if (_stash[i] == _target.name) {
-					_stash.splice(i, 0);
+			for (var i:int = 0; i < _bookmark.stash.length; i++) {
+				if (_bookmark.stash[i] == _target.name) {
+					_bookmark.stash.splice(i, 0);
 					stashed = true; break;
 				}
 			}
@@ -119,6 +118,7 @@ package model.proxies {
 		{
 			trace("CheckoutProxy.onProcessFailure(e)", e.data.method, e.data.result);
 		}
+		
 	}
 	
 }

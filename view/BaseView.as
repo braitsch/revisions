@@ -32,25 +32,38 @@ package view {
 		private function onBookmarkChanged(e:RepositoryEvent):void 
 		{
 			_bookmark = e.data as Bookmark;
-			if (_bookmark == null) {
-				_view.target_txt.text = 'Repository / Branch : NONE';
+			if (_bookmark != null){
+				_bookmark.addEventListener(RepositoryEvent.BRANCH_SET, setStatus);				_bookmark.addEventListener(RepositoryEvent.BOOKMARK_EDITED, setStatus);
+				_bookmark.branch.addEventListener(RepositoryEvent.BRANCH_HISTORY, setStatus);
+			}
+			setStatus();
+		}		
+		
+		private function getLocation():String
+		{
+			if (_bookmark == null){
+				return 'Repository / Branch : NONE';
 			}	else{
-				_view.target_txt.text = 'Repository / Branch : ' + _bookmark.label;
-				if (AppModel.branch.history) onHistoryReceived(e);
-				_bookmark.branch.addEventListener(RepositoryEvent.BRANCH_HISTORY, onHistoryReceived);
+				return 'Repository / Branch : ' + _bookmark.label +' [ '+_bookmark.branch.name+' ]';
 			}
 		}		
-
-		private function onHistoryReceived(e:RepositoryEvent):void
+		
+		private function getPosition():String
 		{
 			var a:Array = AppModel.bookmark.branch.history;
-			if (a.length != 0){
-				_view.target_txt.text = 'Repository / Branch : ' + _bookmark.label;								_view.target_txt.appendText(' -- Version '+a.length+' -- Last Saved : '+a[0][1]+' by '+a[0][2]);
+			if (a == null){
+				return ' -- Last Saved : Unavailable';			}	else if (a.length == 0){
+				return ' -- Last Saved : No Previous Versions Yet';
 			}	else{
-				_view.target_txt.text = 'Repository / Branch : ' + _bookmark.label;				
-				_view.target_txt.appendText(' -- Last Saved : Unavailable');				
+				return ' -- Version '+a.length+' -- Last Saved : '+a[0][1]+' by '+a[0][2];
 			}
 		}
+		
+		private function setStatus(e:RepositoryEvent = null):void 
+		{
+			_view.target_txt.text = getLocation();
+			_view.target_txt.appendText(getPosition());
+		}		
 		
 		private function onGitVersion(e:InstallEvent):void 
 		{
