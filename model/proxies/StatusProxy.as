@@ -105,7 +105,7 @@ package model.proxies {
 				}
 				if (!m) i++;
 			}						
-			
+			trace('staged = '+a[S]);
 		//	for (i = 0; i < 4; i++) trace('result set '+i+' = ', r[i]);
 			_branch.modified = a[M].length;
 			dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_STATUS, a));
@@ -155,7 +155,7 @@ package model.proxies {
 		{
 			return [	Vector.<String>([BashMethods.GET_TRACKED_FILES]), 
 						Vector.<String>([BashMethods.GET_UNTRACKED_FILES]),
-						Vector.<String>([BashMethods.GET_MODIFIED_FILES]),							Vector.<String>([BashMethods.GET_STAGED_FILES]),							Vector.<String>([BashMethods.GET_IGNORED_FILES])];											
+						Vector.<String>([BashMethods.GET_MODIFIED_FILES]),							Vector.<String>([BashMethods.GET_TOTAL_IN_INDEX]),							Vector.<String>([BashMethods.GET_IGNORED_FILES])];											
 		}			
 
 	}

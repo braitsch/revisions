@@ -33,7 +33,7 @@ package view {
 			for (var i:int = 0; i < a.length; i++) {
 				trace(a[i].length);				
 			}
-			if (a[StatusProxy.S].length == 0){
+			if (a[StatusProxy.S] == 0){
 				_view.save_btn.alpha = .5;				_view.save_btn.mouseEnabled = false;			}	else{
 				_view.save_btn.alpha = 1;				_view.save_btn.mouseEnabled = true;
 			}
