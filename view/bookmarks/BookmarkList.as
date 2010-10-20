@@ -3,11 +3,6 @@ package view.bookmarks {
 	import view.layout.SimpleList;
 
 	public class BookmarkList extends SimpleList {
-
-		public function BookmarkList()
-		{
-			
-		}
 		
 		public function addItem(n:ListItem):void 
 		{

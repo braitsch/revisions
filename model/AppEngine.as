@@ -46,7 +46,7 @@ package model {
 			dispatchActiveBookmark();
 		}
 
-		// sequence to remove a bookmark //	
+	// sequence to remove a bookmark //	
 
 		public function deleteBookmark(b:Bookmark, args:Object):void
 		{
@@ -76,7 +76,7 @@ package model {
 			dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_DELETED, _bookmark));
 			dispatchActiveBookmark();
 		}
-
+		
 	// generate bookmarks from database records //		
 		
 		public function generateBookmarks(e:DataBaseEvent):void 

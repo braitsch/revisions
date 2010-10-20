@@ -36,6 +36,11 @@ package view.bookmarks {
 			return _label;
 		}
 		
+		public function set label(s:String):void
+		{
+			_label = s;
+			dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_EDITED));		}
+
 		public function get local():String
 		{
 			return _local;
@@ -45,6 +50,11 @@ package view.bookmarks {
 		{
 			return _remote;
 		}
+
+		public function set remote(s:String):void
+		{
+			_remote = s;
+		}	
 		
 		public function get file():File
 		{
@@ -122,7 +132,7 @@ package view.bookmarks {
 			}
 			return _branch != null;				
 		}
-
+		
 	}
 	
 }
