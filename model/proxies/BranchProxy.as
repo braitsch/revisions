@@ -9,8 +9,6 @@ package model.proxies {
 
 	public class BranchProxy extends NativeProcessProxy{
 
-		private static var _index		:uint = 0;
-		private static var _queue		:Vector.<Bookmark>;
 		private static var _bookmark	:Bookmark;
 
 		public function BranchProxy() 
@@ -18,25 +16,18 @@ package model.proxies {
 			super.executable = 'Branch.sh';
 			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
-		}	
-		
-		public function getBranchesOfBookmarkQueue(v:Vector.<Bookmark>):void
-		{
-			_queue = v;
-			getBranchesOfBookmark(_queue[_index]);			
 		}
 
 		public function getBranchesOfBookmark(b:Bookmark):void
 		{
-			_bookmark = b;
 			trace("BranchProxy.getBranchesOfBookmark(b) > ", b.label);
+			_bookmark = b;
 			super.directory = b.local;
-			super.call(Vector.<String>([BashMethods.GET_BRANCHES]));			
-		}
+			super.call(Vector.<String>([BashMethods.GET_BRANCHES]));					}
 		
 		public function getStashList():void
 		{
-			
+			super.call(Vector.<String>([BashMethods.GET_STASH_LIST]));			
 		}
 		
 		public function addBranch($name:String):void
@@ -51,29 +42,18 @@ package model.proxies {
 		{
 			var m:String = String(e.data.method);
 			switch(m){
-				case BashMethods.GET_BRANCHES:
+				case BashMethods.GET_BRANCHES :
 					var ok:Boolean = _bookmark.attachBranches(e.data.result.split(/[\n\r\t]/g));
 					if (ok == true){
-						trace("BranchProxy.onBranchesValidate() :::::::");
-						onBranchesValidate();
+						dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCHES_READ));
 					}	else{
 						dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_DETACHED, _bookmark));
 					}
-				break;		
-			}
-		}
-		
-		private function onBranchesValidate():void
-		{
-			if (_queue == null){
-				dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCHES_READ));
-			}	else{
-				if (++_index < _queue.length){
-					getBranchesOfBookmark(_queue[_index]);	
-				}	else{
-					_queue = null;
-					dispatchEvent(new RepositoryEvent(RepositoryEvent.QUEUE_BRANCHES_READ));
-				}
+				break;
+				case BashMethods.GET_STASH_LIST :
+						_bookmark.stash = e.data.result.split(/[\n\r\t]/g);
+						dispatchEvent(new RepositoryEvent(RepositoryEvent.STASH_LIST_READ));
+				break;
 			}
 		}
 

@@ -10,38 +10,43 @@ package model {
 
 	public class AppEngine extends EventDispatcher {
 		
+		private static var _index		:uint = 0;
 		private static var _bookmark	:Bookmark;
 		private static var _bookmarks	:Vector.<Bookmark> = new Vector.<Bookmark>();
-		
 		
 	// sequence to initalize a new bookmark //
 
 		public function addBookmark(b:Bookmark):void
 		{
 			_bookmark = b;
-			for (var i:int = 0; i < _bookmarks.length; i++) _bookmarks[i].active = false;
-			AppModel.proxies.editor.addBookmark(b);
-			AppModel.proxies.editor.addEventListener(RepositoryEvent.INITIALIZED, onBookmarkInitialized);
-		}
-
-		private function onBookmarkInitialized(e:RepositoryEvent):void 
-		{
-			AppModel.proxies.editor.removeEventListener(RepositoryEvent.INITIALIZED, onBookmarkInitialized);
-			AppModel.proxies.branch.getBranchesOfBookmark(_bookmark);
-			AppModel.proxies.branch.addEventListener(RepositoryEvent.BRANCHES_READ, onBranchesRead);
-		}
-
-		private function onBranchesRead(e:RepositoryEvent):void 
-		{
-			AppModel.proxies.branch.removeEventListener(RepositoryEvent.BRANCHES_READ, onBranchesRead);
 			AppModel.database.addRepository(_bookmark.label, _bookmark.local);
-			AppModel.database.addEventListener(DataBaseEvent.BOOKMARK_ADDED, onAddedToDatabase);
+			AppModel.database.addEventListener(DataBaseEvent.BOOKMARK_ADDED, initBookmark);			
 		}
 		
-		private function onAddedToDatabase(e:DataBaseEvent):void 
+		private function initBookmark(e:DataBaseEvent):void
 		{
+			AppModel.database.removeEventListener(DataBaseEvent.BOOKMARK_ADDED, initBookmark);
+			AppModel.proxies.editor.addBookmark(_bookmark);
+			AppModel.proxies.editor.addEventListener(RepositoryEvent.INITIALIZED, readBranches);		}
+
+		private function readBranches(e:RepositoryEvent = null):void 
+		{
+			AppModel.proxies.editor.removeEventListener(RepositoryEvent.INITIALIZED, readBranches);
+			AppModel.proxies.branch.getBranchesOfBookmark(_bookmark);
+			AppModel.proxies.branch.addEventListener(RepositoryEvent.BRANCHES_READ, getStashList);
+		}
+
+		private function getStashList(e:RepositoryEvent):void 
+		{
+			AppModel.proxies.branch.removeEventListener(RepositoryEvent.BRANCHES_READ, getStashList);
+			AppModel.proxies.branch.getStashList();
+			AppModel.proxies.branch.addEventListener(RepositoryEvent.STASH_LIST_READ, onBookmarkReady);
+		}
+
+		private function onBookmarkReady(e:RepositoryEvent):void 
+		{
+			for (var i:int = 0; i < _bookmarks.length; i++) _bookmarks[i].active = false;			
 			_bookmarks.push(_bookmark);
-			AppModel.database.removeEventListener(DataBaseEvent.BOOKMARK_ADDED, onAddedToDatabase);
 			dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_ADDED, _bookmark));
 			dispatchActiveBookmark();
 		}
@@ -79,15 +84,9 @@ package model {
 		
 	// generate bookmarks from database records //		
 		
-		public function generateBookmarks(e:DataBaseEvent):void 
+		public function generateBookmarks(a:Array):void 
 		{
-			var a:Array = e.data as Array;
 			var x:Vector.<Bookmark> = new Vector.<Bookmark>();
-			
-			if (a.length == 0) {
-				trace('-- no bookmarks in database, show welcome screen --');
-				return;
-			}
 			
 			for (var i:int = 0; i < a.length; i++) {
 				var b:Bookmark = new Bookmark(a[i].name, a[i].location, a[i].active == 1);
@@ -96,20 +95,27 @@ package model {
 			}
 			trace("BookmarkModel.generateBookmarks(e)", _bookmarks.length, '> bookmark objects created');
 			
-			if (x.length == 0) {
-				AppModel.proxies.branch.getBranchesOfBookmarkQueue(_bookmarks);
-				AppModel.proxies.branch.addEventListener(RepositoryEvent.QUEUE_BRANCHES_READ, onQueueBranchesRead);			}	else{
+			if (x.length > 0) {
 				dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_ERROR, x));
-			}
-			
-		}			
-		
-		private function onQueueBranchesRead(e:RepositoryEvent):void 
+			}	else{
+				AppModel.proxies.branch.getBranchesOfBookmark(_bookmarks[_index]);				AppModel.proxies.branch.addEventListener(RepositoryEvent.BRANCHES_READ, getStashOfNextBookmark);				AppModel.proxies.branch.addEventListener(RepositoryEvent.STASH_LIST_READ, onStoredBookmarkReady);			}		}			
+
+		private function getStashOfNextBookmark(e:RepositoryEvent):void 
 		{
-			trace("BookmarkModel.onQueueBranchesRead(e)");
-			AppModel.proxies.branch.removeEventListener(RepositoryEvent.QUEUE_BRANCHES_READ, onQueueBranchesRead);
-			dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_LIST, _bookmarks));
-			dispatchActiveBookmark();		}	
+			AppModel.proxies.branch.getStashList();
+		}
+
+		private function onStoredBookmarkReady(e:RepositoryEvent):void 
+		{
+			if (++_index < _bookmarks.length){
+				AppModel.proxies.branch.getBranchesOfBookmark(_bookmarks[_index]);	
+			}	else{
+				AppModel.proxies.branch.removeEventListener(RepositoryEvent.BRANCHES_READ, getStashOfNextBookmark);
+				AppModel.proxies.branch.removeEventListener(RepositoryEvent.STASH_LIST_READ, onStoredBookmarkReady);
+				dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_LIST, _bookmarks));
+				dispatchActiveBookmark();
+			}
+		}
 		
 		private function dispatchActiveBookmark():void 
 		{

@@ -19,6 +19,7 @@ package view.bookmarks {
 		private var _branch			:Branch;
 		private var _detach			:Branch = new Branch(DETACH);
 		private var _branches		:Array = [];
+		private var _stash			:Array;
 		private var _file			:File;
 		private var _initialized	:Boolean = false;
 
@@ -131,6 +132,17 @@ package view.bookmarks {
 				}
 			}
 			return _branch != null;				
+		}
+		
+		public function get stash():Array
+		{
+			return _stash;
+		}
+		
+		public function set stash(a:Array):void
+		{
+			_stash = a;
+			trace('setting stash on',_label, a);
 		}
 		
 	}
