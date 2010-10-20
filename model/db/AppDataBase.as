@@ -81,12 +81,14 @@ package model.db {
 		private function getNextActiveRepository($old:String):String 
 		{
 			if (_repositories.length == 1) return '';
-			for (var i : int = 0; i < _repositories.length; i++) if (_repositories[i].name == $old) break;
-			if (i == 0) {
-				return _repositories[1].name; 
+			for (var i:int = 0; i < _repositories.length; i++) if (_repositories[i].name == $old) break;
+			if (i == _repositories.length - 1) {
+				i --;
+			}	else if (i == 0){
+				i = 1;
 			}	else{
-				return _repositories[i-1].name;
-			}
+				i ++;			}
+			return _repositories[i].name;
 		}		
 
 		private function onTransactionComplete(e:DataBaseEvent):void 
