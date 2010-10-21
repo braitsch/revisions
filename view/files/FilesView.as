@@ -61,6 +61,7 @@ package view.files {
 					}
 				}
 			}
+			_list.clear();			
 			_list.build(_files);
 		}		
 

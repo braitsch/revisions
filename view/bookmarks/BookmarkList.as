@@ -15,33 +15,23 @@ package view.bookmarks {
 				k = k.parent;
 			}
 			super.activeItem = k as ListItem;
-//			if (e.target is BookmarkItem){
-//				trace('BookmarkItem ::', e.target.bookmark.label);
-//				dispatchEvent(new UICommand(UICommand.BOOKMARK_SELECTED, e.target.bookmark));					//			}
-//			if (e.target is BookmarkItemBranch){
-//				trace('BookmarkItemBranch ::', e.target.branch.name);	
-//			}
 		}
 
 		public function addItem(n:ListItem):void 
 		{
-			n.y = (n.height + super.leading) * super.container.numChildren;
+			n.y = super.container.height + super.leading;
 			super.container.addChild(n);
 		}
 		
 		public function removeItem(n:ListItem):void 
 		{
-			var i:int;
-			var k:ListItem;
-			for (i = 0; i < super.container.numChildren; i++) {
-				k = super.container.getChildAt(i) as ListItem;
-				if (k.file == n.file) break;
+			var v:Vector.<ListItem> = new Vector.<ListItem>();
+			for (var i:int = 0; i < super.container.numChildren; i++) {
+				var k:ListItem = super.container.getChildAt(i) as ListItem;
+				if (k.file != n.file) v.push(k);
 			}
-			super.container.removeChildAt(i);
-			for (i = 0; i < super.container.numChildren; i++) {
-				k = super.container.getChildAt(i) as ListItem;
-				k.y = super.container.height + super.leading;
-			}
+			super.clear();
+			super.build(v);
 		}
 		
 		public function setActiveBookmark(b:Bookmark):void

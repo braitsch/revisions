@@ -80,6 +80,7 @@ package view.layout {
 		
 		public function build(v:Vector.<ListItem>):void
 		{
+			trace("SimpleList.build(v) _container.height = ", _container.height);
 			for (var i : int = 0; i < v.length; i++) {
 				var k:ListItem = v[i];
 					k.y = _container.height;
