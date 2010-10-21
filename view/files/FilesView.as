@@ -1,5 +1,5 @@
 package view.files {
-	import commands.UICommand;
+	import events.UIEvent;
 
 	import events.RepositoryEvent;
 
@@ -27,7 +27,7 @@ package view.files {
 			_list.setSize(450, 450);
 			_list.scrollbar.x = 438;
 			_list.contextMenu = AirContextMenu.menu;
-			_list.addEventListener(UICommand.LIST_ITEM_SELECTED, onListSelection);					
+			_list.addEventListener(UIEvent.LIST_ITEM_SELECTED, onListSelection);					
 			
 			addChild(_view);
 			addChild(_list);
@@ -42,7 +42,7 @@ package view.files {
 			
 			_files = new Vector.<ListItem>();
 			var a:Array = f.getDirectoryListing();
-			for (var i : int = 0; i < a.length; i++) if (validate(a[i])) _files.push(new FileItem(a[i]));
+			for (var i : int = 0; i < a.length; i++) if (validate(a[i])) _files.push(new FileListItem(a[i]));
 		}
 
 		private function onStatusReceived(e:RepositoryEvent):void 
@@ -55,7 +55,7 @@ package view.files {
 				for (var j:int = 0; j < a.length; j++) {
 					for (var k:int = 0; k < a[j].length; k++) {
 						if (p == a[j][k]){
-							FileItem(_files[i]).status = j;
+							FileListItem(_files[i]).status = j;
 							continue file;
 						}
 					}
@@ -75,9 +75,9 @@ package view.files {
 			return true;
 		}
 		
-		private function onListSelection(e:UICommand):void 
+		private function onListSelection(e:UIEvent):void 
 		{
-			var f:FileItem = _list.activeItem as FileItem;
+			var f:FileListItem = _list.activeItem as FileListItem;
 			trace("FilesView.onListSelection(e)", f.file.nativePath);
 		}			
 		

@@ -1,9 +1,9 @@
 package view.modals {
-	import commands.UICommand;
+	import events.UIEvent;
 
 	import model.AppModel;
 
-	import view.bookmarks.Bookmark;
+	import model.Bookmark;
 	import view.ui.SimpleCheckBox;
 
 	import flash.events.MouseEvent;
@@ -40,7 +40,7 @@ package view.modals {
 		private function onDelete(e:MouseEvent):void 
 		{
 			AppModel.engine.deleteBookmark(_bookmark, {killGit:_check1.selected, trash:_check2.selected});			
-			dispatchEvent(new UICommand(UICommand.CLOSE_MODAL_WINDOW, this));			
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW, this));			
 		}
 		
 	}

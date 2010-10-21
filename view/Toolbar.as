@@ -1,6 +1,6 @@
 package view {
 	import model.proxies.StatusProxy;
-	import commands.UICommand;
+	import events.UIEvent;
 
 	import events.RepositoryEvent;
 
@@ -39,7 +39,7 @@ package view {
 		{
 			var n:Event;
 			switch(e.target.name){
-				case 'new_btn' 		: n = new UICommand(UICommand.ADD_BOOKMARK);	break;				case 'edit_btn' 	: n = new UICommand(UICommand.EDIT_BOOKMARK);	break;				case 'save_btn' 	: n = new UICommand(UICommand.SAVE_PROJECT);	break;				case 'delete_btn' 	: n = new UICommand(UICommand.DELETE_BOOKMARK);	break;				case 'history_btn' 	: n = new UICommand(UICommand.OPEN_HISTORY);	break;
+				case 'new_btn' 		: n = new UIEvent(UIEvent.ADD_BOOKMARK);	break;				case 'edit_btn' 	: n = new UIEvent(UIEvent.EDIT_BOOKMARK);	break;				case 'save_btn' 	: n = new UIEvent(UIEvent.SAVE_PROJECT);	break;				case 'delete_btn' 	: n = new UIEvent(UIEvent.DELETE_BOOKMARK);	break;				case 'history_btn' 	: n = new UIEvent(UIEvent.OPEN_HISTORY);	break;
 			}
 			if (n) dispatchEvent(n);
 		}

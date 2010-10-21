@@ -1,5 +1,5 @@
 package view.modals {
-	import commands.UICommand;
+	import events.UIEvent;
 
 	import utils.StringUtils;
 
@@ -76,7 +76,7 @@ package view.modals {
 		
 		private function onCancelClick(e:MouseEvent):void 
 		{
-			dispatchEvent(new UICommand(UICommand.CLOSE_MODAL_WINDOW, this));
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW, this));
 		}
 				
 	}

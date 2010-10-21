@@ -1,5 +1,5 @@
 package view.directories {
-	import commands.UICommand;
+	import events.UIEvent;
 
 	import model.SystemRules;
 
@@ -27,7 +27,7 @@ package view.directories {
 			_list.scrollbar.x = 278;
 			_list.setSize(290, 450);	
 			_list.contextMenu = AirContextMenu.menu;
-			_list.addEventListener(UICommand.LIST_ITEM_SELECTED, onListSelection);
+			_list.addEventListener(UIEvent.LIST_ITEM_SELECTED, onListSelection);
 		}
 		
 		public function set directory(f:File):void 
@@ -37,7 +37,7 @@ package view.directories {
 			
 			var v:Vector.<ListItem> = new Vector.<ListItem>();
 			var a:Array = f.getDirectoryListing();
-			for (var i : int = 0; i < a.length; i++) if (validate(a[i])) v.push(new Directory(a[i]));
+			for (var i : int = 0; i < a.length; i++) if (validate(a[i])) v.push(new DirectoryListItem(a[i]));
 			_list.build(v);
 		}		
 
@@ -54,9 +54,9 @@ package view.directories {
 			return true;
 		}
 		
-		private function onListSelection(e:UICommand):void 
+		private function onListSelection(e:UIEvent):void 
 		{
-			dispatchEvent(new UICommand(UICommand.DIRECTORY_SELECTED, _list.activeItem as Directory));
+			dispatchEvent(new UIEvent(UIEvent.DIRECTORY_SELECTED, _list.activeItem as DirectoryListItem));
 		}	
 		
 	}

@@ -5,8 +5,8 @@ package model.proxies {
 	import model.air.NativeProcessProxy;
 	import model.bash.BashMethods;
 
-	import view.bookmarks.Bookmark;
-	import view.bookmarks.Branch;
+	import model.Bookmark;
+	import model.Branch;
 
 	public class HistoryProxy extends NativeProcessProxy {
 		

@@ -3,7 +3,7 @@ package view.history {
 
 	import model.AppModel;
 
-	import view.bookmarks.Bookmark;
+	import model.Bookmark;
 	import view.modals.ModalWindow;
 
 	import flash.display.Sprite;

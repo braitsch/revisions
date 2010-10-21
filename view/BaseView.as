@@ -4,7 +4,7 @@ package view {
 
 	import model.AppModel;
 
-	import view.bookmarks.Bookmark;
+	import model.Bookmark;
 
 	import flash.display.Sprite;
 

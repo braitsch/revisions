@@ -6,14 +6,14 @@ package model.proxies {
 	import model.air.NativeProcessProxy;
 	import model.bash.BashMethods;
 
-	import view.bookmarks.Bookmark;
-	import view.bookmarks.Branch;
-	import view.history.HistoryItem;
+	import model.Branch;
+	import model.Bookmark;
+	import view.history.HistoryListItem;
 
 	public class CheckoutProxy extends NativeProcessProxy {
 
 		private static var _status		:StatusProxy;
-		private static var _target		:HistoryItem;
+		private static var _target		:HistoryListItem;
 		private static var _bookmark	:Bookmark;
 
 		public function CheckoutProxy(s:StatusProxy)
@@ -32,7 +32,7 @@ package model.proxies {
 			super.directory = b.local;
 		}
 		
-		public function checkout(n:HistoryItem):void 
+		public function checkout(n:HistoryListItem):void 
 		{
 			_target = n;
 			trace('--------------------------------------');

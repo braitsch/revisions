@@ -1,5 +1,5 @@
 package view.modals {
-	import commands.UICommand;
+	import events.UIEvent;
 
 	import events.InstallEvent;
 
@@ -40,7 +40,7 @@ package view.modals {
 				_view.ok_btn.visible = false;
 				_view.quit_btn.visible = false;				AppModel.proxies.installer.install();
 			}	else{	
-				dispatchEvent(new UICommand(UICommand.CLOSE_MODAL_WINDOW, this));
+				dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW, this));
 			}
 		}
 		private function onButtonQuit(e:MouseEvent):void 

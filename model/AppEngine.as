@@ -2,7 +2,7 @@ package model {
 	import events.DataBaseEvent;
 	import events.RepositoryEvent;
 
-	import view.bookmarks.Bookmark;
+	
 
 	import flash.events.EventDispatcher;
 

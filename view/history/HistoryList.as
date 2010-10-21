@@ -1,11 +1,11 @@
 package view.history {
-	import commands.UICommand;
+	import events.UIEvent;
 
 	import events.RepositoryEvent;
 
 	import model.AppModel;
 
-	import view.bookmarks.Branch;
+	import model.Branch;
 	import view.layout.ListItem;
 	import view.layout.SimpleList;
 
@@ -82,7 +82,7 @@ package view.history {
 									note 	: a[i][3], 
 									sha1 	: a[i][0],	
 									name 	: _branch.name	};
-				v.push(new HistoryItem(o));
+				v.push(new HistoryListItem(o));
 			}
 			_list.clear();
 			_list.build(v);
@@ -94,12 +94,12 @@ package view.history {
 		private function onListTabSelection(e:MouseEvent):void 
 		{
 			if (_branch.history == null) AppModel.proxies.history.getHistoryOfBranch(_branch);
-			dispatchEvent(new UICommand(UICommand.HISTORY_TAB_SELECTED));
+			dispatchEvent(new UIEvent(UIEvent.HISTORY_TAB_SELECTED));
 		}		
 
 		private function onRecordSelection(e:MouseEvent):void 
 		{
-			AppModel.proxies.checkout.checkout(_list.activeItem as HistoryItem);			
+			AppModel.proxies.checkout.checkout(_list.activeItem as HistoryListItem);			
 		}
 		
 	}

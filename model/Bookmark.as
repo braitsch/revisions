@@ -1,4 +1,4 @@
-package view.bookmarks {
+package model {
 	import events.RepositoryEvent;
 
 	import utils.StringUtils;

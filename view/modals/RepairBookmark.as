@@ -1,11 +1,11 @@
 package view.modals {
-	import commands.UICommand;
+	import events.UIEvent;
 
 	import model.AppModel;
 
 	import utils.FileBrowser;
 
-	import view.bookmarks.Bookmark;
+	import model.Bookmark;
 
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
@@ -25,7 +25,7 @@ package view.modals {
 			_view.browse_btn.addEventListener(MouseEvent.CLICK, onDirectoryBrowse);
 			_view.update_btn.addEventListener(MouseEvent.CLICK, onUpdateRepository);
 			_view.delete_btn.addEventListener(MouseEvent.CLICK, onDeleteRepository);
-			_browser.addEventListener(UICommand.FILE_BROWSER_SELECTION, onDirectorySelection);				
+			_browser.addEventListener(UIEvent.FILE_BROWSER_SELECTION, onDirectorySelection);				
 		}
 		
 		public function set bookmark($b:Bookmark):void
@@ -40,7 +40,7 @@ package view.modals {
 			_browser.browse('Please Select A Directory');			
 		}
 		
-		private function onDirectorySelection(e:UICommand):void 
+		private function onDirectorySelection(e:UIEvent):void 
 		{
 			if (!super.isValidTarget(e.data as String, _view.local_txt)) return;	
 			_view.local_txt.text = e.data as String;				
@@ -52,7 +52,7 @@ package view.modals {
 				_view.name_txt.text = 'Please Enter A Name';		
 			}	else{
 				AppModel.database.editRepository(_oldId, _view.name_txt.text, _view.local_txt.text);				
-				dispatchEvent(new UICommand(UICommand.CLOSE_MODAL_WINDOW, this));
+				dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW, this));
 			}
 		}					
 
@@ -60,7 +60,7 @@ package view.modals {
 		{
 		// if it's broken, this just removes the broken bookmark & leaves file system alone.
 			AppModel.database.deleteRepository(_view.name_txt.text);				
-			dispatchEvent(new UICommand(UICommand.CLOSE_MODAL_WINDOW, this));			
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW, this));			
 		}
 		
 	}

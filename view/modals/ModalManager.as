@@ -1,6 +1,6 @@
 package view.modals {
 	import events.RepositoryEvent;
-	import commands.UICommand;
+	import events.UIEvent;
 
 	import events.InstallEvent;
 
@@ -8,7 +8,7 @@ package view.modals {
 
 	import utils.DragAndDropListener;
 
-	import view.bookmarks.Bookmark;
+	import model.Bookmark;
 	import view.history.HistoryView;
 
 	import flash.desktop.NativeApplication;
@@ -32,7 +32,7 @@ package view.modals {
 		public function ModalManager()
 		{
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);	
-			addEventListener(UICommand.CLOSE_MODAL_WINDOW, onCloseModelWindow);	
+			addEventListener(UIEvent.CLOSE_MODAL_WINDOW, onCloseModelWindow);	
 			
 			AppModel.proxies.installer.addEventListener(InstallEvent.GIT_UNAVAILABLE, installGit);
 			AppModel.proxies.branch.addEventListener(RepositoryEvent.BRANCH_DETACHED, onBranchDetached);
@@ -43,8 +43,8 @@ package view.modals {
 		private function onAddedToStage(e:Event):void 
 		{
 			_dragAndDrop.target = stage;
-			_dragAndDrop.addEventListener(NativeDragEvent.NATIVE_DRAG_COMPLETE, onDragAndDrop);						stage.addEventListener(UICommand.ADD_BOOKMARK, addBookmark);			stage.addEventListener(UICommand.EDIT_BOOKMARK, editBookmark);			stage.addEventListener(UICommand.SAVE_PROJECT, addNewCommit);			stage.addEventListener(UICommand.ADD_BRANCH, branchBookmark);
-			stage.addEventListener(UICommand.DELETE_BOOKMARK, removeBookmark);			stage.addEventListener(UICommand.OPEN_HISTORY, viewHistory);		}	
+			_dragAndDrop.addEventListener(NativeDragEvent.NATIVE_DRAG_COMPLETE, onDragAndDrop);						stage.addEventListener(UIEvent.ADD_BOOKMARK, addBookmark);			stage.addEventListener(UIEvent.EDIT_BOOKMARK, editBookmark);			stage.addEventListener(UIEvent.SAVE_PROJECT, addNewCommit);			stage.addEventListener(UIEvent.ADD_BRANCH, branchBookmark);
+			stage.addEventListener(UIEvent.DELETE_BOOKMARK, removeBookmark);			stage.addEventListener(UIEvent.OPEN_HISTORY, viewHistory);		}	
 
 		private function onDragAndDrop(e:NativeDragEvent):void 
 		{
@@ -61,35 +61,35 @@ package view.modals {
 			addChild(_install);
 		}	
 
-		private function addBookmark(e:UICommand):void 
+		private function addBookmark(e:UIEvent):void 
 		{
 			addChild(_add);
 		}
 
-		private function editBookmark(e:UICommand):void
+		private function editBookmark(e:UIEvent):void
 		{
 			if (!AppModel.bookmark) return;
 			_edit.bookmark = AppModel.bookmark;
 			addChild(_edit);
 		}
 		
-		private function branchBookmark(e:UICommand):void 
+		private function branchBookmark(e:UIEvent):void 
 		{
 			// new branch wizard 
 		}
 		
-		private function removeBookmark(e:UICommand):void
+		private function removeBookmark(e:UIEvent):void
 		{
 			_remove.bookmark = AppModel.bookmark;
 			addChild(_remove);
 		}
 		
-		private function addNewCommit(e:UICommand):void 
+		private function addNewCommit(e:UIEvent):void 
 		{
 			addChild(_commit);
 		}
 		
-		private function viewHistory(e:UICommand):void 
+		private function viewHistory(e:UIEvent):void 
 		{
 			addChild(_history);
 		}
@@ -112,7 +112,7 @@ package view.modals {
 			addChild(_modified);	
 		}							
 		
-		private function onCloseModelWindow(e:UICommand):void 
+		private function onCloseModelWindow(e:UIEvent):void 
 		{
 			removeChild(e.data as ModalWindow);
 		}

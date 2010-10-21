@@ -1,9 +1,9 @@
 package view.history {
-	import commands.UICommand;
+	import events.UIEvent;
 
 	import events.RepositoryEvent;
 
-	import view.bookmarks.Bookmark;
+	import model.Bookmark;
 
 	import flash.display.Sprite;
 
@@ -23,7 +23,7 @@ package view.history {
 			for (var i:int = 0; i < a.length; i++) addChild(new HistoryList(a[i], i));
 			
 			setActiveBranch();
-			addEventListener(UICommand.HISTORY_TAB_SELECTED, onTabSelected);
+			addEventListener(UIEvent.HISTORY_TAB_SELECTED, onTabSelected);
 		}
 		
 		public function get list():HistoryList
@@ -46,7 +46,7 @@ package view.history {
 			setChildIndex(_list, numChildren-1);
 		}
 		
-		private function onTabSelected(e:UICommand):void 		{
+		private function onTabSelected(e:UIEvent):void 		{
 			setActiveTab(e.target as HistoryList);
 		}
 		

@@ -1,6 +1,6 @@
 package view.layout {
 	import view.ui.DragHandle;
-	import commands.UICommand;
+	import events.UIEvent;
 
 	import flash.display.Stage;
 	import flash.events.Event;
@@ -14,7 +14,7 @@ package view.layout {
 		public static function set stage($s:Stage):void
 		{
 			_stage = $s;
-			_stage.addEventListener(UICommand.COLUMN_RESIZED, onColumnResize);		
+			_stage.addEventListener(UIEvent.COLUMN_RESIZED, onColumnResize);		
 			_stage.addEventListener(Event.RESIZE, onStageResize);	
 		}
 		
@@ -38,7 +38,7 @@ package view.layout {
 			_base.graphics.endFill();
 		}		
 		
-		private static function onColumnResize(e:UICommand):void 
+		private static function onColumnResize(e:UIEvent):void 
 		{
 			var h:DragHandle = e.target as DragHandle;
 			var p:LiquidColumn = e.target.parent as LiquidColumn;

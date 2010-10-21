@@ -6,8 +6,8 @@ package model {
 	import model.db.AppDatabase;
 	import model.proxies.AppProxies;
 
-	import view.bookmarks.Bookmark;
-	import view.bookmarks.Branch;
+	
+	
 
 	import flash.events.EventDispatcher;
 

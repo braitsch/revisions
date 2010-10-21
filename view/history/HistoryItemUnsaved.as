@@ -3,7 +3,7 @@ package view.history {
 
 	import model.AppModel;
 
-	public class HistoryItemUnsaved extends HistoryItem {
+	public class HistoryItemUnsaved extends HistoryListItem {
 		
 		public function HistoryItemUnsaved($branchName:String)
 		{

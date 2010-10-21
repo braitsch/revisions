@@ -1,5 +1,7 @@
 package view.bookmarks {
-	import commands.UICommand;
+	import model.Bookmark;
+
+	import events.UIEvent;
 
 	import events.RepositoryEvent;
 
@@ -8,13 +10,13 @@ package view.bookmarks {
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 
-	public class BookmarkItem extends ListItem {
+	public class BookmarkListItem extends ListItem {
 
 		private var _view			:BookmarkItemMC = new BookmarkItemMC();
 		private var _branches		:Sprite;
 		private var _bookmark		:Bookmark;
 		
-		public function BookmarkItem($bkmk:Bookmark)
+		public function BookmarkListItem($bkmk:Bookmark)
 		{
 			super.file = $bkmk.file;
 			super.draw(190, 20);
@@ -51,7 +53,7 @@ package view.bookmarks {
 			_branches = new Sprite();
 			_branches.y = 22;
 			for (var i:int = 1; i < _bookmark.branches.length; i++) {
-				var k:BookmarkItemBranch = new BookmarkItemBranch(_bookmark.branches[i]);
+				var k:BranchListItem = new BranchListItem(_bookmark.branches[i]);
 					k.x = 190;
 					k.y = 18 * (i - 1);
 				_branches.addChild(k);	
@@ -63,12 +65,12 @@ package view.bookmarks {
 		private function onBookmarkSelection(e:MouseEvent):void 
 		{
 			_bookmark.branch = _bookmark.getBranchByName('master');
-			dispatchEvent(new UICommand(UICommand.BOOKMARK_SELECTED, _bookmark));		}
+			dispatchEvent(new UIEvent(UIEvent.BOOKMARK_SELECTED, _bookmark));		}
 				
 		private function onBranchSelection(e:MouseEvent):void 
 		{
 			_bookmark.branch = e.target.branch;
-			dispatchEvent(new UICommand(UICommand.BOOKMARK_SELECTED, _bookmark));
+			dispatchEvent(new UIEvent(UIEvent.BOOKMARK_SELECTED, _bookmark));
 		}
 
 	}

@@ -1,14 +1,14 @@
 package view.layout {
-	import commands.UICommand;
+	import events.UIEvent;
 
 	public class NestedList extends SimpleList {	
 
 		public function NestedList()
 		{
-			addEventListener(UICommand.TOGGLE_OPEN_DIRECTORY, onToggleSubItems);			
+			addEventListener(UIEvent.TOGGLE_OPEN_DIRECTORY, onToggleSubItems);			
 		}
 
-		private function onToggleSubItems(e:UICommand):void 
+		private function onToggleSubItems(e:UIEvent):void 
 		{
 			super.activeItem = e.target as ListItem;
 			var n:uint = super.container.getChildIndex(super.activeItem);

@@ -1,7 +1,7 @@
 package model.db {
 	import events.DataBaseEvent;
 
-	import view.bookmarks.Bookmark;
+	import model.Bookmark;
 
 	import flash.data.SQLStatement;
 	import flash.events.EventDispatcher;

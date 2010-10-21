@@ -1,4 +1,5 @@
 package view.bookmarks {
+	import model.Bookmark;
 	import view.layout.ListItem;
 	import view.layout.SimpleList;
 

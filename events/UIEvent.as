@@ -1,8 +1,8 @@
-package commands {
+package events {
 	import flash.events.Event;
 
 	// events dispatched from user interaction that bubble through the display list //
-	public class UICommand extends Event {
+	public class UIEvent extends Event {
 		
 	// bookmark and branch commands //	
 		public static const BRANCH_SELECTED			:String = "BRANCH_SELECTED";
@@ -33,7 +33,7 @@ package commands {
 		
 		public var data:Object;
 
-		public function UICommand($type:String, $data:Object = null)
+		public function UIEvent($type:String, $data:Object = null)
 		{
 			data = $data;
 			super($type, true, true);

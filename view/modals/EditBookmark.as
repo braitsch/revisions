@@ -1,12 +1,12 @@
 package view.modals {
-	import commands.UICommand;
+	import events.UIEvent;
 
 	import events.DataBaseEvent;
 	import events.RepositoryEvent;
 
 	import model.AppModel;
 
-	import view.bookmarks.Bookmark;
+	import model.Bookmark;
 
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
@@ -41,7 +41,7 @@ package view.modals {
 				_view.name_txt.text = 'Please Enter A Name';		
 			}	else{
 				AppModel.database.editRepository(_bookmark.label, _view.name_txt.text, _view.local_txt.text);
-				AppModel.database.addEventListener(RepositoryEvent.BOOKMARK_EDITED, onEditSuccessful);				dispatchEvent(new UICommand(UICommand.CLOSE_MODAL_WINDOW, this));
+				AppModel.database.addEventListener(RepositoryEvent.BOOKMARK_EDITED, onEditSuccessful);				dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW, this));
 			}
 		}
 

@@ -1,4 +1,5 @@
 package view.bookmarks {
+	import model.Bookmark;
 	import events.RepositoryEvent;
 
 	import model.AppModel;
@@ -40,18 +41,18 @@ package view.bookmarks {
 			var v:Vector.<Bookmark> = e.data as Vector.<Bookmark>;
 			var a:Vector.<ListItem> = new Vector.<ListItem>();
 			
-			for (var i:int = 0; i < v.length; i++) a.push(new BookmarkItem(v[i]));
+			for (var i:int = 0; i < v.length; i++) a.push(new BookmarkListItem(v[i]));
 			_list.build(a);
 		}
 
 		private function onBookmarkAdded(e:RepositoryEvent):void 
 		{
-			_list.addItem(new BookmarkItem(e.data as Bookmark));
+			_list.addItem(new BookmarkListItem(e.data as Bookmark));
 		}
 		
 		private function onBookmarkDeleted(e:RepositoryEvent):void 
 		{
-			_list.removeItem(new BookmarkItem(e.data as Bookmark));
+			_list.removeItem(new BookmarkListItem(e.data as Bookmark));
 		}
 		
 	}

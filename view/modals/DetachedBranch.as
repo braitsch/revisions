@@ -1,5 +1,5 @@
 package view.modals {
-	import commands.UICommand;
+	import events.UIEvent;
 
 	import model.AppModel;
 
@@ -23,11 +23,11 @@ package view.modals {
 		private function onBranch(e:MouseEvent):void 
 		{
 			AppModel.proxies.branch.addBranch(_view.name_txt.text);
-			dispatchEvent(new UICommand(UICommand.CLOSE_MODAL_WINDOW, this));		}
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW, this));		}
 		private function onDiscard(e:MouseEvent):void 
 		{
 		//	AppModel.repos.history.discardUnsavedChanges();
-			dispatchEvent(new UICommand(UICommand.CLOSE_MODAL_WINDOW, this));
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW, this));
 		}
 		
 	}

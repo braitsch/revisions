@@ -19,7 +19,8 @@ package events {
 		public static const BRANCH_HISTORY					:String = "HISTORY_RECEIVED";
 		public static const BRANCH_DETACHED					:String = "BRANCH_DETACHED";
 		public static const BRANCH_MODIFIED					:String = "BRANCH_MODIFIED";
-		public static const COMMIT_MODIFIED					:String = "COMMIT_MODIFIED";		
+		public static const COMMIT_MODIFIED					:String = "COMMIT_MODIFIED";	
+			
 		public var data:Object;
 		
 		public function RepositoryEvent($type:String, $data:Object = null)

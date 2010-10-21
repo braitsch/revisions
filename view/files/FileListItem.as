@@ -7,7 +7,7 @@ package view.files {
 	import flash.display.BitmapData;
 	import flash.filesystem.File;
 
-	public class FileItem extends ListItem {
+	public class FileListItem extends ListItem {
 
 		private static var blue		:IconBallBlue = new IconBallBlue(15, 15);		private static var green	:IconBallGreen = new IconBallGreen(15, 15);		private static var grey		:IconBallGrey = new IconBallGrey(15, 15);		private static var orange	:IconBallOrange = new IconBallOrange(15, 15);
 		
@@ -15,7 +15,7 @@ package view.files {
 		private var _label			:String;
 		private var _icon			:Bitmap;
 
-		public function FileItem($file:File) 
+		public function FileListItem($file:File) 
 		{
 			super.file = $file;
 			super.draw(440, 20);

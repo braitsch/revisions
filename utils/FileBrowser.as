@@ -1,5 +1,5 @@
 package utils{
-	import commands.UICommand;
+	import events.UIEvent;
 	import flash.events.EventDispatcher;
 	import flash.events.Event;
 	import flash.filesystem.File;
@@ -19,7 +19,7 @@ package utils{
 		{
 			_local = e.target as File;
 			_target = _local.nativePath;
-			dispatchEvent(new UICommand(UICommand.FILE_BROWSER_SELECTION, _target));
+			dispatchEvent(new UIEvent(UIEvent.FILE_BROWSER_SELECTION, _target));
 		}
 		
 	}

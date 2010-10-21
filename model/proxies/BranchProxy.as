@@ -5,7 +5,7 @@ package model.proxies {
 	import model.air.NativeProcessProxy;
 	import model.bash.BashMethods;
 
-	import view.bookmarks.Bookmark;
+	import model.Bookmark;
 
 	public class BranchProxy extends NativeProcessProxy{
 

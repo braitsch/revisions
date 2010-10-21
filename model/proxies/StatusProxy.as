@@ -7,8 +7,8 @@ package model.proxies {
 	import model.air.NativeProcessQueue;
 	import model.bash.BashMethods;
 
-	import view.bookmarks.Bookmark;
-	import view.bookmarks.Branch;
+	import model.Bookmark;
+	import model.Branch;
 
 	public class StatusProxy extends NativeProcessQueue {
 

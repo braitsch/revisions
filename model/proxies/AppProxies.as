@@ -1,5 +1,5 @@
 package model.proxies {
-	import view.bookmarks.Bookmark;
+	import model.Bookmark;
 
 	import flash.events.EventDispatcher;
 

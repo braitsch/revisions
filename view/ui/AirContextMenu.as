@@ -1,9 +1,9 @@
 package view.ui {
-	import commands.UICommand;
+	import events.UIEvent;
 
 	import model.AppModel;
 
-	import view.bookmarks.Bookmark;
+	import model.Bookmark;
 	import view.layout.ListItem;
 
 	import flash.display.DisplayObject;
@@ -53,7 +53,7 @@ package view.ui {
 		{
 			var cmi:ContextMenuItem = e.target as ContextMenuItem;
 			switch(cmi.label){
-				case 'Save' : _stage.dispatchEvent(new UICommand(UICommand.SAVE_PROJECT));		break;				case 'Edit' : _stage.dispatchEvent(new UICommand(UICommand.EDIT_BOOKMARK));		break;				case 'Delete' : _stage.dispatchEvent(new UICommand(UICommand.DELETE_BOOKMARK));	break;
+				case 'Save' : _stage.dispatchEvent(new UIEvent(UIEvent.SAVE_PROJECT));		break;				case 'Edit' : _stage.dispatchEvent(new UIEvent(UIEvent.EDIT_BOOKMARK));		break;				case 'Delete' : _stage.dispatchEvent(new UIEvent(UIEvent.DELETE_BOOKMARK));	break;
 				
 				case 'Track Item' : 
 					AppModel.proxies.editor.trackFile(getListItem(e.mouseTarget).file);	break;				case 'UnTrack Item' : 

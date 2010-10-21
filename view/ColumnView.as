@@ -1,11 +1,11 @@
 package view {
-	import commands.UICommand;
+	import events.UIEvent;
 
 	import events.RepositoryEvent;
 
 	import model.AppModel;
 
-	import view.bookmarks.Bookmark;
+	import model.Bookmark;
 	import view.bookmarks.BookmarkView;
 	import view.directories.DirectoryView;
 	import view.files.FilesView;
@@ -30,8 +30,8 @@ package view {
 			addChild(_dirs);			
 			addChild(_files);
 					
-			addEventListener(UICommand.BOOKMARK_SELECTED, onBookmarkSelected);
-			addEventListener(UICommand.DIRECTORY_SELECTED, onDirectorySelection);
+			addEventListener(UIEvent.BOOKMARK_SELECTED, onBookmarkSelected);
+			addEventListener(UIEvent.DIRECTORY_SELECTED, onDirectorySelection);
 			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkSet);		}
 
 		public function get columns():Vector.<LiquidColumn>
@@ -48,13 +48,13 @@ package view {
 			}
 		}
 		
-		private function onBookmarkSelected(e:UICommand):void 
+		private function onBookmarkSelected(e:UIEvent):void 
 		{
 			setDirectoryAndFiles(e.data.file);
 			setGlobalActiveBookmark(e.data as Bookmark);
 		}		
 		
-		private function onDirectorySelection(e:UICommand):void 
+		private function onDirectorySelection(e:UIEvent):void 
 		{
 			_files.directory = ListItem(e.data).file;
 			AppModel.proxies.status.getStatusOfBranch(AppModel.branch);		}

@@ -1,5 +1,5 @@
 package view.ui {
-	import commands.UICommand;
+	import events.UIEvent;
 	import flash.events.Event;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -25,7 +25,7 @@ package view.ui {
 		}
 		private function onHandleDrag(e:Event):void 
 		{
-			dispatchEvent(new UICommand(UICommand.COLUMN_RESIZED, this));
+			dispatchEvent(new UIEvent(UIEvent.COLUMN_RESIZED, this));
 		}
 
 		private function onStageMouseUP(event:MouseEvent):void 

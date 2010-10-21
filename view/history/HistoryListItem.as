@@ -1,12 +1,12 @@
 package view.history {
 	import view.layout.ListItem;
 
-	public class HistoryItem extends ListItem {
+	public class HistoryListItem extends ListItem {
 
 		private var _data			:Object;
 		private var _view			:HistoryItemMC = new HistoryItemMC();
 
-		public function HistoryItem(o:Object)
+		public function HistoryListItem(o:Object)
 		{
 			super.draw(650, 20);
 			

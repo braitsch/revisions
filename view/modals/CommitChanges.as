@@ -1,5 +1,5 @@
 package view.modals {
-	import commands.UICommand;
+	import events.UIEvent;
 
 	import model.AppModel;
 
@@ -22,7 +22,7 @@ package view.modals {
 		private function onCommit(e:MouseEvent):void 
 		{
 			AppModel.proxies.editor.commit(_view.note_txt.text);
-			dispatchEvent(new UICommand(UICommand.CLOSE_MODAL_WINDOW, this));
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW, this));
 		}
 		
 	}

@@ -1,5 +1,5 @@
 package view.layout {
-	import commands.UICommand;
+	import events.UIEvent;
 
 	import view.ui.UIScrollBar;
 
@@ -27,7 +27,7 @@ package view.layout {
 			addChild(_scrollbar);
 			
 			_container.addEventListener(MouseEvent.CLICK, onItemSelection);			_container.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			addEventListener(UICommand.TOGGLE_OPEN_DIRECTORY, onListHeightChanged);			
+			addEventListener(UIEvent.TOGGLE_OPEN_DIRECTORY, onListHeightChanged);			
 		}
 		
 	// public getters / setters //	
@@ -80,7 +80,6 @@ package view.layout {
 		
 		public function build(v:Vector.<ListItem>):void
 		{
-			trace("SimpleList.build(v) _container.height = ", _container.height);
 			for (var i : int = 0; i < v.length; i++) {
 				var k:ListItem = v[i];
 					k.y = _container.height;
@@ -104,7 +103,7 @@ package view.layout {
 				k = k.parent;
 			}
 			this.activeItem = k as ListItem;
-			dispatchEvent(new UICommand(UICommand.LIST_ITEM_SELECTED));
+			dispatchEvent(new UIEvent(UIEvent.LIST_ITEM_SELECTED));
 		}
 		
 		private function onAddedToStage(e:Event):void 
@@ -112,7 +111,7 @@ package view.layout {
 			_scrollbar.drawMask(_width, _height);
 		}
 		
-		private function onListHeightChanged(e:UICommand):void 
+		private function onListHeightChanged(e:UIEvent):void 
 		{
 			_scrollbar.adjustToNewListHeight();
 		}		
