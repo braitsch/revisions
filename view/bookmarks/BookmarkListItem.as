@@ -48,7 +48,7 @@ package view.bookmarks {
 				var k:BranchListItem = new BranchListItem(_bookmark.branches[i]);
 					k.x = 190;
 					k.y = 18 * (i - 1);
-				_branches.addChild(k);	
+				_branches.addChild(k);
 			}
 			addChild(_branches);
 			_branches.addEventListener(MouseEvent.CLICK, onBranchSelection);
@@ -56,12 +56,20 @@ package view.bookmarks {
 
 		private function onBranchSelection(e:MouseEvent):void 
 		{
-			AppModel.proxies.checkout.checkout(_bookmark, e.target.branch);
+			if (AppModel.branch == e.target.branch) return;
+			if (_bookmark.initialized){
+				AppModel.proxies.checkout.checkout(_bookmark, e.target.branch);
+			}	else{				AppModel.engine.dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_SET, _bookmark));
+			}
 		}
 		
 		private function onBookmarkSelection(e:MouseEvent):void
-		{
-			AppModel.proxies.checkout.checkout(_bookmark, _bookmark.getBranchByName('master'));
+		{			if (AppModel.bookmark == _bookmark) return;
+			if (_bookmark.initialized){
+				AppModel.proxies.checkout.checkout(_bookmark, _bookmark.getBranchByName('master'));
+			}	else{
+				AppModel.engine.dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_SET, _bookmark));
+			}
 		}
 
 	}
