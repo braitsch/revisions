@@ -17,8 +17,9 @@ package view.files {
 
 		public function FileItem($file:File) 
 		{
-			super(440, false);
 			super.file = $file;
+			super.draw(440, 20);
+			
 			_view.label_txt.x = 25;
 			_view.label_txt.autoSize = 'left';
 			_view.label_txt.mouseEnabled = false;

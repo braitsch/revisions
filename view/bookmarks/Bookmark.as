@@ -80,7 +80,20 @@ package view.bookmarks {
 		public function set initialized(n:Boolean):void
 		{
 			_initialized = n;
-		}			
+		}
+		
+		public function get stash():Array
+		{
+			return _stash;
+		}
+		
+		public function set stash(a:Array):void
+		{
+			for (var i:int = 0; i < a.length; i++) {
+				var n:String = a[i].replace(/stash@\{[0-9]*}: WIP on /, '');
+				_stash.push(n.substring(0, n.indexOf(':')));	
+			}
+		}				
 		
 	// branches //	
 				
@@ -109,8 +122,8 @@ package view.bookmarks {
 		public function get detach():Branch
 		{
 			return _detach;
-		}			
-	
+		}
+		
 		public function attachBranches(a:Array):Boolean
 		{
 	// new repositories don't return a branch name before first commit //		
@@ -131,21 +144,16 @@ package view.bookmarks {
 					}
 				}
 			}
+			sortBranches();
 			return _branch != null;				
 		}
 		
-		public function get stash():Array
+		private function sortBranches():void
 		{
-			return _stash;
-		}
-		
-		public function set stash(a:Array):void
-		{
-			for (var i:int = 0; i < a.length; i++) {
-				var n:String = a[i].replace(/stash@\{[0-9]*}: WIP on /, '');
-				_stash.push(n.substring(0, n.indexOf(':')));	
-				trace('xxxxxx _stash', i, ' ='+_stash[i]+'=');
-			}
+		// ensure master is always the first in the list //	
+			var m:Branch = getBranchByName('master');
+			_branches.splice(_branches.indexOf(m), 1);
+			_branches.unshift(m);
 		}
 		
 	}

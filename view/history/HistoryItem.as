@@ -8,7 +8,8 @@ package view.history {
 
 		public function HistoryItem(o:Object)
 		{
-			super(650, false);
+			super.draw(650, 20);
+			
 			_data = o;
 			_view.num_txt.text = o.index;
 			_view.date_txt.text = o.date;			_view.author_txt.text = o.author;			_view.note_txt.text = o.note;			mouseChildren = false;

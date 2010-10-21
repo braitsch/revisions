@@ -12,10 +12,8 @@ package view.layout {
 		private var _active				:Boolean;
 		private var _bkgd				:Shape = new Shape();	
 
-		public function ListItem($w:uint, $a:Boolean)
+		public function ListItem()
 		{
-			draw($w);
-			_active = $a;
 			_bkgd.alpha = .5;
 			addChildAt(_bkgd, 0);	
 			
@@ -26,11 +24,11 @@ package view.layout {
 		
 	// public setters / getters 	
 		
-		public function draw(w:Number):void
+		public function draw(w:uint, h:uint = 20):void
 		{
+			_bkgd.graphics.clear();
 			_bkgd.graphics.beginFill(0xffffff);
-			_bkgd.graphics.drawRect(0, 0, w, 20);
-			_bkgd.graphics.endFill();			
+			_bkgd.graphics.drawRect(0, 0, w, h);			_bkgd.graphics.endFill();
 		}
 		
 		public function set file($f:File):void
@@ -58,7 +56,7 @@ package view.layout {
 		{
 			return this.parent.getChildIndex(this);
 		}
-	
+		
 	// mouse events //
 
 		private function onRollOver(e:MouseEvent):void 

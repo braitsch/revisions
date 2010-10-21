@@ -26,8 +26,7 @@ package view.layout {
 			_scrollbar.target = _container;
 			addChild(_scrollbar);
 			
-			_container.addEventListener(MouseEvent.CLICK, onItemSelection);
-			_container.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			_container.addEventListener(MouseEvent.CLICK, onItemSelection);			_container.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(UICommand.TOGGLE_OPEN_DIRECTORY, onListHeightChanged);			
 		}
 		
@@ -83,7 +82,8 @@ package view.layout {
 		{
 			for (var i : int = 0; i < v.length; i++) {
 				var k:ListItem = v[i];
-					k.y = (k.height + _leading) * i;
+					k.y = _container.height;
+				if (i > 0) k.y += _leading;
 				if (k.active == 1) this.activeItem = k;
 				_container.addChild(k);
 			}
@@ -95,12 +95,7 @@ package view.layout {
 		
 	// private methods //	
 
-		private function onAddedToStage(e:Event):void 
-		{
-			_scrollbar.drawMask(_width, _height);
-		}
-		
-		private function onItemSelection(e:MouseEvent):void 
+		protected function onItemSelection(e:MouseEvent):void 
 		{
 			var k:DisplayObject = e.target as DisplayObject;
 			while(k.parent){
@@ -109,6 +104,11 @@ package view.layout {
 			}
 			this.activeItem = k as ListItem;
 			dispatchEvent(new UICommand(UICommand.LIST_ITEM_SELECTED));
+		}
+		
+		private function onAddedToStage(e:Event):void 
+		{
+			_scrollbar.drawMask(_width, _height);
 		}
 		
 		private function onListHeightChanged(e:UICommand):void 

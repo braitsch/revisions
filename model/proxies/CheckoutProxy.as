@@ -97,7 +97,7 @@ package model.proxies {
 			trace('>> current branch = ', AppModel.branch.name, '>> current tab = ', _target.name);
 		}
 		
-		private function checkIfBranchIsSavedInStash():void 
+		private function checkIfBranchIsSavedInStash():void
 		{
 			var stashed:Boolean;
 			for (var i:int = 0; i < _bookmark.stash.length; i++) {

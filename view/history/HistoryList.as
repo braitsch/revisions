@@ -30,7 +30,8 @@ package view.history {
 			_view.tab.x = $xpos * 62;
 			_view.tab.buttonMode = true;
 			_view.tab.alpha = .6;
-			_view.tab.label_txt.text = $branch.name;			_view.tab.label_txt.mouseEnabled = false;
+			_view.tab.label_txt.text = _branch.name == 'master' ? 'home' : _branch.name;
+			_view.tab.label_txt.mouseEnabled = false;
 			_view.mouseEnabled = false;
 			
 			_list.y = 46;

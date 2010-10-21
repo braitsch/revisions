@@ -15,14 +15,16 @@ package view.directories {
 
 		public function Directory($f:File)
 		{
-			super(280, false);
-			super.file = $f;	
+			super.file = $f;
+			super.draw(280, 20);
+			
 			_view.mouseEnabled = false;
 			_view.label_txt.x = 25;
 			_view.label_txt.autoSize = 'left';
 			_view.label_txt.mouseEnabled = false;
 			_view.label_txt.text = clean(super.file.url);
 			_view.nested.addEventListener(MouseEvent.CLICK, onToggleSubDirectories);
+			
 			addChild(_view);		
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}

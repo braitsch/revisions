@@ -1,6 +1,4 @@
 package view.bookmarks {
-	import commands.UICommand;
-
 	import events.RepositoryEvent;
 
 	import model.AppModel;
@@ -26,7 +24,6 @@ package view.bookmarks {
 			_list.scrollbar.x = 188;
 			_list.setSize(200, 450);
 			_list.contextMenu = AirContextMenu.menu;
-			_list.addEventListener(UICommand.LIST_ITEM_SELECTED, onListSelection);
 			
 			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkSet);			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARK_LIST, onBookmarkList);
 			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARK_ADDED, onBookmarkAdded);
@@ -55,10 +52,6 @@ package view.bookmarks {
 		private function onBookmarkDeleted(e:RepositoryEvent):void 
 		{
 			_list.removeItem(new BookmarkItem(e.data as Bookmark));
-		}
-		
-		private function onListSelection(e:UICommand):void 		{
-			dispatchEvent(new UICommand(UICommand.BOOKMARK_SELECTED, BookmarkItem(_list.activeItem).bookmark));
 		}
 		
 	}

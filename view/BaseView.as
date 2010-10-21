@@ -52,7 +52,7 @@ package view {
 		{
 			var a:Array = AppModel.bookmark.branch.history;
 			if (a == null){
-				return ' -- Last Saved : Unavailable';			}	else if (a.length == 0){
+				return ' -- Last Saved : No Previous Versions Yet';			}	else if (a.length == 0){
 				return ' -- Last Saved : No Previous Versions Yet';
 			}	else{
 				return ' -- Version '+a.length+' -- Last Saved : '+a[0][1]+' by '+a[0][2];

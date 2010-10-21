@@ -2,8 +2,27 @@ package view.bookmarks {
 	import view.layout.ListItem;
 	import view.layout.SimpleList;
 
+	import flash.display.DisplayObject;
+	import flash.events.MouseEvent;
+
 	public class BookmarkList extends SimpleList {
-		
+
+		override protected function onItemSelection(e:MouseEvent):void 
+		{
+			var k:DisplayObject = e.target as DisplayObject;
+			while(k.parent){
+				if (k is ListItem) break;			
+				k = k.parent;
+			}
+			super.activeItem = k as ListItem;
+//			if (e.target is BookmarkItem){
+//				trace('BookmarkItem ::', e.target.bookmark.label);
+//				dispatchEvent(new UICommand(UICommand.BOOKMARK_SELECTED, e.target.bookmark));					//			}
+//			if (e.target is BookmarkItemBranch){
+//				trace('BookmarkItemBranch ::', e.target.branch.name);	
+//			}
+		}
+
 		public function addItem(n:ListItem):void 
 		{
 			n.y = (n.height + super.leading) * super.container.numChildren;
@@ -21,7 +40,7 @@ package view.bookmarks {
 			super.container.removeChildAt(i);
 			for (i = 0; i < super.container.numChildren; i++) {
 				k = super.container.getChildAt(i) as ListItem;
-				k.y = (k.height + super.leading) * i;
+				k.y = super.container.height + super.leading;
 			}
 		}
 		
