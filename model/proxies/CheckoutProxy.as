@@ -17,6 +17,7 @@ package model.proxies {
 		public function CheckoutProxy(s:StatusProxy)
 		{
 			super.executable = 'Checkout.sh';
+			super.debug = true;
 			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);					
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 			
@@ -33,7 +34,7 @@ package model.proxies {
 			_target = t;
 			_bookmark = b;
 			trace("CheckoutProxy.checkout >> ", _bookmark.label, _target.name || _target.sha1);
-			trace("CheckoutProxy.checkout >> getting modified status of ::", AppModel.branch.name);			
+			trace("CheckoutProxy.checkout >> getting modified status of ::", AppModel.bookmark.label, AppModel.branch.name);			
 			_status.getActiveBranchIsModified();
 		}
 	
@@ -54,6 +55,7 @@ package model.proxies {
 				}	else{
 				// stash the name of the current branch on the current bookmark //	
 					AppModel.bookmark.stash.unshift(AppModel.branch.name);
+					trace("CheckoutProxy.onModifiedReceived(e) >> stashing ", AppModel.branch.name, 'length = '+AppModel.bookmark.stash.length);
 				}
 			}
 			allowCheckout();
@@ -65,6 +67,8 @@ package model.proxies {
 			var name:String = _target is Branch ? _target.name : _target.sha1;
 			super.directory = _bookmark.local;
 			trace("CheckoutProxy.allowCheckout >> going to = ", _bookmark.label, name);
+			trace('**********', AppModel.branch.modified);	
+		//TODO this is not triggering git stash for some reason .....	
 			super.call(Vector.<String>([BashMethods.CHECKOUT_BRANCH, name, AppModel.branch.modified]));
 		}
 		

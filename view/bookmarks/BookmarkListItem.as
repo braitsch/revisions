@@ -64,7 +64,7 @@ package view.bookmarks {
 		}
 		
 		private function onBookmarkSelection(e:MouseEvent):void
-		{			if (AppModel.bookmark == _bookmark) return;
+		{			if (AppModel.bookmark == _bookmark && AppModel.branch.name == 'master') return;
 			if (_bookmark.initialized){
 				AppModel.proxies.checkout.checkout(_bookmark, _bookmark.getBranchByName('master'));
 			}	else{
