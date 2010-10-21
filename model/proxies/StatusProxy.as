@@ -21,6 +21,7 @@ package model.proxies {
 		public function StatusProxy()
 		{
 			super.executable = 'Status.sh';
+			super.debug = false;
 			super.addEventListener(NativeProcessEvent.QUEUE_COMPLETE, onQueueComplete);
 			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);
 		}

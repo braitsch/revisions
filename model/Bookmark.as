@@ -105,7 +105,6 @@ package model {
 		public function set branch(b:Branch):void
 		{
 			_branch = b;
-			dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_SET));
 		}
 		
 		public function get branches():Array

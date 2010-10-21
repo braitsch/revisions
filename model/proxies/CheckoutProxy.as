@@ -1,19 +1,17 @@
 package model.proxies {
+
 	import events.NativeProcessEvent;
 	import events.RepositoryEvent;
-
 	import model.AppModel;
+	import model.Bookmark;
+	import model.Branch;
 	import model.air.NativeProcessProxy;
 	import model.bash.BashMethods;
 
-	import model.Branch;
-	import model.Bookmark;
-	import view.history.HistoryListItem;
-
 	public class CheckoutProxy extends NativeProcessProxy {
 
+		private static var _target		:*; // can be either a branch or commit object //
 		private static var _status		:StatusProxy;
-		private static var _target		:HistoryListItem;
 		private static var _bookmark	:Bookmark;
 
 		public function CheckoutProxy(s:StatusProxy)
@@ -28,78 +26,75 @@ package model.proxies {
 		
 		public function set bookmark(b:Bookmark):void 
 		{
+			super.directory = b.local;		}
+		
+		public function checkout(b:Bookmark, t:*):void
+		{
+			_target = t;
 			_bookmark = b;
-			super.directory = b.local;
+			trace("CheckoutProxy.checkout >> ", _bookmark.label, _target.name || _target.sha1);
+			trace("CheckoutProxy.checkout >> getting modified status of ::", AppModel.branch.name);			
+			_status.getActiveBranchIsModified();
 		}
-		
-		public function checkout(n:HistoryListItem):void 
-		{
-			_target = n;
-			trace('--------------------------------------');
-			trace("CheckoutProxy.checkout >> Attempting to checkout >>", _target.sha1, 'on branch : '+_target.name);
-		// always force refresh the status of the current branch before attempting a checkout	
-			_status.getActiveBranchIsModified();	
-		}	
-		
-		private function onModifiedReceived(e:RepositoryEvent):void 
-		{
-			var m:uint = e.data as uint;
-			trace("CheckoutProxy.onModifiedReceived(e)", AppModel.branch.name, 'modified = ', m);
-			if (AppModel.branch.name == Bookmark.DETACH && m != 0){
-				dispatchEvent(new RepositoryEvent(RepositoryEvent.COMMIT_MODIFIED));		
-			}	else {
-				allowCheckout(m);
-			}					
-		}
-
-		private function allowCheckout(m:uint):void 
-		{
-			trace("CheckoutProxy.allowCheckout(m) >> precheck-out branch = ", AppModel.branch.name);
-			
-			if (m > 0) _bookmark.stash.unshift(AppModel.branch.name);
-			
-			if (_target.index == 0){
-			// temp //	
-				var b:Branch = AppModel.bookmark.getBranchByName(_target.name);
-				trace('attemping checkout of branch >> ', b.name, 'it was modified ==', b.modified!=0);
 	
-				super.call(Vector.<String>([BashMethods.CHECKOUT_BRANCH, _target.name, m]));
-			} else{
-				super.call(Vector.<String>([BashMethods.CHECKOUT_COMMIT, _target.sha1, m]));
-			}				
-		}
-
 		public function discardUnsavedChanges():void
 		{
 			super.call(Vector.<String>([BashMethods.RESET_BRANCH]));
 		}	
-
+		
+		private function onModifiedReceived(e:RepositoryEvent):void
+		{
+			var m:uint = e.data as uint;
+			trace("CheckoutProxy.onModifiedReceived(e)", AppModel.branch.name, 'modified = ', m);
+			if (m != 0){
+				if (AppModel.branch.name == Bookmark.DETACH){
+				// only prompt to save if changes were made on top of a previous commit //	
+					dispatchEvent(new RepositoryEvent(RepositoryEvent.COMMIT_MODIFIED));
+					return;
+				}	else{
+				// stash the name of the current branch on the current bookmark //	
+					AppModel.bookmark.stash.unshift(AppModel.branch.name);
+				}
+			}
+			allowCheckout();
+		}
+		
+		private function allowCheckout():void
+		{
+			trace("CheckoutProxy.allowCheckout >> coming from =", AppModel.bookmark.label, AppModel.branch.name);
+			var name:String = _target is Branch ? _target.name : _target.sha1;
+			super.directory = _bookmark.local;
+			trace("CheckoutProxy.allowCheckout >> going to = ", _bookmark.label, name);
+			super.call(Vector.<String>([BashMethods.CHECKOUT_BRANCH, name, AppModel.branch.modified]));
+		}
+		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
 			trace("CheckoutProxy.onProcessComplete(e)", e.data.method);
 			switch(e.data.method){
-				case BashMethods.CHECKOUT_COMMIT :
-					setBranch(AppModel.bookmark.detach);
-				break;					
 				case BashMethods.CHECKOUT_BRANCH :
-					checkIfBranchIsSavedInStash();
+					if (_target is Branch){
+						checkIfBranchIsSavedInStash();
+					}	else{
+						setBranch(_bookmark.detach);
+					}
 				break;	
 				case BashMethods.POP_STASH :
-					setBranch(AppModel.bookmark.getBranchByName(_target.name));
+					setBranch(_bookmark.getBranchByName(_target.name));
 				break;			}
 		}
 		
 		private function setBranch(b:Branch):void
 		{
-			AppModel.bookmark.branch = b;
-		// run a status request to update file view & history view with the active branch status //
-			AppModel.proxies.status.getStatusOfBranch(AppModel.branch);
-			trace('>> current branch = ', AppModel.branch.name, '>> current tab = ', _target.name);
+			trace("CheckoutProxy.setBranch >> setting bookmark & branch to ::", _bookmark.label, b.name);
+			_bookmark.branch = b;
+		// -- once dispatched this updates everything in the application -- //				
+			AppModel.engine.dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_SET, _bookmark));
 		}
 		
 		private function checkIfBranchIsSavedInStash():void
 		{
-			var stashed:Boolean;
+			var stashed:Boolean = false;
 			for (var i:int = 0; i < _bookmark.stash.length; i++) {
 				if (_bookmark.stash[i] == _target.name) {
 					_bookmark.stash.splice(i, 0);
@@ -110,7 +105,7 @@ package model.proxies {
 				trace("CheckoutProxy.checkIfBranchIsSavedInStash() >> true");				super.call(Vector.<String>([BashMethods.POP_STASH, i]));
 			}	else{
 				trace("CheckoutProxy.checkIfBranchIsSavedInStash() >> false");
-				setBranch(AppModel.bookmark.getBranchByName(_target.name));
+				setBranch(_bookmark.getBranchByName(_target.name));
 			}
 		}
 		

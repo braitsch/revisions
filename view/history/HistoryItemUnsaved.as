@@ -1,19 +1,21 @@
 package view.history {
-	import events.RepositoryEvent;
 
+	import events.RepositoryEvent;
 	import model.AppModel;
+	import model.Branch;
+	import model.Commit;
 
 	public class HistoryItemUnsaved extends HistoryListItem {
 		
-		public function HistoryItemUnsaved($branchName:String)
+		public function HistoryItemUnsaved(b:Branch)
 		{
 			var o:Object = {	index :'XX', 	
 								date :'- Right Now -',
 								author : AppModel.proxies.config.userName || 'Unknown Author',
 								note : 'Working Version (Not Saved)',
-								name : $branchName	};
+								branch : b};
 								
-			super(o);								
+			super(new Commit(o));								
 			super.active = true;
 			AppModel.proxies.config.addEventListener(RepositoryEvent.SET_USERNAME, onUserNameChange);	
 		}

@@ -6,9 +6,7 @@ package events {
 		public static const SET_USERNAME					:String = "SET_USERNAME";
 		public static const INITIALIZED						:String = 'INITIALIZED';
 	
-		public static const BRANCH_SET						:String = "BRANCH_SET";
-		public static const BOOKMARK_SET					:String = "BOOKMARK_SET";		public static const NO_BOOKMARKS					:String = "NO_BOOKMARKS";
-				public static const BOOKMARK_LIST					:String = "BOOKMARKS_READY";		public static const BOOKMARK_ADDED					:String = "BOOKMARK_ADDED";		public static const BOOKMARK_EDITED					:String = "BOOKMARK_EDITED";
+		public static const BOOKMARK_SET					:String = "BOOKMARK_SET";				public static const BOOKMARK_LIST					:String = "BOOKMARKS_READY";		public static const BOOKMARK_ADDED					:String = "BOOKMARK_ADDED";		public static const BOOKMARK_EDITED					:String = "BOOKMARK_EDITED";
 		public static const BOOKMARK_ERROR					:String = "BOOKMARK_ERROR";
 		public static const BOOKMARK_DELETED				:String = "BOOKMARK_DELETED";
 		

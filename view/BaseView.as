@@ -33,7 +33,7 @@ package view {
 		{
 			_bookmark = e.data as Bookmark;
 			if (_bookmark != null){
-				_bookmark.addEventListener(RepositoryEvent.BRANCH_SET, setStatus);				_bookmark.addEventListener(RepositoryEvent.BOOKMARK_EDITED, setStatus);
+				_bookmark.addEventListener(RepositoryEvent.BOOKMARK_EDITED, setStatus);
 				_bookmark.branch.addEventListener(RepositoryEvent.BRANCH_HISTORY, setStatus);
 			}
 			setStatus();

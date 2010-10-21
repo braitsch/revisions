@@ -1,34 +1,31 @@
 package view.history {
+
+	import model.Commit;
 	import view.layout.ListItem;
 
 	public class HistoryListItem extends ListItem {
 
-		private var _data			:Object;
 		private var _view			:HistoryItemMC = new HistoryItemMC();
+		private var _commit			:Commit;
 
-		public function HistoryListItem(o:Object)
+		public function HistoryListItem(c:Commit)
 		{
 			super.draw(650, 20);
 			
-			_data = o;
-			_view.num_txt.text = o.index;
-			_view.date_txt.text = o.date;			_view.author_txt.text = o.author;			_view.note_txt.text = o.note;			mouseChildren = false;
+			_commit = c;
+			_view.num_txt.text = _commit.index;
+			_view.date_txt.text = _commit.date;			_view.author_txt.text = _commit.author;			_view.note_txt.text = _commit.note;			mouseChildren = false;
 			addChild(_view);
+		}
+		
+		public function get commit():Commit
+		{
+			return _commit;
 		}
 		
 		public function set author(a:String):void
 		{
 			_view.author_txt.text = a;
-		}
-		
-		public function get sha1():String
-		{
-			return _data.sha1;
-		}
-		
-		override public function get name():String
-		{
-			return _data.name;
 		}
 		
 	}

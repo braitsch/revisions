@@ -34,9 +34,9 @@ package view.modals {
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);	
 			addEventListener(UIEvent.CLOSE_MODAL_WINDOW, onCloseModelWindow);	
 			
+			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARK_ERROR, repairBookmark);
 			AppModel.proxies.installer.addEventListener(InstallEvent.GIT_UNAVAILABLE, installGit);
 			AppModel.proxies.branch.addEventListener(RepositoryEvent.BRANCH_DETACHED, onBranchDetached);
-			AppModel.proxies.branch.addEventListener(RepositoryEvent.BOOKMARK_ERROR, repairBookmark);
 			AppModel.proxies.checkout.addEventListener(RepositoryEvent.COMMIT_MODIFIED, onCommitModified);
 		}
 
@@ -98,7 +98,7 @@ package view.modals {
 	
 		private function repairBookmark(e:RepositoryEvent):void
 		{
-			_repair.bookmark = e.data as Bookmark;
+			_repair.failed = e.data as Vector.<Bookmark>;
 			addChild(_repair);
 		}	
 		

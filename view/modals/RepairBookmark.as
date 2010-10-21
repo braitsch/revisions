@@ -2,10 +2,9 @@ package view.modals {
 	import events.UIEvent;
 
 	import model.AppModel;
+	import model.Bookmark;
 
 	import utils.FileBrowser;
-
-	import model.Bookmark;
 
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
@@ -15,6 +14,7 @@ package view.modals {
 		private static var _oldId		:String;
 		private static var _browser		:FileBrowser = new FileBrowser();
 		private static var _view		:RepairBookmarkMC = new RepairBookmarkMC();
+		private static var _failed		:Vector.<Bookmark>;
 
 		public function RepairBookmark()
 		{
@@ -28,11 +28,13 @@ package view.modals {
 			_browser.addEventListener(UIEvent.FILE_BROWSER_SELECTION, onDirectorySelection);				
 		}
 		
-		public function set bookmark($b:Bookmark):void
+		public function set failed(v:Vector.<Bookmark>):void
 		{
-			_oldId = $b.label;			
-			_view.name_txt.text = $b.label;
-			_view.local_txt.text = $b.local;
+			_failed = v;
+		//TODO iterate over failed vector to repair multiple bookmarks //	
+			_oldId = _failed[0].label;			
+			_view.name_txt.text = _failed[0].label;
+			_view.local_txt.text = _failed[0].local;
 		}
 		
 		private function onDirectoryBrowse(e:MouseEvent):void 

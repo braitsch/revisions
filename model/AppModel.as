@@ -32,7 +32,7 @@ package model {
 			if (_bookmark == null) return; 
 			_proxies.bookmark = _database.bookmark = _bookmark;
 			AppModel.proxies.status.getStatusOfBranch(_bookmark.branch);
-		}	
+		}
 		
 		static public function get bookmark():Bookmark
 		{

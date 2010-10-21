@@ -1,11 +1,9 @@
 package view.history {
+
 	import events.RepositoryEvent;
-
 	import model.AppModel;
-
 	import model.Bookmark;
 	import view.modals.ModalWindow;
-
 	import flash.display.Sprite;
 
 	public class HistoryView extends ModalWindow {
@@ -76,12 +74,13 @@ package view.history {
 			while(_container.numChildren) _container.removeChildAt(0);
 			if (e.data == null) return;		
 				
-		// set the active collection object //	
+		// display collection associated with the new bookmark //	
 			for (var i:int = 0; i < _collections.length; i++) {
 				if (_collections[i].bookmark == e.data) break;
 			}
 			_collection = _collections[i];
 			_container.addChild(_collection);
+			_collection.setActiveBranch(AppModel.branch);
 		}
 		
 	}

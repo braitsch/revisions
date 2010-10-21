@@ -1,12 +1,9 @@
 package view.bookmarks {
-	import model.Bookmark;
-
-	import events.UIEvent;
 
 	import events.RepositoryEvent;
-
+	import model.AppModel;
+	import model.Bookmark;
 	import view.layout.ListItem;
-
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 
@@ -37,11 +34,6 @@ package view.bookmarks {
 			
 			if (_bookmark.branches.length > 1) attachBranches();
 		}
-
-		public function get bookmark():Bookmark
-		{
-			return _bookmark;
-		}
 		
 		private function onBookmarkEdited(e:RepositoryEvent):void 		{
 			_view.label_txt.text = _bookmark.label;
@@ -62,15 +54,14 @@ package view.bookmarks {
 			_branches.addEventListener(MouseEvent.CLICK, onBranchSelection);
 		}
 
-		private function onBookmarkSelection(e:MouseEvent):void 
-		{
-			_bookmark.branch = _bookmark.getBranchByName('master');
-			dispatchEvent(new UIEvent(UIEvent.BOOKMARK_SELECTED, _bookmark));		}
-				
 		private function onBranchSelection(e:MouseEvent):void 
 		{
-			_bookmark.branch = e.target.branch;
-			dispatchEvent(new UIEvent(UIEvent.BOOKMARK_SELECTED, _bookmark));
+			AppModel.proxies.checkout.checkout(_bookmark, e.target.branch);
+		}
+		
+		private function onBookmarkSelection(e:MouseEvent):void
+		{
+			AppModel.proxies.checkout.checkout(_bookmark, _bookmark.getBranchByName('master'));
 		}
 
 	}

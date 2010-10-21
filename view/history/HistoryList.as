@@ -1,14 +1,12 @@
 package view.history {
-	import events.UIEvent;
 
 	import events.RepositoryEvent;
-
+	import events.UIEvent;
 	import model.AppModel;
-
 	import model.Branch;
+	import model.Commit;
 	import view.layout.ListItem;
 	import view.layout.SimpleList;
-
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 
@@ -25,7 +23,7 @@ package view.history {
 		public function HistoryList($branch:Branch, $xpos:uint)
 		{
 			_branch = $branch;
-			_itemUnsaved = new HistoryItemUnsaved(_branch.name);
+			_itemUnsaved = new HistoryItemUnsaved(_branch);
 			
 			_view.tab.x = $xpos * 62;
 			_view.tab.buttonMode = true;
@@ -77,12 +75,12 @@ package view.history {
 			var a:Array = _branch.history;
 			for (var i:int = 0; i < a.length; i++) {
 				var o:Object = {	index : String(a.length-i),
-									date 	: a[i][1], 
-									author 	: a[i][2], 
-									note 	: a[i][3], 
-									sha1 	: a[i][0],	
-									name 	: _branch.name	};
-				v.push(new HistoryListItem(o));
+									date 	: a[i][1],
+									author 	: a[i][2],
+									note 	: a[i][3],
+									sha1 	: a[i][0],
+									branch 	: _branch};
+				v.push(new HistoryListItem(new Commit(o)));
 			}
 			_list.clear();
 			_list.build(v);
@@ -99,7 +97,11 @@ package view.history {
 
 		private function onRecordSelection(e:MouseEvent):void 
 		{
-			AppModel.proxies.checkout.checkout(_list.activeItem as HistoryListItem);			
+			var k:HistoryListItem = _list.activeItem as HistoryListItem;
+			if (k.index == 0){
+				AppModel.proxies.checkout.checkout(AppModel.bookmark, _branch);					}	else{
+				AppModel.proxies.checkout.checkout(AppModel.bookmark, k.commit);		
+			}
 		}
 		
 	}
