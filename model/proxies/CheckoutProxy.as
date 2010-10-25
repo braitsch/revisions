@@ -51,14 +51,19 @@ package model.proxies {
 				if (AppModel.branch.name == Bookmark.DETACH){
 				// only prompt to save if changes were made on top of a previous commit //	
 					dispatchEvent(new RepositoryEvent(RepositoryEvent.COMMIT_MODIFIED));
-					return;
 				}	else{
-				// stash the name of the current branch on the current bookmark //	
-					AppModel.bookmark.stash.unshift(AppModel.branch.name);
-					trace("CheckoutProxy.onModifiedReceived(e) >> stashing ", AppModel.branch.name, 'length = '+AppModel.bookmark.stash.length);
+					pushStash();
 				}
+			}	else{	
+				allowCheckout();
 			}
-			allowCheckout();
+		}
+		
+		private function pushStash():void
+		{
+	// stash the name of the current branch on the current bookmark //	
+			trace("CheckoutProxy.onModifiedReceived(e) >> stashing ", AppModel.branch.name, 'length = '+AppModel.bookmark.stash.length);
+			super.call(Vector.<String>([BashMethods.PUSH_STASH]));
 		}
 		
 		private function allowCheckout():void
@@ -67,15 +72,17 @@ package model.proxies {
 			var name:String = _target is Branch ? _target.name : _target.sha1;
 			super.directory = _bookmark.local;
 			trace("CheckoutProxy.allowCheckout >> going to = ", _bookmark.label, name);
-			trace('**********', AppModel.branch.modified);	
-		//TODO this is not triggering git stash for some reason .....	
-			super.call(Vector.<String>([BashMethods.CHECKOUT_BRANCH, name, AppModel.branch.modified]));
+			super.call(Vector.<String>([BashMethods.CHECKOUT_BRANCH, name]));
 		}
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
 			trace("CheckoutProxy.onProcessComplete(e)", e.data.method);
 			switch(e.data.method){
+				case BashMethods.PUSH_STASH :
+					AppModel.bookmark.stash.unshift(AppModel.branch.name);
+					allowCheckout();
+				break;				
 				case BashMethods.CHECKOUT_BRANCH :
 					if (_target is Branch){
 						checkIfBranchIsSavedInStash();
