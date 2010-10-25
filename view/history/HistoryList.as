@@ -99,8 +99,9 @@ package view.history {
 		{
 			var k:HistoryListItem = _list.activeItem as HistoryListItem;
 			if (k.index == 0){
-				AppModel.proxies.checkout.checkoutBranch(AppModel.bookmark, _branch);					}	else{
-				AppModel.proxies.checkout.checkoutBranch(AppModel.bookmark, k.commit);		
+				AppModel.proxies.checkout.bookmark = AppModel.bookmark;				AppModel.proxies.checkout.checkout(_branch);		
+			}	else{				AppModel.proxies.checkout.bookmark = AppModel.bookmark;
+				AppModel.proxies.checkout.checkout(k.commit);		
 			}
 		}
 		

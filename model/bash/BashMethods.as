@@ -27,7 +27,7 @@ package model.bash{
 		public static const GET_MODIFIED_FILES:String = 'getModifiedFiles';
 		public static const GET_TRACKED_FILES:String = 'getTrackedFiles';
 		public static const GET_UNTRACKED_FILES:String = 'getUntrackedFiles';
-		public static const GET_TOTAL_IN_INDEX:String = 'getTotalInIndex';
+		public static const GET_NUM_IN_INDEX:String = 'getNumInIndex';
 		public static const GET_IGNORED_FILES:String = 'getIgnoredFiles';
 		
 		public static const POP_STASH:String = 'popStash';

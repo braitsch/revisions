@@ -11,77 +11,61 @@ package model.proxies {
 	public class CheckoutProxy extends NativeProcessProxy {
 
 		private static var _target		:*; // can be either a branch or commit object //
-		private static var _status		:StatusProxy;
 		private static var _bookmark	:Bookmark;
 
-		public function CheckoutProxy(s:StatusProxy)
+		public function CheckoutProxy()
 		{
 			super.executable = 'Checkout.sh';
 			super.debug = false;
 			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);					
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
-			
-			_status = s;
-			_status.addEventListener(RepositoryEvent.BRANCH_MODIFIED, onModifiedReceived);	
 		}
 		
 		public function set bookmark(b:Bookmark):void 
 		{
-			super.directory = b.local;		}
-		
-		public function checkoutBranch(b:Bookmark, t:*):void
-		{
-			_target = t;
-			_bookmark = b;
-			var name:String = _target is Branch ? _target.name : _target.sha1;			
-			trace("CheckoutProxy >> ", _bookmark.label, name);
-			trace("CheckoutProxy >> getting modified status of ::", AppModel.bookmark.label, AppModel.branch.name);
-		// only check for modifications if we are changing branches on the same bookmark //
-			if (_bookmark.branch != _target){
-				_status.getBranchIsModified(_bookmark.branch);
-			}	else{
-				allowCheckout();
-			}
+			_bookmark = b;			super.directory = b.local;
 		}
-	
-		public function discardUnsavedChanges():void
-		{
-			super.call(Vector.<String>([BashMethods.RESET_BRANCH]));
-		}	
 		
-		private function onModifiedReceived(e:RepositoryEvent):void
+	// this should only be called if we are changing branches on a bookmark //	
+		public function checkout(x:*):void
 		{
-			var m:uint = e.data as uint;
-			trace("CheckoutProxy.onModifiedReceived(e)", AppModel.branch.name, 'modified = ', m);
-			if (m == 0){
+			_target = x;
+			super.call(Vector.<String>([BashMethods.GET_NUM_IN_INDEX, _bookmark.branch]));
+		}
+		
+		private function onBranchModifiedStatus(n:uint):void
+		{
+			trace("CheckoutProxy.onBranchModifiedStatus(e) >>>> ", n);
+			if (n == 0){
 				allowCheckout();
-			}	else{
-				if (AppModel.branch.name == Bookmark.DETACH){
-			// only prompt to save if changes were made on top of a previous commit //	
-					dispatchEvent(new RepositoryEvent(RepositoryEvent.COMMIT_MODIFIED));
-				}	else {
-			// stash the name of the current branch if we are moving around the current bookmark //	
-					_bookmark.stash.unshift(_bookmark.branch.name);
-					super.call(Vector.<String>([BashMethods.PUSH_STASH]));
-			//	}	else{
-			//		allowCheckout();
+			} else {
+				if (_bookmark.branch.name == Bookmark.DETACH){
+					dispatchEvent(new RepositoryEvent(RepositoryEvent.COMMIT_MODIFIED));					
+				}	else{
+					stashUnsavedChanges();
 				}
 			}
+		}
+
+		private function stashUnsavedChanges():void
+		{
+			_bookmark.stash.unshift(_bookmark.branch.name);
+			super.call(Vector.<String>([BashMethods.PUSH_STASH]));			
 		}
 		
 		private function allowCheckout():void
 		{
-			trace("CheckoutProxy.allowCheckout >> coming from =", AppModel.bookmark.label, AppModel.branch.name);
-			var name:String = _target is Branch ? _target.name : _target.sha1;
-			super.directory = _bookmark.local;
-			trace("CheckoutProxy.allowCheckout >> going to = ", _bookmark.label, name);
-			super.call(Vector.<String>([BashMethods.CHECKOUT_BRANCH, name]));
+			var n:String =  _target is Branch ? _target.name : _target.sha1;
+			super.call(Vector.<String>([BashMethods.CHECKOUT_BRANCH, n]));
 		}
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
 			trace("CheckoutProxy.onProcessComplete(e)", e.data.method);
-			switch(e.data.method){
+			switch(e.data.method) {
+				case BashMethods.GET_NUM_IN_INDEX :
+					onBranchModifiedStatus(e.data.result);
+				break;
 				case BashMethods.PUSH_STASH :
 					allowCheckout();
 				break;				
