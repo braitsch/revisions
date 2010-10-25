@@ -10,7 +10,7 @@ package view.bookmarks {
 	public class BookmarkListItem extends ListItem {
 
 		private var _view			:BookmarkItemMC = new BookmarkItemMC();
-		private var _branches		:Sprite;
+		private var _branches		:Sprite = new Sprite();
 		private var _bookmark		:Bookmark;
 		
 		public function BookmarkListItem($bkmk:Bookmark)
@@ -51,7 +51,6 @@ package view.bookmarks {
 		
 		private function attachBranches():void
 		{
-			_branches = new Sprite();
 			_branches.y = 22;
 			for (var i:int = 1; i < _bookmark.branches.length; i++) {
 				var k:BranchListItem = new BranchListItem(_bookmark.branches[i]);
