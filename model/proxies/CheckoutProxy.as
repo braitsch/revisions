@@ -5,6 +5,7 @@ package model.proxies {
 	import model.AppModel;
 	import model.Bookmark;
 	import model.Branch;
+	import model.Commit;
 	import model.air.NativeProcessProxy;
 	import model.bash.BashMethods;
 
@@ -35,7 +36,6 @@ package model.proxies {
 		
 		private function onBranchModifiedStatus(n:uint):void
 		{
-			trace("CheckoutProxy.onBranchModifiedStatus(e) >>>> ", n);
 			if (n == 0){
 				allowCheckout();
 			} else {
@@ -55,8 +55,7 @@ package model.proxies {
 		
 		private function allowCheckout():void
 		{
-			var n:String =  _target is Branch ? _target.name : _target.sha1;
-			super.call(Vector.<String>([BashMethods.CHECKOUT_BRANCH, n]));
+			super.call(Vector.<String>([BashMethods.CHECKOUT_BRANCH, _target is Branch ? _target.name : _target.sha1]));
 		}
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
@@ -70,10 +69,10 @@ package model.proxies {
 					allowCheckout();
 				break;				
 				case BashMethods.CHECKOUT_BRANCH :
-					if (_target is Branch){
-						checkIfBranchIsSavedInStash();
-					}	else{
+					if (_target is Commit){
 						setBranch(_bookmark.detach);
+					}	else{
+						checkIfBranchIsSavedInStash();
 					}
 				break;	
 				case BashMethods.POP_STASH :
@@ -99,9 +98,8 @@ package model.proxies {
 				}
 			}
 			if (stashed){
-				trace("CheckoutProxy.checkIfBranchIsSavedInStash() >> true");				super.call(Vector.<String>([BashMethods.POP_STASH, i]));
+				super.call(Vector.<String>([BashMethods.POP_STASH, i]));
 			}	else{
-				trace("CheckoutProxy.checkIfBranchIsSavedInStash() >> false");
 				setBranch(_bookmark.getBranchByName(_target.name));
 			}
 		}
