@@ -38,6 +38,12 @@ package model.proxies {
 			super.call(Vector.<String>([BashMethods.RESET_BRANCH]));			
 		}
 		
+		public function addBranch($name:String):void
+		{
+			_bookmark.addBranch(new Branch($name));
+			super.call(Vector.<String>([BashMethods.ADD_BRANCH, $name]));
+		}		
+		
 		private function onBranchModifiedStatus(n:uint):void
 		{
 			if (n == 0){
@@ -83,9 +89,11 @@ package model.proxies {
 					setBranch(_bookmark.getBranchByName(_target.name));
 					break;
 				case BashMethods.RESET_BRANCH :
-					trace("CheckoutProxy.onProcessComplete(e) >> unsaved changes discarded");
 					allowCheckout();
-				break;							}
+				break;		
+				case BashMethods.ADD_BRANCH:
+					_bookmark.dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_ADDED));
+				break;									}
 		}
 		
 		private function setBranch(b:Branch):void

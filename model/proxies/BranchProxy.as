@@ -30,12 +30,6 @@ package model.proxies {
 			super.call(Vector.<String>([BashMethods.GET_STASH_LIST]));			
 		}
 		
-		public function addBranch($name:String):void
-		{
-//			trace("BranchProxy.addBranch($new)", $name, AppModel.bookmark.previous.name);
-//			super.call(Vector.<String>([BashMethods.ADD_BRANCH, $name, AppModel.bookmark.previous.name]));
-		}
-		
 	// response handlers //			
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 

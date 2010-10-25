@@ -22,7 +22,7 @@ package view.modals {
 
 		private function onBranch(e:MouseEvent):void 
 		{
-			AppModel.proxies.branch.addBranch(_view.name_txt.text);
+			AppModel.proxies.checkout.addBranch(_view.name_txt.text);
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW, this));		}
 		private function onDiscard(e:MouseEvent):void 
 		{

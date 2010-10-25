@@ -96,6 +96,13 @@ package model {
 		}				
 		
 	// branches //	
+			
+		public function addBranch(b:Branch):void
+		{
+			_branch = b;
+			_branches.push(b);
+			sortBranches();
+		}
 				
 		public function get branch():Branch
 		{

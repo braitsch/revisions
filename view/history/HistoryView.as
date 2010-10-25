@@ -24,7 +24,8 @@ package view.history {
 
 			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkSet);
 			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARK_LIST, onBookmarkList);
-			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARK_ADDED, onBookmarkAdded);			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARK_DELETED, onBookmarkDeleted);			AppModel.proxies.status.addEventListener(RepositoryEvent.BRANCH_STATUS, onBranchStatus);
+			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARK_ADDED, onBookmarkAdded);			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARK_DELETED, onBookmarkDeleted);
+			AppModel.proxies.status.addEventListener(RepositoryEvent.BRANCH_STATUS, onBranchStatus);
 		}
 
 	// list editing //

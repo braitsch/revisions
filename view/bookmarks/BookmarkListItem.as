@@ -20,6 +20,7 @@ package view.bookmarks {
 			super.active = $bkmk.active;
 			
 			_bookmark = $bkmk;
+			_bookmark.addEventListener(RepositoryEvent.BRANCH_ADDED, onNewBranchAdded);			
 			_bookmark.addEventListener(RepositoryEvent.BOOKMARK_EDITED, onBookmarkEdited);
 			
 			_view.label_txt.autoSize = 'left';
@@ -33,6 +34,14 @@ package view.bookmarks {
 			addChild(_view);
 			
 			if (_bookmark.branches.length > 1) attachBranches();
+		}
+
+		private function onNewBranchAdded(e:RepositoryEvent):void
+		{
+			var k:BranchListItem = new BranchListItem(_bookmark.branch);
+				k.x = 190;
+				k.y = 18 * _branches.numChildren;
+			_branches.addChild(k);			
 		}
 		
 		private function onBookmarkEdited(e:RepositoryEvent):void 		{
