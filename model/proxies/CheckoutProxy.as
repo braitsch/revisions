@@ -53,10 +53,12 @@ package model.proxies {
 				if (AppModel.branch.name == Bookmark.DETACH){
 			// only prompt to save if changes were made on top of a previous commit //	
 					dispatchEvent(new RepositoryEvent(RepositoryEvent.COMMIT_MODIFIED));
-				}	else{
-			// stash the name of the current branch on the current bookmark //	
-					AppModel.bookmark.stash.unshift(AppModel.branch.name);
+				}	else if (AppModel.bookmark == _bookmark){
+			// stash the name of the current branch if we are moving around the current bookmark //	
+					_bookmark.stash.unshift(_bookmark.branch.name);
 					super.call(Vector.<String>([BashMethods.PUSH_STASH]));
+				}	else{
+					allowCheckout();
 				}
 			}
 		}
