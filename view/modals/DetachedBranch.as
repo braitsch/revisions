@@ -26,7 +26,7 @@ package view.modals {
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW, this));		}
 		private function onDiscard(e:MouseEvent):void 
 		{
-		//	AppModel.repos.history.discardUnsavedChanges();
+			AppModel.proxies.checkout.discardUnsavedChanges();
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW, this));
 		}
 		

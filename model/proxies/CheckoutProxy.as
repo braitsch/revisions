@@ -30,8 +30,12 @@ package model.proxies {
 	// this should only be called if we are changing branches on a bookmark //	
 		public function checkout(x:*):void
 		{
-			_target = x;
-			super.call(Vector.<String>([BashMethods.GET_NUM_IN_INDEX, _bookmark.branch]));
+			_target = x;			super.call(Vector.<String>([BashMethods.GET_NUM_IN_INDEX, _bookmark.branch]));
+		}
+		
+		public function discardUnsavedChanges():void
+		{
+			super.call(Vector.<String>([BashMethods.RESET_BRANCH]));			
 		}
 		
 		private function onBranchModifiedStatus(n:uint):void
@@ -77,7 +81,11 @@ package model.proxies {
 				break;	
 				case BashMethods.POP_STASH :
 					setBranch(_bookmark.getBranchByName(_target.name));
-				break;			}
+					break;
+				case BashMethods.RESET_BRANCH :
+					trace("CheckoutProxy.onProcessComplete(e) >> unsaved changes discarded");
+					allowCheckout();
+				break;							}
 		}
 		
 		private function setBranch(b:Branch):void
