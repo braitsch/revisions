@@ -59,7 +59,7 @@ package view.bookmarks {
 		// prevent re-selecting the current branch //	
 			if (AppModel.branch == e.target.branch) return;
 			if (_bookmark.initialized && _bookmark.branch != e.target.branch){
-				AppModel.proxies.checkout.checkout(_bookmark, e.target.branch);			}	else{				AppModel.engine.dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_SET, _bookmark));
+				AppModel.proxies.checkout.checkoutBranch(_bookmark, e.target.branch);			}	else{				AppModel.engine.dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_SET, _bookmark));
 			}
 		}
 		
@@ -67,7 +67,7 @@ package view.bookmarks {
 		{
 		// prevent re-selecting the current bookmark //							if (AppModel.bookmark == _bookmark && AppModel.branch.name == 'master') return;
 			if (_bookmark.initialized && _bookmark.branch.name != 'master'){
-				AppModel.proxies.checkout.checkout(_bookmark, _bookmark.getBranchByName('master'));
+				AppModel.proxies.checkout.checkoutBranch(_bookmark, _bookmark.getBranchByName('master'));
 			}	else{				AppModel.engine.dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_SET, _bookmark));
 			}
 		}

@@ -17,7 +17,7 @@ package model.proxies {
 		public function CheckoutProxy(s:StatusProxy)
 		{
 			super.executable = 'Checkout.sh';
-			super.debug = true;
+			super.debug = false;
 			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);					
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 			
@@ -29,7 +29,7 @@ package model.proxies {
 		{
 			super.directory = b.local;		}
 		
-		public function checkout(b:Bookmark, t:*):void
+		public function checkoutBranch(b:Bookmark, t:*):void
 		{
 			_target = t;
 			_bookmark = b;
@@ -47,23 +47,18 @@ package model.proxies {
 		{
 			var m:uint = e.data as uint;
 			trace("CheckoutProxy.onModifiedReceived(e)", AppModel.branch.name, 'modified = ', m);
-			if (m != 0){
+			if (m == 0){
+				allowCheckout();
+			}	else{
 				if (AppModel.branch.name == Bookmark.DETACH){
-				// only prompt to save if changes were made on top of a previous commit //	
+			// only prompt to save if changes were made on top of a previous commit //	
 					dispatchEvent(new RepositoryEvent(RepositoryEvent.COMMIT_MODIFIED));
 				}	else{
-					pushStash();
+			// stash the name of the current branch on the current bookmark //	
+					AppModel.bookmark.stash.unshift(AppModel.branch.name);
+					super.call(Vector.<String>([BashMethods.PUSH_STASH]));
 				}
-			}	else{	
-				allowCheckout();
 			}
-		}
-		
-		private function pushStash():void
-		{
-	// stash the name of the current branch on the current bookmark //	
-			trace("CheckoutProxy.onModifiedReceived(e) >> stashing ", AppModel.branch.name, 'length = '+AppModel.bookmark.stash.length);
-			super.call(Vector.<String>([BashMethods.PUSH_STASH]));
 		}
 		
 		private function allowCheckout():void
@@ -80,7 +75,6 @@ package model.proxies {
 			trace("CheckoutProxy.onProcessComplete(e)", e.data.method);
 			switch(e.data.method){
 				case BashMethods.PUSH_STASH :
-					AppModel.bookmark.stash.unshift(AppModel.branch.name);
 					allowCheckout();
 				break;				
 				case BashMethods.CHECKOUT_BRANCH :
