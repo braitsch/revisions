@@ -33,9 +33,15 @@ package model.proxies {
 		{
 			_target = t;
 			_bookmark = b;
-			trace("CheckoutProxy.checkout >> ", _bookmark.label, _target.name || _target.sha1);
-			trace("CheckoutProxy.checkout >> getting modified status of ::", AppModel.bookmark.label, AppModel.branch.name);			
-			_status.getActiveBranchIsModified();
+			var name:String = _target is Branch ? _target.name : _target.sha1;			
+			trace("CheckoutProxy >> ", _bookmark.label, name);
+			trace("CheckoutProxy >> getting modified status of ::", AppModel.bookmark.label, AppModel.branch.name);
+		// only check for modifications if we are changing branches on the same bookmark //
+			if (_bookmark.branch != _target){
+				_status.getBranchIsModified(_bookmark.branch);
+			}	else{
+				allowCheckout();
+			}
 		}
 	
 		public function discardUnsavedChanges():void
@@ -53,12 +59,12 @@ package model.proxies {
 				if (AppModel.branch.name == Bookmark.DETACH){
 			// only prompt to save if changes were made on top of a previous commit //	
 					dispatchEvent(new RepositoryEvent(RepositoryEvent.COMMIT_MODIFIED));
-				}	else if (AppModel.bookmark == _bookmark){
+				}	else {
 			// stash the name of the current branch if we are moving around the current bookmark //	
 					_bookmark.stash.unshift(_bookmark.branch.name);
 					super.call(Vector.<String>([BashMethods.PUSH_STASH]));
-				}	else{
-					allowCheckout();
+			//	}	else{
+			//		allowCheckout();
 				}
 			}
 		}

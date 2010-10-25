@@ -46,10 +46,9 @@ package model.proxies {
 			getStatusOfBranch(AppModel.branch);
 		}		
 		
-		public function getActiveBranchIsModified():void 
+		public function getBranchIsModified($b:Branch):void 
 		{
-		// this is only called prior to a checkout attempt > in history viewer //	
-			_branch = AppModel.branch;
+			_branch = $b;
 			super.queue = [	Vector.<String>([BashMethods.GET_MODIFIED_FILES])	];				
 		}
 		

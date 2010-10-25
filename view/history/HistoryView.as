@@ -70,9 +70,12 @@ package view.history {
 
 		private function onBookmarkSet(e:RepositoryEvent):void 
 		{
-			trace("HistoryView.onBookmarkSet(e)");
+		// don't change tabs if we've checked out a previous commit (head detached) //	
+			if (AppModel.branch.name == Bookmark.DETACH) return;
+			
 			while(_container.numChildren) _container.removeChildAt(0);
-			if (e.data == null) return;		
+		// if all bookmarks have been deleted don't attempt to attach a collection //	
+			if (e.data == null) return;
 				
 		// display collection associated with the new bookmark //	
 			for (var i:int = 0; i < _collections.length; i++) {
