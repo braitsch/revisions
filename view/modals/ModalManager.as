@@ -25,7 +25,7 @@ package view.modals {
 		private static var _edit			:EditBookmark = new EditBookmark();
 		private static var _repair			:RepairBookmark = new RepairBookmark();
 		private static var _remove			:RemoveBookmark = new RemoveBookmark();		private static var _commit			:CommitChanges = new CommitChanges();
-		private static var _error			:UserError = new UserError();		
+		private static var _autoInit		:AutoInit = new AutoInit();		private static var _error			:UserError = new UserError();
 		
 		private static var _history			:HistoryView = new HistoryView();		
 		private static var _install			:InstallGit = new InstallGit();
@@ -38,15 +38,18 @@ package view.modals {
 			addEventListener(UIEvent.CLOSE_MODAL_WINDOW, onCloseModelWindow);	
 			
 			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARK_ERROR, repairBookmark);
-			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARK_ADDED, onBookmarkAdded);
 			AppModel.proxies.installer.addEventListener(InstallEvent.GIT_UNAVAILABLE, installGit);
+			AppModel.proxies.status.addEventListener(RepositoryEvent.BRANCH_STATUS, checkForAutoInit);
 			AppModel.proxies.branch.addEventListener(RepositoryEvent.BRANCH_DETACHED, onBranchDetached);
 			AppModel.proxies.checkout.addEventListener(RepositoryEvent.COMMIT_MODIFIED, onCommitModified);
 		}
 
-		private function onBookmarkAdded(e:RepositoryEvent):void
+		private function checkForAutoInit(e:RepositoryEvent):void
 		{
-			trace("ModalManager.onBookmarkAdded(e)", AppModel.branch.modified); 
+			if (AppModel.bookmark.promptToAutoInit()){
+				addChild(_autoInit);
+				_autoInit.showMessage();
+			}
 		}
 
 		private function onUserError(e:UIEvent):void

@@ -124,7 +124,7 @@ package model {
 			}
 		}
 		
-		private function dispatchActiveBookmark():void 
+		private function dispatchActiveBookmark():void
 		{
 			if (_bookmarks.length == 0){
 				dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_SET, null));
