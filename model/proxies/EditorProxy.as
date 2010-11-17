@@ -24,9 +24,9 @@ package model.proxies {
 			super.directory = b.local;
 		}
 
-		public function commit($msg:String):void
+		public function commit($msg:String, $addAll:Boolean = false):void
 		{
-			super.call(Vector.<String>([BashMethods.COMMIT, $msg]));					
+			super.call(Vector.<String>([BashMethods.COMMIT, $msg, $addAll]));
 		}
 		
 		public function trackFile($file:File):void

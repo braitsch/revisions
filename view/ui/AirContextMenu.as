@@ -1,11 +1,8 @@
 package view.ui {
+
 	import events.UIEvent;
-
 	import model.AppModel;
-
-	import model.Bookmark;
 	import view.layout.ListItem;
-
 	import flash.display.DisplayObject;
 	import flash.display.Stage;
 	import flash.events.ContextMenuEvent;
@@ -18,8 +15,8 @@ package view.ui {
 		private static var _stage		:Stage;
 		private static var _fileOptions :Array = [	new ContextMenuItem('Track Item'),
 													new ContextMenuItem('UnTrack Item'),													new ContextMenuItem('Mark As Ignored')];
-															private static var _bkmkOptions	:Array = [	new ContextMenuItem('Save'),
-													new ContextMenuItem('Edit'),													new ContextMenuItem('Delete')];
+															private static var _bkmkOptions	:Array = [	new ContextMenuItem('Save New Changes'),
+													new ContextMenuItem('Edit Project Name'),													new ContextMenuItem('Track All Files'),													new ContextMenuItem('Delete Project')];
 		
 		static public function initialize(s:Stage):void
 		{
@@ -43,7 +40,7 @@ package view.ui {
 
 		static private function onContextMenuClick(e:ContextMenuEvent):void 
 		{
-			if (e.mouseTarget is Bookmark){
+			if (e.mouseTarget is BookmarkItemMC){
 				_menu.customItems = _bkmkOptions;			}	else{
 				_menu.customItems = _fileOptions;
 			}
@@ -59,7 +56,7 @@ package view.ui {
 					AppModel.proxies.editor.trackFile(getListItem(e.mouseTarget).file);	break;				case 'UnTrack Item' : 
 					AppModel.proxies.editor.unTrackFile(getListItem(e.mouseTarget).file);	break;
 			}
-		//	trace("AirContextMenu.onContextMenuItemSelect(e)", e.mouseTarget, cmi.label);
+			trace("AirContextMenu.onContextMenuItemSelect(e)", e.mouseTarget, cmi.label);
 		}
 		
 		static private function getListItem(k:DisplayObject):ListItem

@@ -32,20 +32,15 @@ package view.modals {
 		
 		private function onOkSelected(e:MouseEvent):void
 		{
-			// write an init commit //
-			closeWindow();
+			onNoSelected(e);
+			AppModel.proxies.editor.commit('Initial Import', true);			
 		}
 		
 		private function onNoSelected(e:MouseEvent):void
 		{
-			closeWindow();
-		}	
-		
-		private function closeWindow():void
-		{
 			AppModel.bookmark.disableAutoInit = _check.selected;
-			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW, this));								
-		}
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW, this));
+		}	
 		
 	}
 	
