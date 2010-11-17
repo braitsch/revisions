@@ -20,7 +20,6 @@ package model.proxies {
 
 		public function getBranchesOfBookmark(b:Bookmark):void
 		{
-			trace("BranchProxy.getBranchesOfBookmark(b) > ", b.label);
 			_bookmark = b;
 			super.directory = b.local;
 			super.call(Vector.<String>([BashMethods.GET_BRANCHES]));					}

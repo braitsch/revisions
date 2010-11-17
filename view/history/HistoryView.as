@@ -32,7 +32,6 @@ package view.history {
 
 		private function onBookmarkList(e:RepositoryEvent):void 
 		{
-			trace("HistoryView.onBookmarkList(e)");
 		// create a collection object for each bookmark we receive //	
 			var a:Vector.<Bookmark> = e.data as Vector.<Bookmark>;
 			for (var i:int = 0;i < a.length; i++) _collections.push(new HistoryCollection(a[i]));
@@ -40,14 +39,12 @@ package view.history {
 		
 		private function onBookmarkAdded(e:RepositoryEvent):void 
 		{
-			trace("HistoryView.onBookmarkAdded(e)");
 			var k:HistoryCollection = new HistoryCollection(e.data as Bookmark);
 			_collections.push(k);
 		}	
 			
 		private function onBookmarkDeleted(e:RepositoryEvent):void 
 		{
-			trace("HistoryView.onBookmarkDeleted(e)");
 			for (var i:int = 0;i < _collections.length; i++) {
 				if (_collections[i].bookmark == e.data) break;
 			}
@@ -59,7 +56,6 @@ package view.history {
 		
 		private function onBranchStatus(e:RepositoryEvent):void 
 		{
-			trace("HistoryView.onBranchStatus(e)", AppModel.branch.name);
 		// never refresh the list if the head is detached //	
 			if (AppModel.branch.name == Bookmark.DETACH) return;
 			if (AppModel.branch.history){

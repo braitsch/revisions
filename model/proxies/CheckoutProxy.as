@@ -17,7 +17,6 @@ package model.proxies {
 		public function CheckoutProxy()
 		{
 			super.executable = 'Checkout.sh';
-			super.debug = false;
 			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);					
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 		}

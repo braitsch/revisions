@@ -5,13 +5,13 @@ package model.proxies {
 
 	public class AppProxies extends EventDispatcher {
 		
-		private static var _install		:InstallProxy = new InstallProxy();		
-		private static var _config		:ConfigProxy = new ConfigProxy();
-		private static var _branch		:BranchProxy = new BranchProxy();
-		private static var _status 		:StatusProxy = new StatusProxy();
-		private static var _history		:HistoryProxy = new HistoryProxy();	
-		private static var _editor		:EditorProxy = new EditorProxy();
-		private static var _checkout	:CheckoutProxy = new CheckoutProxy();
+		private static var _install		:InstallProxy	= new InstallProxy();		
+		private static var _config		:ConfigProxy 	= new ConfigProxy();
+		private static var _branch		:BranchProxy 	= new BranchProxy();
+		private static var _status 		:StatusProxy 	= new StatusProxy();
+		private static var _history		:HistoryProxy 	= new HistoryProxy();	
+		private static var _editor		:EditorProxy 	= new EditorProxy();
+		private static var _checkout	:CheckoutProxy 	= new CheckoutProxy();
 
 		public function set bookmark(b:Bookmark):void
 		{

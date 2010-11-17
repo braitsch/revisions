@@ -21,7 +21,6 @@ package model.proxies {
 		public function StatusProxy()
 		{
 			super.executable = 'Status.sh';
-			super.debug = false;
 			super.addEventListener(NativeProcessEvent.QUEUE_COMPLETE, onQueueComplete);
 			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);
 		}
@@ -50,12 +49,9 @@ package model.proxies {
 		
 		private function onQueueComplete(e:NativeProcessEvent):void
 		{
-			trace("StatusProxy.onQueueComplete(e)");
 			var a:Array = e.data as Array;
-			switch(a.length){
-				case 4 : parseFullBranchStatus(a);	break;
-			}
-			
+			if (a.length == 4) parseFullBranchStatus(a);
+
 		// also force refresh the history on commit //	
 			if (_getHistory == true){
 				_getHistory = false;

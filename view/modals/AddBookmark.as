@@ -65,6 +65,10 @@ package view.modals {
 				showUserError('Selected Folder Is Not Valid');
 				return false;			
 			}
+			if (p == '/') {
+				showUserError('Tracking The ENTIRE File System Is Not Supported, Sorry.');
+				return false;			
+			}			
 			var f:File;
 			try {
 				f = new File('file://'+_view.local_txt.text);

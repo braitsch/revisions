@@ -1,6 +1,9 @@
 package view {
 
+	import events.RepositoryEvent;
 	import events.UIEvent;
+	import model.AppModel;
+	import model.proxies.StatusProxy;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -18,17 +21,31 @@ package view {
 			for (var i:int = 0; i < _view.numChildren; i++) Sprite(_view.getChildAt(i)).buttonMode = true;
 			disable([_view.branch_btn, _view.pull_btn, _view.push_btn, _view.ignore_btn]);
 			
-//			AppModel.proxies.status.addEventListener(RepositoryEvent.BRANCH_STATUS, onStatusReceived);
+			AppModel.proxies.status.addEventListener(RepositoryEvent.BRANCH_STATUS, onStatusReceived);
 		}
 
-//		private function onStatusReceived(e:RepositoryEvent):void 
-//		{
-//			var a:Array = e.data as Array;
-//			if (a[StatusProxy.S] == 0){
-//				_view.save_btn.alpha = .5;//				_view.save_btn.mouseEnabled = false;//			}	else{
-//				_view.save_btn.alpha = 1;//				_view.save_btn.mouseEnabled = true;
-//			}
-//		}
+		private function onStatusReceived(e:RepositoryEvent):void 
+		{
+			var a:Array = e.data as Array;
+			if (!AppModel.bookmark.initialized && a[StatusProxy.T].length > 0){
+				saveEnabled = true;
+			}	else if (AppModel.bookmark.initialized && a[StatusProxy.M].length > 0){
+				saveEnabled = true;
+			}	else{
+				saveEnabled = false;
+			}
+		}
+		
+		private function set saveEnabled(allow:Boolean):void
+		{
+			if (allow) {
+				_view.save_btn.alpha = 1;
+				_view.save_btn.mouseEnabled = true;
+			}	else{
+				_view.save_btn.alpha = .5;
+				_view.save_btn.mouseEnabled = false;
+			}				
+		}
 
 		private function onButtonSelection(e:MouseEvent):void 
 		{
