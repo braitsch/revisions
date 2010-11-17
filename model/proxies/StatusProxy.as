@@ -89,8 +89,7 @@ package model.proxies {
 				if (!m) i++;
 			}						
 		//	for (i = 0; i < 4; i++) trace('result set '+i+' = ', r[i]);
-			_branch.modified = a[M].length;
-			dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_STATUS, a));
+			_branch.status = a;			dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_STATUS, a));
 		}
 
 		private function splitAndPurge(a:Array):void

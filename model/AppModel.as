@@ -18,11 +18,14 @@ package model {
 		private static var _engine		:AppEngine = new AppEngine();	
 		private static var _proxies		:AppProxies = new AppProxies();		
 		private static var _database	:AppDatabase = new AppDatabase();
+		
+		private static var _gitAvailable	:Boolean;		private static var _databaseReady	:Boolean;
 
 		public function AppModel() 
 		{
 			_engine.addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkSet);
-			_database.addEventListener(DataBaseEvent.BOOKMARKS_READ, onDatabaseReady);
+			_database.addEventListener(DataBaseEvent.BOOKMARKS_READ, onBookmarksRead);
+			_database.addEventListener(DataBaseEvent.DATABASE_READY, onDatabaseReady);
 			_proxies.installer.addEventListener(InstallEvent.SET_GIT_VERSION, onGitAvailable);
 		}
 
@@ -65,16 +68,24 @@ package model {
 	
 		private function onGitAvailable(e:InstallEvent):void 
 		{
-			_database.init();
+			_gitAvailable = true;
+			if (_databaseReady) _database.init();
 		}
 		
 		private function onDatabaseReady(e:DataBaseEvent):void
 		{
+			_databaseReady = true;
+			if (_gitAvailable) _database.init();			
+		}		
+		
+		private function onBookmarksRead(e:DataBaseEvent):void
+		{
 			var a:Array = e.data as Array;
 			if (a.length > 0) {
+			// pass the db records to the bookmark engine //	
 				_engine.generateBookmarks(a);
 			}	else{
-			// dispatch some event to the model manager //	
+			//TODO dispatch some event to the model manager //	
 				trace('-- no bookmarks in database, show welcome screen --');
 			}
 		}

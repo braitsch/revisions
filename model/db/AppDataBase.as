@@ -11,7 +11,6 @@ package model.db {
 		private static var _db					:SQLLiteDataBase;
 		private static var _init				:Vector.<SQLStatement>;		private static var _add					:Vector.<SQLStatement>;
 		private static var _edit				:Vector.<SQLStatement>;		private static var _delete				:Vector.<SQLStatement>;		private static var _setActive			:Vector.<SQLStatement>;
-		private static var _ready				:Boolean = false;
 		private static var _repositories		:Array;
 		
 		public function AppDatabase()
@@ -27,21 +26,17 @@ package model.db {
 
 		private function onDataBaseReady(e:DataBaseEvent):void 
 		{
-			_ready = true;
+			dispatchEvent(new DataBaseEvent(DataBaseEvent.DATABASE_READY));
 		}
 
 		// public methods //
 
 		public function init():void 
 		{
-			if (_ready){
-				_init = new Vector.<SQLStatement>();	
-				_init.push(AppSQLQuery.INIT_DATABASE);	
-				_init.push(AppSQLQuery.READ_REPOSITORIES);	
-				_db.execute(_init, true);
-			}	else{
-				trace('ERROR - DataBase Not Yet Initialized');
-			}
+			_init = new Vector.<SQLStatement>();	
+			_init.push(AppSQLQuery.INIT_DATABASE);	
+			_init.push(AppSQLQuery.READ_REPOSITORIES);	
+			_db.execute(_init, true);
 		}
 
 		public function addRepository($label:String, $local:String):void

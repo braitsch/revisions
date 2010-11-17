@@ -1,4 +1,5 @@
 package model {
+	import model.proxies.StatusProxy;
 	import events.RepositoryEvent;
 
 	import flash.events.EventDispatcher;
@@ -7,7 +8,7 @@ package model {
 
 		private var _name		:String;
 		private var _history	:Array;
-		private var _modified	:uint;
+		private var _status		:Array;
 
 		public function Branch(n:String) 
 		{
@@ -32,15 +33,20 @@ package model {
 			return _history;
 		}		
 		
-		public function set modified(n:uint):void
+		public function set status(a:Array):void
 		{
-			_modified = n;
+			_status = a;
 		}
 		
 		public function get modified():uint
 		{
-			return _modified;
+			return _status[StatusProxy.M].length;
 		}
+		
+		public function get untracked():uint
+		{
+			return _status[StatusProxy.U].length;
+		}		
 		
 	}
 	

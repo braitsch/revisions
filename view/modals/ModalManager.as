@@ -38,9 +38,15 @@ package view.modals {
 			addEventListener(UIEvent.CLOSE_MODAL_WINDOW, onCloseModelWindow);	
 			
 			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARK_ERROR, repairBookmark);
+			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARK_ADDED, onBookmarkAdded);
 			AppModel.proxies.installer.addEventListener(InstallEvent.GIT_UNAVAILABLE, installGit);
 			AppModel.proxies.branch.addEventListener(RepositoryEvent.BRANCH_DETACHED, onBranchDetached);
 			AppModel.proxies.checkout.addEventListener(RepositoryEvent.COMMIT_MODIFIED, onCommitModified);
+		}
+
+		private function onBookmarkAdded(e:RepositoryEvent):void
+		{
+			trace("ModalManager.onBookmarkAdded(e)", AppModel.branch.modified); 
 		}
 
 		private function onUserError(e:UIEvent):void
