@@ -1,5 +1,6 @@
 package view.modals {
 
+	import flash.events.Event;
 	import events.UIEvent;
 	import model.AppModel;
 	import view.ui.SimpleCheckBox;
@@ -20,9 +21,11 @@ package view.modals {
 			addChild(_check);
 			
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkSelected);			_view.no_btn.addEventListener(MouseEvent.CLICK, onNoSelected);
+			
+			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
-		
-		public function showMessage():void
+
+		private function onAddedToStage(e:Event):void
 		{
 			var s:String = '';
 			s +='The project '+AppModel.bookmark.label+' has '+AppModel.branch.untracked+' untracked files<br>';

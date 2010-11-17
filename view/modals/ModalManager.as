@@ -46,10 +46,7 @@ package view.modals {
 
 		private function checkForAutoInit(e:RepositoryEvent):void
 		{
-			if (AppModel.bookmark.promptToAutoInit()){
-				addChild(_autoInit);
-				_autoInit.showMessage();
-			}
+			if (AppModel.bookmark.promptToAutoInit()) addChild(_autoInit);
 		}
 
 		private function onUserError(e:UIEvent):void
@@ -126,7 +123,6 @@ package view.modals {
 		
 		private function onCommitModified(e:RepositoryEvent):void 
 		{
-			trace("ModalManager.onCommitModified(e)");
 			addChild(_modified);	
 		}							
 		

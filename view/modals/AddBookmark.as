@@ -21,7 +21,7 @@ package view.modals {
 			super.addInputs(Vector.<TextField>([_view.name_txt, _view.local_txt]));			
 			super.addButtons([_view.add_btn, _view.browse_btn, _view.cancel_btn]);
 			
-			_view.add_btn.addEventListener(MouseEvent.CLICK, onAddRepository);
+			_view.add_btn.addEventListener(MouseEvent.CLICK, onDirectorySelected);
 			_view.browse_btn.addEventListener(MouseEvent.CLICK, showFileBrowser);
 						_browser.addEventListener(UIEvent.FILE_BROWSER_SELECTION, onFileSelection);	
 		}
@@ -30,9 +30,13 @@ package view.modals {
 		{
 			if (!super.isValidTarget($local, _view.local_txt)) return;
 			_view.local_txt.text = $local;
-		// autoset the name field when user drops new repo on the application	
-			var n:String = $local.substring($local.lastIndexOf('/')+1);
-			_view.name_txt.text = n.substr(0,1).toUpperCase()+n.substr(1);
+			_view.name_txt.text = getNameOfDirectory($local);
+		}
+		
+		private function getNameOfDirectory($path:String):String
+		{
+			var n:String = $path.substring($path.lastIndexOf('/')+1);
+			return n.substr(0,1).toUpperCase() + n.substr(1);				
 		}
 
 		private function showFileBrowser(e:MouseEvent):void 
@@ -46,7 +50,7 @@ package view.modals {
 			_view.local_txt.text = e.data as String;				
 		}
 		
-		private function onAddRepository(e:MouseEvent):void 
+		private function onDirectorySelected(e:MouseEvent):void 
 		{	
 			if (!validate()) return;
 			AppModel.engine.addBookmark(new Bookmark(_view.name_txt.text, _view.local_txt.text, true));

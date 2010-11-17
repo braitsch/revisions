@@ -27,10 +27,16 @@ package model {
 		public function Bookmark($label:String, $local:String, $active:Boolean, $remote:String = '')
 		{
 			_label = $label;
-			_local = $local;
+			_local = escapeSpaces($local);
 			_active = $active;
 			_remote = $remote;
 			_file = new File('file://' + $local);			
+		}
+
+		private function escapeSpaces(s:String):String
+		{
+		//TODO this is right now MAC specific -- need to define global func that is os specific	
+			return s.replace(/\s/g, '\ ');
 		}
 
 		public function get label():String

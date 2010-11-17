@@ -41,20 +41,19 @@ package model.proxies {
 		
 		public function addBookmark(b:Bookmark):void 
 		{
-			super.directory = b.local;			super.call(Vector.<String>([BashMethods.INIT_REPOSITORY, b.local]));				
+			super.directory = b.local;			super.call(Vector.<String>([BashMethods.INIT_REPOSITORY]));				
 		}	
 		
 		public function deleteBookmark(b:Bookmark, args:Object):void 
 		{
 			super.directory = b.local;
-			super.call(Vector.<String>([BashMethods.DELETE_REPOSITORY, b.local, args.killGit, args.trash]));				
+			super.call(Vector.<String>([BashMethods.DELETE_REPOSITORY, args.killGit, args.trash]));				
 		}						
 		
 	// response handlers //			
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
-			trace("EditorProxy.onProcessComplete(e)", 'method = '+e.data.method, 'result = '+e.data.result);
 			switch(e.data.method){
 				case BashMethods.COMMIT : 
 					AppModel.bookmark.initialized = true;

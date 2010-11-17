@@ -33,6 +33,7 @@ package model.proxies {
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
+	//		trace("BranchProxy.onProcessComplete(e)", 'method = '+e.data.method, 'result = '+e.data.result);			
 			var m:String = String(e.data.method);
 			switch(m){
 				case BashMethods.GET_BRANCHES :
