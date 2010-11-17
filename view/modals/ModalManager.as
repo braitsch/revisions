@@ -25,19 +25,28 @@ package view.modals {
 		private static var _edit			:EditBookmark = new EditBookmark();
 		private static var _repair			:RepairBookmark = new RepairBookmark();
 		private static var _remove			:RemoveBookmark = new RemoveBookmark();		private static var _commit			:CommitChanges = new CommitChanges();
+		private static var _error			:UserError = new UserError();		
+		
 		private static var _history			:HistoryView = new HistoryView();		
 		private static var _install			:InstallGit = new InstallGit();
 		private static var _modified		:DetachedBranch = new DetachedBranch();
 
 		public function ModalManager()
 		{
-			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);	
+			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			addEventListener(UIEvent.USER_ERROR, onUserError);
 			addEventListener(UIEvent.CLOSE_MODAL_WINDOW, onCloseModelWindow);	
 			
 			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARK_ERROR, repairBookmark);
 			AppModel.proxies.installer.addEventListener(InstallEvent.GIT_UNAVAILABLE, installGit);
 			AppModel.proxies.branch.addEventListener(RepositoryEvent.BRANCH_DETACHED, onBranchDetached);
 			AppModel.proxies.checkout.addEventListener(RepositoryEvent.COMMIT_MODIFIED, onCommitModified);
+		}
+
+		private function onUserError(e:UIEvent):void
+		{
+			_error.message = e.data as String;
+			addChild(_error);
 		}
 
 		private function onAddedToStage(e:Event):void 

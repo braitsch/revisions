@@ -29,7 +29,8 @@ package events {
 		public static const TOGGLE_OPEN_DIRECTORY	:String = "TOGGLE_OPEN_DIRECTORY";
 		
 	// layout modifications //	
-		public static const COLUMN_RESIZED			:String = "COLUMN_RESIZED";
+		public static const COLUMN_RESIZED:String = "COLUMN_RESIZED";
+		public static const USER_ERROR:String = "USER_ERROR";
 		
 		public var data:Object;
 

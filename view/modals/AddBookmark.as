@@ -1,12 +1,10 @@
 package view.modals {
+
 	import events.UIEvent;
-
+	import model.AppEngine;
 	import model.AppModel;
-
-	import utils.FileBrowser;
-
 	import model.Bookmark;
-
+	import utils.FileBrowser;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
 	import flash.text.TextField;
@@ -57,18 +55,47 @@ package view.modals {
 		
 		private function validate():Boolean
 		{
-		//TODO need to check against existing repo names and locations to prevent duplicates 
-			var b:Boolean = true;
-			if (_view.name_txt.text=='' || _view.name_txt.text=='Please Enter A Name'){
-				_view.name_txt.text = 'Please Enter A Name';
-				b = false;			}	
-			try{
-				new File('file://'+_view.local_txt.text);
-			}	catch(e:ArgumentError){
-				_view.local_txt.text = 'Selected Target Is Not Valid';
-				b = false;
+			var n:String = _view.name_txt.text;
+			var p:String = _view.local_txt.text;
+			if (n == '') {
+				showUserError('Project Name Cannot Be Empty');
+				return false;			
 			}
-			return b;
+			if (p == '') {
+				showUserError('Selected Folder Is Not Valid');
+				return false;			
+			}
+			var f:File;
+			try {
+				f = new File('file://'+_view.local_txt.text);
+			}
+			catch(e:Error){
+				showUserError('Target Not Found<br>Please Check The Folder Path');
+				return false;				
+			}
+			if (!f.exists){
+				showUserError('Target Not Found<br>Please Check The Folder Path');
+				return false;
+			}	
+			if (!f.isDirectory){
+				showUserError('New Projects Must Target A Folder');
+				return false;
+			}						
+			var b:Vector.<Bookmark> = AppEngine.bookmarks;
+			for (var i:int = 0; i < b.length; i++) {
+				if (n == b[i].label) {
+					showUserError('Project Name <b>'+b[i].label+'</b> Is Already Taken');
+					return false;				}	else if (p == b[i].local){
+					showUserError('The Folder At <b>'+b[i].local+'</b> Is Already Being Tracked By Project '+b[i].label);
+					return false;
+				}
+			}
+			return true;
+		}
+		
+		private function showUserError(m:String):void
+		{
+			dispatchEvent(new UIEvent(UIEvent.USER_ERROR, m));
 		}
 				
 	}

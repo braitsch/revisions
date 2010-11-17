@@ -13,6 +13,13 @@ package model {
 		private static var _index		:uint = 0;
 		private static var _bookmark	:Bookmark;
 		private static var _bookmarks	:Vector.<Bookmark> = new Vector.<Bookmark>();
+
+	// expose bookmarks to check against duplicates being added //
+			
+		static public function get bookmarks():Vector.<Bookmark>
+		{
+			return _bookmarks;
+		}			
 		
 	// sequence to initalize a new bookmark //
 
@@ -125,7 +132,7 @@ package model {
 				for (var i:int = 0; i < _bookmarks.length; i++) if (_bookmarks[i].active == true) break;
 				dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_SET, _bookmarks[i]));
 			}
-		}						
+		}					
 		
 	}
 	
