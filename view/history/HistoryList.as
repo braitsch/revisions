@@ -97,6 +97,8 @@ package view.history {
 
 		private function onRecordSelection(e:MouseEvent):void 
 		{
+		// ignore mouse events from the scrollbar //	
+			if (!(e.target is HistoryListItem)) return;
 			var k:HistoryListItem = _list.activeItem as HistoryListItem;
 			if (k.index == 0){
 				AppModel.proxies.checkout.bookmark = AppModel.bookmark;				AppModel.proxies.checkout.checkout(_branch);		
