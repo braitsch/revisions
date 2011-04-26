@@ -26,7 +26,7 @@ package model {
 			_engine.addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkSet);
 			_database.addEventListener(DataBaseEvent.BOOKMARKS_READ, onBookmarksRead);
 			_database.addEventListener(DataBaseEvent.DATABASE_READY, onDatabaseReady);
-			_proxies.installer.addEventListener(InstallEvent.SET_GIT_VERSION, onGitAvailable);
+			_proxies.config.addEventListener(InstallEvent.SET_GIT_VERSION, onGitAvailable);
 		}
 
 		static public function onBookmarkSet(e:RepositoryEvent):void

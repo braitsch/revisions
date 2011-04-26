@@ -38,7 +38,7 @@ package view.modals {
 			addEventListener(UIEvent.CLOSE_MODAL_WINDOW, onCloseModelWindow);	
 			
 			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARK_ERROR, repairBookmark);
-			AppModel.proxies.installer.addEventListener(InstallEvent.GIT_UNAVAILABLE, installGit);
+			AppModel.proxies.config.addEventListener(InstallEvent.GIT_UNAVAILABLE, installGit);
 			AppModel.proxies.status.addEventListener(RepositoryEvent.BRANCH_STATUS, checkForAutoInit);
 			AppModel.proxies.branch.addEventListener(RepositoryEvent.BRANCH_DETACHED, onBranchDetached);
 			AppModel.proxies.checkout.addEventListener(RepositoryEvent.COMMIT_MODIFIED, onCommitModified);

@@ -9,7 +9,7 @@ package model.db {
 	public class AppDatabase extends EventDispatcher {
 	
 		private static var _db					:SQLLiteDataBase;
-		private static var _init				:Vector.<SQLStatement>;		private static var _add					:Vector.<SQLStatement>;
+		private static var _open				:Vector.<SQLStatement>;		private static var _add					:Vector.<SQLStatement>;
 		private static var _edit				:Vector.<SQLStatement>;		private static var _delete				:Vector.<SQLStatement>;		private static var _setActive			:Vector.<SQLStatement>;
 		private static var _repositories		:Array;
 		
@@ -33,10 +33,10 @@ package model.db {
 
 		public function init():void 
 		{
-			_init = new Vector.<SQLStatement>();	
-			_init.push(AppSQLQuery.INIT_DATABASE);	
-			_init.push(AppSQLQuery.READ_REPOSITORIES);	
-			_db.execute(_init, true);
+			_open = new Vector.<SQLStatement>();	
+			_open.push(AppSQLQuery.INIT_DATABASE);	
+			_open.push(AppSQLQuery.READ_REPOSITORIES);	
+			_db.execute(_open, true);
 		}
 
 		public function addRepository($label:String, $local:String):void
@@ -89,7 +89,7 @@ package model.db {
 		private function onTransactionComplete(e:DataBaseEvent):void 
 		{
 			switch(e.data.transaction as Vector.<SQLStatement>){
-				case _init:	
+				case _open:	
 					trace("AppDatabase.onTransactionComplete(e) : initDataBase", e.data.result);
 					_repositories = e.data.result[1].data || [];					dispatchEvent(new DataBaseEvent(DataBaseEvent.BOOKMARKS_READ, _repositories));
 				break;				case _add:	

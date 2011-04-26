@@ -28,7 +28,6 @@ package view.modals {
 
 		public function set local($local:String):void
 		{
-			if (!super.isValidTarget($local, _view.local_txt)) return;
 			_view.local_txt.text = $local;
 			_view.name_txt.text = getNameOfDirectory($local);
 		}
@@ -46,7 +45,6 @@ package view.modals {
 		
 		private function onFileSelection(e:UIEvent):void 
 		{
-			if (!super.isValidTarget(e.data as String, _view.local_txt)) return;			
 			_view.local_txt.text = e.data as String;				
 		}
 		

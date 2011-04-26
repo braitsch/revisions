@@ -2,8 +2,12 @@ package model.bash{
 
 	public class BashMethods {
 		
+	// config methods //
+		public static const GET_VERSION:String = 'getVersion';	
+		public static const GET_USER_NAME:String = 'getUserName';	
+		public static const GET_USER_EMAIL:String = 'getUserEmail';	
+		
 	// install methods //	
-		public static const GET_VERSION:String = 'getVersion';
 		public static const DOWNLOAD:String = 'download';
 		public static const MOUNT:String = 'mount';
 		public static const INSTALL:String = 'install';

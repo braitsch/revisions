@@ -62,6 +62,8 @@ package view.bookmarks {
 			_branches.addEventListener(MouseEvent.CLICK, onBranchSelection);
 		}
 
+	//TODO need to check if (bookmark.file.exists == false) prompt for repair
+
 		private function onBranchSelection(e:MouseEvent):void 
 		{
 		// prevent re-selecting the current branch //	

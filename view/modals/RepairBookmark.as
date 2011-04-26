@@ -44,7 +44,6 @@ package view.modals {
 		
 		private function onDirectorySelection(e:UIEvent):void 
 		{
-			if (!super.isValidTarget(e.data as String, _view.local_txt)) return;	
 			_view.local_txt.text = e.data as String;				
 		}
 		

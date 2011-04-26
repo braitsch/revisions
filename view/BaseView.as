@@ -21,7 +21,7 @@ package view {
 			_view.addChild(_status);			_view.addChild(_toolbar);			addChild(_view);
 
 			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkChanged);
-			AppModel.proxies.installer.addEventListener(InstallEvent.SET_GIT_VERSION, onGitVersion);
+			AppModel.proxies.config.addEventListener(InstallEvent.SET_GIT_VERSION, onGitVersion);
 		}
 		
 		public function get view():BaseViewMC

@@ -100,7 +100,6 @@ package model {
 				_bookmarks.push(b);
 				if (b.file.exists == false) x.push(b); 
 			}
-			trace("BookmarkModel.generateBookmarks(e)", _bookmarks.length, '> bookmark objects created');
 			
 			if (x.length > 0) {
 				dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_ERROR, x));

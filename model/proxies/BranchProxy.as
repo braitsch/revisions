@@ -22,14 +22,14 @@ package model.proxies {
 		{
 			_bookmark = b;
 			super.directory = b.local;
-			super.call(Vector.<String>([BashMethods.GET_BRANCHES]));					}
+			super.call(Vector.<String>([BashMethods.GET_BRANCHES]));		}
 		
 		public function getStashList():void
 		{
-			super.call(Vector.<String>([BashMethods.GET_STASH_LIST]));			
+			super.call(Vector.<String>([BashMethods.GET_STASH_LIST]));	
 		}
 		
-	// response handlers //			
+	// response handlers //
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{

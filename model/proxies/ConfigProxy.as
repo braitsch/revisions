@@ -1,15 +1,18 @@
 package model.proxies {
-	import events.RepositoryEvent;
+
+	import events.InstallEvent;
 	import events.NativeProcessEvent;
-
+	import events.RepositoryEvent;
+	import model.SystemRules;
 	import model.air.NativeProcessQueue;
-
+	import model.bash.BashMethods;
 	import flash.events.EventDispatcher;
 
 	public class ConfigProxy extends EventDispatcher {
 
 		private static var _proxy			:NativeProcessQueue;
 		private static var _userName		:String;		private static var _userEmail		:String;
+		private static var _gitVersion		:String;
 
 		public function ConfigProxy()
 		{
@@ -17,8 +20,18 @@ package model.proxies {
 			_proxy.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);
 			_proxy.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 			_proxy.addEventListener(NativeProcessEvent.QUEUE_COMPLETE, onShellQueueComplete);
-			getUserInfo();
+			loadUserSettings();
 		}
+		
+		public function loadUserSettings():void
+		{
+	// expose this so it can be called again after installing / updating git //		
+			_proxy.queue = [	Vector.<String>([BashMethods.GET_VERSION]),
+								Vector.<String>([BashMethods.GET_USER_NAME]),
+								Vector.<String>([BashMethods.GET_USER_EMAIL])	];						
+		}			
+
+	// public setters & getters //
 
 		public function get userName():String
 		{
@@ -32,44 +45,43 @@ package model.proxies {
 		
 		public function set userName($n:String):void
 		{
-			_proxy.call(Vector.<String>(['getUserName', $n]));
+			_proxy.queue = [	Vector.<String>([BashMethods.GET_USER_NAME, $n])	];
 		}
 		
 		public function set userEmail($e:String):void
 		{
-			_proxy.call(Vector.<String>(['getUserEmail', $e]));
+			_proxy.queue = [	Vector.<String>([BashMethods.GET_USER_EMAIL, $e])	];
 		}		
-		
-	// private methods //			
-
-		private function getUserInfo():void
-		{
-			_proxy.queue = [	Vector.<String>(['getUserName']),
-								Vector.<String>(['getUserEmail'])	];						
-		}	
 		
 	// response handlers //			
 		
 		private function onShellQueueComplete(e:NativeProcessEvent):void 
 		{
-			_userName = e.data[0];
-			_userEmail = e.data[1];
-		//TODO prompt if username / email is empty	
+			dispatchEvent(new RepositoryEvent(RepositoryEvent.SET_USERNAME));
+			dispatchEvent(new InstallEvent(InstallEvent.SET_GIT_VERSION, _gitVersion));			
 		}
 
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
 			switch(e.data.method){
-				case 'getUserName' : _userName = e.data.result;		break;				case 'getUserEmail' : 
+				case BashMethods.GET_VERSION : 
+					_gitVersion = e.data.result.substring(12);
+					if (_gitVersion < SystemRules.MIN_GIT_VERSION){
+						_proxy.die();
+						dispatchEvent(new InstallEvent(InstallEvent.GIT_UNAVAILABLE, _gitVersion));
+					}
+				break;				
+				case BashMethods.GET_USER_NAME : 
+					_userName = e.data.result;							break;
+				case BashMethods.GET_USER_EMAIL : 
 					_userEmail = e.data.result;
-					dispatchEvent(new RepositoryEvent(RepositoryEvent.SET_USERNAME));
 				break;
 			}
 		}			
 		
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
-			trace("Configurator.onProcessFailure(e)");
+			trace("ConfigProxy.onProcessFailure(e)", e.data.method, e.data.result);
 		}
 					
 	}

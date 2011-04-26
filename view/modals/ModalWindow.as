@@ -1,8 +1,6 @@
 package view.modals {
+
 	import events.UIEvent;
-
-	import utils.StringUtils;
-
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -41,16 +39,6 @@ package view.modals {
 			for (var i : int = 0; i < v.length; i++) {
 				v[i].tabIndex = i;
 				v[i].selectable = true;
-			}
-		}
-		
-		protected function isValidTarget(s:String, t:TextField):Boolean
-		{
-			if (StringUtils.hasTrailingWhiteSpace(s)){
-				t.text = 'TARGET HAS TRAILING WHITE SPACE - IGNORED';
-				return false;
-			}	else{	
-				return true;
 			}
 		}
 		
