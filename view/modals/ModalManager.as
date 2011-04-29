@@ -1,20 +1,16 @@
 package view.modals {
+
+	import events.ErrorEvent;
+	import events.InstallEvent;
 	import events.RepositoryEvent;
 	import events.UIEvent;
-
-	import events.InstallEvent;
-
 	import model.AppModel;
-
-	import utils.DragAndDropListener;
-
 	import model.Bookmark;
+	import utils.DragAndDropListener;
 	import view.history.HistoryView;
-
-	import flash.desktop.NativeApplication;
 	import flash.display.Sprite;
 	import flash.events.Event;
-	import flash.events.NativeDragEvent;
+	import flash.filesystem.File;
 
 	public class ModalManager extends Sprite {
 
@@ -34,7 +30,6 @@ package view.modals {
 		public function ModalManager()
 		{
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			addEventListener(UIEvent.USER_ERROR, onUserError);
 			addEventListener(UIEvent.CLOSE_MODAL_WINDOW, onCloseModelWindow);	
 			
 			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARK_ERROR, repairBookmark);
@@ -49,24 +44,17 @@ package view.modals {
 			if (AppModel.bookmark.promptToAutoInit()) addChild(_autoInit);
 		}
 
-		private function onUserError(e:UIEvent):void
+		private function onUserError(e:ErrorEvent):void
 		{
-			_error.message = e.data as String;
 			addChild(_error);
+			_error.message = e.type as String;
 		}
 
 		private function onAddedToStage(e:Event):void 
 		{
 			_dragAndDrop.target = stage;
-			_dragAndDrop.addEventListener(NativeDragEvent.NATIVE_DRAG_COMPLETE, onDragAndDrop);						stage.addEventListener(UIEvent.ADD_BOOKMARK, addBookmark);			stage.addEventListener(UIEvent.EDIT_BOOKMARK, editBookmark);			stage.addEventListener(UIEvent.SAVE_PROJECT, addNewCommit);			stage.addEventListener(UIEvent.ADD_BRANCH, branchBookmark);
-			stage.addEventListener(UIEvent.DELETE_BOOKMARK, removeBookmark);			stage.addEventListener(UIEvent.OPEN_HISTORY, viewHistory);		}	
-
-		private function onDragAndDrop(e:NativeDragEvent):void 
-		{
-			addChild(_add);
-			_add.local = _dragAndDrop.file.nativePath;
-			NativeApplication.nativeApplication.activate();
-		}		
+			stage.addEventListener(UIEvent.DRAG_AND_DROP, onDragAndDrop);			stage.addEventListener(UIEvent.ADD_BOOKMARK, addBookmark);			stage.addEventListener(UIEvent.EDIT_BOOKMARK, editBookmark);			stage.addEventListener(UIEvent.SAVE_PROJECT, addNewCommit);			stage.addEventListener(UIEvent.ADD_BRANCH, branchBookmark);			stage.addEventListener(UIEvent.DELETE_BOOKMARK, removeBookmark);
+			stage.addEventListener(UIEvent.OPEN_HISTORY, viewHistory);			stage.addEventListener(ErrorEvent.MULTIPLE_FILE_DROP, onUserError);					}		
 		
 	// commands //		
 
@@ -76,8 +64,16 @@ package view.modals {
 			addChild(_install);
 		}	
 
+		private function onDragAndDrop(e:UIEvent):void 
+		{
+		// when a file or folder is dropped //	
+			addChild(_add);
+			_add.addNewFromDropppedFile(e.data as File);
+		}	
+
 		private function addBookmark(e:UIEvent):void 
 		{
+		// when the button is clicked //	
 			addChild(_add);
 		}
 

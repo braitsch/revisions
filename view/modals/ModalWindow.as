@@ -54,7 +54,6 @@ package view.modals {
 		{
 			this.x = stage.stageWidth / 2 - this.width / 2;
 			this.y = stage.stageHeight / 2 - (_height || this.height) / 2;
-			
 			if (_inputs) {
 				var txt:TextField = _inputs[0];
 				txt.stage.focus = txt;

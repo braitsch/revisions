@@ -33,7 +33,7 @@ package model {
 		private function initBookmark(e:DataBaseEvent):void
 		{
 			AppModel.database.removeEventListener(DataBaseEvent.BOOKMARK_ADDED, initBookmark);
-			AppModel.proxies.editor.addBookmark(_bookmark);
+			AppModel.proxies.editor.initBookmark(_bookmark);
 			AppModel.proxies.editor.addEventListener(RepositoryEvent.INITIALIZED, readBranches);		}
 
 		private function readBranches(e:RepositoryEvent = null):void 
@@ -129,7 +129,8 @@ package model {
 				dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_SET, null));
 			} else{
 				for (var i:int = 0; i < _bookmarks.length; i++) if (_bookmarks[i].active == true) break;
-				dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_SET, _bookmarks[i]));
+		//TODO update view to handle bookmarks that are files and not directories!!!!!!!!!!!!!!!!!!!!!!!!!		
+			//	dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_SET, _bookmarks[i]));
 			}
 		}					
 		

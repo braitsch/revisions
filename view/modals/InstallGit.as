@@ -1,12 +1,12 @@
 package view.modals {
 
-	import model.AppModel;
 	import events.InstallEvent;
 	import events.UIEvent;
-	import model.SystemRules;
-	import model.proxies.InstallProxy;
 	import flash.desktop.NativeApplication;
 	import flash.events.MouseEvent;
+	import model.AppModel;
+	import model.SystemRules;
+	import model.proxies.InstallProxy;
 
 	public class InstallGit extends ModalWindow {
 

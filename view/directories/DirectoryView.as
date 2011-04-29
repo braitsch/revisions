@@ -1,14 +1,14 @@
 package view.directories {
 	import events.UIEvent;
-
+	import flash.filesystem.File;
 	import model.SystemRules;
-
 	import view.layout.LiquidColumn;
 	import view.layout.ListItem;
 	import view.layout.NestedList;
 	import view.ui.AirContextMenu;
 
-	import flash.filesystem.File;
+
+
 
 	public class DirectoryView extends LiquidColumn {
 

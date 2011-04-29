@@ -15,8 +15,9 @@ package model.bash{
 		public static const TRASH:String = 'trash';
 
 	// editor methods //		
-		public static const COMMIT:String = 'commit';
-		public static const TRACK_FILE:String = 'trackFile';		public static const UNTRACK_FILE:String = 'unTrackFile';
+		public static const INIT_SYSTEM_REPO:String = 'initSystemRepo';
+		public static const COMMIT:String = 'commit';		public static const TRACK_FILE:String = 'trackFile';
+		public static const UNTRACK_FILE:String = 'unTrackFile';
 		public static const INIT_REPOSITORY:String = 'initRepository';
 		public static const DELETE_REPOSITORY:String = 'deleteRepository';
 		

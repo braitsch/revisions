@@ -28,9 +28,10 @@ package events {
 		public static const DIRECTORY_SELECTED		:String = "DIRECTORY_SELECTED";
 		public static const TOGGLE_OPEN_DIRECTORY	:String = "TOGGLE_OPEN_DIRECTORY";
 		
-	// layout modifications //	
-		public static const COLUMN_RESIZED:String = "COLUMN_RESIZED";
-		public static const USER_ERROR:String = "USER_ERROR";
+	// other stuff //	
+		public static const COLUMN_RESIZED			:String = "COLUMN_RESIZED";
+		public static const USER_ERROR				:String = "USER_ERROR";
+		public static const DRAG_AND_DROP			:String = "DRAG_AND_DROP";
 		
 		public var data:Object;
 

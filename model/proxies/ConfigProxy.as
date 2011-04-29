@@ -3,10 +3,10 @@ package model.proxies {
 	import events.InstallEvent;
 	import events.NativeProcessEvent;
 	import events.RepositoryEvent;
+	import flash.events.EventDispatcher;
 	import model.SystemRules;
 	import model.air.NativeProcessQueue;
 	import model.bash.BashMethods;
-	import flash.events.EventDispatcher;
 
 	public class ConfigProxy extends EventDispatcher {
 

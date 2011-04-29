@@ -24,13 +24,13 @@ package model {
 		private var _initialized	:Boolean = false;
 		private var _disableAutoInit:Boolean = false;
 
-		public function Bookmark($label:String, $local:String, $active:Boolean, $remote:String = '')
+		public function Bookmark($label:String, $local:String, $active:Boolean = true, $remote:String = '')
 		{
 			_label = $label;
 			_local = escapeSpaces($local);
 			_active = $active;
 			_remote = $remote;
-			_file = new File('file://' + $local);			
+			_file = new File('file://' + $local);		
 		}
 
 		private function escapeSpaces(s:String):String

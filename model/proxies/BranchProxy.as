@@ -1,11 +1,11 @@
 package model.proxies {
+
 	import events.NativeProcessEvent;
 	import events.RepositoryEvent;
-
+	import model.Bookmark;
 	import model.air.NativeProcessProxy;
 	import model.bash.BashMethods;
-
-	import model.Bookmark;
+	import flash.filesystem.File;
 
 	public class BranchProxy extends NativeProcessProxy{
 
@@ -21,7 +21,11 @@ package model.proxies {
 		public function getBranchesOfBookmark(b:Bookmark):void
 		{
 			_bookmark = b;
-			super.directory = b.local;
+			if (_bookmark.file.isDirectory){
+				super.directory = b.local;
+			}	else{
+				super.directory = File.applicationStorageDirectory.nativePath;
+			}
 			super.call(Vector.<String>([BashMethods.GET_BRANCHES]));		}
 		
 		public function getStashList():void

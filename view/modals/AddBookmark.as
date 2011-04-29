@@ -21,39 +21,47 @@ package view.modals {
 			super.addInputs(Vector.<TextField>([_view.name_txt, _view.local_txt]));			
 			super.addButtons([_view.add_btn, _view.browse_btn, _view.cancel_btn]);
 			
-			_view.add_btn.addEventListener(MouseEvent.CLICK, onDirectorySelected);
+			_view.add_btn.addEventListener(MouseEvent.CLICK, onAddButtonClick);
 			_view.browse_btn.addEventListener(MouseEvent.CLICK, showFileBrowser);
-						_browser.addEventListener(UIEvent.FILE_BROWSER_SELECTION, onFileSelection);	
+			_browser.addEventListener(UIEvent.FILE_BROWSER_SELECTION, onFileBrowserSelection);	
 		}
 
-		public function set local($local:String):void
+		public function addNewFromDropppedFile($file:File):void
 		{
-			_view.local_txt.text = $local;
-			_view.name_txt.text = getNameOfDirectory($local);
+			parseTargetNameAndLocation($file);	
 		}
 		
-		private function getNameOfDirectory($path:String):String
-		{
-			var n:String = $path.substring($path.lastIndexOf('/')+1);
-			return n.substr(0,1).toUpperCase() + n.substr(1);				
-		}
+	// adding a new bookmark from the file browser //	
 
 		private function showFileBrowser(e:MouseEvent):void 
 		{
-			_browser.browse('Please Select A Directory');			
+			_browser.browse("Select A File or Folder To Start Tracking");			
 		}
 		
-		private function onFileSelection(e:UIEvent):void 
+		private function onFileBrowserSelection(e:UIEvent):void 
 		{
-			_view.local_txt.text = e.data as String;				
+			parseTargetNameAndLocation(e.data as File);
 		}
 		
-		private function onDirectorySelected(e:MouseEvent):void 
+		private function parseTargetNameAndLocation($file:File):void
+		{
+			var path:String = $file.nativePath;
+			_view.local_txt.text = path;
+			var name:String = path.substring(path.lastIndexOf('/') + 1);
+			if (!$file.isDirectory) name = name.substr(0, name.lastIndexOf('.'));
+			_view.name_txt.text = name.substr(0,1).toUpperCase() + name.substr(1);			
+		}		
+		
+		private function onAddButtonClick(e:MouseEvent):void 
 		{	
-			if (!validate()) return;
-			AppModel.engine.addBookmark(new Bookmark(_view.name_txt.text, _view.local_txt.text, true));
-			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW, this));
+			if (validate()) initNewBookmark();
 		}	
+		
+		private function initNewBookmark():void
+		{
+			AppModel.engine.addBookmark(new Bookmark(_view.name_txt.text, _view.local_txt.text));
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW, this));						
+		}		
 		
 		private function validate():Boolean
 		{
@@ -64,7 +72,7 @@ package view.modals {
 				return false;			
 			}
 			if (p == '') {
-				showUserError('Selected Folder Is Not Valid');
+				showUserError('Selected Target Is Not Valid');
 				return false;			
 			}
 			if (p == '/') {
@@ -73,26 +81,22 @@ package view.modals {
 			}			
 			var f:File;
 			try {
-				f = new File('file://'+_view.local_txt.text);
+				f = new File('file://'+p);
 			}
 			catch(e:Error){
-				showUserError('Target Not Found<br>Please Check The Folder Path');
+				showUserError('Target Not Found<br>Please Check The Path');
 				return false;				
 			}
 			if (!f.exists){
-				showUserError('Target Not Found<br>Please Check The Folder Path');
+				showUserError('Target Not Found<br>Please Check The Path');
 				return false;
 			}	
-			if (!f.isDirectory){
-				showUserError('New Projects Must Target A Folder');
-				return false;
-			}						
 			var b:Vector.<Bookmark> = AppEngine.bookmarks;
 			for (var i:int = 0; i < b.length; i++) {
 				if (n == b[i].label) {
 					showUserError('Project Name <b>'+b[i].label+'</b> Is Already Taken');
 					return false;				}	else if (p == b[i].local){
-					showUserError('The Folder At <b>'+b[i].local+'</b> Is Already Being Tracked By Project '+b[i].label);
+					showUserError('The Target At <b>'+b[i].local+'</b> Is Already Being Tracked By Project '+b[i].label);
 					return false;
 				}
 			}
@@ -101,6 +105,7 @@ package view.modals {
 		
 		private function showUserError(m:String):void
 		{
+			trace("AddBookmark.showUserError(m)", m);
 			dispatchEvent(new UIEvent(UIEvent.USER_ERROR, m));
 		}
 				

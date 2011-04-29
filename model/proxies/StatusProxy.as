@@ -1,14 +1,16 @@
 package model.proxies {
+
 	import events.NativeProcessEvent;
 	import events.RepositoryEvent;
-
 	import model.AppModel;
+	import model.Bookmark;
+	import model.Branch;
 	import model.SystemRules;
 	import model.air.NativeProcessQueue;
 	import model.bash.BashMethods;
+	import flash.filesystem.File;
 
-	import model.Bookmark;
-	import model.Branch;
+
 
 	public class StatusProxy extends NativeProcessQueue {
 
@@ -28,7 +30,11 @@ package model.proxies {
 		public function set bookmark(b:Bookmark):void 
 		{
 			_bookmark = b;
-			super.directory = _bookmark.local;
+			if (_bookmark.file.isDirectory){
+				super.directory = _bookmark.local;
+			}	else{
+				super.directory = File.applicationStorageDirectory.nativePath;
+			}			
 		}		
 
 	// public methods //	

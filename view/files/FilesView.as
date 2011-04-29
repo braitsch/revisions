@@ -1,17 +1,17 @@
 package view.files {
-	import events.UIEvent;
-
 	import events.RepositoryEvent;
-
+	import events.UIEvent;
+	import flash.filesystem.File;
 	import model.AppModel;
 	import model.SystemRules;
-
 	import view.layout.LiquidColumn;
 	import view.layout.ListItem;
 	import view.layout.SimpleList;
 	import view.ui.AirContextMenu;
 
-	import flash.filesystem.File;
+
+
+
 
 	public class FilesView extends LiquidColumn {
 
