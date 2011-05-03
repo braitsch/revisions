@@ -15,17 +15,18 @@ package model.bash{
 		public static const TRASH:String = 'trash';
 
 	// editor methods //		
-		public static const INIT_SYSTEM_REPO:String = 'initSystemRepo';
 		public static const COMMIT:String = 'commit';		public static const TRACK_FILE:String = 'trackFile';
 		public static const UNTRACK_FILE:String = 'unTrackFile';
-		public static const INIT_REPOSITORY:String = 'initRepository';
-		public static const DELETE_REPOSITORY:String = 'deleteRepository';
+		public static const INIT_FOLDER:String = 'initRepository';
+		public static const INIT_FILE:String = 'initSingleFile';
+		public static const KILL_FILE:String = 'killFile';
+		public static const KILL_FOLDER:String = 'killFolder';
 		
 	// branch methods //	
 		public static const RESET_BRANCH:String = 'resetBranch';
-		public static const ADD_BRANCH:String = 'addBranch';
-		public static const GET_BRANCHES:String = 'getBranches';
-	// history methods //				public static const GET_HISTORY:String = 'getHistory';		public static const CHECKOUT_COMMIT:String = 'checkoutCommit';
+		public static const ADD_BRANCH:String = 'addBranch';		public static const GET_BRANCHES:String = 'getBranches';	// history methods //		
+		public static const GET_HISTORY:String = 'getHistory';
+		public static const CHECKOUT_COMMIT:String = 'checkoutCommit';
 		public static const CHECKOUT_BRANCH:String = 'checkoutBranch';
 		
 	// status methods //	

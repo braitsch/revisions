@@ -1,6 +1,6 @@
 package view.history {
 
-	import events.RepositoryEvent;
+	import events.BookmarkEvent;
 	import events.UIEvent;
 	import model.Bookmark;
 	import model.Branch;
@@ -16,7 +16,7 @@ package view.history {
 		public function HistoryCollection($b:Bookmark)
 		{
 			_bookmark = $b;
-			_bookmark.addEventListener(RepositoryEvent.BRANCH_ADDED, onNewBranchAdded);
+			_bookmark.addEventListener(BookmarkEvent.BRANCH_ADDED, onNewBranchAdded);
 			
 			var a:Array = _bookmark.branches;
 			for (var i:int = 0; i < a.length; i++) addChild(new HistoryList(a[i], i));
@@ -58,7 +58,7 @@ package view.history {
 			setActiveTab(e.target as HistoryList);
 		}
 		
-		private function onNewBranchAdded(e:RepositoryEvent):void
+		private function onNewBranchAdded(e:BookmarkEvent):void
 		{
 			trace("HistoryCollection.onNewBranchAdded(e) >> ", _bookmark.branch.name);
 			var k:HistoryList = new HistoryList(_bookmark.branch, numChildren);

@@ -1,6 +1,6 @@
 package view.history {
 
-	import events.RepositoryEvent;
+	import events.BookmarkEvent;
 	import model.AppModel;
 	import model.Branch;
 	import model.Commit;
@@ -17,10 +17,10 @@ package view.history {
 								
 			super(new Commit(o));								
 			super.active = true;
-			AppModel.proxies.config.addEventListener(RepositoryEvent.SET_USERNAME, onUserNameChange);	
+			AppModel.proxies.config.addEventListener(BookmarkEvent.SET_USERNAME, onUserNameChange);	
 		}
 		
-		private function onUserNameChange(e:RepositoryEvent):void 
+		private function onUserNameChange(e:BookmarkEvent):void 
 		{
 			super.author = AppModel.proxies.config.userName;
 		}			

@@ -1,14 +1,13 @@
 package model.proxies {
 
 	import events.NativeProcessEvent;
-	import events.RepositoryEvent;
+	import events.BookmarkEvent;
 	import model.AppModel;
 	import model.Bookmark;
 	import model.Branch;
 	import model.SystemRules;
 	import model.air.NativeProcessQueue;
 	import model.bash.BashMethods;
-	import flash.filesystem.File;
 
 
 
@@ -30,11 +29,7 @@ package model.proxies {
 		public function set bookmark(b:Bookmark):void 
 		{
 			_bookmark = b;
-			if (_bookmark.file.isDirectory){
-				super.directory = _bookmark.local;
-			}	else{
-				super.directory = File.applicationStorageDirectory.nativePath;
-			}			
+			super.directory = _bookmark.gitdir;
 		}		
 
 	// public methods //	
@@ -43,7 +38,7 @@ package model.proxies {
 		{
 			_branch = $b;
 			trace("StatusProxy.getStatusOfBranch($b) >> requesting status of > ", _bookmark.label, _branch.name);
-			super.queue = getStatusTransaction();						}
+			super.queue = getStatusTransaction();		}
 		
 		public function getStatusAndHistory():void
 		{
@@ -95,7 +90,8 @@ package model.proxies {
 				if (!m) i++;
 			}						
 		//	for (i = 0; i < 4; i++) trace('result set '+i+' = ', r[i]);
-			_branch.status = a;			dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_STATUS, a));
+			_branch.status = a;
+			dispatchEvent(new BookmarkEvent(BookmarkEvent.BRANCH_STATUS, a));
 		}
 
 		private function splitAndPurge(a:Array):void
@@ -135,7 +131,7 @@ package model.proxies {
 		
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
-			trace("StatusProxy.onProcessFailure(e)");
+			trace("StatusProxy.onProcessFailure(e)", e.data.method);
 		}
 		
 		private function getStatusTransaction():Array

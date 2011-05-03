@@ -11,6 +11,7 @@ package view.modals {
 
 	public class AddBookmark extends ModalWindow {
 
+		private static var _target		:String;
 		private static var _view		:AddBookmarkMC = new AddBookmarkMC();
 		private static var _browser		:FileBrowser = new FileBrowser();
 
@@ -45,9 +46,9 @@ package view.modals {
 		
 		private function parseTargetNameAndLocation($file:File):void
 		{
-			var path:String = $file.nativePath;
-			_view.local_txt.text = path;
-			var name:String = path.substring(path.lastIndexOf('/') + 1);
+			_target = $file.nativePath;
+			_view.local_txt.text = _target;
+			var name:String = _target.substr(_target.lastIndexOf('/')+1);
 			if (!$file.isDirectory) name = name.substr(0, name.lastIndexOf('.'));
 			_view.name_txt.text = name.substr(0,1).toUpperCase() + name.substr(1);			
 		}		
@@ -59,7 +60,13 @@ package view.modals {
 		
 		private function initNewBookmark():void
 		{
-			AppModel.engine.addBookmark(new Bookmark(_view.name_txt.text, _view.local_txt.text));
+			var o:Object = {
+				label	:	_view.name_txt.text,
+				target	:	_target,
+				remote 	:	'',
+				active 	:	1
+			};				
+			AppModel.engine.addBookmark(new Bookmark(o));
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW, this));						
 		}		
 		
@@ -79,14 +86,7 @@ package view.modals {
 				showUserError('Tracking The ENTIRE File System Is Not Supported, Sorry.');
 				return false;			
 			}			
-			var f:File;
-			try {
-				f = new File('file://'+p);
-			}
-			catch(e:Error){
-				showUserError('Target Not Found<br>Please Check The Path');
-				return false;				
-			}
+			var f:File = new File('file://'+_target);
 			if (!f.exists){
 				showUserError('Target Not Found<br>Please Check The Path');
 				return false;
@@ -95,10 +95,7 @@ package view.modals {
 			for (var i:int = 0; i < b.length; i++) {
 				if (n == b[i].label) {
 					showUserError('Project Name <b>'+b[i].label+'</b> Is Already Taken');
-					return false;				}	else if (p == b[i].local){
-					showUserError('The Target At <b>'+b[i].local+'</b> Is Already Being Tracked By Project '+b[i].label);
-					return false;
-				}
+					return false;				}
 			}
 			return true;
 		}

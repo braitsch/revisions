@@ -1,5 +1,5 @@
 package view.files {
-	import events.RepositoryEvent;
+	import events.BookmarkEvent;
 	import events.UIEvent;
 	import flash.filesystem.File;
 	import model.AppModel;
@@ -8,10 +8,6 @@ package view.files {
 	import view.layout.ListItem;
 	import view.layout.SimpleList;
 	import view.ui.AirContextMenu;
-
-
-
-
 
 	public class FilesView extends LiquidColumn {
 
@@ -32,7 +28,7 @@ package view.files {
 			addChild(_view);
 			addChild(_list);
 			
-			AppModel.proxies.status.addEventListener(RepositoryEvent.BRANCH_STATUS, onStatusReceived);
+			AppModel.proxies.status.addEventListener(BookmarkEvent.BRANCH_STATUS, onStatusReceived);
 		}
 		
 		public function set directory(f:File):void
@@ -45,16 +41,16 @@ package view.files {
 			for (var i : int = 0; i < a.length; i++) if (validate(a[i])) _files.push(new FileListItem(a[i]));
 		}
 
-		private function onStatusReceived(e:RepositoryEvent):void 
+		private function onStatusReceived(e:BookmarkEvent):void 
 		{
 		// we receive the full status of the active branch //	
 			var a:Array = e.data as Array;
 			file: for (var i:int = 0; i < _files.length; i++) {
-		// slice off the root path of the bookmark since git returns an abbreviated path //
-				var p:String = _files[i].file.nativePath.replace(AppModel.bookmark.local+'/', '');
+				var p:String = _files[i].file.name;
 				for (var j:int = 0; j < a.length; j++) {
 					for (var k:int = 0; k < a[j].length; k++) {
-						if (p == a[j][k]){
+						var n:String = a[j][k].substring(a[j][k].lastIndexOf('/')+1);
+						if (p == n){
 							FileListItem(_files[i]).status = j;
 							continue file;
 						}

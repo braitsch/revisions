@@ -34,7 +34,7 @@ package view.modals {
 		//TODO iterate over failed vector to repair multiple bookmarks //	
 			_oldId = _failed[0].label;			
 			_view.name_txt.text = _failed[0].label;
-			_view.local_txt.text = _failed[0].local;
+			_view.local_txt.text = _failed[0].target;
 		}
 		
 		private function onDirectoryBrowse(e:MouseEvent):void 

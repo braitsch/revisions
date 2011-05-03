@@ -2,7 +2,7 @@ package view.modals {
 
 	import events.ErrorEvent;
 	import events.InstallEvent;
-	import events.RepositoryEvent;
+	import events.BookmarkEvent;
 	import events.UIEvent;
 	import model.AppModel;
 	import model.Bookmark;
@@ -32,16 +32,17 @@ package view.modals {
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(UIEvent.CLOSE_MODAL_WINDOW, onCloseModelWindow);	
 			
-			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARK_ERROR, repairBookmark);
+			AppModel.engine.addEventListener(BookmarkEvent.PATH_ERROR, repairBookmark);
 			AppModel.proxies.config.addEventListener(InstallEvent.GIT_UNAVAILABLE, installGit);
-			AppModel.proxies.status.addEventListener(RepositoryEvent.BRANCH_STATUS, checkForAutoInit);
-			AppModel.proxies.branch.addEventListener(RepositoryEvent.BRANCH_DETACHED, onBranchDetached);
-			AppModel.proxies.checkout.addEventListener(RepositoryEvent.COMMIT_MODIFIED, onCommitModified);
+			AppModel.proxies.status.addEventListener(BookmarkEvent.BRANCH_STATUS, checkForAutoInit);
+			AppModel.proxies.branch.addEventListener(BookmarkEvent.BRANCH_DETACHED, onBranchDetached);
+			AppModel.proxies.checkout.addEventListener(BookmarkEvent.COMMIT_MODIFIED, onCommitModified);
 		}
 
-		private function checkForAutoInit(e:RepositoryEvent):void
+		private function checkForAutoInit(e:BookmarkEvent):void
 		{
-			if (AppModel.bookmark.promptToAutoInit()) addChild(_autoInit);
+			var k:Boolean = AppModel.bookmark.promptToAutoInit();
+			if (k) addChild(_autoInit);
 		}
 
 		private function onUserError(e:ErrorEvent):void
@@ -107,17 +108,17 @@ package view.modals {
 		
 	// alerts //	
 	
-		private function repairBookmark(e:RepositoryEvent):void
+		private function repairBookmark(e:BookmarkEvent):void
 		{
 			_repair.failed = e.data as Vector.<Bookmark>;
 			addChild(_repair);
 		}	
 		
-		private function onBranchDetached(e:RepositoryEvent):void 
+		private function onBranchDetached(e:BookmarkEvent):void 
 		{
 			trace("ModalManager.onBranchDetached(e) >> ", e.data.label);		}		
 		
-		private function onCommitModified(e:RepositoryEvent):void 
+		private function onCommitModified(e:BookmarkEvent):void 
 		{
 			addChild(_modified);	
 		}							

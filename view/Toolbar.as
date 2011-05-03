@@ -1,6 +1,6 @@
 package view {
 
-	import events.RepositoryEvent;
+	import events.BookmarkEvent;
 	import events.UIEvent;
 	import model.AppModel;
 	import model.proxies.StatusProxy;
@@ -21,10 +21,10 @@ package view {
 			for (var i:int = 0; i < _view.numChildren; i++) Sprite(_view.getChildAt(i)).buttonMode = true;
 			disable([_view.branch_btn, _view.pull_btn, _view.push_btn, _view.ignore_btn]);
 			
-			AppModel.proxies.status.addEventListener(RepositoryEvent.BRANCH_STATUS, onStatusReceived);
+			AppModel.proxies.status.addEventListener(BookmarkEvent.BRANCH_STATUS, onStatusReceived);
 		}
 
-		private function onStatusReceived(e:RepositoryEvent):void 
+		private function onStatusReceived(e:BookmarkEvent):void 
 		{
 			var a:Array = e.data as Array;
 			if (!AppModel.bookmark.initialized && a[StatusProxy.T].length > 0){

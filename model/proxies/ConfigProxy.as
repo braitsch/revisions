@@ -2,7 +2,7 @@ package model.proxies {
 
 	import events.InstallEvent;
 	import events.NativeProcessEvent;
-	import events.RepositoryEvent;
+	import events.BookmarkEvent;
 	import flash.events.EventDispatcher;
 	import model.SystemRules;
 	import model.air.NativeProcessQueue;
@@ -57,7 +57,7 @@ package model.proxies {
 		
 		private function onShellQueueComplete(e:NativeProcessEvent):void 
 		{
-			dispatchEvent(new RepositoryEvent(RepositoryEvent.SET_USERNAME));
+			dispatchEvent(new BookmarkEvent(BookmarkEvent.SET_USERNAME));
 			dispatchEvent(new InstallEvent(InstallEvent.SET_GIT_VERSION, _gitVersion));			
 		}
 

@@ -1,6 +1,6 @@
 package view.bookmarks {
 
-	import events.RepositoryEvent;
+	import events.BookmarkEvent;
 	import model.AppModel;
 	import model.Bookmark;
 	import view.layout.ListItem;
@@ -20,8 +20,8 @@ package view.bookmarks {
 			super.active = $bkmk.active;
 			
 			_bookmark = $bkmk;
-			_bookmark.addEventListener(RepositoryEvent.BRANCH_ADDED, onNewBranchAdded);			
-			_bookmark.addEventListener(RepositoryEvent.BOOKMARK_EDITED, onBookmarkEdited);
+			_bookmark.addEventListener(BookmarkEvent.BRANCH_ADDED, onNewBranchAdded);			
+			_bookmark.addEventListener(BookmarkEvent.EDITED, onBookmarkEdited);
 			
 			_view.label_txt.autoSize = 'left';
 			_view.label_txt.selectable = false;
@@ -36,7 +36,7 @@ package view.bookmarks {
 			if (_bookmark.branches.length > 1) attachBranches();
 		}
 
-		private function onNewBranchAdded(e:RepositoryEvent):void
+		private function onNewBranchAdded(e:BookmarkEvent):void
 		{
 			var k:BranchListItem = new BranchListItem(_bookmark.branch);
 				k.x = 190;
@@ -44,7 +44,7 @@ package view.bookmarks {
 			_branches.addChild(k);			
 		}
 		
-		private function onBookmarkEdited(e:RepositoryEvent):void 		{
+		private function onBookmarkEdited(e:BookmarkEvent):void 		{
 			_view.label_txt.text = _bookmark.label;
 			super.file = _bookmark.file;
 		}
@@ -70,7 +70,7 @@ package view.bookmarks {
 			if (AppModel.branch == e.target.branch) return;
 			if (_bookmark.initialized && _bookmark.branch != e.target.branch){
 				AppModel.proxies.checkout.bookmark = _bookmark;				AppModel.proxies.checkout.checkout(e.target.branch);			}	else{
-				AppModel.engine.dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_SET, _bookmark));
+				AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.SELECTED, _bookmark));
 			}
 		}
 		
@@ -78,7 +78,7 @@ package view.bookmarks {
 		{		// prevent re-selecting the current bookmark //				
 			if (AppModel.bookmark == _bookmark && AppModel.branch.name == 'master') return;
 			if (_bookmark.initialized && _bookmark.branch.name != 'master'){				AppModel.proxies.checkout.bookmark = _bookmark;				AppModel.proxies.checkout.checkout(_bookmark.getBranchByName('master'));
-			}	else{				AppModel.engine.dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_SET, _bookmark));
+			}	else{				AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.SELECTED, _bookmark));
 			}
 		}
 

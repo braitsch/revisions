@@ -39,11 +39,11 @@ package model.db {
 			_db.execute(_open, true);
 		}
 
-		public function addRepository($label:String, $local:String):void
+		public function addRepository($label:String, $target:String):void
 		{
-			trace("AppDatabase.addRepository > ", $label, $local);
+			trace("AppDatabase.addRepository > ", $label, $target);
 			_add = new Vector.<SQLStatement>();
-			_add.push(AppSQLQuery.CLEAR_ACTIVE);				_add.push(AppSQLQuery.INSERT($label, $local));	
+			_add.push(AppSQLQuery.CLEAR_ACTIVE);				_add.push(AppSQLQuery.INSERT($label, $target));	
 			_add.push(AppSQLQuery.READ_REPOSITORIES);
 			_db.execute(_add, true);	
 		}
@@ -57,10 +57,10 @@ package model.db {
 			_db.execute(_delete, true);
 		}	
 
-		public function editRepository($oldId:String, $newId:String, $local:String):void 
+		public function editRepository($oldId:String, $newId:String, $target:String):void 
 		{
 			_edit = new Vector.<SQLStatement>();	
-			_edit.push(AppSQLQuery.EDIT($oldId, $newId, $local));						
+			_edit.push(AppSQLQuery.EDIT($oldId, $newId, $target));						
 			_edit.push(AppSQLQuery.READ_REPOSITORIES);
 			_db.execute(_edit, true);			
 		}		
@@ -76,14 +76,14 @@ package model.db {
 		private function getNextActiveRepository($old:String):String 
 		{
 			if (_repositories.length == 1) return '';
-			for (var i:int = 0; i < _repositories.length; i++) if (_repositories[i].name == $old) break;
+			for (var i:int = 0; i < _repositories.length; i++) if (_repositories[i].label == $old) break;
 			if (i == _repositories.length - 1) {
 				i --;
 			}	else if (i == 0){
 				i = 1;
 			}	else{
 				i ++;			}
-			return _repositories[i].name;
+			return _repositories[i].label;
 		}		
 
 		private function onTransactionComplete(e:DataBaseEvent):void 
@@ -93,14 +93,14 @@ package model.db {
 					trace("AppDatabase.onTransactionComplete(e) : initDataBase", e.data.result);
 					_repositories = e.data.result[1].data || [];					dispatchEvent(new DataBaseEvent(DataBaseEvent.BOOKMARKS_READ, _repositories));
 				break;				case _add:	
-					trace("AppDatabase.onTransactionComplete(e) : addRepository");					_repositories = e.data.result[2].data || [];					dispatchEvent(new DataBaseEvent(DataBaseEvent.BOOKMARK_ADDED, _repositories));
+					trace("AppDatabase.onTransactionComplete(e) : addRepository");					_repositories = e.data.result[2].data || [];					dispatchEvent(new DataBaseEvent(DataBaseEvent.RECORD_ADDED, _repositories));
 				break;				case _edit:						trace("AppDatabase.onTransactionComplete(e) : editRepository");
 					_repositories = e.data.result[1].data || [];
-					dispatchEvent(new DataBaseEvent(DataBaseEvent.BOOKMARK_EDITED, _repositories));
+					dispatchEvent(new DataBaseEvent(DataBaseEvent.RECORD_EDITED, _repositories));
 				break;				
 				case _delete:	
 					_repositories = e.data.result[2].data || [];
-					dispatchEvent(new DataBaseEvent(DataBaseEvent.BOOKMARK_DELETED, _repositories));
+					dispatchEvent(new DataBaseEvent(DataBaseEvent.RECORD_DELETED, _repositories));
 					trace("AppDatabase.onTransactionComplete(e) : deleteRepository");
 				break;	
 				case _setActive:	

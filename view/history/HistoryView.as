@@ -1,6 +1,6 @@
 package view.history {
 
-	import events.RepositoryEvent;
+	import events.BookmarkEvent;
 	import model.AppModel;
 	import model.Bookmark;
 	import view.modals.ModalWindow;
@@ -22,29 +22,31 @@ package view.history {
 			_container.y = 40;
 			_view.addChild(_container);
 
-			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkSet);
-			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARK_LIST, onBookmarkList);
-			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARK_ADDED, onBookmarkAdded);			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARK_DELETED, onBookmarkDeleted);
-			AppModel.proxies.status.addEventListener(RepositoryEvent.BRANCH_STATUS, onBranchStatus);
+			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onBookmarkSet);
+			AppModel.engine.addEventListener(BookmarkEvent.BOOKMARKS_LOADED, onBookmarkList);
+			AppModel.engine.addEventListener(BookmarkEvent.ADDED, onBookmarkAdded);			AppModel.engine.addEventListener(BookmarkEvent.DELETED, onBookmarkDeleted);
+			AppModel.proxies.status.addEventListener(BookmarkEvent.BRANCH_STATUS, onBranchStatus);
 		}
+
 
 	// list editing //
 
-		private function onBookmarkList(e:RepositoryEvent):void 
+		private function onBookmarkList(e:BookmarkEvent):void 
 		{
 		// create a collection object for each bookmark we receive //	
 			var a:Vector.<Bookmark> = e.data as Vector.<Bookmark>;
 			for (var i:int = 0;i < a.length; i++) _collections.push(new HistoryCollection(a[i]));
 		}
 		
-		private function onBookmarkAdded(e:RepositoryEvent):void 
+		private function onBookmarkAdded(e:BookmarkEvent):void 
 		{
 			var k:HistoryCollection = new HistoryCollection(e.data as Bookmark);
 			_collections.push(k);
 		}	
 			
-		private function onBookmarkDeleted(e:RepositoryEvent):void 
+		private function onBookmarkDeleted(e:BookmarkEvent):void 
 		{
+			while(_container.numChildren) _container.removeChildAt(0);
 			for (var i:int = 0;i < _collections.length; i++) {
 				if (_collections[i].bookmark == e.data) break;
 			}
@@ -54,7 +56,7 @@ package view.history {
 		
 	// status / selection events //	
 		
-		private function onBranchStatus(e:RepositoryEvent):void 
+		private function onBranchStatus(e:BookmarkEvent):void 
 		{
 		// never refresh the list if the head is detached //	
 			if (AppModel.branch.name == Bookmark.DETACH) return;
@@ -65,15 +67,11 @@ package view.history {
 			}
 		}		
 
-		private function onBookmarkSet(e:RepositoryEvent):void 
+		private function onBookmarkSet(e:BookmarkEvent):void 
 		{
 		// don't change tabs if we've checked out a previous commit (head detached) //	
 			if (AppModel.branch.name == Bookmark.DETACH) return;
 			
-			while(_container.numChildren) _container.removeChildAt(0);
-		// if all bookmarks have been deleted don't attempt to attach a collection //	
-			if (e.data == null) return;
-				
 		// display collection associated with the new bookmark //	
 			for (var i:int = 0; i < _collections.length; i++) {
 				if (_collections[i].bookmark == e.data) break;

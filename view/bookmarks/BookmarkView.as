@@ -1,6 +1,6 @@
 package view.bookmarks {
 	import model.Bookmark;
-	import events.RepositoryEvent;
+	import events.BookmarkEvent;
 
 	import model.AppModel;
 
@@ -26,31 +26,30 @@ package view.bookmarks {
 			_list.setSize(200, 450);
 			_list.contextMenu = AirContextMenu.menu;
 			
-			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkSet);			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARK_LIST, onBookmarkList);
-			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARK_ADDED, onBookmarkAdded);
-			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARK_DELETED, onBookmarkDeleted);			
+			AppModel.engine.addEventListener(BookmarkEvent.ADDED, onBookmarkAdded);			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onBookmarkSet);
+			AppModel.engine.addEventListener(BookmarkEvent.DELETED, onBookmarkDeleted);
+			AppModel.engine.addEventListener(BookmarkEvent.BOOKMARKS_LOADED, onBookmarkList);
 		}
 
-		private function onBookmarkSet(e:RepositoryEvent):void 
+		private function onBookmarkSet(e:BookmarkEvent):void 
 		{
-			if (e.data != null) _list.setActiveBookmark(e.data as Bookmark);
+			_list.setActiveBookmark(e.data as Bookmark);
 		}
 
-		private function onBookmarkList(e:RepositoryEvent):void 
+		private function onBookmarkList(e:BookmarkEvent):void 
 		{
 			var v:Vector.<Bookmark> = e.data as Vector.<Bookmark>;
 			var a:Vector.<ListItem> = new Vector.<ListItem>();
-			
 			for (var i:int = 0; i < v.length; i++) a.push(new BookmarkListItem(v[i]));
 			_list.build(a);
 		}
 
-		private function onBookmarkAdded(e:RepositoryEvent):void 
+		private function onBookmarkAdded(e:BookmarkEvent):void 
 		{
 			_list.addItem(new BookmarkListItem(e.data as Bookmark));
 		}
 		
-		private function onBookmarkDeleted(e:RepositoryEvent):void 
+		private function onBookmarkDeleted(e:BookmarkEvent):void 
 		{
 			_list.removeItem(new BookmarkListItem(e.data as Bookmark));
 		}

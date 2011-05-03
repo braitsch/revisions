@@ -1,7 +1,7 @@
 package model {
 	import events.DataBaseEvent;
 	import events.InstallEvent;
-	import events.RepositoryEvent;
+	import events.BookmarkEvent;
 
 	import model.db.AppDatabase;
 	import model.proxies.AppProxies;
@@ -23,16 +23,15 @@ package model {
 
 		public function AppModel() 
 		{
-			_engine.addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkSet);
+			_engine.addEventListener(BookmarkEvent.SELECTED, onBookmarkSet);
 			_database.addEventListener(DataBaseEvent.BOOKMARKS_READ, onBookmarksRead);
 			_database.addEventListener(DataBaseEvent.DATABASE_READY, onDatabaseReady);
 			_proxies.config.addEventListener(InstallEvent.SET_GIT_VERSION, onGitAvailable);
 		}
 
-		static public function onBookmarkSet(e:RepositoryEvent):void
+		static public function onBookmarkSet(e:BookmarkEvent):void
 		{
 			_bookmark = e.data as Bookmark;
-			if (_bookmark == null) return; 
 			_proxies.bookmark = _database.bookmark = _bookmark;
 			AppModel.proxies.status.getStatusOfBranch(_bookmark.branch);
 		}

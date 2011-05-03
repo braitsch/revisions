@@ -2,7 +2,7 @@ package view.modals {
 	import events.UIEvent;
 
 	import events.DataBaseEvent;
-	import events.RepositoryEvent;
+	import events.BookmarkEvent;
 
 	import model.AppModel;
 
@@ -32,7 +32,7 @@ package view.modals {
 		{
 			_bookmark = b;
 			_view.name_txt.text = _bookmark.label;
-			_view.local_txt.text = _bookmark.local;
+			_view.local_txt.text = _bookmark.target;
 		}		
 
 		private function onUpdateRepository(e:MouseEvent):void 
@@ -41,7 +41,7 @@ package view.modals {
 				_view.name_txt.text = 'Please Enter A Name';		
 			}	else{
 				AppModel.database.editRepository(_bookmark.label, _view.name_txt.text, _view.local_txt.text);
-				AppModel.database.addEventListener(RepositoryEvent.BOOKMARK_EDITED, onEditSuccessful);				dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW, this));
+				AppModel.database.addEventListener(BookmarkEvent.EDITED, onEditSuccessful);				dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW, this));
 			}
 		}
 
@@ -49,7 +49,7 @@ package view.modals {
 		{
 		// this dispatches an event from the bookmark that updates the views //	
 			_bookmark.label = _view.name_txt.text;
-			AppModel.database.removeEventListener(RepositoryEvent.BOOKMARK_EDITED, onEditSuccessful);
+			AppModel.database.removeEventListener(BookmarkEvent.EDITED, onEditSuccessful);
 		}
 		
 	}

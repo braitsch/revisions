@@ -1,10 +1,8 @@
 package {
+
 	import model.AppModel;
-
 	import view.ui.AirContextMenu;
-
 	import flash.display.Sprite;
-	import flash.display.Stage;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 
@@ -16,7 +14,7 @@ package {
 		private static var _view		:AppView = new AppView();
 		
 		public function AppMain()
-		{			
+		{	
 			addChild(_view);
 			stage.align = StageAlign.TOP_LEFT;
 			stage.scaleMode = StageScaleMode.NO_SCALE;

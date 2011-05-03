@@ -1,6 +1,6 @@
 package view.history {
 
-	import events.RepositoryEvent;
+	import events.BookmarkEvent;
 	import events.UIEvent;
 	import model.AppModel;
 	import model.Branch;
@@ -41,7 +41,7 @@ package view.history {
 			
 			_list.addEventListener(MouseEvent.CLICK, onRecordSelection);
 			_view.tab.addEventListener(MouseEvent.CLICK, onListTabSelection);
-			_branch.addEventListener(RepositoryEvent.BRANCH_HISTORY, drawList);
+			_branch.addEventListener(BookmarkEvent.BRANCH_HISTORY, drawList);
 		}
 		
 	// public //	
@@ -65,7 +65,7 @@ package view.history {
 
 	// private //
 		
-		private function drawList(e:RepositoryEvent = null):void
+		private function drawList(e:BookmarkEvent = null):void
 		{
 			var v:Vector.<ListItem> = new Vector.<ListItem>();
 			

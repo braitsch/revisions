@@ -1,7 +1,7 @@
 package model.proxies {
 
 	import events.NativeProcessEvent;
-	import events.RepositoryEvent;
+	import events.BookmarkEvent;
 	import model.AppModel;
 	import model.Bookmark;
 	import model.Branch;
@@ -23,7 +23,7 @@ package model.proxies {
 		
 		public function set bookmark(b:Bookmark):void 
 		{
-			_bookmark = b;			super.directory = b.local;
+			_bookmark = b;			super.directory = _bookmark.gitdir;
 		}
 		
 	// this should only be called if we are changing branches on a bookmark //	
@@ -49,7 +49,7 @@ package model.proxies {
 				allowCheckout();
 			} else {
 				if (_bookmark.branch.name == Bookmark.DETACH){
-					dispatchEvent(new RepositoryEvent(RepositoryEvent.COMMIT_MODIFIED));					
+					dispatchEvent(new BookmarkEvent(BookmarkEvent.COMMIT_MODIFIED));					
 				}	else{
 					stashUnsavedChanges();
 				}
@@ -91,7 +91,7 @@ package model.proxies {
 					allowCheckout();
 				break;		
 				case BashMethods.ADD_BRANCH:
-					_bookmark.dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_ADDED));
+					_bookmark.dispatchEvent(new BookmarkEvent(BookmarkEvent.BRANCH_ADDED));
 				break;									}
 		}
 		
@@ -100,7 +100,7 @@ package model.proxies {
 			trace("CheckoutProxy.setBranch >> setting bookmark & branch to ::", _bookmark.label, b.name);
 			_bookmark.branch = b;
 		// -- once dispatched this updates everything in the application -- //				
-			AppModel.engine.dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_SET, _bookmark));
+			AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.SELECTED, _bookmark));
 		}
 		
 		private function checkIfBranchIsSavedInStash():void

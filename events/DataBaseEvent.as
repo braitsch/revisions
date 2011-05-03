@@ -7,9 +7,9 @@ package events {
 		public static const TRANSACTION_COMPLETE	:String = "TRANSACTION_COMPLETE";
 		
 		public static const BOOKMARKS_READ			:String = "BOOKMARKS_READ";
-		public static const BOOKMARK_ADDED			:String = "BOOKMARK_ADDED";
-		public static const BOOKMARK_EDITED			:String = "BOOKMARK_EDITED";
-		public static const BOOKMARK_DELETED		:String = "BOOKMARK_DELETED";
+		public static const RECORD_ADDED			:String = "RECORD_ADDED";
+		public static const RECORD_EDITED			:String = "RECORD_EDITED";
+		public static const RECORD_DELETED			:String = "RECORD_DELETED";
 		
 		public var data:Object;
 		

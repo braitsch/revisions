@@ -24,7 +24,7 @@ package model.proxies {
 		public function set bookmark(b:Bookmark):void 
 		{
 			_bookmark = b;
-			super.directory = _bookmark.local;
+			super.directory = _bookmark.gitdir;
 		}
 		
 		public function getHistoryOfBranch(b:Branch):void

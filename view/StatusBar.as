@@ -1,5 +1,5 @@
 package view {
-	import events.RepositoryEvent;
+	import events.BookmarkEvent;
 
 	import model.AppModel;
 	import model.proxies.StatusProxy;
@@ -16,11 +16,11 @@ package view {
 			this.x = 740;			
 			addChild(_view);
 			
-			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkSet);
-			AppModel.proxies.status.addEventListener(RepositoryEvent.BRANCH_STATUS, onStatusReceived);
+			AppModel.engine.addEventListener(BookmarkEvent.NO_BOOKMARKS, zeroAllFields);
+			AppModel.proxies.status.addEventListener(BookmarkEvent.BRANCH_STATUS, onStatusReceived);
 		}
 
-		private function onStatusReceived(e:RepositoryEvent):void 
+		private function onStatusReceived(e:BookmarkEvent):void 
 		{
 		// we receive the full status of the active branch //	
 			var a:Array = e.data as Array;
@@ -29,14 +29,12 @@ package view {
 			_view.ignored_txt.text = String(a[StatusProxy.I].length);
 		}
 		
-		private function onBookmarkSet(e:RepositoryEvent):void 
+		private function zeroAllFields(e:BookmarkEvent):void 
 		{
-			if (e.data == null){
-				_view.tracked_txt.text = '0';
-				_view.untracked_txt.text = '0';
-				_view.modified_txt.text = '0';
-				_view.ignored_txt.text = '0';
-			}
+			_view.tracked_txt.text = '0';
+			_view.untracked_txt.text = '0';
+			_view.modified_txt.text = '0';
+			_view.ignored_txt.text = '0';
 		}		
 		
 	}

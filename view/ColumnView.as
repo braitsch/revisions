@@ -1,6 +1,6 @@
 package view {
 
-	import events.RepositoryEvent;
+	import events.BookmarkEvent;
 	import events.UIEvent;
 	import model.AppModel;
 	import view.bookmarks.BookmarkView;
@@ -27,32 +27,28 @@ package view {
 			addChild(_files);
 					
 			addEventListener(UIEvent.DIRECTORY_SELECTED, onDirectorySelection);
-			AppModel.engine.addEventListener(RepositoryEvent.BOOKMARK_SET, onBookmarkSet);		}
+			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, setDirectoryAndFiles);
+			AppModel.engine.addEventListener(BookmarkEvent.NO_BOOKMARKS, clearDirectoriesAndFiles);		}
 
 		public function get columns():Vector.<LiquidColumn>
 		{
 			return Vector.<LiquidColumn>([_bkmks, _dirs, _files]);		
 		}
 		
-		private function onBookmarkSet(e:RepositoryEvent):void 
-		{
-			if (e.data == null){
-				clearDirectoryAndFiles();
-			}	else{
-				setDirectoryAndFiles(e.data.file);
-			}
-		}
-		
-		private function clearDirectoryAndFiles():void
+		private function clearDirectoriesAndFiles(e:BookmarkEvent):void
 		{
 			_dirs.directory = null;
 			_files.directory = null;			
 		}		
 		
-		private function setDirectoryAndFiles(f:File):void
+		private function setDirectoryAndFiles(e:BookmarkEvent):void
 		{
-			_dirs.directory = f;
-			_files.directory = f;						
+			var f:File = e.data.file as File;
+			if (f.isDirectory){
+				_dirs.directory = _files.directory = f;						
+			}	else{
+				trace('just tracking a solo file, homey');
+			}
 		}
 		
 		private function onDirectorySelection(e:UIEvent):void 

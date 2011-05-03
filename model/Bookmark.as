@@ -1,43 +1,51 @@
 package model {
-	import events.RepositoryEvent;
 
+	import events.BookmarkEvent;
 	import utils.StringUtils;
-
 	import flash.events.EventDispatcher;
 	import flash.filesystem.File;
 
 	public class Bookmark extends EventDispatcher {
 
 	// branch constants //
-		public static const DETACH	:String = 'detach';
+		public static const DETACH		:String = 'detach';
 
-		private var _label			:String;
-		private var _local			:String;
-		private var _active			:Boolean;
-		private var _remote			:String;
+		private var _target				:String;
+		private var _label				:String;	
+		private var _gitdir				:String;			
+		private var _worktree			:String;
+		private var _active				:Boolean;
+		private var _remote				:String;
 		
-		private var _branch			:Branch;
-		private var _detach			:Branch = new Branch(DETACH);
-		private var _branches		:Array = [];
-		private var _stash			:Array = [];
-		private var _file			:File;
-		private var _initialized	:Boolean = false;
-		private var _disableAutoInit:Boolean = false;
+		private var _branch				:Branch;
+		private var _detach				:Branch = new Branch(DETACH);
+		private var _branches			:Array = [];
+		private var _stash				:Array = [];
+		private var _file				:File;
+		private var _initialized		:Boolean = false;
+		private var _disableAutoInit	:Boolean = false;
 
-		public function Bookmark($label:String, $local:String, $active:Boolean = true, $remote:String = '')
+		public function Bookmark(o:Object)
 		{
-			_label = $label;
-			_local = escapeSpaces($local);
-			_active = $active;
-			_remote = $remote;
-			_file = new File('file://' + $local);		
+			_label = o.label;
+			_target	= o.target;
+			_active = o.active;
+			_remote = o.remote;
+			_file = new File('file://'+_target);
+			if (_file.isDirectory){
+				_worktree = _gitdir = _target;
+			}	else{
+				_worktree = _target.substr(0, _target.lastIndexOf('/'));
+				_gitdir = File.applicationStorageDirectory.nativePath+'/'+_label.toLowerCase();
+			}
+			trace('New Bookmark Created :: '+_label, 'gitDir = '+_gitdir); 
 		}
 
-		private function escapeSpaces(s:String):String
-		{
-		//TODO this is right now MAC specific -- need to define global func that is os specific	
-			return s.replace(/\s/g, '\ ');
-		}
+//		private function escapeSpaces(s:String):String
+//		{
+//		//TODO this is right now MAC specific -- need to define global func that is os specific	
+//			return s.replace(/\s/g, '\ ');
+//		}
 
 		public function get label():String
 		{
@@ -47,13 +55,8 @@ package model {
 		public function set label(s:String):void
 		{
 			_label = s;
-			dispatchEvent(new RepositoryEvent(RepositoryEvent.BOOKMARK_EDITED));		}
+			dispatchEvent(new BookmarkEvent(BookmarkEvent.EDITED));		}
 
-		public function get local():String
-		{
-			return _local;
-		}
-		
 		public function get remote():String
 		{
 			return _remote;
@@ -64,9 +67,24 @@ package model {
 			_remote = s;
 		}	
 		
+		public function get target():String
+		{
+			return _target;
+		}	
+		
 		public function get file():File
 		{
 			return _file;
+		}
+		
+		public function get gitdir():String
+		{
+			return _gitdir;		
+		}
+		
+		public function get worktree():String
+		{
+			return _worktree;		
 		}		
 		
 		public function get active():Boolean

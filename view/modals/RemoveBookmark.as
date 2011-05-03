@@ -34,7 +34,7 @@ package view.modals {
 		{
 			_bookmark = $b;
 			_view.name_txt.text = $b.label;
-			_view.local_txt.text = $b.local;			
+			_view.local_txt.text = $b.target;			
 		}
 		
 		private function onDelete(e:MouseEvent):void 

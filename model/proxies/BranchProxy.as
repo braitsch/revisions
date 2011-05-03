@@ -1,11 +1,10 @@
 package model.proxies {
 
 	import events.NativeProcessEvent;
-	import events.RepositoryEvent;
+	import events.BookmarkEvent;
 	import model.Bookmark;
 	import model.air.NativeProcessProxy;
 	import model.bash.BashMethods;
-	import flash.filesystem.File;
 
 	public class BranchProxy extends NativeProcessProxy{
 
@@ -21,36 +20,32 @@ package model.proxies {
 		public function getBranchesOfBookmark(b:Bookmark):void
 		{
 			_bookmark = b;
-			if (_bookmark.file.isDirectory){
-				super.directory = b.local;
-			}	else{
-				super.directory = File.applicationStorageDirectory.nativePath;
-			}
-			super.call(Vector.<String>([BashMethods.GET_BRANCHES]));		}
+			super.directory = b.worktree;
+			super.call(Vector.<String>([BashMethods.GET_BRANCHES, _bookmark.gitdir]));		}
 		
 		public function getStashList():void
 		{
-			super.call(Vector.<String>([BashMethods.GET_STASH_LIST]));	
+			super.call(Vector.<String>([BashMethods.GET_STASH_LIST, _bookmark.gitdir]));	
 		}
 		
 	// response handlers //
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
-	//		trace("BranchProxy.onProcessComplete(e)", 'method = '+e.data.method, 'result = '+e.data.result);			
+			trace("BranchProxy.onProcessComplete(e)", 'method = '+e.data.method, 'result = '+e.data.result);			
 			var m:String = String(e.data.method);
 			switch(m){
 				case BashMethods.GET_BRANCHES :
 					var ok:Boolean = _bookmark.attachBranches(e.data.result.split(/[\n\r\t]/g));
 					if (ok == true){
-						dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCHES_READ));
+						dispatchEvent(new BookmarkEvent(BookmarkEvent.BRANCHES_READ));
 					}	else{
-						dispatchEvent(new RepositoryEvent(RepositoryEvent.BRANCH_DETACHED, _bookmark));
+						dispatchEvent(new BookmarkEvent(BookmarkEvent.BRANCH_DETACHED, _bookmark));
 					}
 				break;
 				case BashMethods.GET_STASH_LIST :
 						_bookmark.stash = e.data.result.split(/[\n\r\t]/g);
-						dispatchEvent(new RepositoryEvent(RepositoryEvent.STASH_LIST_READ));
+						dispatchEvent(new BookmarkEvent(BookmarkEvent.STASH_LIST_READ));
 				break;
 			}
 		}
