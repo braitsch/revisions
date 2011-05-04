@@ -6,25 +6,33 @@ package model.proxies {
 	import model.SystemRules;
 	import model.air.NativeProcessQueue;
 	import model.bash.BashMethods;
+	import flash.events.TimerEvent;
+	import flash.utils.Timer;
 
 	public class StatusProxy extends NativeProcessQueue {
 
 		public static const	T		:uint = 0; // tracked
 		public static const	U		:uint = 1; // untracked		public static const	M		:uint = 2; // modified		public static const	I		:uint = 3; // ignored
+		
+	// automatically call getStatus every five seconds // 	
+		private static var _timer	:Timer = new Timer(5000);		
 				public function StatusProxy()
 		{
 			super('Status.sh');
 			super.addEventListener(NativeProcessEvent.QUEUE_COMPLETE, onQueueComplete);
 			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);
+			_timer.addEventListener(TimerEvent.TIMER, getStatus);
 		}
 		
 	// public methods //	
 		
-		public function getStatus():void
+		public function getStatus(e:TimerEvent = null):void
 		{
+			_timer.reset();
+			_timer.start();					
 			super.directory = AppModel.bookmark.gitdir;
 			super.queue = getStatusTransaction();
-			trace("StatusProxy.getStatusOfBranch($b) >> requesting status of > ", AppModel.bookmark.label, AppModel.branch.name);		}
+			trace("StatusProxy.getStatus() >> ", AppModel.bookmark.label, AppModel.branch.name);		}
 		
 	// private handlers //
 		

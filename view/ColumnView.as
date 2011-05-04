@@ -45,7 +45,8 @@ package view {
 		{
 			var f:File = e.data.file as File;
 			if (f.isDirectory) {
-				_dirs.directory = _files.directory = f;						
+				_dirs.directory = f;
+				_files.directory = f;						
 			}	else{
 				clearDirectoriesAndFiles(e);
 			}
@@ -54,6 +55,9 @@ package view {
 		private function onDirectorySelection(e:UIEvent):void 
 		{
 			_files.directory = ListItem(e.data).file;
+		// force a status refresh whenever a directory is selected //
+		// this updates the icons next to the files inside the selected directory //	
+			AppModel.proxies.status.getStatus();
 		}		
 		
 	}

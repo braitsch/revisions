@@ -26,14 +26,9 @@ package view.bookmarks {
 			_list.setSize(200, 450);
 			_list.contextMenu = AirContextMenu.menu;
 			
-			AppModel.engine.addEventListener(BookmarkEvent.ADDED, onBookmarkAdded);			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onBookmarkSet);
+			AppModel.engine.addEventListener(BookmarkEvent.LOADED, onBookmarkList);			AppModel.engine.addEventListener(BookmarkEvent.ADDED, onBookmarkAdded);
 			AppModel.engine.addEventListener(BookmarkEvent.DELETED, onBookmarkDeleted);
-			AppModel.engine.addEventListener(BookmarkEvent.LOADED, onBookmarkList);
-		}
-
-		private function onBookmarkSet(e:BookmarkEvent):void 
-		{
-			_list.setActiveBookmark(e.data as Bookmark);
+			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onBookmarkSelected);
 		}
 
 		private function onBookmarkList(e:BookmarkEvent):void 
@@ -53,6 +48,11 @@ package view.bookmarks {
 		{
 			_list.removeItem(new BookmarkListItem(e.data as Bookmark));
 		}
+		
+		private function onBookmarkSelected(e:BookmarkEvent):void 
+		{
+			_list.setActiveBookmark(e.data as Bookmark);
+		}		
 		
 	}
 	

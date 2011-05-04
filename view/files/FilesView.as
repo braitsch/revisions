@@ -34,16 +34,15 @@ package view.files {
 		public function set directory(f:File):void
 		{
 			_list.clear();
-			if (f == null) return;
-			
 			_files = new Vector.<ListItem>();
+			if (f == null) return;
 			var a:Array = f.getDirectoryListing();
 			for (var i : int = 0; i < a.length; i++) if (validate(a[i])) _files.push(new FileListItem(a[i]));
 		}
 
 		private function onStatusReceived(e:BookmarkEvent):void 
 		{
-		// we receive the full status of the active branch //	
+		// we receive the full status of the active branch //
 			var a:Array = e.data as Array;
 			file: for (var i:int = 0; i < _files.length; i++) {
 				var p:String = _files[i].file.name;
