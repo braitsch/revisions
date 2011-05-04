@@ -22,7 +22,6 @@ package model {
 		private var _branches			:Array = [];
 		private var _stash				:Array = [];
 		private var _file				:File;
-		private var _initialized		:Boolean = false;
 		private var _disableAutoInit	:Boolean = false;
 
 		public function Bookmark(o:Object)
@@ -97,16 +96,6 @@ package model {
 			_active = b;
 		}		
 		
-		public function get initialized():Boolean
-		{
-			return _initialized;
-		}
-		
-		public function set initialized(n:Boolean):void
-		{
-			_initialized = n;
-		}
-		
 		public function get stash():Array
 		{
 			return _stash;
@@ -130,7 +119,6 @@ package model {
 		
 		public function promptToAutoInit():Boolean
 		{
-			if (initialized) return false;
 			if (_branch.untracked == 0) return false;
 			if (_disableAutoInit) return false;
 			return true;
@@ -175,11 +163,9 @@ package model {
 		{
 	// new repositories don't return a branch name before first commit //		
 			if (a[0] == ''){
-				_initialized = false;
 				_branch = new Branch('master');
 				_branches.push(_branch);
-			}	else{				_initialized = true;
-				for (var i:int = 0; i < a.length; i++) {
+			}	else{				for (var i:int = 0; i < a.length; i++) {
 					var s:String = a[i];
 					if (s.indexOf('*') == 0){
 						s = StringUtils.trim(s.substr(1));

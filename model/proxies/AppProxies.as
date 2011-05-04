@@ -1,5 +1,4 @@
 package model.proxies {
-	import model.Bookmark;
 
 	import flash.events.EventDispatcher;
 
@@ -12,13 +11,12 @@ package model.proxies {
 		private static var _editor		:EditorProxy 	= new EditorProxy();
 		private static var _checkout	:CheckoutProxy 	= new CheckoutProxy();
 
-		public function set bookmark(b:Bookmark):void
-		{
-			_status.bookmark = _history.bookmark = b;
-			_checkout.bookmark = _editor.bookmark = b;			
-		}
-		
 	// public getters //	
+
+		public function get config():ConfigProxy
+		{
+			return _config;
+		}		
 		
 		public function get editor():EditorProxy
 		{
@@ -44,11 +42,6 @@ package model.proxies {
 		{
 			return _checkout;
 		}		
-		
-		public function get config():ConfigProxy
-		{
-			return _config;
-		}
 		
 	}
 	

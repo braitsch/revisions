@@ -1,8 +1,6 @@
 package model.db {
+
 	import events.DataBaseEvent;
-
-	import model.Bookmark;
-
 	import flash.data.SQLStatement;
 	import flash.events.EventDispatcher;
 
@@ -18,11 +16,6 @@ package model.db {
 			_db = new SQLLiteDataBase('GitMe.db');
 			_db.addEventListener(DataBaseEvent.DATABASE_READY, onDataBaseReady);			_db.addEventListener(DataBaseEvent.TRANSACTION_COMPLETE, onTransactionComplete);
 		}
-
-		public function set bookmark(b:Bookmark):void 
-		{
-			setActiveBookmark(b.label);
-		}		
 
 		private function onDataBaseReady(e:DataBaseEvent):void 
 		{
@@ -65,7 +58,7 @@ package model.db {
 			_db.execute(_edit, true);			
 		}		
 		
-		private function setActiveBookmark(label:String):void
+		public function setActiveBookmark(label:String):void
 		{
 			_setActive = new Vector.<SQLStatement>();
 			_setActive.push(AppSQLQuery.CLEAR_ACTIVE);				_setActive.push(AppSQLQuery.SET_ACTIVE(label));	

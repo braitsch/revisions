@@ -1,7 +1,6 @@
 package model {
-	import model.proxies.StatusProxy;
-	import events.BookmarkEvent;
 
+	import model.proxies.StatusProxy;
 	import flash.events.EventDispatcher;
 
 	public class Branch extends EventDispatcher{
@@ -24,8 +23,7 @@ package model {
 		{
 			_history = [];
 			for (var i:int = 0; i < a.length; i++) _history.push(a[i].split('##'));
-			if (_history[0][1] == '0 seconds ago') _history[0][1] = 'Just Now';	
-			dispatchEvent(new BookmarkEvent(BookmarkEvent.BRANCH_HISTORY));
+			if (_history[0][1] == '0 seconds ago') _history[0][1] = 'Just Now';
 		}
 		
 		public function get history():Array

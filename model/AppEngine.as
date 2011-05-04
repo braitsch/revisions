@@ -38,7 +38,7 @@ package model {
 		private function readBranches(e:BookmarkEvent = null):void 
 		{
 			AppModel.proxies.editor.removeEventListener(BookmarkEvent.INITIALIZED, readBranches);
-			AppModel.proxies.branch.getBranchesOfBookmark(_bookmark);
+			AppModel.proxies.branch.getBranches(_bookmark);
 			AppModel.proxies.branch.addEventListener(BookmarkEvent.BRANCHES_READ, getStashList);
 		}
 
@@ -113,7 +113,7 @@ package model {
 			if (x.length > 0) {
 				dispatchEvent(new BookmarkEvent(BookmarkEvent.PATH_ERROR, x));
 			}	else{
-				AppModel.proxies.branch.getBranchesOfBookmark(_bookmarks[_index]);				AppModel.proxies.branch.addEventListener(BookmarkEvent.BRANCHES_READ, getStashOfNextBookmark);				AppModel.proxies.branch.addEventListener(BookmarkEvent.STASH_LIST_READ, onStoredBookmarkReady);			}		}
+				AppModel.proxies.branch.getBranches(_bookmarks[_index]);				AppModel.proxies.branch.addEventListener(BookmarkEvent.BRANCHES_READ, getStashOfNextBookmark);				AppModel.proxies.branch.addEventListener(BookmarkEvent.STASH_LIST_READ, onStoredBookmarkReady);			}		}
 		
 		private function getStashOfNextBookmark(e:BookmarkEvent):void 
 		{
@@ -123,11 +123,11 @@ package model {
 		private function onStoredBookmarkReady(e:BookmarkEvent):void 
 		{
 			if (++_index < _bookmarks.length){
-				AppModel.proxies.branch.getBranchesOfBookmark(_bookmarks[_index]);	
+				AppModel.proxies.branch.getBranches(_bookmarks[_index]);	
 			}	else{
 				AppModel.proxies.branch.removeEventListener(BookmarkEvent.BRANCHES_READ, getStashOfNextBookmark);
 				AppModel.proxies.branch.removeEventListener(BookmarkEvent.STASH_LIST_READ, onStoredBookmarkReady);
-				dispatchEvent(new BookmarkEvent(BookmarkEvent.BOOKMARKS_LOADED, _bookmarks));
+				dispatchEvent(new BookmarkEvent(BookmarkEvent.LOADED, _bookmarks));
 				dispatchActiveBookmark();
 			}
 		}

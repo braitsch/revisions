@@ -68,7 +68,7 @@ package view.bookmarks {
 		{
 		// prevent re-selecting the current branch //	
 			if (AppModel.branch == e.target.branch) return;
-			if (_bookmark.initialized && _bookmark.branch != e.target.branch){
+			if (_bookmark.branch != e.target.branch){
 				AppModel.proxies.checkout.bookmark = _bookmark;				AppModel.proxies.checkout.checkout(e.target.branch);			}	else{
 				AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.SELECTED, _bookmark));
 			}
@@ -77,7 +77,7 @@ package view.bookmarks {
 		private function onBookmarkSelection(e:MouseEvent):void
 		{		// prevent re-selecting the current bookmark //				
 			if (AppModel.bookmark == _bookmark && AppModel.branch.name == 'master') return;
-			if (_bookmark.initialized && _bookmark.branch.name != 'master'){				AppModel.proxies.checkout.bookmark = _bookmark;				AppModel.proxies.checkout.checkout(_bookmark.getBranchByName('master'));
+			if (_bookmark.branch.name != 'master'){				AppModel.proxies.checkout.bookmark = _bookmark;				AppModel.proxies.checkout.checkout(_bookmark.getBranchByName('master'));
 			}	else{				AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.SELECTED, _bookmark));
 			}
 		}

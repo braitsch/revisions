@@ -1,50 +1,30 @@
 package model.proxies {
 
-	import events.NativeProcessEvent;
 	import events.BookmarkEvent;
+	import events.NativeProcessEvent;
 	import model.AppModel;
-	import model.Bookmark;
-	import model.Branch;
 	import model.SystemRules;
 	import model.air.NativeProcessQueue;
 	import model.bash.BashMethods;
-
-
 
 	public class StatusProxy extends NativeProcessQueue {
 
 		public static const	T		:uint = 0; // tracked
 		public static const	U		:uint = 1; // untracked		public static const	M		:uint = 2; // modified		public static const	I		:uint = 3; // ignored
-				private static var _branch		:Branch;
-		private static var _bookmark	:Bookmark;
-		private static var _getHistory	:Boolean;
-
-		public function StatusProxy()
+				public function StatusProxy()
 		{
 			super('Status.sh');
 			super.addEventListener(NativeProcessEvent.QUEUE_COMPLETE, onQueueComplete);
 			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);
 		}
 		
-		public function set bookmark(b:Bookmark):void 
-		{
-			_bookmark = b;
-			super.directory = _bookmark.gitdir;
-		}		
-
 	// public methods //	
 		
-		public function getStatusOfBranch($b:Branch):void
+		public function getStatus():void
 		{
-			_branch = $b;
-			trace("StatusProxy.getStatusOfBranch($b) >> requesting status of > ", _bookmark.label, _branch.name);
-			super.queue = getStatusTransaction();		}
-		
-		public function getStatusAndHistory():void
-		{
-			_getHistory = true;
-			getStatusOfBranch(AppModel.branch);
-		}		
+			super.directory = AppModel.bookmark.gitdir;
+			super.queue = getStatusTransaction();
+			trace("StatusProxy.getStatusOfBranch($b) >> requesting status of > ", AppModel.bookmark.label, AppModel.branch.name);		}
 		
 	// private handlers //
 		
@@ -52,12 +32,6 @@ package model.proxies {
 		{
 			var a:Array = e.data as Array;
 			if (a.length == 4) parseFullBranchStatus(a);
-
-		// also force refresh the history on commit //	
-			if (_getHistory == true){
-				_getHistory = false;
-				AppModel.proxies.history.getHistoryOfBranch(_branch);
-			}
 		}
 
 		private function parseFullBranchStatus(a:Array):void 
@@ -90,8 +64,8 @@ package model.proxies {
 				if (!m) i++;
 			}						
 		//	for (i = 0; i < 4; i++) trace('result set '+i+' = ', r[i]);
-			_branch.status = a;
-			dispatchEvent(new BookmarkEvent(BookmarkEvent.BRANCH_STATUS, a));
+			AppModel.branch.status = a;
+			AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.STATUS, a));
 		}
 
 		private function splitAndPurge(a:Array):void

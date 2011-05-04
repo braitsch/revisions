@@ -13,27 +13,25 @@ package model.proxies {
 		public function EditorProxy()
 		{
 			super.executable = 'Editor.sh';
-			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);					
-			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);			
-		}
-		
-		public function set bookmark(b:Bookmark):void 
-		{
-			super.directory = b.gitdir;
+			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);
+			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 		}
 
 		public function commit($msg:String, $addAll:Boolean = false):void
 		{
+			super.directory = AppModel.bookmark.gitdir;
 			super.call(Vector.<String>([BashMethods.COMMIT, $msg, $addAll]));
 		}
 		
 		public function trackFile($file:File):void
 		{
+			super.directory = AppModel.bookmark.gitdir;			
 			super.call(Vector.<String>([BashMethods.TRACK_FILE, $file.nativePath]));
 		}
 		
 		public function unTrackFile($file:File):void
 		{
+			super.directory = AppModel.bookmark.gitdir;			
 			super.call(Vector.<String>([BashMethods.UNTRACK_FILE, $file.nativePath]));
 		}
 		
@@ -65,8 +63,10 @@ package model.proxies {
 			trace("EditorProxy.onProcessComplete(e)", e.data.method, e.data.result);
 			switch(e.data.method){
 				case BashMethods.COMMIT : 
-					AppModel.bookmark.initialized = true;
-					AppModel.proxies.status.getStatusAndHistory();				break;				case BashMethods.INIT_FILE: 
+			// auto update the history of the branch we just committed to //	
+					AppModel.proxies.history.getHistory();
+				break;
+				case BashMethods.INIT_FILE: 
 					dispatchEvent(new BookmarkEvent(BookmarkEvent.INITIALIZED));
 				break;					
 				case BashMethods.INIT_FOLDER : 
@@ -78,8 +78,8 @@ package model.proxies {
 				case BashMethods.KILL_FOLDER : 
 					dispatchEvent(new BookmarkEvent(BookmarkEvent.DELETED));
 				break;								
-				case BashMethods.TRACK_FILE : 					AppModel.proxies.status.getStatusOfBranch(AppModel.branch);				break;				case BashMethods.UNTRACK_FILE : 
-					AppModel.proxies.status.getStatusOfBranch(AppModel.branch);
+				case BashMethods.TRACK_FILE : 					AppModel.proxies.status.getStatus();				break;				case BashMethods.UNTRACK_FILE : 
+					AppModel.proxies.status.getStatus();
 				break;
 			}
 		}

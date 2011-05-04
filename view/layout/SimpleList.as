@@ -75,7 +75,8 @@ package view.layout {
 				var i:ListItem = _container.getChildAt(0) as ListItem;
 					i.removeEventListener(MouseEvent.CLICK, onItemSelection);
 				_container.removeChild(i);
-			}			
+			}
+		///	trace("SimpleList.clear()", _container.numChildren);			
 		}							
 		
 		public function build(v:Vector.<ListItem>):void

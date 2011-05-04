@@ -44,17 +44,16 @@ package view {
 		private function setDirectoryAndFiles(e:BookmarkEvent):void
 		{
 			var f:File = e.data.file as File;
-			if (f.isDirectory){
+			if (f.isDirectory) {
 				_dirs.directory = _files.directory = f;						
 			}	else{
-				trace('just tracking a solo file, homey');
+				clearDirectoriesAndFiles(e);
 			}
 		}
 		
 		private function onDirectorySelection(e:UIEvent):void 
 		{
 			_files.directory = ListItem(e.data).file;
-			AppModel.proxies.status.getStatusOfBranch(AppModel.branch);
 		}		
 		
 	}

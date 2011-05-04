@@ -28,7 +28,7 @@ package view.bookmarks {
 			
 			AppModel.engine.addEventListener(BookmarkEvent.ADDED, onBookmarkAdded);			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onBookmarkSet);
 			AppModel.engine.addEventListener(BookmarkEvent.DELETED, onBookmarkDeleted);
-			AppModel.engine.addEventListener(BookmarkEvent.BOOKMARKS_LOADED, onBookmarkList);
+			AppModel.engine.addEventListener(BookmarkEvent.LOADED, onBookmarkList);
 		}
 
 		private function onBookmarkSet(e:BookmarkEvent):void 

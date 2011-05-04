@@ -7,9 +7,6 @@ package view.directories {
 	import view.layout.NestedList;
 	import view.ui.AirContextMenu;
 
-
-
-
 	public class DirectoryView extends LiquidColumn {
 
 		private static var _list		:NestedList = new NestedList();

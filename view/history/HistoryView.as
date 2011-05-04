@@ -22,18 +22,18 @@ package view.history {
 			_container.y = 40;
 			_view.addChild(_container);
 
-			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onBookmarkSet);
-			AppModel.engine.addEventListener(BookmarkEvent.BOOKMARKS_LOADED, onBookmarkList);
-			AppModel.engine.addEventListener(BookmarkEvent.ADDED, onBookmarkAdded);			AppModel.engine.addEventListener(BookmarkEvent.DELETED, onBookmarkDeleted);
-			AppModel.proxies.status.addEventListener(BookmarkEvent.BRANCH_STATUS, onBranchStatus);
+			AppModel.engine.addEventListener(BookmarkEvent.LOADED, onBookmarksReady);
+			AppModel.engine.addEventListener(BookmarkEvent.ADDED, onBookmarkAdded);
+			AppModel.engine.addEventListener(BookmarkEvent.DELETED, onBookmarkDeleted);
+			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onSelection);			AppModel.engine.addEventListener(BookmarkEvent.STATUS, onStatus);
+			AppModel.engine.addEventListener(BookmarkEvent.HISTORY, onHistory);
 		}
-
 
 	// list editing //
 
-		private function onBookmarkList(e:BookmarkEvent):void 
+		private function onBookmarksReady(e:BookmarkEvent):void 
 		{
-		// create a collection object for each bookmark we receive //	
+		// create a collection object for each bookmark in the database //	
 			var a:Vector.<Bookmark> = e.data as Vector.<Bookmark>;
 			for (var i:int = 0;i < a.length; i++) _collections.push(new HistoryCollection(a[i]));
 		}
@@ -56,18 +56,17 @@ package view.history {
 		
 	// status / selection events //	
 		
-		private function onBranchStatus(e:BookmarkEvent):void 
+		private function onStatus(e:BookmarkEvent):void 
 		{
-		// never refresh the list if the head is detached //	
-			if (AppModel.branch.name == Bookmark.DETACH) return;
-			if (AppModel.branch.history){
-				_collection.list.onStatusRefresh();
-			}	else{
-				AppModel.proxies.history.getHistoryOfBranch(AppModel.branch);
-			}
-		}		
+			_collection.list.onStatus();
+		}	
+	
+		private function onHistory(e:BookmarkEvent):void
+		{
+			_collection.list.onHistory();
+		}			
 
-		private function onBookmarkSet(e:BookmarkEvent):void 
+		private function onSelection(e:BookmarkEvent):void 
 		{
 		// don't change tabs if we've checked out a previous commit (head detached) //	
 			if (AppModel.branch.name == Bookmark.DETACH) return;

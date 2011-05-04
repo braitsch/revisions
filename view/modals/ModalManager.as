@@ -32,9 +32,9 @@ package view.modals {
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(UIEvent.CLOSE_MODAL_WINDOW, onCloseModelWindow);	
 			
+			AppModel.engine.addEventListener(BookmarkEvent.STATUS, checkForAutoInit);
 			AppModel.engine.addEventListener(BookmarkEvent.PATH_ERROR, repairBookmark);
 			AppModel.proxies.config.addEventListener(InstallEvent.GIT_UNAVAILABLE, installGit);
-			AppModel.proxies.status.addEventListener(BookmarkEvent.BRANCH_STATUS, checkForAutoInit);
 			AppModel.proxies.branch.addEventListener(BookmarkEvent.BRANCH_DETACHED, onBranchDetached);
 			AppModel.proxies.checkout.addEventListener(BookmarkEvent.COMMIT_MODIFIED, onCommitModified);
 		}

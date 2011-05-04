@@ -3,6 +3,7 @@ package view.history {
 	import events.BookmarkEvent;
 	import events.UIEvent;
 	import model.AppModel;
+	import model.Bookmark;
 	import model.Branch;
 	import model.Commit;
 	import view.layout.ListItem;
@@ -41,7 +42,6 @@ package view.history {
 			
 			_list.addEventListener(MouseEvent.CLICK, onRecordSelection);
 			_view.tab.addEventListener(MouseEvent.CLICK, onListTabSelection);
-			_branch.addEventListener(BookmarkEvent.BRANCH_HISTORY, drawList);
 		}
 		
 	// public //	
@@ -56,17 +56,24 @@ package view.history {
 			return _branch;
 		}
 		
-		public function onStatusRefresh():void
+		public function onStatus():void
 		{
-			trace("HistoryList.onStatusRefresh() _cached =", _cached, '_modified =', _branch.modified);
-		// only rebuild if the modified # has changed //
+		// only rebuild if the # of modified files has changed //
 			if (_branch.modified != _cached) drawList();
 		}
+		
+		public function onHistory():void
+		{
+			 drawList();
+		}		
 
 	// private //
 		
 		private function drawList(e:BookmarkEvent = null):void
 		{
+		// never refresh the list if the head is detached //			
+			if (AppModel.branch.name == Bookmark.DETACH) return;
+			
 			var v:Vector.<ListItem> = new Vector.<ListItem>();
 			
 			if (_branch.modified) v.push(_itemUnsaved);
@@ -84,14 +91,14 @@ package view.history {
 			}
 			_list.clear();
 			_list.build(v);
-			trace("HistoryList.rebuildList > ", '# items = '+a.length);			
+		//	trace("HistoryList.rebuildList > ", '# items = '+a.length);			
 		}
 		
 	// click events //	
 		
 		private function onListTabSelection(e:MouseEvent):void 
 		{
-			if (_branch.history == null) AppModel.proxies.history.getHistoryOfBranch(_branch);
+			if (_branch.history == null) AppModel.proxies.history.getHistory();
 			dispatchEvent(new UIEvent(UIEvent.HISTORY_TAB_SELECTED));
 		}		
 

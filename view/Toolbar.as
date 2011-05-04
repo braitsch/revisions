@@ -21,15 +21,13 @@ package view {
 			for (var i:int = 0; i < _view.numChildren; i++) Sprite(_view.getChildAt(i)).buttonMode = true;
 			disable([_view.branch_btn, _view.pull_btn, _view.push_btn, _view.ignore_btn]);
 			
-			AppModel.proxies.status.addEventListener(BookmarkEvent.BRANCH_STATUS, onStatusReceived);
+			AppModel.engine.addEventListener(BookmarkEvent.STATUS, onStatusReceived);
 		}
 
 		private function onStatusReceived(e:BookmarkEvent):void 
 		{
 			var a:Array = e.data as Array;
-			if (!AppModel.bookmark.initialized && a[StatusProxy.T].length > 0){
-				saveEnabled = true;
-			}	else if (AppModel.bookmark.initialized && a[StatusProxy.M].length > 0){
+			if (a[StatusProxy.T].length > 0 || a[StatusProxy.M].length > 0){
 				saveEnabled = true;
 			}	else{
 				saveEnabled = false;

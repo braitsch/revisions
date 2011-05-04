@@ -1,18 +1,13 @@
 package model.proxies {
-	import events.NativeProcessEvent;
 
+	import events.BookmarkEvent;
+	import events.NativeProcessEvent;
 	import model.AppModel;
 	import model.air.NativeProcessProxy;
 	import model.bash.BashMethods;
 
-	import model.Bookmark;
-	import model.Branch;
-
 	public class HistoryProxy extends NativeProcessProxy {
 		
-		private static var _branch		:Branch;
-		private static var _bookmark	:Bookmark;
-
 		public function HistoryProxy()
 		{
 			super.debug = false;
@@ -21,18 +16,11 @@ package model.proxies {
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 		}
 		
-		public function set bookmark(b:Bookmark):void 
+		public function getHistory():void
 		{
-			_bookmark = b;
-			super.directory = _bookmark.gitdir;
-		}
-		
-		public function getHistoryOfBranch(b:Branch):void
-		{
-			if (AppModel.bookmark.initialized == false) return;
-			_branch = b;
-			trace("HistoryProxy.getHistoryOfBranch(b) > ", _bookmark.label, _branch.name);
-			super.call(Vector.<String>([BashMethods.GET_HISTORY, _branch.name]));
+			super.directory = AppModel.bookmark.gitdir;
+			super.call(Vector.<String>([BashMethods.GET_HISTORY, AppModel.branch.name]));
+			trace("HistoryProxy.getHistoryOfBranch(b) > ", AppModel.bookmark.label, AppModel.branch.name);
 		}
 		
 	// handlers //						
@@ -42,7 +30,10 @@ package model.proxies {
 			trace("HistoryProxy.onProcessComplete(e)", e.data.method);
 			switch(e.data.method){
 				case BashMethods.GET_HISTORY : 
-					_branch.history = e.data.result.split(/[\n\r\t]/g);
+			// always force a getStatus after we requesting the branch history //	
+					AppModel.proxies.status.getStatus();
+					AppModel.branch.history = e.data.result.split(/[\n\r\t]/g);
+					AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.HISTORY));
 				break;							
 			}
 		}

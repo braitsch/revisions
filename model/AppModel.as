@@ -1,39 +1,49 @@
 package model {
+
+	import flash.events.TimerEvent;
+	import events.BookmarkEvent;
 	import events.DataBaseEvent;
 	import events.InstallEvent;
-	import events.BookmarkEvent;
-
 	import model.db.AppDatabase;
 	import model.proxies.AppProxies;
-
-	
-	
-
 	import flash.events.EventDispatcher;
+	import flash.utils.Timer;
 
 	public class AppModel extends EventDispatcher {
 
-		private static var _bookmark	:Bookmark; // the active bookmark //
-
-		private static var _engine		:AppEngine = new AppEngine();	
-		private static var _proxies		:AppProxies = new AppProxies();		
-		private static var _database	:AppDatabase = new AppDatabase();
+		private static var _timer			:Timer = new Timer(5000, 0);
+		private static var _engine			:AppEngine = new AppEngine();	
+		private static var _proxies			:AppProxies = new AppProxies();		
+		private static var _database		:AppDatabase = new AppDatabase();
+		private static var _bookmark		:Bookmark; // the active bookmark //
 		
 		private static var _gitAvailable	:Boolean;		private static var _databaseReady	:Boolean;
 
 		public function AppModel() 
 		{
+			_timer.addEventListener(TimerEvent.TIMER, getStatus);
 			_engine.addEventListener(BookmarkEvent.SELECTED, onBookmarkSet);
 			_database.addEventListener(DataBaseEvent.BOOKMARKS_READ, onBookmarksRead);
 			_database.addEventListener(DataBaseEvent.DATABASE_READY, onDatabaseReady);
 			_proxies.config.addEventListener(InstallEvent.SET_GIT_VERSION, onGitAvailable);
 		}
 
+		static private function getStatus(e:TimerEvent = null):void
+		{
+			AppModel.proxies.status.getStatus();
+		}
+
 		static public function onBookmarkSet(e:BookmarkEvent):void
 		{
 			_bookmark = e.data as Bookmark;
-			_proxies.bookmark = _database.bookmark = _bookmark;
-			AppModel.proxies.status.getStatusOfBranch(_bookmark.branch);
+			_database.setActiveBookmark(_bookmark.label);
+			if (_bookmark.branch.history){
+				getStatus();
+			}	else{
+				AppModel.proxies.history.getHistory();	
+			}
+			_timer.reset();
+		//	_timer.start();			
 		}
 		
 		static public function get bookmark():Bookmark

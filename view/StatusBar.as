@@ -16,8 +16,8 @@ package view {
 			this.x = 740;			
 			addChild(_view);
 			
+			AppModel.engine.addEventListener(BookmarkEvent.STATUS, onStatusReceived);
 			AppModel.engine.addEventListener(BookmarkEvent.NO_BOOKMARKS, zeroAllFields);
-			AppModel.proxies.status.addEventListener(BookmarkEvent.BRANCH_STATUS, onStatusReceived);
 		}
 
 		private function onStatusReceived(e:BookmarkEvent):void 

@@ -17,7 +17,7 @@ package model.proxies {
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 		}
 
-		public function getBranchesOfBookmark(b:Bookmark):void
+		public function getBranches(b:Bookmark):void
 		{
 			_bookmark = b;
 			super.directory = b.worktree;

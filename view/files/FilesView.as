@@ -28,7 +28,7 @@ package view.files {
 			addChild(_view);
 			addChild(_list);
 			
-			AppModel.proxies.status.addEventListener(BookmarkEvent.BRANCH_STATUS, onStatusReceived);
+			AppModel.engine.addEventListener(BookmarkEvent.STATUS, onStatusReceived);
 		}
 		
 		public function set directory(f:File):void
