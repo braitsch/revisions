@@ -14,8 +14,8 @@ package model.proxies {
 		public static const	T		:uint = 0; // tracked
 		public static const	U		:uint = 1; // untracked		public static const	M		:uint = 2; // modified		public static const	I		:uint = 3; // ignored
 		
-	// automatically call getStatus every five seconds // 	
-		private static var _timer	:Timer = new Timer(5000);		
+	// automatically call getStatus every ten seconds // 	
+		private static var _timer	:Timer = new Timer(10000);		
 				public function StatusProxy()
 		{
 			super('Status.sh');

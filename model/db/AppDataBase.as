@@ -13,7 +13,7 @@ package model.db {
 		
 		public function AppDatabase()
 		{
-			_db = new SQLLiteDataBase('GitMe.db');
+			_db = new SQLLiteDataBase('Revisions.db');
 			_db.addEventListener(DataBaseEvent.DATABASE_READY, onDataBaseReady);			_db.addEventListener(DataBaseEvent.TRANSACTION_COMPLETE, onTransactionComplete);
 		}
 
