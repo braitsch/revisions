@@ -1,10 +1,9 @@
 package view.modals {
+
 	import events.UIEvent;
-
+	import fl.text.TLFTextField;
 	import model.AppModel;
-
 	import flash.events.MouseEvent;
-	import flash.text.TextField;
 
 	public class CommitChanges extends ModalWindow {
 
@@ -13,8 +12,7 @@ package view.modals {
 		public function CommitChanges()
 		{
 			addChild(_view);
-			super.cancel = _view.cancel_btn;	
-			super.addInputs(Vector.<TextField>([_view.note_txt]));			
+			super.addInputs(Vector.<TLFTextField>([_view.note_txt]));			
 			super.addButtons([_view.save_btn, _view.cancel_btn]);
 			_view.save_btn.addEventListener(MouseEvent.CLICK, onCommit);			
 		}

@@ -7,7 +7,6 @@ package view.modals {
 		public function UserError()
 		{
 			_view = new UserErrorMC();
-			super.cancel = _view.ok_btn;
 			addChild(_view);
 		}
 

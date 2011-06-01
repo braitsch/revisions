@@ -1,13 +1,11 @@
 package view.modals {
-	import events.UIEvent;
 
+	import events.UIEvent;
+	import fl.text.TLFTextField;
 	import model.AppModel;
 	import model.Bookmark;
-
 	import utils.FileBrowser;
-
 	import flash.events.MouseEvent;
-	import flash.text.TextField;
 
 	public class RepairBookmark extends ModalWindow {
 
@@ -19,7 +17,7 @@ package view.modals {
 		public function RepairBookmark()
 		{
 			addChild(_view);
-			super.addInputs(Vector.<TextField>([_view.name_txt, _view.local_txt]));	
+			super.addInputs(Vector.<TLFTextField>([_view.name_txt, _view.local_txt]));	
 			super.addButtons([_view.browse_btn, _view.update_btn, _view.delete_btn]);
 			
 			_view.browse_btn.addEventListener(MouseEvent.CLICK, onDirectoryBrowse);

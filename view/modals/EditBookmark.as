@@ -1,15 +1,12 @@
 package view.modals {
-	import events.UIEvent;
 
-	import events.DataBaseEvent;
 	import events.BookmarkEvent;
-
+	import events.DataBaseEvent;
+	import events.UIEvent;
+	import fl.text.TLFTextField;
 	import model.AppModel;
-
 	import model.Bookmark;
-
 	import flash.events.MouseEvent;
-	import flash.text.TextField;
 
 	public class EditBookmark extends ModalWindow {
 
@@ -19,8 +16,7 @@ package view.modals {
 		public function EditBookmark()
 		{
 			addChild(_view);
-			super.cancel = _view.cancel_btn;			
-			super.addInputs(Vector.<TextField>([_view.name_txt]));	
+			super.addInputs(Vector.<TLFTextField>([_view.name_txt]));	
 			super.addButtons([_view.update_btn, _view.cancel_btn]);
 			
 		// ability to change file path disabled for now - just create a new bookmark //	

@@ -1,10 +1,9 @@
 package view.modals {
+
 	import events.UIEvent;
-
+	import fl.text.TLFTextField;
 	import model.AppModel;
-
 	import flash.events.MouseEvent;
-	import flash.text.TextField;
 
 	public class DetachedBranch extends ModalWindow {
 
@@ -13,7 +12,7 @@ package view.modals {
 		public function DetachedBranch()
 		{
 			addChild(_view);
-			super.addInputs(Vector.<TextField>([_view.name_txt]));				
+			super.addInputs(Vector.<TLFTextField>([_view.name_txt]));				
 			super.addButtons([_view.discard_btn, _view.branch_btn]);
 			
 			_view.branch_btn.addEventListener(MouseEvent.CLICK, onBranch);			
