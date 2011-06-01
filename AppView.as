@@ -30,7 +30,7 @@ package {
 		private function onAddedToStage(e:Event):void 
 		{
 			_modal.init(stage);
-			_dragAndDrop.target = stage;			
+			_dragAndDrop.target = stage;
 			stage.addEventListener(Event.RESIZE, onStageResize);
 		}
 

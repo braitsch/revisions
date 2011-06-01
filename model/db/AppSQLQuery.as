@@ -5,13 +5,13 @@ package model.db {
 
 		public static const INIT_DATABASE:SQLStatement = new SQLStatement();
 		INIT_DATABASE.text = "CREATE TABLE IF NOT EXISTS repositories (id INTEGER PRIMARY KEY AUTOINCREMENT, label TEXT, target TEXT, local TEXT, remote TEXT, active INTEGER)";
-	
+
 		public static const READ_REPOSITORIES:SQLStatement = new SQLStatement();
 		READ_REPOSITORIES.text = "SELECT * FROM repositories";
 		
 		public static const CLEAR_ACTIVE:SQLStatement = new SQLStatement();
 		CLEAR_ACTIVE.text = "UPDATE repositories SET active=0 WHERE active=1";
-		
+
 		public static function INSERT($label:String, $target:String):SQLStatement
 		{
 			var s:SQLStatement = new SQLStatement();

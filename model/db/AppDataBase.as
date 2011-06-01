@@ -10,6 +10,7 @@ package model.db {
 		private static var _open				:Vector.<SQLStatement>;		private static var _add					:Vector.<SQLStatement>;
 		private static var _edit				:Vector.<SQLStatement>;		private static var _delete				:Vector.<SQLStatement>;		private static var _setActive			:Vector.<SQLStatement>;
 		private static var _repositories		:Array;
+		private static var _settings			:Array;
 		
 		public function AppDatabase()
 		{
@@ -28,7 +29,7 @@ package model.db {
 		{
 			_open = new Vector.<SQLStatement>();	
 			_open.push(AppSQLQuery.INIT_DATABASE);	
-			_open.push(AppSQLQuery.READ_REPOSITORIES);	
+			_open.push(AppSQLQuery.READ_REPOSITORIES);
 			_db.execute(_open, true);
 		}
 

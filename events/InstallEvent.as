@@ -3,9 +3,10 @@ package events {
 
 	public class InstallEvent extends Event {
 		
+		public static const SETTINGS				:String = "SETTINGS";
 		public static const SET_GIT_VERSION			:String = "SET_GIT_VERSION";
 		public static const GIT_UNAVAILABLE			:String = "GIT_UNAVAILABLE";
-		public static const GIT_INSTALL_COMPLETE	:String = "GIT_INSTALL_COMPLETE";	
+		public static const GIT_INSTALL_COMPLETE	:String = "GIT_INSTALL_COMPLETE";
 		
 		public var data:Object;
 

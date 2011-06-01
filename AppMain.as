@@ -1,12 +1,16 @@
 package {
 
+	import events.InstallEvent;
 	import model.AppModel;
+	import model.db.AppSettings;
 	import view.ui.AirContextMenu;
+	import flash.desktop.NativeApplication;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
+	import flash.events.InvokeEvent;
 
-	[SWF(backgroundColor="#ffffff", frameRate="31", width=800, height=600)]
+	[SWF(backgroundColor="#ffffff", frameRate="31")]
 
 	public class AppMain extends Sprite {
 	
@@ -18,9 +22,29 @@ package {
 			addChild(_view);
 			stage.align = StageAlign.TOP_LEFT;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
+			stage.nativeWindow.visible = false;
+			stage.addEventListener(InstallEvent.SETTINGS, onSettings);
+			NativeApplication.nativeApplication.addEventListener(InvokeEvent.INVOKE, onInvokeEvent);
+		}
+
+		private function onInvokeEvent(e:InvokeEvent):void
+		{
+			stage.nativeWindow.visible = false;
+			AppSettings.initialize(stage);
+			AppSettings.setting = {test:'stephen'};
 			AirContextMenu.initialize(stage);
+			NativeApplication.nativeApplication.removeEventListener(InvokeEvent.INVOKE, onInvokeEvent);
 		}
 		
+	//TODO need to deal with this somewhere else once we know what settings we're saving...	
+		private function onSettings(e:InstallEvent):void
+		{
+			var a:Array = e.data as Array;
+			for (var i:int = 0; i < a.length; i++) {
+				for (var val : String in a[i]) trace('prop='+val, 'val='+a[i][val]);
+			}
+		}		
+
 	}
 	
 }

@@ -51,12 +51,12 @@ package view.history {
 
 		private function onRollOver(e:MouseEvent):void
 		{
-			TweenLite.to(e.target.getChildByName('over'), .5, {alpha:1});
+			TweenLite.to(e.target.getChildByName('over'), .3, {alpha:1});
 		}
 		
 		private function onRollOut(e:MouseEvent):void
 		{
-			TweenLite.to(e.target.getChildByName('over'), .5, {alpha:0});
+			TweenLite.to(e.target.getChildByName('over'), .7, {alpha:0});
 		}
 		
 		private function onButtonClick(e:MouseEvent):void

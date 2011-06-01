@@ -19,8 +19,8 @@ package view.bookmarks {
 
 		public function BookmarkView()
 		{
-			_bkgd.y = 34;
-			_list.y = 34;
+			_bkgd.y = 33;
+			_list.y = 33;
 			_scroller.x = 200;
 			addChild(_bkgd);
 			addChild(_header);
@@ -51,8 +51,6 @@ package view.bookmarks {
 				line.graphics.clear();
 				line.graphics.beginFill(0x000000);
 				line.graphics.drawRect(0, 0, 200, 1);
-				line.graphics.beginFill(0xb3b3b3);
-				line.graphics.drawRect(0, 1, 200, 1);
 				line.graphics.endFill();	
 			_header.addChild(bkgd);
 			_header.addChild(text);
