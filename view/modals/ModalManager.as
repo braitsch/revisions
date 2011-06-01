@@ -47,7 +47,7 @@ package view.modals {
 			stage.addEventListener(UIEvent.DRAG_AND_DROP, onDragAndDrop);
 //			stage.addEventListener(UIEvent.ADD_BOOKMARK, addBookmark);
 //			stage.addEventListener(UIEvent.EDIT_BOOKMARK, editBookmark);
-//			stage.addEventListener(UIEvent.SAVE_PROJECT, addNewCommit);
+			stage.addEventListener(UIEvent.SAVE_PROJECT, addNewCommit);
 //			stage.addEventListener(UIEvent.ADD_BRANCH, branchBookmark);
 //			stage.addEventListener(UIEvent.DELETE_BOOKMARK, removeBookmark);
 //			stage.addEventListener(UIEvent.OPEN_HISTORY, viewHistory);
@@ -129,7 +129,6 @@ package view.modals {
 		{
 			addChild(_commit);
 		}
-		
 		
 	// alerts //	
 	

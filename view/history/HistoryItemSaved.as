@@ -32,7 +32,7 @@ package view.history {
 			_bkgd.graphics.beginBitmapFill(new HistoryItemBkgd());
 			_bkgd.graphics.drawRect(0, 0, w, 29);
 			_bkgd.graphics.endFill();
-			_view.buttons.x = w - 85;
+			_view.buttons.x = w - 94;
 		}
 		
 	// private //			

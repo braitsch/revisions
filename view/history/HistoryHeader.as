@@ -1,18 +1,20 @@
 package view.history {
 
+	import view.Scroller;
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.filters.DropShadowFilter;
 
 	public class HistoryHeader extends Sprite {
 
-		private static var _pound	:Bitmap = new Bitmap(new labelPound());
-		private static var _created	:Bitmap = new Bitmap(new labelCreated());
-		private static var _details	:Bitmap = new Bitmap(new labelDetails());
-		private static var _actions	:Bitmap = new Bitmap(new labelActions());
-		private static var _pattern	:Sprite = new Sprite();
-		private static var _columns	:Sprite = new Sprite();
-		private static var _hrule	:Sprite = new Sprite();
+		private static var _pound		:Bitmap = new Bitmap(new labelPound());
+		private static var _created		:Bitmap = new Bitmap(new labelCreated());
+		private static var _details		:Bitmap = new Bitmap(new labelDetails());
+		private static var _actions		:Bitmap = new Bitmap(new labelActions());
+		private static var _pattern		:Sprite = new Sprite();
+		private static var _columns		:Sprite = new Sprite();
+		private static var _scroller	:Scroller = new Scroller();
+		private static var _hrule		:Sprite = new Sprite();
 
 		public function HistoryHeader()
 		{
@@ -22,6 +24,8 @@ package view.history {
 			addChild(_details);
 			addChild(_actions);
 			addChild(_columns);
+	//TODO not sure yet about having the scroller in here...		
+			addChild(_scroller);
 			addChild(_hrule);
 			_pound.x = 15;
 			_created.x = 70;
@@ -53,8 +57,10 @@ package view.history {
 				b.x = 4*i;
 				_pattern.addChild(b);
 			}
-			_actions.x = w-70;
-			_columns.getChildAt(2).x = w-96;
+			_actions.x = w-80;
+			_columns.getChildAt(2).x = w-109;
+			_scroller.x = w - 5;
+			_scroller.draw(h);
 			drawHRule(w);
 			drawColumns(h);
 		}

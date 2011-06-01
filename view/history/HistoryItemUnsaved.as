@@ -1,7 +1,8 @@
 package view.history {
 
-	import flash.events.MouseEvent;
+	import events.UIEvent;
 	import flash.display.Shape;
+	import flash.events.MouseEvent;
 
 	public class HistoryItemUnsaved extends HistoryItem {
 
@@ -22,8 +23,7 @@ package view.history {
 
 		private function onSaveClick(e:MouseEvent):void
 		{
-			trace("HistoryItemUnsaved.onSaveClick(e) ------ saving commit");
-//			AppModel.proxies.checkout.checkout(_commit);
+			dispatchEvent(new UIEvent(UIEvent.SAVE_PROJECT));
 		}
 		
 		override public function resize(w:uint):void
@@ -32,7 +32,7 @@ package view.history {
 			_bkgd.graphics.beginFill(0xffffff);
 			_bkgd.graphics.drawRect(0, 0, w, 29);
 			_bkgd.graphics.endFill();
-			_view.save_btn.x = w - 85;
+			_view.save_btn.x = w - 94;
 		}		
 		
 	}

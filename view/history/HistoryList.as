@@ -8,7 +8,6 @@ package view.history {
 
 	public class HistoryList extends Sprite {
 
-		private var _list				:Sprite = new Sprite();
 		private var _bookmark			:Bookmark;
 		private var _modified			:uint;
 		private var _unsaved			:HistoryItemUnsaved;
@@ -17,7 +16,6 @@ package view.history {
 		{
 			_bookmark = $bkmk;
 			_unsaved = new HistoryItemUnsaved();
-			addChild(_list);
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		
@@ -43,8 +41,8 @@ package view.history {
 
 		private function drawList(e:BookmarkEvent = null):void
 		{
-			while(_list.numChildren) _list.removeChildAt(0);
-			if (_modified) _list.addChild(_unsaved);
+			while(numChildren) removeChildAt(0);
+			if (_modified) addChild(_unsaved);
 			
 			var a:Array = _bookmark.branch.history;
 			for (var i:int = 0; i < a.length; i++) {
@@ -55,9 +53,9 @@ package view.history {
 									sha1 	: a[i][0],
 									branch 	: _bookmark.branch};
 				var item:HistoryItemSaved = new HistoryItemSaved(new Commit(o));
-					item.y = _list.numChildren * 30;
+					item.y = numChildren * 30;
 					item.resize(stage.stageWidth - 204);
-				_list.addChild(item);
+				addChild(item);
 			}
 			_unsaved.resize(stage.stageWidth - 204);
 		}
@@ -69,8 +67,9 @@ package view.history {
 
 		private function resize(e:Event = null):void
 		{
-			for (var i:int = 0; i < _list.numChildren; i++) {
-				HistoryItem(_list.getChildAt(i)).resize(stage.stageWidth - 204);
+			for (var i:int = 0; i < numChildren; i++) {
+				var n:HistoryItem = getChildAt(i) as HistoryItem;
+				if (n) n.resize(stage.stageWidth - 204);
 			}	
 		}	
 		
