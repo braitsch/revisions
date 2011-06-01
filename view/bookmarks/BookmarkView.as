@@ -1,22 +1,21 @@
 package view.bookmarks {
-	import model.Bookmark;
+
 	import events.BookmarkEvent;
-
 	import model.AppModel;
-
-	import view.layout.LiquidColumn;
+	import model.Bookmark;
 	import view.layout.ListItem;
 	import view.ui.AirContextMenu;
+	import flash.display.Bitmap;
+	import flash.display.Sprite;
 
-	public class BookmarkView extends LiquidColumn {
+	public class BookmarkView extends Sprite {
 		
 		private static var _list			:BookmarkList = new BookmarkList();
-		private static var _view			:BookmarkViewMC = new BookmarkViewMC();
+		private static var _view			:Sprite = new Sprite();
 
 		public function BookmarkView()
 		{
-			super.width = 200;
-			
+			_view.addChild(new Bitmap(new BookmarkMC()));
 			_view.addChild(_list);
 			addChild(_view);
 			

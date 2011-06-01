@@ -3,82 +3,77 @@ package view.history {
 	import events.BookmarkEvent;
 	import model.AppModel;
 	import model.Bookmark;
-	import view.modals.ModalWindow;
 	import flash.display.Sprite;
 
-	public class HistoryView extends ModalWindow {
+	public class HistoryView extends Sprite {
 
-		private static var _view			:HistoryViewMC = new HistoryViewMC();
-		private static var _container		:Sprite = new Sprite();
-		private static var _collection		:HistoryCollection;
-		private static var _collections		:Vector.<HistoryCollection> = new Vector.<HistoryCollection>();
+		private static var _header		:HistoryHeader = new HistoryHeader();
+		private static var _activeList	:HistoryList;
+		private static var _lists		:Vector.<HistoryList> = new Vector.<HistoryList>();		
 
 		public function HistoryView()
 		{
-			addChild(_view);
-			super.height = 450;
-			super.cancel = _view.close_btn;
-						_container.x = 20;
-			_container.y = 40;
-			_view.addChild(_container);
-
-			AppModel.engine.addEventListener(BookmarkEvent.LOADED, onBookmarksReady);
-			AppModel.engine.addEventListener(BookmarkEvent.ADDED, onBookmarkAdded);
-			AppModel.engine.addEventListener(BookmarkEvent.DELETED, onBookmarkDeleted);
-			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onSelection);			AppModel.engine.addEventListener(BookmarkEvent.STATUS, onStatus);
-			AppModel.engine.addEventListener(BookmarkEvent.HISTORY, onHistory);
-		}
-
-	// list editing //
-
-		private function onBookmarksReady(e:BookmarkEvent):void 
-		{
-		// create a collection object for each bookmark in the database //	
-			var a:Vector.<Bookmark> = e.data as Vector.<Bookmark>;
-			for (var i:int = 0;i < a.length; i++) _collections.push(new HistoryCollection(a[i]));
+			addChild(_header);
+			AppModel.engine.addEventListener(BookmarkEvent.LOADED, onLoaded);
+			AppModel.engine.addEventListener(BookmarkEvent.ADDED, onAddition);
+			AppModel.engine.addEventListener(BookmarkEvent.DELETED, onDeletion);
+			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onSelection);
+			AppModel.engine.addEventListener(BookmarkEvent.STATUS, onStatus);
+			AppModel.engine.addEventListener(BookmarkEvent.HISTORY, onHistory);			
 		}
 		
-		private function onBookmarkAdded(e:BookmarkEvent):void 
+		public function resize(w:uint, h:uint):void
 		{
-			var k:HistoryCollection = new HistoryCollection(e.data as Bookmark);
-			_collections.push(k);
+			_header.resize(w, h);
+		}
+		
+// list editing //
+
+		private function onLoaded(e:BookmarkEvent):void 
+		{
+		// create a list object for each bookmark in the database //	
+			var a:Vector.<Bookmark> = e.data as Vector.<Bookmark>;
+			for (var i:int = 0;i < a.length; i++) _lists.push(new HistoryList(a[i]));
+		}
+		
+		private function onAddition(e:BookmarkEvent):void 
+		{
+			var k:HistoryList = new HistoryList(e.data as Bookmark);
+			_lists.push(k);
 		}	
 			
-		private function onBookmarkDeleted(e:BookmarkEvent):void 
+		private function onDeletion(e:BookmarkEvent):void 
 		{
-			while(_container.numChildren) _container.removeChildAt(0);
-			for (var i:int = 0;i < _collections.length; i++) {
-				if (_collections[i].bookmark == e.data) break;
+			while(numChildren > 1) removeChildAt(0);
+			for (var i:int = 0;i < _lists.length; i++) {
+				if (_lists[i].bookmark == e.data) break;
 			}
-			_collections[i] = null;
-			_collections.splice(i, 1);
+			_lists[i] = null;
+			_lists.splice(i, 1);
 		}
 		
 	// status / selection events //	
 		
 		private function onStatus(e:BookmarkEvent):void 
 		{
-			_collection.list.onStatus();
+			_activeList.onStatus();
 		}	
 	
 		private function onHistory(e:BookmarkEvent):void
 		{
-			_collection.list.onHistory();
+			_activeList.onHistory();
 		}			
 
 		private function onSelection(e:BookmarkEvent):void 
 		{
-		// don't change tabs if we've checked out a previous commit (head detached) //	
-			if (AppModel.branch.name == Bookmark.DETACH) return;
-			
-		// display collection associated with the new bookmark //	
-			for (var i:int = 0; i < _collections.length; i++) {
-				if (_collections[i].bookmark == e.data) break;
+			_activeList = null;
+			while(numChildren > 1) removeChildAt(0);
+			for (var i:int = 0; i < _lists.length; i++) if (_lists[i].bookmark == e.data) _activeList = _lists[i];
+			if (_activeList) {
+				_activeList.y = 34;
+				addChildAt(_activeList, 0);
 			}
-			_collection = _collections[i];
-			_container.addChild(_collection);
-			_collection.setActiveBranch(AppModel.branch);
-		}
+		}		
 		
 	}
 	

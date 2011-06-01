@@ -17,8 +17,8 @@ package model.bash{
 	// editor methods //		
 		public static const COMMIT:String = 'commit';		public static const TRACK_FILE:String = 'trackFile';
 		public static const UNTRACK_FILE:String = 'unTrackFile';
-		public static const INIT_FOLDER:String = 'initRepository';
-		public static const INIT_FILE:String = 'initSingleFile';
+		public static const INIT_FOLDER:String = 'initFolder';
+		public static const INIT_FILE:String = 'initFile';
 		public static const KILL_FILE:String = 'killFile';
 		public static const KILL_FOLDER:String = 'killFolder';
 		

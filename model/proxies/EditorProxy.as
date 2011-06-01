@@ -23,6 +23,11 @@ package model.proxies {
 			super.call(Vector.<String>([BashMethods.COMMIT, $msg, $addAll]));
 		}
 		
+		public function initalCommit():void
+		{
+			
+		}
+		
 		public function trackFile($file:File):void
 		{
 			super.directory = AppModel.bookmark.gitdir;			
@@ -78,12 +83,12 @@ package model.proxies {
 				case BashMethods.KILL_FOLDER : 
 					dispatchEvent(new BookmarkEvent(BookmarkEvent.DELETED));
 				break;								
-				case BashMethods.TRACK_FILE : 					AppModel.proxies.status.getStatus();				break;				case BashMethods.UNTRACK_FILE : 
+				case BashMethods.TRACK_FILE : 
 					AppModel.proxies.status.getStatus();
-				break;
+				break;				case BashMethods.UNTRACK_FILE : 					AppModel.proxies.status.getStatus();				break;
 			}
 		}
-		
+
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
 			trace("EditorProxy.onProcessFailure(e)", e.data.method, e.data.result);

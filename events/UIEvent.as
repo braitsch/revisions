@@ -23,8 +23,6 @@ package events {
 		
 	// list item selections //	
 		public static const LIST_ITEM_SELECTED		:String = "LIST_ITEM_SELECTED";
-		public static const HISTORY_ITEM_SELECTED	:String = "HISTORY_ITEM_SELECTED";
-		public static const HISTORY_TAB_SELECTED	:String = "HISTORY_TAB_SELECTED";
 		public static const DIRECTORY_SELECTED		:String = "DIRECTORY_SELECTED";
 		public static const TOGGLE_OPEN_DIRECTORY	:String = "TOGGLE_OPEN_DIRECTORY";
 		

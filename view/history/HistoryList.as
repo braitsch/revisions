@@ -1,118 +1,78 @@
 package view.history {
 
 	import events.BookmarkEvent;
-	import events.UIEvent;
-	import model.AppModel;
 	import model.Bookmark;
-	import model.Branch;
 	import model.Commit;
-	import view.layout.ListItem;
-	import view.layout.SimpleList;
 	import flash.display.Sprite;
-	import flash.events.MouseEvent;
+	import flash.events.Event;
 
 	public class HistoryList extends Sprite {
 
-	// each one of these represent one branch on a bookmark //
-	
-		private var _list				:SimpleList = new SimpleList();
-		private var _view				:HistoryListMC = new HistoryListMC();
-		private var _cached				:uint;		// cached modified value //
-		private var _branch				:Branch;
-		private var _itemUnsaved		:HistoryItemUnsaved;
+		private var _list				:Sprite = new Sprite();
+		private var _bookmark			:Bookmark;
+		private var _modified			:uint;
+		private var _unsaved			:HistoryItemUnsaved;
 
-		public function HistoryList($branch:Branch, $xpos:uint)
+		public function HistoryList($bkmk:Bookmark)
 		{
-			_branch = $branch;
-			_itemUnsaved = new HistoryItemUnsaved(_branch);
-			
-			_view.tab.x = $xpos * 62;
-			_view.tab.buttonMode = true;
-			_view.tab.alpha = .6;
-			_view.tab.label_txt.text = _branch.name == 'master' ? 'home' : _branch.name;
-			_view.tab.label_txt.mouseEnabled = false;
-			_view.mouseEnabled = false;
-			
-			_list.y = 46;
-			_list.setSize(650, 308);
-			_list.scrollbar.y = -22;
-			_list.scrollbar.x = 655;
-			addChild(_view);
+			_bookmark = $bkmk;
+			_unsaved = new HistoryItemUnsaved();
 			addChild(_list);
-			
-			_list.addEventListener(MouseEvent.CLICK, onRecordSelection);
-			_view.tab.addEventListener(MouseEvent.CLICK, onListTabSelection);
+			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		
 	// public //	
-
-		public function set active(on:Boolean):void
-		{
-			_view.tab.alpha = on ? 1 : .6;
-		}
 		
-		public function get branch():Branch
+		public function get bookmark():Bookmark
 		{
-			return _branch;
+			return _bookmark;
 		}
 		
 		public function onStatus():void
 		{
 		// only rebuild if the # of modified files has changed //
-			if (_branch.modified != _cached) drawList();
+			if (_bookmark.branch.modified != _modified) {
+				_modified = _bookmark.branch.modified;
+				drawList();
+			}
 		}
 		
-		public function onHistory():void
-		{
-			 drawList();
-		}		
-
-	// private //
+		public function onHistory():void { drawList(); }
 		
+	// private //
+
 		private function drawList(e:BookmarkEvent = null):void
 		{
-		// never refresh the list if the head is detached //			
-			if (AppModel.branch.name == Bookmark.DETACH) return;
+			while(_list.numChildren) _list.removeChildAt(0);
+			if (_modified) _list.addChild(_unsaved);
 			
-			var v:Vector.<ListItem> = new Vector.<ListItem>();
-			
-			if (_branch.modified) v.push(_itemUnsaved);
-			_cached = _branch.modified;
-			
-			var a:Array = _branch.history;
+			var a:Array = _bookmark.branch.history;
 			for (var i:int = 0; i < a.length; i++) {
 				var o:Object = {	index : String(a.length-i),
 									date 	: a[i][1],
 									author 	: a[i][2],
 									note 	: a[i][3],
 									sha1 	: a[i][0],
-									branch 	: _branch};
-				v.push(new HistoryListItem(new Commit(o)));
+									branch 	: _bookmark.branch};
+				var item:HistoryItemSaved = new HistoryItemSaved(new Commit(o));
+					item.y = _list.numChildren * 30;
+					item.resize(stage.stageWidth - 204);
+				_list.addChild(item);
 			}
-			_list.clear();
-			_list.build(v);
-		//	trace("HistoryList.rebuildList > ", '# items = '+a.length);			
+			_unsaved.resize(stage.stageWidth - 204);
 		}
 		
-	// click events //	
-		
-		private function onListTabSelection(e:MouseEvent):void 
+		private function onAddedToStage(e:Event):void
 		{
-			if (_branch.history == null) AppModel.proxies.history.getHistory();
-			dispatchEvent(new UIEvent(UIEvent.HISTORY_TAB_SELECTED));
-		}		
+			stage.addEventListener(Event.RESIZE, resize);
+		}
 
-		private function onRecordSelection(e:MouseEvent):void 
+		private function resize(e:Event = null):void
 		{
-		// ignore mouse events from the scrollbar //	
-			if (!(e.target is HistoryListItem)) return;
-			var k:HistoryListItem = _list.activeItem as HistoryListItem;
-			if (k.index == 0){
-				AppModel.proxies.checkout.bookmark = AppModel.bookmark;				AppModel.proxies.checkout.checkout(_branch);		
-			}	else{				AppModel.proxies.checkout.bookmark = AppModel.bookmark;
-				AppModel.proxies.checkout.checkout(k.commit);		
-			}
-		}
+			for (var i:int = 0; i < _list.numChildren; i++) {
+				HistoryItem(_list.getChildAt(i)).resize(stage.stageWidth - 204);
+			}	
+		}	
 		
 	}
 	

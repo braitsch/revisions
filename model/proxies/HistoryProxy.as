@@ -20,7 +20,7 @@ package model.proxies {
 		{
 			super.directory = AppModel.bookmark.gitdir;
 			super.call(Vector.<String>([BashMethods.GET_HISTORY, AppModel.branch.name]));
-			trace("HistoryProxy.getHistoryOfBranch(b) > ", AppModel.bookmark.label, AppModel.branch.name);
+			trace("HistoryProxy.getHistory(b) > ", AppModel.bookmark.label, AppModel.branch.name);
 		}
 		
 	// handlers //						

@@ -8,8 +8,9 @@ package view.modals {
 
 	public class ModalWindow extends Sprite {
 		
-		private var _height		:Number;
-		private var _inputs		:Vector.<TextField>;
+		private var _height			:Number;
+		private var _inputs			:Vector.<TextField>;
+		private var _heightOffset	:uint = 50;
 
 		public function ModalWindow()
 		{		
@@ -52,8 +53,10 @@ package view.modals {
 		
 		private function onAddedToStage(e:Event):void 
 		{
-			this.x = stage.stageWidth / 2 - this.width / 2;
-			this.y = stage.stageHeight / 2 - (_height || this.height) / 2;
+			var w:uint = stage.stageWidth;
+			var h:uint = stage.stageHeight;
+			this.x = w/2 - this.width / 2;
+			this.y = (h-_heightOffset)/2 - this.height / 2 + _heightOffset;			
 			if (_inputs) {
 				var txt:TextField = _inputs[0];
 				txt.stage.focus = txt;

@@ -1,21 +1,20 @@
 package view.directories {
+
 	import events.UIEvent;
-	import flash.filesystem.File;
 	import model.SystemRules;
-	import view.layout.LiquidColumn;
 	import view.layout.ListItem;
 	import view.layout.NestedList;
 	import view.ui.AirContextMenu;
+	import flash.display.Sprite;
+	import flash.filesystem.File;
 
-	public class DirectoryView extends LiquidColumn {
+	public class DirectoryView extends Sprite {
 
 		private static var _list		:NestedList = new NestedList();
 		private static var _view		:DirectoryViewMC = new DirectoryViewMC();
 
 		public function DirectoryView()
 		{
-			super.width = 290;			
-			
 			addChild(_view);
 			addChild(_list);
 			

@@ -22,7 +22,6 @@ package model {
 		private var _branches			:Array = [];
 		private var _stash				:Array = [];
 		private var _file				:File;
-		private var _disableAutoInit	:Boolean = false;
 
 		public function Bookmark(o:Object)
 		{
@@ -107,21 +106,6 @@ package model {
 				var n:String = a[i].replace(/stash@\{[0-9]*}: WIP on /, '');
 				_stash.push(n.substring(0, n.indexOf(':')));	
 			}
-		}
-		
-	// autoinit prompt when bookmark is first created //	
-		
-		public function set disableAutoInit(disable:Boolean):void
-		{
-		//TODO this probably should be written to the DB as a stored preference setting.. 	
-			_disableAutoInit = disable;
-		}		
-		
-		public function promptToAutoInit():Boolean
-		{
-			if (_branch.untracked == 0) return false;
-			if (_disableAutoInit) return false;
-			return true;
 		}
 		
 	// branches //	

@@ -45,6 +45,8 @@ package model {
 		
 		public function get untracked():uint
 		{
+		//TODO bug here, need to not request modified if branch status has not been requested yet/	
+			if (!_status) return 0;
 			return _status[StatusProxy.U].length;
 		}		
 		

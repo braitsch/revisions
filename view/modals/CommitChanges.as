@@ -21,7 +21,7 @@ package view.modals {
 
 		private function onCommit(e:MouseEvent):void 
 		{
-			AppModel.proxies.editor.commit(_view.note_txt.text);
+			AppModel.proxies.editor.commit(_view.note_txt.text, false);
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW, this));
 		}
 		

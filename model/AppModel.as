@@ -83,8 +83,7 @@ package model {
 			// pass the db records to the bookmark engine //	
 				_engine.generateBookmarks(a);
 			}	else{
-			//TODO dispatch some event to the model manager //	
-				trace('-- no bookmarks in database, show welcome screen --');
+				_engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.NO_BOOKMARKS));
 			}
 		}
 		

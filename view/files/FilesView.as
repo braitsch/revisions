@@ -1,15 +1,16 @@
 package view.files {
+
 	import events.BookmarkEvent;
 	import events.UIEvent;
-	import flash.filesystem.File;
 	import model.AppModel;
 	import model.SystemRules;
-	import view.layout.LiquidColumn;
 	import view.layout.ListItem;
 	import view.layout.SimpleList;
 	import view.ui.AirContextMenu;
+	import flash.display.Sprite;
+	import flash.filesystem.File;
 
-	public class FilesView extends LiquidColumn {
+	public class FilesView extends Sprite {
 
 		private static var _list	:SimpleList = new SimpleList();
 		private static var _view	:FilesViewMC = new FilesViewMC();
@@ -17,8 +18,6 @@ package view.files {
 
 		public function FilesView()
 		{
-			super.width = 450;
-						
 			_list.x = 5;			_list.y = 38;
 			_list.setSize(450, 450);
 			_list.scrollbar.x = 438;

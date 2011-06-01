@@ -6,7 +6,6 @@ package view {
 	import view.bookmarks.BookmarkView;
 	import view.directories.DirectoryView;
 	import view.files.FilesView;
-	import view.layout.LiquidColumn;
 	import view.layout.ListItem;
 	import flash.display.Sprite;
 	import flash.filesystem.File;
@@ -30,11 +29,6 @@ package view {
 			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, setDirectoryAndFiles);
 			AppModel.engine.addEventListener(BookmarkEvent.NO_BOOKMARKS, clearDirectoriesAndFiles);		}
 
-		public function get columns():Vector.<LiquidColumn>
-		{
-			return Vector.<LiquidColumn>([_bkmks, _dirs, _files]);		
-		}
-		
 		private function clearDirectoriesAndFiles(e:BookmarkEvent):void
 		{
 			_dirs.directory = null;
