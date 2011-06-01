@@ -1,13 +1,12 @@
 package {
 
-	import flash.display.Sprite;
-	import flash.events.Event;
 	import utils.DragAndDropListener;
 	import view.Header;
 	import view.MainView;
 	import view.bookmarks.BookmarkView;
-	import view.history.HistoryView;
 	import view.modals.ModalManager;
+	import flash.display.Sprite;
+	import flash.events.Event;
 
 	public class AppView extends Sprite {
 		
@@ -40,8 +39,9 @@ package {
 			var w:uint = stage.stageWidth;
 			var h:uint = stage.stageHeight;
 			_modal.resize(w, h);
-			_main.resize(w-_main.x, h-_main.y);
 			_header.resize(w);
+			_bkmks.resize(h-_bkmks.y);
+			_main.resize(w-_main.x, h-_main.y);
 		}
 					
 	}

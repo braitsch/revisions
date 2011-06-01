@@ -11,7 +11,7 @@ package view.layout {
 	public class SimpleList extends Sprite {
 	
 		private var _width				:uint;
-		private var _height 			:uint;		private var _leading			:uint = 2;
+		private var _height 			:uint;		private var _leading			:uint = 1;
 		private var _container			:Sprite;
 		private var _scrollbar			:UIScrollBar;
 		private var _activeItem			:ListItem;

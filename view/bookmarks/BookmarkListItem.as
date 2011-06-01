@@ -9,14 +9,13 @@ package view.bookmarks {
 
 	public class BookmarkListItem extends ListItem {
 
-		private var _view			:BookmarkItemMC = new BookmarkItemMC();
+		private var _view			:BookmarkItem = new BookmarkItem();
 		private var _branches		:Sprite = new Sprite();
 		private var _bookmark		:Bookmark;
 		
 		public function BookmarkListItem($bkmk:Bookmark)
 		{
 			super.file = $bkmk.file;
-			super.draw(190, 20);
 			super.active = $bkmk.active;
 			
 			_bookmark = $bkmk;
@@ -28,8 +27,7 @@ package view.bookmarks {
 			_view.label_txt.text = _bookmark.label;
 			_view.mouseEnabled = true;
 			_view.mouseChildren = false;
-			_view.graphics.beginFill(0xff0000, 0);
-			_view.graphics.drawRect(0, 0, 190, 20);
+			_view.blue.alpha = 0;
 			_view.addEventListener(MouseEvent.CLICK, onBookmarkSelection);
 			addChild(_view);
 			

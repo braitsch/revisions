@@ -2,6 +2,7 @@ package view.history {
 
 	import view.Scroller;
 	import flash.display.Bitmap;
+	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.filters.DropShadowFilter;
 
@@ -11,7 +12,7 @@ package view.history {
 		private static var _created		:Bitmap = new Bitmap(new labelCreated());
 		private static var _details		:Bitmap = new Bitmap(new labelDetails());
 		private static var _actions		:Bitmap = new Bitmap(new labelActions());
-		private static var _pattern		:Sprite = new Sprite();
+		private static var _pattern		:Shape = new Shape();
 		private static var _columns		:Sprite = new Sprite();
 		private static var _scroller	:Scroller = new Scroller();
 		private static var _hrule		:Sprite = new Sprite();
@@ -50,13 +51,9 @@ package view.history {
 
 		public function resize(w:uint, h:uint):void
 		{
-			var n:uint = w / 4;
-			while(_pattern.numChildren) _pattern.removeChildAt(0);
-			for (var i:int = 0; i < n+1; i++) {
-				var b:Bitmap = new Bitmap(new DkGreyPattern());
-				b.x = 4*i;
-				_pattern.addChild(b);
-			}
+			_pattern.graphics.beginBitmapFill(new DkGreyPattern());
+			_pattern.graphics.drawRect(0, 0, w, 32);
+			_pattern.graphics.endFill();			
 			_actions.x = w-80;
 			_columns.getChildAt(2).x = w-109;
 			_scroller.x = w - 5;
