@@ -9,18 +9,17 @@ package view.history {
 
 	public class HistoryView extends Sprite {
 
-		private static var _mask		:Shape = new Shape();
+		private static var _hitArea		:Shape = new Shape();
 		private static var _header		:HistoryHeader = new HistoryHeader();
 		private static var _activeList	:HistoryList;
 		private static var _lists		:Vector.<HistoryList> = new Vector.<HistoryList>();
 		private static var _listYpos	:uint = 34;
-		private static var _mainHeight	:uint;
 
 		public function HistoryView()
 		{
-			addChild(_mask);
+			addChild(_hitArea);
 			addChild(_header);
-			_mask.y = _listYpos;
+			_hitArea.y = _listYpos;
 			AppModel.engine.addEventListener(BookmarkEvent.LOADED, onLoaded);
 			AppModel.engine.addEventListener(BookmarkEvent.ADDED, onAddition);
 			AppModel.engine.addEventListener(BookmarkEvent.DELETED, onDeletion);
@@ -32,25 +31,24 @@ package view.history {
 
 		private function onMouseWheel(e:MouseEvent):void
 		{
-			if (_activeList.height <= _mainHeight) return;
+			if (_activeList.height <= _hitArea.height) return;
+		//TODO need to smooth this out a bit //	
 			_activeList.y += e.delta;
-			var minY:int = _listYpos - _activeList.height + _mainHeight;
+			var minY:int = _listYpos - _activeList.height + _hitArea.height;
 			if (_activeList.y >= _listYpos) {
 				_activeList.y = _listYpos;
 			}	else if (_activeList.y < minY){
 				_activeList.y = minY;
 			}
-//			TweenLite.to(_activeList, .3, {y:_activeList.y+(e.delta*2)});
 		}
 		
 		public function resize(w:uint, h:uint):void
 		{
 			_header.resize(w, h);
-			_mainHeight = h-_listYpos;
-			_mask.graphics.clear();
-			_mask.graphics.beginFill(0xff0000, 0);
-			_mask.graphics.drawRect(0, 0, w, h-_listYpos);
-			_mask.graphics.endFill();
+			_hitArea.graphics.clear();
+			_hitArea.graphics.beginFill(0xff0000, 0);
+			_hitArea.graphics.drawRect(0, 0, w, h-_listYpos);
+			_hitArea.graphics.endFill();
 		}
 		
 // list editing //

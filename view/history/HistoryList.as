@@ -17,6 +17,7 @@ package view.history {
 			_bookmark = $bkmk;
 			_unsaved = new HistoryItemUnsaved();
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
 		}
 		
 	// public //	
@@ -62,14 +63,19 @@ package view.history {
 		
 		private function onAddedToStage(e:Event):void
 		{
+			resize();
 			stage.addEventListener(Event.RESIZE, resize);
+		}
+		
+		private function onRemovedFromStage(e:Event):void
+		{
+			stage.removeEventListener(Event.RESIZE, resize);
 		}
 
 		private function resize(e:Event = null):void
 		{
 			for (var i:int = 0; i < numChildren; i++) {
-				var n:HistoryItem = getChildAt(i) as HistoryItem;
-				if (n) n.resize(stage.stageWidth - 204);
+				HistoryItem(getChildAt(i)).resize(stage.stageWidth - 204);
 			}	
 		}	
 		

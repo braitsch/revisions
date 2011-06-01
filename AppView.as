@@ -41,6 +41,7 @@ package {
 			var h:uint = stage.stageHeight;
 			_modal.resize(w, h);
 			_main.resize(w-_main.x, h-_main.y);
+			_header.resize(w);
 		}
 					
 	}
