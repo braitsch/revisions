@@ -4,7 +4,6 @@ package view.bookmarks {
 	import model.AppModel;
 	import model.Bookmark;
 	import view.Scroller;
-	import view.layout.ListItem;
 	import view.ui.AirContextMenu;
 	import flash.display.Bitmap;
 	import flash.display.Shape;
@@ -19,18 +18,16 @@ package view.bookmarks {
 
 		public function BookmarkView()
 		{
-			_bkgd.y = 33;
-			_list.y = 33;
-			_scroller.x = 200;
 			addChild(_bkgd);
 			addChild(_header);
 			addChild(_list);
 			addChild(_scroller);
-			
-			_list.scrollbar.x = 188;
-			_list.setSize(200, 450);
-			_list.contextMenu = AirContextMenu.menu;
 			addHeader();
+			
+			_bkgd.y = 33;
+			_list.y = 33;
+			_scroller.x = 200;
+			_list.contextMenu = AirContextMenu.menu;
 						AppModel.engine.addEventListener(BookmarkEvent.LOADED, onBookmarkList);
 			AppModel.engine.addEventListener(BookmarkEvent.ADDED, onBookmarkAdded);
 			AppModel.engine.addEventListener(BookmarkEvent.DELETED, onBookmarkDeleted);
@@ -69,9 +66,7 @@ package view.bookmarks {
 		private function onBookmarkList(e:BookmarkEvent):void 
 		{
 			var v:Vector.<Bookmark> = e.data as Vector.<Bookmark>;
-			var a:Vector.<ListItem> = new Vector.<ListItem>();
-			for (var i:int = 0; i < v.length; i++) a.push(new BookmarkListItem(v[i]));
-			_list.build(a);
+			for (var i:int = 0; i < v.length; i++) _list.addItem(new BookmarkListItem(v[i]));
 		}
 
 		private function onBookmarkAdded(e:BookmarkEvent):void 

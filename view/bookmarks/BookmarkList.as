@@ -1,45 +1,32 @@
 package view.bookmarks {
+
 	import model.Bookmark;
-	import view.layout.ListItem;
-	import view.layout.SimpleList;
+	import flash.display.Sprite;
 
-	import flash.display.DisplayObject;
-	import flash.events.MouseEvent;
+	public class BookmarkList extends Sprite {
+		
+		private static var _leading	:uint = 1;
 
-	public class BookmarkList extends SimpleList {
-
-		override protected function onItemSelection(e:MouseEvent):void 
+		public function addItem(n:BookmarkListItem):void 
 		{
-			var k:DisplayObject = e.target as DisplayObject;
-			while(k.parent){
-				if (k is ListItem) break;			
-				k = k.parent;
-			}
-			super.activeItem = k as ListItem;
-		}
-
-		public function addItem(n:ListItem):void 
-		{
-			n.y = super.container.height + super.leading;
-			super.container.addChild(n);
+			n.y = (n.height + _leading) * numChildren;
+			addChild(n);
 		}
 		
-		public function removeItem(n:ListItem):void 
+		public function removeItem(n:BookmarkListItem):void 
 		{
-			var v:Vector.<ListItem> = new Vector.<ListItem>();
-			for (var i:int = 0; i < super.container.numChildren; i++) {
-				var k:ListItem = super.container.getChildAt(i) as ListItem;
-				if (k.file != n.file) v.push(k);
+			removeChild(n);
+			for (var i:int = 0; i < numChildren; i++) {
+				var k:BookmarkListItem = getChildAt(i) as BookmarkListItem;
+				k.y = (k.height + _leading) * i;
 			}
-			super.clear();
-			super.build(v);
 		}
 		
 		public function setActiveBookmark(b:Bookmark):void
 		{
-			for (var i:int = 0; i < super.container.numChildren; i++) {
-				var k:ListItem = super.container.getChildAt(i) as ListItem;
-				if (k.file == b.file) super.activeItem = k;
+			for (var i:int = 0; i < numChildren; i++) {
+				var k:BookmarkListItem = getChildAt(i) as BookmarkListItem;
+				k.active = (k.bookmark == b);
 			}			
 		}
 				
