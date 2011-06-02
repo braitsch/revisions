@@ -17,7 +17,7 @@ package view.modals {
 		private static var _new				:NewBookmark = new NewBookmark();
 		private static var _edit			:EditBookmark = new EditBookmark();
 		private static var _repair			:RepairBookmark = new RepairBookmark();
-		private static var _remove			:RemoveBookmark = new RemoveBookmark();		private static var _commit			:CommitChanges = new CommitChanges();
+		private static var _remove			:RemoveBookmark = new RemoveBookmark();		private static var _commit			:SaveCommit = new SaveCommit();
 		private static var _untracked		:AddUntrackedFiles = new AddUntrackedFiles();		private static var _error			:UserError = new UserError();
 		
 		private static var _install			:InstallGit = new InstallGit();

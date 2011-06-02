@@ -26,12 +26,12 @@ package {
 			_main.x = 204;
 			_bkmks.y = _main.y = 66;
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			addEventListener(MouseEvent.CLICK, onClick);
+	//		addEventListener(MouseEvent.CLICK, onClick);
 		}
 
 		private function onClick(e:MouseEvent):void
 		{
-			trace(e.target);
+			trace(e.target, 'was selected');
 		}
 		
 		private function onAddedToStage(e:Event):void 

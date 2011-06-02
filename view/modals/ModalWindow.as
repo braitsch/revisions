@@ -2,6 +2,7 @@ package view.modals {
 
 	import events.UIEvent;
 	import fl.text.TLFTextField;
+	import com.greensock.TweenLite;
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -35,15 +36,24 @@ package view.modals {
 					var label:Bitmap = a[i].getChildAt(2) as Bitmap;
 					label.x = -(label.width/2) + 2;
 					label.y = -(label.height/2) + 2;
+					a[i]['over'].alpha = 0;
+					a[i].addEventListener(MouseEvent.ROLL_OUT, onButtonRollOut);
+					a[i].addEventListener(MouseEvent.ROLL_OVER, onButtonRollOver);
 				}
 			}
 		// tack on the close button //	
 			_closeButton.y = 10;
 			_closeButton.x = this.width - 10;
+			_closeButton.over.alpha = 0;
 			_closeButton.buttonMode = true;
 			_closeButton.addEventListener(MouseEvent.CLICK, onCloseClick);
+			_closeButton.addEventListener(MouseEvent.ROLL_OUT, onButtonRollOut);
+			_closeButton.addEventListener(MouseEvent.ROLL_OVER, onButtonRollOver);			
 			addChild(_closeButton);			
 		}
+
+		private function onButtonRollOut(e:MouseEvent):void {TweenLite.to(e.target.over, .3, {alpha:0});}
+		private function onButtonRollOver(e:MouseEvent):void {TweenLite.to(e.target.over, .5, {alpha:1});}
 		
 		protected function addInputs(v:Vector.<TLFTextField>):void
 		{
@@ -62,10 +72,10 @@ package view.modals {
 			if (_inputs) {
 				var txt:TLFTextField = _inputs[0];
 				txt.stage.focus = txt;
-				txt.setSelection(0, txt.text.length);
+				txt.setSelection(0, txt.length);
 			}
-		}		
-		
+		}
+
 		private function onCloseClick(e:MouseEvent):void 
 		{
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW, this));
