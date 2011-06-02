@@ -37,19 +37,17 @@ package view.modals {
 			AppModel.engine.addEventListener(BookmarkEvent.NO_BOOKMARKS, showWelcomeScreen);
 			AppModel.engine.addEventListener(BookmarkEvent.UNTRACKED_FILES, promptToTrackFiles);
 			AppModel.proxies.config.addEventListener(InstallEvent.GIT_UNAVAILABLE, installGit);
-			AppModel.proxies.branch.addEventListener(BookmarkEvent.BRANCH_DETACHED, onBranchDetached);
 			AppModel.proxies.checkout.addEventListener(BookmarkEvent.COMMIT_MODIFIED, onCommitModified);
 		}
 
 		public function init(stage:Stage):void
 		{
 			stage.addEventListener(UIEvent.DRAG_AND_DROP, onDragAndDrop);
-			stage.addEventListener(UIEvent.ADD_BOOKMARK, newBookmark);
-//			stage.addEventListener(UIEvent.EDIT_BOOKMARK, editBookmark);
+			stage.addEventListener(UIEvent.ADD_BOOKMARK, onNewButtonClick);
+			stage.addEventListener(UIEvent.EDIT_BOOKMARK, editBookmark);
 			stage.addEventListener(UIEvent.SAVE_PROJECT, addNewCommit);
-//			stage.addEventListener(UIEvent.DELETE_BOOKMARK, removeBookmark);
-//			stage.addEventListener(UIEvent.OPEN_HISTORY, viewHistory);
-//			stage.addEventListener(ErrorEvent.MULTIPLE_FILE_DROP, onUserError);			
+			stage.addEventListener(UIEvent.DELETE_BOOKMARK, removeBookmark);
+			stage.addEventListener(ErrorEvent.MULTIPLE_FILE_DROP, onUserError);			
 		}
 		
 		public function resize(w:Number, h:Number):void
@@ -79,33 +77,30 @@ package view.modals {
 		private function installGit(e:InstallEvent):void 
 		{
 			_install.version = String(e.data);
-			addChild(_install);
+			showModalWindow(_install);
 		}	
 
 		private function onDragAndDrop(e:UIEvent):void 
 		{
-		// when a file or folder is dropped //	
-			showModalWindow(_new);
 			_new.addNewFromDropppedFile(e.data as File);
+			showModalWindow(_new);
 		}	
 
-		private function newBookmark(e:UIEvent):void 
+		private function onNewButtonClick(e:UIEvent):void 
 		{
-		// when the button is clicked //	
-			addChild(_new);
+			showModalWindow(_new);
 		}
 
 		private function editBookmark(e:UIEvent):void
 		{
-			if (!AppModel.bookmark) return;
 			_edit.bookmark = AppModel.bookmark;
-			addChild(_edit);
+			showModalWindow(_edit);
 		}
 		
 		private function removeBookmark(e:UIEvent):void
 		{
 			_remove.bookmark = AppModel.bookmark;
-			addChild(_remove);
+			showModalWindow(_remove);
 		}
 		
 		private function addNewCommit(e:UIEvent):void 
@@ -118,22 +113,18 @@ package view.modals {
 		private function repairBookmark(e:BookmarkEvent):void
 		{
 			_repair.failed = e.data as Vector.<Bookmark>;
-			addChild(_repair);
+			showModalWindow(_repair);
 		}	
-		
-		private function onBranchDetached(e:BookmarkEvent):void 
-		{
-			trace("ModalManager.onBranchDetached(e) >> ", e.data.label);		}		
 		
 		private function onCommitModified(e:BookmarkEvent):void 
 		{
-			addChild(_modified);	
+			showModalWindow(_modified);	
 		}
 		
 		private function onUserError(e:ErrorEvent):void
 		{
-			addChild(_error);
 			_error.message = e.type as String;
+			showModalWindow(_error);
 		}									
 		
 	// adding & removing modal windows //	
