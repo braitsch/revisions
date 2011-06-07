@@ -1,6 +1,6 @@
 package view.history {
 
-	import model.AppModel;
+	import events.UIEvent;
 	import model.Commit;
 	import com.greensock.TweenLite;
 	import flash.display.Shape;
@@ -61,12 +61,13 @@ package view.history {
 		
 		private function onButtonClick(e:MouseEvent):void
 		{
-			trace("HistoryItem.onButtonClick(e)", e.currentTarget.name, _commit.sha1);
-			return;
+//			trace("HistoryItem.onButtonClick(e)", e.currentTarget.name, _commit.sha1);
 			switch (e.currentTarget.name){
-				case 'info' 	: AppModel.proxies.checkout.checkout(_commit);	break;
-				case 'revert' 	: AppModel.proxies.checkout.checkout(_commit);	break;
-				case 'download' : AppModel.proxies.checkout.checkout(_commit);	break;
+				case 'info' 	: 
+					dispatchEvent(new UIEvent(UIEvent.COMMIT_DETAILS, _commit));
+				break;
+//				case 'revert' 	: AppModel.proxies.checkout.checkout(_commit);	break;
+//				case 'download' : AppModel.proxies.checkout.checkout(_commit);	break;
 			}
 		}		
 		

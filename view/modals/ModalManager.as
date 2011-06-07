@@ -6,6 +6,7 @@ package view.modals {
 	import events.UIEvent;
 	import model.AppModel;
 	import model.Bookmark;
+	import model.Commit;
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.MouseEvent;
@@ -18,6 +19,7 @@ package view.modals {
 		private static var _edit			:EditBookmark = new EditBookmark();
 		private static var _repair			:RepairBookmark = new RepairBookmark();
 		private static var _remove			:RemoveBookmark = new RemoveBookmark();		private static var _commit			:SaveCommit = new SaveCommit();
+		private static var _details			:CommitDetails = new CommitDetails();
 		private static var _untracked		:AddUntrackedFiles = new AddUntrackedFiles();		private static var _error			:UserError = new UserError();
 		
 		private static var _install			:InstallGit = new InstallGit();
@@ -47,9 +49,10 @@ package view.modals {
 			stage.addEventListener(UIEvent.EDIT_BOOKMARK, editBookmark);
 			stage.addEventListener(UIEvent.SAVE_PROJECT, addNewCommit);
 			stage.addEventListener(UIEvent.DELETE_BOOKMARK, removeBookmark);
+			stage.addEventListener(UIEvent.COMMIT_DETAILS, showCommitDetails);
 			stage.addEventListener(ErrorEvent.MULTIPLE_FILE_DROP, onUserError);			
 		}
-		
+
 		public function resize(w:Number, h:Number):void
 		{
 			_curtain.resize(w, h);
@@ -107,6 +110,12 @@ package view.modals {
 		{
 			showModalWindow(_commit);
 		}
+		
+		private function showCommitDetails(e:UIEvent):void
+		{
+			_details.commit = e.data as Commit;
+			showModalWindow(_details);
+		}		
 		
 	// alerts //	
 	
