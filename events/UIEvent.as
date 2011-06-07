@@ -27,9 +27,9 @@ package events {
 		public static const TOGGLE_OPEN_DIRECTORY	:String = "TOGGLE_OPEN_DIRECTORY";
 		
 	// other stuff //	
-		public static const COLUMN_RESIZED			:String = "COLUMN_RESIZED";
 		public static const USER_ERROR				:String = "USER_ERROR";
 		public static const DRAG_AND_DROP			:String = "DRAG_AND_DROP";
+		public static const REVERT					:String = "REVERT";
 		public static const COMMIT_DETAILS			:String = "COMMIT_DETAILS";
 		
 		public var data:Object;
