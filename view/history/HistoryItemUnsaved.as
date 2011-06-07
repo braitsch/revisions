@@ -23,7 +23,7 @@ package view.history {
 
 		private function onSaveClick(e:MouseEvent):void
 		{
-			dispatchEvent(new UIEvent(UIEvent.SAVE_PROJECT));
+			dispatchEvent(new UIEvent(UIEvent.COMMIT));
 		}
 		
 		override public function resize(w:uint):void

@@ -2,7 +2,6 @@ package view.modals {
 
 	import events.UIEvent;
 	import model.Commit;
-	import flash.display.Bitmap;
 	import flash.events.MouseEvent;
 
 	public class CommitDetails extends ModalWindow {
@@ -12,7 +11,6 @@ package view.modals {
 		public function CommitDetails()
 		{
 			addChild(_view);
-			_view.ok_btn.addChild(new Bitmap(new LabelOk()));
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onClose);
 			super.addButtons([_view.ok_btn]);
 		}

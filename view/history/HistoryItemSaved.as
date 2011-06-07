@@ -66,7 +66,9 @@ package view.history {
 				case 'info' 	: 
 					dispatchEvent(new UIEvent(UIEvent.COMMIT_DETAILS, _commit));
 				break;
-//				case 'revert' 	: AppModel.proxies.checkout.checkout(_commit);	break;
+				case 'revert'	:
+					dispatchEvent(new UIEvent(UIEvent.REVERT, _commit));
+				break;	
 //				case 'download' : AppModel.proxies.checkout.checkout(_commit);	break;
 			}
 		}		

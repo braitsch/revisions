@@ -18,15 +18,17 @@ package view.modals {
 		private static var _new				:NewBookmark = new NewBookmark();
 		private static var _edit			:EditBookmark = new EditBookmark();
 		private static var _repair			:RepairBookmark = new RepairBookmark();
-		private static var _remove			:RemoveBookmark = new RemoveBookmark();		private static var _commit			:SaveCommit = new SaveCommit();
-		private static var _details			:CommitDetails = new CommitDetails();
-		private static var _untracked		:AddUntrackedFiles = new AddUntrackedFiles();		private static var _error			:UserError = new UserError();
+		private static var _remove			:RemoveBookmark = new RemoveBookmark();		private static var _commit			:WindowCommit = new WindowCommit();
+		private static var _revert			:WindowRevert = new WindowRevert();
+		private static var _details			:CommitDetails = new CommitDetails();		private static var _untracked		:AddUntrackedFiles = new AddUntrackedFiles();
+		private static var _error			:UserError = new UserError();
 		
 		private static var _install			:InstallGit = new InstallGit();
 		private static var _modified		:DetachedBranch = new DetachedBranch();
 		private static var _curtain			:ModalCurtain = new ModalCurtain();
-		private static var _welcome			:WelcomeScreen = new WelcomeScreen();
-		private static var _window			:ModalWindow; // active window onscreen //
+		private static var _welcome:WelcomeScreen = new WelcomeScreen();
+		private static var _window:ModalWindow;
+ // active window onscreen //
 
 		public function ModalManager()
 		{
@@ -47,8 +49,9 @@ package view.modals {
 			stage.addEventListener(UIEvent.DRAG_AND_DROP, onDragAndDrop);
 			stage.addEventListener(UIEvent.ADD_BOOKMARK, onNewButtonClick);
 			stage.addEventListener(UIEvent.EDIT_BOOKMARK, editBookmark);
-			stage.addEventListener(UIEvent.SAVE_PROJECT, addNewCommit);
 			stage.addEventListener(UIEvent.DELETE_BOOKMARK, removeBookmark);
+			stage.addEventListener(UIEvent.COMMIT, addNewCommit);
+			stage.addEventListener(UIEvent.REVERT, revertProject);
 			stage.addEventListener(UIEvent.COMMIT_DETAILS, showCommitDetails);
 			stage.addEventListener(ErrorEvent.MULTIPLE_FILE_DROP, onUserError);			
 		}
@@ -115,7 +118,13 @@ package view.modals {
 		{
 			_details.commit = e.data as Commit;
 			showModalWindow(_details);
-		}		
+		}
+		
+		private function revertProject(e:UIEvent):void
+		{
+			_revert.commit = e.data as Commit;
+			showModalWindow(_revert);			
+		}				
 		
 	// alerts //	
 	

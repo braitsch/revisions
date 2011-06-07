@@ -6,7 +6,6 @@ package view.modals {
 	import model.AppModel;
 	import model.Bookmark;
 	import utils.FileBrowser;
-	import flash.display.Bitmap;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
 
@@ -19,8 +18,6 @@ package view.modals {
 		public function NewBookmark()
 		{
 			addChild(_view);
-			_view.action_btn.addChild(new Bitmap(new LabelOk()));
-			_view.browse_btn.addChild(new Bitmap(new LabelBrowse()));
 			_view.browse_btn.addEventListener(MouseEvent.CLICK, showFileBrowser);
 			_view.action_btn.addEventListener(MouseEvent.CLICK, onActionButtonClick);
 			super.addButtons([_view.action_btn, _view.browse_btn]);

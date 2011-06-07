@@ -49,8 +49,7 @@ package view {
 		{
 			var n:Event;
 			switch(e.target.name){
-				case 'new_btn' 		: n = new UIEvent(UIEvent.ADD_BOOKMARK);	break;				case 'edit_btn' 	: n = new UIEvent(UIEvent.EDIT_BOOKMARK);	break;				case 'save_btn' 	: n = new UIEvent(UIEvent.SAVE_PROJECT);	break;				case 'delete_btn' 	: n = new UIEvent(UIEvent.DELETE_BOOKMARK);	break;				case 'history_btn' 	: n = new UIEvent(UIEvent.OPEN_HISTORY);	break;
-			}
+				case 'new_btn' 		: n = new UIEvent(UIEvent.ADD_BOOKMARK);	break;				case 'edit_btn' 	: n = new UIEvent(UIEvent.EDIT_BOOKMARK);	break;				case 'save_btn' 	: n = new UIEvent(UIEvent.COMMIT);	break;				case 'delete_btn' 	: n = new UIEvent(UIEvent.DELETE_BOOKMARK);	break;			}
 			if (n) dispatchEvent(n);
 		}
 		

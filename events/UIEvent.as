@@ -17,7 +17,9 @@ package events {
 		public static const DELETE_BRANCH			:String = "DELETE_BRANCH";
 		
 	// modal window events //	
-		public static const SAVE_PROJECT			:String = "SAVE_PROJECT";					public static const OPEN_HISTORY			:String = "OPEN_HISTORY";
+		public static const COMMIT					:String = "COMMIT";		public static const REVERT					:String = "REVERT";
+		public static const DOWNLOAD				:String = "DOWNLOAD";
+		public static const COMMIT_DETAILS			:String = "COMMIT_DETAILS";
 		public static const CLOSE_MODAL_WINDOW		:String = "CLOSE_MODAL_WINDOW";
 		public static const FILE_BROWSER_SELECTION	:String = "FILE_BROWSER_SELECTION";		
 		
@@ -29,8 +31,6 @@ package events {
 	// other stuff //	
 		public static const USER_ERROR				:String = "USER_ERROR";
 		public static const DRAG_AND_DROP			:String = "DRAG_AND_DROP";
-		public static const REVERT					:String = "REVERT";
-		public static const COMMIT_DETAILS			:String = "COMMIT_DETAILS";
 		
 		public var data:Object;
 

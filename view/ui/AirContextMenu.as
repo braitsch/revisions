@@ -51,7 +51,7 @@ package view.ui {
 			var cmi:ContextMenuItem = e.target as ContextMenuItem;
 			switch(cmi.label){
 				case 'Save Version' : 
-					_stage.dispatchEvent(new UIEvent(UIEvent.SAVE_PROJECT));	break;				case 'Edit Bookmark' : 
+					_stage.dispatchEvent(new UIEvent(UIEvent.COMMIT));	break;				case 'Edit Bookmark' : 
 					_stage.dispatchEvent(new UIEvent(UIEvent.EDIT_BOOKMARK));	break;				case 'Delete Bookmark' : 
 					_stage.dispatchEvent(new UIEvent(UIEvent.DELETE_BOOKMARK));	break;
 				case 'Track Item' : 

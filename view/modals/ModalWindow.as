@@ -3,7 +3,6 @@ package view.modals {
 	import events.UIEvent;
 	import fl.text.TLFTextField;
 	import com.greensock.TweenLite;
-	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -32,10 +31,8 @@ package view.modals {
 		{			for (var i : int = 0; i < a.length; i++) {
 				a[i].buttonMode = true;
 				a[i].mouseChildren = false;
-				if (a[i].numChildren == 3){
-					var label:Bitmap = a[i].getChildAt(2) as Bitmap;
-					label.x = -(label.width/2) + 2;
-					label.y = -(label.height/2) + 2;
+		//TODO fix this once we get rid of all the old style buttons		
+				if (a[i].hasOwnProperty('over')){
 					a[i]['over'].alpha = 0;
 					a[i].addEventListener(MouseEvent.ROLL_OUT, onButtonRollOut);
 					a[i].addEventListener(MouseEvent.ROLL_OVER, onButtonRollOver);
