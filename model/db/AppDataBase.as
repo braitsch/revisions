@@ -10,7 +10,6 @@ package model.db {
 		private static var _open				:Vector.<SQLStatement>;		private static var _add					:Vector.<SQLStatement>;
 		private static var _edit				:Vector.<SQLStatement>;		private static var _delete				:Vector.<SQLStatement>;		private static var _setActive			:Vector.<SQLStatement>;
 		private static var _repositories		:Array;
-		private static var _settings			:Array;
 		
 		public function AppDatabase()
 		{
