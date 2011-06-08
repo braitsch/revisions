@@ -32,7 +32,7 @@ package view.modals {
 
 		private function onRevert(e:MouseEvent):void
 		{
-			trace("WindowRevert.onRevert(e) ------ revert!!!!");
+			AppModel.proxies.checkout.revert(_commit.sha1);			
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW, this));			
 		}
 		

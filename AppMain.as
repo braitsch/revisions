@@ -41,7 +41,7 @@ package {
 		{
 			var a:Array = e.data as Array;
 			for (var i:int = 0; i < a.length; i++) {
-				for (var val : String in a[i]) trace('prop='+val, 'val='+a[i][val]);
+	//			for (var val : String in a[i]) trace('prop='+val, 'val='+a[i][val]);
 			}
 		}		
 

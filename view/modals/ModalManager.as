@@ -21,7 +21,7 @@ package view.modals {
 		private static var _remove			:RemoveBookmark = new RemoveBookmark();		private static var _commit			:WindowCommit = new WindowCommit();
 		private static var _revert			:WindowRevert = new WindowRevert();
 		private static var _download		:WindowDownload = new WindowDownload();		private static var _details			:CommitDetails = new CommitDetails();
-		private static var _untracked		:AddUntrackedFiles = new AddUntrackedFiles();
+	//	private static var _untracked		:AddUntrackedFiles = new AddUntrackedFiles();
 		private static var _error			:UserError = new UserError();
 		private static var _welcome:WelcomeScreen = new WelcomeScreen();
 		
@@ -39,7 +39,7 @@ package view.modals {
 			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onBookmarkSelected);
 			AppModel.engine.addEventListener(BookmarkEvent.PATH_ERROR, repairBookmark);
 			AppModel.engine.addEventListener(BookmarkEvent.NO_BOOKMARKS, showWelcomeScreen);
-			AppModel.engine.addEventListener(BookmarkEvent.UNTRACKED_FILES, promptToTrackFiles);
+	//		AppModel.engine.addEventListener(BookmarkEvent.UNTRACKED_FILES, promptToTrackFiles);
 			AppModel.proxies.config.addEventListener(InstallEvent.GIT_UNAVAILABLE, installGit);
 			AppModel.proxies.checkout.addEventListener(BookmarkEvent.COMMIT_MODIFIED, onCommitModified);
 		}
@@ -66,10 +66,10 @@ package view.modals {
 			}
 		}
 		
-		private function promptToTrackFiles(e:BookmarkEvent):void
-		{
-			showModalWindow(_untracked);
-		}
+//		private function promptToTrackFiles(e:BookmarkEvent):void
+//		{
+//			showModalWindow(_untracked);
+//		}
 
 		private function onBookmarkSelected(e:BookmarkEvent):void
 		{

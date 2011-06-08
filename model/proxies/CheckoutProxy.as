@@ -21,6 +21,12 @@ package model.proxies {
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 		}
 		
+		public function revert(sha1:String):void
+		{
+			super.directory = AppModel.bookmark.gitdir;
+			super.call(Vector.<String>([BashMethods.REVERT, sha1]));			
+		}
+		
 		public function download(sha1:String, saveAs:String, file:String):void
 		{
 			super.directory = AppModel.bookmark.gitdir;
@@ -46,15 +52,15 @@ package model.proxies {
 		
 		private function onBranchModifiedStatus(n:uint):void
 		{
-			if (n == 0){
-				allowCheckout();
-			} else {
-				if (_bookmark.branch.name == Bookmark.DETACH){
-					dispatchEvent(new BookmarkEvent(BookmarkEvent.COMMIT_MODIFIED));					
-				}	else{
-					stashUnsavedChanges();
-				}
-			}
+//			if (n == 0){
+//				allowCheckout();
+//			} else {
+//				if (_bookmark.branch.name == Bookmark.DETACH){
+//					dispatchEvent(new BookmarkEvent(BookmarkEvent.COMMIT_MODIFIED));					
+//				}	else{
+//					stashUnsavedChanges();
+//				}
+//			}
 		}
 
 		private function stashUnsavedChanges():void
@@ -72,6 +78,10 @@ package model.proxies {
 		{
 			trace("CheckoutProxy.onProcessComplete(e)", e.data.method, e.data.result);
 			switch(e.data.method) {
+				case BashMethods.REVERT :
+			// auto update the history after reverting to an earlier version //	
+					AppModel.proxies.history.getHistory();				
+				break;
 				case BashMethods.GET_NUM_IN_INDEX :
 					onBranchModifiedStatus(e.data.result);
 				break;
@@ -80,7 +90,7 @@ package model.proxies {
 				break;				
 				case BashMethods.CHECKOUT_BRANCH :
 					if (_target is Commit){
-						setBranch(_bookmark.detach);
+					//	setBranch(_bookmark.detach);
 					}	else{
 						checkIfBranchIsSavedInStash();
 					}

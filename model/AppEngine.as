@@ -55,22 +55,6 @@ package model {
 			_bookmarks.push(_bookmark);
 			dispatchEvent(new BookmarkEvent(BookmarkEvent.ADDED, _bookmark));
 			dispatchActiveBookmark();
-		// when adding a folder run an inventory to check for untracked files //	
-			if (_bookmark.file.isDirectory){
-				AppModel.proxies.status.getStatus();
-				AppModel.engine.addEventListener(BookmarkEvent.STATUS, onUntrackedFiles);
-			}
-		}
-
-		private function onUntrackedFiles(e:BookmarkEvent):void
-		{
-			if (AppModel.branch.untracked == 0){
-				AppModel.proxies.editor.commit('Bookmark Created', true);
-			}	else{
-		// if we have untracked files, ask the user if they want to add them all //		
-				dispatchEvent(new BookmarkEvent(BookmarkEvent.UNTRACKED_FILES));
-			}
-			AppModel.engine.removeEventListener(BookmarkEvent.STATUS, onUntrackedFiles);
 		}
 
 	// sequence to remove a bookmark //	

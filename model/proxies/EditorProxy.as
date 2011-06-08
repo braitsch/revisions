@@ -17,15 +17,10 @@ package model.proxies {
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 		}
 
-		public function commit($msg:String, $addAll:Boolean = false):void
+		public function commit($msg:String):void
 		{
 			super.directory = AppModel.bookmark.gitdir;
-			super.call(Vector.<String>([BashMethods.COMMIT, $msg, $addAll]));
-		}
-		
-		public function initalCommit():void
-		{
-			
+			super.call(Vector.<String>([BashMethods.COMMIT, $msg]));
 		}
 		
 		public function trackFile($file:File):void

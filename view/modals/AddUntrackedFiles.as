@@ -9,6 +9,8 @@ package view.modals {
 
 		private static var _view	:AutoInitMC = new AutoInitMC();
 
+	//TODO update this class to prompt user when initializing a new repository //
+
 		public function AddUntrackedFiles()
 		{
 			addChild(_view);
@@ -28,13 +30,13 @@ package view.modals {
 		
 		private function onOkSelected(e:MouseEvent):void
 		{
-			AppModel.proxies.editor.commit('Bookmark Created', true);	
+			AppModel.proxies.editor.commit('Bookmark Created');	
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW, this));
 		}
 		
 		private function onNoSelected(e:MouseEvent):void
 		{
-			AppModel.proxies.editor.commit('Bookmark Created', false);	
+			AppModel.proxies.editor.commit('Bookmark Created');	
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW, this));
 		}	
 		

@@ -28,6 +28,7 @@ package model.bash{
 		public static const GET_HISTORY:String = 'getHistory';
 		public static const CHECKOUT_COMMIT:String = 'checkoutCommit';
 		public static const CHECKOUT_BRANCH:String = 'checkoutBranch';
+		public static const REVERT:String = 'revertToVersion';
 		public static const DOWNLOAD_VERSION:String = 'downloadVersion';
 		
 	// status methods //	

@@ -32,7 +32,7 @@ package model.proxies {
 			_timer.start();					
 			super.directory = AppModel.bookmark.gitdir;
 			super.queue = getStatusTransaction();
-			trace("StatusProxy.getStatus() >> ", AppModel.bookmark.label, AppModel.branch.name);		}
+	//		trace("StatusProxy.getStatus() >> ", AppModel.bookmark.label, AppModel.branch.name);		}
 		
 	// private handlers //
 		

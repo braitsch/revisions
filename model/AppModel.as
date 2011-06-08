@@ -28,6 +28,12 @@ package model {
 		{
 			_bookmark = e.data as Bookmark;
 			_database.setActiveBookmark(_bookmark.label);
+			if (_bookmark.branch==null)
+			{
+				trace('no branch');
+				return;
+			}
+			
 			if (_bookmark.branch.history){
 				AppModel.proxies.status.getStatus();
 			}	else{

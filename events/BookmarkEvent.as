@@ -18,11 +18,9 @@ package events {
 		public static const BRANCHES_READ					:String = "BRANCHES_READ";
 		public static const QUEUE_BRANCHES_READ				:String = "QUEUE_BRANCHES_READ";
 		public static const BRANCH_ADDED					:String = "BRANCH_ADDED";
-		public static const BRANCH_DETACHED					:String = "BRANCH_DETACHED";
 		public static const BRANCH_MODIFIED					:String = "BRANCH_MODIFIED";
 		public static const COMMIT_MODIFIED					:String = "COMMIT_MODIFIED";
 		public static const UNTRACKED_FILES					:String = "UNTRACKED_FILES";
-		
 			
 		public var data:Object;
 		

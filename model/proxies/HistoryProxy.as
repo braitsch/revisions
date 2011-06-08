@@ -10,7 +10,6 @@ package model.proxies {
 		
 		public function HistoryProxy()
 		{
-			super.debug = false;
 			super.executable = 'History.sh';
 			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
@@ -19,15 +18,15 @@ package model.proxies {
 		public function getHistory():void
 		{
 			super.directory = AppModel.bookmark.gitdir;
-			super.call(Vector.<String>([BashMethods.GET_HISTORY, AppModel.branch.name]));
-			trace("HistoryProxy.getHistory(b) > ", AppModel.bookmark.label, AppModel.branch.name);
+			super.call(Vector.<String>([BashMethods.GET_HISTORY]));
+	//		trace("HistoryProxy.getHistory(b) > ", AppModel.bookmark.label, AppModel.branch.name);
 		}
 		
 	// handlers //						
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
-			trace("HistoryProxy.onProcessComplete(e)", e.data.method);
+	//		trace("HistoryProxy.onProcessComplete(e)", e.data.method);
 			switch(e.data.method){
 				case BashMethods.GET_HISTORY : 
 			// always force a getStatus after we requesting the branch history //	
