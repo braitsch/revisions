@@ -26,7 +26,6 @@ package view.modals {
 		private static var _welcome:WelcomeScreen = new WelcomeScreen();
 		
 		private static var _install			:InstallGit = new InstallGit();
-		private static var _modified		:DetachedBranch = new DetachedBranch();
 		private static var _curtain			:ModalCurtain = new ModalCurtain();
 		private static var _window			:ModalWindow; // active window onscreen //
 
@@ -41,7 +40,6 @@ package view.modals {
 			AppModel.engine.addEventListener(BookmarkEvent.NO_BOOKMARKS, showWelcomeScreen);
 	//		AppModel.engine.addEventListener(BookmarkEvent.UNTRACKED_FILES, promptToTrackFiles);
 			AppModel.proxies.config.addEventListener(InstallEvent.GIT_UNAVAILABLE, installGit);
-			AppModel.proxies.checkout.addEventListener(BookmarkEvent.COMMIT_MODIFIED, onCommitModified);
 		}
 
 		public function init(stage:Stage):void
@@ -140,11 +138,6 @@ package view.modals {
 			_repair.failed = e.data as Vector.<Bookmark>;
 			showModalWindow(_repair);
 		}	
-		
-		private function onCommitModified(e:BookmarkEvent):void 
-		{
-			showModalWindow(_modified);	
-		}
 		
 		private function onUserError(e:ErrorEvent):void
 		{
