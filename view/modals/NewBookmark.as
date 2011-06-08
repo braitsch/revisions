@@ -21,7 +21,6 @@ package view.modals {
 			_view.browse_btn.addEventListener(MouseEvent.CLICK, showFileBrowser);
 			_view.action_btn.addEventListener(MouseEvent.CLICK, onActionButtonClick);
 			super.addButtons([_view.action_btn, _view.browse_btn]);
-			
 			super.addInputs(Vector.<TLFTextField>([_view.name_txt]));
 			
 			_view.github.over.alpha = _view.beanstalk.over.alpha = 0;

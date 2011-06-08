@@ -61,15 +61,16 @@ package view.history {
 		
 		private function onButtonClick(e:MouseEvent):void
 		{
-//			trace("HistoryItem.onButtonClick(e)", e.currentTarget.name, _commit.sha1);
 			switch (e.currentTarget.name){
-				case 'info' 	: 
-					dispatchEvent(new UIEvent(UIEvent.COMMIT_DETAILS, _commit));
-				break;
 				case 'revert'	:
 					dispatchEvent(new UIEvent(UIEvent.REVERT, _commit));
 				break;	
-//				case 'download' : AppModel.proxies.checkout.checkout(_commit);	break;
+				case 'info' 	: 
+					dispatchEvent(new UIEvent(UIEvent.COMMIT_DETAILS, _commit));
+				break;
+				case 'download'	:
+					dispatchEvent(new UIEvent(UIEvent.DOWNLOAD, _commit));
+				break;				
 			}
 		}		
 		

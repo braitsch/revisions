@@ -1,7 +1,7 @@
 package model.proxies {
 
-	import events.NativeProcessEvent;
 	import events.BookmarkEvent;
+	import events.NativeProcessEvent;
 	import model.AppModel;
 	import model.Bookmark;
 	import model.Branch;
@@ -21,9 +21,10 @@ package model.proxies {
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 		}
 		
-		public function set bookmark(b:Bookmark):void 
+		public function download(sha1:String, saveAs:String, file:String):void
 		{
-			_bookmark = b;			super.directory = _bookmark.gitdir;
+			super.directory = AppModel.bookmark.gitdir;
+			super.call(Vector.<String>([BashMethods.DOWNLOAD_VERSION, sha1, saveAs, file]));
 		}
 		
 	// this should only be called if we are changing branches on a bookmark //	
@@ -69,7 +70,7 @@ package model.proxies {
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
-			trace("CheckoutProxy.onProcessComplete(e)", e.data.method);
+			trace("CheckoutProxy.onProcessComplete(e)", e.data.method, e.data.result);
 			switch(e.data.method) {
 				case BashMethods.GET_NUM_IN_INDEX :
 					onBranchModifiedStatus(e.data.result);

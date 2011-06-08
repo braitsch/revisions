@@ -57,9 +57,8 @@ package view.bookmarks {
 
 		private function onBookmarkSelection(e:MouseEvent):void
 		{		// prevent re-selecting the current bookmark //				
-			if (AppModel.bookmark == _bookmark) return;
-			if (_bookmark.branch.name != 'master'){				AppModel.proxies.checkout.bookmark = _bookmark;				AppModel.proxies.checkout.checkout(_bookmark.getBranchByName('master'));
-			}	else{				AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.SELECTED, _bookmark));
+			if (AppModel.bookmark != _bookmark) {
+				AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.SELECTED, _bookmark));
 			}
 		}
 

@@ -20,15 +20,15 @@ package view.modals {
 		private static var _repair			:RepairBookmark = new RepairBookmark();
 		private static var _remove			:RemoveBookmark = new RemoveBookmark();		private static var _commit			:WindowCommit = new WindowCommit();
 		private static var _revert			:WindowRevert = new WindowRevert();
-		private static var _details			:CommitDetails = new CommitDetails();		private static var _untracked		:AddUntrackedFiles = new AddUntrackedFiles();
+		private static var _download		:WindowDownload = new WindowDownload();		private static var _details			:CommitDetails = new CommitDetails();
+		private static var _untracked		:AddUntrackedFiles = new AddUntrackedFiles();
 		private static var _error			:UserError = new UserError();
+		private static var _welcome:WelcomeScreen = new WelcomeScreen();
 		
 		private static var _install			:InstallGit = new InstallGit();
 		private static var _modified		:DetachedBranch = new DetachedBranch();
 		private static var _curtain			:ModalCurtain = new ModalCurtain();
-		private static var _welcome:WelcomeScreen = new WelcomeScreen();
-		private static var _window:ModalWindow;
- // active window onscreen //
+		private static var _window			:ModalWindow; // active window onscreen //
 
 		public function ModalManager()
 		{
@@ -52,6 +52,7 @@ package view.modals {
 			stage.addEventListener(UIEvent.DELETE_BOOKMARK, removeBookmark);
 			stage.addEventListener(UIEvent.COMMIT, addNewCommit);
 			stage.addEventListener(UIEvent.REVERT, revertProject);
+			stage.addEventListener(UIEvent.DOWNLOAD, downloadVersion);
 			stage.addEventListener(UIEvent.COMMIT_DETAILS, showCommitDetails);
 			stage.addEventListener(ErrorEvent.MULTIPLE_FILE_DROP, onUserError);			
 		}
@@ -114,17 +115,23 @@ package view.modals {
 			showModalWindow(_commit);
 		}
 		
+		private function revertProject(e:UIEvent):void
+		{
+			_revert.commit = e.data as Commit;
+			showModalWindow(_revert);			
+		}
+		
+		private function downloadVersion(e:UIEvent):void
+		{
+			_download.commit = e.data as Commit;
+			showModalWindow(_download);		
+		}
+
 		private function showCommitDetails(e:UIEvent):void
 		{
 			_details.commit = e.data as Commit;
 			showModalWindow(_details);
 		}
-		
-		private function revertProject(e:UIEvent):void
-		{
-			_revert.commit = e.data as Commit;
-			showModalWindow(_revert);			
-		}				
 		
 	// alerts //	
 	
