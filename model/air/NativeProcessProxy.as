@@ -15,11 +15,11 @@ package model.air {
 		
 		private var _np				:NativeProcess = new NativeProcess();
 		private var _npi			:NativeProcessStartupInfo = new NativeProcessStartupInfo();
-		private var _dir			:String = File.desktopDirectory.resolvePath('git-test').nativePath;
+		private var _dir			:String = File.desktopDirectory.nativePath;
 		private var _method			:String;
 		private var _result			:String;
 		private var _failed			:Boolean = false;	
-		public var debug			:Boolean = false;
+		protected var debug			:Boolean = false;
 		
 		public function NativeProcessProxy($exec:String = '')
 		{

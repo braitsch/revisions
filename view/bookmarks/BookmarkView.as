@@ -66,17 +66,17 @@ package view.bookmarks {
 		private function onBookmarkList(e:BookmarkEvent):void 
 		{
 			var v:Vector.<Bookmark> = e.data as Vector.<Bookmark>;
-			for (var i:int = 0; i < v.length; i++) _list.addItem(new BookmarkListItem(v[i]));
+			for (var i:int = 0; i < v.length; i++) _list.addItem(v[i]);
 		}
 
 		private function onBookmarkAdded(e:BookmarkEvent):void 
 		{
-			_list.addItem(new BookmarkListItem(e.data as Bookmark));
+			_list.addItem(e.data as Bookmark);
 		}
 		
 		private function onBookmarkDeleted(e:BookmarkEvent):void 
 		{
-			_list.removeItem(new BookmarkListItem(e.data as Bookmark));
+			_list.removeItem(e.data as Bookmark);
 		}
 		
 		private function onBookmarkSelected(e:BookmarkEvent):void 
