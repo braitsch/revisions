@@ -31,13 +31,13 @@ package view.modals {
 		private function onOkSelected(e:MouseEvent):void
 		{
 			AppModel.proxies.editor.commit('Bookmark Created');	
-			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW, this));
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 		}
 		
 		private function onNoSelected(e:MouseEvent):void
 		{
 			AppModel.proxies.editor.commit('Bookmark Created');	
-			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW, this));
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 		}	
 		
 	}

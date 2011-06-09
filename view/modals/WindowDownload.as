@@ -42,13 +42,13 @@ package view.modals {
 		
 		private function onCancel(e:MouseEvent):void
 		{
-			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW, this));
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 		}
 
 		private function onDownload(e:MouseEvent):void
 		{
 			_browser.browse('Choose a location to save '+AppModel.bookmark.label);
-			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW, this));
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 		}
 
 	}

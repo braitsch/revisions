@@ -59,10 +59,10 @@ package model {
 
 	// sequence to remove a bookmark //	
 
-		public function deleteBookmark(b:Bookmark, args:Object):void
+		public function deleteBookmark(bkmk:Bookmark, trashGit:Boolean, trashFiles:Boolean):void
 		{
-			_bookmark = b;
-			AppModel.proxies.editor.deleteBookmark(b, args);		
+			_bookmark = bkmk;
+			AppModel.proxies.editor.deleteBookmark(bkmk, trashGit, trashFiles);		
 			AppModel.proxies.editor.addEventListener(BookmarkEvent.DELETED, onBookmarkDeleted);				
 		}
 			

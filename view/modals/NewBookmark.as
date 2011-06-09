@@ -67,7 +67,7 @@ package view.modals {
 				active 	:	1
 			};				
 			AppModel.engine.addBookmark(new Bookmark(o));
-			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW, this));						
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));						
 		}		
 		
 		private function validate():Boolean

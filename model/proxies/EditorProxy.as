@@ -35,24 +35,26 @@ package model.proxies {
 			super.call(Vector.<String>([BashMethods.UNTRACK_FILE, $file.nativePath]));
 		}
 		
-		public function initBookmark(b:Bookmark):void 
+		public function initBookmark(bkmk:Bookmark):void 
 		{
-			if (b.file.isDirectory){
-				super.directory = b.target;			
+			if (bkmk.file.isDirectory){
+				super.directory = bkmk.target;			
 				super.call(Vector.<String>([BashMethods.INIT_FOLDER]));
 			}	else{
 				super.directory =  File.applicationStorageDirectory.nativePath;
-				super.call(Vector.<String>([BashMethods.INIT_FILE, b.target, b.label, b.worktree]));	
+				super.call(Vector.<String>([BashMethods.INIT_FILE, bkmk.target, bkmk.label, bkmk.worktree]));	
 			}
 		}	
 
-		public function deleteBookmark(b:Bookmark, args:Object):void 
+		public function deleteBookmark(bkmk:Bookmark, trashGit:Boolean, trashFiles:Boolean):void 
 		{
-			super.directory = b.gitdir;
-			if (b.file.isDirectory){
-				super.call(Vector.<String>([BashMethods.KILL_FOLDER, args.killGit]));
+			super.directory = bkmk.gitdir;
+			var target:String = trashFiles ? bkmk.target : '';
+			trace('bkmk.target = '+target);
+			if (bkmk.file.isDirectory){
+				super.call(Vector.<String>([BashMethods.KILL_FOLDER, trashGit, target]));
 			}	else{
-				super.call(Vector.<String>([BashMethods.KILL_FILE, args.killGit]));
+				super.call(Vector.<String>([BashMethods.KILL_FILE, trashGit, target]));
 			}
 		}						
 		

@@ -27,13 +27,13 @@ package view.modals {
 
 		private function onCancel(e:MouseEvent):void
 		{
-			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW, this));			
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));			
 		}
 
 		private function onRevert(e:MouseEvent):void
 		{
 			AppModel.proxies.checkout.revert(_commit.sha1);			
-			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW, this));			
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));			
 		}
 		
 	}

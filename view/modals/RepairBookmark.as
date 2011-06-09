@@ -51,7 +51,7 @@ package view.modals {
 				_view.name_txt.text = 'Please Enter A Name';		
 			}	else{
 				AppModel.database.editRepository(_oldId, _view.name_txt.text, _view.local_txt.text);				
-				dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW, this));
+				dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 			}
 		}					
 
@@ -59,7 +59,7 @@ package view.modals {
 		{
 		// if it's broken, this just removes the broken bookmark & leaves file system alone.
 			AppModel.database.deleteRepository(_view.name_txt.text);				
-			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW, this));			
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));			
 		}
 		
 	}

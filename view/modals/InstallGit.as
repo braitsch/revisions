@@ -38,7 +38,7 @@ package view.modals {
 			if (!_installed){
 				onInstallStart();
 			}	else{	
-				dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW, this));
+				dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 			}
 		}
 		

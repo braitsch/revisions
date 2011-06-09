@@ -55,7 +55,7 @@ package view.modals {
 				break;
 				case 'ok_btn' : 
 					if (validateName()){
-						dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW, this));
+						dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 						AppModel.database.editRepository(_bookmark.label, _view.name_txt.text, _view.local_txt.text);
 					}	
 				break;
