@@ -18,7 +18,7 @@ package view.modals {
 		private static var _new				:NewBookmark = new NewBookmark();
 		private static var _edit			:EditBookmark = new EditBookmark();
 		private static var _repair			:RepairBookmark = new RepairBookmark();
-		private static var _remove			:RemoveBookmark = new RemoveBookmark();		private static var _commit			:WindowCommit = new WindowCommit();
+		private static var _delete			:DeleteBookmark = new DeleteBookmark();		private static var _commit			:WindowCommit = new WindowCommit();
 		private static var _revert			:WindowRevert = new WindowRevert();
 		private static var _download		:WindowDownload = new WindowDownload();		private static var _details			:CommitDetails = new CommitDetails();
 	//	private static var _untracked		:AddUntrackedFiles = new AddUntrackedFiles();
@@ -47,7 +47,7 @@ package view.modals {
 			stage.addEventListener(UIEvent.DRAG_AND_DROP, onDragAndDrop);
 			stage.addEventListener(UIEvent.ADD_BOOKMARK, onNewButtonClick);
 			stage.addEventListener(UIEvent.EDIT_BOOKMARK, editBookmark);
-			stage.addEventListener(UIEvent.DELETE_BOOKMARK, removeBookmark);
+			stage.addEventListener(UIEvent.DELETE_BOOKMARK, deleteBookmark);
 			stage.addEventListener(UIEvent.COMMIT, addNewCommit);
 			stage.addEventListener(UIEvent.REVERT, revertProject);
 			stage.addEventListener(UIEvent.DOWNLOAD, downloadVersion);
@@ -63,15 +63,10 @@ package view.modals {
 				_window.y = (h-50)/2 - _window.height / 2 + 50;
 			}
 		}
-		
-//		private function promptToTrackFiles(e:BookmarkEvent):void
-//		{
-//			showModalWindow(_untracked);
-//		}
 
 		private function onBookmarkSelected(e:BookmarkEvent):void
 		{
-			if (_welcome.stage) hideModalWindow(_welcome);
+			if (_window == _welcome) hideModalWindow();
 		}
 
 		private function showWelcomeScreen(e:BookmarkEvent):void
@@ -98,20 +93,29 @@ package view.modals {
 
 		private function editBookmark(e:UIEvent):void
 		{
-			_edit.bookmark = AppModel.bookmark;
+			_edit.bookmark = e.data as Bookmark;
 			showModalWindow(_edit);
 		}
 		
-		private function removeBookmark(e:UIEvent):void
+		private function deleteBookmark(e:UIEvent):void
 		{
-			_remove.bookmark = AppModel.bookmark;
-			showModalWindow(_remove);
+			_delete.bookmark = e.data as Bookmark;
+			showModalWindow(_delete);
 		}
 		
 		private function addNewCommit(e:UIEvent):void 
 		{
+		//TODO need to handle commit right clicks on bookmarks
+		// right now these attempt to commit AppModel.bookmark
+		// not the bookmark that was right clicked!!	
 			showModalWindow(_commit);
 		}
+		
+		private function showCommitDetails(e:UIEvent):void
+		{
+			_details.commit = e.data as Commit;
+			showModalWindow(_details);
+		}		
 		
 		private function revertProject(e:UIEvent):void
 		{
@@ -125,12 +129,6 @@ package view.modals {
 			showModalWindow(_download);		
 		}
 
-		private function showCommitDetails(e:UIEvent):void
-		{
-			_details.commit = e.data as Commit;
-			showModalWindow(_details);
-		}
-		
 	// alerts //	
 	
 		private function repairBookmark(e:BookmarkEvent):void
@@ -143,23 +141,29 @@ package view.modals {
 		{
 			_error.message = e.type as String;
 			showModalWindow(_error);
-		}									
+		}
+		
+//		private function promptToTrackFiles(e:BookmarkEvent):void
+//		{
+//			showModalWindow(_untracked);
+//		}											
 		
 	// adding & removing modal windows //	
 		
-		private function onCloseButton(e:UIEvent):void {hideModalWindow(_window);}
-		private function onCurtainClick(e:MouseEvent):void {hideModalWindow(_window);}		
+		private function onCloseButton(e:UIEvent):void { hideModalWindow(); }
+		private function onCurtainClick(e:MouseEvent):void { hideModalWindow(); }		
 		
 		private function showModalWindow(mw:ModalWindow):void
 		{
+			if (_window) removeChild(_window);
 			addChild(mw);
 			_window = mw;
 			_curtain.show();
 		}
 		
-		private function hideModalWindow(mw:ModalWindow):void
+		private function hideModalWindow():void
 		{
-			removeChild(mw);
+			removeChild(_window);
 			_window = null;
 			_curtain.hide();
 		}		

@@ -8,7 +8,7 @@ package model {
 		public static const	DETACH	:String = '(no branch)';
 		
 		private var _name			:String;
-		private var _status			:Array;
+		private var _status			:Array = [[], [], [], []];
 		private var _history		:Array;
 
 		public function Branch(n:String) 

@@ -28,7 +28,7 @@ package view.modals {
 		}			
 		
 		protected function addButtons(a:Array):void
-		{			for (var i : int = 0; i < a.length; i++) {
+		{			for (var i:int=0; i < a.length; i++) {
 				a[i].buttonMode = true;
 				a[i].mouseChildren = false;
 		//TODO fix this once we get rid of all the old style buttons		
@@ -55,8 +55,17 @@ package view.modals {
 		protected function addInputs(v:Vector.<TLFTextField>):void
 		{
 			_inputs = v;
-			for (var i : int = 0; i < v.length; i++) v[i].tabIndex = i;
+			for (var i:int=0; i < v.length; i++) v[i].tabIndex = i;
 		}
+		
+		protected function addCheckboxes(a:Array):void
+		{
+			for (var i:int=0; i < a.length; i++) {
+				a[i].buttonMode = true;
+				a[i].cross.visible = false;
+				a[i].cross.mouseEnabled = false;
+			}
+		}		
 		
 	// private methods //	
 
@@ -77,7 +86,7 @@ package view.modals {
 		{
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW, this));
 		}
-				
+
 	}
 	
 }
