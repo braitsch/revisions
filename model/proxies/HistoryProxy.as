@@ -21,18 +21,29 @@ package model.proxies {
 			super.call(Vector.<String>([BashMethods.GET_HISTORY]));
 		}
 		
+		public function getTotalCommits():void
+		{
+			super.directory = AppModel.bookmark.gitdir;
+			super.call(Vector.<String>([BashMethods.GET_TOTAL_COMMITS]));
+		}
+		
 	// handlers //						
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
-	//		trace("HistoryProxy.onProcessComplete(e)", e.data.method);
+			trace("HistoryProxy.onProcessComplete(e)", e.data.method);
 			switch(e.data.method){
 				case BashMethods.GET_HISTORY : 
 			// always force a getStatus after we requesting the branch history //	
+					getTotalCommits();
 					AppModel.proxies.status.getStatus();
 					AppModel.branch.history = e.data.result.split(/[\n\r\t]/g);
 					AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.HISTORY));
-				break;							
+				break;
+				case BashMethods.GET_TOTAL_COMMITS :
+			// git log returns one less than the actual commit count //	
+					AppModel.branch.totalCommits = Number(e.data.result) + 1;
+				break; 				
 			}
 		}
 		

@@ -51,7 +51,7 @@ package model.db {
 			var p:XMLList = _xml['user-defined'].children();
 			for (var i:int = 0; i < p.length(); i++) _settings[p[i].name()] = p[i].valueOf();
 			dispatchEvent(new InstallEvent(InstallEvent.SETTINGS));
-			traceSettings();
+		//	traceSettings();
 		}
 		
 		private function saveXML(e:Event = null):void
@@ -79,7 +79,7 @@ package model.db {
 		
 		private function writeToFile():void 
 		{
-			traceSettings();
+		//	traceSettings();
 			var output:String = '<?xml version="1.0" encoding="utf-8"?>\n';
 				output += _xml.toXMLString();
 				output = output.replace(/\n/g, File.lineEnding);

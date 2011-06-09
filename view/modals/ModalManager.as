@@ -25,7 +25,7 @@ package view.modals {
 		private static var _settings		:GlobalSettings = new GlobalSettings();
 	//	private static var _untracked		:AddUntrackedFiles = new AddUntrackedFiles();
 		private static var _error			:UserError = new UserError();
-		private static var _welcome:WelcomeScreen = new WelcomeScreen();
+		private static var _welcome			:WelcomeScreen = new WelcomeScreen();
 		
 		private static var _install			:InstallGit = new InstallGit();
 		private static var _curtain			:ModalCurtain = new ModalCurtain();

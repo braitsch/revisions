@@ -10,6 +10,7 @@ package model {
 		private var _name			:String;
 		private var _status			:Array = [[], [], [], []];
 		private var _history		:Array;
+		private var _totalCommits	:uint;
 
 		public function Branch(n:String) 
 		{
@@ -28,6 +29,12 @@ package model {
 			_history = [];
 			for (var i:int = 0; i < a.length; i++) _history.push(a[i].split('##'));
 			if (_history[0][1] == '0 seconds ago') _history[0][1] = 'Just Now';
+		}
+
+		public function set totalCommits(n:uint):void
+		{
+			_totalCommits = n;
+			trace('_totalCommits: ' + (_totalCommits));
 		}
 		
 	}
