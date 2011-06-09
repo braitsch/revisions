@@ -23,6 +23,7 @@ package events {
 	// other stuff //	
 		public static const USER_ERROR				:String = "USER_ERROR";
 		public static const DRAG_AND_DROP			:String = "DRAG_AND_DROP";
+		public static const GLOBAL_SETTINGS			:String = "GLOBAL_SETTINGS";
 		
 		public var data:Object;
 

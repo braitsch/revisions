@@ -3,18 +3,22 @@ package model.db {
 	import events.InstallEvent;
 	import flash.display.Stage;
 	import flash.events.Event;
+	import flash.events.EventDispatcher;
 	import flash.filesystem.File;
 	import flash.filesystem.FileMode;
 	import flash.filesystem.FileStream;
 	
-	public class AppSettings {
+	public class AppSettings extends EventDispatcher {
+
+		public static var CHECK_FOR_UPDATES			:String = 'checkForUpdates';
+		public static var PROMPT_BEFORE_DOWNLOAD	:String = "promptBeforeDownload";
 
 		private static var _file		:File;
 		private static var _xml			:XML;
 		private static var _stage		:Stage;
-		private static var _settings	:Array = [];
+		private static var _settings:Object = {};
 
-		public static function initialize(stage:Stage):void
+		public function initialize(stage:Stage):void
 		{
 			_stage = stage;
 			_stage.nativeWindow.addEventListener(Event.CLOSING, saveXML); 
@@ -22,12 +26,17 @@ package model.db {
 			_file.exists ? readXML() : saveXML();
 		}
 		
-		public static function set setting(o:Object):void
+		public static function setSetting(name:String, val:*):void
 		{
-			_settings.push(o);			
+			_settings[name] = val;
+		}
+		
+		public static function getSetting(name:String):*
+		{
+			for (var p:String in _settings) if (name == p) return _settings[p];
 		}
 
-		private static function readXML():void 
+		private function readXML():void 
 		{
 			var stream:FileStream = new FileStream();
     			stream.open(_file, FileMode.READ);
@@ -37,39 +46,40 @@ package model.db {
 			_stage.nativeWindow.y = _xml['window'].@y;
 			_stage.nativeWindow.width = _xml['window'].@width;
 			_stage.nativeWindow.height = _xml['window'].@height;
-			var p:XMLList = _xml['user-defined'].children();
-			for (var i:int = 0; i < p.length(); i++) {
-				var o:Object = {};
-					o[p.name()] = p.valueOf();
-				_settings.push(o);	
-			}
 			_stage.nativeWindow.visible = true;
-			_stage.dispatchEvent(new InstallEvent(InstallEvent.SETTINGS, _settings));
+		// store user-defined preferences //	
+			var p:XMLList = _xml['user-defined'].children();
+			for (var i:int = 0; i < p.length(); i++) _settings[p[i].name()] = p[i].valueOf();
+			dispatchEvent(new InstallEvent(InstallEvent.SETTINGS));
+			traceSettings();
 		}
 		
-		private static function saveXML(e:Event = null):void
+		private function saveXML(e:Event = null):void
 		{
 			getSettings(); 
 			writeToFile();
 		}
 		
-		private static function getSettings():void 
+		private function getSettings():void 
 		{
 			_xml = <preferences/>;
 			_xml['window'].@width = _stage.nativeWindow.width;
 			_xml['window'].@height = _stage.nativeWindow.height;
 			_xml['window'].@x = _stage.nativeWindow.x;
 			_xml['window'].@y = _stage.nativeWindow.y;
-		// write user defined preferences //	
-			for (var i:int = 0; i < _settings.length; i++) {
-				var p:Object = _settings[i];
-				for (var val : String in p) _xml['user-defined'][val] = p[val];
-			}
+		// write user-defined preferences //	
+			for (var p:String in _settings) _xml['user-defined'][p] = _settings[p];
 			_xml['lastSaved'] = new Date().toString();
 		}
 		
-		private static function writeToFile():void 
+		private function traceSettings():void
 		{
+			for (var p:String in _settings) trace('prop & value = '+p, _settings[p]);
+		}
+		
+		private function writeToFile():void 
+		{
+			traceSettings();
 			var output:String = '<?xml version="1.0" encoding="utf-8"?>\n';
 				output += _xml.toXMLString();
 				output = output.replace(/\n/g, File.lineEnding);
@@ -78,7 +88,7 @@ package model.db {
 				stream.writeUTFBytes(output);
 				stream.close();
 		}
-		
+
 	}
 	
 }

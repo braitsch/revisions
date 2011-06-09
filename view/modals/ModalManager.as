@@ -7,6 +7,7 @@ package view.modals {
 	import model.AppModel;
 	import model.Bookmark;
 	import model.Commit;
+	import model.db.AppSettings;
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.MouseEvent;
@@ -21,6 +22,7 @@ package view.modals {
 		private static var _delete			:DeleteBookmark = new DeleteBookmark();		private static var _commit			:WindowCommit = new WindowCommit();
 		private static var _revert			:WindowRevert = new WindowRevert();
 		private static var _download		:WindowDownload = new WindowDownload();		private static var _details			:CommitDetails = new CommitDetails();
+		private static var _settings		:GlobalSettings = new GlobalSettings();
 	//	private static var _untracked		:AddUntrackedFiles = new AddUntrackedFiles();
 		private static var _error			:UserError = new UserError();
 		private static var _welcome:WelcomeScreen = new WelcomeScreen();
@@ -51,7 +53,8 @@ package view.modals {
 			stage.addEventListener(UIEvent.COMMIT, addNewCommit);
 			stage.addEventListener(UIEvent.REVERT, revertProject);
 			stage.addEventListener(UIEvent.DOWNLOAD, downloadVersion);
-			stage.addEventListener(UIEvent.COMMIT_DETAILS, showCommitDetails);
+			stage.addEventListener(UIEvent.COMMIT_DETAILS, commitDetails);
+			stage.addEventListener(UIEvent.GLOBAL_SETTINGS, globalSettings);
 			stage.addEventListener(ErrorEvent.MULTIPLE_FILE_DROP, onUserError);			
 		}
 
@@ -111,7 +114,7 @@ package view.modals {
 			showModalWindow(_commit);
 		}
 		
-		private function showCommitDetails(e:UIEvent):void
+		private function commitDetails(e:UIEvent):void
 		{
 			_details.commit = e.data as Commit;
 			showModalWindow(_details);
@@ -126,8 +129,18 @@ package view.modals {
 		private function downloadVersion(e:UIEvent):void
 		{
 			_download.commit = e.data as Commit;
-			showModalWindow(_download);		
+			if (AppSettings.getSetting(AppSettings.PROMPT_BEFORE_DOWNLOAD) == 'true'){	
+				showModalWindow(_download);
+			}	else{
+				_download.selectDownloadLocation();
+			}
 		}
+		
+		private function globalSettings(e:UIEvent):void
+		{
+			showModalWindow(_settings);
+		}
+		
 
 	// alerts //	
 	

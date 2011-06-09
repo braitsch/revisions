@@ -4,6 +4,7 @@ package model {
 	import events.DataBaseEvent;
 	import events.InstallEvent;
 	import model.db.AppDatabase;
+	import model.db.AppSettings;
 	import model.proxies.AppProxies;
 	import flash.events.EventDispatcher;
 
@@ -12,6 +13,7 @@ package model {
 		private static var _engine			:AppEngine = new AppEngine();	
 		private static var _proxies			:AppProxies = new AppProxies();		
 		private static var _database		:AppDatabase = new AppDatabase();
+		private static var _settings		:AppSettings = new AppSettings();
 		private static var _bookmark		:Bookmark; // the active bookmark //
 		
 		private static var _gitAvailable	:Boolean;		private static var _databaseReady	:Boolean;
@@ -23,11 +25,12 @@ package model {
 			_database.addEventListener(DataBaseEvent.DATABASE_READY, onDatabaseReady);
 			_proxies.config.addEventListener(InstallEvent.SET_GIT_VERSION, onGitAvailable);
 		}
-
+		
 		static public function onBookmarkSet(e:BookmarkEvent):void
 		{
 			_bookmark = e.data as Bookmark;
 			_database.setActiveBookmark(_bookmark.label);
+			//TODO fix this shit man!
 			if (_bookmark.branch==null)
 			{
 				trace('no branch');
@@ -67,6 +70,11 @@ package model {
 		{
 			return _database;
 		}
+		
+		static public function get settings():AppSettings
+		{
+			return _settings;
+		}		
 		
 	// event handlers //	
 	

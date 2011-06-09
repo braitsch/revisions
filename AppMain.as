@@ -1,6 +1,5 @@
 package {
 
-	import events.InstallEvent;
 	import model.AppModel;
 	import model.db.AppSettings;
 	import view.ui.AirContextMenu;
@@ -22,29 +21,18 @@ package {
 			addChild(_view);
 			stage.align = StageAlign.TOP_LEFT;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
-			stage.nativeWindow.visible = false;
-			stage.addEventListener(InstallEvent.SETTINGS, onSettings);
+			AirContextMenu.initialize(stage);
+		//TODO temp solution to get around fdt overwriting AIR descriptor file //	
 			NativeApplication.nativeApplication.addEventListener(InvokeEvent.INVOKE, onInvokeEvent);
 		}
 
 		private function onInvokeEvent(e:InvokeEvent):void
 		{
 			stage.nativeWindow.visible = false;
-			AppSettings.initialize(stage);
-			AppSettings.setting = {test:'stephen'};
-			AirContextMenu.initialize(stage);
+			AppModel.settings.initialize(stage);
 			NativeApplication.nativeApplication.removeEventListener(InvokeEvent.INVOKE, onInvokeEvent);
 		}
 		
-	//TODO need to deal with this somewhere else once we know what settings we're saving...	
-		private function onSettings(e:InstallEvent):void
-		{
-			var a:Array = e.data as Array;
-			for (var i:int = 0; i < a.length; i++) {
-	//			for (var val : String in a[i]) trace('prop='+val, 'val='+a[i][val]);
-			}
-		}		
-
 	}
 	
 }
