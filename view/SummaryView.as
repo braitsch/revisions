@@ -1,5 +1,6 @@
 package view {
 
+	import com.greensock.TweenLite;
 	import events.BookmarkEvent;
 	import events.UIEvent;
 	import model.AppModel;
@@ -27,8 +28,8 @@ package view {
 		private static var _bold		:Font = new HelveticaBold() as Font;		
 		private static var _tformat1	:TextFormat = new TextFormat();
 		private static var _tformat2	:TextFormat = new TextFormat();
-		private static var _glowWhite	:GlowFilter = new GlowFilter(0xffffff, 1, 6, 6, 3, 3);
-		private static var _glowBlack	:GlowFilter = new GlowFilter(0xffffff, 1, 2, 2, 3, 3);
+		private static var _glowSmall	:GlowFilter = new GlowFilter(0xffffff, 1, 2, 2, 3, 3);
+		private static var _glowLarge	:GlowFilter = new GlowFilter(0xffffff, 1, 6, 6, 3, 3);
 
 		public function SummaryView()
 		{
@@ -59,11 +60,15 @@ package view {
 			var a:Array = [_details.settings_btn, _details.pull_btn, _details.push_btn, _details.history_btn];
 			for (var i:int = 0; i < a.length; i++) {
 				a[i].buttonMode = true;
+				a[i]['over'].alpha = 0;
 				a[i].addEventListener(MouseEvent.ROLL_OUT, onButtonRollOut);
 				a[i].addEventListener(MouseEvent.ROLL_OVER, onButtonRollOver);
 			}
 			_details.save_btn.over.alpha = 0;
+			_details.pull_btn.addEventListener(MouseEvent.CLICK, onPullButton);
+			_details.push_btn.addEventListener(MouseEvent.CLICK, onPushButton);
 			_details.history_btn.addEventListener(MouseEvent.CLICK, onHistoryButton);
+			_details.settings_btn.addEventListener(MouseEvent.CLICK, onSettingsButton);
 		}
 
 		private function initTextFields():void
@@ -75,9 +80,9 @@ package view {
 			_view.name_txt.width = 200;
 			_view.name_txt.wordWrap = true;
 			_view.name_txt.multiline = true;
-			_view.name_txt.filters = [_glowWhite];
-			_details.version_txt.filters = [_glowBlack];
-			_details.lastSaved_txt.filters = [_glowBlack]; 
+			_view.name_txt.filters = [_glowLarge];
+			_details.version_txt.filters = [_glowSmall];
+			_details.lastSaved_txt.filters = [_glowSmall]; 
 			_view.name_txt.defaultTextFormat = _tformat2;
 			_details.version_txt.defaultTextFormat = _tformat1;
 			_details.lastSaved_txt.defaultTextFormat = _tformat1;
@@ -130,23 +135,32 @@ package view {
 		
 		private function onButtonRollOut(e:MouseEvent):void
 		{
-		//	trace("SummaryView.onButtonRollOut(e)", e.currentTarget);
+			TweenLite.to(e.currentTarget.over, .5, {alpha:0});
 		}
 		
 		private function onButtonRollOver(e:MouseEvent):void
 		{
-		//	trace("SummaryView.onButtonRollOver(e)", e.currentTarget);
+			TweenLite.to(e.currentTarget.over, .5, {alpha:1});
 		}
 		
 		private function onSaveButton(e:MouseEvent):void
 		{
 			dispatchEvent(new UIEvent(UIEvent.COMMIT));
-		}
-
+		}		
+		
 		private function onHistoryButton(e:MouseEvent):void
 		{
 			dispatchEvent(new UIEvent(UIEvent.SHOW_HISTORY));
-		}				
+		}
+		
+		private function onSettingsButton(e:MouseEvent):void
+		{
+			dispatchEvent(new UIEvent(UIEvent.EDIT_BOOKMARK, AppModel.bookmark));			
+		}
+
+	// TODO //		
+		private function onPushButton(e:MouseEvent):void { }
+		private function onPullButton(e:MouseEvent):void { }
 		
 	}
 	

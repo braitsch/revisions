@@ -56,10 +56,7 @@ package view.bookmarks {
 		}
 
 		private function onBookmarkSelection(e:MouseEvent):void
-		{		// prevent re-selecting the current bookmark //				
-			if (AppModel.bookmark != _bookmark) {
-				AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.SELECTED, _bookmark));
-			}
+		{			AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.SELECTED, _bookmark));
 		}
 
 	}

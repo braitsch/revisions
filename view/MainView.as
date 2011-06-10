@@ -1,9 +1,11 @@
 package view{
 
+	import flash.events.MouseEvent;
 	import events.BookmarkEvent;
 	import events.UIEvent;
 	import model.AppModel;
 	import view.history.HistoryView;
+	import com.greensock.TweenLite;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.filters.BlurFilter;
@@ -19,22 +21,30 @@ package view{
 		{
 			addChild(_pattern);
 			addChild(_history);
-			addEventListener(UIEvent.SHOW_HISTORY, onShowHistory);
-			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onBookmarkSelected);
-		}
-
-		private function onShowHistory(e:UIEvent):void
-		{
-			removeChild(_curtain);	
-			removeChild(_summary);
-			_history.filters = [];
-		}
-
-		private function onBookmarkSelected(e:BookmarkEvent):void
-		{
 			addChild(_curtain);
 			addChild(_summary);
+			_curtain.visible = _summary.visible = false;
+			_curtain.addEventListener(MouseEvent.CLICK, onCurtainClick);
+			addEventListener(UIEvent.SHOW_HISTORY, onShowHistory);
+			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, showSummary);
+		}
+
+
+		private function showSummary(e:BookmarkEvent):void
+		{
+			_curtain.visible = _summary.visible = true;
+			TweenLite.to(_curtain, .5, {alpha:1});
+			TweenLite.to(_summary, .5, {alpha:1});
 			_history.filters = [new BlurFilter(2, 2, 3)];
+		}
+		
+		private function onShowHistory(e:UIEvent):void { hideSummary(); }
+		private function onCurtainClick(e:MouseEvent):void { hideSummary(); }
+		private function hideSummary():void
+		{
+			TweenLite.to(_curtain, .3, {alpha:0, onComplete:function():void{_curtain.visible=false;}});
+			TweenLite.to(_summary, .3, {alpha:0, onComplete:function():void{_summary.visible=false;}});
+			_history.filters = [];
 		}
 
 		public function resize(w:uint, h:uint):void

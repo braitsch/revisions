@@ -21,6 +21,7 @@ package view.ui {
 													new ContextMenuItem('UnTrack Item'),													new ContextMenuItem('Mark As Ignored')];
 															private static var _bkmkOptions	:Array = [	new ContextMenuItem('Save Latest Version'),
 													new ContextMenuItem('Delete Bookmark'),
+													new ContextMenuItem('Show Bookmark Details'),
 													new ContextMenuItem('Edit Bookmark Settings')];
 		
 		static public function initialize(s:Stage):void
@@ -75,6 +76,9 @@ package view.ui {
 				break;				case 'Delete Bookmark' : 
 					_stage.dispatchEvent(new UIEvent(UIEvent.DELETE_BOOKMARK, bkmk));	
 				break;
+				case 'Show Bookmark Details' : 
+					AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.SELECTED, bkmk));	
+				break;				
 			}
 		}
 		
