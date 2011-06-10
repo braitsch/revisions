@@ -9,7 +9,7 @@ package view.history {
 
 	public class HistoryView extends Sprite {
 
-		private static var _hitArea		:Shape = new Shape();
+		private static var _hitArea		:Shape = new Shape(); // for mousewheel scrolling //
 		private static var _header		:HistoryHeader = new HistoryHeader();
 		private static var _activeList	:HistoryList;
 		private static var _lists		:Vector.<HistoryList> = new Vector.<HistoryList>();

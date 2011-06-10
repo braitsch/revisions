@@ -33,6 +33,7 @@ package view.history {
 			_bkgd.graphics.drawRect(0, 0, w, 29);
 			_bkgd.graphics.endFill();
 			_view.save_btn.x = w - 94;
+			super.textMask.width = w - 105;			
 		}		
 		
 	}
