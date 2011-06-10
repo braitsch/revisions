@@ -31,7 +31,8 @@ package model {
 			_bookmark = e.data as Bookmark;
 			_database.setActiveBookmark(_bookmark.label);
 			AppModel.proxies.status.getStatus();
-			AppModel.proxies.history.getSummaryDetails();
+			AppModel.proxies.history.getSummary();
+	//		AppModel.proxies.history.getHistory();
 //			if (_bookmark.branch.history){
 //				AppModel.proxies.status.getStatus();
 //			}	else{

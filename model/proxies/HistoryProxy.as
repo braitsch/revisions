@@ -22,7 +22,7 @@ package model.proxies {
 			super.queue = [	Vector.<String>([BashMethods.GET_HISTORY]) ];
 		}
 		
-		public function getSummaryDetails():void
+		public function getSummary():void
 		{
 			super.directory = AppModel.bookmark.gitdir;
 			super.queue = [	Vector.<String>([BashMethods.GET_LAST_COMMIT]),
@@ -43,19 +43,23 @@ package model.proxies {
 		{
 			var a:Array = e.data as Array;
 			switch(a.length){
-				case 1 : parseHistory(a); break;
-				case 2 : parseSummary(a); break;
+				case 1 : 
+					parseHistory(a[0]); 
+				break;
+				case 2 : 
+					parseSummary(a[0], a[1]); 
+				break;
 				case 3 : 
-					parseHistory(a.shift());
-					parseSummary(a);
+					parseHistory(a[0]);
+					parseSummary(a[1], a[2]);
 				break;
 			}
 		}
 
-		private function parseSummary(a:Array):void
+		private function parseSummary(lastCommit:String, totalCommits:String):void
 		{
 			// the last commit //
-			var d:Array = a[0].split('##');
+			var d:Array = lastCommit.split('##');
 			var c:Commit = new Commit({	index:0,
 										sha1	:d[0],
 										date	:d[1],
@@ -64,14 +68,14 @@ package model.proxies {
 										branch	:AppModel.branch});
 			// total commits - git log returns one less than the actual commit count //	
 			AppModel.branch.lastCommit = c;
-			AppModel.branch.totalCommits = Number(a[1]) + 1;
+			AppModel.branch.totalCommits = Number(totalCommits) + 1;
 		}
 
-		private function parseHistory(a:Array):void
+		private function parseHistory(s:String):void
 		{
 			// always force a getStatus after we requesting the branch history //	
 			AppModel.proxies.status.getStatus();
-			AppModel.branch.history = a[0].split(/[\n\r\t]/g);
+			AppModel.branch.history = s.split(/[\n\r\t]/g);
 			AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.HISTORY));			
 		}
 		
