@@ -29,6 +29,8 @@ package view.history {
 		
 		public function onStatus():void
 		{
+		// don't draw if the user hasn't requested the history yet.	
+			if (_bookmark.branch.history == null) return;
 		// only rebuild if the # of modified files has changed //
 			if (_bookmark.branch.modified != _modified) {
 				_modified = _bookmark.branch.modified;

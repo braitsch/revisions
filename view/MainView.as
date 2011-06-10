@@ -29,12 +29,11 @@ package view{
 			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, showSummary);
 		}
 
-
 		private function showSummary(e:BookmarkEvent):void
 		{
+			TweenLite.to(_curtain, .3, {alpha:1});
+			TweenLite.to(_summary, .3, {alpha:1});
 			_curtain.visible = _summary.visible = true;
-			TweenLite.to(_curtain, .5, {alpha:1});
-			TweenLite.to(_summary, .5, {alpha:1});
 			_history.filters = [new BlurFilter(2, 2, 3)];
 		}
 		
@@ -42,9 +41,9 @@ package view{
 		private function onCurtainClick(e:MouseEvent):void { hideSummary(); }
 		private function hideSummary():void
 		{
+			_history.filters = [];
 			TweenLite.to(_curtain, .3, {alpha:0, onComplete:function():void{_curtain.visible=false;}});
 			TweenLite.to(_summary, .3, {alpha:0, onComplete:function():void{_summary.visible=false;}});
-			_history.filters = [];
 		}
 
 		public function resize(w:uint, h:uint):void

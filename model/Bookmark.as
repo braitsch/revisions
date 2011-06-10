@@ -2,6 +2,7 @@ package model {
 
 	import events.BookmarkEvent;
 	import utils.StringUtils;
+	import flash.display.Bitmap;
 	import flash.events.EventDispatcher;
 	import flash.filesystem.File;
 
@@ -18,6 +19,8 @@ package model {
 		private var _branches			:Array = [];
 		private var _stash				:Array = [];
 		private var _file				:File;
+		private var _icon32				:Bitmap;
+		private var _icon128			:Bitmap;
 
 		public function Bookmark(o:Object)
 		{
@@ -32,6 +35,7 @@ package model {
 				_worktree = _target.substr(0, _target.lastIndexOf('/'));
 				_gitdir = File.applicationStorageDirectory.nativePath+'/'+_label.toLowerCase();
 			}
+			getIcons();
 		//	trace('New Bookmark Created :: '+_label, 'gitDir = '+_gitdir); 
 		}
 
@@ -42,6 +46,8 @@ package model {
 		public function get active():Boolean { return _active; }
 		public function set active(b:Boolean):void { _active = b; }
 
+		public function get icon32():Bitmap { return _icon32; }
+		public function get icon128():Bitmap { return _icon128; }
 		public function get target():String { return _target; }
 		public function get file():File { return _file; }
 		public function get gitdir():String { return _gitdir;}
@@ -63,6 +69,15 @@ package model {
 				_stash.push(n.substring(0, n.indexOf(':')));	
 			}
 		}
+		
+		private function getIcons():void
+		{
+			var icons:Array = _file.icon.bitmaps;
+			for (var i:int = 0; i < icons.length; i++) {
+				if (icons[i].width == 32) _icon32 = new Bitmap(icons[i]);
+				if (icons[i].width == 128) _icon128 = new Bitmap(icons[i]);
+			}
+		}		
 		
 	// branches //	
 			

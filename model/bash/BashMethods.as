@@ -28,6 +28,7 @@ package model.bash{
 		
 	// history & status //	
 		public static const GET_HISTORY			:String = 'getHistory';
+		public static const GET_LAST_COMMIT		:String = 'getLastCommit';
 		public static const GET_TOTAL_COMMITS	:String = 'getTotalCommits';
 		public static const GET_MODIFIED_FILES	:String = 'getModifiedFiles';
 		public static const GET_TRACKED_FILES	:String = 'getTrackedFiles';

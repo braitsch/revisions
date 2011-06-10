@@ -30,18 +30,13 @@ package model {
 		{
 			_bookmark = e.data as Bookmark;
 			_database.setActiveBookmark(_bookmark.label);
-			//TODO fix this shit man!
-			if (_bookmark.branch==null)
-			{
-				trace('no branch');
-				return;
-			}
-			
-			if (_bookmark.branch.history){
-				AppModel.proxies.status.getStatus();
-			}	else{
-				AppModel.proxies.history.getHistory();	
-			}
+			AppModel.proxies.status.getStatus();
+			AppModel.proxies.history.getSummaryDetails();
+//			if (_bookmark.branch.history){
+//				AppModel.proxies.status.getStatus();
+//			}	else{
+//				AppModel.proxies.history.getHistory();	
+//			}
 		}
 		
 		static public function get bookmark():Bookmark

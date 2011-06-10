@@ -65,8 +65,8 @@ package model.proxies {
 			trace("EditorProxy.onProcessComplete(e)", e.data.method, e.data.result);
 			switch(e.data.method){
 				case BashMethods.COMMIT : 
-			// auto update the history of the branch we just committed to //	
-					AppModel.proxies.history.getHistory();
+			// refresh the app views after every commit //	
+					AppModel.proxies.history.getHistoryAndSummary();
 				break;
 				case BashMethods.INIT_FILE: 
 					dispatchEvent(new BookmarkEvent(BookmarkEvent.INITIALIZED));

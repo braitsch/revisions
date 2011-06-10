@@ -27,18 +27,12 @@ package view.bookmarks {
 			_view.mouseChildren = false;
 			_view.addEventListener(MouseEvent.CLICK, onBookmarkSelection);
 			addChild(_view);
-			
-			var icons:Array = _bookmark.file.icon.bitmaps;
-			for (var i:int = 0; i < icons.length; i++) {
-				if (icons[i].width == 32) {
-					_icon = new Bitmap(icons[i]);
-					_icon.y = 4;
-					_icon.x = 5;
-					_icon.width = _icon.height = 24;
-					_icon.smoothing = true;
-					addChild(_icon);
-				}
-			}
+			_icon = _bookmark.icon32;
+			_icon.y = 4;
+			_icon.x = 5;
+			_icon.width = _icon.height = 24;
+			_icon.smoothing = true;
+			addChild(_icon);
 		}
 		
 		public function get bookmark():Bookmark

@@ -14,6 +14,8 @@ package events {
 		public static const EDITED							:String = "edited";
 		public static const PATH_ERROR						:String = "path_error";
 		
+		public static const SUMMARY							:String = "SUMMARY";
+		public static const COMMIT_COUNT					:String = "COMMIT_COUNT";
 		public static const STASH_LIST_READ					:String = "STASH_LIST_READ";
 		public static const BRANCHES_READ					:String = "BRANCHES_READ";
 		public static const QUEUE_BRANCHES_READ				:String = "QUEUE_BRANCHES_READ";

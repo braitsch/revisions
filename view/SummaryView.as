@@ -1,9 +1,10 @@
 package view {
 
-	import com.greensock.TweenLite;
 	import events.BookmarkEvent;
 	import events.UIEvent;
 	import model.AppModel;
+	import model.Bookmark;
+	import com.greensock.TweenLite;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.MovieClip;
@@ -26,6 +27,7 @@ package view {
 		private static var _fringe		:Bitmap = new Bitmap(new SummaryBkgdBottom());
 		private static var _pattern		:BitmapData = new SummaryBkgdPattern();
 		private static var _bold		:Font = new HelveticaBold() as Font;		
+		private static var _bookmark	:Bookmark;
 		private static var _tformat1	:TextFormat = new TextFormat();
 		private static var _tformat2	:TextFormat = new TextFormat();
 		private static var _glowSmall	:GlowFilter = new GlowFilter(0xffffff, 1, 2, 2, 3, 3);
@@ -93,33 +95,45 @@ package view {
 
 		private function onBookmarkSelected(e:BookmarkEvent):void
 		{
-			_view.name_txt.text = AppModel.bookmark.label;
+			_bookmark = e.data as Bookmark;
+			_view.name_txt.text = _bookmark.label;
 			_offset = (_view.name_txt.height-26)/2;
+			_details.y = 20 + _offset;
 			_view.name_txt.y = -_offset - 13;
 			_view.name_txt.x = -_view.name_txt.width/2;
-			_details.y = 20 + _offset;
-			_details.version_txt.text = 'Version #50';
-			_details.lastSaved_txt.text = 'Last Saved : Just Now';
 			getBookmarkIcon();
+			addBookmarkListeners();
+		}
+
+		private function addBookmarkListeners():void
+		{
+			_bookmark.addEventListener(BookmarkEvent.EDITED, onBookmarkEdited);			
+			_bookmark.branch.addEventListener(BookmarkEvent.SUMMARY, onSummary);
+		}
+
+		private function onSummary(e:BookmarkEvent):void
+		{
+			_details.version_txt.text = 'Version #'+e.data.totalCommits as String;
+			_details.lastSaved_txt.text = 'Last Saved : '+e.data.lastCommit.date;
+		}
+
+		private function onBookmarkEdited(e:BookmarkEvent):void
+		{
+			_view.name_txt.text = _bookmark.label;			
 		}
 
 		private function getBookmarkIcon():void
 		{
 			if (_icon) _view.removeChild(_icon);
-			var icons:Array = AppModel.bookmark.file.icon.bitmaps;
-			for (var i:int = 0; i < icons.length; i++) {
-				if (icons[i].width == 128) {
-					_icon = new Bitmap(icons[i]);
-					_icon.x = -64;
-					_icon.y = -140 - _offset;
-					_view.addChild(_icon);
-				}
-			}			
+			_icon = _bookmark.icon128;
+			_icon.x = -64;
+			_icon.y = -140 - _offset;
+			_view.addChild(_icon);
 		}
 
 		private function onStatusReceived(e:BookmarkEvent):void
 		{
-			var m:uint = AppModel.bookmark.branch.modified;
+			var m:uint = _bookmark.branch.modified;
 			if (m > 0){
 				_details.save_btn.over.alpha = 1;
 				_details.save_btn.buttonMode = true;
@@ -151,11 +165,12 @@ package view {
 		private function onHistoryButton(e:MouseEvent):void
 		{
 			dispatchEvent(new UIEvent(UIEvent.SHOW_HISTORY));
+			AppModel.proxies.history.getHistory();
 		}
 		
 		private function onSettingsButton(e:MouseEvent):void
 		{
-			dispatchEvent(new UIEvent(UIEvent.EDIT_BOOKMARK, AppModel.bookmark));			
+			dispatchEvent(new UIEvent(UIEvent.EDIT_BOOKMARK, _bookmark));			
 		}
 
 	// TODO //		
