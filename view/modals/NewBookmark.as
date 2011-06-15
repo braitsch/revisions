@@ -18,13 +18,14 @@ package view.modals {
 		public function NewBookmark()
 		{
 			addChild(_view);
+			_view.name_txt.text = _view.local_txt.text = ''; 
 			_view.browse_btn.addEventListener(MouseEvent.CLICK, showFileBrowser);
 			_view.action_btn.addEventListener(MouseEvent.CLICK, onActionButtonClick);
-			super.addButtons([_view.action_btn, _view.browse_btn]);
-			super.addInputs(Vector.<TLFTextField>([_view.name_txt]));
-			
-			_view.github.over.alpha = _view.beanstalk.over.alpha = 0;
+			_view.github.addEventListener(MouseEvent.CLICK, onGitHub); 
+			_view.beanstalk.addEventListener(MouseEvent.CLICK, onBeanstalk);
 			_browser.addEventListener(UIEvent.FILE_BROWSER_SELECTION, onFileBrowserSelection);
+			super.addButtons([_view.action_btn, _view.browse_btn, _view.github, _view.beanstalk]);
+			super.addInputs(Vector.<TLFTextField>([_view.name_txt]));
 		}
 
 		public function addNewFromDropppedFile($file:File):void
@@ -56,8 +57,18 @@ package view.modals {
 		private function onActionButtonClick(e:MouseEvent):void 
 		{	
 			if (validate()) initNewBookmark();
+		}
+		
+		private function onGitHub(e:MouseEvent):void
+		{
+			dispatchEvent(new UIEvent(UIEvent.USER_ERROR, 'GitHub & Beanstalk integration is coming in the next build.'));
 		}	
 		
+		private function onBeanstalk(e:MouseEvent):void
+		{
+			dispatchEvent(new UIEvent(UIEvent.USER_ERROR, 'GitHub & Beanstalk integration is coming in the next build.'));
+		}
+
 		private function initNewBookmark():void
 		{
 			var o:Object = {
@@ -102,7 +113,6 @@ package view.modals {
 		
 		private function showUserError(m:String):void
 		{
-			trace("AddBookmark.showUserError(m)", m);
 			dispatchEvent(new UIEvent(UIEvent.USER_ERROR, m));
 		}
 				

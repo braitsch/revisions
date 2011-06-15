@@ -66,7 +66,7 @@ package view.modals {
 			}
 		}
 
-		private function onCloseClick(e:MouseEvent):void 
+		protected function onCloseClick(e:MouseEvent):void 
 		{
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 		}

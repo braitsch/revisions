@@ -32,10 +32,10 @@ package system {
 			NativeApplication.nativeApplication.activate();			
 			NativeDragManager.dropAction = NativeDragActions.COPY;
 			var a:Array = e.clipboard.getData(ClipboardFormats.FILE_LIST_FORMAT) as Array;
-			if (a.length > 1){
-				_target.dispatchEvent(new UIEvent(UIEvent.MULTIPLE_FILE_DROP));
-			}	else{
+			if (a.length == 1){
 				_target.dispatchEvent(new UIEvent(UIEvent.DRAG_AND_DROP, a[0]));
+			}	else{
+				_target.dispatchEvent(new UIEvent(UIEvent.USER_ERROR, 'Please add only one file at a time.'));
 			}
 		}
 

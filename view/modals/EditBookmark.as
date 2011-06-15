@@ -20,12 +20,16 @@ package view.modals {
 		{
 			addChild(_view);
 			super.addInputs(Vector.<TLFTextField>([_view.name_txt]));
-			super.addButtons([_view.browse_btn, _view.delete_btn, _view.ok_btn]);
+			super.addButtons([_view.browse_btn, _view.delete_btn, _view.ok_btn, _view.github, _view.beanstalk]);
 		
-			_check1.label = 'Autosave Every 60 Minutes';	
+			_check1.label = 'Autosave Every 60 Minutes';
 			_view.local_txt.selectable = false;
-			_view.addEventListener(MouseEvent.CLICK, onButtonClick);
-			_browser.addEventListener(UIEvent.FILE_BROWSER_SELECTION, onFileSelection);	
+			_browser.addEventListener(UIEvent.FILE_BROWSER_SELECTION, onFileSelection);
+			_view.browse_btn.addEventListener(MouseEvent.CLICK, onBrowseButton);
+			_view.delete_btn.addEventListener(MouseEvent.CLICK, onDeleteButton);
+			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOKButton);
+			_view.github.addEventListener(MouseEvent.CLICK, onGitHubButton);
+			_view.beanstalk.addEventListener(MouseEvent.CLICK, onBeanstalkButton);
 			AppModel.database.addEventListener(DataBaseEvent.RECORD_EDITED, onEditSuccessful);					
 		}
 
@@ -39,27 +43,36 @@ package view.modals {
 		private function onFileSelection(e:UIEvent):void
 		{
 			_view.local_txt.text = e.data as String;			
-		}		
-
-		private function onButtonClick(e:MouseEvent):void 
-		{
-			switch(e.target.name){
-				case 'browse_btn' : 
-					var m:String = _bookmark.file.isDirectory ? 'Directory' : 'File';
-					_browser.browse('Please Select A '+m);
-				break;
-				case 'delete_btn' : 
-					dispatchEvent(new UIEvent(UIEvent.DELETE_BOOKMARK, _bookmark));	
-				break;
-				case 'ok_btn' : 
-					if (validateName()){
-						dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-						AppModel.database.editRepository(_bookmark.label, _view.name_txt.text, _view.local_txt.text);
-					}	
-				break;
-			}
 		}
 		
+		private function onBrowseButton(e:MouseEvent):void
+		{
+			_browser.browse('Please Select A '+_bookmark.file.isDirectory ? 'Directory' : 'File');			
+		}
+		
+		private function onDeleteButton(e:MouseEvent):void
+		{
+			dispatchEvent(new UIEvent(UIEvent.DELETE_BOOKMARK, _bookmark));				
+		}
+		
+		private function onOKButton(e:MouseEvent):void
+		{
+			if (validateName()){
+				dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
+				AppModel.database.editRepository(_bookmark.label, _view.name_txt.text, _view.local_txt.text);
+			}			
+		}
+		
+		private function onGitHubButton(e:MouseEvent):void
+		{
+			dispatchEvent(new UIEvent(UIEvent.USER_ERROR, 'GitHub & Beanstalk integration is coming in the next build.'));
+		}
+		
+		private function onBeanstalkButton(e:MouseEvent):void
+		{
+			dispatchEvent(new UIEvent(UIEvent.USER_ERROR, 'GitHub & Beanstalk integration is coming in the next build.'));			
+		}												
+
 		private function validateName():Boolean
 		{
 			if (_view.name_txt.text=='' || _view.name_txt.text=='Please Enter A Name'){

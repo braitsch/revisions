@@ -22,8 +22,13 @@ package view.modals {
 		
 		private function onOKButton(e:MouseEvent):void
 		{
-			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_ALERT));
 		}
+		
+		override protected function onCloseClick(e:MouseEvent):void 
+		{
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_ALERT));
+		}		
 		
 	}
 	

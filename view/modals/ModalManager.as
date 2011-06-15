@@ -39,7 +39,6 @@ package view.modals {
 			mouseEnabled = false;
 			checkExpiredAndUpdates();
 			_curtain.addEventListener(MouseEvent.CLICK, onCurtainClick);
-			this.addEventListener(UIEvent.CLOSE_MODAL_WINDOW, onCloseButton);
 			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onBookmarkSelected);
 			AppModel.engine.addEventListener(BookmarkEvent.PATH_ERROR, repairBookmark);
 			AppModel.engine.addEventListener(BookmarkEvent.NO_BOOKMARKS, showWelcomeScreen);
@@ -58,7 +57,9 @@ package view.modals {
 			stage.addEventListener(UIEvent.DOWNLOAD, downloadVersion);
 			stage.addEventListener(UIEvent.COMMIT_DETAILS, commitDetails);
 			stage.addEventListener(UIEvent.GLOBAL_SETTINGS, globalSettings);
-			stage.addEventListener(UIEvent.MULTIPLE_FILE_DROP, onMultipleFileDrop);		
+			stage.addEventListener(UIEvent.USER_ERROR, onShowAlert);		
+			stage.addEventListener(UIEvent.CLOSE_ALERT, onCloseAlert);		
+			stage.addEventListener(UIEvent.CLOSE_MODAL_WINDOW, onCloseButton);
 		}
 
 		public function resize(w:Number, h:Number):void
@@ -173,12 +174,6 @@ package view.modals {
 			showModalWindow(_repair);
 		}	
 		
-		private function onMultipleFileDrop(e:UIEvent):void
-		{
-			_alert.message = 'Please add only one file at a time.';
-			showModalWindow(_alert);
-		}
-		
 	// adding & removing modal windows //	
 		
 		private function onCloseButton(e:UIEvent):void { hideModalWindow(); }
@@ -197,7 +192,21 @@ package view.modals {
 			removeChild(_window);
 			_window = null;
 			_curtain.hide();
-		}		
+			if (_alert.stage) removeChild(_alert);
+		}
+		
+		private function onShowAlert(e:UIEvent):void
+		{
+			_alert.message = e.data as String;
+			_curtain.show();
+			addChild(_alert);
+		}			
+		
+		private function onCloseAlert(e:UIEvent):void
+		{
+			removeChild(_alert);
+			if (_window == null) _curtain.hide();
+		}			
 			
 	}
 	
