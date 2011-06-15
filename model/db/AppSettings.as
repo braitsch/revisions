@@ -10,19 +10,20 @@ package model.db {
 	
 	public class AppSettings extends EventDispatcher {
 
-		public static var CHECK_FOR_UPDATES			:String = 'checkForUpdates';
-		public static var PROMPT_BEFORE_DOWNLOAD	:String = "promptBeforeDownload";
+		public static const CHECK_FOR_UPDATES			:String = 'checkForUpdates';
+		public static const SHOW_TOOL_TIPS				:String = "showToolTips";
+		public static const PROMPT_BEFORE_DOWNLOAD		:String = "promptBeforeDownload";
 
 		private static var _file		:File;
 		private static var _xml			:XML;
 		private static var _stage		:Stage;
-		private static var _settings:Object = {};
+		private static var _settings	:Object = {};
 
 		public function initialize(stage:Stage):void
 		{
 			_stage = stage;
 			_stage.nativeWindow.addEventListener(Event.CLOSING, saveXML); 
-			_file = File.applicationStorageDirectory.resolvePath("settings.xml");
+			_file = File.applicationStorageDirectory.resolvePath("Revisions.xml");
 			_file.exists ? readXML() : saveXML();
 		}
 		

@@ -17,6 +17,7 @@ package view.modals {
 		{
 			addChild(_view);
 			_check1.label = "Don't prompt me to update again.";
+			_view.check1.addEventListener(MouseEvent.CLICK, onCheckbox);
 			_view.cancel_btn.addEventListener(MouseEvent.CLICK, onCancel);
 			_view.download_btn.addEventListener(MouseEvent.CLICK, onDownload);
 			super.addButtons([_view.cancel_btn, _view.download_btn]);
@@ -28,10 +29,14 @@ package view.modals {
 			_view.message_txt.text+= "Would you like to update to this latest version?";
 		}
 		
+		private function onCheckbox(e:MouseEvent):void
+		{
+			AppSettings.setSetting(AppSettings.CHECK_FOR_UPDATES, !_check1.selected);
+		}		
+		
 		private function onCancel(e:MouseEvent):void
 		{
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));			
-			AppSettings.setSetting(AppSettings.CHECK_FOR_UPDATES, !_check1.selected);
 		}
 
 		private function onDownload(e:MouseEvent):void
@@ -41,7 +46,6 @@ package view.modals {
 			AppModel.updater.addEventListener(InstallEvent.UPDATE_ERROR, onUpdateError);
 			AppModel.updater.addEventListener(InstallEvent.UPDATE_PROGRESS, onUpdateProgress);
 			AppModel.updater.addEventListener(InstallEvent.UPDATE_COMPLETE, onUpdateComplete);
-			AppSettings.setSetting(AppSettings.CHECK_FOR_UPDATES, !_check1.selected);
 		}
 
 		private function onUpdateError(e:InstallEvent):void

@@ -21,11 +21,11 @@ package view.modals {
 		{
 			addChild(_view);
 			super.addButtons([_view.cancel_btn, _view.download_btn]);
-			_check1.addEventListener(MouseEvent.CLICK, onCheckbox);
+			_check1.label = "Next time just do it and don't ask me";
+			_view.check1.addEventListener(MouseEvent.CLICK, onCheckbox);
 			_view.cancel_btn.addEventListener(MouseEvent.CLICK, onCancel);
 			_view.download_btn.addEventListener(MouseEvent.CLICK, onDownload);
 			_browser.addEventListener(UIEvent.FILE_BROWSER_SELECTION, onFileBrowserSelection);
-			_check1.label = "Next time just do it and don't ask me";
 			AppModel.settings.addEventListener(InstallEvent.SETTINGS, onUserSettings);			
 		}
 		

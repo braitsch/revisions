@@ -25,6 +25,7 @@ package view.modals {
 			_check1.label = 'Autosave Every 60 Minutes';
 			_view.local_txt.selectable = false;
 			_browser.addEventListener(UIEvent.FILE_BROWSER_SELECTION, onFileSelection);
+			_view.check1.addEventListener(MouseEvent.CLICK, onAutosaveCheck);
 			_view.browse_btn.addEventListener(MouseEvent.CLICK, onBrowseButton);
 			_view.delete_btn.addEventListener(MouseEvent.CLICK, onDeleteButton);
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOKButton);
@@ -54,6 +55,12 @@ package view.modals {
 		{
 			dispatchEvent(new UIEvent(UIEvent.DELETE_BOOKMARK, _bookmark));				
 		}
+		
+		private function onAutosaveCheck(e:MouseEvent):void
+		{
+		//TODO write autosave value to the database //	
+			trace("EditBookmark.onAutosaveCheck(e)", _check1.selected);
+		}		
 		
 		private function onOKButton(e:MouseEvent):void
 		{
