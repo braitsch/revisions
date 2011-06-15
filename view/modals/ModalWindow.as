@@ -10,7 +10,6 @@ package view.modals {
 
 	public class ModalWindow extends Sprite {
 		
-		private var _height			:Number;
 		private var _inputs			:Vector.<TLFTextField>;
 		private var _heightOffset	:uint = 50;
 		private var _closeButton	:ModalCloseButton = new ModalCloseButton();
@@ -20,12 +19,6 @@ package view.modals {
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			this.filters = [new GlowFilter(0x000000, .5, 20, 20, 2, 2)];
 		}
-		
-		override public function set height(n:Number):void
-		{
-		// masked lists seem to blow out the height and screw up positioning..	
-			_height = n;
-		}			
 		
 		protected function addButtons(a:Array):void
 		{			for (var i:int=0; i < a.length; i++) {

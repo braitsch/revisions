@@ -72,10 +72,10 @@ package model.db {
 			_xml['lastSaved'] = new Date().toString();
 		}
 		
-		private function traceSettings():void
-		{
-			for (var p:String in _settings) trace('prop & value = '+p, _settings[p]);
-		}
+//		private function traceSettings():void
+//		{
+//			for (var p:String in _settings) trace('prop & value = '+p, _settings[p]);
+//		}
 		
 		private function writeToFile():void 
 		{

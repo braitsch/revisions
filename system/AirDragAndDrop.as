@@ -1,6 +1,5 @@
 package system {
 
-	import events.ErrorEvent;
 	import events.UIEvent;
 	import flash.desktop.ClipboardFormats;
 	import flash.desktop.NativeApplication;
@@ -34,7 +33,7 @@ package system {
 			NativeDragManager.dropAction = NativeDragActions.COPY;
 			var a:Array = e.clipboard.getData(ClipboardFormats.FILE_LIST_FORMAT) as Array;
 			if (a.length > 1){
-				_target.dispatchEvent(new ErrorEvent(ErrorEvent.MULTIPLE_FILE_DROP));
+				_target.dispatchEvent(new UIEvent(UIEvent.MULTIPLE_FILE_DROP));
 			}	else{
 				_target.dispatchEvent(new UIEvent(UIEvent.DRAG_AND_DROP, a[0]));
 			}

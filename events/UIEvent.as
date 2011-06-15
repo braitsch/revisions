@@ -24,7 +24,8 @@ package events {
 		public static const USER_ERROR				:String = "USER_ERROR";
 		public static const DRAG_AND_DROP			:String = "DRAG_AND_DROP";
 		public static const SHOW_HISTORY			:String = "SHOW_HISTORY";
-		public static const GLOBAL_SETTINGS			:String = "GLOBAL_SETTINGS";
+		public static const GLOBAL_SETTINGS:String = "GLOBAL_SETTINGS";
+		public static const MULTIPLE_FILE_DROP:String = "MULTIPLE_FILE_DROP";
 		
 		public var data:Object;
 

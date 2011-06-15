@@ -1,14 +1,13 @@
 package view.modals {
 
-	import system.LicenseManager;
 	import events.BookmarkEvent;
-	import events.ErrorEvent;
 	import events.InstallEvent;
 	import events.UIEvent;
 	import model.AppModel;
 	import model.Bookmark;
 	import model.Commit;
 	import model.db.AppSettings;
+	import system.LicenseManager;
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.MouseEvent;
@@ -25,8 +24,8 @@ package view.modals {
 		private static var _download		:WindowDownload = new WindowDownload();		private static var _details			:CommitDetails = new CommitDetails();
 		private static var _settings		:GlobalSettings = new GlobalSettings();
 		private static var _update			:WindowUpdate = new WindowUpdate();
+		private static var _alert			:WindowAlert = new WindowAlert();
 		private static var _expired			:WindowExpired = new WindowExpired();
-		private static var _error			:UserError = new UserError();
 		private static var _welcome			:WelcomeScreen = new WelcomeScreen();
 		
 		private static var _install			:InstallGit = new InstallGit();
@@ -59,7 +58,7 @@ package view.modals {
 			stage.addEventListener(UIEvent.DOWNLOAD, downloadVersion);
 			stage.addEventListener(UIEvent.COMMIT_DETAILS, commitDetails);
 			stage.addEventListener(UIEvent.GLOBAL_SETTINGS, globalSettings);
-			stage.addEventListener(ErrorEvent.MULTIPLE_FILE_DROP, onUserError);		
+			stage.addEventListener(UIEvent.MULTIPLE_FILE_DROP, onMultipleFileDrop);		
 		}
 
 		public function resize(w:Number, h:Number):void
@@ -174,10 +173,10 @@ package view.modals {
 			showModalWindow(_repair);
 		}	
 		
-		private function onUserError(e:ErrorEvent):void
+		private function onMultipleFileDrop(e:UIEvent):void
 		{
-			_error.message = e.type as String;
-			showModalWindow(_error);
+			_alert.message = 'Please add only one file at a time.';
+			showModalWindow(_alert);
 		}
 		
 	// adding & removing modal windows //	
