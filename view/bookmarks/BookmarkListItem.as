@@ -18,21 +18,20 @@ package view.bookmarks {
 		{
 			_bookmark = $bkmk;
 			_bookmark.addEventListener(BookmarkEvent.EDITED, onBookmarkEdited);
-			
 			_view.blue.alpha = 0;
 			_view.label_txt.autoSize = 'left';
 			_view.label_txt.selectable = false;
 			_view.label_txt.text = _bookmark.label;
-			_view.mouseEnabled = true;
-			_view.mouseChildren = false;
-			_view.addEventListener(MouseEvent.CLICK, onBookmarkSelection);
-			addChild(_view);
 			_icon = _bookmark.icon32;
 			_icon.y = 4;
 			_icon.x = 5;
 			_icon.width = _icon.height = 24;
 			_icon.smoothing = true;
+			addChild(_view);
 			addChild(_icon);
+			this.buttonMode = true;
+			this.mouseChildren = false;
+			this.addEventListener(MouseEvent.CLICK, onBookmarkSelected);			
 		}
 		
 		public function get bookmark():Bookmark
@@ -49,7 +48,7 @@ package view.bookmarks {
 			_view.label_txt.text = _bookmark.label;
 		}
 
-		private function onBookmarkSelection(e:MouseEvent):void
+		private function onBookmarkSelected(e:MouseEvent):void
 		{			AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.SELECTED, _bookmark));
 		}
 

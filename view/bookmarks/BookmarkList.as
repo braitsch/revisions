@@ -1,12 +1,20 @@
 package view.bookmarks {
 
+	import model.AppModel;
+	import flash.events.MouseEvent;
 	import model.Bookmark;
 	import com.greensock.TweenLite;
 	import flash.display.Sprite;
 
 	public class BookmarkList extends Sprite {
 		
-		private static var _leading	:uint = 1;
+		private static var _leading:uint = 1;
+
+		public function BookmarkList()
+		{	
+			addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
+			addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
+		}
 
 		public function addItem(b:Bookmark):void 
 		{
@@ -37,6 +45,17 @@ package view.bookmarks {
 				k.active = (k.bookmark == b);
 			}			
 		}
+		
+		private function onMouseOver(e:MouseEvent):void
+		{
+			BookmarkListItem(e.target).active = true;
+		}
+
+		private function onMouseOut(e:MouseEvent):void
+		{
+			var b:BookmarkListItem = e.target as BookmarkListItem;
+			if (b.bookmark != AppModel.bookmark) b.active = false;
+		}		
 				
 	}
 	
