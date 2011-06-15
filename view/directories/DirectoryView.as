@@ -1,12 +1,12 @@
 package view.directories {
 
 	import events.UIEvent;
-	import model.SystemRules;
-	import view.layout.ListItem;
-	import view.layout.NestedList;
-	import view.ui.AirContextMenu;
 	import flash.display.Sprite;
 	import flash.filesystem.File;
+	import system.AirContextMenu;
+	import system.SystemRules;
+	import view.layout.ListItem;
+	import view.layout.NestedList;
 
 	public class DirectoryView extends Sprite {
 

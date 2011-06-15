@@ -6,6 +6,7 @@ package view.modals {
 	import fl.text.TLFTextField;
 	import model.AppModel;
 	import model.db.AppSettings;
+	import system.LicenseManager;
 	import flash.events.MouseEvent;
 
 	public class GlobalSettings extends ModalWindow {
@@ -34,7 +35,7 @@ package view.modals {
 		{
 			_view.name_txt.text = AppModel.proxies.config.userName;
 			_view.email_txt.text = AppModel.proxies.config.userEmail;
-			_view.license_txt.text = '56afea94f7c9cda8f96b6cebe53023c64d157a9f';
+			_view.license_txt.text = LicenseManager.key;
 		}
 		
 		private function onCheckboxSelected(e:MouseEvent):void

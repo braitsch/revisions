@@ -1,10 +1,10 @@
 package model.proxies {
 
-	import events.NativeProcessEvent;
 	import events.BookmarkEvent;
+	import events.NativeProcessEvent;
 	import model.Bookmark;
 	import model.air.NativeProcessProxy;
-	import model.bash.BashMethods;
+	import system.BashMethods;
 
 	public class BranchProxy extends NativeProcessProxy{
 

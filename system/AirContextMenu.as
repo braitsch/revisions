@@ -1,4 +1,4 @@
-package view.ui {
+package system {
 
 	import events.BookmarkEvent;
 	import events.UIEvent;

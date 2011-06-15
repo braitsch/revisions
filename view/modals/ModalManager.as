@@ -1,5 +1,6 @@
 package view.modals {
 
+	import system.LicenseManager;
 	import events.BookmarkEvent;
 	import events.ErrorEvent;
 	import events.InstallEvent;
@@ -23,6 +24,7 @@ package view.modals {
 		private static var _revert			:WindowRevert = new WindowRevert();
 		private static var _download		:WindowDownload = new WindowDownload();		private static var _details			:CommitDetails = new CommitDetails();
 		private static var _settings		:GlobalSettings = new GlobalSettings();
+		private static var _expired			:GlobalSettings = new GlobalSettings();
 	//	private static var _untracked		:AddUntrackedFiles = new AddUntrackedFiles();
 		private static var _error			:UserError = new UserError();
 		private static var _welcome			:WelcomeScreen = new WelcomeScreen();
@@ -37,6 +39,8 @@ package view.modals {
 			mouseEnabled = false;
 			addEventListener(UIEvent.CLOSE_MODAL_WINDOW, onCloseButton);
 			_curtain.addEventListener(MouseEvent.CLICK, onCurtainClick);
+			if (LicenseManager.checkExpired()) showModalWindow(_expired);
+			AppModel.updater.addEventListener(InstallEvent.UPDATE_AVAILABLE, promptToUpdate);
 			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onBookmarkSelected);
 			AppModel.engine.addEventListener(BookmarkEvent.PATH_ERROR, repairBookmark);
 			AppModel.engine.addEventListener(BookmarkEvent.NO_BOOKMARKS, showWelcomeScreen);
@@ -55,7 +59,8 @@ package view.modals {
 			stage.addEventListener(UIEvent.DOWNLOAD, downloadVersion);
 			stage.addEventListener(UIEvent.COMMIT_DETAILS, commitDetails);
 			stage.addEventListener(UIEvent.GLOBAL_SETTINGS, globalSettings);
-			stage.addEventListener(ErrorEvent.MULTIPLE_FILE_DROP, onUserError);			
+			stage.addEventListener(ErrorEvent.MULTIPLE_FILE_DROP, onUserError);		
+			stage.addEventListener(UIEvent.TRIAL_EXPIRED, onTrialExpired);		
 		}
 
 		public function resize(w:Number, h:Number):void
@@ -76,6 +81,12 @@ package view.modals {
 		{
 			showModalWindow(_welcome);
 		}
+		
+		private function promptToUpdate(e:InstallEvent):void
+		{
+			trace('A newer version of the application is available');
+			trace('this version = '+e.data.o, 'new version = '+e.data.n);
+		}		
 		
 		private function installGit(e:InstallEvent):void 
 		{
@@ -143,6 +154,11 @@ package view.modals {
 		
 
 	// alerts //	
+	
+		private function onTrialExpired(e:UIEvent):void
+		{
+			trace("ModalManager.onTrialExpired(e)");
+		}	
 	
 		private function repairBookmark(e:BookmarkEvent):void
 		{

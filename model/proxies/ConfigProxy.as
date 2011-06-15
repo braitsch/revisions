@@ -1,12 +1,12 @@
 package model.proxies {
 
+	import events.BookmarkEvent;
 	import events.InstallEvent;
 	import events.NativeProcessEvent;
-	import events.BookmarkEvent;
 	import flash.events.EventDispatcher;
-	import model.SystemRules;
 	import model.air.NativeProcessQueue;
-	import model.bash.BashMethods;
+	import system.BashMethods;
+	import system.SystemRules;
 
 	public class ConfigProxy extends EventDispatcher {
 

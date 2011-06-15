@@ -1,8 +1,6 @@
 package model.air {
 
-	import utils.StringUtils;
 	import events.NativeProcessEvent;
-
 	import flash.desktop.NativeProcess;
 	import flash.desktop.NativeProcessStartupInfo;
 	import flash.events.EventDispatcher;
@@ -10,6 +8,8 @@ package model.air {
 	import flash.events.NativeProcessExitEvent;
 	import flash.events.ProgressEvent;
 	import flash.filesystem.File;
+	import system.StringUtils;
+
 
 	public class NativeProcessProxy extends EventDispatcher {
 		

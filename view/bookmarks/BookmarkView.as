@@ -1,13 +1,13 @@
 package view.bookmarks {
 
 	import events.BookmarkEvent;
-	import model.AppModel;
-	import model.Bookmark;
-	import view.Scroller;
-	import view.ui.AirContextMenu;
 	import flash.display.Bitmap;
 	import flash.display.Shape;
 	import flash.display.Sprite;
+	import model.AppModel;
+	import model.Bookmark;
+	import system.AirContextMenu;
+	import view.Scroller;
 
 	public class BookmarkView extends Sprite {
 		

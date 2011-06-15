@@ -1,12 +1,12 @@
 package model.proxies {
 
-	import events.NativeProcessEvent;
 	import events.BookmarkEvent;
+	import events.NativeProcessEvent;
+	import flash.filesystem.File;
 	import model.AppModel;
 	import model.Bookmark;
 	import model.air.NativeProcessProxy;
-	import model.bash.BashMethods;
-	import flash.filesystem.File;
+	import system.BashMethods;
 
 	public class EditorProxy extends NativeProcessProxy {
 

@@ -2,9 +2,9 @@ package model.proxies {
 
 	import events.InstallEvent;
 	import events.NativeProcessEvent;
-	import model.air.NativeProcessProxy;
-	import model.bash.BashMethods;
 	import flash.events.EventDispatcher;
+	import model.air.NativeProcessProxy;
+	import system.BashMethods;
 
 	// installs & updates git if user does not have minimum required version installed.
 

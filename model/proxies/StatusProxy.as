@@ -2,12 +2,12 @@ package model.proxies {
 
 	import events.BookmarkEvent;
 	import events.NativeProcessEvent;
-	import model.AppModel;
-	import model.SystemRules;
-	import model.air.NativeProcessQueue;
-	import model.bash.BashMethods;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
+	import model.AppModel;
+	import model.air.NativeProcessQueue;
+	import system.BashMethods;
+	import system.SystemRules;
 
 	public class StatusProxy extends NativeProcessQueue {
 

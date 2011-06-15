@@ -2,13 +2,13 @@ package view.files {
 
 	import events.BookmarkEvent;
 	import events.UIEvent;
-	import model.AppModel;
-	import model.SystemRules;
-	import view.layout.ListItem;
-	import view.layout.SimpleList;
-	import view.ui.AirContextMenu;
 	import flash.display.Sprite;
 	import flash.filesystem.File;
+	import model.AppModel;
+	import system.AirContextMenu;
+	import system.SystemRules;
+	import view.layout.ListItem;
+	import view.layout.SimpleList;
 
 	public class FilesView extends Sprite {
 

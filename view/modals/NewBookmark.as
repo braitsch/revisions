@@ -2,12 +2,12 @@ package view.modals {
 
 	import events.UIEvent;
 	import fl.text.TLFTextField;
+	import flash.events.MouseEvent;
+	import flash.filesystem.File;
 	import model.AppEngine;
 	import model.AppModel;
 	import model.Bookmark;
-	import utils.FileBrowser;
-	import flash.events.MouseEvent;
-	import flash.filesystem.File;
+	import system.FileBrowser;
 
 	public class NewBookmark extends ModalWindow {
 

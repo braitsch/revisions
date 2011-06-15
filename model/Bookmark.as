@@ -1,10 +1,10 @@
 package model {
 
 	import events.BookmarkEvent;
-	import utils.StringUtils;
 	import flash.display.Bitmap;
 	import flash.events.EventDispatcher;
 	import flash.filesystem.File;
+	import system.StringUtils;
 
 	public class Bookmark extends EventDispatcher {
 

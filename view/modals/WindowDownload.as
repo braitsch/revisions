@@ -2,12 +2,12 @@ package view.modals {
 
 	import events.InstallEvent;
 	import events.UIEvent;
+	import flash.events.MouseEvent;
 	import model.AppModel;
 	import model.Bookmark;
 	import model.Commit;
 	import model.db.AppSettings;
-	import utils.FileBrowser;
-	import flash.events.MouseEvent;
+	import system.FileBrowser;
 
 	public class WindowDownload extends ModalWindow {
 

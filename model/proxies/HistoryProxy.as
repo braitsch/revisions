@@ -5,7 +5,7 @@ package model.proxies {
 	import model.AppModel;
 	import model.Commit;
 	import model.air.NativeProcessQueue;
-	import model.bash.BashMethods;
+	import system.BashMethods;
 
 	public class HistoryProxy extends NativeProcessQueue {
 		

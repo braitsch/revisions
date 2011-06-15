@@ -8,6 +8,8 @@ package events {
 		public static const GIT_UNAVAILABLE			:String = "GIT_UNAVAILABLE";
 		public static const GIT_INSTALL_COMPLETE	:String = "GIT_INSTALL_COMPLETE";
 		
+		public static const UPDATE_AVAILABLE 		:String = "UPDATE_AVAILABLE";
+		
 		public var data:Object;
 
 		public function InstallEvent($type:String, $data:Object = null)

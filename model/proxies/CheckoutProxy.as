@@ -3,7 +3,7 @@ package model.proxies {
 	import events.NativeProcessEvent;
 	import model.AppModel;
 	import model.air.NativeProcessProxy;
-	import model.bash.BashMethods;
+	import system.BashMethods;
 
 	public class CheckoutProxy extends NativeProcessProxy {
 

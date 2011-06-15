@@ -1,4 +1,4 @@
-package utils {
+package system {
 
 	import events.ErrorEvent;
 	import events.UIEvent;
@@ -10,7 +10,7 @@ package utils {
 	import flash.display.Sprite;
 	import flash.events.NativeDragEvent;
 
-	public class DragAndDropListener extends Sprite {
+	public class AirDragAndDrop extends Sprite {
 
 		private var _target	:InteractiveObject;
 

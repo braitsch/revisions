@@ -1,12 +1,12 @@
 package {
 
-	import utils.DragAndDropListener;
+	import flash.display.Sprite;
+	import flash.events.Event;
+	import system.AirDragAndDrop;
 	import view.Header;
 	import view.MainView;
 	import view.bookmarks.BookmarkView;
 	import view.modals.ModalManager;
-	import flash.display.Sprite;
-	import flash.events.Event;
 
 	public class AppView extends Sprite {
 		
@@ -14,7 +14,7 @@ package {
 		private static var _bkmks		:BookmarkView = new BookmarkView();
 		private static var _header		:Header = new Header();
 		private static var _modal		:ModalManager = new ModalManager();
-		private static var _dragAndDrop	:DragAndDropListener = new DragAndDropListener();	
+		private static var _dragAndDrop	:AirDragAndDrop = new AirDragAndDrop();	
 
 		public function AppView()
 		{

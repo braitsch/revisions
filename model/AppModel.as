@@ -6,6 +6,7 @@ package model {
 	import model.db.AppDatabase;
 	import model.db.AppSettings;
 	import model.proxies.AppProxies;
+	import system.UpdateManager;
 	import flash.events.EventDispatcher;
 
 	public class AppModel extends EventDispatcher {
@@ -14,12 +15,14 @@ package model {
 		private static var _proxies			:AppProxies = new AppProxies();		
 		private static var _database		:AppDatabase = new AppDatabase();
 		private static var _settings		:AppSettings = new AppSettings();
+		private static var _updater			:UpdateManager = new UpdateManager();
 		private static var _bookmark		:Bookmark; // the active bookmark //
 		
 		private static var _gitAvailable	:Boolean;		private static var _databaseReady	:Boolean;
 
 		public function AppModel() 
 		{
+			_updater.checkForUpdate();
 			_engine.addEventListener(BookmarkEvent.SELECTED, onBookmarkSet);
 			_database.addEventListener(DataBaseEvent.BOOKMARKS_READ, onBookmarksRead);
 			_database.addEventListener(DataBaseEvent.DATABASE_READY, onDatabaseReady);
@@ -32,12 +35,6 @@ package model {
 			_database.setActiveBookmark(_bookmark.label);
 			AppModel.proxies.status.getStatus();
 			AppModel.proxies.history.getSummary();
-	//		AppModel.proxies.history.getHistory();
-//			if (_bookmark.branch.history){
-//				AppModel.proxies.status.getStatus();
-//			}	else{
-//				AppModel.proxies.history.getHistory();	
-//			}
 		}
 		
 		static public function get bookmark():Bookmark
@@ -70,7 +67,12 @@ package model {
 		static public function get settings():AppSettings
 		{
 			return _settings;
-		}		
+		}
+		
+		static public function get updater():UpdateManager
+		{
+			return _updater;
+		}				
 		
 	// event handlers //	
 	
@@ -96,7 +98,7 @@ package model {
 				_engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.NO_BOOKMARKS));
 			}
 		}
-		
+
 	}
 	
 }

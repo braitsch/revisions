@@ -24,6 +24,7 @@ package events {
 		public static const USER_ERROR				:String = "USER_ERROR";
 		public static const DRAG_AND_DROP			:String = "DRAG_AND_DROP";
 		public static const SHOW_HISTORY			:String = "SHOW_HISTORY";
+		public static const TRIAL_EXPIRED			:String = "TRIAL_EXPIRED";
 		public static const GLOBAL_SETTINGS			:String = "GLOBAL_SETTINGS";
 		
 		public var data:Object;

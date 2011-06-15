@@ -5,8 +5,8 @@ package view.modals {
 	import flash.desktop.NativeApplication;
 	import flash.events.MouseEvent;
 	import model.AppModel;
-	import model.SystemRules;
 	import model.proxies.InstallProxy;
+	import system.SystemRules;
 
 	public class InstallGit extends ModalWindow {
 
