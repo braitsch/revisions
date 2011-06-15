@@ -8,7 +8,10 @@ package events {
 		public static const GIT_UNAVAILABLE			:String = "GIT_UNAVAILABLE";
 		public static const GIT_INSTALL_COMPLETE	:String = "GIT_INSTALL_COMPLETE";
 		
-		public static const UPDATE_AVAILABLE 		:String = "UPDATE_AVAILABLE";
+		public static const UPDATE_AVAILABLE:String = "UPDATE_AVAILABLE";
+		public static const UPDATE_PROGRESS:String = "UPDATE_PROGRESS";
+		public static const UPDATE_COMPLETE:String = "UPDATE_COMPLETE";
+		public static const UPDATE_ERROR:String = "UPDATE_ERROR";
 		
 		public var data:Object;
 

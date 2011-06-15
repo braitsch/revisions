@@ -24,27 +24,27 @@ package view.modals {
 		private static var _revert			:WindowRevert = new WindowRevert();
 		private static var _download		:WindowDownload = new WindowDownload();		private static var _details			:CommitDetails = new CommitDetails();
 		private static var _settings		:GlobalSettings = new GlobalSettings();
-		private static var _expired			:GlobalSettings = new GlobalSettings();
-	//	private static var _untracked		:AddUntrackedFiles = new AddUntrackedFiles();
+		private static var _update			:WindowUpdate = new WindowUpdate();
+		private static var _expired			:WindowExpired = new WindowExpired();
 		private static var _error			:UserError = new UserError();
 		private static var _welcome			:WelcomeScreen = new WelcomeScreen();
 		
 		private static var _install			:InstallGit = new InstallGit();
 		private static var _curtain			:ModalCurtain = new ModalCurtain();
-		private static var _window			:ModalWindow; // active window onscreen //
+		private static var _window			:ModalWindow;
+ // active window onscreen //
 
 		public function ModalManager()
 		{
 			addChild(_curtain);
 			mouseEnabled = false;
-			addEventListener(UIEvent.CLOSE_MODAL_WINDOW, onCloseButton);
+			checkExpiredAndUpdates();
 			_curtain.addEventListener(MouseEvent.CLICK, onCurtainClick);
-			if (LicenseManager.checkExpired()) showModalWindow(_expired);
-			AppModel.updater.addEventListener(InstallEvent.UPDATE_AVAILABLE, promptToUpdate);
+			this.addEventListener(UIEvent.CLOSE_MODAL_WINDOW, onCloseButton);
 			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onBookmarkSelected);
 			AppModel.engine.addEventListener(BookmarkEvent.PATH_ERROR, repairBookmark);
 			AppModel.engine.addEventListener(BookmarkEvent.NO_BOOKMARKS, showWelcomeScreen);
-	//		AppModel.engine.addEventListener(BookmarkEvent.UNTRACKED_FILES, promptToTrackFiles);
+			AppModel.updater.addEventListener(InstallEvent.UPDATE_AVAILABLE, promptToUpdate);
 			AppModel.proxies.config.addEventListener(InstallEvent.GIT_UNAVAILABLE, installGit);
 		}
 
@@ -60,7 +60,6 @@ package view.modals {
 			stage.addEventListener(UIEvent.COMMIT_DETAILS, commitDetails);
 			stage.addEventListener(UIEvent.GLOBAL_SETTINGS, globalSettings);
 			stage.addEventListener(ErrorEvent.MULTIPLE_FILE_DROP, onUserError);		
-			stage.addEventListener(UIEvent.TRIAL_EXPIRED, onTrialExpired);		
 		}
 
 		public function resize(w:Number, h:Number):void
@@ -71,7 +70,7 @@ package view.modals {
 				_window.y = (h-50)/2 - _window.height / 2 + 50;
 			}
 		}
-
+		
 		private function onBookmarkSelected(e:BookmarkEvent):void
 		{
 			if (_window == _welcome) hideModalWindow();
@@ -81,13 +80,7 @@ package view.modals {
 		{
 			showModalWindow(_welcome);
 		}
-		
-		private function promptToUpdate(e:InstallEvent):void
-		{
-			trace('A newer version of the application is available');
-			trace('this version = '+e.data.o, 'new version = '+e.data.n);
-		}		
-		
+	
 		private function installGit(e:InstallEvent):void 
 		{
 			_install.version = String(e.data);
@@ -152,13 +145,28 @@ package view.modals {
 			showModalWindow(_settings);
 		}
 		
+	// check expired & update application //
+	
+		private function checkExpiredAndUpdates():void
+		{
+			if (LicenseManager.checkExpired()){
+				showModalWindow(_expired);
+			}	else{
+				AppModel.updater.checkForUpdate();				
+			}
+		}		
+		
+		private function promptToUpdate(e:InstallEvent):void
+		{
+			if (AppSettings.getSetting(AppSettings.CHECK_FOR_UPDATES) == 'true'){
+				_update.newVersion = e.data.n;
+				showModalWindow(_update);			
+			}	else{
+				trace("ModalManager.promptToUpdate(e), there is an update available");
+			}
+		}			
 
 	// alerts //	
-	
-		private function onTrialExpired(e:UIEvent):void
-		{
-			trace("ModalManager.onTrialExpired(e)");
-		}	
 	
 		private function repairBookmark(e:BookmarkEvent):void
 		{
@@ -171,11 +179,6 @@ package view.modals {
 			_error.message = e.type as String;
 			showModalWindow(_error);
 		}
-		
-//		private function promptToTrackFiles(e:BookmarkEvent):void
-//		{
-//			showModalWindow(_untracked);
-//		}											
 		
 	// adding & removing modal windows //	
 		

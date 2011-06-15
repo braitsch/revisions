@@ -78,8 +78,8 @@ package system {
 		
 		private function onUpdateXMLLoadError(event:IOErrorEvent):void
 		{
-			trace("ERROR Loading Update Descriptor:", event.text);
 			killUpdateXMLLoader(URLLoader(event.currentTarget));
+			dispatchEvent(new InstallEvent(InstallEvent.UPDATE_ERROR, event.text));			
 		}
 		
 		private function killUpdateXMLLoader(XMLLoader:URLLoader):void
@@ -112,7 +112,6 @@ package system {
 		{
 			fileStream = new FileStream;
 			fileStream.open(updateFile, FileMode.WRITE);
-			trace("UpdateManager.onURLStreamOpen(event)");
 		}
 		
 		private function onURLStreamProgress(event:ProgressEvent):void
@@ -123,17 +122,17 @@ package system {
 			urlStream.readBytes(loadedBytes);
 		// Writing loaded bytes into the FileStream
 			fileStream.writeBytes(loadedBytes);
+			dispatchEvent(new InstallEvent(InstallEvent.UPDATE_PROGRESS, event));			
 		}
 		
 		private function onURLStreamError(event:IOErrorEvent):void
 		{
 			closeStreams();
-			trace("ERROR downloading update:", event.text);
+			dispatchEvent(new InstallEvent(InstallEvent.UPDATE_ERROR, event.text));
 		}
 		
 		private function onURLStreamComplete(event:Event):void
 		{
-			trace("UpdateManager.onURLStreamComplete(event)");
 			closeStreams();
 			var os:String = Capabilities.os.toLowerCase();
 			if (os.indexOf('win') != -1){
@@ -146,20 +145,19 @@ package system {
 			}	else if (os.indexOf('linux') != -1){
 				installUpdate(updateFile);
 			}
+			dispatchEvent(new InstallEvent(InstallEvent.UPDATE_COMPLETE));
 		}
 		
 	// mac osx install handlers //	
 		
 		private function onHdiutilError(e:ErrorEvent):void
 		{
-			trace("UpdateManager.onHdiutilError(e)", e.text);
+			dispatchEvent(new InstallEvent(InstallEvent.UPDATE_ERROR, e.text));
 		}
 
 		private function onHdiutilSuccess(e:Event):void
 		{
-			trace(e.target, e.currentTarget);
-			trace("UpdateManager.onHdiutilSuccess(e)", hdiutil.mountPoint);
-    		var dmg:File = new File(hdiutil.mountPoint);
+    		var dmg:File = new File(e.target.mountPoint);
 			var files:Array = dmg.getDirectoryListing();
             if (files.length == 1)
             {
@@ -178,7 +176,6 @@ package system {
 		// Running the installer using NativeProcess API
 			var info:NativeProcessStartupInfo = new NativeProcessStartupInfo;
 				info.executable = installer;
-			trace("UpdateManager.installUpdate() attempting to run installer");
 			var process:NativeProcess = new NativeProcess;
 				process.start(info);
 			

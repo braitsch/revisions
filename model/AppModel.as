@@ -22,7 +22,6 @@ package model {
 
 		public function AppModel() 
 		{
-			_updater.checkForUpdate();
 			_engine.addEventListener(BookmarkEvent.SELECTED, onBookmarkSet);
 			_database.addEventListener(DataBaseEvent.BOOKMARKS_READ, onBookmarksRead);
 			_database.addEventListener(DataBaseEvent.DATABASE_READY, onDatabaseReady);

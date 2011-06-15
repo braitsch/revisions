@@ -1,9 +1,7 @@
 package {
 
-	import events.UIEvent;
 	import model.AppModel;
 	import system.AirContextMenu;
-	import system.LicenseManager;
 	import flash.desktop.NativeApplication;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
@@ -25,7 +23,6 @@ package {
 			stage.align = StageAlign.TOP_LEFT;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			AirContextMenu.initialize(stage);
-			if (!LicenseManager.validate('tacos')) dispatchEvent(new UIEvent(UIEvent.TRIAL_EXPIRED));
 		//TODO temp solution to get around fdt overwriting AIR descriptor file //	
 			NativeApplication.nativeApplication.addEventListener(InvokeEvent.INVOKE, onInvokeEvent);
 		}
