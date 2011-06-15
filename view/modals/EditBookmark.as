@@ -3,27 +3,26 @@ package view.modals {
 	import events.DataBaseEvent;
 	import events.UIEvent;
 	import fl.text.TLFTextField;
-	import flash.display.Sprite;
-	import flash.events.MouseEvent;
 	import model.AppModel;
 	import model.Bookmark;
 	import system.FileBrowser;
+	import view.ui.ModalCheckbox;
+	import flash.events.MouseEvent;
 
 	public class EditBookmark extends ModalWindow {
 
 		private static var _view		:EditBookmarkMC = new EditBookmarkMC();
-		private static var _check1		:Sprite;
 		private static var _bookmark	:Bookmark;
 		private static var _browser		:FileBrowser = new FileBrowser();
+		private static var _check1		:ModalCheckbox = new ModalCheckbox(_view.check1, true);
 
 		public function EditBookmark()
 		{
 			addChild(_view);
 			super.addInputs(Vector.<TLFTextField>([_view.name_txt]));
-			super.addCheckboxes([_view.check1]);			
 			super.addButtons([_view.browse_btn, _view.delete_btn, _view.ok_btn]);
-			
-			_check1 = _view.check1.cross;
+		
+			_check1.label = 'Autosave Every 60 Minutes';	
 			_view.local_txt.selectable = false;
 			_view.addEventListener(MouseEvent.CLICK, onButtonClick);
 			_browser.addEventListener(UIEvent.FILE_BROWSER_SELECTION, onFileSelection);	
@@ -45,7 +44,6 @@ package view.modals {
 		private function onButtonClick(e:MouseEvent):void 
 		{
 			switch(e.target.name){
-				case 'check1' : _check1.visible = !_check1.visible;	break;
 				case 'browse_btn' : 
 					var m:String = _bookmark.file.isDirectory ? 'Directory' : 'File';
 					_browser.browse('Please Select A '+m);

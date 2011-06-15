@@ -58,15 +58,6 @@ package view.modals {
 			for (var i:int=0; i < v.length; i++) v[i].tabIndex = i;
 		}
 		
-		protected function addCheckboxes(a:Array):void
-		{
-			for (var i:int=0; i < a.length; i++) {
-				a[i].buttonMode = true;
-				a[i].cross.visible = false;
-				a[i].cross.mouseEnabled = false;
-			}
-		}		
-		
 	// private methods //	
 
 		private function onAddedToStage(e:Event):void 

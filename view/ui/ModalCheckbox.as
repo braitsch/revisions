@@ -4,7 +4,7 @@ package view.ui {
 
 	public class ModalCheckbox extends Sprite {
 
-		private static var _view:ModalCheckboxMC;
+		private var _view:ModalCheckboxMC;
 
 		public function ModalCheckbox(v:ModalCheckboxMC, on:Boolean)
 		{
@@ -20,9 +20,14 @@ package view.ui {
 		{
 			_view.label_txt.text = s;
 			_view.graphics.clear();
-			_view.graphics.beginFill(0xff0000, 0);
+			_view.graphics.beginFill(0xff0000, .2);
 			_view.graphics.drawRect(2, 2, _view.width-4, _view.height-4);
 			_view.graphics.endFill();				
+		}
+		
+		public function set selected(b:Boolean):void
+		{
+			_view.cross.visible = b;
 		}
 		
 		public function get selected():Boolean

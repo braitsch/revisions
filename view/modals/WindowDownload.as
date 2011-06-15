@@ -2,28 +2,30 @@ package view.modals {
 
 	import events.InstallEvent;
 	import events.UIEvent;
-	import flash.events.MouseEvent;
 	import model.AppModel;
 	import model.Bookmark;
 	import model.Commit;
 	import model.db.AppSettings;
 	import system.FileBrowser;
+	import view.ui.ModalCheckbox;
+	import flash.events.MouseEvent;
 
 	public class WindowDownload extends ModalWindow {
 
 		private static var _commit	:Commit;
 		private static var _view	:WindowDownloadMC = new WindowDownloadMC();
 		private static var _browser	:FileBrowser = new FileBrowser();
+		private static var _check1	:ModalCheckbox = new ModalCheckbox(_view.check1, false);
 
 		public function WindowDownload()
 		{
 			addChild(_view);
-			super.addCheckboxes([_view.check1]);
 			super.addButtons([_view.cancel_btn, _view.download_btn]);
-			_view.check1.addEventListener(MouseEvent.CLICK, onCheckbox);
+			_check1.addEventListener(MouseEvent.CLICK, onCheckbox);
 			_view.cancel_btn.addEventListener(MouseEvent.CLICK, onCancel);
 			_view.download_btn.addEventListener(MouseEvent.CLICK, onDownload);
 			_browser.addEventListener(UIEvent.FILE_BROWSER_SELECTION, onFileBrowserSelection);
+			_check1.label = "Next time just do it and don't ask me";
 			AppModel.settings.addEventListener(InstallEvent.SETTINGS, onUserSettings);			
 		}
 		
@@ -41,7 +43,7 @@ package view.modals {
 		
 		private function onUserSettings(e:InstallEvent):void
 		{
-			_view.check1.cross.visible = AppSettings.getSetting(AppSettings.PROMPT_BEFORE_DOWNLOAD) == 'false';
+			_check1.selected = AppSettings.getSetting(AppSettings.PROMPT_BEFORE_DOWNLOAD) == 'false';
 		}		
 
 		private function onFileBrowserSelection(e:UIEvent):void
@@ -60,8 +62,7 @@ package view.modals {
 
 		private function onCheckbox(e:MouseEvent):void
 		{
-			_view.check1.cross.visible = !_view.check1.cross.visible;
-			AppSettings.setSetting(AppSettings.PROMPT_BEFORE_DOWNLOAD, _view.check1.cross.visible==false);				
+			AppSettings.setSetting(AppSettings.PROMPT_BEFORE_DOWNLOAD, _check1.selected==false);				
 		}		
 		
 		private function onCancel(e:MouseEvent):void

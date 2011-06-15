@@ -7,28 +7,30 @@ package view.modals {
 	import model.AppModel;
 	import model.db.AppSettings;
 	import system.LicenseManager;
+	import view.ui.ModalCheckbox;
 	import flash.events.MouseEvent;
 
 	public class GlobalSettings extends ModalWindow {
 
 		private static var _view		:GlobalSettingsMC = new GlobalSettingsMC();
+		private static var _check1		:ModalCheckbox = new ModalCheckbox(_view.check1, true);
 
 	//TODO add 'prompt for download' checkbox into view to change global setting
 		public function GlobalSettings()
 		{
 			addChild(_view);
 			super.addButtons([_view.ok_btn]);
-			super.addCheckboxes([_view.check1]);
 			super.addInputs(Vector.<TLFTextField>([_view.name_txt, _view.email_txt]));
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOk);
-			_view.check1.addEventListener(MouseEvent.CLICK, onCheckboxSelected);
+			_check1.label = 'Automatically Check for Updates';
+			_check1.addEventListener(MouseEvent.CLICK, onCheckbox);
 			AppModel.settings.addEventListener(InstallEvent.SETTINGS, onUserSettings);
 			AppModel.proxies.config.addEventListener(BookmarkEvent.SET_USERNAME, onUserInfo);
 		}
 
 		private function onUserSettings(e:InstallEvent):void
 		{
-			_view.check1.cross.visible = AppSettings.getSetting(AppSettings.CHECK_FOR_UPDATES) == 'true';
+			_check1.selected = AppSettings.getSetting(AppSettings.CHECK_FOR_UPDATES) == 'true';
 		}
 
 		private function onUserInfo(e:BookmarkEvent):void
@@ -38,10 +40,9 @@ package view.modals {
 			_view.license_txt.text = LicenseManager.key;
 		}
 		
-		private function onCheckboxSelected(e:MouseEvent):void
+		private function onCheckbox(e:MouseEvent):void
 		{
-			_view.check1.cross.visible = !_view.check1.cross.visible;
-			AppSettings.setSetting(AppSettings.CHECK_FOR_UPDATES, _view.check1.cross.visible);
+			AppSettings.setSetting(AppSettings.CHECK_FOR_UPDATES, _check1.selected);
 		}
 
 		private function onOk(e:MouseEvent):void
