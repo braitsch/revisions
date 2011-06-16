@@ -23,7 +23,7 @@ package view.modals {
 			super.addInputs(Vector.<TLFTextField>([_view.name_txt, _view.email_txt]));
 			_check1.label = 'Automatically check for updates';
 			_check2.label = 'Show tooltips';
-			_check3.label = 'Prompt before downloading a previous revision';
+			_check3.label = 'Prompt before downloading a previous version';
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOk);
 			_view.check1.addEventListener(MouseEvent.CLICK, onCheck1);
 			_view.check2.addEventListener(MouseEvent.CLICK, onCheck2);

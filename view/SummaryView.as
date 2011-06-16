@@ -103,6 +103,14 @@ package view {
 			_view.name_txt.x = -_view.name_txt.width/2;
 			getBookmarkIcon();
 			addBookmarkListeners();
+			showRemoteButtons(_bookmark.remote != null);
+		}
+
+		private function showRemoteButtons(b:Boolean):void
+		{
+			_details.pull_btn.visible = _details.push_btn.visible = b;
+			_details.history_btn.x = b ? 58 : 20;
+			_details.settings_btn.x = b ? -56 : -18;
 		}
 
 		private function addBookmarkListeners():void
@@ -173,9 +181,15 @@ package view {
 			dispatchEvent(new UIEvent(UIEvent.EDIT_BOOKMARK, _bookmark));			
 		}
 
-	// TODO //		
-		private function onPushButton(e:MouseEvent):void { }
-		private function onPullButton(e:MouseEvent):void { }
+	// TODO once we have remote integration //		
+		private function onPushButton(e:MouseEvent):void 
+		{ 
+			trace("SummaryView.onPushButton(e)");
+		}
+		private function onPullButton(e:MouseEvent):void 
+		{ 
+			trace("SummaryView.onPullButton(e)");
+		}
 		
 	}
 	
