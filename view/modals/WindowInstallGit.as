@@ -1,18 +1,14 @@
 package view.modals {
 
 	import events.InstallEvent;
-	import events.UIEvent;
+	import model.AppModel;
+	import system.SystemRules;
 	import flash.desktop.NativeApplication;
 	import flash.events.MouseEvent;
-	import model.AppModel;
-	import model.proxies.InstallProxy;
-	import system.SystemRules;
 
 	public class WindowInstallGit extends ModalWindow {
 
 		private static var _view		:InstallGitMC = new InstallGitMC();
-		private static var _installed	:Boolean;
-		private static var _installer	:InstallProxy;		
 
 		public function WindowInstallGit()
 		{
@@ -23,7 +19,6 @@ package view.modals {
 
 		public function set version(n:Number):void
 		{
-			_installed = false;
 			if (n==0){
 				_view.message_txt.htmlText = 'To start using GitMe,<br>I need to first install the underlying Git program on this computer.';	
 			} else{
@@ -35,11 +30,7 @@ package view.modals {
 
 		private function onButtonOK(e:MouseEvent):void 
 		{
-			if (!_installed){
-				onInstallStart();
-			}	else{	
-				dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-			}
+			onInstallStart();
 		}
 		
 		private function onButtonQuit(e:MouseEvent):void 
@@ -53,18 +44,19 @@ package view.modals {
 		{
 			_view.ok_btn.visible = false;
 			_view.quit_btn.visible = false;
-			_view.message_txt.text = 'Installing Git - This will take a few seconds..';			
-			_installer = new InstallProxy();
-			_installer.addEventListener(InstallEvent.GIT_INSTALL_COMPLETE, onInstallComplete);				
+			_view.message_txt.text = 'Installing Git - This will take a few seconds..';
+		//	AppModel.proxies.install.installGitLocal();
+			AppModel.proxies.install.downloadAndInstallGit();
+			AppModel.proxies.install.addEventListener(InstallEvent.GIT_INSTALL_COMPLETE, onInstallComplete);
 		}		
 
 		private function onInstallComplete(e:InstallEvent):void 
 		{
-			_installed = true;
 			_view.ok_btn.visible = true;
 			_view.message_txt.text = "You're All Set - Install Complete!!";	
 		// read and update the gui with newly installed git version //	
 			AppModel.proxies.config.loadGitSettings();
+			AppModel.proxies.install.removeEventListener(InstallEvent.GIT_INSTALL_COMPLETE, onInstallComplete);
 		}		
 		
 	}
