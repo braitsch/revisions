@@ -8,12 +8,12 @@ package view.modals {
 	import view.ui.ModalCheckbox;
 	import flash.events.MouseEvent;
 
-	public class WindowUpdate extends ModalWindow {
+	public class UpdateApp extends ModalWindow {
 
 		private static var _view	:WindowUpdateMC = new WindowUpdateMC();
 		private static var _check1	:ModalCheckbox = new ModalCheckbox(_view.check1, false);
 
-		public function WindowUpdate()
+		public function UpdateApp()
 		{
 			addChild(_view);
 			_check1.label = "Don't prompt me to update again.";

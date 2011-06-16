@@ -41,6 +41,21 @@ package view.modals {
 			_closeButton.addEventListener(MouseEvent.ROLL_OVER, onButtonRollOver);			
 			addChild(_closeButton);			
 		}
+		
+		protected function enableButton(b:Sprite, on:Boolean):void
+		{
+			if (on){
+				b.alpha = 1;
+				b.buttonMode = true;
+				b.addEventListener(MouseEvent.ROLL_OUT, onButtonRollOut);
+				b.addEventListener(MouseEvent.ROLL_OVER, onButtonRollOver);
+			}	else{
+				b.alpha = .5;
+				b.buttonMode = false;
+				b.removeEventListener(MouseEvent.ROLL_OUT, onButtonRollOut);
+				b.removeEventListener(MouseEvent.ROLL_OVER, onButtonRollOver);				
+			}
+		}
 
 		private function onButtonRollOut(e:MouseEvent):void {TweenLite.to(e.target.over, .3, {alpha:0});}
 		private function onButtonRollOver(e:MouseEvent):void {TweenLite.to(e.target.over, .5, {alpha:1});}

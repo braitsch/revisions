@@ -18,14 +18,14 @@ package view.modals {
 		private static var _new				:NewBookmark = new NewBookmark();
 		private static var _edit			:EditBookmark = new EditBookmark();
 		private static var _repair			:RepairBookmark = new RepairBookmark();		private static var _delete			:DeleteBookmark = new DeleteBookmark();
-		private static var _commit			:WindowCommit = new WindowCommit();
-		private static var _revert			:WindowRevert = new WindowRevert();		private static var _download		:WindowDownload = new WindowDownload();
+		private static var _commit			:NewCommit = new NewCommit();
+		private static var _revert			:RevertToVersion = new RevertToVersion();		private static var _download		:DownloadVersion = new DownloadVersion();
 		private static var _details			:CommitDetails = new CommitDetails();
 		private static var _settings		:GlobalSettings = new GlobalSettings();
-		private static var _update			:WindowUpdate = new WindowUpdate();
-		private static var _alert			:WindowAlert = new WindowAlert();
-		private static var _expired			:WindowExpired = new WindowExpired();
-		private static var _install			:WindowInstallGit = new WindowInstallGit();
+		private static var _updateApp		:UpdateApp = new UpdateApp();
+		private static var _gitWindow		:GitWindow = new GitWindow();
+		private static var _alert			:Alert = new Alert();
+		private static var _expired			:AppExpired = new AppExpired();
 		private static var _window			:ModalWindow;	// the active modal window //
 		private static var _curtain			:ModalCurtain = new ModalCurtain();
 
@@ -79,8 +79,8 @@ package view.modals {
 	
 		private function installGit(e:InstallEvent):void 
 		{
-			_install.version = Number(e.data) || 0;
-			showModalWindow(_install);
+			_gitWindow.version = e.data as String;
+			showModalWindow(_gitWindow);
 		}	
 
 		private function onDragAndDrop(e:UIEvent):void 
@@ -149,8 +149,8 @@ package view.modals {
 		private function promptToUpdate(e:InstallEvent):void
 		{
 			if (AppSettings.getSetting(AppSettings.CHECK_FOR_UPDATES) == 'true'){
-				_update.newVersion = e.data.n;
-				showModalWindow(_update);			
+				_updateApp.newVersion = e.data.n;
+				showModalWindow(_updateApp);			
 			}	else{
 				trace("ModalManager.promptToUpdate(e), there is an update available");
 			}
@@ -179,6 +179,7 @@ package view.modals {
 		
 		private function hideModalWindow():void
 		{
+			if (_gitWindow.installed == false) return;
 			removeChild(_window);
 			_window = null;
 			_curtain.hide();

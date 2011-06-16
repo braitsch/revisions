@@ -5,11 +5,11 @@ package view.modals {
 	import flash.desktop.NativeApplication;
 	import flash.events.MouseEvent;
 
-	public class WindowExpired extends ModalWindow {
+	public class AppExpired extends ModalWindow {
 
 		private static var _view	:WindowExpiredMC = new WindowExpiredMC();
 
-		public function WindowExpired()
+		public function AppExpired()
 		{
 			addChild(_view);
 			_view.message_txt.text = 'This beta version of Revisions has expired.\n';

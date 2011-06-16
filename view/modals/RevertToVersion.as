@@ -5,12 +5,12 @@ package view.modals {
 	import model.Commit;
 	import flash.events.MouseEvent;
 
-	public class WindowRevert extends ModalWindow {
+	public class RevertToVersion extends ModalWindow {
 
 		private static var _view		:WindowRevertMC = new WindowRevertMC();
 		private static var _commit		:Commit;
 
-		public function WindowRevert()
+		public function RevertToVersion()
 		{
 			addChild(_view);
 			super.addButtons([_view.revert_btn, _view.cancel_btn]);

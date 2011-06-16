@@ -4,11 +4,11 @@ package view.modals {
 	import flash.events.MouseEvent;
 	import view.modals.ModalWindow;
 
-	public class WindowAlert extends ModalWindow {
+	public class Alert extends ModalWindow {
 
 		private static var _view:WindowAlertMC = new WindowAlertMC();
 
-		public function WindowAlert()
+		public function Alert()
 		{
 			addChild(_view);
 			super.addButtons([_view.ok_btn]);

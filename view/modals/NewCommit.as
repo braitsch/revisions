@@ -5,11 +5,11 @@ package view.modals {
 	import model.AppModel;
 	import flash.events.MouseEvent;
 
-	public class WindowCommit extends ModalWindow {
+	public class NewCommit extends ModalWindow {
 
 		private static var _view		:WindowCommitMC = new WindowCommitMC();
 
-		public function WindowCommit()
+		public function NewCommit()
 		{
 			addChild(_view);
 			_view.save_btn.addEventListener(MouseEvent.CLICK, onCommit);			

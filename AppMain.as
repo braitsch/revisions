@@ -1,5 +1,6 @@
 package {
 
+	import system.MyNativeMenu;
 	import events.InstallEvent;
 	import model.AppModel;
 	import system.AirContextMenu;
@@ -14,8 +15,11 @@ package {
 
 	public class AppMain extends Sprite {
 	
+		private static var _menu:MyNativeMenu;
+		
 		public function AppMain()
 		{	
+		//	_menu= new MyNativeMenu();
 			new AppModel();
 			addChild(new AppView());
 			stage.align = StageAlign.TOP_LEFT;

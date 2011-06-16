@@ -12,7 +12,7 @@ package model.proxies {
 		public function InstallProxy()
 		{
 			super('Install.sh');			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);
-			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
+		//	super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 			super.addEventListener(NativeProcessEvent.QUEUE_COMPLETE, onShellQueueComplete);
 		}
 
@@ -34,18 +34,18 @@ package model.proxies {
 		
 	// response handlers //	
 	
-		private function onProcessComplete(e:NativeProcessEvent):void
-		{
-	// download by far takes the longest..		
-			switch(e.data.method){
-				case BashMethods.DOWNLOAD : trace('download complete');	break;
-				case BashMethods.MOUNT : trace('mount complete');	break;
-				case BashMethods.INSTALL : trace('install complete');	break;
-				case BashMethods.UNMOUNT : trace('unmount complete');	break;
-				case BashMethods.TRASH : trace('trash complete');	break;
-				case BashMethods.UPDATE_PATH : trace('path update complete');	break;
-			}
-		}			
+//		private function onProcessComplete(e:NativeProcessEvent):void
+//		{
+//	// download by far takes the longest..		
+//			switch(e.data.method){
+//				case BashMethods.DOWNLOAD : trace('download complete');	break;
+//				case BashMethods.MOUNT : trace('mount complete');	break;
+//				case BashMethods.INSTALL : trace('install complete');	break;
+//				case BashMethods.UNMOUNT : trace('unmount complete');	break;
+//				case BashMethods.TRASH : trace('trash complete');	break;
+//				case BashMethods.UPDATE_PATH : trace('path update complete');	break;
+//			}
+//		}			
 		
 		private function onShellQueueComplete(e:NativeProcessEvent):void 
 		{

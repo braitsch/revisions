@@ -73,11 +73,9 @@ package model.proxies {
 		
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
-			trace("ConfigProxy.onProcessFailure(e)", e.data.method, e.data.result);
 			if (e.data.method == BashMethods.GET_VERSION){
 				super.die();
-				trace('ConfigProxy.onProcessFailure, git is not installed!!!!');
-				dispatchEvent(new InstallEvent(InstallEvent.GIT_UNAVAILABLE));				
+				dispatchEvent(new InstallEvent(InstallEvent.GIT_UNAVAILABLE, '0'));				
 			}
 		}
 

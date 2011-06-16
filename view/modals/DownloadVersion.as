@@ -10,14 +10,14 @@ package view.modals {
 	import view.ui.ModalCheckbox;
 	import flash.events.MouseEvent;
 
-	public class WindowDownload extends ModalWindow {
+	public class DownloadVersion extends ModalWindow {
 
 		private static var _commit	:Commit;
 		private static var _view	:WindowDownloadMC = new WindowDownloadMC();
 		private static var _browser	:FileBrowser = new FileBrowser();
 		private static var _check1	:ModalCheckbox = new ModalCheckbox(_view.check1, false);
 
-		public function WindowDownload()
+		public function DownloadVersion()
 		{
 			addChild(_view);
 			super.addButtons([_view.cancel_btn, _view.download_btn]);
