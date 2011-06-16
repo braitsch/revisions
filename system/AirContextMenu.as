@@ -42,7 +42,7 @@ package system {
 
 		static private function onContextMenuClick(e:ContextMenuEvent):void 
 		{
-			if (e.mouseTarget is BookmarkItem){
+			if (e.mouseTarget is BookmarkListItem){
 				var b:Bookmark = getBookmark(e.mouseTarget);
 				_bkmkOptions[0].enabled = b.branch.modified;
 				_menu.customItems = _bkmkOptions;			}	else{

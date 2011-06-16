@@ -12,7 +12,7 @@ package view.modals {
 
 		private static var _view		:GitWindowMC = new GitWindowMC();
 		private static var _version		:String;
-		private static var _installed	:Boolean = false;
+		private static var _installed	:Boolean = true;
 
 		public function GitWindow()
 		{
@@ -37,6 +37,7 @@ package view.modals {
 			}
 			b.x = 3; b.y = -1;
 			_view.addChild(b);
+			_installed = false;
 		}
 
 		private function disableButtons():void
