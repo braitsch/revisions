@@ -26,7 +26,7 @@ package view.modals {
 			_view.cancel_btn.addEventListener(MouseEvent.CLICK, onCancel);
 			_view.download_btn.addEventListener(MouseEvent.CLICK, onDownload);
 			_browser.addEventListener(UIEvent.FILE_BROWSER_SELECTION, onFileBrowserSelection);
-			AppModel.settings.addEventListener(InstallEvent.SETTINGS, onUserSettings);			
+			AppModel.settings.addEventListener(InstallEvent.APP_SETTINGS, onUserSettings);			
 		}
 		
 		public function set commit(cmt:Commit):void

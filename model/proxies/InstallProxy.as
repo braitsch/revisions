@@ -2,44 +2,32 @@ package model.proxies {
 
 	import events.InstallEvent;
 	import events.NativeProcessEvent;
-	import flash.events.EventDispatcher;
-	import model.air.NativeProcessProxy;
+	import model.air.NativeProcessQueue;
 	import system.BashMethods;
 
 	// installs & updates git if user does not have minimum required version installed.
 
-	public class InstallProxy extends EventDispatcher {
-
-		private static var _proxy			:NativeProcessProxy;
+	public class InstallProxy extends NativeProcessQueue {
 
 		public function InstallProxy()
 		{
-			_proxy = new NativeProcessProxy();
-			_proxy.executable = 'Install.sh';			_proxy.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);
-			_proxy.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
-			_proxy.call(Vector.<String>([BashMethods.DOWNLOAD]));
-			trace("InstallProxy.InstallProxy() -------- Installing Git");
+			super('Install.sh');			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);
+			super.addEventListener(NativeProcessEvent.QUEUE_COMPLETE, onShellQueueComplete);
 		}
 		
+		public function installGit():void
+		{
+			super.queue = [	Vector.<String>([BashMethods.DOWNLOAD]),
+							Vector.<String>([BashMethods.MOUNT]),
+							Vector.<String>([BashMethods.INSTALL]),
+							Vector.<String>([BashMethods.UNMOUNT]),
+							Vector.<String>([BashMethods.TRASH])];
+		}
 	// response handlers //			
 		
-		private function onProcessComplete(e:NativeProcessEvent):void 
+		private function onShellQueueComplete(e:NativeProcessEvent):void 
 		{
-			var m:String = String(e.data.method);
-			switch(m){
-				case BashMethods.DOWNLOAD: 
-					_proxy.call(Vector.<String>([BashMethods.MOUNT]));				
-				break;				case BashMethods.MOUNT : 
-					_proxy.call(Vector.<String>([BashMethods.INSTALL]));			
-				break;				case BashMethods.INSTALL : 
-					_proxy.call(Vector.<String>([BashMethods.UNMOUNT]));			
-				break;				case BashMethods.UNMOUNT : 
-					_proxy.call(Vector.<String>([BashMethods.TRASH]));				
-				break;
-				case BashMethods.TRASH : 
-					dispatchEvent(new InstallEvent(InstallEvent.GIT_INSTALL_COMPLETE));		
-				break;					
-			}
+			dispatchEvent(new InstallEvent(InstallEvent.GIT_INSTALL_COMPLETE));		
 		}	
 		
 		private function onProcessFailure(e:NativeProcessEvent):void 

@@ -1,6 +1,5 @@
 package view.modals {
 
-	import events.BookmarkEvent;
 	import events.InstallEvent;
 	import events.UIEvent;
 	import fl.text.TLFTextField;
@@ -29,8 +28,9 @@ package view.modals {
 			_view.check1.addEventListener(MouseEvent.CLICK, onCheck1);
 			_view.check2.addEventListener(MouseEvent.CLICK, onCheck2);
 			_view.check3.addEventListener(MouseEvent.CLICK, onCheck3);
-			AppModel.settings.addEventListener(InstallEvent.SETTINGS, onUserSettings);
-			AppModel.proxies.config.addEventListener(BookmarkEvent.SET_USERNAME, onUserInfo);
+			AppModel.settings.addEventListener(InstallEvent.APP_SETTINGS, onUserSettings);
+			AppModel.proxies.config.addEventListener(InstallEvent.GIT_IS_READY, onGitSettings);
+			AppModel.proxies.config.addEventListener(InstallEvent.GIT_SETTINGS, onGitSettings);
 		}
 
 		private function onUserSettings(e:InstallEvent):void
@@ -40,7 +40,7 @@ package view.modals {
 			_check3.selected = AppSettings.getSetting(AppSettings.PROMPT_BEFORE_DOWNLOAD) == 'true';
 		}
 
-		private function onUserInfo(e:BookmarkEvent):void
+		private function onGitSettings(e:InstallEvent):void
 		{
 			_view.name_txt.text = AppModel.proxies.config.userName;
 			_view.email_txt.text = AppModel.proxies.config.userEmail;
@@ -64,7 +64,8 @@ package view.modals {
 		
 		private function onOk(e:MouseEvent):void
 		{
-		//TODO write username & email to git global config //
+			AppModel.proxies.config.userName = _view.name_txt.text;
+			AppModel.proxies.config.userEmail = _view.email_txt.text;
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));			
 		}
 		

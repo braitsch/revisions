@@ -51,7 +51,7 @@ package model.db {
 		// store user-defined preferences //	
 			var p:XMLList = _xml['user-defined'].children();
 			for (var i:int = 0; i < p.length(); i++) _settings[p[i].name()] = p[i].valueOf();
-			dispatchEvent(new InstallEvent(InstallEvent.SETTINGS));
+			dispatchEvent(new InstallEvent(InstallEvent.APP_SETTINGS));
 		//	traceSettings();
 		}
 		

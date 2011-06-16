@@ -3,15 +3,18 @@ package events {
 
 	public class InstallEvent extends Event {
 		
-		public static const SETTINGS				:String = "SETTINGS";
-		public static const SET_GIT_VERSION			:String = "SET_GIT_VERSION";
 		public static const GIT_UNAVAILABLE			:String = "GIT_UNAVAILABLE";
 		public static const GIT_INSTALL_COMPLETE	:String = "GIT_INSTALL_COMPLETE";
+		public static const GIT_IS_READY			:String = "GIT_IS_READY";
+		public static const GIT_SETTINGS			:String = "GIT_SETTINGS";
+		public static const APP_SETTINGS			:String = "APP_SETTINGS";
 		
-		public static const UPDATE_AVAILABLE:String = "UPDATE_AVAILABLE";
-		public static const UPDATE_PROGRESS:String = "UPDATE_PROGRESS";
-		public static const UPDATE_COMPLETE:String = "UPDATE_COMPLETE";
-		public static const UPDATE_ERROR:String = "UPDATE_ERROR";
+		public static const APP_EXPIRED				:String = "APP_EXPIRED";
+		public static const APP_UP_TO_DATE			:String = "APP_UP_TO_DATE";
+		public static const UPDATE_AVAILABLE		:String = "UPDATE_AVAILABLE";
+		public static const UPDATE_PROGRESS			:String = "UPDATE_PROGRESS";
+		public static const UPDATE_COMPLETE			:String = "UPDATE_COMPLETE";
+		public static const UPDATE_FAILURE:String = "UPDATE_FAILURE";
 		
 		public var data:Object;
 

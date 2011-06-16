@@ -61,12 +61,12 @@ package view.modals {
 		
 		private function onGitHub(e:MouseEvent):void
 		{
-			dispatchEvent(new UIEvent(UIEvent.USER_ERROR, 'GitHub & Beanstalk integration is coming in the next build.'));
+			dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, 'GitHub & Beanstalk integration is coming in the next build.'));
 		}	
 		
 		private function onBeanstalk(e:MouseEvent):void
 		{
-			dispatchEvent(new UIEvent(UIEvent.USER_ERROR, 'GitHub & Beanstalk integration is coming in the next build.'));
+			dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, 'GitHub & Beanstalk integration is coming in the next build.'));
 		}
 
 		private function initNewBookmark():void
@@ -113,7 +113,7 @@ package view.modals {
 		
 		private function showUserError(m:String):void
 		{
-			dispatchEvent(new UIEvent(UIEvent.USER_ERROR, m));
+			dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, m));
 		}
 				
 	}

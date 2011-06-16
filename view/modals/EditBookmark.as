@@ -72,12 +72,12 @@ package view.modals {
 		
 		private function onGitHubButton(e:MouseEvent):void
 		{
-			dispatchEvent(new UIEvent(UIEvent.USER_ERROR, 'GitHub & Beanstalk integration is coming in the next build.'));
+			dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, 'GitHub & Beanstalk integration is coming in the next build.'));
 		}
 		
 		private function onBeanstalkButton(e:MouseEvent):void
 		{
-			dispatchEvent(new UIEvent(UIEvent.USER_ERROR, 'GitHub & Beanstalk integration is coming in the next build.'));			
+			dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, 'GitHub & Beanstalk integration is coming in the next build.'));			
 		}												
 
 		private function validateName():Boolean

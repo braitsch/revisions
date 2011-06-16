@@ -3,8 +3,6 @@ package events {
 
 	public class BookmarkEvent extends Event {
 		
-		public static const SET_USERNAME					:String = "SET_USERNAME";
-	
 		public static const LOADED							:String = "bookmarks_loaded";
 		public static const NO_BOOKMARKS					:String = "no_bookmarks";
 		public static const INITIALIZED						:String = 'initialized';		public static const ADDED							:String = "added";		public static const DELETED							:String = "deleted";

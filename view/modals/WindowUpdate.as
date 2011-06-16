@@ -43,7 +43,7 @@ package view.modals {
 		{
 			_view.message_txt.text = "Downloading Update..";
 			AppModel.updater.updateApplication();
-			AppModel.updater.addEventListener(InstallEvent.UPDATE_ERROR, onUpdateError);
+			AppModel.updater.addEventListener(InstallEvent.UPDATE_FAILURE, onUpdateError);
 			AppModel.updater.addEventListener(InstallEvent.UPDATE_PROGRESS, onUpdateProgress);
 			AppModel.updater.addEventListener(InstallEvent.UPDATE_COMPLETE, onUpdateComplete);
 		}

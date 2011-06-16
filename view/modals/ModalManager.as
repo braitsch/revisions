@@ -7,7 +7,6 @@ package view.modals {
 	import model.Bookmark;
 	import model.Commit;
 	import model.db.AppSettings;
-	import system.LicenseManager;
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.MouseEvent;
@@ -15,29 +14,25 @@ package view.modals {
 
 	public class ModalManager extends Sprite {
 
-	// modal windows //	
+		private static var _welcome			:WelcomeScreen = new WelcomeScreen();
 		private static var _new				:NewBookmark = new NewBookmark();
 		private static var _edit			:EditBookmark = new EditBookmark();
-		private static var _repair			:RepairBookmark = new RepairBookmark();
-		private static var _delete			:DeleteBookmark = new DeleteBookmark();		private static var _commit			:WindowCommit = new WindowCommit();
-		private static var _revert			:WindowRevert = new WindowRevert();
-		private static var _download		:WindowDownload = new WindowDownload();		private static var _details			:CommitDetails = new CommitDetails();
+		private static var _repair			:RepairBookmark = new RepairBookmark();		private static var _delete			:DeleteBookmark = new DeleteBookmark();
+		private static var _commit			:WindowCommit = new WindowCommit();
+		private static var _revert			:WindowRevert = new WindowRevert();		private static var _download		:WindowDownload = new WindowDownload();
+		private static var _details			:CommitDetails = new CommitDetails();
 		private static var _settings		:GlobalSettings = new GlobalSettings();
 		private static var _update			:WindowUpdate = new WindowUpdate();
 		private static var _alert			:WindowAlert = new WindowAlert();
 		private static var _expired			:WindowExpired = new WindowExpired();
-		private static var _welcome			:WelcomeScreen = new WelcomeScreen();
-		
-		private static var _install			:InstallGit = new InstallGit();
+		private static var _install			:WindowInstallGit = new WindowInstallGit();
+		private static var _window			:ModalWindow;	// the active modal window //
 		private static var _curtain			:ModalCurtain = new ModalCurtain();
-		private static var _window			:ModalWindow;
- // active window onscreen //
 
 		public function ModalManager()
 		{
 			addChild(_curtain);
 			mouseEnabled = false;
-			checkExpiredAndUpdates();
 			_curtain.addEventListener(MouseEvent.CLICK, onCurtainClick);
 			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onBookmarkSelected);
 			AppModel.engine.addEventListener(BookmarkEvent.PATH_ERROR, repairBookmark);
@@ -57,9 +52,10 @@ package view.modals {
 			stage.addEventListener(UIEvent.DOWNLOAD, downloadVersion);
 			stage.addEventListener(UIEvent.COMMIT_DETAILS, commitDetails);
 			stage.addEventListener(UIEvent.GLOBAL_SETTINGS, globalSettings);
-			stage.addEventListener(UIEvent.USER_ERROR, onShowAlert);		
-			stage.addEventListener(UIEvent.CLOSE_ALERT, onCloseAlert);		
+			stage.addEventListener(UIEvent.SHOW_ALERT, onShowAlert);		
+			stage.addEventListener(UIEvent.HIDE_ALERT, onCloseAlert);		
 			stage.addEventListener(UIEvent.CLOSE_MODAL_WINDOW, onCloseButton);
+			stage.addEventListener(InstallEvent.APP_EXPIRED, onAppExpired);
 		}
 
 		public function resize(w:Number, h:Number):void
@@ -83,7 +79,7 @@ package view.modals {
 	
 		private function installGit(e:InstallEvent):void 
 		{
-			_install.version = String(e.data);
+			_install.version = Number(e.data) || 0;
 			showModalWindow(_install);
 		}	
 
@@ -145,15 +141,9 @@ package view.modals {
 			showModalWindow(_settings);
 		}
 		
-	// check expired & update application //
-	
-		private function checkExpiredAndUpdates():void
+		private function onAppExpired(e:InstallEvent):void
 		{
-			if (LicenseManager.checkExpired()){
-				showModalWindow(_expired);
-			}	else{
-				AppModel.updater.checkForUpdate();				
-			}
+			showModalWindow(_expired);		
 		}		
 		
 		private function promptToUpdate(e:InstallEvent):void

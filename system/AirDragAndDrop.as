@@ -35,7 +35,7 @@ package system {
 			if (a.length == 1){
 				_target.dispatchEvent(new UIEvent(UIEvent.DRAG_AND_DROP, a[0]));
 			}	else{
-				_target.dispatchEvent(new UIEvent(UIEvent.USER_ERROR, 'Please add only one file at a time.'));
+				_target.dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, 'Please add only one file at a time.'));
 			}
 		}
 

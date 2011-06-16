@@ -70,7 +70,9 @@ package system {
 			var oldVersion:String = oldDescriptor.odns::versionNumber.toString();
 			
 		// Compare current version with update version
-			if (oldVersion != newVersion) {
+			if (oldVersion == newVersion) {
+				dispatchEvent(new InstallEvent(InstallEvent.APP_UP_TO_DATE));
+			}	else{
 				_updateURL = newDescriptor.ndns::url.toString();
 				dispatchEvent(new InstallEvent(InstallEvent.UPDATE_AVAILABLE, {o:oldVersion, n:newVersion}));
 			}
@@ -79,7 +81,7 @@ package system {
 		private function onUpdateXMLLoadError(event:IOErrorEvent):void
 		{
 			killUpdateXMLLoader(URLLoader(event.currentTarget));
-			dispatchEvent(new InstallEvent(InstallEvent.UPDATE_ERROR, event.text));			
+			dispatchEvent(new InstallEvent(InstallEvent.UPDATE_FAILURE, event.text));			
 		}
 		
 		private function killUpdateXMLLoader(XMLLoader:URLLoader):void
@@ -128,7 +130,7 @@ package system {
 		private function onURLStreamError(event:IOErrorEvent):void
 		{
 			closeStreams();
-			dispatchEvent(new InstallEvent(InstallEvent.UPDATE_ERROR, event.text));
+			dispatchEvent(new InstallEvent(InstallEvent.UPDATE_FAILURE, event.text));
 		}
 		
 		private function onURLStreamComplete(event:Event):void
@@ -152,7 +154,7 @@ package system {
 		
 		private function onHdiutilError(e:ErrorEvent):void
 		{
-			dispatchEvent(new InstallEvent(InstallEvent.UPDATE_ERROR, e.text));
+			dispatchEvent(new InstallEvent(InstallEvent.UPDATE_FAILURE, e.text));
 		}
 
 		private function onHdiutilSuccess(e:Event):void

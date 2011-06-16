@@ -1,7 +1,9 @@
 package {
 
+	import events.InstallEvent;
 	import model.AppModel;
 	import system.AirContextMenu;
+	import system.LicenseManager;
 	import flash.desktop.NativeApplication;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
@@ -12,27 +14,48 @@ package {
 
 	public class AppMain extends Sprite {
 	
-		private static var _view		:AppView;
-		private static var _model		:AppModel;
-		
 		public function AppMain()
 		{	
-			_view = new AppView();
-			_model = new AppModel();
-			addChild(_view);
+			new AppModel();
+			addChild(new AppView());
 			stage.align = StageAlign.TOP_LEFT;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
-			AirContextMenu.initialize(stage);
-		//TODO temp solution to get around fdt overwriting AIR descriptor file //	
 			NativeApplication.nativeApplication.addEventListener(InvokeEvent.INVOKE, onInvokeEvent);
 		}
 		
 		private function onInvokeEvent(e:InvokeEvent):void
 		{
 			stage.nativeWindow.visible = false;
-			AppModel.settings.initialize(stage);
 			NativeApplication.nativeApplication.removeEventListener(InvokeEvent.INVOKE, onInvokeEvent);
+		// start the initialization sequence //	
+			checkExpiredAndUpdates();
 		}
+		
+		private function checkExpiredAndUpdates():void
+		{
+			if (LicenseManager.checkExpired()){
+				stage.dispatchEvent(new InstallEvent(InstallEvent.APP_EXPIRED));
+			}	else{
+				AppModel.updater.checkForUpdate();				
+			}
+			AppModel.updater.addEventListener(InstallEvent.APP_UP_TO_DATE, onAppUpToDate);
+		}			
+		
+		private function onAppUpToDate(e:InstallEvent):void
+		{
+			trace("AppMain.onAppUpToDate(e)");
+			AppModel.proxies.config.loadGitSettings();
+			AppModel.proxies.config.addEventListener(InstallEvent.GIT_IS_READY, onGitReady);
+		}
+
+		private function onGitReady(e:InstallEvent):void
+		{
+			trace("AppMain.onGitReady(e)");
+			AppModel.database.init();
+			AirContextMenu.initialize(stage);
+			AppModel.settings.initialize(stage);
+		}
+		
 		
 	}
 	
