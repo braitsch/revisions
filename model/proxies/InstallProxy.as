@@ -12,9 +12,10 @@ package model.proxies {
 		public function InstallProxy()
 		{
 			super('Install.sh');			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);
+			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 			super.addEventListener(NativeProcessEvent.QUEUE_COMPLETE, onShellQueueComplete);
 		}
-		
+
 	// optionally can be called from WindowInstallGit instead of the download function //	
 		public function installGitLocal():void
 		{
@@ -31,7 +32,20 @@ package model.proxies {
 							Vector.<String>([BashMethods.UPDATE_PATH])];
 		}
 		
-	// response handlers //			
+	// response handlers //	
+	
+		private function onProcessComplete(e:NativeProcessEvent):void
+		{
+	// download by far takes the longest..		
+			switch(e.data.method){
+				case BashMethods.DOWNLOAD : trace('download complete');	break;
+				case BashMethods.MOUNT : trace('mount complete');	break;
+				case BashMethods.INSTALL : trace('install complete');	break;
+				case BashMethods.UNMOUNT : trace('unmount complete');	break;
+				case BashMethods.TRASH : trace('trash complete');	break;
+				case BashMethods.UPDATE_PATH : trace('path update complete');	break;
+			}
+		}			
 		
 		private function onShellQueueComplete(e:NativeProcessEvent):void 
 		{
