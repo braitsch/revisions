@@ -180,10 +180,10 @@ package view.modals {
 		private function hideModalWindow():void
 		{
 			if (_gitWindow.installed == false) return;
-			removeChild(_window);
+			if (_window) removeChild(_window);
+			if (_alert.stage) removeChild(_alert);
 			_window = null;
 			_curtain.hide();
-			if (_alert.stage) removeChild(_alert);
 		}
 		
 		private function onShowAlert(e:UIEvent):void

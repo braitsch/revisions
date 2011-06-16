@@ -71,7 +71,7 @@ package system {
 			
 		// Compare current version with update version
 			if (oldVersion == newVersion) {
-				dispatchEvent(new InstallEvent(InstallEvent.APP_UP_TO_DATE));
+				dispatchEvent(new InstallEvent(InstallEvent.APP_UP_TO_DATE, oldVersion));
 			}	else{
 				_updateURL = newDescriptor.ndns::url.toString();
 				dispatchEvent(new InstallEvent(InstallEvent.UPDATE_AVAILABLE, {o:oldVersion, n:newVersion}));

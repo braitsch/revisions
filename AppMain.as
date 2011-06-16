@@ -1,6 +1,6 @@
 package {
 
-	import system.MyNativeMenu;
+	import system.AirNativeMenu;
 	import events.InstallEvent;
 	import model.AppModel;
 	import system.AirContextMenu;
@@ -15,8 +15,6 @@ package {
 
 	public class AppMain extends Sprite {
 	
-		private static var _menu:MyNativeMenu;
-		
 		public function AppMain()
 		{	
 		//	_menu= new MyNativeMenu();
@@ -54,6 +52,7 @@ package {
 		
 		private function onAppUpToDate(e:InstallEvent):void
 		{
+			AppModel.updater.removeEventListener(InstallEvent.APP_UP_TO_DATE, onAppUpToDate);
 			AppModel.proxies.config.loadGitSettings();
 			AppModel.proxies.config.addEventListener(InstallEvent.GIT_IS_READY, onGitReady);
 		}
@@ -61,7 +60,9 @@ package {
 		private function onGitReady(e:InstallEvent):void
 		{
 			AppModel.database.init();
+			AirNativeMenu.initialize(stage);
 			AirContextMenu.initialize(stage);
+			AppModel.proxies.config.removeEventListener(InstallEvent.GIT_IS_READY, onGitReady);
 		}
 		
 	}
