@@ -67,7 +67,7 @@ package view {
 					dispatchEvent(new UIEvent(UIEvent.GLOBAL_SETTINGS));
 				break;
 				case 'help_btn' :
-					navigateToURL(new URLRequest('http://revisions-app.com/'));
+					navigateToURL(new URLRequest('http://revisions-app.com/help'));
 				break;
 			}
 		}

@@ -30,8 +30,15 @@ package {
 		private function onInvokeEvent(e:InvokeEvent):void
 		{
 			stage.nativeWindow.visible = false;
+			AppModel.settings.addEventListener(InstallEvent.APP_SETTINGS, onAppSettings);
+			AppModel.settings.initialize(stage);
 			NativeApplication.nativeApplication.removeEventListener(InvokeEvent.INVOKE, onInvokeEvent);
-		// start the initialization sequence //	
+		}
+
+		private function onAppSettings(e:InstallEvent):void
+		{
+			stage.nativeWindow.visible = true;
+			AppModel.settings.removeEventListener(InstallEvent.APP_SETTINGS, onAppSettings);
 			checkExpiredAndUpdates();
 		}
 		
@@ -47,19 +54,15 @@ package {
 		
 		private function onAppUpToDate(e:InstallEvent):void
 		{
-			trace("AppMain.onAppUpToDate(e)");
 			AppModel.proxies.config.loadGitSettings();
 			AppModel.proxies.config.addEventListener(InstallEvent.GIT_IS_READY, onGitReady);
 		}
 
 		private function onGitReady(e:InstallEvent):void
 		{
-			trace("AppMain.onGitReady(e)");
 			AppModel.database.init();
 			AirContextMenu.initialize(stage);
-			AppModel.settings.initialize(stage);
 		}
-		
 		
 	}
 	
