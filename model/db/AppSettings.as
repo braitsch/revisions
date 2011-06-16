@@ -10,7 +10,7 @@ package model.db {
 	
 	public class AppSettings extends EventDispatcher {
 
-		public static const CHECK_FOR_UPDATES			:String = 'checkForUpdates';
+		public static const IGNORE_UPDATES			:String = 'checkForUpdates';
 		public static const SHOW_TOOL_TIPS				:String = "showToolTips";
 		public static const PROMPT_BEFORE_DOWNLOAD		:String = "promptBeforeDownload";
 

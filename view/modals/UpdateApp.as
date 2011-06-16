@@ -31,7 +31,7 @@ package view.modals {
 		
 		private function onCheckbox(e:MouseEvent):void
 		{
-			AppSettings.setSetting(AppSettings.CHECK_FOR_UPDATES, !_check1.selected);
+			AppSettings.setSetting(AppSettings.IGNORE_UPDATES, _check1.selected);
 		}		
 		
 		private function onCancel(e:MouseEvent):void

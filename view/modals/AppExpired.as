@@ -26,7 +26,7 @@ package view.modals {
 		
 		private function onCheckForUpdates(e:MouseEvent):void
 		{
-			AppSettings.setSetting(AppSettings.CHECK_FOR_UPDATES, 'true');			
+			AppSettings.setSetting(AppSettings.IGNORE_UPDATES, 'false');			
 			AppModel.updater.checkForUpdate();	
 		}
 		

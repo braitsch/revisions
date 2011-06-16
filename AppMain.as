@@ -15,15 +15,18 @@ package {
 
 	public class AppMain extends Sprite {
 	
+	private static var _initialized:Boolean = false;
+	
 		public function AppMain()
 		{	
-		//	_menu= new MyNativeMenu();
 			new AppModel();
 			addChild(new AppView());
 			stage.align = StageAlign.TOP_LEFT;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			NativeApplication.nativeApplication.addEventListener(InvokeEvent.INVOKE, onInvokeEvent);
 		}
+		
+		public static function get initialized():Boolean { return _initialized; }
 		
 		private function onInvokeEvent(e:InvokeEvent):void
 		{
@@ -42,16 +45,18 @@ package {
 		
 		private function checkExpiredAndUpdates():void
 		{
+			trace("AppMain.checkExpiredAndUpdates()");
 			if (LicenseManager.checkExpired()){
 				stage.dispatchEvent(new InstallEvent(InstallEvent.APP_EXPIRED));
 			}	else{
 				AppModel.updater.checkForUpdate();				
+				AppModel.updater.addEventListener(InstallEvent.APP_UP_TO_DATE, onAppUpToDate);
 			}
-			AppModel.updater.addEventListener(InstallEvent.APP_UP_TO_DATE, onAppUpToDate);
 		}			
 		
 		private function onAppUpToDate(e:InstallEvent):void
 		{
+			trace("AppMain.onAppUpToDate(e)");
 			AppModel.updater.removeEventListener(InstallEvent.APP_UP_TO_DATE, onAppUpToDate);
 			AppModel.proxies.config.loadGitSettings();
 			AppModel.proxies.config.addEventListener(InstallEvent.GIT_IS_READY, onGitReady);
@@ -59,10 +64,12 @@ package {
 
 		private function onGitReady(e:InstallEvent):void
 		{
+			trace("AppMain.onGitReady(e)");
 			AppModel.database.init();
 			AirNativeMenu.initialize(stage);
 			AirContextMenu.initialize(stage);
 			AppModel.proxies.config.removeEventListener(InstallEvent.GIT_IS_READY, onGitReady);
+			_initialized = true;
 		}
 		
 	}

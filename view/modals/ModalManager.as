@@ -148,11 +148,12 @@ package view.modals {
 		
 		private function promptToUpdate(e:InstallEvent):void
 		{
-			if (AppSettings.getSetting(AppSettings.CHECK_FOR_UPDATES) == 'true'){
-				_updateApp.newVersion = e.data.n;
-				showModalWindow(_updateApp);			
+			if (AppSettings.getSetting(AppSettings.IGNORE_UPDATES) == 'true'){
+				checkAppIsInitialized();
+				trace("ModalManager.promptToUpdate(e), Revisions "+e.data.n+' is Available');
 			}	else{
-				trace("ModalManager.promptToUpdate(e), there is an update available");
+				_updateApp.newVersion = e.data.n;
+				showModalWindow(_updateApp);				
 			}
 		}			
 
@@ -180,6 +181,7 @@ package view.modals {
 		private function hideModalWindow():void
 		{
 			if (_gitWindow.installed == false) return;
+			if (_window == _updateApp) checkAppIsInitialized();
 			if (_window) removeChild(_window);
 			if (_alert.stage) removeChild(_alert);
 			_window = null;
@@ -197,7 +199,12 @@ package view.modals {
 		{
 			removeChild(_alert);
 			if (_window == null) _curtain.hide();
-		}			
+		}
+		
+		private function checkAppIsInitialized():void
+		{
+			if (!AppMain.initialized) AppModel.updater.dispatchEvent(new InstallEvent(InstallEvent.APP_UP_TO_DATE));	
+		}
 			
 	}
 	

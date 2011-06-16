@@ -35,7 +35,7 @@ package view.modals {
 
 		private function onUserSettings(e:InstallEvent):void
 		{
-			_check1.selected = AppSettings.getSetting(AppSettings.CHECK_FOR_UPDATES) == 'true';
+			_check1.selected = AppSettings.getSetting(AppSettings.IGNORE_UPDATES) == 'true';
 			_check2.selected = AppSettings.getSetting(AppSettings.SHOW_TOOL_TIPS) == 'true';
 			_check3.selected = AppSettings.getSetting(AppSettings.PROMPT_BEFORE_DOWNLOAD) == 'true';
 		}
@@ -49,7 +49,7 @@ package view.modals {
 		
 		private function onCheck1(e:MouseEvent):void
 		{
-			AppSettings.setSetting(AppSettings.CHECK_FOR_UPDATES, _check1.selected);
+			AppSettings.setSetting(AppSettings.IGNORE_UPDATES, _check1.selected);
 		}
 		
 		private function onCheck2(e:MouseEvent):void
