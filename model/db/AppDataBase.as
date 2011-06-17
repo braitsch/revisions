@@ -32,11 +32,10 @@ package model.db {
 			_db.execute(_open, true);
 		}
 
-		public function addRepository($label:String, $path:String):void
+		public function addRepository($label:String, $type:String, $path:String):void
 		{
-			trace("AppDatabase.addRepository > ", $label, $path);
 			_add = new Vector.<SQLStatement>();
-			_add.push(AppSQLQuery.CLEAR_ACTIVE);				_add.push(AppSQLQuery.INSERT($label, $path));	
+			_add.push(AppSQLQuery.CLEAR_ACTIVE);				_add.push(AppSQLQuery.INSERT($label, $type, $path));	
 			_add.push(AppSQLQuery.READ_REPOSITORIES);
 			_db.execute(_add, true);	
 		}

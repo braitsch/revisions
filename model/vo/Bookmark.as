@@ -1,6 +1,7 @@
 package model.vo {
 
 	import events.BookmarkEvent;
+	import model.AppEngine;
 	import system.StringUtils;
 	import com.adobe.crypto.MD5;
 	import flash.display.Bitmap;
@@ -29,15 +30,15 @@ package model.vo {
 		public function Bookmark(o:Object)
 		{
 			_label = o.label;
-			_path = o.path; // target
+			_type = o.type;
+			_path = o.path;
 			_remote = o.remote;
 			_active = o.active;
 			_gitdir = _path;
 			_file = new File('file://'+_path);
-			_type = _file.isDirectory ? Bookmark.FOLDER : Bookmark.FILE;
 			if (_type == Bookmark.FILE) _gitdir = File.applicationStorageDirectory.nativePath+'/'+MD5.hash(_path);			
 			getFileSystemIcons();
-	//		trace('New Bookmark Created :: '+_label, 'gitDir = '+_gitdir); 
+		//	trace('New Bookmark Created :: '+_label, _type); 
 		}
 
 		public function get branch():Branch { return _branch; }		
@@ -111,7 +112,40 @@ package model.vo {
 		{
 			for (var i:int = 0;i < _branches.length; i++) if (n == _branches[i].name) break;
 			return _branches[i];
-		}			
+		}
+		
+	// static validation function //
+	
+		public static function validate(n:String, p:String):String
+		{
+			if (n == '') {
+				return 'Project name cannot be empty.';
+			}
+			if (p == '') {
+				return 'Selected target is not valid.';
+			}
+			if (p == '/') {
+				return 'Tracking the ENTIRE file system is not supported, sorry dude.';
+			}			
+			var f:File = new File('file://'+p);
+			if (!f.exists){
+				return 'Target not found.\nPlease check the file path.';
+			}
+			if (p.indexOf('/Volumes') == 0){
+				return 'Sorry, tracking files on external volumes is not yet supported.';
+			}
+			var b:Vector.<Bookmark> = AppEngine.bookmarks;
+			for (var i:int = 0; i < b.length; i++) {
+				if (n == b[i].label) {
+					return 'The name '+b[i].label+' is already taken.\nPlease choose something else.';
+				}	else if (MD5.hash(p) == MD5.hash(b[i].path)){
+					var w:String = p.substr(p.lastIndexOf('/')+1);
+					var k:String = f.isDirectory ? 'folder' : 'file';
+					return 'The '+k+' '+w+' is already being tracked by the bookmark '+b[i].label;
+				}
+			}
+			return '';
+		}
 		
 	}
 	

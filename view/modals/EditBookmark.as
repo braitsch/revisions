@@ -48,7 +48,11 @@ package view.modals {
 		
 		private function onBrowseButton(e:MouseEvent):void
 		{
-			_browser.browse('Please Select A '+_bookmark.type == Bookmark.FOLDER ? 'Directory' : 'File');			
+			if (_bookmark.type == Bookmark.FILE){
+				_browser.browseForFile('Select a file to be tracked by : '+_bookmark.label);
+			}	else{
+				_browser.browseForDirectory('Select a folder to be tracked by : '+_bookmark.label);
+			}
 		}
 		
 		private function onDeleteButton(e:MouseEvent):void

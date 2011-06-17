@@ -1,9 +1,9 @@
 package {
 
-	import system.AirNativeMenu;
 	import events.InstallEvent;
 	import model.AppModel;
 	import system.AirContextMenu;
+	import system.AirNativeMenu;
 	import system.LicenseManager;
 	import flash.desktop.NativeApplication;
 	import flash.display.Sprite;

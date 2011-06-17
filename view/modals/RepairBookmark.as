@@ -1,18 +1,20 @@
 package view.modals {
 
+	import events.DataBaseEvent;
 	import events.UIEvent;
 	import fl.text.TLFTextField;
-	import flash.events.MouseEvent;
 	import model.AppModel;
 	import model.vo.Bookmark;
 	import system.FileBrowser;
+	import flash.events.MouseEvent;
+	import flash.filesystem.File;
 
 	public class RepairBookmark extends ModalWindow {
 
-		private static var _oldId		:String;
 		private static var _browser		:FileBrowser = new FileBrowser();
 		private static var _view		:RepairBookmarkMC = new RepairBookmarkMC();
 		private static var _failed		:Vector.<Bookmark>;
+		private static var _bookmark	:Bookmark; // current bkmk being repaired //
 
 		public function RepairBookmark()
 		{
@@ -20,46 +22,63 @@ package view.modals {
 			super.addInputs(Vector.<TLFTextField>([_view.name_txt, _view.local_txt]));	
 			super.addButtons([_view.browse_btn, _view.update_btn, _view.delete_btn]);
 			
-			_view.browse_btn.addEventListener(MouseEvent.CLICK, onDirectoryBrowse);
+			_view.browse_btn.addEventListener(MouseEvent.CLICK, onBrowseButton);
 			_view.update_btn.addEventListener(MouseEvent.CLICK, onUpdateRepository);
-			_view.delete_btn.addEventListener(MouseEvent.CLICK, onDeleteRepository);
+			_view.delete_btn.addEventListener(MouseEvent.CLICK, onDeleteBookmark);
 			_browser.addEventListener(UIEvent.FILE_BROWSER_SELECTION, onDirectorySelection);				
 		}
 		
 		public function set failed(v:Vector.<Bookmark>):void
 		{
 			_failed = v;
-		//TODO iterate over failed vector to repair multiple bookmarks //	
-			_oldId = _failed[0].label;			
-			_view.name_txt.text = _failed[0].label;
-			_view.local_txt.text = _failed[0].path;
+			repairBookmark(_failed[0]);
+		}
+
+		private function repairBookmark(b:Bookmark):void
+		{
+			_bookmark = b;
+			_view.name_txt.text = b.label;
+			_view.local_txt.text = b.path;			
 		}
 		
-		private function onDirectoryBrowse(e:MouseEvent):void 
+		private function onBrowseButton(e:MouseEvent):void 
 		{
-			_browser.browse('Please Select A Directory');			
+			if (_bookmark.type == Bookmark.FILE){
+				_browser.browseForFile('Select a file to be tracked by : '+_bookmark.label);
+			}	else{
+				_browser.browseForDirectory('Select a folder to be tracked by : '+_bookmark.label);
+			}		
 		}
 		
 		private function onDirectorySelection(e:UIEvent):void 
 		{
-			_view.local_txt.text = e.data as String;				
+			_view.local_txt.text = File(e.data).nativePath;	
 		}
 		
 		private function onUpdateRepository(e:MouseEvent):void 
 		{
-			if (_view.name_txt.text=='' || _view.name_txt.text=='Please Enter A Name'){
-				_view.name_txt.text = 'Please Enter A Name';		
+			var m:String = Bookmark.validate(_view.name_txt.text, _view.local_txt.text);
+			if (m == '') {
+				AppModel.database.addEventListener(DataBaseEvent.RECORD_EDITED, onEditComplete);
+				AppModel.database.editRepository(_bookmark.label, _view.name_txt.text, _view.local_txt.text);				
 			}	else{
-				AppModel.database.editRepository(_oldId, _view.name_txt.text, _view.local_txt.text);				
+				dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, m));
+			}			
+		}
+
+		private function onEditComplete(e:DataBaseEvent):void
+		{
+			_failed.splice(0, 1);
+			if (_failed.length){
+				repairBookmark(_failed[0]);
+			}	else{
 				dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 			}
-		}					
+		}
 
-		private function onDeleteRepository(e:MouseEvent):void 
+		private function onDeleteBookmark(e:MouseEvent):void 
 		{
-		// if it's broken, this just removes the broken bookmark & leaves file system alone.
-			AppModel.database.deleteRepository(_view.name_txt.text);				
-			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));			
+			dispatchEvent(new UIEvent(UIEvent.DELETE_BOOKMARK, _bookmark));	
 		}
 		
 	}

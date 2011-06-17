@@ -38,7 +38,7 @@ package view.modals {
 	// called from ModalManager if user chose not to be prompted before downloads //	
 		public function selectDownloadLocation(e:MouseEvent = null):void
 		{
-			_browser.browse('Choose a location to save '+AppModel.bookmark.label);
+			_browser.browseForDirectory('Choose a location to save '+AppModel.bookmark.label);
 		}
 		
 		private function onUserSettings(e:InstallEvent):void

@@ -25,7 +25,7 @@ package model {
 		public function addBookmark(b:Bookmark):void
 		{
 			_bookmark = b;
-			AppModel.database.addRepository(_bookmark.label, _bookmark.path);
+			AppModel.database.addRepository(_bookmark.label, _bookmark.type, _bookmark.path);
 			AppModel.database.addEventListener(DataBaseEvent.RECORD_ADDED, initBookmark);			
 		}
 		
@@ -98,10 +98,10 @@ package model {
 		public function generateBookmarks(a:Array):void 
 		{
 			var x:Vector.<Bookmark> = new Vector.<Bookmark>();
-			
 			for (var i:int = 0; i < a.length; i++) {
 				var o:Object = {
 					label	:	a[i].label,
+					type	:	a[i].type,
 					path	:	a[i].path,
 					local	:	a[i].local,
 					remote 	:	a[i].remote,
