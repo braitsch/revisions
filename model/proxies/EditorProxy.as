@@ -1,5 +1,6 @@
 package model.proxies {
 
+	import events.InstallEvent;
 	import com.adobe.crypto.MD5;
 	import events.BookmarkEvent;
 	import events.NativeProcessEvent;
@@ -56,13 +57,19 @@ package model.proxies {
 			}	else{
 				super.call(Vector.<String>([BashMethods.KILL_FILE, trashGit, path]));
 			}
-		}						
+		}	
+		
+		public function editAppStorageGitDirName($old:String, $new:String):void
+		{
+			super.directory =  File.applicationStorageDirectory.nativePath;			
+			super.call(Vector.<String>([BashMethods.EDIT_GIT_DIR, $old, $new]));
+		}
 		
 	// response handlers //			
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
-			trace("EditorProxy.onProcessComplete(e)", e.data.method, e.data.result);
+		//	trace("EditorProxy.onProcessComplete(e)", e.data.method, e.data.result);
 			switch(e.data.method){
 				case BashMethods.COMMIT : 
 			// refresh the app views after every commit //	
@@ -83,6 +90,9 @@ package model.proxies {
 				case BashMethods.TRACK_FILE : 
 					AppModel.proxies.status.getStatus();
 				break;				case BashMethods.UNTRACK_FILE : 					AppModel.proxies.status.getStatus();				break;
+				case BashMethods.EDIT_GIT_DIR : 
+					dispatchEvent(new InstallEvent(InstallEvent.GIT_DIR_UPDATED));
+				break;				
 			}
 		}
 

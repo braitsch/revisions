@@ -16,6 +16,7 @@ package events {
 		public static const UPDATE_PROGRESS			:String = "UPDATE_PROGRESS";
 		public static const UPDATE_COMPLETE			:String = "UPDATE_COMPLETE";
 		public static const UPDATE_FAILURE			:String = "UPDATE_FAILURE";
+		public static const GIT_DIR_UPDATED			:String = "GIT_DIR_UPDATED";
 		
 		public var data:Object;
 

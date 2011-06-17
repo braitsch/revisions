@@ -29,16 +29,13 @@ package model.vo {
 
 		public function Bookmark(o:Object)
 		{
-			_label = o.label;
 			_type = o.type;
-			_path = o.path;
 			_remote = o.remote;
 			_active = o.active;
-			_gitdir = _path;
-			_file = new File('file://'+_path);
-			if (_type == Bookmark.FILE) _gitdir = File.applicationStorageDirectory.nativePath+'/'+MD5.hash(_path);			
+			this.path = o.path;
+			this.label = o.label;
 			getFileSystemIcons();
-		//	trace('New Bookmark Created :: '+_label, _type); 
+		//	trace('New Bookmark Created :: '+_label, _type, _path); 
 		}
 
 		public function get branch():Branch { return _branch; }		
@@ -51,7 +48,6 @@ package model.vo {
 		public function get icon32():Bitmap { return _icon32; }
 		public function get icon128():Bitmap { return _icon128; }
 		public function get type():String { return _type; }
-		public function get path():String { return _path; }
 		public function get exists():Boolean { return _file.exists; }
 		public function get gitdir():String { return _gitdir;}
 		public function get worktree():String { return _file.parent.nativePath; }
@@ -62,6 +58,17 @@ package model.vo {
 		{
 			_label = s;
 			dispatchEvent(new BookmarkEvent(BookmarkEvent.EDITED));
+		}
+		public function get path():String { return _path; }
+		public function set path(p:String):void
+		{
+			_path = p;
+			if (_type == Bookmark.FOLDER){
+				 _gitdir = _path;
+			}	else{
+				 _gitdir = File.applicationStorageDirectory.nativePath+'/'+MD5.hash(_path);			
+			}
+			_file = new File('file://'+_path);			
 		}
 		
 		public function get stash():Array { return _stash; }

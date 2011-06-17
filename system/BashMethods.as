@@ -17,14 +17,15 @@ package system{
 		public static const UNMOUNT				:String = 'unmount';
 		public static const TRASH				:String = 'trash';
 		public static const UPDATE_PATH			:String = 'updatePath';
-	// editor methods //		
+		public static const EDIT_GIT_DIR		:String = 'editGitDir';
+	// editor methods //		
 		public static const COMMIT				:String = 'commit';
 		public static const TRACK_FILE			:String = 'trackFile';
 		public static const UNTRACK_FILE		:String = 'unTrackFile';
 		public static const INIT_FOLDER			:String = 'initFolder';
 		public static const INIT_FILE			:String = 'initFile';
-		public static const KILL_FILE			:String = 'killFile';
-		public static const KILL_FOLDER			:String = 'killFolder';		
+		public static const KILL_FILE			:String = 'killFile';		public static const KILL_FOLDER			:String = 'killFolder';
+		
 		public static const GET_BRANCHES		:String = 'getBranches';
 		public static const GET_STASH_LIST		:String = 'getStashList';
 		public static const DOWNLOAD_VERSION	:String = 'downloadVersion';

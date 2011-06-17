@@ -53,7 +53,7 @@ package view.modals {
 		// if we get a file, strip off the file extension //	
 			if (!$file.isDirectory) n = n.substr(0, n.lastIndexOf('.'));
 		// capitalize the name //	
-			_name = name.substr(0,1).toUpperCase() + name.substr(1);
+			_name = n.substr(0,1).toUpperCase() + n.substr(1);
 		// and finally update the window's textfields //	
 			_view.name_txt.text = _name;
 			_view.local_txt.text = _path;
@@ -89,8 +89,6 @@ package view.modals {
 				remote 	:	null,
 				active 	:	1
 			};		
-			trace('type = '+o.type);		
-			return;
 			AppModel.engine.addBookmark(new Bookmark(o));
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));						
 		}		

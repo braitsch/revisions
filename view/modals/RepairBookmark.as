@@ -1,11 +1,13 @@
 package view.modals {
 
 	import events.DataBaseEvent;
+	import events.InstallEvent;
 	import events.UIEvent;
 	import fl.text.TLFTextField;
 	import model.AppModel;
 	import model.vo.Bookmark;
 	import system.FileBrowser;
+	import com.adobe.crypto.MD5;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
 
@@ -21,9 +23,8 @@ package view.modals {
 			addChild(_view);
 			super.addInputs(Vector.<TLFTextField>([_view.name_txt, _view.local_txt]));	
 			super.addButtons([_view.browse_btn, _view.update_btn, _view.delete_btn]);
-			
 			_view.browse_btn.addEventListener(MouseEvent.CLICK, onBrowseButton);
-			_view.update_btn.addEventListener(MouseEvent.CLICK, onUpdateRepository);
+			_view.update_btn.addEventListener(MouseEvent.CLICK, onUpdateBookmark);
 			_view.delete_btn.addEventListener(MouseEvent.CLICK, onDeleteBookmark);
 			_browser.addEventListener(UIEvent.FILE_BROWSER_SELECTION, onDirectorySelection);				
 		}
@@ -55,25 +56,37 @@ package view.modals {
 			_view.local_txt.text = File(e.data).nativePath;	
 		}
 		
-		private function onUpdateRepository(e:MouseEvent):void 
+		private function onUpdateBookmark(e:MouseEvent):void 
 		{
 			var m:String = Bookmark.validate(_view.name_txt.text, _view.local_txt.text);
-			if (m == '') {
-				AppModel.database.addEventListener(DataBaseEvent.RECORD_EDITED, onEditComplete);
-				AppModel.database.editRepository(_bookmark.label, _view.name_txt.text, _view.local_txt.text);				
-			}	else{
+			if (m != '') {
 				dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, m));
+			}	else{
+				AppModel.proxies.editor.addEventListener(InstallEvent.GIT_DIR_UPDATED, onGitDirUpdated);
+				AppModel.proxies.editor.editAppStorageGitDirName(MD5.hash(_bookmark.path), MD5.hash(_view.local_txt.text));				
 			}			
 		}
+		
+		private function onGitDirUpdated(e:InstallEvent):void
+		{
+			_bookmark.path = _view.local_txt.text;
+			AppModel.proxies.editor.removeEventListener(InstallEvent.GIT_DIR_UPDATED, onGitDirUpdated);			
+			AppModel.database.addEventListener(DataBaseEvent.RECORD_EDITED, onEditSuccessful);
+			AppModel.database.editRepository(_bookmark.label, _view.name_txt.text, _view.local_txt.text);
+		}		
 
-		private function onEditComplete(e:DataBaseEvent):void
+		private function onEditSuccessful(e:DataBaseEvent):void
 		{
 			_failed.splice(0, 1);
+			_bookmark.path = _view.local_txt.text;
+			_bookmark.label = _view.name_txt.text;
 			if (_failed.length){
 				repairBookmark(_failed[0]);
 			}	else{
+				AppModel.engine.buildBookmarksFromDatabase();
 				dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 			}
+			AppModel.database.removeEventListener(DataBaseEvent.RECORD_EDITED, onEditSuccessful);			
 		}
 
 		private function onDeleteBookmark(e:MouseEvent):void 

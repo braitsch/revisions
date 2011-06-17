@@ -111,10 +111,15 @@ package model {
 				_bookmarks.push(b);
 				if (b.exists == false) x.push(b);
 			}
-			if (x.length > 0) {
-				dispatchEvent(new BookmarkEvent(BookmarkEvent.PATH_ERROR, x));
+			if (x.length == 0) {
+				buildBookmarksFromDatabase();
 			}	else{
-				AppModel.proxies.branch.getBranches(_bookmarks[_index]);				AppModel.proxies.branch.addEventListener(BookmarkEvent.BRANCHES_READ, getStashOfNextBookmark);				AppModel.proxies.branch.addEventListener(BookmarkEvent.STASH_LIST_READ, onStoredBookmarkReady);			}		}
+				dispatchEvent(new BookmarkEvent(BookmarkEvent.PATH_ERROR, x));
+			}		}		
+		public function buildBookmarksFromDatabase():void
+		{
+			AppModel.proxies.branch.getBranches(_bookmarks[_index]);			AppModel.proxies.branch.addEventListener(BookmarkEvent.BRANCHES_READ, getStashOfNextBookmark);			AppModel.proxies.branch.addEventListener(BookmarkEvent.STASH_LIST_READ, onStoredBookmarkReady);
+		}
 		
 		private function getStashOfNextBookmark(e:BookmarkEvent):void 
 		{
