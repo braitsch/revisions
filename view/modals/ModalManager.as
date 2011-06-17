@@ -3,14 +3,15 @@ package view.modals {
 	import events.BookmarkEvent;
 	import events.InstallEvent;
 	import events.UIEvent;
-	import flash.display.Sprite;
-	import flash.display.Stage;
-	import flash.events.MouseEvent;
-	import flash.filesystem.File;
 	import model.AppModel;
 	import model.db.AppSettings;
 	import model.vo.Bookmark;
 	import model.vo.Commit;
+	import flash.display.Sprite;
+	import flash.display.Stage;
+	import flash.events.MouseEvent;
+	import flash.filesystem.File;
+	import flash.filters.BlurFilter;
 
 	public class ModalManager extends Sprite {
 
@@ -65,6 +66,8 @@ package view.modals {
 				_window.x = w/2 - _window.width / 2;
 				_window.y = (h-50)/2 - _window.height / 2 + 50;
 			}
+			_alert.x = w/2 - _alert.width / 2;
+			_alert.y = (h-50)/2 - _alert.height / 2 + 50;
 		}
 		
 		private function onBookmarkSelected(e:BookmarkEvent):void
@@ -175,6 +178,7 @@ package view.modals {
 			if (_window) removeChild(_window);
 			addChild(mw);
 			_window = mw;
+			_window.filters = [];
 			_curtain.show();
 		}
 		
@@ -193,11 +197,13 @@ package view.modals {
 			_alert.message = e.data as String;
 			_curtain.show();
 			addChild(_alert);
+			if (_window) _window.filters = [new BlurFilter(5, 5, 3)];
 		}			
 		
 		private function onCloseAlert(e:UIEvent):void
 		{
 			removeChild(_alert);
+			if (_window) _window.filters = [];
 			if (_window == null) _curtain.hide();
 		}
 		
