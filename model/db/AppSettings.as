@@ -10,7 +10,7 @@ package model.db {
 	
 	public class AppSettings extends EventDispatcher {
 
-		public static const IGNORE_UPDATES			:String = 'checkForUpdates';
+		public static const IGNORE_UPDATES				:String = 'checkForUpdates';
 		public static const SHOW_TOOL_TIPS				:String = "showToolTips";
 		public static const PROMPT_BEFORE_DOWNLOAD		:String = "promptBeforeDownload";
 
@@ -50,9 +50,17 @@ package model.db {
 			_stage.nativeWindow.visible = true;
 		// store user-defined preferences //	
 			var p:XMLList = _xml['user-defined'].children();
-			for (var i:int = 0; i < p.length(); i++) _settings[p[i].name()] = p[i].valueOf();
+			for (var i:int = 0; i < p.length(); i++) _settings[p[i].name()] = castSetting(p[i].valueOf());
 			dispatchEvent(new InstallEvent(InstallEvent.APP_SETTINGS));
 		//	traceSettings();
+		}
+		
+		private function castSetting(s:String):*
+		{
+		// cast xml strings to boolean for faster comparisons 	
+			if (s == 'true') return true;
+			if (s == 'false') return false;
+			return s;
 		}
 		
 		private function saveXML(e:Event = null):void
@@ -75,7 +83,7 @@ package model.db {
 		
 //		private function traceSettings():void
 //		{
-//			for (var p:String in _settings) trace('prop & value = '+p, _settings[p]);
+//			for (var p:String in _settings) trace('prop & value = '+p, _settings[p], typeof _settings[p]);
 //		}
 		
 		private function writeToFile():void 

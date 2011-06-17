@@ -1,12 +1,13 @@
 package view {
 
-	import flash.net.navigateToURL;
-	import flash.net.URLRequest;
 	import events.UIEvent;
-	import com.greensock.TweenLite;
+	import view.ui.SmartButton;
+	import view.ui.Tooltip;
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
+	import flash.net.URLRequest;
+	import flash.net.navigateToURL;
 	
 	public class Header extends Sprite {
 		
@@ -37,24 +38,10 @@ package view {
 		
 		private function initButtons():void
 		{
-			for (var i:int = 0; i < _buttons.numChildren; i++) {
-				var b:Sprite = _buttons.getChildAt(i) as Sprite;
-					b.buttonMode = true;
-					b['over'].alpha = 0;
-					b.addEventListener(MouseEvent.CLICK, onClick);
-					b.addEventListener(MouseEvent.ROLL_OUT, onRollOut);
-					b.addEventListener(MouseEvent.ROLL_OVER, onRollOver);
+			for (var i:int = 0; i < 3; i++) {
+				var b:SmartButton = new SmartButton(_buttons.getChildAt(i) as Sprite, new Tooltip('tacos'));
+				b.view.addEventListener(MouseEvent.CLICK, onClick);
 			}
-		}
-
-		private function onRollOver(e:MouseEvent):void
-		{
-			TweenLite.to(e.currentTarget.over, .5, {alpha:1});
-		}
-
-		private function onRollOut(e:MouseEvent):void
-		{
-			TweenLite.to(e.currentTarget.over, .5, {alpha:0});
 		}
 
 		private function onClick(e:MouseEvent):void

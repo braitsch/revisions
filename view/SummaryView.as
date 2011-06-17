@@ -1,8 +1,11 @@
 package view {
 
-	import com.greensock.TweenLite;
 	import events.BookmarkEvent;
 	import events.UIEvent;
+	import model.AppModel;
+	import model.vo.Bookmark;
+	import view.ui.SmartButton;
+	import view.ui.Tooltip;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.MovieClip;
@@ -14,8 +17,6 @@ package view {
 	import flash.text.Font;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
-	import model.AppModel;
-	import model.vo.Bookmark;
 
 	public class SummaryView extends Sprite {
 
@@ -59,13 +60,9 @@ package view {
 		
 		private function initButtons():void
 		{
+			var l:Array = ['settings', 'pull remote', 'push remote', 'history'];
 			var a:Array = [_details.settings_btn, _details.pull_btn, _details.push_btn, _details.history_btn];
-			for (var i:int = 0; i < a.length; i++) {
-				a[i].buttonMode = true;
-				a[i]['over'].alpha = 0;
-				a[i].addEventListener(MouseEvent.ROLL_OUT, onButtonRollOut);
-				a[i].addEventListener(MouseEvent.ROLL_OVER, onButtonRollOver);
-			}
+			for (var i:int = 0; i < 4; i++) new SmartButton(a[i], new Tooltip(l[i]));
 			_details.save_btn.over.alpha = 0;
 			_details.pull_btn.addEventListener(MouseEvent.CLICK, onPullButton);
 			_details.push_btn.addEventListener(MouseEvent.CLICK, onPushButton);
@@ -154,16 +151,6 @@ package view {
 		}
 
 	// button events //
-		
-		private function onButtonRollOut(e:MouseEvent):void
-		{
-			TweenLite.to(e.currentTarget.over, .5, {alpha:0});
-		}
-		
-		private function onButtonRollOver(e:MouseEvent):void
-		{
-			TweenLite.to(e.currentTarget.over, .5, {alpha:1});
-		}
 		
 		private function onSaveButton(e:MouseEvent):void
 		{

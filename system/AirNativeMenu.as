@@ -48,7 +48,7 @@ package system {
         	 		_stage.dispatchEvent(new UIEvent(UIEvent.ADD_BOOKMARK));	
         	 	break;
         	 	case _update	: 
-					AppSettings.setSetting(AppSettings.IGNORE_UPDATES, 'false');
+					AppSettings.setSetting(AppSettings.IGNORE_UPDATES, false);
         	 		AppModel.updater.addEventListener(InstallEvent.APP_UP_TO_DATE, onUpToDate);
         	 		AppModel.updater.checkForUpdate();
         	 	break;	

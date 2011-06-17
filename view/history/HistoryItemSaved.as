@@ -1,10 +1,11 @@
 package view.history {
 
-	import com.greensock.TweenLite;
 	import events.UIEvent;
+	import model.vo.Commit;
+	import view.ui.SmartButton;
+	import view.ui.Tooltip;
 	import flash.display.Shape;
 	import flash.events.MouseEvent;
-	import model.vo.Commit;
 
 	public class HistoryItemSaved extends HistoryItem {
 
@@ -43,23 +44,11 @@ package view.history {
 			_view.buttons.buttonMode = true;
 			_buttons = [_view.buttons.revert, _view.buttons.download, _view.buttons.info];
 			for (var i:int = 0; i < 3; i++) {
-				_buttons[i].over.alpha = 0;
-				_buttons[i].addEventListener(MouseEvent.CLICK, onButtonClick);
-				_buttons[i].addEventListener(MouseEvent.ROLL_OVER, onRollOver);
-				_buttons[i].addEventListener(MouseEvent.ROLL_OUT, onRollOut);
+				var b:SmartButton = new SmartButton(_buttons[i], new Tooltip('bwah'));
+				b.view.addEventListener(MouseEvent.CLICK, onButtonClick);
 			}
 		}
 
-		private function onRollOver(e:MouseEvent):void
-		{
-			TweenLite.to(e.target.getChildByName('over'), .3, {alpha:1});
-		}
-		
-		private function onRollOut(e:MouseEvent):void
-		{
-			TweenLite.to(e.target.getChildByName('over'), .7, {alpha:0});
-		}
-		
 		private function onButtonClick(e:MouseEvent):void
 		{
 			switch (e.currentTarget.name){

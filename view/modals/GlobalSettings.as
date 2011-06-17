@@ -35,9 +35,9 @@ package view.modals {
 
 		private function onUserSettings(e:InstallEvent):void
 		{
-			_check1.selected = AppSettings.getSetting(AppSettings.IGNORE_UPDATES) == 'true';
-			_check2.selected = AppSettings.getSetting(AppSettings.SHOW_TOOL_TIPS) == 'true';
-			_check3.selected = AppSettings.getSetting(AppSettings.PROMPT_BEFORE_DOWNLOAD) == 'true';
+			_check1.selected = AppSettings.getSetting(AppSettings.IGNORE_UPDATES);
+			_check2.selected = AppSettings.getSetting(AppSettings.SHOW_TOOL_TIPS);
+			_check3.selected = AppSettings.getSetting(AppSettings.PROMPT_BEFORE_DOWNLOAD);
 		}
 
 		private function onGitSettings(e:InstallEvent):void

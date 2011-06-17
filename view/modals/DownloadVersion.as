@@ -43,7 +43,7 @@ package view.modals {
 		
 		private function onUserSettings(e:InstallEvent):void
 		{
-			_check1.selected = AppSettings.getSetting(AppSettings.PROMPT_BEFORE_DOWNLOAD) == 'false';
+			_check1.selected = AppSettings.getSetting(AppSettings.PROMPT_BEFORE_DOWNLOAD) == false;
 		}		
 
 		private function onFileBrowserSelection(e:UIEvent):void
@@ -62,7 +62,7 @@ package view.modals {
 
 		private function onCheckbox(e:MouseEvent):void
 		{
-			AppSettings.setSetting(AppSettings.PROMPT_BEFORE_DOWNLOAD, _check1.selected==false);				
+			AppSettings.setSetting(AppSettings.PROMPT_BEFORE_DOWNLOAD, _check1.selected == false);				
 		}		
 		
 		private function onCancel(e:MouseEvent):void

@@ -129,7 +129,7 @@ package view.modals {
 		private function downloadVersion(e:UIEvent):void
 		{
 			_download.commit = e.data as Commit;
-			if (AppSettings.getSetting(AppSettings.PROMPT_BEFORE_DOWNLOAD) == 'true'){	
+			if (AppSettings.getSetting(AppSettings.PROMPT_BEFORE_DOWNLOAD)){	
 				showModalWindow(_download);
 			}	else{
 				_download.selectDownloadLocation();
@@ -148,7 +148,7 @@ package view.modals {
 		
 		private function promptToUpdate(e:InstallEvent):void
 		{
-			if (AppSettings.getSetting(AppSettings.IGNORE_UPDATES) == 'true'){
+			if (AppSettings.getSetting(AppSettings.IGNORE_UPDATES)){
 				checkAppIsInitialized();
 				trace("ModalManager.promptToUpdate(e), Revisions "+e.data.n+' is Available');
 			}	else{
