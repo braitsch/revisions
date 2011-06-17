@@ -2,16 +2,17 @@ package view.modals {
 
 	import events.UIEvent;
 	import fl.text.TLFTextField;
-	import flash.events.MouseEvent;
-	import flash.filesystem.File;
 	import model.AppEngine;
 	import model.AppModel;
 	import model.Bookmark;
 	import system.FileBrowser;
+	import com.adobe.crypto.MD5;
+	import flash.events.MouseEvent;
+	import flash.filesystem.File;
 
 	public class NewBookmark extends ModalWindow {
 
-		private static var _target		:String;
+		private static var _path		:String;
 		private static var _view		:NewBookmarkMC = new NewBookmarkMC();
 		private static var _browser		:FileBrowser = new FileBrowser();
 
@@ -47,9 +48,9 @@ package view.modals {
 		
 		private function parseTargetNameAndLocation($file:File):void
 		{
-			_target = $file.nativePath;
-			_view.local_txt.text = _target;
-			var name:String = _target.substr(_target.lastIndexOf('/')+1);
+			_path = $file.nativePath;
+			_view.local_txt.text = _path;
+			var name:String = _path.substr(_path.lastIndexOf('/')+1);
 			if (!$file.isDirectory) name = name.substr(0, name.lastIndexOf('.'));
 			_view.name_txt.text = name.substr(0,1).toUpperCase() + name.substr(1);			
 		}		
@@ -73,8 +74,8 @@ package view.modals {
 		{
 			var o:Object = {
 				label	:	_view.name_txt.text,
-				target	:	_target,
-				remote 	:	'',
+				target	:	_path,
+				remote 	:	null,
 				active 	:	1
 			};				
 			AppModel.engine.addBookmark(new Bookmark(o));
@@ -86,27 +87,32 @@ package view.modals {
 			var n:String = _view.name_txt.text;
 			var p:String = _view.local_txt.text;
 			if (n == '') {
-				showUserError('Project Name Cannot Be Empty');
+				showUserError('Project name cannot be empty.');
 				return false;			
 			}
 			if (p == '') {
-				showUserError('Selected Target Is Not Valid');
+				showUserError('Selected target is not valid.');
 				return false;			
 			}
 			if (p == '/') {
-				showUserError('Tracking The ENTIRE File System Is Not Supported, Sorry.');
+				showUserError('Tracking the ENTIRE file system is not supported, sorry dude.');
 				return false;			
 			}			
-			var f:File = new File('file://'+_target);
+			var f:File = new File('file://'+_path);
 			if (!f.exists){
-				showUserError('Target Not Found<br>Please Check The Path');
+				showUserError('Target not found.\nPlease check the file path.');
 				return false;
 			}	
 			var b:Vector.<Bookmark> = AppEngine.bookmarks;
 			for (var i:int = 0; i < b.length; i++) {
 				if (n == b[i].label) {
-					showUserError('Project Name <b>'+b[i].label+'</b> Is Already Taken');
-					return false;				}
+					showUserError('The name '+b[i].label+' is already taken.\nPlease choose something else.');
+					return false;				}	else if (MD5.hash(p) == MD5.hash(b[i].path)){
+					var w:String = p.substr(p.lastIndexOf('/')+1);
+					var k:String = f.isDirectory ? 'folder' : 'file';
+					showUserError('The '+k+' '+w+' is already being tracked by the bookmark '+b[i].label);
+					return false;					
+				}
 			}
 			return true;
 		}

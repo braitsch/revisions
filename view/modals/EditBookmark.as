@@ -38,7 +38,7 @@ package view.modals {
 		{
 			_bookmark = b;
 			_view.name_txt.text = _bookmark.label;
-			_view.local_txt.text = _bookmark.target;
+			_view.local_txt.text = _bookmark.path;
 		}
 		
 		private function onFileSelection(e:UIEvent):void
@@ -48,7 +48,7 @@ package view.modals {
 		
 		private function onBrowseButton(e:MouseEvent):void
 		{
-			_browser.browse('Please Select A '+_bookmark.file.isDirectory ? 'Directory' : 'File');			
+			_browser.browse('Please Select A '+_bookmark.type == Bookmark.FOLDER ? 'Directory' : 'File');			
 		}
 		
 		private function onDeleteButton(e:MouseEvent):void

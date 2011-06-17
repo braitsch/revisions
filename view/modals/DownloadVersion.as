@@ -51,9 +51,9 @@ package view.modals {
 			var file:String = '';
 			var bkmk:Bookmark = AppModel.bookmark;
 			var saveAs:String = e.data.nativePath+'/'+bkmk.label+' Version '+_commit.index;
-			if (bkmk.file.isDirectory == false){
-				file = bkmk.file.nativePath;
-				saveAs += bkmk.file.nativePath.substr(bkmk.file.nativePath.lastIndexOf('.'));
+			if (bkmk.type == Bookmark.FILE){
+				file = bkmk.path;
+				saveAs += bkmk.path.substr(bkmk.path.lastIndexOf('.'));
 			}			
 			AppModel.proxies.checkout.download(_commit.sha1, saveAs, file);
 		}

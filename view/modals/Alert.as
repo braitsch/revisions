@@ -17,7 +17,7 @@ package view.modals {
 
 		public function set message(m:String):void
 		{
-			_view.message_txt.text = m;			
+			_view.message_txt.htmlText = m;			
 		}
 		
 		private function onOKButton(e:MouseEvent):void

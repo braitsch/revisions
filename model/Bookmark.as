@@ -1,42 +1,43 @@
 package model {
 
 	import events.BookmarkEvent;
+	import system.StringUtils;
+	import com.adobe.crypto.MD5;
 	import flash.display.Bitmap;
 	import flash.events.EventDispatcher;
 	import flash.filesystem.File;
-	import system.StringUtils;
 
 	public class Bookmark extends EventDispatcher {
 
-		private var _target				:String;
-		private var _label				:String;	
-		private var _gitdir				:String;			
-		private var _worktree			:String;
-		private var _active				:Boolean;
-		private var _remote				:String;
+		public static const	FILE		:String = 'file';
+		public static const	FOLDER		:String = 'folder';
+
+		private var _label				:String;	// user generated name of bookmark //
+		private var _path				:String;	// local file path to the thing we're tracking //
+		private var _type				:String; 	// is either FILE or FOLDER //
+		private var _gitdir				:String;	// location of the actual .git directory	
+		private var _remote				:String;	// github or beanstalk location this links to //
+		private var _active				:Boolean;	
 		
-		private var _branch				:Branch;
-		private var _branches			:Array = [];
-		private var _stash				:Array = [];
-		private var _file				:File;
+		private var _file				:File;		// for internal use only //
 		private var _icon32				:Bitmap;
 		private var _icon128			:Bitmap;
+		private var _stash				:Array = [];
+		private var _branch				:Branch;	// the currently active branch //
+		private var _branches			:Array = [];
 
 		public function Bookmark(o:Object)
 		{
 			_label = o.label;
-			_target	= o.target;
-			_active = o.active;
+			_path = o.target;
 			_remote = o.remote;
-			_file = new File('file://'+_target);
-			if (_file.isDirectory){
-				_worktree = _gitdir = _target;
-			}	else{
-				_worktree = _target.substr(0, _target.lastIndexOf('/'));
-				_gitdir = File.applicationStorageDirectory.nativePath+'/'+_label.toLowerCase();
-			}
-			getIcons();
-		//	trace('New Bookmark Created :: '+_label, 'gitDir = '+_gitdir); 
+			_active = o.active;
+			_file = new File('file://'+_path);
+			_gitdir = _path;
+			_type = _file.isDirectory ? Bookmark.FOLDER : Bookmark.FILE;
+			if (_type == Bookmark.FILE) _gitdir = File.applicationStorageDirectory.nativePath+'/'+MD5.hash(_path);			
+			getFileSystemIcons();
+	//		trace('New Bookmark Created :: '+_label, 'gitDir = '+_gitdir); 
 		}
 
 		public function get branch():Branch { return _branch; }		
@@ -48,10 +49,11 @@ package model {
 
 		public function get icon32():Bitmap { return _icon32; }
 		public function get icon128():Bitmap { return _icon128; }
-		public function get target():String { return _target; }
-		public function get file():File { return _file; }
+		public function get type():String { return _type; }
+		public function get path():String { return _path; }
+		public function get exists():Boolean { return _file.exists; }
 		public function get gitdir():String { return _gitdir;}
-		public function get worktree():String { return _worktree; }
+		public function get worktree():String { return _file.parent.nativePath; }
 		public function get branches():Array { return _branches; }
 		
 		public function get label():String { return _label; }		
@@ -70,7 +72,7 @@ package model {
 			}
 		}
 		
-		private function getIcons():void
+		private function getFileSystemIcons():void
 		{
 			var icons:Array = _file.icon.bitmaps;
 			for (var i:int = 0; i < icons.length; i++) {
@@ -81,19 +83,6 @@ package model {
 		
 	// branches //	
 			
-		public function addBranch(b:Branch):void
-		{
-			_branch = b;
-			_branches.push(b);
-			sortBranches();
-		}
-
-		public function getBranchByName(n:String):Branch 
-		{
-			for (var i:int = 0;i < _branches.length; i++) if (n == _branches[i].name) break;
-			return _branches[i];
-		}	
-		
 		public function attachBranches(a:Array):void
 		{
 			for (var i:int = 0; i < a.length; i++) {
@@ -117,6 +106,12 @@ package model {
 			_branches.splice(_branches.indexOf(m), 1);
 			_branches.unshift(m);
 		}
+		
+		private function getBranchByName(n:String):Branch 
+		{
+			for (var i:int = 0;i < _branches.length; i++) if (n == _branches[i].name) break;
+			return _branches[i];
+		}			
 		
 	}
 	

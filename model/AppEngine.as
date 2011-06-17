@@ -24,7 +24,7 @@ package model {
 		public function addBookmark(b:Bookmark):void
 		{
 			_bookmark = b;
-			AppModel.database.addRepository(_bookmark.label, _bookmark.target);
+			AppModel.database.addRepository(_bookmark.label, _bookmark.path);
 			AppModel.database.addEventListener(DataBaseEvent.RECORD_ADDED, initBookmark);			
 		}
 		
@@ -108,7 +108,7 @@ package model {
 				};
 				var b:Bookmark = new Bookmark(o);
 				_bookmarks.push(b);
-				if (b.file.exists == false) x.push(b);
+				if (b.exists == false) x.push(b);
 			}
 			if (x.length > 0) {
 				dispatchEvent(new BookmarkEvent(BookmarkEvent.PATH_ERROR, x));

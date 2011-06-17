@@ -2,11 +2,12 @@ package model.proxies {
 
 	import events.BookmarkEvent;
 	import events.NativeProcessEvent;
-	import flash.filesystem.File;
 	import model.AppModel;
 	import model.Bookmark;
 	import model.air.NativeProcessProxy;
 	import system.BashMethods;
+	import com.adobe.crypto.MD5;
+	import flash.filesystem.File;
 
 	public class EditorProxy extends NativeProcessProxy {
 
@@ -37,21 +38,20 @@ package model.proxies {
 		
 		public function initBookmark(bkmk:Bookmark):void 
 		{
-			if (bkmk.file.isDirectory){
-				super.directory = bkmk.target;			
+			if (bkmk.type == Bookmark.FOLDER){
+				super.directory = bkmk.path;			
 				super.call(Vector.<String>([BashMethods.INIT_FOLDER]));
 			}	else{
 				super.directory =  File.applicationStorageDirectory.nativePath;
-				super.call(Vector.<String>([BashMethods.INIT_FILE, bkmk.target, bkmk.label, bkmk.worktree]));	
+				super.call(Vector.<String>([BashMethods.INIT_FILE, bkmk.path, MD5.hash(bkmk.path), bkmk.worktree]));	
 			}
 		}	
 
 		public function deleteBookmark(bkmk:Bookmark, trashGit:Boolean, trashFiles:Boolean):void 
 		{
 			super.directory = bkmk.gitdir;
-			var target:String = trashFiles ? bkmk.target : '';
-			trace('bkmk.target = '+target);
-			if (bkmk.file.isDirectory){
+			var target:String = trashFiles ? bkmk.path : '';
+			if (bkmk.type == Bookmark.FOLDER){
 				super.call(Vector.<String>([BashMethods.KILL_FOLDER, trashGit, target]));
 			}	else{
 				super.call(Vector.<String>([BashMethods.KILL_FILE, trashGit, target]));
