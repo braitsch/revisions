@@ -134,6 +134,8 @@ package view {
 			_icon.x = -64;
 			_icon.y = -140 - _offset;
 			_view.addChild(_icon);
+		// offset file icons slightly so they're not so close to the main text //	
+			if (_bookmark.type == Bookmark.FILE) _icon.y -= 10;
 		}
 
 		private function onStatusReceived(e:BookmarkEvent):void

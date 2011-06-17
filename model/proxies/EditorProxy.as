@@ -61,7 +61,7 @@ package model.proxies {
 		
 		public function editAppStorageGitDirName($old:String, $new:String):void
 		{
-			super.directory =  File.applicationStorageDirectory.nativePath;			
+			super.directory =  File.applicationStorageDirectory.nativePath;
 			super.call(Vector.<String>([BashMethods.EDIT_GIT_DIR, $old, $new]));
 		}
 		

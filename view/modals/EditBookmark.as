@@ -40,6 +40,8 @@ package view.modals {
 			_bookmark = b;
 			_view.name_txt.text = _bookmark.label;
 			_view.local_txt.text = _bookmark.path;
+		//TODO decide wether we're going to allow file path editing...
+			_view.browse_btn.visible = false;
 		}
 		
 		private function onFileSelection(e:UIEvent):void
@@ -79,22 +81,37 @@ package view.modals {
 
 		private function onUpdateBookmark(e:MouseEvent):void
 		{
-			var m:String = Bookmark.validate(_view.name_txt.text, _view.local_txt.text);
+			var m:String = Bookmark.validate(_view.name_txt.text, _view.local_txt.text, _bookmark);
 			if (m != '') {
 				dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, m));
-			}	else{
-				AppModel.proxies.editor.addEventListener(InstallEvent.GIT_DIR_UPDATED, onGitDirUpdated);
-				AppModel.proxies.editor.editAppStorageGitDirName(MD5.hash(_bookmark.path), MD5.hash(_view.local_txt.text));
+			}	else {
+				_bookmark.type == Bookmark.FILE ? updateGitDir() : updateDatabase();
 			}			
+		}
+		
+		private function updateGitDir():void
+		{
+			if (_view.local_txt.text == _bookmark.path){
+				updateDatabase();		
+			}	else{
+		// the file path has changed //		
+				AppModel.proxies.editor.addEventListener(InstallEvent.GIT_DIR_UPDATED, onGitDirUpdated);
+				AppModel.proxies.editor.editAppStorageGitDirName(MD5.hash(_bookmark.path), MD5.hash(_view.local_txt.text));			
+			}
 		}
 		
 		private function onGitDirUpdated(e:InstallEvent):void
 		{
+			updateDatabase();
 			AppModel.proxies.editor.removeEventListener(InstallEvent.GIT_DIR_UPDATED, onGitDirUpdated);			
-			AppModel.database.addEventListener(DataBaseEvent.RECORD_EDITED, onEditSuccessful);
-			AppModel.database.editRepository(_bookmark.label, _view.name_txt.text, _view.local_txt.text);
 		}
-
+		
+		private function updateDatabase():void
+		{
+			AppModel.database.addEventListener(DataBaseEvent.RECORD_EDITED, onEditSuccessful);
+			AppModel.database.editRepository(_bookmark.label, _view.name_txt.text, _view.local_txt.text);				
+		}
+		
 		private function onEditSuccessful(e:DataBaseEvent):void 
 		{
 			_bookmark.path = _view.local_txt.text;

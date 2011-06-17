@@ -34,7 +34,6 @@ package model.vo {
 			_active = o.active;
 			this.path = o.path;
 			this.label = o.label;
-			getFileSystemIcons();
 		//	trace('New Bookmark Created :: '+_label, _type, _path); 
 		}
 
@@ -69,6 +68,7 @@ package model.vo {
 				 _gitdir = File.applicationStorageDirectory.nativePath+'/'+MD5.hash(_path);			
 			}
 			_file = new File('file://'+_path);			
+			getFileSystemIcons();
 		}
 		
 		public function get stash():Array { return _stash; }
@@ -123,7 +123,7 @@ package model.vo {
 		
 	// static validation function //
 	
-		public static function validate(n:String, p:String):String
+		public static function validate(n:String, p:String, b:Bookmark = null):String
 		{
 			if (n == '') {
 				return 'Project name cannot be empty.';
@@ -141,14 +141,14 @@ package model.vo {
 			if (p.indexOf('/Volumes') == 0){
 				return 'Sorry, tracking files on external volumes is not yet supported.';
 			}
-			var b:Vector.<Bookmark> = AppEngine.bookmarks;
-			for (var i:int = 0; i < b.length; i++) {
-				if (n == b[i].label) {
-					return 'The name '+b[i].label+' is already taken.\nPlease choose something else.';
-				}	else if (MD5.hash(p) == MD5.hash(b[i].path)){
+			var v:Vector.<Bookmark> = AppEngine.bookmarks;
+			for (var i:int = 0; i < v.length; i++) {
+				if (n == v[i].label) {
+					if (b) if (n != b.label) return 'The name '+v[i].label+' is already taken.\nPlease choose something else.';
+				}	else if (MD5.hash(p) == MD5.hash(v[i].path)){
 					var w:String = p.substr(p.lastIndexOf('/')+1);
 					var k:String = f.isDirectory ? 'folder' : 'file';
-					return 'The '+k+' '+w+' is already being tracked by the bookmark '+b[i].label;
+					if (b) if (p != b.path) return 'The '+k+' '+w+' is already being tracked by the bookmark '+v[i].label;
 				}
 			}
 			return '';

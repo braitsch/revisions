@@ -61,20 +61,35 @@ package view.modals {
 			var m:String = Bookmark.validate(_view.name_txt.text, _view.local_txt.text);
 			if (m != '') {
 				dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, m));
+			}	else {
+				_bookmark.type == Bookmark.FILE ? updateGitDir() : updateDatabase();
+			}		
+		}
+		
+		private function updateGitDir():void
+		{
+			if (_view.local_txt.text == _bookmark.path){
+				updateDatabase();		
 			}	else{
+		// the file path has changed //		
 				AppModel.proxies.editor.addEventListener(InstallEvent.GIT_DIR_UPDATED, onGitDirUpdated);
-				AppModel.proxies.editor.editAppStorageGitDirName(MD5.hash(_bookmark.path), MD5.hash(_view.local_txt.text));				
-			}			
+				AppModel.proxies.editor.editAppStorageGitDirName(MD5.hash(_bookmark.path), MD5.hash(_view.local_txt.text));			
+			}
 		}
 		
 		private function onGitDirUpdated(e:InstallEvent):void
 		{
+			updateDatabase();
 			_bookmark.path = _view.local_txt.text;
 			AppModel.proxies.editor.removeEventListener(InstallEvent.GIT_DIR_UPDATED, onGitDirUpdated);			
+		}
+		
+		private function updateDatabase():void
+		{
 			AppModel.database.addEventListener(DataBaseEvent.RECORD_EDITED, onEditSuccessful);
-			AppModel.database.editRepository(_bookmark.label, _view.name_txt.text, _view.local_txt.text);
+			AppModel.database.editRepository(_bookmark.label, _view.name_txt.text, _view.local_txt.text);				
 		}		
-
+		
 		private function onEditSuccessful(e:DataBaseEvent):void
 		{
 			_failed.splice(0, 1);

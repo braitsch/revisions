@@ -10,8 +10,6 @@ package view.modals {
 
 	public class NewBookmark extends ModalWindow {
 
-		private static var _name		:String;	// _view.name_txt.text
-		private static var _path		:String;	// _view.local_txt.text
 		private static var _view		:NewBookmarkMC = new NewBookmarkMC();
 		private static var _browser		:FileBrowser = new FileBrowser();
 
@@ -47,21 +45,18 @@ package view.modals {
 		
 		private function parseTargetNameAndLocation($file:File):void
 		{
-			_path = $file.nativePath;
+			var p:String = $file.nativePath;
 		// get the name of the file off the end of the file path //	
-			var n:String = _path.substr(_path.lastIndexOf('/') + 1);
+			var n:String = p.substr(p.lastIndexOf('/') + 1);
 		// if we get a file, strip off the file extension //	
 			if (!$file.isDirectory) n = n.substr(0, n.lastIndexOf('.'));
-		// capitalize the name //	
-			_name = n.substr(0,1).toUpperCase() + n.substr(1);
-		// and finally update the window's textfields //	
-			_view.name_txt.text = _name;
-			_view.local_txt.text = _path;
+			_view.local_txt.text = p;
+			_view.name_txt.text = n.substr(0,1).toUpperCase() + n.substr(1);
 		}		
 		
 		private function onActionButtonClick(e:MouseEvent):void 
 		{	
-			var m:String = Bookmark.validate(_name, _path);
+			var m:String = Bookmark.validate(_view.name_txt.text, _view.local_txt.text);
 			if (m == '') {
 				initNewBookmark();
 			}	else{
@@ -81,11 +76,11 @@ package view.modals {
 
 		private function initNewBookmark():void
 		{
-			var b:Boolean = new File('file://'+_path).isDirectory;
+			var b:Boolean = new File('file://'+_view.local_txt.text).isDirectory;
 			var o:Object = {
-				label	:	_name,
+				label	:	_view.name_txt.text,
 				type	: 	b ? Bookmark.FOLDER : Bookmark.FILE,
-				path	:	_path,
+				path	:	_view.local_txt.text,
 				remote 	:	null,
 				active 	:	1
 			};		
