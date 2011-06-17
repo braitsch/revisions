@@ -1,5 +1,6 @@
 package view.modals {
 
+	import events.BookmarkEvent;
 	import events.DataBaseEvent;
 	import events.InstallEvent;
 	import events.UIEvent;
@@ -22,9 +23,9 @@ package view.modals {
 		{
 			addChild(_view);
 			super.addInputs(Vector.<TLFTextField>([_view.name_txt, _view.local_txt]));	
-			super.addButtons([_view.browse_btn, _view.update_btn, _view.delete_btn]);
+			super.addButtons([_view.browse_btn, _view.ok_btn, _view.delete_btn]);
+			_view.ok_btn.addEventListener(MouseEvent.CLICK, onUpdateBookmark);
 			_view.browse_btn.addEventListener(MouseEvent.CLICK, onBrowseButton);
-			_view.update_btn.addEventListener(MouseEvent.CLICK, onUpdateBookmark);
 			_view.delete_btn.addEventListener(MouseEvent.CLICK, onDeleteBookmark);
 			_browser.addEventListener(UIEvent.FILE_BROWSER_SELECTION, onDirectorySelection);				
 		}
@@ -90,13 +91,13 @@ package view.modals {
 			AppModel.database.editRepository(_bookmark.label, _view.name_txt.text, _view.local_txt.text);				
 		}		
 		
-		private function onEditSuccessful(e:DataBaseEvent):void
+		private function onEditSuccessful(e:DataBaseEvent = null):void
 		{
 			_failed.splice(0, 1);
 			_bookmark.path = _view.local_txt.text;
 			_bookmark.label = _view.name_txt.text;
-			if (_failed.length){
-				repairBookmark(_failed[0]);
+			if (_failed.length > 0){
+				AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.PATH_ERROR, _failed));
 			}	else{
 				AppModel.engine.buildBookmarksFromDatabase();
 				dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
@@ -107,8 +108,15 @@ package view.modals {
 		private function onDeleteBookmark(e:MouseEvent):void 
 		{
 			dispatchEvent(new UIEvent(UIEvent.DELETE_BOOKMARK, _bookmark));	
+			AppModel.engine.addEventListener(BookmarkEvent.DELETED, onDeleteComplete);
+		}
+
+		private function onDeleteComplete(e:BookmarkEvent):void 
+		{
+			onEditSuccessful();
 		}
 		
 	}
 	
 }
+

@@ -41,6 +41,11 @@ package view.ui {
 		{
 			return _view.cross.visible;	
 		}
+		
+		override public function set visible(b:Boolean):void
+		{
+			_view.visible = b;	
+		}
 
 		private function onToggle(e:MouseEvent):void 
 		{

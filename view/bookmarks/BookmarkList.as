@@ -29,6 +29,7 @@ package view.bookmarks {
 				var k:BookmarkListItem = getChildAt(i) as BookmarkListItem;
 				if (k.bookmark == b) break;
 			}
+			if (!k) return; // the list hasn't been built yet //
 			TweenLite.to(k, .3, {alpha:0, onComplete:function():void{
 				removeChild(k);
 				for (i = 0; i < numChildren; i++) {

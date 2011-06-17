@@ -2,16 +2,17 @@ package model {
 
 	import events.BookmarkEvent;
 	import events.DataBaseEvent;
-	import flash.events.EventDispatcher;
 	import model.vo.Bookmark;
+	import flash.events.EventDispatcher;
 
 	// class reposonsible for adding and removing bookmarks from the application //
 
 	public class AppEngine extends EventDispatcher {
 		
-		private static var _index		:uint = 0;
-		private static var _bookmark	:Bookmark;
-		private static var _bookmarks	:Vector.<Bookmark> = new Vector.<Bookmark>();
+		private static var _index			:uint = 0;
+		private static var _bookmark		:Bookmark;
+		private static var _bookmarks		:Vector.<Bookmark> = new Vector.<Bookmark>();
+		private static var _bookmarksReady	:Boolean = false;
 
 	// expose bookmarks to check against duplicates being added //
 			
@@ -63,11 +64,16 @@ package model {
 		public function deleteBookmark(bkmk:Bookmark, trashGit:Boolean, trashFiles:Boolean):void
 		{
 			_bookmark = bkmk;
-			AppModel.proxies.editor.deleteBookmark(bkmk, trashGit, trashFiles);		
-			AppModel.proxies.editor.addEventListener(BookmarkEvent.DELETED, onBookmarkDeleted);				
+			if (!trashGit && !trashFiles){
+		// no need to edit the filesystem //	
+				removeFromDatabase();
+			}	else{
+				AppModel.proxies.editor.deleteBookmark(bkmk, trashGit, trashFiles);		
+				AppModel.proxies.editor.addEventListener(BookmarkEvent.DELETED, removeFromDatabase);
+			}
 		}
 			
-		private function onBookmarkDeleted(e:BookmarkEvent):void 
+		private function removeFromDatabase(e:BookmarkEvent = null):void 
 		{
 			AppModel.database.deleteRepository(_bookmark.label);
 			AppModel.database.addEventListener(DataBaseEvent.RECORD_DELETED, onRemovedFromDatabase);
@@ -81,16 +87,18 @@ package model {
 
 		private function removeBookmarkFromList(a:Array):void 
 		{
-			trace("AppEngine.removeBookmarkFromList()");
 			for (var i:int = 0; i < _bookmarks.length; i++) if (_bookmarks[i] == _bookmark) _bookmarks.splice(i, 1);
 			for (var j:int = 0; j < a.length; j++) _bookmarks[j].active = a[j].active;
-				
+			
 			dispatchEvent(new BookmarkEvent(BookmarkEvent.DELETED, _bookmark));
+			
+		// don't parse bookmarks until all the broken paths have been repaired //	
+			if (_bookmarksReady == false) return;
 			if (_bookmarks.length > 0) {
 				dispatchActiveBookmark();
 			}	else{
 				dispatchEvent(new BookmarkEvent(BookmarkEvent.NO_BOOKMARKS));
-			}
+			}				
 		}
 		
 	// generate bookmarks from database records //		
@@ -131,6 +139,7 @@ package model {
 			if (++_index < _bookmarks.length){
 				AppModel.proxies.branch.getBranches(_bookmarks[_index]);	
 			}	else{
+				_bookmarksReady = true;
 				AppModel.proxies.branch.removeEventListener(BookmarkEvent.BRANCHES_READ, getStashOfNextBookmark);
 				AppModel.proxies.branch.removeEventListener(BookmarkEvent.STASH_LIST_READ, onStoredBookmarkReady);
 				dispatchEvent(new BookmarkEvent(BookmarkEvent.LOADED, _bookmarks));

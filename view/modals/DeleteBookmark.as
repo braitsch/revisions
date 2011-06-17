@@ -26,6 +26,8 @@ package view.modals {
 			_bookmark = $b;
 			_trashGit.selected = _trashFiles.selected = false;
 			_view.message_txt.text = 'Are you sure you want to deal the bookmark "'+_bookmark.label+'"?';
+		// disable options if the filepath to the bookmark is broken //	
+			_trashGit.visible = _trashFiles.visible = _bookmark.exists;
 		}
 		
 		private function onDeleteButton(e:MouseEvent):void 
