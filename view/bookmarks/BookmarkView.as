@@ -5,9 +5,9 @@ package view.bookmarks {
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import model.AppModel;
-	import model.Bookmark;
+	import model.vo.Bookmark;
 	import system.AirContextMenu;
-	import view.Scroller;
+	import view.ui.Scroller;
 
 	public class BookmarkView extends Sprite {
 		

@@ -1,10 +1,10 @@
 package view.history {
 
-	import events.UIEvent;
-	import model.Commit;
 	import com.greensock.TweenLite;
+	import events.UIEvent;
 	import flash.display.Shape;
 	import flash.events.MouseEvent;
+	import model.vo.Commit;
 
 	public class HistoryItemSaved extends HistoryItem {
 

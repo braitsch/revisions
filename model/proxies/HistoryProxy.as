@@ -3,8 +3,8 @@ package model.proxies {
 	import events.BookmarkEvent;
 	import events.NativeProcessEvent;
 	import model.AppModel;
-	import model.Commit;
 	import model.air.NativeProcessQueue;
+	import model.vo.Commit;
 	import system.BashMethods;
 
 	public class HistoryProxy extends NativeProcessQueue {

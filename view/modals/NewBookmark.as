@@ -4,7 +4,7 @@ package view.modals {
 	import fl.text.TLFTextField;
 	import model.AppEngine;
 	import model.AppModel;
-	import model.Bookmark;
+	import model.vo.Bookmark;
 	import system.FileBrowser;
 	import com.adobe.crypto.MD5;
 	import flash.events.MouseEvent;
@@ -74,7 +74,7 @@ package view.modals {
 		{
 			var o:Object = {
 				label	:	_view.name_txt.text,
-				target	:	_path,
+				path	:	_path,
 				remote 	:	null,
 				active 	:	1
 			};				

@@ -1,10 +1,10 @@
 package view.history {
 
-	import view.Scroller;
 	import flash.display.Bitmap;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.filters.DropShadowFilter;
+	import view.ui.Scroller;
 
 	public class HistoryHeader extends Sprite {
 

@@ -1,4 +1,4 @@
-package model {
+package model.vo {
 
 	public class Commit {
 	

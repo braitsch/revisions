@@ -1,4 +1,4 @@
-package model {
+package model.vo {
 
 	import events.BookmarkEvent;
 	import model.proxies.StatusProxy;

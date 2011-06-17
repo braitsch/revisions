@@ -1,10 +1,10 @@
 package view.history {
 
 	import events.BookmarkEvent;
-	import model.Bookmark;
-	import model.Commit;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import model.vo.Bookmark;
+	import model.vo.Commit;
 
 	public class HistoryList extends Sprite {
 

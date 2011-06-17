@@ -1,11 +1,11 @@
 package view.history {
 
 	import events.BookmarkEvent;
-	import model.AppModel;
-	import model.Bookmark;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
+	import model.AppModel;
+	import model.vo.Bookmark;
 
 	public class HistoryView extends Sprite {
 

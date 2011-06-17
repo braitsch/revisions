@@ -32,11 +32,11 @@ package model.db {
 			_db.execute(_open, true);
 		}
 
-		public function addRepository($label:String, $target:String):void
+		public function addRepository($label:String, $path:String):void
 		{
-			trace("AppDatabase.addRepository > ", $label, $target);
+			trace("AppDatabase.addRepository > ", $label, $path);
 			_add = new Vector.<SQLStatement>();
-			_add.push(AppSQLQuery.CLEAR_ACTIVE);				_add.push(AppSQLQuery.INSERT($label, $target));	
+			_add.push(AppSQLQuery.CLEAR_ACTIVE);				_add.push(AppSQLQuery.INSERT($label, $path));	
 			_add.push(AppSQLQuery.READ_REPOSITORIES);
 			_db.execute(_add, true);	
 		}
@@ -50,10 +50,10 @@ package model.db {
 			_db.execute(_delete, true);
 		}	
 
-		public function editRepository($oldId:String, $newId:String, $target:String):void 
+		public function editRepository($oldId:String, $newId:String, $path:String):void 
 		{
 			_edit = new Vector.<SQLStatement>();	
-			_edit.push(AppSQLQuery.EDIT($oldId, $newId, $target));						
+			_edit.push(AppSQLQuery.EDIT($oldId, $newId, $path));						
 			_edit.push(AppSQLQuery.READ_REPOSITORIES);
 			_db.execute(_edit, true);			
 		}		

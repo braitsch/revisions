@@ -1,4 +1,4 @@
-package view {
+package view.ui {
 
 	import flash.display.Bitmap;
 	import flash.display.Shape;

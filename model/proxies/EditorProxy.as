@@ -1,13 +1,13 @@
 package model.proxies {
 
+	import com.adobe.crypto.MD5;
 	import events.BookmarkEvent;
 	import events.NativeProcessEvent;
-	import model.AppModel;
-	import model.Bookmark;
-	import model.air.NativeProcessProxy;
-	import system.BashMethods;
-	import com.adobe.crypto.MD5;
 	import flash.filesystem.File;
+	import model.AppModel;
+	import model.air.NativeProcessProxy;
+	import model.vo.Bookmark;
+	import system.BashMethods;
 
 	public class EditorProxy extends NativeProcessProxy {
 
@@ -50,11 +50,11 @@ package model.proxies {
 		public function deleteBookmark(bkmk:Bookmark, trashGit:Boolean, trashFiles:Boolean):void 
 		{
 			super.directory = bkmk.gitdir;
-			var target:String = trashFiles ? bkmk.path : '';
+			var path:String = trashFiles ? bkmk.path : '';
 			if (bkmk.type == Bookmark.FOLDER){
-				super.call(Vector.<String>([BashMethods.KILL_FOLDER, trashGit, target]));
+				super.call(Vector.<String>([BashMethods.KILL_FOLDER, trashGit, path]));
 			}	else{
-				super.call(Vector.<String>([BashMethods.KILL_FILE, trashGit, target]));
+				super.call(Vector.<String>([BashMethods.KILL_FILE, trashGit, path]));
 			}
 		}						
 		

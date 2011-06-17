@@ -4,7 +4,7 @@ package model.db {
 	public class AppSQLQuery {
 
 		public static const INIT_DATABASE:SQLStatement = new SQLStatement();
-		INIT_DATABASE.text = "CREATE TABLE IF NOT EXISTS repositories (id INTEGER PRIMARY KEY AUTOINCREMENT, label TEXT, target TEXT, local TEXT, remote TEXT, active INTEGER)";
+		INIT_DATABASE.text = "CREATE TABLE IF NOT EXISTS repositories (id INTEGER PRIMARY KEY AUTOINCREMENT, label TEXT, path TEXT, remote TEXT, active INTEGER)";
 
 		public static const READ_REPOSITORIES:SQLStatement = new SQLStatement();
 		READ_REPOSITORIES.text = "SELECT * FROM repositories";
@@ -12,17 +12,17 @@ package model.db {
 		public static const CLEAR_ACTIVE:SQLStatement = new SQLStatement();
 		CLEAR_ACTIVE.text = "UPDATE repositories SET active=0 WHERE active=1";
 
-		public static function INSERT($label:String, $target:String):SQLStatement
+		public static function INSERT($label:String, $path:String):SQLStatement
 		{
 			var s:SQLStatement = new SQLStatement();
-			s.text = "INSERT INTO repositories (label, target, active) VALUES ('"+$label+"', '"+$target+"', 1)";
+			s.text = "INSERT INTO repositories (label, path, active) VALUES ('"+$label+"', '"+$path+"', 1)";
 			return s;
 		}
 		
-		public static function EDIT($oldLabel:String, $newLabel:String, $target:String):SQLStatement 
+		public static function EDIT($oldLabel:String, $newLabel:String, $path:String):SQLStatement 
 		{
 			var s:SQLStatement = new SQLStatement();
-			s.text = "UPDATE repositories SET label='"+$newLabel+"', target='"+$target+"' WHERE label = '"+$oldLabel+"'";
+			s.text = "UPDATE repositories SET label='"+$newLabel+"', path='"+$path+"' WHERE label = '"+$oldLabel+"'";
 			return s;				
 		}
 		

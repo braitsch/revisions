@@ -3,11 +3,11 @@ package view.modals {
 	import events.DataBaseEvent;
 	import events.UIEvent;
 	import fl.text.TLFTextField;
+	import flash.events.MouseEvent;
 	import model.AppModel;
-	import model.Bookmark;
+	import model.vo.Bookmark;
 	import system.FileBrowser;
 	import view.ui.ModalCheckbox;
-	import flash.events.MouseEvent;
 
 	public class EditBookmark extends ModalWindow {
 

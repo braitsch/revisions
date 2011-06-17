@@ -2,11 +2,13 @@ package model {
 
 	import events.BookmarkEvent;
 	import events.DataBaseEvent;
+	import flash.events.EventDispatcher;
 	import model.db.AppDatabase;
 	import model.db.AppSettings;
 	import model.proxies.AppProxies;
+	import model.vo.Bookmark;
+	import model.vo.Branch;
 	import system.UpdateManager;
-	import flash.events.EventDispatcher;
 
 	public class AppModel extends EventDispatcher {
 

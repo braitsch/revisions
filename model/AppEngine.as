@@ -1,8 +1,9 @@
 package model {
 
-	import events.DataBaseEvent;
 	import events.BookmarkEvent;
+	import events.DataBaseEvent;
 	import flash.events.EventDispatcher;
+	import model.vo.Bookmark;
 
 	// class reposonsible for adding and removing bookmarks from the application //
 
@@ -101,7 +102,7 @@ package model {
 			for (var i:int = 0; i < a.length; i++) {
 				var o:Object = {
 					label	:	a[i].label,
-					target	:	a[i].target,
+					path	:	a[i].path,
 					local	:	a[i].local,
 					remote 	:	a[i].remote,
 					active 	:	a[i].active

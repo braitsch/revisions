@@ -1,6 +1,6 @@
 package view.bookmarks {
-	import model.Branch;
 	import flash.display.Sprite;
+	import model.vo.Branch;
 
 	public class BranchListItem extends Sprite {
 

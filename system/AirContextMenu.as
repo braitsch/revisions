@@ -2,16 +2,16 @@ package system {
 
 	import events.BookmarkEvent;
 	import events.UIEvent;
-	import model.AppModel;
-	import model.Bookmark;
-	import view.bookmarks.BookmarkListItem;
-	import view.layout.ListItem;
 	import flash.display.DisplayObject;
 	import flash.display.InteractiveObject;
 	import flash.display.Stage;
 	import flash.events.ContextMenuEvent;
 	import flash.ui.ContextMenu;
 	import flash.ui.ContextMenuItem;
+	import model.AppModel;
+	import model.vo.Bookmark;
+	import view.bookmarks.BookmarkListItem;
+	import view.layout.ListItem;
 
 	public class AirContextMenu {
 		

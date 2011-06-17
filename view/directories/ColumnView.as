@@ -1,14 +1,13 @@
-package view {
+package view.directories {
 
 	import events.BookmarkEvent;
 	import events.UIEvent;
-	import model.AppModel;
-	import view.bookmarks.BookmarkView;
-	import view.directories.DirectoryView;
-	import view.files.FilesView;
-	import view.layout.ListItem;
 	import flash.display.Sprite;
 	import flash.filesystem.File;
+	import model.AppModel;
+	import view.bookmarks.BookmarkView;
+	import view.files.FilesView;
+	import view.layout.ListItem;
 
 	public class ColumnView extends Sprite {
 

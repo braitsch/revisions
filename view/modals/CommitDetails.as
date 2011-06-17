@@ -1,8 +1,8 @@
 package view.modals {
 
 	import events.UIEvent;
-	import model.Commit;
 	import flash.events.MouseEvent;
+	import model.vo.Commit;
 
 	public class CommitDetails extends ModalWindow {
 

@@ -1,10 +1,8 @@
 package view {
 
+	import com.greensock.TweenLite;
 	import events.BookmarkEvent;
 	import events.UIEvent;
-	import model.AppModel;
-	import model.Bookmark;
-	import com.greensock.TweenLite;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.MovieClip;
@@ -16,6 +14,8 @@ package view {
 	import flash.text.Font;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
+	import model.AppModel;
+	import model.vo.Bookmark;
 
 	public class SummaryView extends Sprite {
 

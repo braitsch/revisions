@@ -4,7 +4,7 @@ package view.modals {
 	import fl.text.TLFTextField;
 	import flash.events.MouseEvent;
 	import model.AppModel;
-	import model.Bookmark;
+	import model.vo.Bookmark;
 	import system.FileBrowser;
 
 	public class RepairBookmark extends ModalWindow {

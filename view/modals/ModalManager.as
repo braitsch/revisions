@@ -3,14 +3,14 @@ package view.modals {
 	import events.BookmarkEvent;
 	import events.InstallEvent;
 	import events.UIEvent;
-	import model.AppModel;
-	import model.Bookmark;
-	import model.Commit;
-	import model.db.AppSettings;
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
+	import model.AppModel;
+	import model.db.AppSettings;
+	import model.vo.Bookmark;
+	import model.vo.Commit;
 
 	public class ModalManager extends Sprite {
 

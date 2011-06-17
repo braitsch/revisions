@@ -1,4 +1,4 @@
-package model {
+package model.vo {
 
 	import events.BookmarkEvent;
 	import system.StringUtils;
@@ -29,11 +29,11 @@ package model {
 		public function Bookmark(o:Object)
 		{
 			_label = o.label;
-			_path = o.target;
+			_path = o.path; // target
 			_remote = o.remote;
 			_active = o.active;
-			_file = new File('file://'+_path);
 			_gitdir = _path;
+			_file = new File('file://'+_path);
 			_type = _file.isDirectory ? Bookmark.FOLDER : Bookmark.FILE;
 			if (_type == Bookmark.FILE) _gitdir = File.applicationStorageDirectory.nativePath+'/'+MD5.hash(_path);			
 			getFileSystemIcons();

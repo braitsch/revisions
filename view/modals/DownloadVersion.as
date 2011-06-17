@@ -2,13 +2,13 @@ package view.modals {
 
 	import events.InstallEvent;
 	import events.UIEvent;
+	import flash.events.MouseEvent;
 	import model.AppModel;
-	import model.Bookmark;
-	import model.Commit;
 	import model.db.AppSettings;
+	import model.vo.Bookmark;
+	import model.vo.Commit;
 	import system.FileBrowser;
 	import view.ui.ModalCheckbox;
-	import flash.events.MouseEvent;
 
 	public class DownloadVersion extends ModalWindow {
 

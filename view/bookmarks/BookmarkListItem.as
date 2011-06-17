@@ -1,12 +1,12 @@
 package view.bookmarks {
 
-	import events.BookmarkEvent;
-	import model.AppModel;
-	import model.Bookmark;
 	import com.greensock.TweenLite;
+	import events.BookmarkEvent;
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
+	import model.AppModel;
+	import model.vo.Bookmark;
 
 	public class BookmarkListItem extends Sprite {
 

@@ -1,9 +1,9 @@
 package view.modals {
 
 	import events.UIEvent;
-	import model.AppModel;
-	import model.Commit;
 	import flash.events.MouseEvent;
+	import model.AppModel;
+	import model.vo.Commit;
 
 	public class RevertToVersion extends ModalWindow {
 
