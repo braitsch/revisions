@@ -1,5 +1,6 @@
 package model.db {
 
+	import model.AppModel;
 	import events.InstallEvent;
 	import flash.display.Stage;
 	import flash.events.Event;
@@ -10,7 +11,7 @@ package model.db {
 	
 	public class AppSettings extends EventDispatcher {
 
-		public static const IGNORE_UPDATES				:String = 'checkForUpdates';
+		public static const CHECK_FOR_UPDATES			:String = 'checkForUpdates';
 		public static const SHOW_TOOL_TIPS				:String = "showToolTips";
 		public static const PROMPT_BEFORE_DOWNLOAD		:String = "promptBeforeDownload";
 
@@ -30,6 +31,7 @@ package model.db {
 		public static function setSetting(name:String, val:*):void
 		{
 			_settings[name] = val;
+			AppModel.settings.dispatchEvent(new InstallEvent(InstallEvent.APP_SETTINGS));
 		}
 		
 		public static function getSetting(name:String):*

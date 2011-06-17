@@ -151,12 +151,12 @@ package view.modals {
 		
 		private function promptToUpdate(e:InstallEvent):void
 		{
-			if (AppSettings.getSetting(AppSettings.IGNORE_UPDATES)){
+			if (AppSettings.getSetting(AppSettings.CHECK_FOR_UPDATES)){
+				_updateApp.newVersion = e.data.n;
+				showModalWindow(_updateApp);
+			}	else{
 				checkAppIsInitialized();
 				trace("ModalManager.promptToUpdate(e), Revisions "+e.data.n+' is Available');
-			}	else{
-				_updateApp.newVersion = e.data.n;
-				showModalWindow(_updateApp);				
 			}
 		}			
 
