@@ -24,6 +24,7 @@ package model.proxies {
 		
 		public function getStashList():void
 		{
+			super.directory = _bookmark.worktree;			
 			super.call(Vector.<String>([BashMethods.GET_STASH_LIST, _bookmark.gitdir]));	
 		}
 		
@@ -31,7 +32,7 @@ package model.proxies {
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
-		//	trace("BranchProxy.onProcessComplete(e)", 'method = '+e.data.method, 'result = '+e.data.result);			
+	//		trace("BranchProxy.onProcessComplete(e)", _bookmark.label, 'method = '+e.data.method, 'result = '+e.data.result);			
 			var m:String = String(e.data.method);
 			switch(m){
 				case BashMethods.GET_BRANCHES :

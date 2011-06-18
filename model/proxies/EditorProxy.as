@@ -43,8 +43,9 @@ package model.proxies {
 				super.directory = bkmk.path;			
 				super.call(Vector.<String>([BashMethods.INIT_FOLDER]));
 			}	else{
+				trace('bkmk.path: ' + (bkmk.path), bkmk.worktree);	
 				super.directory =  File.applicationStorageDirectory.nativePath;
-				super.call(Vector.<String>([BashMethods.INIT_FILE, bkmk.path, MD5.hash(bkmk.path), bkmk.worktree]));	
+				super.call(Vector.<String>([BashMethods.INIT_FILE, bkmk.path, MD5.hash(bkmk.path), bkmk.worktree]));
 			}
 		}	
 

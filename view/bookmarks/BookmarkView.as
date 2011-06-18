@@ -1,16 +1,18 @@
 package view.bookmarks {
 
 	import events.BookmarkEvent;
-	import flash.display.Bitmap;
-	import flash.display.Shape;
-	import flash.display.Sprite;
 	import model.AppModel;
 	import model.vo.Bookmark;
 	import system.AirContextMenu;
 	import view.ui.Scroller;
+	import flash.display.Bitmap;
+	import flash.display.Shape;
+	import flash.display.Sprite;
+	import flash.events.MouseEvent;
 
 	public class BookmarkView extends Sprite {
 		
+		private static var _hitArea		:Shape = new Shape(); // for mousewheel scrolling //		
 		private static var _header		:Sprite = new Sprite();		
 		private static var _list		:BookmarkList = new BookmarkList();
 		private static var _bkgd		:Shape = new Shape();
@@ -22,11 +24,11 @@ package view.bookmarks {
 			addChild(_header);
 			addChild(_list);
 			addChild(_scroller);
+			addChild(_hitArea);			
 			addHeader();
 			
-			_bkgd.y = 33;
-			_list.y = 33;
 			_scroller.x = 200;
+			_hitArea.y = _list.y = _bkgd.y = 33;
 			_list.contextMenu = AirContextMenu.menu;
 						AppModel.engine.addEventListener(BookmarkEvent.LOADED, onBookmarkList);
 			AppModel.engine.addEventListener(BookmarkEvent.ADDED, onBookmarkAdded);
@@ -60,13 +62,18 @@ package view.bookmarks {
 			_bkgd.graphics.beginBitmapFill(new BookmarkBkgd());
 			_bkgd.graphics.drawRect(0, 0, 200, h);
 			_bkgd.graphics.endFill();
-			_scroller.draw(h);			
+			_hitArea.graphics.clear();
+			_hitArea.graphics.beginFill(0xff0000, 0);
+			_hitArea.graphics.drawRect(0, 0, 200, h-33);
+			_hitArea.graphics.endFill();						
+			_scroller.draw(h);
 		}
 
 		private function onBookmarkList(e:BookmarkEvent):void 
 		{
 			var v:Vector.<Bookmark> = e.data as Vector.<Bookmark>;
 			for (var i:int = 0; i < v.length; i++) _list.addItem(v[i]);
+			addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);			
 		}
 
 		private function onBookmarkAdded(e:BookmarkEvent):void 
@@ -82,7 +89,19 @@ package view.bookmarks {
 		private function onBookmarkSelected(e:BookmarkEvent):void 
 		{
 			_list.setActiveBookmark(e.data as Bookmark);
-		}		
+		}	
+		
+		private function onMouseWheel(e:MouseEvent):void
+		{
+			if (_list.height <= _hitArea.height) return;
+			_list.y += e.delta;
+			var minY:int = 33 - _list.height + _hitArea.height;
+			if (_list.y >= 33) {
+				_list.y = 33;
+			}	else if (_list.y < minY){
+				_list.y = minY;
+			}
+		}			
 		
 	}
 	

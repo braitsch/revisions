@@ -26,13 +26,11 @@ package view.history {
 			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onSelection);
 			AppModel.engine.addEventListener(BookmarkEvent.STATUS, onStatus);
 			AppModel.engine.addEventListener(BookmarkEvent.HISTORY, onHistory);
-			addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);			
 		}
 
 		private function onMouseWheel(e:MouseEvent):void
 		{
 			if (_activeList.height <= _hitArea.height) return;
-		//TODO need to smooth this out a bit //	
 			_activeList.y += e.delta;
 			var minY:int = _listYpos - _activeList.height + _hitArea.height;
 			if (_activeList.y >= _listYpos) {
@@ -58,6 +56,7 @@ package view.history {
 		// create a list object for each bookmark in the database //	
 			var a:Vector.<Bookmark> = e.data as Vector.<Bookmark>;
 			for (var i:int = 0;i < a.length; i++) _lists.push(new HistoryList(a[i]));
+			addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);			
 		}
 		
 		private function onAddition(e:BookmarkEvent):void 
