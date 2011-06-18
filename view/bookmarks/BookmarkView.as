@@ -24,11 +24,12 @@ package view.bookmarks {
 			addChild(_header);
 			addChild(_list);
 			addChild(_scroller);
-			addChild(_hitArea);			
+			addChild(_hitArea);
 			addHeader();
 			
 			_scroller.x = 200;
 			_hitArea.y = _list.y = _bkgd.y = 33;
+			_list.mask = _hitArea;
 			_list.contextMenu = AirContextMenu.menu;
 						AppModel.engine.addEventListener(BookmarkEvent.LOADED, onBookmarkList);
 			AppModel.engine.addEventListener(BookmarkEvent.ADDED, onBookmarkAdded);
@@ -67,6 +68,13 @@ package view.bookmarks {
 			_hitArea.graphics.drawRect(0, 0, 200, h-33);
 			_hitArea.graphics.endFill();						
 			_scroller.draw(h);
+			if (_hitArea.height > _list.height){
+				_list.y = 33;
+			}	else{
+				var d:Number = _list.height - _hitArea.height;
+				var k:Number = d + _list.y - 33;
+				if (k < 0) _list.y -= k;
+			}
 		}
 
 		private function onBookmarkList(e:BookmarkEvent):void 

@@ -34,7 +34,7 @@ package model.vo {
 			_active = o.active;
 			this.path = o.path;
 			this.label = o.label;
-		//	trace('New Bookmark Created :: '+_label, _type, _path, _gitdir); 
+			trace('New Bookmark Created :: '+_label, _type, _path, _gitdir); 
 		}
 
 		public function get branch():Branch { return _branch; }		
@@ -132,15 +132,21 @@ package model.vo {
 				return 'Selected target is not valid.';
 			}
 			if (p == '/') {
-				return 'Tracking the ENTIRE file system is not supported, sorry dude.';
+				return 'Sorry, tracking the ENTIRE file system is not supported.';
 			}			
 			var f:File = new File('file://'+p);
 			if (!f.exists){
 				return 'Target not found.\nPlease check the file path.';
 			}
+			if (f.isPackage){
+				return 'Tracking Applications & binaries is not supported.';
+			}
+			if (p.indexOf('/Applications') == 0){
+				return 'Tracking Applications & binaries is not supported.';
+			}			
 			if (p.indexOf('/Volumes') == 0){
 				return 'Sorry, tracking files on external volumes is not yet supported.';
-			}
+			}			
 			var v:Vector.<Bookmark> = AppEngine.bookmarks;
 			for (var i:int = 0; i < v.length; i++) {
 				if (n == v[i].label) {

@@ -24,6 +24,7 @@ package model.proxies {
 		
 		public function getSummary():void
 		{
+			trace("HistoryProxy.getSummary()", AppModel.bookmark.label);
 			super.directory = AppModel.bookmark.gitdir;
 			super.queue = [	Vector.<String>([BashMethods.GET_LAST_COMMIT]),
 							Vector.<String>([BashMethods.GET_TOTAL_COMMITS]) ];
