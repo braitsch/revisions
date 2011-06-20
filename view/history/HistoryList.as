@@ -1,5 +1,6 @@
 package view.history {
 
+	import events.UIEvent;
 	import events.BookmarkEvent;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -61,6 +62,7 @@ package view.history {
 				addChild(item);
 			}
 			_unsaved.resize(stage.stageWidth - 204);
+			dispatchEvent(new UIEvent(UIEvent.HISTORY_DRAWN));
 		}
 		
 		private function onAddedToStage(e:Event):void

@@ -1,6 +1,6 @@
 package view{
 
-	import flash.events.MouseEvent;
+	import view.history.HistoryPreloader;
 	import events.BookmarkEvent;
 	import events.UIEvent;
 	import model.AppModel;
@@ -8,7 +8,9 @@ package view{
 	import com.greensock.TweenLite;
 	import flash.display.Shape;
 	import flash.display.Sprite;
+	import flash.events.MouseEvent;
 	import flash.filters.BlurFilter;
+	import flash.utils.setTimeout;
 
 	public class MainView extends Sprite {
 
@@ -16,6 +18,7 @@ package view{
 		private static var _curtain		:Sprite = new Sprite();
 		private static var _summary		:SummaryView = new SummaryView();
 		private static var _history		:HistoryView = new HistoryView();
+		private static var _preloader	:HistoryPreloader = new HistoryPreloader();
 
 		public function MainView()
 		{
@@ -23,6 +26,7 @@ package view{
 			addChild(_history);
 			addChild(_curtain);
 			addChild(_summary);
+			addChild(_preloader);
 			_curtain.visible = _summary.visible = false;
 			_curtain.addEventListener(MouseEvent.CLICK, onCurtainClick);
 			addEventListener(UIEvent.SHOW_HISTORY, onShowHistory);
@@ -37,10 +41,30 @@ package view{
 			_history.filters = [new BlurFilter(2, 2, 3)];
 		}
 		
-		private function onShowHistory(e:UIEvent):void { hideSummary(); }
-		private function onCurtainClick(e:MouseEvent):void { hideSummary(); }
+		private function onShowHistory(e:UIEvent):void { checkHistoryExists(); }
+		private function onCurtainClick(e:MouseEvent):void { checkHistoryExists(); }
+		
+	// request history if it doesn't exist so the user isn't left with an empty screen //	
+		private function checkHistoryExists():void
+		{
+			if (AppModel.bookmark.branch.history) {
+				hideSummary();			
+			}	else{
+				_preloader.show();
+				AppModel.proxies.history.getHistory();
+				addEventListener(UIEvent.HISTORY_DRAWN, onHistory);	
+			}
+		}
+		
+		private function onHistory(e:UIEvent):void
+		{
+			setTimeout(hideSummary, 1000);
+			AppModel.engine.removeEventListener(UIEvent.HISTORY_DRAWN, onHistory);	
+		}
+		
 		private function hideSummary():void
 		{
+			_preloader.hide();
 			_history.filters = [];
 			TweenLite.to(_curtain, .3, {alpha:0, onComplete:function():void{_curtain.visible=false;}});
 			TweenLite.to(_summary, .3, {alpha:0, onComplete:function():void{_summary.visible=false;}});
@@ -51,6 +75,8 @@ package view{
 			_summary.resize(h);
 			_history.resize(w, h);
 			_summary.x = Math.round(w/2 - 175);
+			_preloader.x = w/2;
+			_preloader.y = h/2 - 100;
 			_pattern.graphics.beginBitmapFill(new LtGreyPattern());	
 			_pattern.graphics.drawRect(0, 0, w, h);	
 			_pattern.graphics.endFill();
