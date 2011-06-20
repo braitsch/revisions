@@ -90,6 +90,7 @@ package view.modals {
 		
 		private function addNameAndEmail(e:InstallEvent):void
 		{
+			trace("ModalManager.addNameAndEmail(e)");
 			showModalWindow(_nameAndEmail);
 		}		
 

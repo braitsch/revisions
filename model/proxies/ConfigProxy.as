@@ -1,6 +1,5 @@
 package model.proxies {
 
-	import system.StringUtils;
 	import events.InstallEvent;
 	import events.NativeProcessEvent;
 	import model.air.NativeProcessQueue;
@@ -15,9 +14,8 @@ package model.proxies {
 		public function ConfigProxy()
 		{
 			super('Config.sh');
+			super.addEventListener(NativeProcessEvent.QUEUE_COMPLETE, onQueueComplete);
 			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);
-			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
-			super.addEventListener(NativeProcessEvent.QUEUE_COMPLETE, onShellQueueComplete);
 		}
 		
 	// this should only be called when first installing or updating git //	
@@ -26,12 +24,6 @@ package model.proxies {
 			super.queue = [	Vector.<String>([BashMethods.GET_VERSION])];
 		}
 
-		public function getUserNameAndEmail():void
-		{
-			super.queue = [	Vector.<String>([BashMethods.GET_USER_NAME]),
-							Vector.<String>([BashMethods.GET_USER_EMAIL])];				
-		}
-		
 		public function setUserNameAndEmail(n:String, e:String):void
 		{
 			super.queue = [	Vector.<String>([BashMethods.SET_USER_NAME, n]),
@@ -41,52 +33,44 @@ package model.proxies {
 	// public setters & getters //
 	
 		public function get userName():String { return _userName; }
-		public function get userEmail():String { return _userEmail; }
-
-		public function set userName($n:String):void
-		{
-			if ($n == _userName) return;
-			super.queue = [	Vector.<String>([BashMethods.SET_USER_NAME, $n])	];
-		}
-		
-		public function set userEmail($e:String):void
-		{
-			if ($e == _userEmail) return;
-			super.queue = [	Vector.<String>([BashMethods.SET_USER_EMAIL, $e])	];
-		}		
+		public function get userEmail():String { return _userEmail; }	
 		
 	// response handlers //			
 		
-		private function onShellQueueComplete(e:NativeProcessEvent):void 
+		private function onQueueComplete(e:NativeProcessEvent):void 
 		{
-			if (e.data.length == 2){
-				if (_userName == '' || _userEmail == ''){
-					dispatchEvent(new InstallEvent(InstallEvent.NAME_AND_EMAIL));
-				}	else{	
-					dispatchEvent(new InstallEvent(InstallEvent.GIT_SETTINGS));
-				}
+			if (e.data.length == 1){
+				checkGitVersionNumber(e.data[0] as String);
+			}	else if (e.data.length == 2){
+				checkUserNameAndEmail(e.data[0], e.data[1]);
 			}
 		}
-
-		private function onProcessComplete(e:NativeProcessEvent):void 
+		
+		private function checkGitVersionNumber(v:String):void
 		{
-			var r:String = StringUtils.trim(e.data.result);
-			trace("ConfigProxy.onProcessComplete(e)", e.data.method, r);
-			switch(e.data.method){
-				case BashMethods.GET_VERSION : 
-					_gitVersion = r.substring(12);
-					if (_gitVersion >= SystemRules.MIN_GIT_VERSION){
-						getUserNameAndEmail();
-					}	else{
-						dispatchEvent(new InstallEvent(InstallEvent.GIT_UNAVAILABLE, _gitVersion));
-					}
-				break;				
-				case BashMethods.GET_USER_NAME : _userName = r; 	break;
-				case BashMethods.SET_USER_NAME : _userName = r; 	break;
-				case BashMethods.GET_USER_EMAIL : _userEmail = r; 	break;
-				case BashMethods.SET_USER_EMAIL : _userEmail = r; 	break;
-			}
-		}			
+			_gitVersion = v.substring(12);
+			if (_gitVersion >= SystemRules.MIN_GIT_VERSION){
+				getUserNameAndEmail();
+			}	else{
+				dispatchEvent(new InstallEvent(InstallEvent.GIT_UNAVAILABLE, _gitVersion));
+			}			
+		}
+		
+		private function checkUserNameAndEmail(n:String, e:String):void
+		{
+			if (n == '' || e == ''){
+				dispatchEvent(new InstallEvent(InstallEvent.NAME_AND_EMAIL));
+			}	else{
+				_userName = n; _userEmail = e;
+				dispatchEvent(new InstallEvent(InstallEvent.GIT_SETTINGS));
+			}			
+		}
+
+		private function getUserNameAndEmail():void
+		{
+			super.queue = [	Vector.<String>([BashMethods.GET_USER_NAME]),
+							Vector.<String>([BashMethods.GET_USER_EMAIL])];				
+		}					
 		
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
