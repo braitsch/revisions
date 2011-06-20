@@ -21,23 +21,34 @@ package model.proxies {
 		}
 		
 	// this should only be called when first installing or updating git //	
-		public function loadGitSettings():void
+		public function getGitVersion():void
 		{
-			super.queue = [	Vector.<String>([BashMethods.GET_VERSION]),
-							Vector.<String>([BashMethods.GET_USER_NAME]),
-							Vector.<String>([BashMethods.GET_USER_EMAIL])];
-		}			
+			super.queue = [	Vector.<String>([BashMethods.GET_VERSION])];
+		}
 
+		public function getUserNameAndEmail():void
+		{
+			super.queue = [	Vector.<String>([BashMethods.GET_USER_NAME]),
+							Vector.<String>([BashMethods.GET_USER_EMAIL])];				
+		}
+		
+		public function setUserNameAndEmail(n:String, e:String):void
+		{
+			super.queue = [	Vector.<String>([BashMethods.SET_USER_NAME, n]),
+							Vector.<String>([BashMethods.SET_USER_EMAIL, e])];				
+		}
+				
 	// public setters & getters //
 	
 		public function get userName():String { return _userName; }
+		public function get userEmail():String { return _userEmail; }
+
 		public function set userName($n:String):void
 		{
 			if ($n == _userName) return;
 			super.queue = [	Vector.<String>([BashMethods.SET_USER_NAME, $n])	];
 		}
 		
-		public function get userEmail():String { return _userEmail; }
 		public function set userEmail($e:String):void
 		{
 			if ($e == _userEmail) return;
@@ -48,25 +59,25 @@ package model.proxies {
 		
 		private function onShellQueueComplete(e:NativeProcessEvent):void 
 		{
-			if (e.data.length == 3){
+			if (e.data.length == 2){
 				if (_userName == '' || _userEmail == ''){
 					dispatchEvent(new InstallEvent(InstallEvent.NAME_AND_EMAIL));
 				}	else{	
-					dispatchEvent(new InstallEvent(InstallEvent.GIT_IS_READY));
+					dispatchEvent(new InstallEvent(InstallEvent.GIT_SETTINGS));
 				}
-			}	else{
-				dispatchEvent(new InstallEvent(InstallEvent.GIT_SETTINGS));
 			}
 		}
 
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
 			var r:String = StringUtils.trim(e.data.result);
+			trace("ConfigProxy.onProcessComplete(e)", e.data.method, r);
 			switch(e.data.method){
 				case BashMethods.GET_VERSION : 
 					_gitVersion = r.substring(12);
-					if (_gitVersion < SystemRules.MIN_GIT_VERSION){
-						super.die();
+					if (_gitVersion >= SystemRules.MIN_GIT_VERSION){
+						getUserNameAndEmail();
+					}	else{
 						dispatchEvent(new InstallEvent(InstallEvent.GIT_UNAVAILABLE, _gitVersion));
 					}
 				break;				

@@ -5,7 +5,6 @@ package events {
 		
 		public static const GIT_UNAVAILABLE			:String = "GIT_UNAVAILABLE";
 		public static const GIT_INSTALL_COMPLETE	:String = "GIT_INSTALL_COMPLETE";
-		public static const GIT_IS_READY			:String = "GIT_IS_READY";
 		public static const GIT_SETTINGS			:String = "GIT_SETTINGS";
 		public static const APP_SETTINGS			:String = "APP_SETTINGS";
 		public static const NAME_AND_EMAIL			:String = "NAME_AND_EMAIL";

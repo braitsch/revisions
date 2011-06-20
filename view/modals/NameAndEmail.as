@@ -23,13 +23,8 @@ package view.modals {
 
 		private function onGitSettings(e:InstallEvent):void
 		{
-			if (!_config.userName || !_config.userEmail){
-				setUserNameAndEmail();
-			}	else{
-				dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-				_config.dispatchEvent(new InstallEvent(InstallEvent.GIT_IS_READY));
-				_config.removeEventListener(InstallEvent.GIT_SETTINGS, onGitSettings);				
-			}
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
+			_config.removeEventListener(InstallEvent.GIT_SETTINGS, onGitSettings);
 		}
 
 		private function onAddedToStage(e:Event):void
@@ -45,21 +40,11 @@ package view.modals {
 			var e:String = StringUtil.trim(_view.email_txt.text);
 			var m:String = NameAndEmail.validate(n, e);
 			if (m == ''){
-				setUserNameAndEmail();
+				_config.setUserNameAndEmail(n, e);
 			}	else{
 				dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, m));
 			}
 		}
-		
-		private function setUserNameAndEmail():void
-		{
-			if (!_config.userName){
-				_config.userName = StringUtil.trim(_view.name_txt.text);
-			}	else if (!_config.userEmail) {
-				_config.userEmail = StringUtil.trim(_view.email_txt.text);
-			}
-		}
-		
 		
 		public static function validate(n:String, e:String):String
 		{

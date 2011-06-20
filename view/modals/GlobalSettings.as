@@ -7,6 +7,8 @@ package view.modals {
 	import model.db.AppSettings;
 	import system.LicenseManager;
 	import view.ui.ModalCheckbox;
+	import mx.utils.StringUtil;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 
 	public class GlobalSettings extends ModalWindow {
@@ -28,8 +30,15 @@ package view.modals {
 			_view.check1.addEventListener(MouseEvent.CLICK, onCheck1);
 			_view.check2.addEventListener(MouseEvent.CLICK, onCheck2);
 			_view.check3.addEventListener(MouseEvent.CLICK, onCheck3);
+			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			AppModel.settings.addEventListener(InstallEvent.APP_SETTINGS, onUserSettings);
-			AppModel.proxies.config.addEventListener(InstallEvent.GIT_IS_READY, onGitSettings);
+		}
+
+		private function onAddedToStage(e:Event):void
+		{
+			_view.license_txt.text = LicenseManager.key;
+			_view.name_txt.text = AppModel.proxies.config.userName;
+			_view.email_txt.text = AppModel.proxies.config.userEmail;
 			AppModel.proxies.config.addEventListener(InstallEvent.GIT_SETTINGS, onGitSettings);
 		}
 
@@ -42,9 +51,8 @@ package view.modals {
 
 		private function onGitSettings(e:InstallEvent):void
 		{
-			_view.name_txt.text = AppModel.proxies.config.userName;
-			_view.email_txt.text = AppModel.proxies.config.userEmail;
-			_view.license_txt.text = LicenseManager.key;
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
+			AppModel.proxies.config.removeEventListener(InstallEvent.GIT_SETTINGS, onGitSettings);			
 		}
 		
 		private function onCheck1(e:MouseEvent):void
@@ -62,11 +70,16 @@ package view.modals {
 			AppSettings.setSetting(AppSettings.PROMPT_BEFORE_DOWNLOAD, _check3.selected);
 		}
 		
-		private function onOk(e:MouseEvent):void
+		private function onOk(evt:MouseEvent):void
 		{
-			AppModel.proxies.config.userName = _view.name_txt.text;
-			AppModel.proxies.config.userEmail = _view.email_txt.text;
-			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));			
+			var n:String = StringUtil.trim(_view.name_txt.text);
+			var e:String = StringUtil.trim(_view.email_txt.text);
+			var m:String = NameAndEmail.validate(n, e);
+			if (m == ''){
+				AppModel.proxies.config.setUserNameAndEmail(n, e);
+			}	else{
+				dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, m));
+			}	
 		}
 		
 	}

@@ -56,8 +56,8 @@ package {
 		private function onAppUpToDate(e:InstallEvent):void
 		{
 			AppModel.updater.removeEventListener(InstallEvent.APP_UP_TO_DATE, onAppUpToDate);
-			AppModel.proxies.config.loadGitSettings();
-			AppModel.proxies.config.addEventListener(InstallEvent.GIT_IS_READY, onGitReady);
+			AppModel.proxies.config.getGitVersion();
+			AppModel.proxies.config.addEventListener(InstallEvent.GIT_SETTINGS, onGitReady);
 		}
 
 		private function onGitReady(e:InstallEvent):void
@@ -65,7 +65,7 @@ package {
 			AppModel.database.init();
 			AirNativeMenu.initialize(stage);
 			AirContextMenu.initialize(stage);
-			AppModel.proxies.config.removeEventListener(InstallEvent.GIT_IS_READY, onGitReady);
+			AppModel.proxies.config.removeEventListener(InstallEvent.GIT_SETTINGS, onGitReady);
 			_initialized = true;
 		}
 		

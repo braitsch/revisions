@@ -66,7 +66,7 @@ package view.modals {
 			_view.message_txt.text+= _version == '0' ? 'Install' : 'Update';
 			_view.message_txt.text+= ' Complete!!';
 		// read and update the gui with newly installed git version //	
-			AppModel.proxies.config.loadGitSettings();
+			AppModel.proxies.config.getGitVersion();
 			AppModel.proxies.install.removeEventListener(InstallEvent.GIT_INSTALL_COMPLETE, onInstallComplete);
 		}
 		
