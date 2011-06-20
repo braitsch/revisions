@@ -1,5 +1,6 @@
 package model.proxies {
 
+	import system.StringUtils;
 	import events.InstallEvent;
 	import events.NativeProcessEvent;
 	import model.air.NativeProcessQueue;
@@ -48,7 +49,11 @@ package model.proxies {
 		private function onShellQueueComplete(e:NativeProcessEvent):void 
 		{
 			if (e.data.length == 3){
-				dispatchEvent(new InstallEvent(InstallEvent.GIT_IS_READY));
+				if (_userName == '' || _userEmail == ''){
+					dispatchEvent(new InstallEvent(InstallEvent.NAME_AND_EMAIL));
+				}	else{	
+					dispatchEvent(new InstallEvent(InstallEvent.GIT_IS_READY));
+				}
 			}	else{
 				dispatchEvent(new InstallEvent(InstallEvent.GIT_SETTINGS));
 			}
@@ -56,23 +61,25 @@ package model.proxies {
 
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
+			var r:String = StringUtils.trim(e.data.result);
 			switch(e.data.method){
 				case BashMethods.GET_VERSION : 
-					_gitVersion = e.data.result.substring(12);
+					_gitVersion = r.substring(12);
 					if (_gitVersion < SystemRules.MIN_GIT_VERSION){
 						super.die();
 						dispatchEvent(new InstallEvent(InstallEvent.GIT_UNAVAILABLE, _gitVersion));
 					}
 				break;				
-				case BashMethods.GET_USER_NAME : _userName = e.data.result; 	break;
-				case BashMethods.SET_USER_NAME : _userName = e.data.result; 	break;
-				case BashMethods.GET_USER_EMAIL : _userEmail = e.data.result; 	break;
-				case BashMethods.SET_USER_EMAIL : _userEmail = e.data.result; 	break;
+				case BashMethods.GET_USER_NAME : _userName = r; 	break;
+				case BashMethods.SET_USER_NAME : _userName = r; 	break;
+				case BashMethods.GET_USER_EMAIL : _userEmail = r; 	break;
+				case BashMethods.SET_USER_EMAIL : _userEmail = r; 	break;
 			}
 		}			
 		
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
+			trace("ConfigProxy.onProcessFailure(e)", e.data.method, e.data.result);
 			if (e.data.method == BashMethods.GET_VERSION){
 				super.die();
 				dispatchEvent(new InstallEvent(InstallEvent.GIT_UNAVAILABLE, '0'));				

@@ -8,6 +8,7 @@ package events {
 		public static const GIT_IS_READY			:String = "GIT_IS_READY";
 		public static const GIT_SETTINGS			:String = "GIT_SETTINGS";
 		public static const APP_SETTINGS			:String = "APP_SETTINGS";
+		public static const NAME_AND_EMAIL			:String = "NAME_AND_EMAIL";
 		
 		public static const APP_EXPIRED				:String = "APP_EXPIRED";
 		public static const APP_UP_TO_DATE			:String = "APP_UP_TO_DATE";
@@ -16,8 +17,7 @@ package events {
 		public static const UPDATE_PROGRESS			:String = "UPDATE_PROGRESS";
 		public static const UPDATE_COMPLETE			:String = "UPDATE_COMPLETE";
 		public static const UPDATE_FAILURE			:String = "UPDATE_FAILURE";
-		public static const GIT_DIR_UPDATED:String = "GIT_DIR_UPDATED";
-		public static const BROKEN_REMOVED:String = "BROKEN_REMOVED";
+		public static const GIT_DIR_UPDATED			:String = "GIT_DIR_UPDATED";
 		
 		public var data:Object;
 

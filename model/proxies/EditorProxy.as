@@ -21,6 +21,7 @@ package model.proxies {
 
 		public function commit($msg:String):void
 		{
+			trace("EditorProxy.commit($msg)", AppModel.proxies.config.userName);
 			super.directory = AppModel.bookmark.gitdir;
 			super.call(Vector.<String>([BashMethods.COMMIT, $msg]));
 		}

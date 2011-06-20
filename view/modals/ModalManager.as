@@ -24,6 +24,7 @@ package view.modals {
 		private static var _details			:CommitDetails = new CommitDetails();
 		private static var _settings		:GlobalSettings = new GlobalSettings();
 		private static var _updateApp		:UpdateApp = new UpdateApp();
+		private static var _nameAndEmail	:NameAndEmail = new NameAndEmail();
 		private static var _gitWindow		:GitWindow = new GitWindow();
 		private static var _alert			:Alert = new Alert();
 		private static var _expired			:AppExpired = new AppExpired();
@@ -39,6 +40,7 @@ package view.modals {
 			AppModel.engine.addEventListener(BookmarkEvent.PATH_ERROR, repairBookmark);
 			AppModel.engine.addEventListener(BookmarkEvent.NO_BOOKMARKS, showWelcomeScreen);
 			AppModel.updater.addEventListener(InstallEvent.UPDATE_AVAILABLE, promptToUpdate);
+			AppModel.proxies.config.addEventListener(InstallEvent.NAME_AND_EMAIL, addNameAndEmail);
 			AppModel.proxies.config.addEventListener(InstallEvent.GIT_UNAVAILABLE, installGit);
 		}
 
@@ -85,6 +87,11 @@ package view.modals {
 			_gitWindow.version = e.data as String;
 			showModalWindow(_gitWindow);
 		}	
+		
+		private function addNameAndEmail(e:InstallEvent):void
+		{
+			showModalWindow(_nameAndEmail);
+		}		
 
 		private function onDragAndDrop(e:UIEvent):void 
 		{
@@ -184,7 +191,7 @@ package view.modals {
 		
 		private function hideModalWindow():void
 		{
-			if (_gitWindow.installed == false) return;
+			if (checkGitIsInitialized() == false) return;
 			if (_window == _updateApp) checkAppIsInitialized();
 			if (_window) removeChild(_window);
 			if (_alert.stage) removeChild(_alert);
@@ -205,6 +212,14 @@ package view.modals {
 			removeChild(_alert);
 			if (_window) _window.filters = [];
 			if (_window == null) _curtain.hide();
+		}
+		
+		private function checkGitIsInitialized():Boolean
+		{
+			if (_gitWindow.installed == false) return false;
+			if (AppModel.proxies.config.userName == '') return false; 			
+			if (AppModel.proxies.config.userEmail == '') return false; 			
+			return true;
 		}
 		
 		private function checkAppIsInitialized():void

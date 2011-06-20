@@ -34,7 +34,7 @@ package model.vo {
 			_active = o.active;
 			this.path = o.path;
 			this.label = o.label;
-			trace('New Bookmark Created :: '+_label, _type, _path, _gitdir); 
+		//	trace('New Bookmark Created :: '+_label, _type, _path, _gitdir); 
 		}
 
 		public function get branch():Branch { return _branch; }		
