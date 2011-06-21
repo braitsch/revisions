@@ -1,10 +1,10 @@
 package view{
 
-	import view.history.HistoryPreloader;
 	import events.BookmarkEvent;
 	import events.UIEvent;
 	import model.AppModel;
 	import view.history.HistoryView;
+	import view.history.HistoryPreloader;
 	import com.greensock.TweenLite;
 	import flash.display.Shape;
 	import flash.display.Sprite;
@@ -76,7 +76,7 @@ package view{
 			_history.resize(w, h);
 			_summary.x = Math.round(w/2 - 175);
 			_preloader.x = w/2;
-			_preloader.y = h/2 - 100;
+			_preloader.y = h/2 - 50;
 			_pattern.graphics.beginBitmapFill(new LtGreyPattern());	
 			_pattern.graphics.drawRect(0, 0, w, h);	
 			_pattern.graphics.endFill();

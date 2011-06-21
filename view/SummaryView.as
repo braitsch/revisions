@@ -92,6 +92,7 @@ package view {
 
 		private function onBookmarkSelected(e:BookmarkEvent):void
 		{
+			if (_bookmark) removeBookmarkListeners();
 			_bookmark = e.data as Bookmark;
 			_view.name_txt.text = _bookmark.label;
 			_offset = (_view.name_txt.height-26)/2;
@@ -115,6 +116,12 @@ package view {
 			_bookmark.addEventListener(BookmarkEvent.EDITED, onBookmarkEdited);			
 			_bookmark.branch.addEventListener(BookmarkEvent.SUMMARY, onSummary);
 		}
+		
+		private function removeBookmarkListeners():void
+		{
+			_bookmark.removeEventListener(BookmarkEvent.EDITED, onBookmarkEdited);			
+			_bookmark.branch.removeEventListener(BookmarkEvent.SUMMARY, onSummary);
+		}		
 
 		private function onSummary(e:BookmarkEvent):void
 		{

@@ -50,7 +50,7 @@ package view.history {
 			
 			var a:Array = _bookmark.branch.history;
 			for (var i:int = 0; i < a.length; i++) {
-				var o:Object = {	index : String(a.length-i),
+				var o:Object = {	index : String(_bookmark.branch.totalCommits-i),
 									date 	: a[i][1],
 									author 	: a[i][2],
 									note 	: a[i][3],

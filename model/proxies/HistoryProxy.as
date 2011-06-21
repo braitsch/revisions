@@ -73,7 +73,7 @@ package model.proxies {
 
 		private function parseHistory(s:String):void
 		{
-			// always force a getStatus after we requesting the branch history //	
+		// always force a getStatus after we requesting the branch history //	
 			AppModel.proxies.status.getStatus();
 			AppModel.branch.history = s.split(/[\n\r\t]/g);
 			AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.HISTORY));			

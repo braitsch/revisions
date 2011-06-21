@@ -21,6 +21,7 @@ package model.vo {
 		
 		public function get name():String { return _name; }
 		public function get history():Array { return _history; }
+		public function get totalCommits():uint { return _totalCommits; }
 		public function get modified():uint { return _status[StatusProxy.M].length; }
 		public function get untracked():uint { return _status[StatusProxy.U].length; }
 				
