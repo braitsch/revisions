@@ -50,7 +50,8 @@ package view.modals {
 		{
 			var file:String = '';
 			var bkmk:Bookmark = AppModel.bookmark;
-			var saveAs:String = e.data.nativePath+'/'+bkmk.label+' Version '+_commit.index;
+			//TODO needs commit index fix
+			var saveAs:String = e.data.nativePath+'/'+bkmk.label+' Version XX';//+_commit.index;
 			if (bkmk.type == Bookmark.FILE){
 				file = bkmk.path;
 				saveAs += bkmk.path.substr(bkmk.path.lastIndexOf('.'));

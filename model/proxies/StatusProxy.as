@@ -2,20 +2,24 @@ package model.proxies {
 
 	import events.BookmarkEvent;
 	import events.NativeProcessEvent;
-	import flash.events.TimerEvent;
-	import flash.utils.Timer;
 	import model.AppModel;
 	import model.air.NativeProcessQueue;
+	import model.vo.Commit;
 	import system.BashMethods;
 	import system.SystemRules;
+	import flash.events.TimerEvent;
+	import flash.utils.Timer;
 
 	public class StatusProxy extends NativeProcessQueue {
 
-		public static const	T		:uint = 0; // tracked
-		public static const	U		:uint = 1; // untracked		public static const	M		:uint = 2; // modified		public static const	I		:uint = 3; // ignored
+		public static const	T			:uint = 0; // tracked
+		public static const	U			:uint = 1; // untracked		public static const	M			:uint = 2; // modified		public static const	I			:uint = 3; // ignored
 		
 	// automatically call getStatus every ten seconds // 	
-		private static var _timer	:Timer = new Timer(10000);		
+		private static var _timer		:Timer = new Timer(5000);
+		private static var _refreshing	:Boolean = false;
+		
+		static public function get refreshing():Boolean { return _refreshing; }		
 				public function StatusProxy()
 		{
 			super('Status.sh');
@@ -28,21 +32,58 @@ package model.proxies {
 		
 		public function getStatus(e:TimerEvent = null):void
 		{
-			_timer.reset();
-			_timer.start();					
+			_refreshing = true;
+			resetTimer();
 			super.directory = AppModel.bookmark.gitdir;
-			super.queue = getStatusTransaction();
-		//	trace("StatusProxy.getStatus() >> ", AppModel.bookmark.label, AppModel.branch.name);		}
+			super.queue = [	Vector.<String>([BashMethods.GET_TRACKED_FILES]), 
+							Vector.<String>([BashMethods.GET_UNTRACKED_FILES]),
+							Vector.<String>([BashMethods.GET_MODIFIED_FILES]),	
+							Vector.<String>([BashMethods.GET_IGNORED_FILES])];		
+		}
+				public function getSummary():void
+		{
+			_refreshing = true;
+			resetTimer();
+			super.directory = AppModel.bookmark.gitdir;
+			super.queue = [	Vector.<String>([BashMethods.GET_MODIFIED_FILES]),
+							Vector.<String>([BashMethods.GET_LAST_COMMIT]),
+							Vector.<String>([BashMethods.GET_TOTAL_COMMITS]) ];					
+		}
+		
+		public function resetTimer():void
+		{
+			_timer.reset();
+			_timer.start();	
+		}
 		
 	// private handlers //
 		
 		private function onQueueComplete(e:NativeProcessEvent):void
 		{
 			var a:Array = e.data as Array;
-			if (a.length == 4) parseFullBranchStatus(a);
+			switch (a.length){
+				case 3 : parseSummary(a);	break;
+				case 4 : parseStatus(a);	break;
+			}
+			_refreshing = false;
+		}
+		
+		private function parseSummary(a:Array):void
+		{
+			AppModel.branch.modified = splitAndTrim(a[0]).length;
+			AppModel.branch.lastCommit = new Commit(a[1]);
+			AppModel.branch.totalCommits = uint(a[2]) + 1;
+			AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.SUMMARY));			
 		}
 
-		private function parseFullBranchStatus(a:Array):void 
+		private function splitAndTrim(s:String):Array
+		{
+			var x:Array = s.split(/[\n\r\t]/g);
+			for (var i:int = 0; i < x.length; i++) if (x[i]=='') x.splice(i, 1);
+			return x;		
+		}
+
+		private function parseStatus(a:Array):void 
 		{
 			var i:int = 0, j:int = 0; 
 			var m:Boolean = false;
@@ -115,13 +156,6 @@ package model.proxies {
 		{
 			trace("StatusProxy.onProcessFailure(e)", e.data.method);
 		}
-		
-		private function getStatusTransaction():Array
-		{
-			return [	Vector.<String>([BashMethods.GET_TRACKED_FILES]), 
-						Vector.<String>([BashMethods.GET_UNTRACKED_FILES]),
-						Vector.<String>([BashMethods.GET_MODIFIED_FILES]),							Vector.<String>([BashMethods.GET_IGNORED_FILES])];											
-		}			
 
 	}
 	

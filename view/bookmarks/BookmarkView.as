@@ -16,7 +16,7 @@ package view.bookmarks {
 		private static var _header		:Sprite = new Sprite();		
 		private static var _list		:BookmarkList = new BookmarkList();
 		private static var _bkgd		:Shape = new Shape();
-		private static var _scroller	:Scroller = new Scroller();		
+		private static var _scroller	:Scroller = new Scroller();	
 
 		public function BookmarkView()
 		{
@@ -109,7 +109,7 @@ package view.bookmarks {
 			}	else if (_list.y < minY){
 				_list.y = minY;
 			}
-		}			
+		}
 		
 	}
 	

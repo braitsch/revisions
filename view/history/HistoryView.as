@@ -24,8 +24,10 @@ package view.history {
 			AppModel.engine.addEventListener(BookmarkEvent.ADDED, onAddition);
 			AppModel.engine.addEventListener(BookmarkEvent.DELETED, onDeletion);
 			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onSelection);
+			AppModel.engine.addEventListener(BookmarkEvent.SUMMARY, onSummary);
 			AppModel.engine.addEventListener(BookmarkEvent.STATUS, onStatus);
 			AppModel.engine.addEventListener(BookmarkEvent.HISTORY, onHistory);
+			AppModel.engine.addEventListener(BookmarkEvent.COMMIT_COMPLETE, onCommit);
 		}
 
 		private function onMouseWheel(e:MouseEvent):void
@@ -77,16 +79,26 @@ package view.history {
 		
 	// status / selection events //	
 		
-		private function onStatus(e:BookmarkEvent):void 
+		private function onCommit(e:BookmarkEvent):void
 		{
-			_activeList.onStatus();
-		}	
-	
+			_activeList.drawList(true);
+		}			
+		
 		private function onHistory(e:BookmarkEvent):void
 		{
-			_activeList.onHistory();
+			_activeList.drawList(false);
 		}			
-
+		
+		private function onStatus(e:BookmarkEvent):void 
+		{
+			_activeList.checkIfModified();
+		}	
+		
+		private function onSummary(e:BookmarkEvent):void
+		{
+			_activeList.checkIfModified();
+		}							
+		
 		private function onSelection(e:BookmarkEvent):void 
 		{
 			_activeList = null;

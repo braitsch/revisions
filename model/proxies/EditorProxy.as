@@ -1,14 +1,15 @@
 package model.proxies {
 
-	import events.InstallEvent;
-	import com.adobe.crypto.MD5;
 	import events.BookmarkEvent;
+	import events.InstallEvent;
 	import events.NativeProcessEvent;
-	import flash.filesystem.File;
 	import model.AppModel;
 	import model.air.NativeProcessProxy;
 	import model.vo.Bookmark;
+	import model.vo.Commit;
 	import system.BashMethods;
+	import com.adobe.crypto.MD5;
+	import flash.filesystem.File;
 
 	public class EditorProxy extends NativeProcessProxy {
 
@@ -71,11 +72,12 @@ package model.proxies {
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
-		//	trace("EditorProxy.onProcessComplete(e)", e.data.method, e.data.result);
+			trace("EditorProxy.onProcessComplete(e)", e.data.method, e.data.result);
 			switch(e.data.method){
 				case BashMethods.COMMIT : 
-			// refresh the app views after every commit //	
-					AppModel.proxies.history.getHistoryAndSummary();
+					AppModel.proxies.status.resetTimer();
+					AppModel.branch.addCommit(new Commit(e.data.result));
+					AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.COMMIT_COMPLETE));
 				break;
 				case BashMethods.INIT_FILE: 
 					dispatchEvent(new BookmarkEvent(BookmarkEvent.INITIALIZED));
@@ -97,7 +99,7 @@ package model.proxies {
 				break;				
 			}
 		}
-
+		
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
 			trace("EditorProxy.onProcessFailure(e)", e.data.method, e.data.result);

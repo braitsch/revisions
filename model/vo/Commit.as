@@ -3,27 +3,20 @@ package model.vo {
 	public class Commit {
 	
 		private var _sha1	:String;
-		private var _index	:String;
 		private var _date	:String;
 		private var _author	:String;
 		private var _note	:String;
-		private var _branch	:Branch;
 
-		public function Commit(o:Object)
+		public function Commit(s:String)
 		{
-			_index 	= o.index;
-			_sha1 	= o.sha1;
-			_date 	= o.date;
-			_author = o.author;
-			_note 	= o.note;
-			_branch = o.branch;
+			var a:Array = s.split('##');
+			_sha1 	= a[0];
+			_date 	= a[1];
+			_author = a[2];
+			_note 	= a[3];
+			if (_date == '0 seconds ago') _date = 'Just now';
 		}
 
-		public function get index():String
-		{
-			return _index;
-		}
-		
 		public function get sha1():String
 		{
 			return _sha1;
@@ -44,11 +37,6 @@ package model.vo {
 			return _note;
 		}
 		
-		public function get branch():Branch
-		{
-			return _branch;
-		}		
-
 	}
 	
 }

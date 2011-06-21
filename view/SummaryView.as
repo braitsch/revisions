@@ -44,8 +44,9 @@ package view {
 			initButtons();
 			initTextFields();
 			this.filters = [new DropShadowFilter(5, 45, 0, .5, 10, 10)];
-			AppModel.engine.addEventListener(BookmarkEvent.STATUS, onStatusReceived);
-			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onBookmarkSelected);			
+			AppModel.engine.addEventListener(BookmarkEvent.STATUS, onStatus);
+			AppModel.engine.addEventListener(BookmarkEvent.SUMMARY, onSummary);
+			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onSelected);			
 		}
 		
 		public function resize(h:uint):void
@@ -90,7 +91,7 @@ package view {
 			_details.lastSaved_txt.autoSize = TextFieldAutoSize.CENTER;
 		}
 
-		private function onBookmarkSelected(e:BookmarkEvent):void
+		private function onSelected(e:BookmarkEvent):void
 		{
 			if (_bookmark) removeBookmarkListeners();
 			_bookmark = e.data as Bookmark;
@@ -114,20 +115,12 @@ package view {
 		private function addBookmarkListeners():void
 		{
 			_bookmark.addEventListener(BookmarkEvent.EDITED, onBookmarkEdited);			
-			_bookmark.branch.addEventListener(BookmarkEvent.SUMMARY, onSummary);
 		}
 		
 		private function removeBookmarkListeners():void
 		{
 			_bookmark.removeEventListener(BookmarkEvent.EDITED, onBookmarkEdited);			
-			_bookmark.branch.removeEventListener(BookmarkEvent.SUMMARY, onSummary);
 		}		
-
-		private function onSummary(e:BookmarkEvent):void
-		{
-			_details.version_txt.text = 'Version #'+e.data.totalCommits as String;
-			_details.lastSaved_txt.text = 'Last Saved : '+e.data.lastCommit.date;
-		}
 
 		private function onBookmarkEdited(e:BookmarkEvent):void
 		{
@@ -145,7 +138,7 @@ package view {
 			if (_bookmark.type == Bookmark.FILE) _icon.y -= 10;
 		}
 
-		private function onStatusReceived(e:BookmarkEvent):void
+		private function onStatus(e:BookmarkEvent):void
 		{
 			var m:uint = _bookmark.branch.modified;
 			if (m > 0){
@@ -158,6 +151,13 @@ package view {
 				_details.save_btn.removeEventListener(MouseEvent.CLICK, onSaveButton);
 			}
 		}
+		
+		private function onSummary(e:BookmarkEvent):void
+		{
+			onStatus(e);
+			_details.version_txt.text = 'Version #'+_bookmark.branch.totalCommits as String;
+			_details.lastSaved_txt.text = 'Last Saved : '+_bookmark.branch.lastCommit.date;
+		}		
 
 	// button events //
 		

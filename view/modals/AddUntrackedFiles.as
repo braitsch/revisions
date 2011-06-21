@@ -22,7 +22,7 @@ package view.modals {
 		private function onAddedToStage(e:Event):void
 		{
 			var s:String = '';
-			s += 'This project '+AppModel.bookmark.label+' has '+AppModel.branch.untracked+' untracked files.<br>';
+	//		s += 'This project '+AppModel.bookmark.label+' has '+AppModel.branch.untracked+' untracked files.<br>';
 			s += 'Would you like me to start tracking all of them?<br>';
 			s += 'You can always toggle tracking off on each file later.';
 			_view.message_txt.htmlText = s;

@@ -2,16 +2,17 @@ package system {
 
 	import events.BookmarkEvent;
 	import events.UIEvent;
+	import model.AppModel;
+	import model.proxies.StatusProxy;
+	import model.vo.Bookmark;
+	import view.bookmarks.BookmarkListItem;
+	import view.layout.ListItem;
 	import flash.display.DisplayObject;
 	import flash.display.InteractiveObject;
 	import flash.display.Stage;
 	import flash.events.ContextMenuEvent;
 	import flash.ui.ContextMenu;
 	import flash.ui.ContextMenuItem;
-	import model.AppModel;
-	import model.vo.Bookmark;
-	import view.bookmarks.BookmarkListItem;
-	import view.layout.ListItem;
 
 	public class AirContextMenu {
 		
@@ -69,14 +70,16 @@ package system {
 			var cmi:ContextMenuItem = e.target as ContextMenuItem;
 			switch(cmi.label){
 				case 'Save Latest Version' : 
+					if (StatusProxy.refreshing) return;
 					_stage.dispatchEvent(new UIEvent(UIEvent.COMMIT, bkmk));	
 					AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.SELECTED, bkmk));	
-				break;				case 'Edit Bookmark Settings' : 
-					_stage.dispatchEvent(new UIEvent(UIEvent.EDIT_BOOKMARK, bkmk));	
-				break;				case 'Delete Bookmark' : 
-					_stage.dispatchEvent(new UIEvent(UIEvent.DELETE_BOOKMARK, bkmk));	
+				break;
+				case 'Edit Bookmark Settings' : 					_stage.dispatchEvent(new UIEvent(UIEvent.EDIT_BOOKMARK, bkmk));	
+				break;
+				case 'Delete Bookmark' : 					_stage.dispatchEvent(new UIEvent(UIEvent.DELETE_BOOKMARK, bkmk));	
 				break;
 				case 'Show Bookmark Summary' : 
+					if (StatusProxy.refreshing) return;
 					AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.SELECTED, bkmk));	
 				break;				
 			}
