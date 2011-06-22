@@ -41,7 +41,7 @@ package model.vo {
 			this.path = o.path;
 			this.label = o.label;
 			if (_autosave) initAutoSave();
-			trace('New Bookmark Created :: '+_label, _autosave); 
+		//	trace('New Bookmark Created :: '+_label, _autosave); 
 		}
 
 		public function get branch():Branch { return _branch; }		
@@ -132,14 +132,14 @@ package model.vo {
 		private function initAutoSave():void
 		{
 		//	_timer = new Timer(_autosave * 100);
-			_timer = new Timer(2000);
+			_timer = new Timer(8000);
 			_timer.addEventListener(TimerEvent.TIMER, onTimerEvent);
 			_timer.start();
 		}
 
 		private function onTimerEvent(e:TimerEvent):void
 		{
-			AppModel.proxies.status.autosave(this);	
+			AppModel.proxies.status.autoSave(this);	
 		}
 		
 	// static validation function //

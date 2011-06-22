@@ -4,10 +4,13 @@ package model.proxies {
 	import events.NativeProcessEvent;
 	import model.AppModel;
 	import model.air.NativeProcessQueue;
+	import model.vo.Bookmark;
 	import model.vo.Commit;
 	import system.BashMethods;
 
 	public class HistoryProxy extends NativeProcessQueue {
+		
+		private static var _bookmark		:Bookmark;		
 		
 		public function HistoryProxy()
 		{
@@ -16,9 +19,10 @@ package model.proxies {
 			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);			
 		}
 		
-		public function getHistory():void
+		public function getHistory($b:Bookmark = null):void
 		{
-			super.directory = AppModel.bookmark.gitdir;
+			_bookmark = $b ? $b : AppModel.bookmark;			
+			super.directory = _bookmark.gitdir;
 			super.queue = [	Vector.<String>([BashMethods.GET_HISTORY]) ];
 		}
 		
@@ -32,10 +36,10 @@ package model.proxies {
 		{
 			var a:Array = s.split(/[\n\r\t]/g);
 			var v:Vector.<Commit> = new Vector.<Commit>();
-			for (var i:int = 0; i < a.length; i++) v.push(new Commit(a[i], AppModel.branch.totalCommits-i));
-			AppModel.branch.history = v;
+			for (var i:int = 0; i < a.length; i++) v.push(new Commit(a[i], _bookmark.branch.totalCommits-i));
+			_bookmark.branch.history = v;
 			AppModel.proxies.status.resetTimer();			
-			AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.HISTORY));			
+			AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.HISTORY, _bookmark));			
 		}
 		
 		private function onProcessFailure(e:NativeProcessEvent):void 

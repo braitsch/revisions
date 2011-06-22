@@ -86,7 +86,7 @@ package view.modals {
 				path		:	_view.local_txt.text,
 				remote 		:	null,
 				active 		:	1,
-				autosave	:	_check1.selected
+				autosave	:	_check1.selected ? 60 : 0
 			};		
 			AppModel.engine.addBookmark(new Bookmark(o));
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));						

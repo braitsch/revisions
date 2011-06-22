@@ -26,7 +26,7 @@ package model {
 		public function addBookmark(b:Bookmark):void
 		{
 			_bookmark = b;
-			AppModel.database.addRepository(_bookmark.label, _bookmark.type, _bookmark.path, b.autosave);
+			AppModel.database.addRepository(_bookmark.label, _bookmark.type, _bookmark.path, _bookmark.autosave);
 			AppModel.database.addEventListener(DataBaseEvent.RECORD_ADDED, initBookmark);			
 		}
 		

@@ -81,14 +81,17 @@ package view.history {
 		
 		private function onCommit(e:BookmarkEvent):void
 		{
-			_activeList.drawList(true);
+			if (e.data.branch.history == null) return;
+			var hl:HistoryList = getListByBookmark(e.data as Bookmark);
+			if (hl) hl.drawList(false);
 		}			
 		
 		private function onHistory(e:BookmarkEvent):void
 		{
-			_activeList.drawList(false);
-		}			
-		
+			var hl:HistoryList = getListByBookmark(e.data as Bookmark);
+			if (hl) hl.drawList(false);
+		}
+
 		private function onStatus(e:BookmarkEvent):void 
 		{
 			_activeList.checkIfModified();
@@ -103,12 +106,18 @@ package view.history {
 		{
 			_activeList = null;
 			while(numChildren > 2) removeChildAt(0);
-			for (var i:int = 0; i < _lists.length; i++) if (_lists[i].bookmark == e.data) _activeList = _lists[i];
+			_activeList = getListByBookmark(e.data as Bookmark);
 			if (_activeList) {
 				_activeList.y = _listYpos;
 				addChildAt(_activeList, 0);
 			}
-		}		
+		}
+		
+		private function getListByBookmark(b:Bookmark):HistoryList
+		{
+			for (var i:int = 0; i < _lists.length; i++) if (_lists[i].bookmark == b) return _lists[i];
+			return null;
+		}				
 		
 	}
 	

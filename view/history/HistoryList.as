@@ -44,9 +44,7 @@ package view.history {
 			if (reset) _modified = 0;
 			while(numChildren) removeChildAt(0);
 			var a:Vector.<Commit> = _bookmark.branch.history;
-			for (var i:int = 0; i < a.length; i++) {
-				addChild(new HistoryItemSaved(a[i]));
-			}
+			for (var i:int = 0; i < a.length; i++) addChild(new HistoryItemSaved(a[i]));
 			sortList();						
 		}
 		
@@ -58,7 +56,7 @@ package view.history {
 			for (var i:int = 0; i < numChildren; i++) {
 				var k:HistoryItem = getChildAt(i) as HistoryItem;
 				k.y = i * 30;
-				k.resize(stage.stageWidth - 204);
+				if (stage) k.resize(stage.stageWidth - 204);
 				TweenLite.from(getChildAt(i), .2, {alpha:0, delay:i*.05});
 			}
 			dispatchEvent(new UIEvent(UIEvent.HISTORY_DRAWN));

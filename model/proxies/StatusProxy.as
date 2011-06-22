@@ -62,17 +62,16 @@ package model.proxies {
 			super.queue = [	Vector.<String>([BashMethods.GET_MODIFIED_FILES]) ]; 			
 		}
 		
+		public function autoSave(b:Bookmark):void
+		{
+			_autoSaveQueue.push(b);
+			if (!_working) getModified(_autoSaveQueue[0]);
+		}		
+		
 		public function resetTimer():void
 		{
 			_timer.reset();
 			_timer.start();	
-		}
-		
-		public function autosave(b:Bookmark):void
-		{
-			_autoSaveQueue.push(b);
-			trace('_autoSaveQueue length: ' + (_autoSaveQueue.length));
-			if (!_working) getModified(_autoSaveQueue[0]);
 		}
 		
 	// private handlers //
@@ -90,11 +89,27 @@ package model.proxies {
 		
 		private function onModified(a:Array):void
 		{
-			var m:uint = splitAndTrim(a[0]).length;
-			trace("StatusProxy.onModified(a)", m);
-			if (m > 0) AppModel.proxies.editor.commit('auto commit', _bookmark);
 			_autoSaveQueue.shift();
-			if (_autoSaveQueue.length) getModified(_autoSaveQueue[0]);	
+			trace("StatusProxy.onModified(a)", _bookmark.label, splitAndTrim(a[0]).length);
+			if (splitAndTrim(a[0]).length > 0) {
+				AppModel.engine.addEventListener(BookmarkEvent.COMMIT_COMPLETE, onCommitComplete);
+				AppModel.proxies.editor.commit('AutoSaved On : '+new Date().toLocaleString(), _bookmark);
+			}	else if (_autoSaveQueue.length > 0) {
+				getModified(_autoSaveQueue[0]);	
+			}	else{
+				trace('----------------------- queue is empty');
+			}
+		}
+
+		private function onCommitComplete(e:BookmarkEvent):void
+		{
+			trace("StatusProxy.onCommitComplete(e)", _bookmark.label);
+			if (_autoSaveQueue.length > 0) {
+				getModified(_autoSaveQueue[0]);	
+			}	else{
+				trace('----------------------- queue is empty');
+			}
+			AppModel.engine.removeEventListener(BookmarkEvent.COMMIT_COMPLETE, onCommitComplete);			
 		}
 		
 		private function parseSummary(a:Array):void
