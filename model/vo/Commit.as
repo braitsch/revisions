@@ -6,14 +6,16 @@ package model.vo {
 		private var _date	:String;
 		private var _author	:String;
 		private var _note	:String;
+		private var _index	:uint;
 
-		public function Commit(s:String)
+		public function Commit(s:String, n:uint)
 		{
 			var a:Array = s.split('##');
 			_sha1 	= a[0];
 			_date 	= a[1];
 			_author = a[2];
 			_note 	= a[3];
+			_index  = n;
 			if (_date == '0 seconds ago') _date = 'Just now';
 		}
 
@@ -36,6 +38,11 @@ package model.vo {
 		{
 			return _note;
 		}
+		
+		public function get index():uint
+		{
+			return _index;
+		}		
 		
 	}
 	

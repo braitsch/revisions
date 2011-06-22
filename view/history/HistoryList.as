@@ -45,7 +45,7 @@ package view.history {
 			while(numChildren) removeChildAt(0);
 			var a:Vector.<Commit> = _bookmark.branch.history;
 			for (var i:int = 0; i < a.length; i++) {
-				addChild(new HistoryItemSaved(a[i], _bookmark.branch.totalCommits-i));
+				addChild(new HistoryItemSaved(a[i]));
 			}
 			sortList();						
 		}
@@ -54,11 +54,7 @@ package view.history {
 	
 		private function sortList():void
 		{
-			if (_modified > 0) {
-				addChildAt(_unsaved, 0);
-			}	else if (_modified == 0 && _unsaved.stage) {
-				removeChildAt(0);
-			}
+			showHideUnsaved();
 			for (var i:int = 0; i < numChildren; i++) {
 				var k:HistoryItem = getChildAt(i) as HistoryItem;
 				k.y = i * 30;
@@ -66,7 +62,16 @@ package view.history {
 				TweenLite.from(getChildAt(i), .2, {alpha:0, delay:i*.05});
 			}
 			dispatchEvent(new UIEvent(UIEvent.HISTORY_DRAWN));
-		}	
+		}
+		
+		private function showHideUnsaved():void
+		{
+			if (_modified > 0) {
+				addChildAt(_unsaved, 0);
+			}	else if (_modified == 0 && _unsaved.stage) {
+				removeChildAt(0);
+			}				
+		}
 		
 		private function onAddedToStage(e:Event):void
 		{

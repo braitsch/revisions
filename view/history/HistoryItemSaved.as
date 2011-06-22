@@ -14,13 +14,13 @@ package view.history {
 		private var _buttons		:Array;
 		private var _commit			:Commit;
 
-		public function HistoryItemSaved(c:Commit, n:uint)
+		public function HistoryItemSaved(c:Commit)
 		{
 			super(_view);
 			_commit = c;
-			_view.num_txt.text = n.toString();
 			_view.time_txt.text = _commit.date;
 			_view.details_txt.text = _commit.note;
+			_view.num_txt.text = _commit.index.toString();
 			addButtons();
 			addChild(_bkgd);
 			addChild(_view);

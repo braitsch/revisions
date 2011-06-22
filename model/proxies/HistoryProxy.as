@@ -32,7 +32,7 @@ package model.proxies {
 		{
 			var a:Array = s.split(/[\n\r\t]/g);
 			var v:Vector.<Commit> = new Vector.<Commit>();
-			for (var i:int = 0; i < a.length; i++) v.push(new Commit(a[i]));
+			for (var i:int = 0; i < a.length; i++) v.push(new Commit(a[i], AppModel.branch.totalCommits-i));
 			AppModel.branch.history = v;
 			AppModel.proxies.status.resetTimer();			
 			AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.HISTORY));			

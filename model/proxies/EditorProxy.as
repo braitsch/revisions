@@ -76,7 +76,7 @@ package model.proxies {
 			switch(e.data.method){
 				case BashMethods.COMMIT : 
 					AppModel.proxies.status.resetTimer();
-					AppModel.branch.addCommit(new Commit(e.data.result));
+					AppModel.branch.addCommit(new Commit(e.data.result, AppModel.branch.totalCommits+1));
 					AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.COMMIT_COMPLETE));
 				break;
 				case BashMethods.INIT_FILE: 

@@ -70,9 +70,10 @@ package model.proxies {
 		
 		private function parseSummary(a:Array):void
 		{
+			var n:uint = uint(a[2]) + 1;
 			AppModel.branch.modified = splitAndTrim(a[0]).length;
-			AppModel.branch.lastCommit = new Commit(a[1]);
-			AppModel.branch.totalCommits = uint(a[2]) + 1;
+			AppModel.branch.totalCommits = n;
+			AppModel.branch.lastCommit = new Commit(a[1], n);
 			AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.SUMMARY));			
 		}
 
