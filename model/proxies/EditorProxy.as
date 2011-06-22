@@ -12,6 +12,8 @@ package model.proxies {
 	import flash.filesystem.File;
 
 	public class EditorProxy extends NativeProcessProxy {
+		
+		private static var _bookmark:Bookmark;
 
 		public function EditorProxy()
 		{
@@ -19,11 +21,11 @@ package model.proxies {
 			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 		}
-
-		public function commit($msg:String):void
+		
+		public function commit($msg:String, $b:Bookmark = null):void
 		{
-			trace("EditorProxy.commit($msg)", AppModel.proxies.config.userName);
-			super.directory = AppModel.bookmark.gitdir;
+			_bookmark = $b ? $b : AppModel.bookmark;
+			super.directory = _bookmark.gitdir;
 			super.call(Vector.<String>([BashMethods.COMMIT, $msg]));
 		}
 		
@@ -72,11 +74,11 @@ package model.proxies {
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
-		//	trace("EditorProxy.onProcessComplete(e)", e.data.method, e.data.result);
+			trace("EditorProxy.onProcessComplete(e)", e.data.method, e.data.result);
 			switch(e.data.method){
 				case BashMethods.COMMIT : 
 					AppModel.proxies.status.resetTimer();
-					AppModel.branch.addCommit(new Commit(e.data.result, AppModel.branch.totalCommits+1));
+					_bookmark.branch.addCommit(new Commit(e.data.result, AppModel.branch.totalCommits+1));
 					AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.COMMIT_COMPLETE));
 				break;
 				case BashMethods.INIT_FILE: 

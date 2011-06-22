@@ -5,6 +5,7 @@ package view.modals {
 	import model.AppModel;
 	import model.vo.Bookmark;
 	import system.FileBrowser;
+	import view.ui.ModalCheckbox;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
 
@@ -12,10 +13,12 @@ package view.modals {
 
 		private static var _view		:NewBookmarkMC = new NewBookmarkMC();
 		private static var _browser		:FileBrowser = new FileBrowser();
+		private static var _check1		:ModalCheckbox = new ModalCheckbox(_view.check1, true);		
 
 		public function NewBookmark()
 		{
 			addChild(_view);
+			_check1.label = 'Autosave Every 60 Minutes';			
 			_view.name_txt.text = _view.local_txt.text = ''; 
 			_view.browse_btn.addEventListener(MouseEvent.CLICK, showFileBrowser);
 			_view.action_btn.addEventListener(MouseEvent.CLICK, onActionButtonClick);
@@ -73,16 +76,17 @@ package view.modals {
 		{
 			dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, 'GitHub & Beanstalk integration is coming in the next build.'));
 		}
-
+		
 		private function initNewBookmark():void
 		{
 			var b:Boolean = new File('file://'+_view.local_txt.text).isDirectory;
 			var o:Object = {
-				label	:	_view.name_txt.text,
-				type	: 	b ? Bookmark.FOLDER : Bookmark.FILE,
-				path	:	_view.local_txt.text,
-				remote 	:	null,
-				active 	:	1
+				label		:	_view.name_txt.text,
+				type		: 	b ? Bookmark.FOLDER : Bookmark.FILE,
+				path		:	_view.local_txt.text,
+				remote 		:	null,
+				active 		:	1,
+				autosave	:	_check1.selected
 			};		
 			AppModel.engine.addBookmark(new Bookmark(o));
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));						

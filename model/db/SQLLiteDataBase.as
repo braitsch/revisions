@@ -42,9 +42,9 @@ package model.db {
 
 //	private methods		
 
-		private function onSQLResult(e:SQLEvent):void 
+		private function onSQLResult(e:SQLEvent = null):void 
 		{
-			_results.push(e.target.getResult());
+			if (e) _results.push(e.target.getResult());
 			_queue.shift();
 			if (_queue.length) {
 				_queue[0].execute();
@@ -81,6 +81,7 @@ package model.db {
 			log("SQLLiteDataBase.onDatabaseError(e)");
 		    log("Error Message:", e.error.message);
     		log("Error Details:", e.error.details);
+    		onSQLResult();
 		}
 
 		private function onDatabaseClose(e:SQLEvent):void 

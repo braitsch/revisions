@@ -1,5 +1,7 @@
 package model.vo {
 
+	import model.AppModel;
+	import flash.events.TimerEvent;
 	import events.BookmarkEvent;
 	import model.AppEngine;
 	import system.StringUtils;
@@ -7,6 +9,7 @@ package model.vo {
 	import flash.display.Bitmap;
 	import flash.events.EventDispatcher;
 	import flash.filesystem.File;
+	import flash.utils.Timer;
 
 	public class Bookmark extends EventDispatcher {
 
@@ -18,9 +21,11 @@ package model.vo {
 		private var _type				:String; 	// is either FILE or FOLDER //
 		private var _gitdir				:String;	// location of the actual .git directory	
 		private var _remote				:String;	// github or beanstalk location this links to //
-		private var _active				:Boolean;	
+		private var _active				:Boolean;
+		private var _autosave			:uint;	
 		
 		private var _file				:File;		// for internal use only //
+		private var _timer				:Timer;
 		private var _icon32				:Bitmap;
 		private var _icon128			:Bitmap;
 		private var _stash				:Array = [];
@@ -32,9 +37,11 @@ package model.vo {
 			_type = o.type;
 			_remote = o.remote;
 			_active = o.active;
+			_autosave = o.autosave;
 			this.path = o.path;
 			this.label = o.label;
-		//	trace('New Bookmark Created :: '+_label, _type, _path, _gitdir); 
+			if (_autosave) initAutoSave();
+			trace('New Bookmark Created :: '+_label, _autosave); 
 		}
 
 		public function get branch():Branch { return _branch; }		
@@ -47,6 +54,7 @@ package model.vo {
 		public function get icon32():Bitmap { return _icon32; }
 		public function get icon128():Bitmap { return _icon128; }
 		public function get type():String { return _type; }
+		public function get autosave():uint { return _autosave; }
 		public function get exists():Boolean { return _file.exists; }
 		public function get gitdir():String { return _gitdir;}
 		public function get worktree():String { return _file.parent.nativePath; }
@@ -121,6 +129,19 @@ package model.vo {
 			return _branches[i];
 		}
 		
+		private function initAutoSave():void
+		{
+		//	_timer = new Timer(_autosave * 100);
+			_timer = new Timer(2000);
+			_timer.addEventListener(TimerEvent.TIMER, onTimerEvent);
+			_timer.start();
+		}
+
+		private function onTimerEvent(e:TimerEvent):void
+		{
+			AppModel.proxies.status.autosave(this);	
+		}
+		
 	// static validation function //
 	
 		public static function validate(n:String, p:String, b:Bookmark = null):String
@@ -159,7 +180,7 @@ package model.vo {
 			}
 			return '';
 		}
-		
+
 	}
 	
 }

@@ -27,7 +27,6 @@ package view.modals {
 			_check1.label = 'Autosave Every 60 Minutes';
 			_view.local_txt.selectable = false;
 			_browser.addEventListener(UIEvent.FILE_BROWSER_SELECTION, onFileSelection);
-			_view.check1.addEventListener(MouseEvent.CLICK, onAutosaveCheck);
 			_view.browse_btn.addEventListener(MouseEvent.CLICK, onBrowseButton);
 			_view.delete_btn.addEventListener(MouseEvent.CLICK, onDeleteButton);
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onUpdateBookmark);
@@ -61,12 +60,6 @@ package view.modals {
 		private function onDeleteButton(e:MouseEvent):void
 		{
 			dispatchEvent(new UIEvent(UIEvent.DELETE_BOOKMARK, _bookmark));				
-		}
-		
-		private function onAutosaveCheck(e:MouseEvent):void
-		{
-		//TODO write autosave value to the database //	
-			trace("EditBookmark.onAutosaveCheck(e)", _check1.selected);
 		}
 		
 		private function onGitHubButton(e:MouseEvent):void
@@ -108,8 +101,9 @@ package view.modals {
 		
 		private function updateDatabase():void
 		{
+			var autosave:uint = _check1.selected ? 60 : 0;
 			AppModel.database.addEventListener(DataBaseEvent.RECORD_EDITED, onEditSuccessful);
-			AppModel.database.editRepository(_bookmark.label, _view.name_txt.text, _view.local_txt.text);				
+			AppModel.database.editRepository(_bookmark.label, _view.name_txt.text, _view.local_txt.text, autosave);				
 		}
 		
 		private function onEditSuccessful(e:DataBaseEvent):void 

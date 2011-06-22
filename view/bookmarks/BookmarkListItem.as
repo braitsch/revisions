@@ -51,7 +51,7 @@ package view.bookmarks {
 
 		private function onBookmarkSelected(e:MouseEvent):void
 		{
-			if (StatusProxy.refreshing == false){
+			if (StatusProxy.working == false){
 				AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.SELECTED, _bookmark));
 			}
 		}

@@ -9,7 +9,7 @@ package model.db {
 		private static var _db					:SQLLiteDataBase;
 		private static var _open				:Vector.<SQLStatement>;		private static var _add					:Vector.<SQLStatement>;
 		private static var _edit				:Vector.<SQLStatement>;		private static var _delete				:Vector.<SQLStatement>;		private static var _setActive			:Vector.<SQLStatement>;
-		private static var _repositories		:Array;
+		private static var _bookmarks			:Array;
 		
 		public function AppDatabase()
 		{
@@ -32,10 +32,10 @@ package model.db {
 			_db.execute(_open, true);
 		}
 
-		public function addRepository($label:String, $type:String, $path:String):void
+		public function addRepository($label:String, $type:String, $path:String, $autosave:uint):void
 		{
 			_add = new Vector.<SQLStatement>();
-			_add.push(AppSQLQuery.CLEAR_ACTIVE);				_add.push(AppSQLQuery.INSERT($label, $type, $path));	
+			_add.push(AppSQLQuery.CLEAR_ACTIVE);				_add.push(AppSQLQuery.INSERT($label, $type, $path, $autosave));	
 			_add.push(AppSQLQuery.READ_REPOSITORIES);
 			_db.execute(_add, true);	
 		}
@@ -49,10 +49,10 @@ package model.db {
 			_db.execute(_delete, true);
 		}	
 
-		public function editRepository($oldId:String, $newId:String, $path:String):void 
+		public function editRepository($oldId:String, $newId:String, $path:String, $autosave:uint):void 
 		{
 			_edit = new Vector.<SQLStatement>();	
-			_edit.push(AppSQLQuery.EDIT($oldId, $newId, $path));						
+			_edit.push(AppSQLQuery.EDIT($oldId, $newId, $path, $autosave));						
 			_edit.push(AppSQLQuery.READ_REPOSITORIES);
 			_db.execute(_edit, true);			
 		}		
@@ -67,15 +67,15 @@ package model.db {
 		
 		private function getNextActiveRepository($old:String):String 
 		{
-			if (_repositories.length == 1) return '';
-			for (var i:int = 0; i < _repositories.length; i++) if (_repositories[i].label == $old) break;
-			if (i == _repositories.length - 1) {
+			if (_bookmarks.length == 1) return '';
+			for (var i:int = 0; i < _bookmarks.length; i++) if (_bookmarks[i].label == $old) break;
+			if (i == _bookmarks.length - 1) {
 				i --;
 			}	else if (i == 0){
 				i = 1;
 			}	else{
 				i ++;			}
-			return _repositories[i].label;
+			return _bookmarks[i].label;
 		}		
 
 		private function onTransactionComplete(e:DataBaseEvent):void 
@@ -83,16 +83,16 @@ package model.db {
 			switch(e.data.transaction as Vector.<SQLStatement>){
 				case _open:	
 					trace("AppDatabase.onTransactionComplete(e) : initDataBase", e.data.result);
-					_repositories = e.data.result[1].data || [];					dispatchEvent(new DataBaseEvent(DataBaseEvent.BOOKMARKS_READ, _repositories));
+					_bookmarks = e.data.result[1].data || [];					dispatchEvent(new DataBaseEvent(DataBaseEvent.BOOKMARKS_READ, _bookmarks));
 				break;				case _add:	
-					trace("AppDatabase.onTransactionComplete(e) : addRepository");					_repositories = e.data.result[2].data || [];					dispatchEvent(new DataBaseEvent(DataBaseEvent.RECORD_ADDED, _repositories));
+					trace("AppDatabase.onTransactionComplete(e) : addRepository");					_bookmarks = e.data.result[2].data || [];					dispatchEvent(new DataBaseEvent(DataBaseEvent.RECORD_ADDED, _bookmarks));
 				break;				case _edit:						trace("AppDatabase.onTransactionComplete(e) : editRepository");
-					_repositories = e.data.result[1].data || [];
-					dispatchEvent(new DataBaseEvent(DataBaseEvent.RECORD_EDITED, _repositories));
+					_bookmarks = e.data.result[1].data || [];
+					dispatchEvent(new DataBaseEvent(DataBaseEvent.RECORD_EDITED, _bookmarks));
 				break;				
 				case _delete:	
-					_repositories = e.data.result[2].data || [];
-					dispatchEvent(new DataBaseEvent(DataBaseEvent.RECORD_DELETED, _repositories));
+					_bookmarks = e.data.result[2].data || [];
+					dispatchEvent(new DataBaseEvent(DataBaseEvent.RECORD_DELETED, _bookmarks));
 					trace("AppDatabase.onTransactionComplete(e) : deleteRepository");
 				break;	
 				case _setActive:	

@@ -70,7 +70,7 @@ package system {
 			var cmi:ContextMenuItem = e.target as ContextMenuItem;
 			switch(cmi.label){
 				case 'Save Latest Version' : 
-					if (StatusProxy.refreshing) return;
+					if (StatusProxy.working) return;
 					_stage.dispatchEvent(new UIEvent(UIEvent.COMMIT, bkmk));	
 					AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.SELECTED, bkmk));	
 				break;
@@ -79,7 +79,7 @@ package system {
 				case 'Delete Bookmark' : 					_stage.dispatchEvent(new UIEvent(UIEvent.DELETE_BOOKMARK, bkmk));	
 				break;
 				case 'Show Bookmark Summary' : 
-					if (StatusProxy.refreshing) return;
+					if (StatusProxy.working) return;
 					AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.SELECTED, bkmk));	
 				break;				
 			}

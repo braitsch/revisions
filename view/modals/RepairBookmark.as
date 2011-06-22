@@ -88,7 +88,7 @@ package view.modals {
 		private function updateDatabase():void
 		{
 			AppModel.database.addEventListener(DataBaseEvent.RECORD_EDITED, onEditSuccessful);
-			AppModel.database.editRepository(_bookmark.label, _view.name_txt.text, _view.local_txt.text);				
+			AppModel.database.editRepository(_bookmark.label, _view.name_txt.text, _view.local_txt.text, _bookmark.autosave);				
 		}		
 		
 		private function onEditSuccessful(e:DataBaseEvent = null):void

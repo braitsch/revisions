@@ -4,6 +4,7 @@ package model.proxies {
 	import events.NativeProcessEvent;
 	import model.AppModel;
 	import model.air.NativeProcessQueue;
+	import model.vo.Bookmark;
 	import model.vo.Commit;
 	import system.BashMethods;
 	import system.SystemRules;
@@ -16,10 +17,12 @@ package model.proxies {
 		public static const	U			:uint = 1; // untracked		public static const	M			:uint = 2; // modified		public static const	I			:uint = 3; // ignored
 		
 	// automatically call getStatus every ten seconds // 	
-		private static var _timer		:Timer = new Timer(5000);
-		private static var _refreshing	:Boolean = false;
+		private static var _timer			:Timer = new Timer(5000);
+		private static var _working			:Boolean = false;
+		private static var _bookmark		:Bookmark;
+		private static var _autoSaveQueue	:Array = [];
 		
-		static public function get refreshing():Boolean { return _refreshing; }		
+		static public function get working():Boolean { return _working; }		
 				public function StatusProxy()
 		{
 			super('Status.sh');
@@ -32,7 +35,7 @@ package model.proxies {
 		
 		public function getStatus(e:TimerEvent = null):void
 		{
-			_refreshing = true;
+			_working = true;
 			resetTimer();
 			super.directory = AppModel.bookmark.gitdir;
 			super.queue = [	Vector.<String>([BashMethods.GET_TRACKED_FILES]), 
@@ -42,12 +45,21 @@ package model.proxies {
 		}
 				public function getSummary():void
 		{
-			_refreshing = true;
+			_working = true;
 			resetTimer();
 			super.directory = AppModel.bookmark.gitdir;
 			super.queue = [	Vector.<String>([BashMethods.GET_MODIFIED_FILES]),
 							Vector.<String>([BashMethods.GET_LAST_COMMIT]),
 							Vector.<String>([BashMethods.GET_TOTAL_COMMITS]) ];					
+		}
+		
+		public function getModified(b:Bookmark):void
+		{
+			_working = true;
+			resetTimer();
+			_bookmark = b;
+			super.directory = _bookmark.gitdir;			
+			super.queue = [	Vector.<String>([BashMethods.GET_MODIFIED_FILES]) ]; 			
 		}
 		
 		public function resetTimer():void
@@ -56,16 +68,33 @@ package model.proxies {
 			_timer.start();	
 		}
 		
+		public function autosave(b:Bookmark):void
+		{
+			_autoSaveQueue.push(b);
+			trace('_autoSaveQueue length: ' + (_autoSaveQueue.length));
+			if (!_working) getModified(_autoSaveQueue[0]);
+		}
+		
 	// private handlers //
 		
 		private function onQueueComplete(e:NativeProcessEvent):void
 		{
 			var a:Array = e.data as Array;
 			switch (a.length){
+				case 1 : onModified(a);		break;
 				case 3 : parseSummary(a);	break;
 				case 4 : parseStatus(a);	break;
 			}
-			_refreshing = false;
+			_working = false;
+		}
+		
+		private function onModified(a:Array):void
+		{
+			var m:uint = splitAndTrim(a[0]).length;
+			trace("StatusProxy.onModified(a)", m);
+			if (m > 0) AppModel.proxies.editor.commit('auto commit', _bookmark);
+			_autoSaveQueue.shift();
+			if (_autoSaveQueue.length) getModified(_autoSaveQueue[0]);	
 		}
 		
 		private function parseSummary(a:Array):void
