@@ -39,7 +39,6 @@ package view.modals {
 			_bookmark = b;
 			_view.name_txt.text = _bookmark.label;
 			_view.local_txt.text = _bookmark.path;
-			trace('_bookmark.autosave: ' + (_bookmark.autosave));
 			_check1.selected = _bookmark.autosave != 0;
 		//TODO decide wether we're going to allow file path editing...
 			_view.browse_btn.visible = false;

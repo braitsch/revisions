@@ -32,9 +32,12 @@ package view{
 			_curtain.addEventListener(MouseEvent.CLICK, onCurtainClick);
 			_summary.addEventListener(UIEvent.SHOW_HISTORY, onShowHistory);
 			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, showSummary);
-			AppModel.engine.addEventListener(BookmarkEvent.LOADED, hideLoader);
-			AppModel.proxies.config.addEventListener(InstallEvent.GIT_SETTINGS, showLoader);			
+			AppModel.engine.addEventListener(InstallEvent.INIT_START, showLoader);
+			AppModel.engine.addEventListener(InstallEvent.INIT_COMPLETE, hideLoader);
 		}
+		
+	// need to either expose preloader, or listen for events that show when db is opened
+	// and hide it when the bookmark view is done building all the bookmarks.	
 		
 		public function resize(w:uint, h:uint):void
 		{
@@ -68,6 +71,9 @@ package view{
 		private function checkHistoryExists():void
 		{
 			if (AppModel.bookmark.branch.history) {
+		// TODO should check here if history has changed, and if so refresh view..
+		// instead of just hiding the summary window. it we don't refresh history we won't see commits
+		// that were autosaved behind the scenes.		
 				hideSummary();			
 			}	else{
 				_preloader.show();
@@ -95,7 +101,7 @@ package view{
 			_preloader.show();
 		}
 		
-		private function hideLoader(e:BookmarkEvent):void 
+		private function hideLoader(e:InstallEvent):void 
 		{
 			_preloader.hide();
 		}			

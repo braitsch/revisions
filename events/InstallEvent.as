@@ -18,6 +18,9 @@ package events {
 		public static const UPDATE_FAILURE			:String = "UPDATE_FAILURE";
 		public static const GIT_DIR_UPDATED			:String = "GIT_DIR_UPDATED";
 		
+		public static const INIT_START				:String = 'initStart';
+		public static const INIT_COMPLETE			:String = 'initComplete';
+		
 		public var data:Object;
 
 		public function InstallEvent($type:String, $data:Object = null)

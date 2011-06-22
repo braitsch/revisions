@@ -2,6 +2,7 @@ package model {
 
 	import events.BookmarkEvent;
 	import events.DataBaseEvent;
+	import events.InstallEvent;
 	import model.vo.Bookmark;
 	import flash.events.EventDispatcher;
 
@@ -122,6 +123,7 @@ package model {
 			}
 			if (x.length == 0) {
 				buildBookmarksFromDatabase();
+				dispatchEvent(new InstallEvent(InstallEvent.INIT_START));	
 			}	else{
 				dispatchEvent(new BookmarkEvent(BookmarkEvent.PATH_ERROR, x));
 			}		}		
@@ -142,7 +144,7 @@ package model {
 			}	else{
 				_bookmarksReady = true;
 				AppModel.proxies.branch.removeEventListener(BookmarkEvent.BRANCHES_READ, getStashOfNextBookmark);
-				AppModel.proxies.branch.removeEventListener(BookmarkEvent.STASH_LIST_READ, onStoredBookmarkReady);
+				AppModel.proxies.branch.removeEventListener(BookmarkEvent.STASH_LIST_READ, onStoredBookmarkReady);			
 				dispatchEvent(new BookmarkEvent(BookmarkEvent.LOADED, _bookmarks));
 				dispatchActiveBookmark();
 			}
