@@ -1,11 +1,11 @@
 package view.history {
 
 	import events.BookmarkEvent;
+	import model.AppModel;
+	import model.vo.Bookmark;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
-	import model.AppModel;
-	import model.vo.Bookmark;
 
 	public class HistoryView extends Sprite {
 
@@ -81,19 +81,19 @@ package view.history {
 		private function onHistory(e:BookmarkEvent):void
 		{
 			var hl:HistoryList = getListByBookmark(e.data as Bookmark);
-			if (hl) hl.drawList(false);
+			if (hl) hl.checkIfChanged();
 		}
 
 		private function onStatus(e:BookmarkEvent):void 
 		{
 			var hl:HistoryList = getListByBookmark(e.data as Bookmark);
-			if (hl) hl.checkIfModified();
+			if (hl) hl.checkIfChanged();
 		}	
 		
 		private function onSummary(e:BookmarkEvent):void
 		{
 			var hl:HistoryList = getListByBookmark(e.data as Bookmark);
-			if (hl) hl.checkIfModified();
+			if (hl) hl.checkIfChanged();
 		}							
 		
 		private function onSelection(e:BookmarkEvent):void 

@@ -9,8 +9,9 @@ package view.history {
 
 	public class HistoryList extends Sprite {
 
+		private var _hLength			:uint;	// cached history length
+		private var _mLength			:uint;	// cached modified length
 		private var _bookmark			:Bookmark;
-		private var _modified			:Number;
 		private var _unsaved			:HistoryItemUnsaved;
 
 		public function HistoryList($bkmk:Bookmark)
@@ -23,34 +24,53 @@ package view.history {
 		
 	// public //	
 		
-		public function get bookmark():Bookmark
-		{
-			return _bookmark;
-		}
+		public function get bookmark():Bookmark { return _bookmark; }
 		
-		public function checkIfModified():void
+	// on status, summary & history updates //
+		public function checkIfChanged():void
+		{
+			if (_bookmark.branch.history == null) return;
+			var h:Boolean = historyHasChanged();
+			var m:Boolean = modifiedHasChanged();
+			if (h == true) {
+				drawList();
+			}	else if (m == true){
+				sortList();
+			}
+		}
+
+	// private //
+
+		private function modifiedHasChanged():Boolean
 		{
 			var n:uint = _bookmark.branch.modified.length;
-			if (isNaN(_modified)) {
-				_modified = n;
-				if (_bookmark.branch.history != null) sortList();
-			}	else if (n != _modified) {
-				_modified = n;
-				if (_bookmark.branch.history != null) sortList();
-			}			
+			if (isNaN(_mLength) || _mLength != n) {
+				_mLength = n;
+				return true;
+			}	else{
+				return false;
+			}
 		}
 		
-		public function drawList(reset:Boolean):void
+		private function historyHasChanged():Boolean
 		{
-			if (reset) _modified = 0;
+			var h:uint = _bookmark.branch.history.length;			
+			if (isNaN(_hLength) || _hLength != h) {
+				_hLength = h;
+				return true;
+			}	else{
+				return false;
+			}
+		}
+		
+		private function drawList():void
+		{
 			while(numChildren) removeChildAt(0);
-			var a:Vector.<Commit> = _bookmark.branch.history;
-			for (var i:int = 0; i < a.length; i++) addChild(new HistoryItemSaved(a[i]));
+			var v:Vector.<Commit> = _bookmark.branch.history;
+			for (var i:int = 0; i < v.length; i++) addChild(new HistoryItemSaved(v[i]));
 			sortList();						
 		}
 		
-	// private //
-	
 		private function sortList():void
 		{
 			showHideUnsaved();
@@ -65,9 +85,9 @@ package view.history {
 		
 		private function showHideUnsaved():void
 		{
-			if (_modified > 0) {
+			if (_mLength > 0) {
 				addChildAt(_unsaved, 0);
-			}	else if (_modified == 0 && _unsaved.stage) {
+			}	else if (_mLength == 0 && _unsaved.stage) {
 				removeChildAt(0);
 			}				
 		}
