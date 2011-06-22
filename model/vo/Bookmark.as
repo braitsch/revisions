@@ -50,11 +50,12 @@ package model.vo {
 		public function set remote(s:String):void { _remote = s;}
 		public function get active():Boolean { return _active; }
 		public function set active(b:Boolean):void { _active = b; }
+		public function set autosave(n:uint):void { _autosave = n; }
+		public function get autosave():uint { return _autosave; }
 
 		public function get icon32():Bitmap { return _icon32; }
 		public function get icon128():Bitmap { return _icon128; }
 		public function get type():String { return _type; }
-		public function get autosave():uint { return _autosave; }
 		public function get exists():Boolean { return _file.exists; }
 		public function get gitdir():String { return _gitdir;}
 		public function get worktree():String { return _file.parent.nativePath; }

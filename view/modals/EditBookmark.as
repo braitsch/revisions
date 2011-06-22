@@ -39,6 +39,8 @@ package view.modals {
 			_bookmark = b;
 			_view.name_txt.text = _bookmark.label;
 			_view.local_txt.text = _bookmark.path;
+			trace('_bookmark.autosave: ' + (_bookmark.autosave));
+			_check1.selected = _bookmark.autosave != 0;
 		//TODO decide wether we're going to allow file path editing...
 			_view.browse_btn.visible = false;
 		}
@@ -101,9 +103,9 @@ package view.modals {
 		
 		private function updateDatabase():void
 		{
-			var autosave:uint = _check1.selected ? 60 : 0;
+			_bookmark.autosave = _check1.selected ? 60 : 0;
 			AppModel.database.addEventListener(DataBaseEvent.RECORD_EDITED, onEditSuccessful);
-			AppModel.database.editRepository(_bookmark.label, _view.name_txt.text, _view.local_txt.text, autosave);				
+			AppModel.database.editRepository(_bookmark.label, _view.name_txt.text, _view.local_txt.text, _bookmark.autosave);				
 		}
 		
 		private function onEditSuccessful(e:DataBaseEvent):void 
