@@ -168,19 +168,33 @@ package model.vo {
 			if (p.indexOf('/Volumes') == 0){
 				return 'Sorry, tracking files on external volumes is not yet supported.';
 			}			
+			var i:int;
 			var v:Vector.<Bookmark> = AppEngine.bookmarks;
-			for (var i:int = 0; i < v.length; i++) {
+		// check names //	
+			for (i = 0; i < v.length; i++) {
 				if (n == v[i].label) {
-					if (b) if (n != b.label) return 'The name '+v[i].label+' is already taken.\nPlease choose something else.';
-				}	else if (MD5.hash(p) == MD5.hash(v[i].path)){
+					if (b == null){
+						return 'The name "'+v[i].label+'" is already taken.\nPlease choose something else.';
+					} else if (n != b.label){
+						return 'The name "'+v[i].label+'" is already taken.\nPlease choose something else.';
+					}
+				}
+			}
+		// check paths //	
+			for (i = 0; i < v.length; i++) {
+				if (MD5.hash(p) == MD5.hash(v[i].path)){
 					var w:String = p.substr(p.lastIndexOf('/')+1);
 					var k:String = f.isDirectory ? 'folder' : 'file';
-					if (b) if (p != b.path) return 'The '+k+' '+w+' is already being tracked by the bookmark '+v[i].label;
+					if (b == null){
+						return 'The '+k+' "'+w+'" is already being tracked by the bookmark "'+v[i].label+'".';
+					}	else if (p != b.path){
+						return 'The '+k+' "'+w+'" is already being tracked by the bookmark "'+v[i].label+'".';
+					}				
 				}
 			}
 			return '';
 		}
-
+		
 	}
 	
 }
