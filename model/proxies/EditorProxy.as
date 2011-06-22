@@ -72,7 +72,7 @@ package model.proxies {
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
-			trace("EditorProxy.onProcessComplete(e)", e.data.method, e.data.result);
+		//	trace("EditorProxy.onProcessComplete(e)", e.data.method, e.data.result);
 			switch(e.data.method){
 				case BashMethods.COMMIT : 
 					AppModel.proxies.status.resetTimer();

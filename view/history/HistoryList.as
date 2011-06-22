@@ -63,7 +63,7 @@ package view.history {
 				var k:HistoryItem = getChildAt(i) as HistoryItem;
 				k.y = i * 30;
 				k.resize(stage.stageWidth - 204);
-				TweenLite.from(getChildAt(i), .3, {alpha:0, delay:i*.1});
+				TweenLite.from(getChildAt(i), .2, {alpha:0, delay:i*.05});
 			}
 			dispatchEvent(new UIEvent(UIEvent.HISTORY_DRAWN));
 		}	

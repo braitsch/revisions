@@ -95,14 +95,8 @@ package view {
 		{
 			if (_bookmark) removeBookmarkListeners();
 			_bookmark = e.data as Bookmark;
-			_view.name_txt.text = _bookmark.label;
-			_offset = (_view.name_txt.height-26)/2;
-			_details.y = 20 + _offset;
-			_view.name_txt.y = -_offset - 13;
-			_view.name_txt.x = -_view.name_txt.width/2;
-			getBookmarkIcon();
+			onBookmarkEdited(e);
 			addBookmarkListeners();
-			showRemoteButtons(_bookmark.remote != null);
 		}
 
 		private function showRemoteButtons(b:Boolean):void
@@ -124,7 +118,13 @@ package view {
 
 		private function onBookmarkEdited(e:BookmarkEvent):void
 		{
-			_view.name_txt.text = _bookmark.label;			
+			_view.name_txt.text = _bookmark.label;
+			_offset = (_view.name_txt.height-26)/2;
+			_details.y = 20 + _offset;
+			_view.name_txt.y = -_offset - 13;
+			_view.name_txt.x = -_view.name_txt.width/2;	
+			getBookmarkIcon();
+			showRemoteButtons(_bookmark.remote != null);								
 		}
 
 		private function getBookmarkIcon():void
@@ -169,7 +169,6 @@ package view {
 		private function onHistoryButton(e:MouseEvent):void
 		{
 			dispatchEvent(new UIEvent(UIEvent.SHOW_HISTORY));
-			AppModel.proxies.history.getHistory();
 		}
 		
 		private function onSettingsButton(e:MouseEvent):void
