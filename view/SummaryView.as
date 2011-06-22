@@ -61,7 +61,7 @@ package view {
 		
 		private function initButtons():void
 		{
-			var l:Array = ['settings', 'pull remote', 'push remote', 'history'];
+			var l:Array = ['Settings', 'Pull Remote', 'Push Remote', 'History'];
 			var a:Array = [_details.settings_btn, _details.pull_btn, _details.push_btn, _details.history_btn];
 			for (var i:int = 0; i < 4; i++) new SmartButton(a[i], new Tooltip(l[i]));
 			_details.save_btn.over.alpha = 0;

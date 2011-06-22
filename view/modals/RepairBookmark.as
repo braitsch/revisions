@@ -4,7 +4,6 @@ package view.modals {
 	import events.DataBaseEvent;
 	import events.InstallEvent;
 	import events.UIEvent;
-	import fl.text.TLFTextField;
 	import model.AppModel;
 	import model.vo.Bookmark;
 	import system.FileBrowser;
@@ -22,7 +21,6 @@ package view.modals {
 		public function RepairBookmark()
 		{
 			addChild(_view);
-			super.addInputs(Vector.<TLFTextField>([_view.name_txt, _view.local_txt]));	
 			super.addButtons([_view.browse_btn, _view.ok_btn, _view.delete_btn]);
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onUpdateBookmark);
 			_view.browse_btn.addEventListener(MouseEvent.CLICK, onBrowseButton);

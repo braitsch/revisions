@@ -126,9 +126,6 @@ package view.modals {
 		
 		private function addNewCommit(e:UIEvent):void 
 		{
-		//TODO need to handle commit right clicks on bookmarks
-		// right now these attempt to commit AppModel.bookmark
-		// not the bookmark that was right clicked!!	
 			showModalWindow(_commit);
 		}
 		

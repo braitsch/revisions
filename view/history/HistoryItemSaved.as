@@ -44,8 +44,9 @@ package view.history {
 		{
 			_view.buttons.buttonMode = true;
 			_buttons = [_view.buttons.revert, _view.buttons.download, _view.buttons.info];
+			var l:Array = ['Revert', 'Download', 'Info'];
 			for (var i:int = 0; i < 3; i++) {
-				var b:SmartButton = new SmartButton(_buttons[i], new Tooltip('bwah'));
+				var b:SmartButton = new SmartButton(_buttons[i], new Tooltip(l[i]));
 				b.view.addEventListener(MouseEvent.CLICK, onButtonClick);
 			}
 		}

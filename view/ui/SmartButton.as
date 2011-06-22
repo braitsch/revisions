@@ -23,9 +23,10 @@ package view.ui {
 			_view['over'].alpha = 0;			
 			_view.addEventListener(MouseEvent.ROLL_OUT, onRollOut);		
 			_view.addEventListener(MouseEvent.ROLL_OVER, onRollOver);
+			_view.addEventListener(MouseEvent.CLICK, onClick);
 			_timer.addEventListener(TimerEvent.TIMER, onTimeout);
 		}
-		
+
 		public function get view():Sprite { return _view; }			
 
 		private function onRollOver(e:MouseEvent):void
@@ -39,7 +40,12 @@ package view.ui {
 			_timer.stop();
 			if (_tooltip.stage) _view.stage.removeChild(_tooltip);
 			TweenLite.to(e.currentTarget.over, .5, {alpha:0});
-		}	
+		}
+		
+		private function onClick(e:MouseEvent):void
+		{
+			if (_tooltip.stage) _view.stage.removeChild(_tooltip);			
+		}			
 
 		private function startTimeout():void
 		{
@@ -51,7 +57,7 @@ package view.ui {
 		{
 			var p:Point = _view.parent.localToGlobal(new Point(_view.x, _view.y));
 			_tooltip.x = p.x;
-			_tooltip.y = p.y - 15; 
+			_tooltip.y = p.y - 20; 
 			_view.stage.addChild(_tooltip);
 		}
 		
