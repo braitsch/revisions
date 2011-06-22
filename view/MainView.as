@@ -36,9 +36,6 @@ package view{
 			AppModel.engine.addEventListener(InstallEvent.INIT_COMPLETE, hideLoader);
 		}
 		
-	// need to either expose preloader, or listen for events that show when db is opened
-	// and hide it when the bookmark view is done building all the bookmarks.	
-		
 		public function resize(w:uint, h:uint):void
 		{
 			_summary.resize(h);
@@ -64,28 +61,20 @@ package view{
 			_history.filters = [new BlurFilter(2, 2, 3)];
 		}
 		
-		private function onShowHistory(e:UIEvent):void { checkHistoryExists(); }
-		private function onCurtainClick(e:MouseEvent):void { checkHistoryExists(); }
+		private function onShowHistory(e:UIEvent):void { refreshHistory(); }
+		private function onCurtainClick(e:MouseEvent):void { refreshHistory(); }
 		
-	// request history if it doesn't exist so the user isn't left with an empty screen //	
-		private function checkHistoryExists():void
+		private function refreshHistory():void
 		{
-			if (AppModel.bookmark.branch.history) {
-		// TODO should check here if history has changed, and if so refresh view..
-		// instead of just hiding the summary window. it we don't refresh history we won't see commits
-		// that were autosaved behind the scenes.		
-				hideSummary();			
-			}	else{
-				_preloader.show();
-				addEventListener(UIEvent.HISTORY_DRAWN, onHistory);	
-				setTimeout(function():void{AppModel.proxies.history.getHistory();}, 500);
-			}
+			_preloader.show();
+			addEventListener(UIEvent.HISTORY_DRAWN, onHistory);	
+			setTimeout(function():void{AppModel.proxies.history.getHistory();}, 500);
 		}
 		
 		private function onHistory(e:UIEvent):void
 		{
 			setTimeout(hideSummary, 500);
-			removeEventListener(UIEvent.HISTORY_DRAWN, onHistory);	
+			removeEventListener(UIEvent.HISTORY_DRAWN, onHistory);
 		}
 		
 		private function hideSummary():void

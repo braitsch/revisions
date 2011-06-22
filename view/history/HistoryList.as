@@ -36,6 +36,9 @@ package view.history {
 				drawList();
 			}	else if (m == true){
 				sortList();
+			}	else{
+		// dispatch event to kill the preloader //		
+				dispatchEvent(new UIEvent(UIEvent.HISTORY_DRAWN));				
 			}
 		}
 
