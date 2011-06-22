@@ -10,7 +10,6 @@ package model.vo {
 		private var _name			:String;
 		private var _history		:Vector.<Commit>;
 		private var _status			:Array = [[], [], [], []];
-		private var _modified		:uint;
 		private var _lastCommit		:Commit;
 		private var _totalCommits	:uint = 0;
 
@@ -24,31 +23,34 @@ package model.vo {
 		public function set history(v:Vector.<Commit>):void { _history = v; }
 		public function get history():Vector.<Commit> { return _history; }
 		
-		public function set lastCommit(c:Commit):void { _lastCommit = c; }
 		public function get lastCommit():Commit { return _lastCommit; }
-		
-		public function set totalCommits(n:uint):void { _totalCommits = n; }
 		public function get totalCommits():uint { return _totalCommits; }
-		
-		public function get modified():uint { return _modified; }
-//		public function get untracked():uint { return _status[StatusProxy.U].length; }
+		public function get modified():Array { return _status[StatusProxy.M]; }
+//		public function get untracked():uint { return _status[StatusProxy.U]; }
 				
 		public function set status(a:Array):void 
 		{ 
 			_status = a; 
-			_modified = _status[StatusProxy.M].length;
 		}
-		public function set modified(n:uint):void 
-		{ 
-			_modified = n;
+		
+		public function clearModified():void
+		{
+			_status[StatusProxy.M] = [];
 		}
 		
 		public function addCommit(c:Commit):void
 		{
-			_lastCommit = c;
-			_history.unshift(c);
+ 			_lastCommit = c;
 			_totalCommits += 1;
-			_status	= [[], [], [], []];				
+			_status[StatusProxy.M] = [];
+			_history.unshift(c);
+		}
+		
+		public function setSummary(lc:Commit, tc:uint, mod:Array):void
+		{
+ 			_lastCommit = lc;
+			_totalCommits = tc;
+			_status[StatusProxy.M] = mod;
 		}
 	
 	}

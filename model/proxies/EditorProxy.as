@@ -74,12 +74,10 @@ package model.proxies {
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
-	//		trace("EditorProxy.onProcessComplete(e)", e.data.method, e.data.result);
+			trace("EditorProxy.onProcessComplete(e)", e.data.method, e.data.result);
 			switch(e.data.method){
 				case BashMethods.COMMIT : 
-					AppModel.proxies.status.resetTimer();
-					AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.COMMIT_COMPLETE, _bookmark));					
-					if (_bookmark.branch.history) _bookmark.branch.addCommit(new Commit(e.data.result, AppModel.branch.totalCommits + 1));
+					onCommitComplete(e.data.result);
 				break;
 				case BashMethods.INIT_FILE: 
 					dispatchEvent(new BookmarkEvent(BookmarkEvent.INITIALIZED));
@@ -100,6 +98,19 @@ package model.proxies {
 					dispatchEvent(new InstallEvent(InstallEvent.GIT_DIR_UPDATED));
 				break;				
 			}
+		}
+		
+		private function onCommitComplete(s:String):void
+		{
+			if (_bookmark.branch.history == null){
+				_bookmark.branch.clearModified();
+				AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.STATUS, _bookmark));
+			}	else{	
+			// if we have a history, we always have a status & totalCommit from getSummary //	
+				_bookmark.branch.addCommit(new Commit(s, _bookmark.branch.totalCommits + 1));
+				AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.SUMMARY, _bookmark));
+			}
+			AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.COMMIT_COMPLETE));
 		}
 		
 		private function onProcessFailure(e:NativeProcessEvent):void 

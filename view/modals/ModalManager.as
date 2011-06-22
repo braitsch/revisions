@@ -1,5 +1,6 @@
 package view.modals {
 
+	import flash.events.KeyboardEvent;
 	import events.BookmarkEvent;
 	import events.InstallEvent;
 	import events.UIEvent;
@@ -59,6 +60,12 @@ package view.modals {
 			stage.addEventListener(UIEvent.HIDE_ALERT, onCloseAlert);		
 			stage.addEventListener(UIEvent.CLOSE_MODAL_WINDOW, onCloseButton);
 			stage.addEventListener(InstallEvent.APP_EXPIRED, onAppExpired);
+			stage.addEventListener(KeyboardEvent.KEY_UP, checkForEnterKey);
+		}
+
+		private function checkForEnterKey(e:KeyboardEvent):void
+		{
+			if (e.keyCode == 13 && _window != null) _window.onEnterKey();
 		}
 
 		public function resize(w:Number, h:Number):void

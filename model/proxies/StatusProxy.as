@@ -35,8 +35,8 @@ package model.proxies {
 		
 		public function getStatus(e:TimerEvent = null):void
 		{
-			_working = true;
 			resetTimer();
+			_working = true;
 			super.directory = AppModel.bookmark.gitdir;
 			super.queue = [	Vector.<String>([BashMethods.GET_TRACKED_FILES]), 
 							Vector.<String>([BashMethods.GET_UNTRACKED_FILES]),
@@ -45,8 +45,8 @@ package model.proxies {
 		}
 				public function getSummary():void
 		{
-			_working = true;
 			resetTimer();
+			_working = true;
 			super.directory = AppModel.bookmark.gitdir;
 			super.queue = [	Vector.<String>([BashMethods.GET_MODIFIED_FILES]),
 							Vector.<String>([BashMethods.GET_LAST_COMMIT]),
@@ -55,8 +55,8 @@ package model.proxies {
 		
 		public function getModified(b:Bookmark):void
 		{
-			_working = true;
 			resetTimer();
+			_working = true;
 			_bookmark = b;
 			super.directory = _bookmark.gitdir;			
 			super.queue = [	Vector.<String>([BashMethods.GET_MODIFIED_FILES]) ]; 			
@@ -90,35 +90,25 @@ package model.proxies {
 		private function onModified(a:Array):void
 		{
 			_autoSaveQueue.shift();
-			trace("StatusProxy.onModified(a)", _bookmark.label, splitAndTrim(a[0]).length);
 			if (splitAndTrim(a[0]).length > 0) {
 				AppModel.engine.addEventListener(BookmarkEvent.COMMIT_COMPLETE, onCommitComplete);
-				AppModel.proxies.editor.commit('AutoSaved On : '+new Date().toLocaleString(), _bookmark);
+				AppModel.proxies.editor.commit('AutoSaved : '+new Date().toLocaleString(), _bookmark);
 			}	else if (_autoSaveQueue.length > 0) {
 				getModified(_autoSaveQueue[0]);	
-			}	else{
-				trace('----------------------- queue is empty');
 			}
 		}
 
 		private function onCommitComplete(e:BookmarkEvent):void
 		{
-			trace("StatusProxy.onCommitComplete(e)", _bookmark.label);
-			if (_autoSaveQueue.length > 0) {
-				getModified(_autoSaveQueue[0]);	
-			}	else{
-				trace('----------------------- queue is empty');
-			}
+			if (_autoSaveQueue.length > 0) getModified(_autoSaveQueue[0]);	
 			AppModel.engine.removeEventListener(BookmarkEvent.COMMIT_COMPLETE, onCommitComplete);			
 		}
 		
 		private function parseSummary(a:Array):void
 		{
-			var n:uint = uint(a[2]) + 1;
-			AppModel.branch.modified = splitAndTrim(a[0]).length;
-			AppModel.branch.totalCommits = n;
-			AppModel.branch.lastCommit = new Commit(a[1], n);
-			AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.SUMMARY));			
+			var n:uint = uint(a[2]) + 1; // total commits //
+			AppModel.branch.setSummary(new Commit(a[1], n), n, splitAndTrim(a[0]));
+			AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.SUMMARY, AppModel.bookmark));			
 		}
 
 		private function splitAndTrim(s:String):Array
@@ -159,7 +149,7 @@ package model.proxies {
 			}						
 		//	for (i = 0; i < 4; i++) trace('result set '+i+' = ', r[i]);
 			AppModel.branch.status = a;
-			AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.STATUS, a));
+			AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.STATUS, AppModel.bookmark));
 		}
 
 		private function splitAndPurge(a:Array):void

@@ -27,7 +27,6 @@ package view.history {
 			AppModel.engine.addEventListener(BookmarkEvent.SUMMARY, onSummary);
 			AppModel.engine.addEventListener(BookmarkEvent.STATUS, onStatus);
 			AppModel.engine.addEventListener(BookmarkEvent.HISTORY, onHistory);
-			AppModel.engine.addEventListener(BookmarkEvent.COMMIT_COMPLETE, onCommit);
 		}
 
 		private function onMouseWheel(e:MouseEvent):void
@@ -79,13 +78,6 @@ package view.history {
 		
 	// status / selection events //	
 		
-		private function onCommit(e:BookmarkEvent):void
-		{
-			if (e.data.branch.history == null) return;
-			var hl:HistoryList = getListByBookmark(e.data as Bookmark);
-			if (hl) hl.drawList(false);
-		}			
-		
 		private function onHistory(e:BookmarkEvent):void
 		{
 			var hl:HistoryList = getListByBookmark(e.data as Bookmark);
@@ -94,12 +86,14 @@ package view.history {
 
 		private function onStatus(e:BookmarkEvent):void 
 		{
-			_activeList.checkIfModified();
+			var hl:HistoryList = getListByBookmark(e.data as Bookmark);
+			if (hl) hl.checkIfModified();
 		}	
 		
 		private function onSummary(e:BookmarkEvent):void
 		{
-			_activeList.checkIfModified();
+			var hl:HistoryList = getListByBookmark(e.data as Bookmark);
+			if (hl) hl.checkIfModified();
 		}							
 		
 		private function onSelection(e:BookmarkEvent):void 

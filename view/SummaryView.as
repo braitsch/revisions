@@ -44,8 +44,8 @@ package view {
 			initButtons();
 			initTextFields();
 			this.filters = [new DropShadowFilter(5, 45, 0, .5, 10, 10)];
-			AppModel.engine.addEventListener(BookmarkEvent.STATUS, onStatus);
-			AppModel.engine.addEventListener(BookmarkEvent.SUMMARY, onSummary);
+			AppModel.engine.addEventListener(BookmarkEvent.STATUS, drawView);
+			AppModel.engine.addEventListener(BookmarkEvent.SUMMARY, drawView);
 			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onSelected);			
 		}
 		
@@ -138,9 +138,11 @@ package view {
 			if (_bookmark.type == Bookmark.FILE) _icon.y -= 10;
 		}
 
-		private function onStatus(e:BookmarkEvent):void
+		private function drawView(e:BookmarkEvent):void
 		{
-			var m:uint = _bookmark.branch.modified;
+		// ignore if we're not showing the bookmark that just updated //
+			if (e.data != _bookmark) return;
+			var m:uint = _bookmark.branch.modified.length;
 			if (m > 0){
 				_details.save_btn.over.alpha = 1;
 				_details.save_btn.buttonMode = true;
@@ -149,15 +151,10 @@ package view {
 				_details.save_btn.over.alpha = 0;
 				_details.save_btn.buttonMode = false;
 				_details.save_btn.removeEventListener(MouseEvent.CLICK, onSaveButton);
-			}
-		}
-		
-		private function onSummary(e:BookmarkEvent):void
-		{
-			onStatus(e);
+			}					
 			_details.version_txt.text = 'Version #'+_bookmark.branch.totalCommits as String;
 			_details.lastSaved_txt.text = 'Last Saved : '+_bookmark.branch.lastCommit.date;
-		}		
+		}
 
 	// button events //
 		

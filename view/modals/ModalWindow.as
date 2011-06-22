@@ -13,23 +13,22 @@ package view.modals {
 		private var _inputs			:Vector.<TLFTextField>;
 		private var _heightOffset	:uint = 50;
 		private var _closeButton	:ModalCloseButton = new ModalCloseButton();
-
+	
 		public function ModalWindow()
 		{		
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			this.filters = [new GlowFilter(0x000000, .5, 20, 20, 2, 2)];
 		}
 		
+		public function onEnterKey():void { }		
+		
 		protected function addButtons(a:Array):void
 		{			for (var i:int=0; i < a.length; i++) {
 				a[i].buttonMode = true;
 				a[i].mouseChildren = false;
-		//TODO fix this once we get rid of all the old style buttons		
-				if (a[i].hasOwnProperty('over')){
-					a[i]['over'].alpha = 0;
-					a[i].addEventListener(MouseEvent.ROLL_OUT, onButtonRollOut);
-					a[i].addEventListener(MouseEvent.ROLL_OVER, onButtonRollOver);
-				}
+				a[i]['over'].alpha = 0;
+				a[i].addEventListener(MouseEvent.ROLL_OUT, onButtonRollOut);
+				a[i].addEventListener(MouseEvent.ROLL_OVER, onButtonRollOver);
 			}
 		// tack on the close button //	
 			_closeButton.y = 10;
@@ -76,8 +75,8 @@ package view.modals {
 			this.y = (h-_heightOffset)/2 - this.height / 2 + _heightOffset;			
 			if (_inputs) {
 				var txt:TLFTextField = _inputs[0];
-				txt.stage.focus = txt;
 				txt.setSelection(0, txt.length);
+				txt.textFlow.interactionManager.setFocus();
 			}
 		}
 

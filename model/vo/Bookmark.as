@@ -132,7 +132,7 @@ package model.vo {
 		private function initAutoSave():void
 		{
 		//	_timer = new Timer(_autosave * 100);
-			_timer = new Timer(8000);
+			_timer = new Timer(4000);
 			_timer.addEventListener(TimerEvent.TIMER, onTimerEvent);
 			_timer.start();
 		}

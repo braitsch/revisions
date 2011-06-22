@@ -21,12 +21,17 @@ package view.modals {
 			_check1.label = 'Autosave Every 60 Minutes';			
 			_view.name_txt.text = _view.local_txt.text = ''; 
 			_view.browse_btn.addEventListener(MouseEvent.CLICK, showFileBrowser);
-			_view.action_btn.addEventListener(MouseEvent.CLICK, onActionButtonClick);
+			_view.action_btn.addEventListener(MouseEvent.CLICK, onOkButton);
 			_view.github.addEventListener(MouseEvent.CLICK, onGitHub); 
 			_view.beanstalk.addEventListener(MouseEvent.CLICK, onBeanstalk);
-			_browser.addEventListener(UIEvent.FILE_BROWSER_SELECTION, onFileBrowserSelection);
+			_browser.addEventListener(UIEvent.FILE_BROWSER_SELECTION, onFileSelection);
 			super.addButtons([_view.action_btn, _view.browse_btn, _view.github, _view.beanstalk]);
 			super.addInputs(Vector.<TLFTextField>([_view.name_txt]));
+		}
+		
+		override public function onEnterKey():void
+		{
+			onOkButton();
 		}
 
 		public function addNewFromDropppedFile($file:File):void
@@ -41,7 +46,7 @@ package view.modals {
 			_browser.browseForAnything("Select A File or Folder To Start Tracking");			
 		}
 		
-		private function onFileBrowserSelection(e:UIEvent):void 
+		private function onFileSelection(e:UIEvent):void 
 		{
 			parseTargetNameAndLocation(e.data as File);
 		}
@@ -57,7 +62,7 @@ package view.modals {
 			_view.name_txt.text = n.substr(0,1).toUpperCase() + n.substr(1);
 		}		
 		
-		private function onActionButtonClick(e:MouseEvent):void 
+		private function onOkButton(e:MouseEvent = null):void 
 		{	
 			var m:String = Bookmark.validate(_view.name_txt.text, _view.local_txt.text);
 			if (m == '') {

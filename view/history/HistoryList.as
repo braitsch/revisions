@@ -30,11 +30,12 @@ package view.history {
 		
 		public function checkIfModified():void
 		{
+			var n:uint = _bookmark.branch.modified.length;
 			if (isNaN(_modified)) {
-				_modified = _bookmark.branch.modified;
+				_modified = n;
 				if (_bookmark.branch.history != null) sortList();
-			}	else if (_bookmark.branch.modified != _modified) {
-				_modified = _bookmark.branch.modified;
+			}	else if (n != _modified) {
+				_modified = n;
 				if (_bookmark.branch.history != null) sortList();
 			}			
 		}
