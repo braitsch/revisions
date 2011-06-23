@@ -139,7 +139,7 @@ package model.vo {
 
 		private function onTimerEvent(e:TimerEvent):void
 		{
-			AppModel.proxies.status.autoSave(this);	
+			AppModel.proxies.status.autoSave(this);
 		}
 		
 	// static validation function //

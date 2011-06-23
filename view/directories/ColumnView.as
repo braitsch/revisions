@@ -50,7 +50,7 @@ package view.directories {
 			_files.directory = ListItem(e.data).file;
 		// force a status refresh whenever a directory is selected //
 		// this updates the icons next to the files inside the selected directory //	
-			AppModel.proxies.status.getStatus();
+		//	AppModel.proxies.status.getStatus();
 		}		
 		
 	}

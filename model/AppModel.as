@@ -21,6 +21,7 @@ package model {
 
 		public function AppModel() 
 		{
+			_proxies.status.addListenersToResetTimer();
 			_engine.addEventListener(BookmarkEvent.SELECTED, onBookmarkSet);
 			_database.addEventListener(DataBaseEvent.BOOKMARKS_READ, onBookmarksRead);
 		}

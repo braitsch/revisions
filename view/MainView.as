@@ -34,6 +34,7 @@ package view{
 			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, showSummary);
 			AppModel.engine.addEventListener(InstallEvent.INIT_START, showLoader);
 			AppModel.engine.addEventListener(InstallEvent.INIT_COMPLETE, hideLoader);
+			AppModel.engine.addEventListener(BookmarkEvent.NO_BOOKMARKS, onNoBookmarks);
 		}
 		
 		public function resize(w:uint, h:uint):void
@@ -75,6 +76,11 @@ package view{
 		{
 			setTimeout(hideSummary, 500);
 			removeEventListener(UIEvent.HISTORY_DRAWN, onHistory);
+		}
+		
+		private function onNoBookmarks(e:BookmarkEvent):void
+		{
+			if (_summary.visible) hideSummary();
 		}
 		
 		private function hideSummary():void

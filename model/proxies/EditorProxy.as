@@ -73,7 +73,7 @@ package model.proxies {
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
-		//	trace("EditorProxy.onProcessComplete(e)", e.data.method, e.data.result);
+			trace("EditorProxy.onProcessComplete(e)", e.data.method, e.data.result);
 			switch(e.data.method){
 				case BashMethods.COMMIT : 
 					onCommitComplete(e.data.result);
@@ -91,8 +91,8 @@ package model.proxies {
 					dispatchEvent(new BookmarkEvent(BookmarkEvent.DELETED));
 				break;								
 				case BashMethods.TRACK_FILE : 
-					AppModel.proxies.status.getStatus();
-				break;				case BashMethods.UNTRACK_FILE : 					AppModel.proxies.status.getStatus();				break;
+			//		AppModel.proxies.status.getStatus();
+				break;				case BashMethods.UNTRACK_FILE : 			//		AppModel.proxies.status.getStatus();				break;
 				case BashMethods.EDIT_GIT_DIR : 
 					dispatchEvent(new InstallEvent(InstallEvent.GIT_DIR_UPDATED));
 				break;				

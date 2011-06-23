@@ -12,15 +12,12 @@ package model {
 		
 		private static var _index			:uint = 0;
 		private static var _bookmark		:Bookmark;
+		private static var _broken			:Vector.<Bookmark> = new Vector.<Bookmark>();
 		private static var _bookmarks		:Vector.<Bookmark> = new Vector.<Bookmark>();
-		private static var _bookmarksReady	:Boolean = false;
 
 	// expose bookmarks to check against duplicates being added //
 			
-		static public function get bookmarks():Vector.<Bookmark>
-		{
-			return _bookmarks;
-		}			
+		static public function get bookmarks():Vector.<Bookmark> { return _bookmarks; }
 		
 	// sequence to initalize a new bookmark //
 
@@ -94,7 +91,7 @@ package model {
 			dispatchEvent(new BookmarkEvent(BookmarkEvent.DELETED, _bookmark));
 			
 		// don't parse bookmarks until all the broken paths have been repaired //	
-			if (_bookmarksReady == false) return;
+			if (_broken.length != 0) return;
 			if (_bookmarks.length > 0) {
 				dispatchActiveBookmark();
 			}	else{
@@ -106,7 +103,6 @@ package model {
 		
 		public function generateBookmarks(a:Array):void 
 		{
-			var x:Vector.<Bookmark> = new Vector.<Bookmark>();
 			for (var i:int = 0; i < a.length; i++) {
 				var o:Object = {
 					label		:	a[i].label,
@@ -119,16 +115,28 @@ package model {
 				};
 				var b:Bookmark = new Bookmark(o);
 				_bookmarks.push(b);
-				if (b.exists == false) x.push(b);
+				if (b.exists == false) _broken.push(b);
 			}
-			if (x.length == 0) {
+			if (_broken.length == 0) {
 				buildBookmarksFromDatabase();
-				dispatchEvent(new InstallEvent(InstallEvent.INIT_START));	
 			}	else{
-				dispatchEvent(new BookmarkEvent(BookmarkEvent.PATH_ERROR, x));
-			}		}		
-		public function buildBookmarksFromDatabase():void
+				dispatchEvent(new BookmarkEvent(BookmarkEvent.PATH_ERROR, _broken[0]));
+			}
+		}
+		
+		public function checkForBrokenBookmarks():void
 		{
+			trace("AppEngine.checkForBrokenBookmarks() length = ", _broken.length);
+			if (_broken.length == 0) return;
+				_broken.splice(0, 1);
+			if (_broken.length == 0) {
+				buildBookmarksFromDatabase();
+			}	else{
+				dispatchEvent(new BookmarkEvent(BookmarkEvent.PATH_ERROR, _broken[0]));
+			}			
+		}						private function buildBookmarksFromDatabase():void
+		{
+			dispatchEvent(new InstallEvent(InstallEvent.INIT_START));
 			AppModel.proxies.branch.getBranches(_bookmarks[_index]);			AppModel.proxies.branch.addEventListener(BookmarkEvent.BRANCHES_READ, getStashOfNextBookmark);			AppModel.proxies.branch.addEventListener(BookmarkEvent.STASH_LIST_READ, onStoredBookmarkReady);
 		}
 		
@@ -142,7 +150,6 @@ package model {
 			if (++_index < _bookmarks.length){
 				AppModel.proxies.branch.getBranches(_bookmarks[_index]);	
 			}	else{
-				_bookmarksReady = true;
 				AppModel.proxies.branch.removeEventListener(BookmarkEvent.BRANCHES_READ, getStashOfNextBookmark);
 				AppModel.proxies.branch.removeEventListener(BookmarkEvent.STASH_LIST_READ, onStoredBookmarkReady);			
 				dispatchEvent(new BookmarkEvent(BookmarkEvent.LOADED, _bookmarks));
@@ -155,8 +162,8 @@ package model {
 			var ab:Bookmark; // active bookmark //
 			for (var i:int = 0; i < _bookmarks.length; i++) if (_bookmarks[i].active == true) ab = _bookmarks[i];
 			if (ab != null) dispatchEvent(new BookmarkEvent(BookmarkEvent.SELECTED, ab));
-		}					
-		
+		}
+
 	}
 	
 }

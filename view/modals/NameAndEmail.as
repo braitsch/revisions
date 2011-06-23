@@ -1,10 +1,11 @@
 package view.modals {
 
-	import mx.utils.StringUtil;
-	import model.proxies.ConfigProxy;
 	import events.InstallEvent;
 	import events.UIEvent;
+	import fl.text.TLFTextField;
 	import model.AppModel;
+	import model.proxies.ConfigProxy;
+	import mx.utils.StringUtil;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 
@@ -18,6 +19,7 @@ package view.modals {
 			addChild(_view);
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			super.addButtons([_view.ok_btn]);
+			super.addInputs(Vector.<TLFTextField>([_view.name_txt, _view.email_txt]));			
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);
 		}
 

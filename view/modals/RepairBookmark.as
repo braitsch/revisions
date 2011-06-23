@@ -7,7 +7,6 @@ package view.modals {
 	import model.AppModel;
 	import model.vo.Bookmark;
 	import system.FileBrowser;
-	import com.adobe.crypto.MD5;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
 
@@ -15,7 +14,6 @@ package view.modals {
 
 		private static var _browser		:FileBrowser = new FileBrowser();
 		private static var _view		:RepairBookmarkMC = new RepairBookmarkMC();
-		private static var _failed		:Vector.<Bookmark>;
 		private static var _bookmark	:Bookmark; // current bkmk being repaired //
 
 		public function RepairBookmark()
@@ -28,19 +26,13 @@ package view.modals {
 			_browser.addEventListener(UIEvent.FILE_BROWSER_SELECTION, onDirectorySelection);				
 		}
 		
-		public function set failed(v:Vector.<Bookmark>):void
-		{
-			_failed = v;
-			repairBookmark(_failed[0]);
-		}
-
-		private function repairBookmark(b:Bookmark):void
+		public function set bookmark(b:Bookmark):void
 		{
 			_bookmark = b;
 			_view.name_txt.text = b.label;
 			_view.local_txt.text = b.path;			
 		}
-		
+
 		private function onBrowseButton(e:MouseEvent):void 
 		{
 			if (_bookmark.type == Bookmark.FILE){
@@ -57,7 +49,7 @@ package view.modals {
 		
 		private function onUpdateBookmark(e:MouseEvent):void 
 		{
-			var m:String = Bookmark.validate(_view.name_txt.text, _view.local_txt.text);
+			var m:String = Bookmark.validate(_view.name_txt.text, _view.local_txt.text, _bookmark);
 			if (m != '') {
 				dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, m));
 			}	else {
@@ -71,8 +63,8 @@ package view.modals {
 				updateDatabase();		
 			}	else{
 		// the file path has changed //		
+				AppModel.proxies.editor.editAppStorageGitDirName(_bookmark.path, _view.local_txt.text);
 				AppModel.proxies.editor.addEventListener(InstallEvent.GIT_DIR_UPDATED, onGitDirUpdated);
-				AppModel.proxies.editor.editAppStorageGitDirName(MD5.hash(_bookmark.path), MD5.hash(_view.local_txt.text));			
 			}
 		}
 		
@@ -91,18 +83,14 @@ package view.modals {
 		
 		private function onEditSuccessful(e:DataBaseEvent = null):void
 		{
-			_failed.splice(0, 1);
 			_bookmark.path = _view.local_txt.text;
 			_bookmark.label = _view.name_txt.text;
-			if (_failed.length > 0){
-				AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.PATH_ERROR, _failed));
-			}	else{
-				AppModel.engine.buildBookmarksFromDatabase();
-				dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-			}
+			
+			AppModel.engine.checkForBrokenBookmarks();
 			AppModel.database.removeEventListener(DataBaseEvent.RECORD_EDITED, onEditSuccessful);			
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 		}
-
+		
 		private function onDeleteBookmark(e:MouseEvent):void 
 		{
 			dispatchEvent(new UIEvent(UIEvent.DELETE_BOOKMARK, _bookmark));	

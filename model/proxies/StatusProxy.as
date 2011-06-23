@@ -2,6 +2,7 @@ package model.proxies {
 
 	import events.BookmarkEvent;
 	import events.NativeProcessEvent;
+	import model.AppEngine;
 	import model.AppModel;
 	import model.air.NativeProcessQueue;
 	import model.vo.Bookmark;
@@ -28,13 +29,18 @@ package model.proxies {
 			super('Status.sh');
 			super.addEventListener(NativeProcessEvent.QUEUE_COMPLETE, onQueueComplete);
 			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);
-			_timer.addEventListener(TimerEvent.TIMER, getStatus);
+			_timer.addEventListener(TimerEvent.TIMER, checkForActiveBookmark);
 		}
 		
-	// public methods //	
-		
-		public function getStatus(e:TimerEvent = null):void
+		public function addListenersToResetTimer():void
 		{
+		//TODO may need to add more listerners here for commits, etc.	
+			AppModel.engine.addEventListener(BookmarkEvent.HISTORY, resetTimer);
+		}
+
+		private function getStatus():void
+		{
+			trace("StatusProxy.getStatus()");
 			resetTimer();
 			_working = true;
 			super.directory = AppModel.bookmark.gitdir;
@@ -45,6 +51,7 @@ package model.proxies {
 		}
 				public function getSummary():void
 		{
+			trace("StatusProxy.getSummary()");
 			resetTimer();
 			_working = true;
 			super.directory = AppModel.bookmark.gitdir;
@@ -68,11 +75,16 @@ package model.proxies {
 			if (!_working) getModified(_autoSaveQueue[0]);
 		}		
 		
-		public function resetTimer():void
+		private function resetTimer(e:BookmarkEvent = null):void
 		{
 			_timer.reset();
-			_timer.start();	
+			_timer.start();
 		}
+		
+		private function checkForActiveBookmark(e:TimerEvent):void
+		{
+			AppEngine.bookmarks.length == 0 ? _timer.stop() : getStatus();		
+		}		
 		
 	// private handlers //
 		
@@ -107,6 +119,7 @@ package model.proxies {
 		private function parseSummary(a:Array):void
 		{
 			var n:uint = uint(a[2]) + 1; // total commits //
+			trace("StatusProxy.parseSummary(a)", n);
 			AppModel.branch.setSummary(new Commit(a[1], n), n, splitAndTrim(a[0]));
 			AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.SUMMARY, AppModel.bookmark));			
 		}
@@ -189,7 +202,7 @@ package model.proxies {
 		
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
-			trace("StatusProxy.onProcessFailure(e)", e.data.method);
+			trace("StatusProxy.onProcessFailure(e)", e.data.method, e.data.result);
 		}
 
 	}

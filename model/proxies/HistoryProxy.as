@@ -38,7 +38,6 @@ package model.proxies {
 			var v:Vector.<Commit> = new Vector.<Commit>();
 			for (var i:int = 0; i < a.length; i++) v.push(new Commit(a[i], _bookmark.branch.totalCommits-i));
 			_bookmark.branch.history = v;
-			AppModel.proxies.status.resetTimer();			
 			AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.HISTORY, _bookmark));			
 		}
 		

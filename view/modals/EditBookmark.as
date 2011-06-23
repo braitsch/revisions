@@ -1,14 +1,13 @@
 package view.modals {
 
-	import events.InstallEvent;
 	import events.DataBaseEvent;
+	import events.InstallEvent;
 	import events.UIEvent;
 	import fl.text.TLFTextField;
 	import model.AppModel;
 	import model.vo.Bookmark;
 	import system.FileBrowser;
 	import view.ui.ModalCheckbox;
-	import com.adobe.crypto.MD5;
 	import flash.events.MouseEvent;
 
 	public class EditBookmark extends ModalWindow {
@@ -89,8 +88,8 @@ package view.modals {
 				updateDatabase();		
 			}	else{
 		// the file path has changed //		
+				AppModel.proxies.editor.editAppStorageGitDirName(_bookmark.path, _view.local_txt.text);	
 				AppModel.proxies.editor.addEventListener(InstallEvent.GIT_DIR_UPDATED, onGitDirUpdated);
-				AppModel.proxies.editor.editAppStorageGitDirName(MD5.hash(_bookmark.path), MD5.hash(_view.local_txt.text));			
 			}
 		}
 		

@@ -1,6 +1,5 @@
 package view.modals {
 
-	import flash.events.KeyboardEvent;
 	import events.BookmarkEvent;
 	import events.InstallEvent;
 	import events.UIEvent;
@@ -10,6 +9,7 @@ package view.modals {
 	import model.vo.Commit;
 	import flash.display.Sprite;
 	import flash.display.Stage;
+	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
 	import flash.filters.BlurFilter;
@@ -97,7 +97,6 @@ package view.modals {
 		
 		private function addNameAndEmail(e:InstallEvent):void
 		{
-			trace("ModalManager.addNameAndEmail(e)");
 			showModalWindow(_nameAndEmail);
 		}		
 
@@ -124,6 +123,12 @@ package view.modals {
 			_delete.bookmark = e.data as Bookmark;
 			showModalWindow(_delete);
 		}
+		
+		private function repairBookmark(e:BookmarkEvent):void
+		{
+			_repair.bookmark = e.data as Bookmark;
+			showModalWindow(_repair);
+		}			
 		
 		private function addNewCommit(e:UIEvent):void 
 		{
@@ -173,14 +178,6 @@ package view.modals {
 			}
 		}			
 
-	// alerts //	
-	
-		private function repairBookmark(e:BookmarkEvent):void
-		{
-			_repair.failed = e.data as Vector.<Bookmark>;
-			showModalWindow(_repair);
-		}	
-		
 	// adding & removing modal windows //	
 		
 		private function onCloseButton(e:UIEvent):void { hideModalWindow(); }
