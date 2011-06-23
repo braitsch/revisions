@@ -20,22 +20,29 @@ package view.modals {
 			addChild(_view);
 			_check1.label = 'Autosave Every 60 Minutes';			
 			_view.name_txt.text = _view.local_txt.text = ''; 
-			_view.browse_btn.addEventListener(MouseEvent.CLICK, showFileBrowser);
-			_view.action_btn.addEventListener(MouseEvent.CLICK, onOkButton);
+			_view.addFile.addEventListener(MouseEvent.CLICK, showFileBrowser);
+			_view.addFolder.addEventListener(MouseEvent.CLICK, showFileBrowser);
+			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);
 			_view.github.addEventListener(MouseEvent.CLICK, onGitHub); 
 			_view.beanstalk.addEventListener(MouseEvent.CLICK, onBeanstalk);
 			_browser.addEventListener(UIEvent.FILE_BROWSER_SELECTION, onFileSelection);
-			super.addButtons([_view.action_btn, _view.browse_btn, _view.github, _view.beanstalk]);
+			super.addButtons([_view.ok_btn, _view.addFile, _view.addFolder, _view.github, _view.beanstalk]);
 			super.addInputs(Vector.<TLFTextField>([_view.name_txt]));
 		}
-		
+
 		override public function onEnterKey():void
 		{
 			onOkButton();
 		}
+		
+		public function reset():void
+		{
+			toggleButtons(true);
+		}
 
 		public function addNewFromDropppedFile($file:File):void
 		{
+			toggleButtons(false);
 			parseTargetNameAndLocation($file);	
 		}
 		
@@ -43,11 +50,22 @@ package view.modals {
 
 		private function showFileBrowser(e:MouseEvent):void 
 		{
-			_browser.browseForAnything("Select A File or Folder To Start Tracking");			
+			if (e.target == _view.addFile){
+				_browser.browseForFile("Select A File To Start Tracking");
+			}	else if (e.target == _view.addFolder){
+				_browser.browseForDirectory("Select A Folder To Start Tracking");
+			}
+		}
+		
+		private function toggleButtons(reset:Boolean):void
+		{
+			_view.ok_btn.visible = !reset;
+			_view.addFile.visible = _view.addFolder.visible = reset;
 		}
 		
 		private function onFileSelection(e:UIEvent):void 
 		{
+			toggleButtons(false);
 			parseTargetNameAndLocation(e.data as File);
 		}
 		
@@ -68,6 +86,7 @@ package view.modals {
 			if (m == '') {
 				initNewBookmark();
 			}	else{
+				toggleButtons(true);
 				dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, m));
 			}
 		}

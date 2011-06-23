@@ -21,15 +21,6 @@ package system {
 			_file.addEventListener(Event.SELECT, onValidSelection);
 		}
 		
-		public function browseForAnything($msg:String):void
-		{
-		//TODO i don't think this lets us select folders - fuck!!	
-		// i think i just need to create two separate buttons
-		// track file, track folder..
-			_file.browseForOpen($msg);			
-			_file.addEventListener(Event.SELECT, onValidSelection);
-		}
-
 		private function onValidSelection(e:Event):void 
 		{
 			dispatchEvent(new UIEvent(UIEvent.FILE_BROWSER_SELECTION, e.target as File));

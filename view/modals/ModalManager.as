@@ -109,6 +109,7 @@ package view.modals {
 
 		private function onNewButtonClick(e:UIEvent):void 
 		{
+			_new.reset();
 			showModalWindow(_new);
 		}
 

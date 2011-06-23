@@ -25,7 +25,7 @@ package model.db {
 			_stage = stage;
 			_stage.nativeWindow.addEventListener(Event.CLOSING, saveXML); 
 			_file = File.applicationStorageDirectory.resolvePath("Revisions.xml");
-			_file.exists ? readXML() : saveXML();
+			_file.exists ? readXML() : setDefaultSettings();
 		}
 		
 		public static function setSetting(name:String, val:*):void
@@ -63,6 +63,14 @@ package model.db {
 			if (s == 'true') return true;
 			if (s == 'false') return false;
 			return s;
+		}
+		
+		private function setDefaultSettings():void
+		{
+			_settings[CHECK_FOR_UPDATES] = true;
+			_settings[SHOW_TOOL_TIPS] = true;
+			_settings[PROMPT_BEFORE_DOWNLOAD] = true;
+			dispatchEvent(new InstallEvent(InstallEvent.APP_SETTINGS));			
 		}
 		
 		private function saveXML(e:Event = null):void
