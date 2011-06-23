@@ -124,17 +124,23 @@ package model {
 			}
 		}
 		
-		public function checkForBrokenBookmarks():void
+	// called from everytime a bkmk is repaired //			
+		public function getNextBrokenBookmark():Bookmark
 		{
-			trace("AppEngine.checkForBrokenBookmarks() length = ", _broken.length);
-			if (_broken.length == 0) return;
-				_broken.splice(0, 1);
 			if (_broken.length == 0) {
-				buildBookmarksFromDatabase();
+				return null;
 			}	else{
-				dispatchEvent(new BookmarkEvent(BookmarkEvent.PATH_ERROR, _broken[0]));
-			}			
-		}						private function buildBookmarksFromDatabase():void
+				_broken.splice(0, 1);
+				if (_broken.length == 0){
+					buildBookmarksFromDatabase();
+					return null;
+				}	else{
+					return _broken[0];
+				}				
+			}
+		}
+		
+		private function buildBookmarksFromDatabase():void
 		{
 			dispatchEvent(new InstallEvent(InstallEvent.INIT_START));
 			AppModel.proxies.branch.getBranches(_bookmarks[_index]);			AppModel.proxies.branch.addEventListener(BookmarkEvent.BRANCHES_READ, getStashOfNextBookmark);			AppModel.proxies.branch.addEventListener(BookmarkEvent.STASH_LIST_READ, onStoredBookmarkReady);

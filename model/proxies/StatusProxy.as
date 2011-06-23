@@ -2,7 +2,6 @@ package model.proxies {
 
 	import events.BookmarkEvent;
 	import events.NativeProcessEvent;
-	import model.AppEngine;
 	import model.AppModel;
 	import model.air.NativeProcessQueue;
 	import model.vo.Bookmark;
@@ -29,35 +28,36 @@ package model.proxies {
 			super('Status.sh');
 			super.addEventListener(NativeProcessEvent.QUEUE_COMPLETE, onQueueComplete);
 			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);
-			_timer.addEventListener(TimerEvent.TIMER, checkForActiveBookmark);
+			_timer.addEventListener(TimerEvent.TIMER, getStatus);
 		}
 		
 		public function addListenersToResetTimer():void
 		{
-		//TODO may need to add more listerners here for commits, etc.	
 			AppModel.engine.addEventListener(BookmarkEvent.HISTORY, resetTimer);
+			AppModel.engine.addEventListener(BookmarkEvent.NO_BOOKMARKS, killTimer);
 		}
 
-		private function getStatus():void
-		{
-			trace("StatusProxy.getStatus()");
+		private function getStatus(e:TimerEvent):void
+		{	
+			if (checkBookmarkExists() == false) return;			
 			resetTimer();
 			_working = true;
 			super.directory = AppModel.bookmark.gitdir;
 			super.queue = [	Vector.<String>([BashMethods.GET_TRACKED_FILES]), 
 							Vector.<String>([BashMethods.GET_UNTRACKED_FILES]),
 							Vector.<String>([BashMethods.GET_MODIFIED_FILES]),	
-							Vector.<String>([BashMethods.GET_IGNORED_FILES])];		
+							Vector.<String>([BashMethods.GET_IGNORED_FILES])];
 		}
-				public function getSummary():void
+		
+		public function getSummary():void
 		{
-			trace("StatusProxy.getSummary()");
+			if (checkBookmarkExists() == false) return;
 			resetTimer();
 			_working = true;
 			super.directory = AppModel.bookmark.gitdir;
 			super.queue = [	Vector.<String>([BashMethods.GET_MODIFIED_FILES]),
 							Vector.<String>([BashMethods.GET_LAST_COMMIT]),
-							Vector.<String>([BashMethods.GET_TOTAL_COMMITS]) ];					
+							Vector.<String>([BashMethods.GET_TOTAL_COMMITS]) ];
 		}
 		
 		public function getModified(b:Bookmark):void
@@ -69,21 +69,33 @@ package model.proxies {
 			super.queue = [	Vector.<String>([BashMethods.GET_MODIFIED_FILES]) ]; 			
 		}
 		
+		private function checkBookmarkExists():Boolean
+		{
+			if (AppModel.bookmark.exists){
+				return true;
+			}	else{
+				_timer.stop();
+				AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.PATH_ERROR, AppModel.bookmark));
+				return false;				
+			}
+		}
+		
 		public function autoSave(b:Bookmark):void
 		{
 			_autoSaveQueue.push(b);
 			if (!_working) getModified(_autoSaveQueue[0]);
 		}		
 		
-		private function resetTimer(e:BookmarkEvent = null):void
+		public function resetTimer(e:BookmarkEvent = null):void
 		{
 			_timer.reset();
 			_timer.start();
 		}
 		
-		private function checkForActiveBookmark(e:TimerEvent):void
+		private function killTimer(e:BookmarkEvent):void
 		{
-			AppEngine.bookmarks.length == 0 ? _timer.stop() : getStatus();		
+			_timer.stop();
+			trace("StatusProxy.killTimer(e)");
 		}		
 		
 	// private handlers //
@@ -119,7 +131,6 @@ package model.proxies {
 		private function parseSummary(a:Array):void
 		{
 			var n:uint = uint(a[2]) + 1; // total commits //
-			trace("StatusProxy.parseSummary(a)", n);
 			AppModel.branch.setSummary(new Commit(a[1], n), n, splitAndTrim(a[0]));
 			AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.SUMMARY, AppModel.bookmark));			
 		}

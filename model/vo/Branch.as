@@ -51,7 +51,6 @@ package model.vo {
  			_lastCommit = lc;
 			_totalCommits = tc;
 			_status[StatusProxy.M] = mod;
-			trace("Branch.setSummary(lc, tc, mod)", mod);
 		}
 	
 	}

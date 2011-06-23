@@ -29,6 +29,7 @@ package view.modals {
 		public function set bookmark(b:Bookmark):void
 		{
 			_bookmark = b;
+			trace('_bookmark: ' + (_bookmark.label));
 			_view.name_txt.text = b.label;
 			_view.local_txt.text = b.path;			
 		}
@@ -85,10 +86,15 @@ package view.modals {
 		{
 			_bookmark.path = _view.local_txt.text;
 			_bookmark.label = _view.name_txt.text;
-			
-			AppModel.engine.checkForBrokenBookmarks();
-			AppModel.database.removeEventListener(DataBaseEvent.RECORD_EDITED, onEditSuccessful);			
-			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
+		// always check if there are more broken bkmks in the engine queue //	
+			var bkmk:Bookmark = AppModel.engine.getNextBrokenBookmark();
+			if (bkmk) {
+				this.bookmark = bkmk;
+			}	else{
+				AppModel.proxies.status.resetTimer();
+				dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
+			}
+			AppModel.database.removeEventListener(DataBaseEvent.RECORD_EDITED, onEditSuccessful);
 		}
 		
 		private function onDeleteBookmark(e:MouseEvent):void 
