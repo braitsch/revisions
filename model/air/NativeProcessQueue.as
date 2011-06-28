@@ -43,7 +43,7 @@ package model.air {
 		private function onProcessComplete(e:NativeProcessEvent):void
 		{
 			_index++;
-			_results.push(e.data.result);	
+			_results.push(e.data);	
 			dispatchEvent(new NativeProcessEvent(NativeProcessEvent.PROCESS_COMPLETE, e.data));
 			if (_index < _queue.length) {
 				_proxy.call(_queue[_index]);

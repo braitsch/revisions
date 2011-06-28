@@ -103,6 +103,8 @@ package model.proxies {
 		private function onQueueComplete(e:NativeProcessEvent):void
 		{
 			var a:Array = e.data as Array;
+		// strip the method names off the result array //	
+			for (var i:int = 0; i < a.length; i++) a[i] = a[i].result;			
 			switch (a.length){
 				case 1 : onModified(a);		break;
 				case 3 : parseSummary(a);	break;
@@ -215,7 +217,7 @@ package model.proxies {
 		{
 			trace("StatusProxy.onProcessFailure(e)", e.data.method, e.data.result);
 		}
-
+		
 	}
 	
 }

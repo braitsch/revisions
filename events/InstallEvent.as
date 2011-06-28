@@ -3,7 +3,8 @@ package events {
 
 	public class InstallEvent extends Event {
 		
-		public static const GIT_UNAVAILABLE			:String = "GIT_UNAVAILABLE";
+		public static const GIT_NOT_INSTALLED		:String = "GIT_UNAVAILABLE";
+		public static const GIT_NEEDS_UPDATING		:String = "GIT_NEEDS_UPDATING";
 		public static const GIT_INSTALL_COMPLETE	:String = "GIT_INSTALL_COMPLETE";
 		public static const GIT_SETTINGS			:String = "GIT_SETTINGS";
 		public static const APP_SETTINGS			:String = "APP_SETTINGS";
@@ -19,7 +20,7 @@ package events {
 		public static const GIT_DIR_UPDATED			:String = "GIT_DIR_UPDATED";
 		
 		public static const INIT_START				:String = 'initStart';
-		public static const INIT_COMPLETE			:String = 'initComplete';
+		public static const INIT_COMPLETE:String = 'initComplete';
 		
 		public var data:Object;
 

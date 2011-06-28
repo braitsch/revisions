@@ -6,38 +6,72 @@ package view.modals {
 	import system.SystemRules;
 	import flash.desktop.NativeApplication;
 	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import flash.events.MouseEvent;
 
 	public class GitWindow extends ModalWindow {
 
-		private static var _view		:GitWindowMC = new GitWindowMC();
-		private static var _version		:String;
-		private static var _installed	:Boolean = true;
+		private static var _view			:GitWindowMC = new GitWindowMC();
 
 		public function GitWindow()
 		{
 			addChild(_view);
 			super.addButtons([_view.cancel_btn, _view.ok_btn]);
-			_view.cancel_btn.addEventListener(MouseEvent.CLICK, quitApplication);			_view.ok_btn.addEventListener(MouseEvent.CLICK, installAndUpdate);
 		}
 		
-		public function get installed():Boolean { return _installed; }
-
-		public function set version(n:String):void
+		public function promptToInstall():void
 		{
-			_version = n;
-			var b:Bitmap;
-			if (n == '0'){
-				b = new Bitmap(new GitInstallBadge());
-				_view.message_txt.text = 'Revisions requires the Git library to run correctly.\n';	
-				_view.message_txt.text+= 'It only takes a second to install. Okay if I add that for you?';	
-			}	else{
-				b= new Bitmap(new GitUpdateBadge());
-				_view.message_txt.text = 'I need to update your Git version of '+n+' to '+SystemRules.MIN_GIT_VERSION+'\nIs that OK?';
+			attachBadge(new GitInstallBadge());
+			_view.message_txt.text = 'Revisions requires the Git library to run correctly.\n';	
+			_view.message_txt.text+= 'It only takes a second to install. Okay if I add that for you?';	
+			setButtonsToInstall();
+		}
+		
+		public function promptToUpgrade():void
+		{
+			attachBadge(new GitUpdateBadge());
+			_view.message_txt.text = getUpgradePrompt();	
+		}
+		
+		private function getUpgradePrompt():String
+		{
+			var m:String;
+			var n:String;
+			var v:String = AppModel.proxies.config.gitVersion;
+			var p:String = AppModel.proxies.config.gitLocation;
+			if (p == SystemRules.MACPORTS){
+				n = 'Macports'; 
+			}	else if (p == SystemRules.HOMEBREW){
+				n = 'Homebrew';
 			}
-			b.x = 3; b.y = -1;
-			_view.addChild(b);
-			_installed = false;
+			if (n){
+				setButtonsToClose();
+				m = 'It looks like you installed Git via '+n+' but are running version '+v+'. ';
+				m+= 'Please update Git to version '+SystemRules.MIN_GIT_VERSION+' and then restart Revisions.';				
+			}	else{
+				setButtonsToInstall();
+				m = 'I need to update your Git version of '+v+' to '+SystemRules.MIN_GIT_VERSION+'\nIs that OK?';				
+			}
+			return m;
+		}
+		
+		private function setButtonsToInstall():void
+		{
+			_view.ok_btn.addEventListener(MouseEvent.CLICK, installAndUpdate);
+			_view.cancel_btn.addEventListener(MouseEvent.CLICK, quitApplication);			
+		}
+		
+		private function setButtonsToClose():void
+		{
+			_view.cancel_btn.visible = false;
+			_view.ok_btn.addEventListener(MouseEvent.CLICK, quitApplication);
+		}
+		
+		private function attachBadge(bmd:BitmapData):void
+		{
+			var b:Bitmap = new Bitmap(bmd);
+				b.x = 3; b.y = -1;	
+			_view.addChild(b);						
 		}
 
 		private function disableButtons():void
@@ -51,23 +85,22 @@ package view.modals {
 		private function installAndUpdate(e:MouseEvent):void
 		{
 			disableButtons();
-			_view.message_txt.text = _version == '0' ? 'Installing' : 'Updating';
+			_view.message_txt.text = AppModel.proxies.config.gitVersion ? 'Updating' : 'Installing';
 			_view.message_txt.text+= ' Git - This will take a few seconds..';
-			AppModel.proxies.install.installGitLocal();
-			AppModel.proxies.install.addEventListener(InstallEvent.GIT_INSTALL_COMPLETE, onInstallComplete);
+			AppModel.proxies.config.installGit();
+			AppModel.proxies.config.addEventListener(InstallEvent.GIT_INSTALL_COMPLETE, onInstallComplete);
 		}		
 
 		private function onInstallComplete(e:InstallEvent):void 
 		{
-			_installed = true;			
 			super.enableButton(_view.ok_btn, true);
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, closeWindow);
 			_view.message_txt.text = "You're All Set - ";
-			_view.message_txt.text+= _version == '0' ? 'Install' : 'Update';
+			_view.message_txt.text+= AppModel.proxies.config.gitVersion ? 'Update' : 'Install';
 			_view.message_txt.text+= ' Complete!!';
 		// read and update the gui with newly installed git version //	
-			AppModel.proxies.config.getGitVersion();
-			AppModel.proxies.install.removeEventListener(InstallEvent.GIT_INSTALL_COMPLETE, onInstallComplete);
+			AppModel.proxies.config.checkIfGitIsInstalled();
+			AppModel.proxies.config.removeEventListener(InstallEvent.GIT_INSTALL_COMPLETE, onInstallComplete);
 		}
 		
 		private function quitApplication(e:MouseEvent):void 

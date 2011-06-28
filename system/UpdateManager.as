@@ -70,7 +70,7 @@ package system {
 			var oldVersion:String = oldDescriptor.odns::versionNumber.toString();
 			
 		// Compare current version with update version
-			if (oldVersion == newVersion) {
+			if (oldVersion >= newVersion) {
 				dispatchEvent(new InstallEvent(InstallEvent.APP_UP_TO_DATE, oldVersion));
 			}	else{
 				_updateURL = newDescriptor.ndns::url.toString();

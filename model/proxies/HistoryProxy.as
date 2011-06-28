@@ -29,7 +29,7 @@ package model.proxies {
 		private function onQueueComplete(e:NativeProcessEvent):void 
 		{
 			var a:Array = e.data as Array;
-			parseHistory(a[0]); 
+			parseHistory(a[0].result); 
 		}
 
 		private function parseHistory(s:String):void

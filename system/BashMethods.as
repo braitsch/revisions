@@ -3,7 +3,8 @@ package system{
 	public class BashMethods {
 		
 	// config methods //
-		public static const GET_VERSION			:String = 'getVersion';	
+		public static const DETECT_GIT			:String = 'detectGit';		
+		public static const INSTALL_GIT			:String = 'installGit';
 		public static const SET_USER_NAME		:String = 'setUserName';
 		public static const GET_USER_NAME		:String = 'getUserName';	
 		public static const SET_USER_EMAIL		:String = 'setUserEmail';
@@ -23,8 +24,8 @@ package system{
 		public static const TRACK_FILE			:String = 'trackFile';
 		public static const UNTRACK_FILE		:String = 'unTrackFile';
 		public static const INIT_FOLDER			:String = 'initFolder';
-		public static const INIT_FILE			:String = 'initFile';
-		public static const KILL_FILE			:String = 'killFile';		public static const KILL_FOLDER			:String = 'killFolder';
+		public static const INIT_FILE			:String = 'initFile';		public static const KILL_FILE			:String = 'killFile';
+		public static const KILL_FOLDER			:String = 'killFolder';
 		
 		public static const GET_BRANCHES		:String = 'getBranches';
 		public static const GET_STASH_LIST		:String = 'getStashList';

@@ -1,5 +1,6 @@
 package view.modals {
 
+	import model.proxies.ConfigProxy;
 	import events.BookmarkEvent;
 	import events.InstallEvent;
 	import events.UIEvent;
@@ -42,7 +43,8 @@ package view.modals {
 			AppModel.engine.addEventListener(BookmarkEvent.NO_BOOKMARKS, showWelcomeScreen);
 			AppModel.updater.addEventListener(InstallEvent.UPDATE_AVAILABLE, promptToUpdate);
 			AppModel.proxies.config.addEventListener(InstallEvent.NAME_AND_EMAIL, addNameAndEmail);
-			AppModel.proxies.config.addEventListener(InstallEvent.GIT_UNAVAILABLE, installGit);
+			AppModel.proxies.config.addEventListener(InstallEvent.GIT_NOT_INSTALLED, installGit);
+			AppModel.proxies.config.addEventListener(InstallEvent.GIT_NEEDS_UPDATING, upgradeGit);
 		}
 
 		public function init(stage:Stage):void
@@ -91,9 +93,15 @@ package view.modals {
 	
 		private function installGit(e:InstallEvent):void 
 		{
-			_gitWindow.version = e.data as String;
+			_gitWindow.promptToInstall();
 			showModalWindow(_gitWindow);
 		}	
+		
+		private function upgradeGit(e:InstallEvent):void
+		{
+			_gitWindow.promptToUpgrade();
+			showModalWindow(_gitWindow);			
+		}
 		
 		private function addNameAndEmail(e:InstallEvent):void
 		{
@@ -219,9 +227,10 @@ package view.modals {
 		
 		private function checkGitIsInitialized():Boolean
 		{
-			if (_gitWindow.installed == false) return false;
-			if (AppModel.proxies.config.userName == '') return false; 			
-			if (AppModel.proxies.config.userEmail == '') return false; 			
+			var c:ConfigProxy = AppModel.proxies.config;
+			if (c.gitInstalled == false) return false;
+			if (c.userName == '') return false; 			
+			if (c.userEmail == '') return false; 			
 			return true;
 		}
 		
