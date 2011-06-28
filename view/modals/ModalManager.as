@@ -19,6 +19,7 @@ package view.modals {
 
 		private static var _welcome			:WelcomeScreen = new WelcomeScreen();
 		private static var _new				:NewBookmark = new NewBookmark();
+		private static var _dragAndDrop		:AddDragAndDrop = new AddDragAndDrop();			
 		private static var _edit			:EditBookmark = new EditBookmark();
 		private static var _repair			:RepairBookmark = new RepairBookmark();		private static var _delete			:DeleteBookmark = new DeleteBookmark();
 		private static var _commit			:NewCommit = new NewCommit();
@@ -110,13 +111,12 @@ package view.modals {
 
 		private function onDragAndDrop(e:UIEvent):void 
 		{
-			_new.addNewFromDropppedFile(e.data as File);
-			showModalWindow(_new);
+			_dragAndDrop.file = e.data as File;
+			showModalWindow(_dragAndDrop);
 		}	
 
 		private function onNewButtonClick(e:UIEvent):void 
 		{
-			_new.reset();
 			showModalWindow(_new);
 		}
 
