@@ -9,9 +9,9 @@ package model.proxies {
 	public class ConfigProxy extends NativeProcessQueue {
 
 		private static var _userName		:String;		private static var _userEmail		:String;
+		private static var _gitReady		:Boolean = false;
 		private static var _gitVersion		:String;
 		private static var _gitLocation		:String;
-		private static var _gitInstalled	:Boolean = false;
 
 		public function ConfigProxy()
 		{
@@ -21,9 +21,9 @@ package model.proxies {
 		//	super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);			
 		}
 
+		public function get gitReady():Boolean { return _gitReady; }
 		public function get gitVersion():String { return _gitVersion; }
 		public function get gitLocation():String { return _gitLocation; }
-		public function get gitInstalled():Boolean { return _gitInstalled; }
 
 		public function checkIfGitIsInstalled():void
 		{
@@ -79,7 +79,6 @@ package model.proxies {
 				_gitVersion = a[0].substring(12);
 				_gitLocation = a[1];
 				if (_gitVersion >= SystemRules.MIN_GIT_VERSION){
-					_gitInstalled = true;
 					getUserNameAndEmail();
 				}	else{
 					dispatchEvent(new InstallEvent(InstallEvent.GIT_NEEDS_UPDATING));
@@ -91,10 +90,11 @@ package model.proxies {
 		
 		private function checkUserNameAndEmail(n:String, e:String):void
 		{
+			_userName = n; _userEmail = e;
 			if (n == '' || e == ''){
 				dispatchEvent(new InstallEvent(InstallEvent.NAME_AND_EMAIL));
 			}	else{
-				_userName = n; _userEmail = e;
+				_gitReady = true;
 				dispatchEvent(new InstallEvent(InstallEvent.GIT_SETTINGS));
 			}			
 		}

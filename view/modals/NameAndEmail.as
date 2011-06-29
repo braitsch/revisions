@@ -22,7 +22,7 @@ package view.modals {
 			super.addInputs(Vector.<TLFTextField>([_view.name_txt, _view.email_txt]));			
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);
 		}
-
+		
 		private function onGitSettings(e:InstallEvent):void
 		{
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));

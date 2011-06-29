@@ -5,7 +5,6 @@ package view.modals {
 	import events.UIEvent;
 	import model.AppModel;
 	import model.db.AppSettings;
-	import model.proxies.ConfigProxy;
 	import model.remote.RemoteAccount;
 	import model.vo.Bookmark;
 	import model.vo.Commit;
@@ -211,7 +210,7 @@ package view.modals {
 		
 		private function hideModalWindow():void
 		{
-			if (checkGitIsInitialized() == false) return;
+			if (AppModel.proxies.config.gitReady == false) return;
 			if (_window == _updateApp) checkAppIsInitialized();
 			if (_window) removeChild(_window);
 			if (_alert.stage) removeChild(_alert);
@@ -232,15 +231,6 @@ package view.modals {
 			removeChild(_alert);
 			if (_window) _window.filters = [];
 			if (_window == null) _curtain.hide();
-		}
-		
-		private function checkGitIsInitialized():Boolean
-		{
-			var c:ConfigProxy = AppModel.proxies.config;
-			if (c.gitInstalled == false) return false;
-			if (c.userName == '') return false; 			
-			if (c.userEmail == '') return false; 			
-			return true;
 		}
 		
 		private function checkAppIsInitialized():void
