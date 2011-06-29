@@ -41,7 +41,7 @@ package model.vo {
 			this.path = o.path;
 			this.label = o.label;
 			if (_autosave) initAutoSave();
-		//	trace('New Bookmark Created :: '+_label, _autosave); 
+		//	trace('New Bookmark Created :: '+_label); 
 		}
 
 		public function get branch():Branch { return _branch; }		

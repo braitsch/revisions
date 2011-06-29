@@ -1,11 +1,12 @@
 package view.modals {
 
-	import model.proxies.ConfigProxy;
 	import events.BookmarkEvent;
 	import events.InstallEvent;
 	import events.UIEvent;
 	import model.AppModel;
 	import model.db.AppSettings;
+	import model.proxies.ConfigProxy;
+	import model.remote.RemoteAccount;
 	import model.vo.Bookmark;
 	import model.vo.Commit;
 	import flash.display.Sprite;
@@ -19,9 +20,10 @@ package view.modals {
 
 		private static var _welcome			:WelcomeScreen = new WelcomeScreen();
 		private static var _new				:NewBookmark = new NewBookmark();
-		private static var _dragAndDrop		:AddDragAndDrop = new AddDragAndDrop();			
 		private static var _edit			:EditBookmark = new EditBookmark();
-		private static var _repair			:RepairBookmark = new RepairBookmark();		private static var _delete			:DeleteBookmark = new DeleteBookmark();
+		private static var _repair			:RepairBookmark = new RepairBookmark();
+		private static var _delete			:DeleteBookmark = new DeleteBookmark();		private static var _login			:WindowLogin = new WindowLogin();
+		private static var _dragAndDrop		:AddDragAndDrop = new AddDragAndDrop();
 		private static var _commit			:NewCommit = new NewCommit();
 		private static var _revert			:RevertToVersion = new RevertToVersion();		private static var _download		:DownloadVersion = new DownloadVersion();
 		private static var _details			:CommitDetails = new CommitDetails();
@@ -62,6 +64,7 @@ package view.modals {
 			stage.addEventListener(UIEvent.SHOW_ALERT, onShowAlert);		
 			stage.addEventListener(UIEvent.HIDE_ALERT, onCloseAlert);		
 			stage.addEventListener(UIEvent.CLOSE_MODAL_WINDOW, onCloseButton);
+			stage.addEventListener(UIEvent.SHOW_LOGIN, onShowLogin);
 			stage.addEventListener(InstallEvent.APP_EXPIRED, onAppExpired);
 			stage.addEventListener(KeyboardEvent.KEY_UP, checkForEnterKey);
 		}
@@ -103,6 +106,12 @@ package view.modals {
 			_gitWindow.promptToUpgrade();
 			showModalWindow(_gitWindow);			
 		}
+		
+		private function onShowLogin(e:UIEvent):void
+		{
+			_login.account = e.data as RemoteAccount;
+			showModalWindow(_login);
+		}		
 		
 		private function addNameAndEmail(e:InstallEvent):void
 		{

@@ -1,5 +1,6 @@
 package view.modals {
 
+	import model.remote.RemoteAccount;
 	import events.UIEvent;
 	import system.FileBrowser;
 	import flash.events.MouseEvent;
@@ -28,10 +29,12 @@ package view.modals {
 					_browser.browseForDirectory('Select a folder to track.');
 				break;	
 				case _view.github_btn :
-					dispatchMessage('GitHub integration is coming in the next build.');
+					dispatchEvent(new UIEvent(UIEvent.SHOW_LOGIN, new RemoteAccount(RemoteAccount.GITHUB)));
+	//				dispatchMessage('GitHub integration is coming in the next build.');
 				break;	
 				case _view.beanstalk_btn :
-					dispatchMessage('Beanstalk integration is coming in the next build.');
+					dispatchEvent(new UIEvent(UIEvent.SHOW_LOGIN, new RemoteAccount(RemoteAccount.BEANSTALK)));
+	//				dispatchMessage('Beanstalk integration is coming in the next build.');
 				break;	
 				case _view.private_btn :
 					dispatchMessage('Private repositories will be supported in the next build.');

@@ -19,14 +19,15 @@ package events {
 		public static const GLOBAL_SETTINGS			:String = "GLOBAL_SETTINGS";
 		public static const GITHUB					:String = "GITHUB";
 		public static const BEANSTALK				:String = "BEANSTALK";
+		public static const SHOW_LOGIN				:String = "SHOW_LOGIN";
 		public static const DRAG_AND_DROP			:String = "DRAG_AND_DROP";
 		public static const FILE_BROWSER_SELECTION	:String = "FILE_BROWSER_SELECTION";
 		
 	// list item selections //	
 		public static const LIST_ITEM_SELECTED		:String = "LIST_ITEM_SELECTED";
 		public static const DIRECTORY_SELECTED		:String = "DIRECTORY_SELECTED";
-		public static const TOGGLE_OPEN_DIRECTORY:String = "TOGGLE_OPEN_DIRECTORY";
-		public static const HISTORY_DRAWN:String = "HISTORY_DRAWN";
+		public static const TOGGLE_OPEN_DIRECTORY	:String = "TOGGLE_OPEN_DIRECTORY";
+		public static const HISTORY_DRAWN			:String = "HISTORY_DRAWN";
 		
 		public var data:Object;
 
