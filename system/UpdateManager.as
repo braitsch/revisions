@@ -1,13 +1,13 @@
 package system {
 
+	import flash.events.TimerEvent;
 	import events.InstallEvent;
-	import flash.events.EventDispatcher;
-	import events.UIEvent;
 	import flash.desktop.NativeApplication;
 	import flash.desktop.NativeProcess;
 	import flash.desktop.NativeProcessStartupInfo;
 	import flash.events.ErrorEvent;
 	import flash.events.Event;
+	import flash.events.EventDispatcher;
 	import flash.events.IOErrorEvent;
 	import flash.events.ProgressEvent;
 	import flash.filesystem.File;
@@ -18,21 +18,30 @@ package system {
 	import flash.net.URLStream;
 	import flash.system.Capabilities;
 	import flash.utils.ByteArray;
+	import flash.utils.Timer;
 	
 	public class UpdateManager extends EventDispatcher
 	{
 		private static const UPDATE_DESCRIPTOR_URL:String = "http://revisions-app.com/download/update.xml";
 		
-		private var updateFile	:File;
-		private var urlStream	:URLStream;
-		private var fileStream	:FileStream;
-		private var hdiutil		:HdiutilHelper;
-		private var _updateURL	:String;
-		
+		private static var updateFile	:File;
+		private static var urlStream	:URLStream;
+		private static var fileStream	:FileStream;
+		private static var hdiutil		:HdiutilHelper;
+		private static var _updateURL	:String;
+		private static var _timeout		:Timer = new Timer(3000, 1);
+
+		public function UpdateManager()
+		{
+			_timeout.addEventListener(TimerEvent.TIMER_COMPLETE, onTimeout);
+		}
+
 	// public methods //	
 		
 		public function checkForUpdate():void
 		{
+			_timeout.reset();
+			_timeout.start();
 			downloadXMLUpdateFile();
 		}
 		
@@ -54,6 +63,7 @@ package system {
 		
 		private function onUpdateXMLLoadComplete(event:Event):void
 		{
+			_timeout.stop();			
 			var XMLLoader:URLLoader = URLLoader(event.currentTarget);
 			killUpdateXMLLoader(XMLLoader);
 		
@@ -78,10 +88,10 @@ package system {
 			}
 		}
 		
-		private function onUpdateXMLLoadError(event:IOErrorEvent):void
+		private function onUpdateXMLLoadError(e:IOErrorEvent):void
 		{
-			killUpdateXMLLoader(URLLoader(event.currentTarget));
-			dispatchEvent(new InstallEvent(InstallEvent.UPDATE_FAILURE, event.text));			
+			if (_timeout.running) dispatchUpdateUnavailable(e.text);
+			killUpdateXMLLoader(URLLoader(e.currentTarget));
 		}
 		
 		private function killUpdateXMLLoader(XMLLoader:URLLoader):void
@@ -127,10 +137,10 @@ package system {
 			dispatchEvent(new InstallEvent(InstallEvent.UPDATE_PROGRESS, event));			
 		}
 		
-		private function onURLStreamError(event:IOErrorEvent):void
+		private function onURLStreamError(e:IOErrorEvent):void
 		{
 			closeStreams();
-			dispatchEvent(new InstallEvent(InstallEvent.UPDATE_FAILURE, event.text));
+			if (_timeout.running) dispatchUpdateUnavailable(e.text);
 		}
 		
 		private function onURLStreamComplete(event:Event):void
@@ -154,7 +164,7 @@ package system {
 		
 		private function onHdiutilError(e:ErrorEvent):void
 		{
-			dispatchEvent(new InstallEvent(InstallEvent.UPDATE_FAILURE, e.text));
+			if (_timeout.running) dispatchUpdateUnavailable(e.text);
 		}
 
 		private function onHdiutilSuccess(e:Event):void
@@ -193,6 +203,19 @@ package system {
 			urlStream.removeEventListener(IOErrorEvent.IO_ERROR, onURLStreamError);
 			urlStream.close();
 			if (fileStream) fileStream.close();
+		}
+		
+	// update check failures //	
+	
+		private function onTimeout(e:TimerEvent):void
+		{
+			dispatchUpdateUnavailable();
+		}
+		
+		private function dispatchUpdateUnavailable(m:String = ''):void
+		{
+			_timeout.stop();
+			dispatchEvent(new InstallEvent(InstallEvent.UPDATE_FAILURE, m));
 		}
 		
 	}

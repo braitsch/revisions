@@ -30,6 +30,7 @@ package {
 		
 		private function onInvokeEvent(e:InvokeEvent):void
 		{
+			trace("AppMain.onInvokeEvent(e)");
 			stage.nativeWindow.visible = false;
 			AppModel.settings.addEventListener(InstallEvent.APP_SETTINGS, onAppSettings);
 			AppModel.settings.initialize(stage);
@@ -38,6 +39,7 @@ package {
 
 		private function onAppSettings(e:InstallEvent):void
 		{
+			trace("AppMain.onAppSettings(e)");
 			stage.nativeWindow.visible = true;
 			AppModel.settings.removeEventListener(InstallEvent.APP_SETTINGS, onAppSettings);
 			checkExpiredAndUpdates();
@@ -45,16 +47,19 @@ package {
 		
 		private function checkExpiredAndUpdates():void
 		{
+			trace("AppMain.checkExpiredAndUpdates()");
 			if (LicenseManager.checkExpired()){
 				stage.dispatchEvent(new InstallEvent(InstallEvent.APP_EXPIRED));
 			}	else{
 				AppModel.updater.checkForUpdate();				
 				AppModel.updater.addEventListener(InstallEvent.APP_UP_TO_DATE, onAppUpToDate);
+				AppModel.updater.addEventListener(InstallEvent.UPDATE_FAILURE, onAppUpToDate);
 			}
-		}			
-		
+		}
+
 		private function onAppUpToDate(e:InstallEvent):void
 		{
+			trace("AppMain.onAppUpToDate(e)");
 			AppModel.updater.removeEventListener(InstallEvent.APP_UP_TO_DATE, onAppUpToDate);
 			AppModel.proxies.config.detectGit();
 			AppModel.proxies.config.addEventListener(InstallEvent.GIT_SETTINGS, onGitReady);
@@ -62,6 +67,7 @@ package {
 
 		private function onGitReady(e:InstallEvent):void
 		{
+			trace("AppMain.onGitReady(e)");
 			AppModel.database.init();
 			AirNativeMenu.initialize(stage);
 			AirContextMenu.initialize(stage);

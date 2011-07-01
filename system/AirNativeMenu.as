@@ -18,9 +18,9 @@ package system {
        	private static var _menu		:NativeMenu;
        	private static var _file		:NativeMenuItem;
        	private static var _main		:NativeMenuItem;
-       	private static var _new			:NativeMenuItem = new NativeMenuItem('New Bookmark');
+       	private static var _newBkmk		:NativeMenuItem = new NativeMenuItem('New Bookmark');
        	private static var _aboutGit	:NativeMenuItem = new NativeMenuItem('About Git');
-       	private static var _update		:NativeMenuItem = new NativeMenuItem('Check For Updates');
+       	private static var _updateApp	:NativeMenuItem = new NativeMenuItem('Check For Updates');
        	private static var _stage		:Stage;
                      
         public static function initialize(s:Stage):void
@@ -28,14 +28,14 @@ package system {
         	_stage = s;
             _menu = NativeApplication.nativeApplication.menu;
             _file = getMenuByName('File');
-            _new.addEventListener(Event.SELECT, onOptionSelected);
-            _file.submenu.addItem(_new);
+            _newBkmk.addEventListener(Event.SELECT, onOptionSelected);
+            _file.submenu.addItem(_newBkmk);
             _main = getMenuByName('adl');
             if (!_main) _main = getMenuByName('Revisions');
-            _update.addEventListener(Event.SELECT, onOptionSelected);
+            _updateApp.addEventListener(Event.SELECT, onOptionSelected);
             _aboutGit.addEventListener(Event.SELECT, onOptionSelected);
-            _main.submenu.addItemAt(_update, 1);
-            _main.submenu.addItemAt(_aboutGit, 2);
+            _main.submenu.addItemAt(_aboutGit, 1);
+            _main.submenu.addItemAt(_updateApp, 2);
 		}
 
 		private static function getMenuByName(s:String):NativeMenuItem
@@ -47,13 +47,13 @@ package system {
         private static function onOptionSelected(e:Event):void 
         { 
         	 switch(e.target){
-        	 	case _new		: 
+        	 	case _newBkmk	: 
         	 		_stage.dispatchEvent(new UIEvent(UIEvent.ADD_BOOKMARK));	
         	 	break;
         	 	case _aboutGit : 
         	 		_stage.dispatchEvent(new UIEvent(UIEvent.ABOUT_GIT));
         	 	break;        	 	
-        	 	case _update	: 
+        	 	case _updateApp	: 
 					AppSettings.setSetting(AppSettings.CHECK_FOR_UPDATES, true);
         	 		AppModel.updater.addEventListener(InstallEvent.APP_UP_TO_DATE, onUpToDate);
         	 		AppModel.updater.checkForUpdate();
