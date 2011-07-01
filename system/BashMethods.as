@@ -3,28 +3,20 @@ package system{
 	public class BashMethods {
 		
 	// config methods //
-		public static const DETECT_GIT			:String = 'detectGit';		
+		public static const DETECT_GIT			:String = 'getGitDetails';		
 		public static const INSTALL_GIT			:String = 'installGit';
 		public static const SET_USER_NAME		:String = 'setUserName';
 		public static const GET_USER_NAME		:String = 'getUserName';	
 		public static const SET_USER_EMAIL		:String = 'setUserEmail';
 		public static const GET_USER_EMAIL		:String = 'getUserEmail';	
 		
-	// install methods //	
-		public static const INSTALL_LOCAL		:String = 'installLocal';	
-		public static const DOWNLOAD			:String = 'download';
-		public static const MOUNT				:String = 'mount';
-		public static const INSTALL				:String = 'install';
-		public static const UNMOUNT				:String = 'unmount';
-		public static const TRASH				:String = 'trash';
-		public static const UPDATE_PATH			:String = 'updatePath';
-		public static const EDIT_GIT_DIR		:String = 'editGitDir';
 	// editor methods //		
 		public static const COMMIT				:String = 'commit';
 		public static const TRACK_FILE			:String = 'trackFile';
 		public static const UNTRACK_FILE		:String = 'unTrackFile';
-		public static const INIT_FOLDER			:String = 'initFolder';
-		public static const INIT_FILE			:String = 'initFile';		public static const KILL_FILE			:String = 'killFile';
+		public static const EDIT_GIT_DIR		:String = 'editGitDir';
+		public static const INIT_FOLDER			:String = 'initFolder';		public static const INIT_FILE			:String = 'initFile';
+		public static const KILL_FILE			:String = 'killFile';
 		public static const KILL_FOLDER			:String = 'killFolder';
 		
 		public static const GET_BRANCHES		:String = 'getBranches';
@@ -39,7 +31,7 @@ package system{
 		public static const GET_MODIFIED_FILES	:String = 'getModifiedFiles';
 		public static const GET_TRACKED_FILES	:String = 'getTrackedFiles';
 		public static const GET_UNTRACKED_FILES	:String = 'getUntrackedFiles';
-		public static const GET_IGNORED_FILES	:String = 'getIgnoredFiles';
+		public static const GET_IGNORED_FILES:String = 'getIgnoredFiles';
 		
 	}
 	
