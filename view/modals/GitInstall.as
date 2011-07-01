@@ -2,15 +2,18 @@ package view.modals {
 
 	public class GitInstall extends GitWindow {
 
+		private static var _view:GitInstallMC = new GitInstallMC();
+
 		public function GitInstall()
 		{
-			attachBadge(new GitInstallBadge());			
+			super(_view);
 		}
 		
 		public function promptToInstall():void
 		{
-			super.view.message_txt.appendText('Revisions requires the Git library to run correctly.\n');	
-			super.view.message_txt.appendText('It only takes a second to install. Okay if I add that for you?');	
+			_view.message_txt.text = '';
+			_view.message_txt.appendText('Revisions requires the Git library to run correctly.\n');	
+			_view.message_txt.appendText('It only takes a second to install. Okay if I add that for you?');	
 		}
 		
 	}

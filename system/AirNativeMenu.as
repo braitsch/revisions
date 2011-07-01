@@ -50,24 +50,16 @@ package system {
         	 	case _new		: 
         	 		_stage.dispatchEvent(new UIEvent(UIEvent.ADD_BOOKMARK));	
         	 	break;
+        	 	case _aboutGit : 
+        	 		_stage.dispatchEvent(new UIEvent(UIEvent.ABOUT_GIT));
+        	 	break;        	 	
         	 	case _update	: 
 					AppSettings.setSetting(AppSettings.CHECK_FOR_UPDATES, true);
         	 		AppModel.updater.addEventListener(InstallEvent.APP_UP_TO_DATE, onUpToDate);
         	 		AppModel.updater.checkForUpdate();
-        	 	break;	
-        	 	case _aboutGit : 
-        	 		_stage.dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, getGitDetails()));
-        	 	break;	        	 	
+        	 	break;	       	 	
         	 }
            
-		}
-
-		private static function getGitDetails():String
-		{
-			var m:String = 'Git Version : '+AppModel.proxies.config.gitVersion+'\n';
-			m+='Installed at : '+AppModel.proxies.config.gitInstall+'\n';
-			m+='Loaded from cache : '+AppModel.proxies.config.loadedFromCache+'\n';
-			return m;
 		}
 
 		private static function onUpToDate(e:InstallEvent):void

@@ -26,6 +26,7 @@ package view.modals {
 		private static var _commit			:NewCommit = new NewCommit();
 		private static var _revert			:RevertToVersion = new RevertToVersion();		private static var _download		:DownloadVersion = new DownloadVersion();
 		private static var _details			:CommitDetails = new CommitDetails();
+		private static var _aboutGit		:GitAbout = new GitAbout();
 		private static var _settings		:GlobalSettings = new GlobalSettings();
 		private static var _updateApp		:UpdateApp = new UpdateApp();
 		private static var _nameAndEmail	:NameAndEmail = new NameAndEmail();
@@ -60,6 +61,7 @@ package view.modals {
 			stage.addEventListener(UIEvent.REVERT, revertProject);
 			stage.addEventListener(UIEvent.DOWNLOAD, downloadVersion);
 			stage.addEventListener(UIEvent.COMMIT_DETAILS, commitDetails);
+			stage.addEventListener(UIEvent.ABOUT_GIT, onAboutGit);
 			stage.addEventListener(UIEvent.GLOBAL_SETTINGS, globalSettings);
 			stage.addEventListener(UIEvent.SHOW_ALERT, onShowAlert);		
 			stage.addEventListener(UIEvent.HIDE_ALERT, onCloseAlert);		
@@ -178,6 +180,11 @@ package view.modals {
 		{
 			showModalWindow(_settings);
 		}
+		
+		private function onAboutGit(e:UIEvent):void
+		{
+			showModalWindow(_aboutGit);
+		}		
 		
 		private function onAppExpired(e:InstallEvent):void
 		{

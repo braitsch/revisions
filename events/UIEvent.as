@@ -16,6 +16,7 @@ package events {
 		public static const HIDE_ALERT				:String = "HIDE_ALERT";
 		public static const CLOSE_MODAL_WINDOW		:String = "CLOSE_MODAL_WINDOW";
 		public static const SHOW_HISTORY			:String = "SHOW_HISTORY";
+		public static const ABOUT_GIT				:String = "ABOUT_GIT";
 		public static const GLOBAL_SETTINGS			:String = "GLOBAL_SETTINGS";
 		public static const GITHUB					:String = "GITHUB";
 		public static const BEANSTALK				:String = "BEANSTALK";
@@ -27,7 +28,7 @@ package events {
 		public static const LIST_ITEM_SELECTED		:String = "LIST_ITEM_SELECTED";
 		public static const DIRECTORY_SELECTED		:String = "DIRECTORY_SELECTED";
 		public static const TOGGLE_OPEN_DIRECTORY	:String = "TOGGLE_OPEN_DIRECTORY";
-		public static const HISTORY_DRAWN			:String = "HISTORY_DRAWN";
+		public static const HISTORY_DRAWN:String = "HISTORY_DRAWN";
 		
 		public var data:Object;
 

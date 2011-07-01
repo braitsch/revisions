@@ -1,32 +1,33 @@
 package view.modals {
 
-	import system.SystemRules;
 	import events.InstallEvent;
 	import events.UIEvent;
 	import model.AppModel;
+	import system.SystemRules;
 	import flash.desktop.NativeApplication;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 
 	public class GitWindow extends ModalWindow {
 
-		protected var view			:GitWindowMC = new GitWindowMC();
+		private var _view			:*;
 
-		public function GitWindow()
+		public function GitWindow(v:Sprite)
 		{
-			addChild(view);
-			super.addButtons([view.cancel_btn, view.ok_btn]);	
-			view.message_txt.text = '';		
-			view.ok_btn.addEventListener(MouseEvent.CLICK, installAndUpdate);
-			view.cancel_btn.addEventListener(MouseEvent.CLICK, quitApplication);			
+			_view = v;
+			addChild(_view);
+			super.addButtons([_view.cancel_btn, _view.ok_btn]);	
+			_view.ok_btn.addEventListener(MouseEvent.CLICK, installAndUpdate);
+			_view.cancel_btn.addEventListener(MouseEvent.CLICK, quitApplication);
 		}
 		
 		protected function attachBadge(bmd:BitmapData):void
 		{
 			var b:Bitmap = new Bitmap(bmd);
 				b.x = 3; b.y = -1;	
-			view.addChild(b);						
+			_view.addChild(b);						
 		}
 		
 		protected function checkForPackageInstaller():String
@@ -43,16 +44,16 @@ package view.modals {
 		
 		private function disableButtons():void
 		{
-			super.enableButton(view.ok_btn, false);
-			super.enableButton(view.cancel_btn, false);
-			view.ok_btn.removeEventListener(MouseEvent.CLICK, installAndUpdate);
-			view.cancel_btn.removeEventListener(MouseEvent.CLICK, quitApplication);
+			super.enableButton(_view.ok_btn, false);
+			super.enableButton(_view.cancel_btn, false);
+			_view.ok_btn.removeEventListener(MouseEvent.CLICK, installAndUpdate);
+			_view.cancel_btn.removeEventListener(MouseEvent.CLICK, quitApplication);
 		}
 		
 		private function installAndUpdate(e:MouseEvent):void
 		{
 			disableButtons();
-			view.message_txt.text = getInstallMessage();
+			_view.message_txt.text = getInstallMessage();
 			if (checkForPackageInstaller() == ''){
 				AppModel.proxies.config.installGit();
 			}	else{
@@ -76,11 +77,11 @@ package view.modals {
 
 		private function onInstallComplete(e:InstallEvent):void 
 		{
-			super.enableButton(view.ok_btn, true);
-			view.ok_btn.addEventListener(MouseEvent.CLICK, closeWindow);
-			view.message_txt.text = "You're All Set - ";
-			view.message_txt.text+= AppModel.proxies.config.gitVersion ? 'Update' : 'Install';
-			view.message_txt.text+= ' Complete!!';
+			super.enableButton(_view.ok_btn, true);
+			_view.ok_btn.addEventListener(MouseEvent.CLICK, closeWindow);
+			_view.message_txt.text = "You're All Set - ";
+			_view.message_txt.text+= AppModel.proxies.config.gitVersion ? 'Update' : 'Install';
+			_view.message_txt.text+= ' Complete!!';
 			AppModel.proxies.config.removeEventListener(InstallEvent.GIT_INSTALL_COMPLETE, onInstallComplete);
 		// read and update the gui with newly installed git version //	
 			AppModel.proxies.config.detectGit();			
