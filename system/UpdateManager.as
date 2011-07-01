@@ -1,7 +1,7 @@
 package system {
 
-	import flash.events.TimerEvent;
 	import events.InstallEvent;
+	import model.db.AppSettings;
 	import flash.desktop.NativeApplication;
 	import flash.desktop.NativeProcess;
 	import flash.desktop.NativeProcessStartupInfo;
@@ -10,6 +10,7 @@ package system {
 	import flash.events.EventDispatcher;
 	import flash.events.IOErrorEvent;
 	import flash.events.ProgressEvent;
+	import flash.events.TimerEvent;
 	import flash.filesystem.File;
 	import flash.filesystem.FileMode;
 	import flash.filesystem.FileStream;
@@ -80,11 +81,11 @@ package system {
 			var oldVersion:String = oldDescriptor.odns::versionNumber.toString();
 			
 		// Compare current version with update version
-			if (oldVersion >= newVersion) {
-				dispatchEvent(new InstallEvent(InstallEvent.APP_UP_TO_DATE, oldVersion));
-			}	else{
+			if (oldVersion < newVersion && AppSettings.getSetting(AppSettings.CHECK_FOR_UPDATES)) {
 				_updateURL = newDescriptor.ndns::url.toString();
 				dispatchEvent(new InstallEvent(InstallEvent.UPDATE_AVAILABLE, {o:oldVersion, n:newVersion}));
+			} else {
+				dispatchEvent(new InstallEvent(InstallEvent.APP_UP_TO_DATE, oldVersion));
 			}
 		}
 		

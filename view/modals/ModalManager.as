@@ -193,19 +193,25 @@ package view.modals {
 		
 		private function promptToUpdate(e:InstallEvent):void
 		{
-			if (AppSettings.getSetting(AppSettings.CHECK_FOR_UPDATES)){
-				_updateApp.newVersion = e.data.n;
-				showModalWindow(_updateApp);
-			}	else{
-				checkAppIsInitialized();
-				trace("ModalManager.promptToUpdate(e), Revisions "+e.data.n+' is Available');
-			}
+			_updateApp.newVersion = e.data.n;
+			showModalWindow(_updateApp);
 		}			
 
 	// adding & removing modal windows //	
 		
-		private function onCloseButton(e:UIEvent):void { hideModalWindow(); }
-		private function onCurtainClick(e:MouseEvent):void { hideModalWindow(); }		
+		private function onCloseButton(e:UIEvent):void { checkIfOkToClose(); }
+		private function onCurtainClick(e:MouseEvent):void { checkIfOkToClose(); }		
+		
+		private function checkIfOkToClose():void
+		{
+			if (_window == _updateApp) {
+				hideModalWindow();
+		// special case that allows app to continue initialization sequence //
+				AppModel.updater.dispatchEvent(new InstallEvent(InstallEvent.UPDATE_IGNORED));
+			}	else if (checkGitIsReady() == true){
+				hideModalWindow();
+			}
+		}		
 		
 		private function showModalWindow(mw:ModalWindow):void
 		{
@@ -218,14 +224,12 @@ package view.modals {
 		
 		private function hideModalWindow():void
 		{
-			if (AppModel.proxies.config.gitReady == false) return;
-			if (_window == _updateApp) checkAppIsInitialized();
-			if (_window) removeChild(_window);
+			removeChild(_window);
 			if (_alert.stage) removeChild(_alert);
 			_window = null;
 			_curtain.hide();
 		}
-		
+
 		private function onShowAlert(e:UIEvent):void
 		{
 			_alert.message = e.data as String;
@@ -241,11 +245,17 @@ package view.modals {
 			if (_window == null) _curtain.hide();
 		}
 		
-		private function checkAppIsInitialized():void
+		private function checkGitIsReady():Boolean
 		{
-			if (!AppMain.initialized) AppModel.updater.dispatchEvent(new InstallEvent(InstallEvent.APP_UP_TO_DATE));	
-		}
-			
+		// stop user from advancing past git windows if vals are undefined //
+			var b:Boolean = _window == _gitInstall || _window == _gitUpgrade || _window == _nameAndEmail;
+			if (b &&  AppModel.proxies.config.gitReady == false) {
+				return false;
+			}	else{
+				return true;
+			}
+		}		
+		
 	}
 	
 }

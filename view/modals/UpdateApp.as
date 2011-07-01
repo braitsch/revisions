@@ -67,7 +67,6 @@ package view.modals {
 			_view.message_txt.text+= "Preparing For Install.";			
 		}
 		
-		
 	}
 	
 }

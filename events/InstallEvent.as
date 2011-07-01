@@ -12,8 +12,8 @@ package events {
 		
 		public static const APP_EXPIRED				:String = "APP_EXPIRED";
 		public static const APP_UP_TO_DATE			:String = "APP_UP_TO_DATE";
-		public static const IGNORE_UPDATE			:String = "IGNORE_UPDATE";
 		public static const UPDATE_AVAILABLE		:String = "UPDATE_AVAILABLE";
+		public static const UPDATE_IGNORED			:String = "UPDATE_IGNORED";
 		public static const UPDATE_PROGRESS			:String = "UPDATE_PROGRESS";
 		public static const UPDATE_COMPLETE			:String = "UPDATE_COMPLETE";
 		public static const UPDATE_FAILURE			:String = "UPDATE_FAILURE";

@@ -10,7 +10,7 @@ package model.proxies {
 	public class ConfigProxy extends NativeProcessQueue {
 
 		private static var _userName			:String;		private static var _userEmail			:String;
-		private static var _gitReady			:Boolean = false;
+		private static var _gitReady			:Boolean;
 		private static var _gitInstall			:String;
 		private static var _gitVersion			:String;
 		private static var _loadedFromCache		:String;

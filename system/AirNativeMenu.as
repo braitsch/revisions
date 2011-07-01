@@ -55,15 +55,24 @@ package system {
         	 	break;        	 	
         	 	case _updateApp	: 
 					AppSettings.setSetting(AppSettings.CHECK_FOR_UPDATES, true);
-        	 		AppModel.updater.addEventListener(InstallEvent.APP_UP_TO_DATE, onUpToDate);
+        	 		AppModel.updater.addEventListener(InstallEvent.APP_UP_TO_DATE, onAppUpToDate);
+        	 		AppModel.updater.addEventListener(InstallEvent.UPDATE_FAILURE, onUpdateUnavailable);
         	 		AppModel.updater.checkForUpdate();
         	 	break;	       	 	
         	 }
-           
 		}
 
-		private static function onUpToDate(e:InstallEvent):void
+		private static function onUpdateUnavailable(e:InstallEvent):void
 		{
+			AppModel.updater.removeEventListener(InstallEvent.APP_UP_TO_DATE, onAppUpToDate);			
+			AppModel.updater.removeEventListener(InstallEvent.UPDATE_FAILURE, onUpdateUnavailable);			
+			_stage.dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, 'Update server unavailable.\nPlease check your internet connection'));			
+		}
+
+		private static function onAppUpToDate(e:InstallEvent):void
+		{
+			AppModel.updater.removeEventListener(InstallEvent.APP_UP_TO_DATE, onAppUpToDate);			
+			AppModel.updater.removeEventListener(InstallEvent.UPDATE_FAILURE, onUpdateUnavailable);
 			_stage.dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, 'Revisions '+e.data+' is up to date'));
 		}
       
