@@ -29,7 +29,8 @@ package view.modals {
 		private static var _settings		:GlobalSettings = new GlobalSettings();
 		private static var _updateApp		:UpdateApp = new UpdateApp();
 		private static var _nameAndEmail	:NameAndEmail = new NameAndEmail();
-		private static var _gitWindow		:GitWindow = new GitWindow();
+		private static var _gitInstall		:GitInstall = new GitInstall();
+		private static var _gitUpgrade		:GitUpgrade = new GitUpgrade();
 		private static var _alert			:Alert = new Alert();
 		private static var _expired			:AppExpired = new AppExpired();
 		private static var _window			:ModalWindow;	// the active modal window //
@@ -96,14 +97,14 @@ package view.modals {
 	
 		private function installGit(e:InstallEvent):void 
 		{
-			_gitWindow.promptToInstall();
-			showModalWindow(_gitWindow);
+			_gitInstall.promptToInstall();
+			showModalWindow(_gitInstall);
 		}	
 		
 		private function upgradeGit(e:InstallEvent):void
 		{
-			_gitWindow.promptToUpgrade();
-			showModalWindow(_gitWindow);			
+			_gitUpgrade.promptToUpgrade();
+			showModalWindow(_gitUpgrade);			
 		}
 		
 		private function onShowLogin(e:UIEvent):void

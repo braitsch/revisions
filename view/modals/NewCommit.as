@@ -1,5 +1,6 @@
 package view.modals {
 
+	import flash.events.Event;
 	import events.UIEvent;
 	import fl.text.TLFTextField;
 	import model.AppModel;
@@ -15,7 +16,12 @@ package view.modals {
 			_view.save_btn.addEventListener(MouseEvent.CLICK, onCommit);			
 			super.addButtons([_view.save_btn]);
 			super.addInputs(Vector.<TLFTextField>([_view.note_txt]));
-			_view.note_txt.text = 'Final edits to client presentation. Ready for Peer Review.';
+			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+		}
+
+		private function onAddedToStage(e:Event):void
+		{
+			_view.note_txt.text = '';
 		}
 
 		private function onCommit(e:MouseEvent):void 

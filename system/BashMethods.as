@@ -3,7 +3,9 @@ package system{
 	public class BashMethods {
 		
 	// config methods //
-		public static const DETECT_GIT			:String = 'getGitDetails';		
+		public static const DETECT_GIT			:String = 'getGitDetails';
+		public static const HOMEBREW			:String = 'updateHomebrew';
+		public static const MACPORTS			:String = 'updateMacports';				
 		public static const INSTALL_GIT			:String = 'installGit';
 		public static const SET_USER_NAME		:String = 'setUserName';
 		public static const GET_USER_NAME		:String = 'getUserName';	

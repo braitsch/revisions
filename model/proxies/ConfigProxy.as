@@ -39,6 +39,18 @@ package model.proxies {
 			super.queue = [	Vector.<String>([BashMethods.INSTALL_GIT]) ];
 		}
 		
+		public function updatePackageManager():void
+		{
+			switch(_gitInstall){
+				case SystemRules.MACPORTS :
+					super.queue = [	Vector.<String>([BashMethods.MACPORTS]) ];			
+				break;
+				case SystemRules.HOMEBREW : 
+					super.queue = [	Vector.<String>([BashMethods.HOMEBREW]) ];	
+				break;
+			}
+		}
+		
 		public function setUserNameAndEmail(n:String, e:String):void
 		{
 			super.queue = [	Vector.<String>([BashMethods.SET_USER_NAME, n]),
@@ -69,6 +81,12 @@ package model.proxies {
 				case BashMethods.INSTALL_GIT :
 					onInstallComplete();
 				break;
+				case BashMethods.MACPORTS :
+					onInstallComplete();
+				break;					
+				case BashMethods.HOMEBREW :
+					onInstallComplete();
+				break;				
 				case BashMethods.DETECT_GIT :
 					if (o.result != 0){
 						parseGitDetails(o.result);
