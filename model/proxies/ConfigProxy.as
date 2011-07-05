@@ -3,6 +3,7 @@ package model.proxies {
 	import events.InstallEvent;
 	import events.NativeProcessEvent;
 	import events.UIEvent;
+	import model.AppModel;
 	import model.air.NativeProcessQueue;
 	import system.BashMethods;
 	import system.SystemRules;
@@ -133,7 +134,7 @@ package model.proxies {
 			m+='ConfigProxy.onProcessFailure(e) \n';
 			m+='method '+e.data.method+' failed \n';
 			m+='error message = '+e.data.result;
-			dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, m));
+			AppModel.engine.dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, m));
 		}
 
 	}

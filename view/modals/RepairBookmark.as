@@ -51,7 +51,7 @@ package view.modals {
 		{
 			var m:String = Bookmark.validate(_view.name_txt.text, _view.local_txt.text, _bookmark);
 			if (m != '') {
-				dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, m));
+				AppModel.engine.dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, m));
 			}	else {
 				_bookmark.type == Bookmark.FILE ? updateGitDir() : updateDatabase();
 			}		

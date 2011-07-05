@@ -45,7 +45,7 @@ package view.modals {
 			if (m == '') {
 				initNewBookmark();
 			}	else{
-				dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, m));
+				AppModel.engine.dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, m));
 			}
 		}	
 		

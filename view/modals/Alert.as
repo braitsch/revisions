@@ -1,8 +1,8 @@
 package view.modals {
 
 	import events.UIEvent;
+	import model.AppModel;
 	import flash.events.MouseEvent;
-	import view.modals.ModalWindow;
 
 	public class Alert extends ModalWindow {
 
@@ -22,12 +22,12 @@ package view.modals {
 		
 		private function onOKButton(e:MouseEvent):void
 		{
-			dispatchEvent(new UIEvent(UIEvent.HIDE_ALERT));
+			AppModel.engine.dispatchEvent(new UIEvent(UIEvent.HIDE_ALERT));
 		}
 		
 		override protected function onCloseClick(e:MouseEvent):void 
 		{
-			dispatchEvent(new UIEvent(UIEvent.HIDE_ALERT));
+			AppModel.engine.dispatchEvent(new UIEvent(UIEvent.HIDE_ALERT));
 		}		
 		
 	}

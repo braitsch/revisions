@@ -1,6 +1,7 @@
 package view.modals {
 
 	import events.UIEvent;
+	import model.AppModel;
 	import system.FileBrowser;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
@@ -48,7 +49,7 @@ package view.modals {
 		
 		private function dispatchMessage(m:String):void
 		{
-			dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, m));
+			AppModel.engine.dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, m));
 		}	
 		
 	}

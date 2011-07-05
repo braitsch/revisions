@@ -44,7 +44,7 @@ package view.modals {
 			if (m == ''){
 				_config.setUserNameAndEmail(n, e);
 			}	else{
-				dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, m));
+				AppModel.engine.dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, m));
 			}
 		}
 		

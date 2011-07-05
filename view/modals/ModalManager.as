@@ -42,9 +42,12 @@ package view.modals {
 			addChild(_curtain);
 			mouseEnabled = false;
 			_curtain.addEventListener(MouseEvent.CLICK, onCurtainClick);
+			AppModel.engine.addEventListener(UIEvent.SHOW_ALERT, onShowAlert);		
+			AppModel.engine.addEventListener(UIEvent.HIDE_ALERT, onCloseAlert);				
 			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onBookmarkSelected);
 			AppModel.engine.addEventListener(BookmarkEvent.PATH_ERROR, repairBookmark);
 			AppModel.engine.addEventListener(BookmarkEvent.NO_BOOKMARKS, showWelcomeScreen);
+			AppModel.engine.addEventListener(InstallEvent.APP_EXPIRED, onAppExpired);			
 			AppModel.updater.addEventListener(InstallEvent.UPDATE_AVAILABLE, promptToUpdate);
 			AppModel.proxies.config.addEventListener(InstallEvent.NAME_AND_EMAIL, addNameAndEmail);
 			AppModel.proxies.config.addEventListener(InstallEvent.GIT_NOT_INSTALLED, installGit);
@@ -62,12 +65,9 @@ package view.modals {
 			stage.addEventListener(UIEvent.DOWNLOAD, downloadVersion);
 			stage.addEventListener(UIEvent.COMMIT_DETAILS, commitDetails);
 			stage.addEventListener(UIEvent.ABOUT_GIT, onAboutGit);
-			stage.addEventListener(UIEvent.GLOBAL_SETTINGS, globalSettings);
-			stage.addEventListener(UIEvent.SHOW_ALERT, onShowAlert);		
-			stage.addEventListener(UIEvent.HIDE_ALERT, onCloseAlert);		
+			stage.addEventListener(UIEvent.GLOBAL_SETTINGS, globalSettings);	
 			stage.addEventListener(UIEvent.CLOSE_MODAL_WINDOW, onCloseButton);
 			stage.addEventListener(UIEvent.SHOW_LOGIN, onShowLogin);
-			stage.addEventListener(InstallEvent.APP_EXPIRED, onAppExpired);
 			stage.addEventListener(KeyboardEvent.KEY_UP, checkForEnterKey);
 		}
 

@@ -78,7 +78,7 @@ package view.modals {
 			if (m == ''){
 				AppModel.proxies.config.setUserNameAndEmail(n, e);
 			}	else{
-				dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, m));
+				AppModel.engine.dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, m));
 			}	
 		}
 		

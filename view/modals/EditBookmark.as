@@ -64,19 +64,19 @@ package view.modals {
 		
 		private function onGitHubButton(e:MouseEvent):void
 		{
-			dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, 'GitHub & Beanstalk integration is coming in the next build.'));
+			AppModel.engine.dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, 'GitHub & Beanstalk integration is coming in the next build.'));
 		}
 		
 		private function onBeanstalkButton(e:MouseEvent):void
 		{
-			dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, 'GitHub & Beanstalk integration is coming in the next build.'));			
+			AppModel.engine.dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, 'GitHub & Beanstalk integration is coming in the next build.'));			
 		}												
 
 		private function onUpdateBookmark(e:MouseEvent):void
 		{
 			var m:String = Bookmark.validate(_view.name_txt.text, _view.local_txt.text, _bookmark);
 			if (m != '') {
-				dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, m));
+				AppModel.engine.dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, m));
 			}	else {
 				_bookmark.type == Bookmark.FILE ? updateGitDir() : updateDatabase();
 			}			

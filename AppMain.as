@@ -42,7 +42,7 @@ package {
 		private function checkExpiredAndUpdates():void
 		{
 			if (LicenseManager.checkExpired()){
-				stage.dispatchEvent(new InstallEvent(InstallEvent.APP_EXPIRED));
+				AppModel.engine.dispatchEvent(new InstallEvent(InstallEvent.APP_EXPIRED));
 			}	else{
 				AppModel.updater.addEventListener(InstallEvent.APP_UP_TO_DATE, onAppUpToDate);
 				AppModel.updater.addEventListener(InstallEvent.UPDATE_FAILURE, onAppUpToDate);
