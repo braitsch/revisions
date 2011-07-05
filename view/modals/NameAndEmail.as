@@ -1,6 +1,6 @@
 package view.modals {
 
-	import events.InstallEvent;
+	import events.AppEvent;
 	import events.UIEvent;
 	import fl.text.TLFTextField;
 	import model.AppModel;
@@ -17,23 +17,23 @@ package view.modals {
 		public function NameAndEmail()
 		{
 			addChild(_view);
-			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			super.addButtons([_view.ok_btn]);
-			super.addInputs(Vector.<TLFTextField>([_view.name_txt, _view.email_txt]));			
+			super.addInputs(Vector.<TLFTextField>([_view.name_txt, _view.email_txt]));
+			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);
 		}
 		
-		private function onGitSettings(e:InstallEvent):void
+		private function onGitSettings(e:AppEvent):void
 		{
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-			_config.removeEventListener(InstallEvent.GIT_SETTINGS, onGitSettings);
+			_config.removeEventListener(AppEvent.GIT_SETTINGS, onGitSettings);
 		}
 
 		private function onAddedToStage(e:Event):void
 		{
 			_view.name_txt.text = _config.userName;
 			_view.email_txt.text = _config.userEmail;
-			_config.addEventListener(InstallEvent.GIT_SETTINGS, onGitSettings);
+			_config.addEventListener(AppEvent.GIT_SETTINGS, onGitSettings);
 		}
 
 		private function onOkButton(evt:MouseEvent):void
@@ -44,7 +44,7 @@ package view.modals {
 			if (m == ''){
 				_config.setUserNameAndEmail(n, e);
 			}	else{
-				AppModel.engine.dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, m));
+				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
 			}
 		}
 		

@@ -11,8 +11,9 @@ package view.modals {
 		public function CommitDetails()
 		{
 			addChild(_view);
-			_view.ok_btn.addEventListener(MouseEvent.CLICK, onClose);
+			super.addCloseButton();
 			super.addButtons([_view.ok_btn]);
+			_view.ok_btn.addEventListener(MouseEvent.CLICK, onClose);
 		}
 
 		public function set commit(cmt:Commit):void

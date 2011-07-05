@@ -12,7 +12,7 @@ package view.modals {
 		
 		private var _inputs			:Vector.<TLFTextField>;
 		private var _heightOffset	:uint = 50;
-		private var _closeButton	:ModalCloseButton = new ModalCloseButton();
+		private var _closeButton	:ModalCloseButton;
 	
 		public function ModalWindow()
 		{		
@@ -20,7 +20,14 @@ package view.modals {
 			this.filters = [new GlowFilter(0x000000, .5, 20, 20, 2, 2)];
 		}
 		
-		public function onEnterKey():void { }		
+	// override this in any windows that should listen for the enter key //	
+		public function onEnterKey():void { }
+		
+		public function resize(w:Number, h:Number):void
+		{
+			this.x = w / 2 - this.width / 2;
+			this.y = (h - _heightOffset) / 2 - this.height / 2 + _heightOffset;			
+		}
 		
 		protected function addButtons(a:Array):void
 		{			for (var i:int=0; i < a.length; i++) {
@@ -30,7 +37,11 @@ package view.modals {
 				a[i].addEventListener(MouseEvent.ROLL_OUT, onButtonRollOut);
 				a[i].addEventListener(MouseEvent.ROLL_OVER, onButtonRollOver);
 			}
-		// tack on the close button //	
+		}
+		
+		protected function addCloseButton():void
+		{
+			_closeButton = new ModalCloseButton();
 			_closeButton.y = 10;
 			_closeButton.x = this.width - 10;
 			_closeButton.over.alpha = 0;
@@ -38,7 +49,7 @@ package view.modals {
 			_closeButton.addEventListener(MouseEvent.CLICK, onCloseClick);
 			_closeButton.addEventListener(MouseEvent.ROLL_OUT, onButtonRollOut);
 			_closeButton.addEventListener(MouseEvent.ROLL_OVER, onButtonRollOver);			
-			addChild(_closeButton);			
+			addChild(_closeButton);				
 		}
 		
 		protected function enableButton(b:Sprite, on:Boolean):void
@@ -55,9 +66,6 @@ package view.modals {
 				b.removeEventListener(MouseEvent.ROLL_OVER, onButtonRollOver);				
 			}
 		}
-
-		private function onButtonRollOut(e:MouseEvent):void {TweenLite.to(e.target.over, .3, {alpha:0});}
-		private function onButtonRollOver(e:MouseEvent):void {TweenLite.to(e.target.over, .5, {alpha:1});}
 		
 		protected function addInputs(v:Vector.<TLFTextField>):void
 		{
@@ -65,25 +73,23 @@ package view.modals {
 			for (var i:int=0; i < v.length; i++) v[i].tabIndex = i;
 		}
 		
-	// private methods //	
-
+		protected function onCloseClick(e:MouseEvent):void 
+		{
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
+		}		
+		
 		private function onAddedToStage(e:Event):void 
 		{
-			var w:uint = stage.stageWidth;
-			var h:uint = stage.stageHeight;
-			this.x = w/2 - this.width / 2;
-			this.y = (h-_heightOffset)/2 - this.height / 2 + _heightOffset;			
+			resize(stage.stageWidth, stage.stageHeight);	
 			if (_inputs) {
 				var txt:TLFTextField = _inputs[0];
 				txt.setSelection(0, txt.length);
 				txt.textFlow.interactionManager.setFocus();
 			}
 		}
-
-		protected function onCloseClick(e:MouseEvent):void 
-		{
-			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-		}
+		
+		private function onButtonRollOut(e:MouseEvent):void {TweenLite.to(e.target.over, .3, {alpha:0});}
+		private function onButtonRollOver(e:MouseEvent):void {TweenLite.to(e.target.over, .5, {alpha:1});}
 
 	}
 	

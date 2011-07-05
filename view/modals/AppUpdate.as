@@ -1,26 +1,26 @@
 package view.modals {
 
 	import flash.events.ProgressEvent;
-	import events.InstallEvent;
+	import events.AppEvent;
 	import model.db.AppSettings;
 	import model.AppModel;
 	import events.UIEvent;
 	import view.ui.ModalCheckbox;
 	import flash.events.MouseEvent;
 
-	public class UpdateApp extends ModalWindow {
+	public class AppUpdate extends ModalWindow {
 
 		private static var _view	:WindowUpdateMC = new WindowUpdateMC();
 		private static var _check1	:ModalCheckbox = new ModalCheckbox(_view.check1, false);
 
-		public function UpdateApp()
+		public function AppUpdate()
 		{
 			addChild(_view);
+			super.addButtons([_view.skip_btn, _view.download_btn]);
 			_check1.label = "Don't prompt me to update again.";
 			_view.check1.addEventListener(MouseEvent.CLICK, onCheckbox);
-			_view.cancel_btn.addEventListener(MouseEvent.CLICK, onCancel);
+			_view.skip_btn.addEventListener(MouseEvent.CLICK, onSkipUpdate);
 			_view.download_btn.addEventListener(MouseEvent.CLICK, onDownload);
-			super.addButtons([_view.cancel_btn, _view.download_btn]);
 		}
 
 		public function set newVersion(n:String):void
@@ -34,34 +34,35 @@ package view.modals {
 			AppSettings.setSetting(AppSettings.CHECK_FOR_UPDATES, !_check1.selected);
 		}		
 		
-		private function onCancel(e:MouseEvent):void
+		private function onSkipUpdate(e:MouseEvent):void
 		{
-			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));			
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
+			AppModel.updater.dispatchEvent(new AppEvent(AppEvent.APP_UPDATE_IGNORED));
 		}
 
 		private function onDownload(e:MouseEvent):void
 		{
 			_view.message_txt.text = "Downloading Update..";
 			AppModel.updater.updateApplication();
-			AppModel.updater.addEventListener(InstallEvent.UPDATE_FAILURE, onUpdateError);
-			AppModel.updater.addEventListener(InstallEvent.UPDATE_PROGRESS, onUpdateProgress);
-			AppModel.updater.addEventListener(InstallEvent.UPDATE_COMPLETE, onUpdateComplete);
+			AppModel.updater.addEventListener(AppEvent.APP_UPDATE_FAILURE, onUpdateError);
+			AppModel.updater.addEventListener(AppEvent.APP_UPDATE_PROGRESS, onUpdateProgress);
+			AppModel.updater.addEventListener(AppEvent.APP_UPDATE_COMPLETE, onUpdateComplete);
 		}
 
-		private function onUpdateError(e:InstallEvent):void
+		private function onUpdateError(e:AppEvent):void
 		{
 			_view.message_txt.text = "Whoops! Something Went Wrong.";			
 			_view.message_txt.text+= e.data;
 		}
 		
-		private function onUpdateProgress(e:InstallEvent):void
+		private function onUpdateProgress(e:AppEvent):void
 		{
 			var p:ProgressEvent = e.data as ProgressEvent;
 			var n:String = ((p.bytesLoaded / p.bytesTotal) * 100).toFixed(2);
 			_view.message_txt.text = "Downloading Update.. "+n+'%';
 		}
 		
-		private function onUpdateComplete(e:InstallEvent):void
+		private function onUpdateComplete(e:AppEvent):void
 		{
 			_view.message_txt.text = "Download Complete.\n";			
 			_view.message_txt.text+= "Preparing For Install.";			

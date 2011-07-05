@@ -1,7 +1,7 @@
 package view.bookmarks {
 
 	import events.BookmarkEvent;
-	import events.InstallEvent;
+	import events.AppEvent;
 	import model.AppModel;
 	import model.vo.Bookmark;
 	import system.AirContextMenu;
@@ -83,7 +83,7 @@ package view.bookmarks {
 			var v:Vector.<Bookmark> = e.data as Vector.<Bookmark>;
 			for (var i:int = 0; i < v.length; i++) _list.addItem(v[i]);
 			addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
-			AppModel.engine.dispatchEvent(new InstallEvent(InstallEvent.INIT_COMPLETE));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.INIT_COMPLETE));
 		}
 
 		private function onBookmarkAdded(e:BookmarkEvent):void 

@@ -12,11 +12,11 @@ package view.modals {
 		public function AppExpired()
 		{
 			addChild(_view);
+			super.addButtons([_view.cancel_btn, _view.ok_btn]);
 			_view.message_txt.text = 'This beta version of Revisions has expired.\n';
 			_view.message_txt.text+= 'Please update to the most current version.';
 			_view.cancel_btn.addEventListener(MouseEvent.CLICK, onCancel);
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onCheckForUpdates);
-			super.addButtons([_view.cancel_btn, _view.ok_btn]);
 		}
 
 		private function onCancel(e:MouseEvent):void

@@ -1,5 +1,6 @@
 package system {
 
+	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
 	import flash.desktop.ClipboardFormats;
@@ -36,7 +37,7 @@ package system {
 			if (a.length == 1){
 				_target.dispatchEvent(new UIEvent(UIEvent.DRAG_AND_DROP, a[0]));
 			}	else{
-				AppModel.engine.dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, 'Please add only one file at a time.'));
+				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, 'Please add only one file at a time.'));
 			}
 		}
 

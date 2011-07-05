@@ -1,7 +1,7 @@
 package view.modals {
 
 	import events.BookmarkEvent;
-	import events.InstallEvent;
+	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
 	import model.db.AppSettings;
@@ -21,37 +21,45 @@ package view.modals {
 		private static var _new				:NewBookmark = new NewBookmark();
 		private static var _edit			:EditBookmark = new EditBookmark();
 		private static var _repair			:RepairBookmark = new RepairBookmark();
-		private static var _delete			:DeleteBookmark = new DeleteBookmark();		private static var _login			:WindowLogin = new WindowLogin();
-		private static var _dragAndDrop		:AddDragAndDrop = new AddDragAndDrop();
+		private static var _delete			:DeleteBookmark = new DeleteBookmark();		private static var _dragAndDrop		:AddDragAndDrop = new AddDragAndDrop();
 		private static var _commit			:NewCommit = new NewCommit();
-		private static var _revert			:RevertToVersion = new RevertToVersion();		private static var _download		:DownloadVersion = new DownloadVersion();
 		private static var _details			:CommitDetails = new CommitDetails();
-		private static var _aboutGit		:GitAbout = new GitAbout();
+		private static var _revert			:RevertToVersion = new RevertToVersion();		private static var _download		:DownloadVersion = new DownloadVersion();
 		private static var _settings		:GlobalSettings = new GlobalSettings();
-		private static var _updateApp		:UpdateApp = new UpdateApp();
-		private static var _nameAndEmail	:NameAndEmail = new NameAndEmail();
+		private static var _appUpdate		:AppUpdate = new AppUpdate();
+		private static var _appExpired		:AppExpired = new AppExpired();
+		private static var _gitAbout		:GitAbout = new GitAbout();
 		private static var _gitInstall		:GitInstall = new GitInstall();
 		private static var _gitUpgrade		:GitUpgrade = new GitUpgrade();
+		private static var _nameAndEmail	:NameAndEmail = new NameAndEmail();
+		private static var _login			:LoginScreen = new LoginScreen();
 		private static var _alert			:Alert = new Alert();
-		private static var _expired			:AppExpired = new AppExpired();
+		private static var _debug			:DebugScreen = new DebugScreen();
+		
+	// windows that force user to make a decision - autoclose disabled //	
+		private static var _stickies		:Vector.<ModalWindow> = new <ModalWindow>
+					[ _repair, _appExpired, _appUpdate, _gitInstall, _gitUpgrade, _nameAndEmail ];
+				
 		private static var _window			:ModalWindow;	// the active modal window //
-		private static var _curtain			:ModalCurtain = new ModalCurtain();
+		private static var _curtain			:ModalCurtain = new ModalCurtain();	
 
 		public function ModalManager()
 		{
 			addChild(_curtain);
 			mouseEnabled = false;
 			_curtain.addEventListener(MouseEvent.CLICK, onCurtainClick);
-			AppModel.engine.addEventListener(UIEvent.SHOW_ALERT, onShowAlert);		
-			AppModel.engine.addEventListener(UIEvent.HIDE_ALERT, onCloseAlert);				
+			AppModel.engine.addEventListener(AppEvent.SHOW_DEBUG, onShowDebug);
+			AppModel.engine.addEventListener(AppEvent.HIDE_DEBUG, onHideDebug);
+			AppModel.engine.addEventListener(AppEvent.SHOW_ALERT, onShowAlert);
+			AppModel.engine.addEventListener(AppEvent.HIDE_ALERT, onHideAlert);			
 			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onBookmarkSelected);
 			AppModel.engine.addEventListener(BookmarkEvent.PATH_ERROR, repairBookmark);
 			AppModel.engine.addEventListener(BookmarkEvent.NO_BOOKMARKS, showWelcomeScreen);
-			AppModel.engine.addEventListener(InstallEvent.APP_EXPIRED, onAppExpired);			
-			AppModel.updater.addEventListener(InstallEvent.UPDATE_AVAILABLE, promptToUpdate);
-			AppModel.proxies.config.addEventListener(InstallEvent.NAME_AND_EMAIL, addNameAndEmail);
-			AppModel.proxies.config.addEventListener(InstallEvent.GIT_NOT_INSTALLED, installGit);
-			AppModel.proxies.config.addEventListener(InstallEvent.GIT_NEEDS_UPDATING, upgradeGit);
+			AppModel.engine.addEventListener(AppEvent.APP_EXPIRED, onAppExpired);
+			AppModel.updater.addEventListener(AppEvent.APP_UPDATE_AVAILABLE, promptToUpdate);
+			AppModel.proxies.config.addEventListener(AppEvent.GIT_NAME_AND_EMAIL, addNameAndEmail);
+			AppModel.proxies.config.addEventListener(AppEvent.GIT_NOT_INSTALLED, installGit);
+			AppModel.proxies.config.addEventListener(AppEvent.GIT_NEEDS_UPDATING, upgradeGit);
 		}
 
 		public function init(stage:Stage):void
@@ -66,25 +74,22 @@ package view.modals {
 			stage.addEventListener(UIEvent.COMMIT_DETAILS, commitDetails);
 			stage.addEventListener(UIEvent.ABOUT_GIT, onAboutGit);
 			stage.addEventListener(UIEvent.GLOBAL_SETTINGS, globalSettings);	
-			stage.addEventListener(UIEvent.CLOSE_MODAL_WINDOW, onCloseButton);
 			stage.addEventListener(UIEvent.SHOW_LOGIN, onShowLogin);
+			stage.addEventListener(UIEvent.CLOSE_MODAL_WINDOW, onCloseButton);
 			stage.addEventListener(KeyboardEvent.KEY_UP, checkForEnterKey);
-		}
-
-		private function checkForEnterKey(e:KeyboardEvent):void
-		{
-			if (e.keyCode == 13 && _window != null) _window.onEnterKey();
 		}
 
 		public function resize(w:Number, h:Number):void
 		{
 			_curtain.resize(w, h);
-			if (_window){
-				_window.x = w/2 - _window.width / 2;
-				_window.y = (h-50)/2 - _window.height / 2 + 50;
-			}
-			_alert.x = w/2 - _alert.width / 2;
-			_alert.y = (h-50)/2 - _alert.height / 2 + 50;
+			if (_window) _window.resize(w, h);
+			if (_alert.stage) _alert.resize(w, h);
+			if (_debug.stage) _debug.resize(w, h);
+		}
+		
+		private function checkForEnterKey(e:KeyboardEvent):void
+		{
+			if (e.keyCode == 13 && _window != null) _window.onEnterKey();
 		}
 		
 		private function onBookmarkSelected(e:BookmarkEvent):void
@@ -97,13 +102,13 @@ package view.modals {
 			showModalWindow(_welcome);
 		}
 	
-		private function installGit(e:InstallEvent):void 
+		private function installGit(e:AppEvent):void 
 		{
 			_gitInstall.promptToInstall();
 			showModalWindow(_gitInstall);
 		}	
 		
-		private function upgradeGit(e:InstallEvent):void
+		private function upgradeGit(e:AppEvent):void
 		{
 			_gitUpgrade.promptToUpgrade();
 			showModalWindow(_gitUpgrade);			
@@ -115,7 +120,7 @@ package view.modals {
 			showModalWindow(_login);
 		}		
 		
-		private function addNameAndEmail(e:InstallEvent):void
+		private function addNameAndEmail(e:AppEvent):void
 		{
 			showModalWindow(_nameAndEmail);
 		}		
@@ -183,35 +188,31 @@ package view.modals {
 		
 		private function onAboutGit(e:UIEvent):void
 		{
-			showModalWindow(_aboutGit);
+			showModalWindow(_gitAbout);
 		}		
 		
-		private function onAppExpired(e:InstallEvent):void
+		private function onAppExpired(e:AppEvent):void
 		{
-			showModalWindow(_expired);		
+			showModalWindow(_appExpired);		
 		}		
 		
-		private function promptToUpdate(e:InstallEvent):void
+		private function promptToUpdate(e:AppEvent):void
 		{
-			_updateApp.newVersion = e.data.n;
-			showModalWindow(_updateApp);
+			_appUpdate.newVersion = e.data.n;
+			showModalWindow(_appUpdate);
 		}			
 
 	// adding & removing modal windows //	
 		
-		private function onCloseButton(e:UIEvent):void { checkIfOkToClose(); }
-		private function onCurtainClick(e:MouseEvent):void { checkIfOkToClose(); }		
+		private function onCloseButton(e:UIEvent):void { hideModalWindow(); }
+		private function onCurtainClick(e:MouseEvent):void { checkIsStickyWindow(); }		
 		
-		private function checkIfOkToClose():void
+		private function checkIsStickyWindow():void
 		{
-			if (_window == _updateApp) {
-				hideModalWindow();
-		// special case that allows app to continue initialization sequence //
-				AppModel.updater.dispatchEvent(new InstallEvent(InstallEvent.UPDATE_IGNORED));
-			}	else if (checkGitIsReady() == true){
-				hideModalWindow();
-			}
-		}		
+			if (_debug.stage || _alert.stage) return;
+			for (var i:int = 0; i < _stickies.length; i++) if (_window == _stickies[i]) return;
+			hideModalWindow();
+		}
 		
 		private function showModalWindow(mw:ModalWindow):void
 		{
@@ -225,35 +226,46 @@ package view.modals {
 		private function hideModalWindow():void
 		{
 			removeChild(_window);
-			if (_alert.stage) removeChild(_alert);
 			_window = null;
 			_curtain.hide();
 		}
 
-		private function onShowAlert(e:UIEvent):void
+	// special windows alert & debug //
+
+		private function onShowAlert(e:AppEvent):void
 		{
 			_alert.message = e.data as String;
-			_curtain.show();
-			addChild(_alert);
-			if (_window) _window.filters = [new BlurFilter(5, 5, 3)];
+			showAlertOrDebug(_alert);
 		}			
 		
-		private function onCloseAlert(e:UIEvent):void
+		private function onHideAlert(e:AppEvent):void
 		{
-			removeChild(_alert);
-			if (_window) _window.filters = [];
-			if (_window == null) _curtain.hide();
+			hideAlertOrDebug(_alert);
 		}
 		
-		private function checkGitIsReady():Boolean
+		private function onShowDebug(e:AppEvent):void
 		{
-		// stop user from advancing past git windows if vals are undefined //
-			var b:Boolean = _window == _gitInstall || _window == _gitUpgrade || _window == _nameAndEmail;
-			if (b &&  AppModel.proxies.config.gitReady == false) {
-				return false;
-			}	else{
-				return true;
-			}
+			_debug.message = e.data as Object;
+			showAlertOrDebug(_debug);
+		}			
+		
+		private function onHideDebug(e:AppEvent):void
+		{
+			hideAlertOrDebug(_debug);
+		}
+		
+		private function showAlertOrDebug(w:ModalWindow):void
+		{
+			addChild(w);
+			_curtain.show();
+			if (_window) _window.filters = [new BlurFilter(5, 5, 3)];			
+		}
+		
+		private function hideAlertOrDebug(w:ModalWindow):void
+		{
+			removeChild(w);
+			if (_window) _window.filters = [];
+			if (_window == null) _curtain.hide();			
 		}		
 		
 	}

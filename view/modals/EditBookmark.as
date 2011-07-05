@@ -1,7 +1,7 @@
 package view.modals {
 
+	import events.AppEvent;
 	import events.DataBaseEvent;
-	import events.InstallEvent;
 	import events.UIEvent;
 	import fl.text.TLFTextField;
 	import model.AppModel;
@@ -20,6 +20,7 @@ package view.modals {
 		public function EditBookmark()
 		{
 			addChild(_view);
+			super.addCloseButton();
 			super.addInputs(Vector.<TLFTextField>([_view.name_txt]));
 			super.addButtons([_view.browse_btn, _view.delete_btn, _view.ok_btn, _view.github, _view.beanstalk]);
 		
@@ -64,19 +65,19 @@ package view.modals {
 		
 		private function onGitHubButton(e:MouseEvent):void
 		{
-			AppModel.engine.dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, 'GitHub & Beanstalk integration is coming in the next build.'));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, 'GitHub & Beanstalk integration is coming in the next build.'));
 		}
 		
 		private function onBeanstalkButton(e:MouseEvent):void
 		{
-			AppModel.engine.dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, 'GitHub & Beanstalk integration is coming in the next build.'));			
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, 'GitHub & Beanstalk integration is coming in the next build.'));			
 		}												
 
 		private function onUpdateBookmark(e:MouseEvent):void
 		{
 			var m:String = Bookmark.validate(_view.name_txt.text, _view.local_txt.text, _bookmark);
 			if (m != '') {
-				AppModel.engine.dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, m));
+				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
 			}	else {
 				_bookmark.type == Bookmark.FILE ? updateGitDir() : updateDatabase();
 			}			
@@ -89,14 +90,14 @@ package view.modals {
 			}	else{
 		// the file path has changed //		
 				AppModel.proxies.editor.editAppStorageGitDirName(_bookmark.path, _view.local_txt.text);	
-				AppModel.proxies.editor.addEventListener(InstallEvent.GIT_DIR_UPDATED, onGitDirUpdated);
+				AppModel.proxies.editor.addEventListener(AppEvent.GIT_DIR_UPDATED, onGitDirUpdated);
 			}
 		}
 		
-		private function onGitDirUpdated(e:InstallEvent):void
+		private function onGitDirUpdated(e:AppEvent):void
 		{
 			updateDatabase();
-			AppModel.proxies.editor.removeEventListener(InstallEvent.GIT_DIR_UPDATED, onGitDirUpdated);			
+			AppModel.proxies.editor.removeEventListener(AppEvent.GIT_DIR_UPDATED, onGitDirUpdated);			
 		}
 		
 		private function updateDatabase():void

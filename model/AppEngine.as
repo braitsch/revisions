@@ -2,7 +2,7 @@ package model {
 
 	import events.BookmarkEvent;
 	import events.DataBaseEvent;
-	import events.InstallEvent;
+	import events.AppEvent;
 	import model.vo.Bookmark;
 	import flash.events.EventDispatcher;
 
@@ -142,7 +142,7 @@ package model {
 		
 		private function buildBookmarksFromDatabase():void
 		{
-			dispatchEvent(new InstallEvent(InstallEvent.INIT_START));
+			dispatchEvent(new AppEvent(AppEvent.INIT_START));
 			AppModel.proxies.branch.getBranches(_bookmarks[_index]);			AppModel.proxies.branch.addEventListener(BookmarkEvent.BRANCHES_READ, getStashOfNextBookmark);			AppModel.proxies.branch.addEventListener(BookmarkEvent.STASH_LIST_READ, onStoredBookmarkReady);
 		}
 		

@@ -1,7 +1,7 @@
 package view{
 
 	import events.BookmarkEvent;
-	import events.InstallEvent;
+	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
 	import view.history.HistoryView;
@@ -32,8 +32,8 @@ package view{
 			_curtain.addEventListener(MouseEvent.CLICK, onCurtainClick);
 			_summary.addEventListener(UIEvent.SHOW_HISTORY, onShowHistory);
 			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, showSummary);
-			AppModel.engine.addEventListener(InstallEvent.INIT_START, showLoader);
-			AppModel.engine.addEventListener(InstallEvent.INIT_COMPLETE, hideLoader);
+			AppModel.engine.addEventListener(AppEvent.INIT_START, showLoader);
+			AppModel.engine.addEventListener(AppEvent.INIT_COMPLETE, hideLoader);
 			AppModel.engine.addEventListener(BookmarkEvent.NO_BOOKMARKS, onNoBookmarks);
 		}
 		
@@ -91,12 +91,12 @@ package view{
 			TweenLite.to(_summary, .3, {alpha:0, onComplete:function():void{_summary.visible=false; _summary.alpha=1;}});
 		}
 
-		private function showLoader(e:InstallEvent):void
+		private function showLoader(e:AppEvent):void
 		{
 			_preloader.show();
 		}
 		
-		private function hideLoader(e:InstallEvent):void 
+		private function hideLoader(e:AppEvent):void 
 		{
 			_preloader.hide();
 		}			

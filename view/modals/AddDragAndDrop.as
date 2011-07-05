@@ -1,5 +1,6 @@
 package view.modals {
 
+	import events.AppEvent;
 	import events.UIEvent;
 	import fl.text.TLFTextField;
 	import model.AppModel;
@@ -16,6 +17,7 @@ package view.modals {
 		public function AddDragAndDrop()
 		{
 			addChild(_view);
+			super.addCloseButton();
 			super.addButtons([_view.ok_btn]);
 			super.addInputs(Vector.<TLFTextField>([_view.name_txt]));
 			_check1.label = 'Autosave Every 60 Minutes';			
@@ -45,7 +47,7 @@ package view.modals {
 			if (m == '') {
 				initNewBookmark();
 			}	else{
-				AppModel.engine.dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, m));
+				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
 			}
 		}	
 		

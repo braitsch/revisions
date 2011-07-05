@@ -1,8 +1,7 @@
 package model.proxies {
 
-	import events.InstallEvent;
+	import events.AppEvent;
 	import events.NativeProcessEvent;
-	import events.UIEvent;
 	import model.AppModel;
 	import model.air.NativeProcessQueue;
 	import system.BashMethods;
@@ -92,7 +91,7 @@ package model.proxies {
 					if (o.result != 0){
 						parseGitDetails(o.result);
 					}	else{
-						dispatchEvent(new InstallEvent(InstallEvent.GIT_NOT_INSTALLED));								
+						dispatchEvent(new AppEvent(AppEvent.GIT_NOT_INSTALLED));								
 					}
 				break;
 			}
@@ -107,33 +106,30 @@ package model.proxies {
 			if (_gitVersion >= SystemRules.MIN_GIT_VERSION){
 				getUserNameAndEmail();
 			}	else{
-				dispatchEvent(new InstallEvent(InstallEvent.GIT_NEEDS_UPDATING));					
+				dispatchEvent(new AppEvent(AppEvent.GIT_NEEDS_UPDATING));					
 			}
 		}
 
 		private function onInstallComplete():void
 		{
-			dispatchEvent(new InstallEvent(InstallEvent.GIT_INSTALL_COMPLETE));
+			dispatchEvent(new AppEvent(AppEvent.GIT_INSTALL_COMPLETE));
 		}		
 		
 		private function checkUserNameAndEmail(n:String, e:String):void
 		{
 			_userName = n; _userEmail = e;
 			if (n == '' || e == ''){
-				dispatchEvent(new InstallEvent(InstallEvent.NAME_AND_EMAIL));
+				dispatchEvent(new AppEvent(AppEvent.GIT_NAME_AND_EMAIL));
 			}	else{
 				_gitReady = true;
-				dispatchEvent(new InstallEvent(InstallEvent.GIT_SETTINGS));
+				dispatchEvent(new AppEvent(AppEvent.GIT_SETTINGS));
 			}			
 		}
 
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
-			var m:String = 'Sorry, it looks like there was a problem! \n';
-			m+='ConfigProxy.onProcessFailure(e) \n';
-			m+='Method "'+e.data.method+'" failed \n';
-			m+='Message: '+e.data.result;
-			AppModel.engine.dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, m));
+			var s:String = 'ConfigProxy.onProcessFailure(e)';
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_DEBUG, {s:s, m:e.data.method, r:e.data.result}));
 		}
 
 	}

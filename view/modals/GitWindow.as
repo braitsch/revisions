@@ -1,6 +1,6 @@
 package view.modals {
 
-	import events.InstallEvent;
+	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
 	import system.SystemRules;
@@ -59,7 +59,7 @@ package view.modals {
 			}	else{
 				AppModel.proxies.config.updatePackageManager();
 			}
-			AppModel.proxies.config.addEventListener(InstallEvent.GIT_INSTALL_COMPLETE, onInstallComplete);
+			AppModel.proxies.config.addEventListener(AppEvent.GIT_INSTALL_COMPLETE, onInstallComplete);
 		}
 		
 		private function getInstallMessage():String
@@ -75,14 +75,14 @@ package view.modals {
 			return m;			
 		}
 
-		private function onInstallComplete(e:InstallEvent):void 
+		private function onInstallComplete(e:AppEvent):void 
 		{
 			super.enableButton(_view.ok_btn, true);
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, closeWindow);
 			_view.message_txt.text = "You're All Set - ";
 			_view.message_txt.text+= AppModel.proxies.config.gitVersion ? 'Update' : 'Install';
 			_view.message_txt.text+= ' Complete!!';
-			AppModel.proxies.config.removeEventListener(InstallEvent.GIT_INSTALL_COMPLETE, onInstallComplete);
+			AppModel.proxies.config.removeEventListener(AppEvent.GIT_INSTALL_COMPLETE, onInstallComplete);
 		// read and update the gui with newly installed git version //	
 			AppModel.proxies.config.detectGit();			
 		}

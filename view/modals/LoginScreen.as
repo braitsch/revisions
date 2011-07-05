@@ -9,21 +9,22 @@ package view.modals {
 	import flash.events.MouseEvent;
 
 
-	public class WindowLogin extends ModalWindow {
+	public class LoginScreen extends ModalWindow {
 
 		private static var _view	:WindowLoginMC = new WindowLoginMC();
 		private static var _account	:RemoteAccount;
 
-		public function WindowLogin()
+		public function LoginScreen()
 		{
 			addChild(_view);
+			super.addCloseButton();			
+			super.addInputs(Vector.<TLFTextField>([_view.name_txt, _view.pass_txt]));
+			super.addButtons([_view.skip_btn, _view.login_btn, _view.github, _view.beanstalk]);
 			_view.pass_txt.displayAsPassword = true;
 			_view.github.addEventListener(MouseEvent.CLICK, gotoNewAccountPage);
 			_view.beanstalk.addEventListener(MouseEvent.CLICK, gotoNewAccountPage);						
 			_view.skip_btn.addEventListener(MouseEvent.CLICK, onSkipButton);						
 			_view.login_btn.addEventListener(MouseEvent.CLICK, onLoginButton);						
-			super.addButtons([_view.skip_btn, _view.login_btn, _view.github, _view.beanstalk]);
-			super.addInputs(Vector.<TLFTextField>([_view.name_txt, _view.pass_txt]));
 		}
 
 		public function set account(a:RemoteAccount):void

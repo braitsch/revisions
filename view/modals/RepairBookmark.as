@@ -1,8 +1,8 @@
 package view.modals {
 
+	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.DataBaseEvent;
-	import events.InstallEvent;
 	import events.UIEvent;
 	import model.AppModel;
 	import model.vo.Bookmark;
@@ -51,7 +51,7 @@ package view.modals {
 		{
 			var m:String = Bookmark.validate(_view.name_txt.text, _view.local_txt.text, _bookmark);
 			if (m != '') {
-				AppModel.engine.dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, m));
+				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
 			}	else {
 				_bookmark.type == Bookmark.FILE ? updateGitDir() : updateDatabase();
 			}		
@@ -64,15 +64,15 @@ package view.modals {
 			}	else{
 		// the file path has changed //		
 				AppModel.proxies.editor.editAppStorageGitDirName(_bookmark.path, _view.local_txt.text);
-				AppModel.proxies.editor.addEventListener(InstallEvent.GIT_DIR_UPDATED, onGitDirUpdated);
+				AppModel.proxies.editor.addEventListener(AppEvent.GIT_DIR_UPDATED, onGitDirUpdated);
 			}
 		}
 		
-		private function onGitDirUpdated(e:InstallEvent):void
+		private function onGitDirUpdated(e:AppEvent):void
 		{
 			updateDatabase();
 			_bookmark.path = _view.local_txt.text;
-			AppModel.proxies.editor.removeEventListener(InstallEvent.GIT_DIR_UPDATED, onGitDirUpdated);			
+			AppModel.proxies.editor.removeEventListener(AppEvent.GIT_DIR_UPDATED, onGitDirUpdated);			
 		}
 		
 		private function updateDatabase():void

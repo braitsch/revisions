@@ -11,8 +11,6 @@ package events {
 				public static const COMMIT					:String = "COMMIT";		public static const REVERT					:String = "REVERT";
 		public static const DOWNLOAD				:String = "DOWNLOAD";
 		public static const COMMIT_DETAILS			:String = "COMMIT_DETAILS";
-		public static const SHOW_ALERT				:String = "SHOW_ALERT";
-		public static const HIDE_ALERT				:String = "HIDE_ALERT";
 		public static const CLOSE_MODAL_WINDOW		:String = "CLOSE_MODAL_WINDOW";
 		public static const SHOW_HISTORY			:String = "SHOW_HISTORY";
 		public static const HISTORY_DRAWN			:String = "HISTORY_DRAWN";

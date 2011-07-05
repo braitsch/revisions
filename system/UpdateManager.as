@@ -1,6 +1,6 @@
 package system {
 
-	import events.InstallEvent;
+	import events.AppEvent;
 	import model.db.AppSettings;
 	import flash.desktop.NativeApplication;
 	import flash.desktop.NativeProcess;
@@ -83,9 +83,9 @@ package system {
 		// Compare current version with update version
 			if (oldVersion < newVersion && AppSettings.getSetting(AppSettings.CHECK_FOR_UPDATES)) {
 				_updateURL = newDescriptor.ndns::url.toString();
-				dispatchEvent(new InstallEvent(InstallEvent.UPDATE_AVAILABLE, {o:oldVersion, n:newVersion}));
+				dispatchEvent(new AppEvent(AppEvent.APP_UPDATE_AVAILABLE, {o:oldVersion, n:newVersion}));
 			} else {
-				dispatchEvent(new InstallEvent(InstallEvent.APP_UP_TO_DATE, oldVersion));
+				dispatchEvent(new AppEvent(AppEvent.APP_UP_TO_DATE, oldVersion));
 			}
 		}
 		
@@ -135,7 +135,7 @@ package system {
 			urlStream.readBytes(loadedBytes);
 		// Writing loaded bytes into the FileStream
 			fileStream.writeBytes(loadedBytes);
-			dispatchEvent(new InstallEvent(InstallEvent.UPDATE_PROGRESS, event));			
+			dispatchEvent(new AppEvent(AppEvent.APP_UPDATE_PROGRESS, event));			
 		}
 		
 		private function onURLStreamError(e:IOErrorEvent):void
@@ -158,7 +158,7 @@ package system {
 			}	else if (os.indexOf('linux') != -1){
 				installUpdate(updateFile);
 			}
-			dispatchEvent(new InstallEvent(InstallEvent.UPDATE_COMPLETE));
+			dispatchEvent(new AppEvent(AppEvent.APP_UPDATE_COMPLETE));
 		}
 		
 	// mac osx install handlers //	
@@ -216,7 +216,7 @@ package system {
 		private function dispatchUpdateUnavailable(m:String = ''):void
 		{
 			_timeout.stop();
-			dispatchEvent(new InstallEvent(InstallEvent.UPDATE_FAILURE, m));
+			dispatchEvent(new AppEvent(AppEvent.APP_UPDATE_FAILURE, m));
 		}
 		
 	}

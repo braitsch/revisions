@@ -1,6 +1,6 @@
 package system {
 
-	import events.InstallEvent;
+	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
 	import model.db.AppSettings;
@@ -55,25 +55,25 @@ package system {
         	 	break;        	 	
         	 	case _updateApp	: 
 					AppSettings.setSetting(AppSettings.CHECK_FOR_UPDATES, true);
-        	 		AppModel.updater.addEventListener(InstallEvent.APP_UP_TO_DATE, onAppUpToDate);
-        	 		AppModel.updater.addEventListener(InstallEvent.UPDATE_FAILURE, onUpdateUnavailable);
+        	 		AppModel.updater.addEventListener(AppEvent.APP_UP_TO_DATE, onAppUpToDate);
+        	 		AppModel.updater.addEventListener(AppEvent.APP_UPDATE_FAILURE, onUpdateUnavailable);
         	 		AppModel.updater.checkForUpdate();
         	 	break;	       	 	
         	 }
 		}
 
-		private static function onUpdateUnavailable(e:InstallEvent):void
+		private static function onUpdateUnavailable(e:AppEvent):void
 		{
-			AppModel.updater.removeEventListener(InstallEvent.APP_UP_TO_DATE, onAppUpToDate);			
-			AppModel.updater.removeEventListener(InstallEvent.UPDATE_FAILURE, onUpdateUnavailable);			
-			AppModel.engine.dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, 'Update server unavailable.\nPlease check your internet connection'));			
+			AppModel.updater.removeEventListener(AppEvent.APP_UP_TO_DATE, onAppUpToDate);			
+			AppModel.updater.removeEventListener(AppEvent.APP_UPDATE_FAILURE, onUpdateUnavailable);			
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, 'Update server unavailable.\nPlease check your internet connection'));			
 		}
 
-		private static function onAppUpToDate(e:InstallEvent):void
+		private static function onAppUpToDate(e:AppEvent):void
 		{
-			AppModel.updater.removeEventListener(InstallEvent.APP_UP_TO_DATE, onAppUpToDate);			
-			AppModel.updater.removeEventListener(InstallEvent.UPDATE_FAILURE, onUpdateUnavailable);
-			AppModel.engine.dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, 'Revisions '+e.data+' is up to date'));
+			AppModel.updater.removeEventListener(AppEvent.APP_UP_TO_DATE, onAppUpToDate);			
+			AppModel.updater.removeEventListener(AppEvent.APP_UPDATE_FAILURE, onUpdateUnavailable);
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, 'Revisions '+e.data+' is up to date'));
 		}
       
     } 

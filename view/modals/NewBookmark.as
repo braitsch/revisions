@@ -1,5 +1,6 @@
 package view.modals {
 
+	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
 	import system.FileBrowser;
@@ -14,6 +15,7 @@ package view.modals {
 		public function NewBookmark()
 		{
 			addChild(_view);
+			super.addCloseButton();			
 			super.addButtons([_view.file_btn, _view.folder_btn, _view.github_btn, _view.beanstalk_btn, _view.private_btn]);			
 			_view.addEventListener(MouseEvent.CLICK, onButtonClick);
 			_browser.addEventListener(UIEvent.FILE_BROWSER_SELECTION, onFileSelection);			
@@ -44,12 +46,12 @@ package view.modals {
 		
 		private function onFileSelection(e:UIEvent):void
 		{
-			dispatchEvent(new UIEvent(UIEvent.DRAG_AND_DROP, e.data as File));
+			AppModel.engine.dispatchEvent(new UIEvent(UIEvent.DRAG_AND_DROP, e.data as File));
 		}		
 		
 		private function dispatchMessage(m:String):void
 		{
-			AppModel.engine.dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, m));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
 		}	
 		
 	}

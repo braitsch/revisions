@@ -16,6 +16,7 @@ package view.modals {
 		public function DeleteBookmark()
 		{
 			addChild(_view);
+			super.addCloseButton();			
 			super.addButtons([_view.delete_btn]);
 			_trashFiles.label = 'Also Move Files to Trash';
 			_trashGit.label = 'Destroy History (warning this cannot be undone)';

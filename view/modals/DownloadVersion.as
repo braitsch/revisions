@@ -1,6 +1,6 @@
 package view.modals {
 
-	import events.InstallEvent;
+	import events.AppEvent;
 	import events.UIEvent;
 	import flash.events.MouseEvent;
 	import model.AppModel;
@@ -20,13 +20,14 @@ package view.modals {
 		public function DownloadVersion()
 		{
 			addChild(_view);
+			super.addCloseButton();
 			super.addButtons([_view.cancel_btn, _view.download_btn]);
 			_check1.label = "Next time just do it and don't ask me";
 			_view.check1.addEventListener(MouseEvent.CLICK, onCheckbox);
 			_view.cancel_btn.addEventListener(MouseEvent.CLICK, onCancel);
 			_view.download_btn.addEventListener(MouseEvent.CLICK, onDownload);
 			_browser.addEventListener(UIEvent.FILE_BROWSER_SELECTION, onFileBrowserSelection);
-			AppModel.settings.addEventListener(InstallEvent.APP_SETTINGS, onUserSettings);			
+			AppModel.settings.addEventListener(AppEvent.APP_SETTINGS, onUserSettings);			
 		}
 		
 		public function set commit(cmt:Commit):void
@@ -41,7 +42,7 @@ package view.modals {
 			_browser.browseForDirectory('Choose a location to save '+AppModel.bookmark.label);
 		}
 		
-		private function onUserSettings(e:InstallEvent):void
+		private function onUserSettings(e:AppEvent):void
 		{
 			_check1.selected = AppSettings.getSetting(AppSettings.PROMPT_BEFORE_DOWNLOAD) == false;
 		}		

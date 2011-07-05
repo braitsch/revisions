@@ -1,6 +1,6 @@
 package view.modals {
 
-	import events.InstallEvent;
+	import events.AppEvent;
 	import events.UIEvent;
 	import fl.text.TLFTextField;
 	import model.AppModel;
@@ -21,6 +21,7 @@ package view.modals {
 		public function GlobalSettings()
 		{
 			addChild(_view);
+			super.addCloseButton();			
 			super.addButtons([_view.ok_btn]);
 			super.addInputs(Vector.<TLFTextField>([_view.name_txt, _view.email_txt]));
 			_check1.label = 'Automatically check for updates';
@@ -31,7 +32,7 @@ package view.modals {
 			_view.check2.addEventListener(MouseEvent.CLICK, onCheck2);
 			_view.check3.addEventListener(MouseEvent.CLICK, onCheck3);
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			AppModel.settings.addEventListener(InstallEvent.APP_SETTINGS, onUserSettings);
+			AppModel.settings.addEventListener(AppEvent.APP_SETTINGS, onUserSettings);
 		}
 
 		private function onAddedToStage(e:Event):void
@@ -39,20 +40,20 @@ package view.modals {
 			_view.license_txt.text = LicenseManager.key;
 			_view.name_txt.text = AppModel.proxies.config.userName;
 			_view.email_txt.text = AppModel.proxies.config.userEmail;
-			AppModel.proxies.config.addEventListener(InstallEvent.GIT_SETTINGS, onGitSettings);
+			AppModel.proxies.config.addEventListener(AppEvent.GIT_SETTINGS, onGitSettings);
 		}
 
-		private function onUserSettings(e:InstallEvent):void
+		private function onUserSettings(e:AppEvent):void
 		{
 			_check1.selected = AppSettings.getSetting(AppSettings.CHECK_FOR_UPDATES);
 			_check2.selected = AppSettings.getSetting(AppSettings.SHOW_TOOL_TIPS);
 			_check3.selected = AppSettings.getSetting(AppSettings.PROMPT_BEFORE_DOWNLOAD);
 		}
 
-		private function onGitSettings(e:InstallEvent):void
+		private function onGitSettings(e:AppEvent):void
 		{
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-			AppModel.proxies.config.removeEventListener(InstallEvent.GIT_SETTINGS, onGitSettings);			
+			AppModel.proxies.config.removeEventListener(AppEvent.GIT_SETTINGS, onGitSettings);			
 		}
 		
 		private function onCheck1(e:MouseEvent):void
@@ -78,7 +79,7 @@ package view.modals {
 			if (m == ''){
 				AppModel.proxies.config.setUserNameAndEmail(n, e);
 			}	else{
-				AppModel.engine.dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, m));
+				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
 			}	
 		}
 		

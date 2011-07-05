@@ -1,7 +1,7 @@
 package model.db {
 
 	import model.AppModel;
-	import events.InstallEvent;
+	import events.AppEvent;
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
@@ -31,7 +31,7 @@ package model.db {
 		public static function setSetting(name:String, val:*):void
 		{
 			_settings[name] = val;
-			AppModel.settings.dispatchEvent(new InstallEvent(InstallEvent.APP_SETTINGS));
+			AppModel.settings.dispatchEvent(new AppEvent(AppEvent.APP_SETTINGS));
 		}
 		
 		public static function getSetting(name:String):*
@@ -53,7 +53,7 @@ package model.db {
 		// store user-defined preferences //	
 			var p:XMLList = _xml['user-defined'].children();
 			for (var i:int = 0; i < p.length(); i++) _settings[p[i].name()] = castSetting(p[i].valueOf());
-			dispatchEvent(new InstallEvent(InstallEvent.APP_SETTINGS));
+			dispatchEvent(new AppEvent(AppEvent.APP_SETTINGS));
 		//	traceSettings();
 		}
 		
@@ -70,7 +70,7 @@ package model.db {
 			_settings[CHECK_FOR_UPDATES] = true;
 			_settings[SHOW_TOOL_TIPS] = true;
 			_settings[PROMPT_BEFORE_DOWNLOAD] = true;
-			dispatchEvent(new InstallEvent(InstallEvent.APP_SETTINGS));			
+			dispatchEvent(new AppEvent(AppEvent.APP_SETTINGS));			
 		}
 		
 		private function saveXML(e:Event = null):void

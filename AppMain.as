@@ -1,6 +1,6 @@
 package {
 
-	import events.InstallEvent;
+	import events.AppEvent;
 	import model.AppModel;
 	import system.AirContextMenu;
 	import system.AirNativeMenu;
@@ -27,45 +27,45 @@ package {
 		private function onInvokeEvent(e:InvokeEvent):void
 		{
 			stage.nativeWindow.visible = false;
-			AppModel.settings.addEventListener(InstallEvent.APP_SETTINGS, onAppSettings);
+			AppModel.settings.addEventListener(AppEvent.APP_SETTINGS, onAppSettings);
 			AppModel.settings.initialize(stage);
 			NativeApplication.nativeApplication.removeEventListener(InvokeEvent.INVOKE, onInvokeEvent);
 		}
 
-		private function onAppSettings(e:InstallEvent):void
+		private function onAppSettings(e:AppEvent):void
 		{
 			stage.nativeWindow.visible = true;
-			AppModel.settings.removeEventListener(InstallEvent.APP_SETTINGS, onAppSettings);
+			AppModel.settings.removeEventListener(AppEvent.APP_SETTINGS, onAppSettings);
 			checkExpiredAndUpdates();
 		}
 		
 		private function checkExpiredAndUpdates():void
 		{
 			if (LicenseManager.checkExpired()){
-				AppModel.engine.dispatchEvent(new InstallEvent(InstallEvent.APP_EXPIRED));
+				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.APP_EXPIRED));
 			}	else{
-				AppModel.updater.addEventListener(InstallEvent.APP_UP_TO_DATE, onAppUpToDate);
-				AppModel.updater.addEventListener(InstallEvent.UPDATE_FAILURE, onAppUpToDate);
-				AppModel.updater.addEventListener(InstallEvent.UPDATE_IGNORED, onAppUpToDate);
+				AppModel.updater.addEventListener(AppEvent.APP_UP_TO_DATE, onAppUpToDate);
+				AppModel.updater.addEventListener(AppEvent.APP_UPDATE_FAILURE, onAppUpToDate);
+				AppModel.updater.addEventListener(AppEvent.APP_UPDATE_IGNORED, onAppUpToDate);
 				AppModel.updater.checkForUpdate();
 			}
 		}
 
-		private function onAppUpToDate(e:InstallEvent):void
+		private function onAppUpToDate(e:AppEvent):void
 		{
-			AppModel.updater.removeEventListener(InstallEvent.APP_UP_TO_DATE, onAppUpToDate);
-			AppModel.updater.removeEventListener(InstallEvent.UPDATE_FAILURE, onAppUpToDate);
-			AppModel.updater.removeEventListener(InstallEvent.UPDATE_IGNORED, onAppUpToDate);			
+			AppModel.updater.removeEventListener(AppEvent.APP_UP_TO_DATE, onAppUpToDate);
+			AppModel.updater.removeEventListener(AppEvent.APP_UPDATE_FAILURE, onAppUpToDate);
+			AppModel.updater.removeEventListener(AppEvent.APP_UPDATE_IGNORED, onAppUpToDate);			
 			AppModel.proxies.config.detectGit();
-			AppModel.proxies.config.addEventListener(InstallEvent.GIT_SETTINGS, onGitReady);
+			AppModel.proxies.config.addEventListener(AppEvent.GIT_SETTINGS, onGitReady);
 		}
 
-		private function onGitReady(e:InstallEvent):void
+		private function onGitReady(e:AppEvent):void
 		{
 			AppModel.database.init();
 			AirNativeMenu.initialize(stage);
 			AirContextMenu.initialize(stage);
-			AppModel.proxies.config.removeEventListener(InstallEvent.GIT_SETTINGS, onGitReady);
+			AppModel.proxies.config.removeEventListener(AppEvent.GIT_SETTINGS, onGitReady);
 		}
 		
 	}

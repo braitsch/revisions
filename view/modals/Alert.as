@@ -1,6 +1,6 @@
 package view.modals {
 
-	import events.UIEvent;
+	import events.AppEvent;
 	import model.AppModel;
 	import flash.events.MouseEvent;
 
@@ -22,12 +22,12 @@ package view.modals {
 		
 		private function onOKButton(e:MouseEvent):void
 		{
-			AppModel.engine.dispatchEvent(new UIEvent(UIEvent.HIDE_ALERT));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_ALERT));
 		}
 		
 		override protected function onCloseClick(e:MouseEvent):void 
 		{
-			AppModel.engine.dispatchEvent(new UIEvent(UIEvent.HIDE_ALERT));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_ALERT));
 		}		
 		
 	}

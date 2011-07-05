@@ -13,10 +13,11 @@ package view.modals {
 		public function NewCommit()
 		{
 			addChild(_view);
-			_view.save_btn.addEventListener(MouseEvent.CLICK, onCommit);			
+			super.addCloseButton();			
 			super.addButtons([_view.save_btn]);
 			super.addInputs(Vector.<TLFTextField>([_view.note_txt]));
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			_view.save_btn.addEventListener(MouseEvent.CLICK, onCommit);
 		}
 
 		private function onAddedToStage(e:Event):void
