@@ -129,11 +129,10 @@ package model.proxies {
 
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
-			var m:String = 'Sorry, it looks there was a problem! \n';
-			m+='------------------------------- \n';			
+			var m:String = 'Sorry, it looks like there was a problem! \n';
 			m+='ConfigProxy.onProcessFailure(e) \n';
-			m+='method '+e.data.method+' failed \n';
-			m+='error message = '+e.data.result;
+			m+='Method "'+e.data.method+'" failed \n';
+			m+='Message: '+e.data.result;
 			AppModel.engine.dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, m));
 		}
 

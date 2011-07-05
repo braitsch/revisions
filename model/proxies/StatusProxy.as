@@ -2,6 +2,7 @@ package model.proxies {
 
 	import events.BookmarkEvent;
 	import events.NativeProcessEvent;
+	import events.UIEvent;
 	import model.AppModel;
 	import model.air.NativeProcessQueue;
 	import model.vo.Bookmark;
@@ -215,7 +216,11 @@ package model.proxies {
 		
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
-			trace("StatusProxy.onProcessFailure(e)", e.data.method, e.data.result);
+			var m:String = 'Sorry, it looks like there was a problem! \n';
+			m+='StatusProxy.onProcessFailure(e) \n';
+			m+='Method "'+e.data.method+'" failed \n';
+			m+='Message: '+e.data.result;
+			AppModel.engine.dispatchEvent(new UIEvent(UIEvent.SHOW_ALERT, m));
 		}
 		
 	}
