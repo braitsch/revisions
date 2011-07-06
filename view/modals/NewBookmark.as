@@ -46,7 +46,7 @@ package view.modals {
 		
 		private function onFileSelection(e:UIEvent):void
 		{
-			AppModel.engine.dispatchEvent(new UIEvent(UIEvent.DRAG_AND_DROP, e.data as File));
+			dispatchEvent(new UIEvent(UIEvent.DRAG_AND_DROP, e.data as File));
 		}		
 		
 		private function dispatchMessage(m:String):void

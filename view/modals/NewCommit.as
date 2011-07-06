@@ -25,7 +25,8 @@ package view.modals {
 			_view.note_txt.text = '';
 		}
 
-		private function onCommit(e:MouseEvent):void 
+		override public function onEnterKey():void { onCommit(); }
+		private function onCommit(e:MouseEvent = null):void 
 		{
 			AppModel.proxies.editor.commit(_view.note_txt.text);
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));

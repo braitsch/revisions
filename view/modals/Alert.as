@@ -12,7 +12,7 @@ package view.modals {
 		{
 			addChild(_view);
 			super.addButtons([_view.ok_btn]);
-			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOKButton);
+			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);
 		}
 
 		public function set message(m:String):void
@@ -20,7 +20,8 @@ package view.modals {
 			_view.message_txt.htmlText = m;			
 		}
 		
-		private function onOKButton(e:MouseEvent):void
+		override public function onEnterKey():void { onOkButton(); }		
+		private function onOkButton(e:MouseEvent = null):void
 		{
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_ALERT));
 		}

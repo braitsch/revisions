@@ -27,10 +27,10 @@ package view.modals {
 			_check1.label = 'Automatically check for updates';
 			_check2.label = 'Show tooltips';
 			_check3.label = 'Prompt before downloading a previous version';
-			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOk);
 			_view.check1.addEventListener(MouseEvent.CLICK, onCheck1);
 			_view.check2.addEventListener(MouseEvent.CLICK, onCheck2);
 			_view.check3.addEventListener(MouseEvent.CLICK, onCheck3);
+			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			AppModel.settings.addEventListener(AppEvent.APP_SETTINGS, onUserSettings);
 		}
@@ -71,7 +71,8 @@ package view.modals {
 			AppSettings.setSetting(AppSettings.PROMPT_BEFORE_DOWNLOAD, _check3.selected);
 		}
 		
-		private function onOk(evt:MouseEvent):void
+		override public function onEnterKey():void { onOkButton(); }		
+		private function onOkButton(evt:MouseEvent = null):void
 		{
 			var n:String = StringUtil.trim(_view.name_txt.text);
 			var e:String = StringUtil.trim(_view.email_txt.text);

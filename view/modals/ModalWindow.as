@@ -1,8 +1,10 @@
 package view.modals {
 
+	import flash.events.KeyboardEvent;
 	import events.UIEvent;
 	import fl.text.TLFTextField;
 	import com.greensock.TweenLite;
+	import flash.display.InteractiveObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -85,7 +87,17 @@ package view.modals {
 				var txt:TLFTextField = _inputs[0];
 				txt.setSelection(0, txt.length);
 				txt.textFlow.interactionManager.setFocus();
+				for (var i:int = 0; i < _inputs.length; i++) {
+					InteractiveObject(_inputs[i].getChildAt(1)).tabIndex = i;
+					InteractiveObject(_inputs[i].getChildAt(1)).addEventListener(KeyboardEvent.KEY_UP, onKeyUpEvent);
+				}
 			}
+		}
+
+		private function onKeyUpEvent(e:KeyboardEvent):void
+		{
+		//TODO this is fucking bullshit. need to move back to classic textfields	
+			if (e.keyCode == 13) onEnterKey();			
 		}
 		
 		private function onButtonRollOut(e:MouseEvent):void {TweenLite.to(e.target.over, .3, {alpha:0});}

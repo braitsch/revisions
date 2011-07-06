@@ -28,7 +28,8 @@ package view.modals {
 			_view.message_txt.appendText('Loaded from cache : '+c.loadedFromCache+'\n');
 		}
 		
-		private function onOkButton(e:MouseEvent):void
+		override public function onEnterKey():void { onOkButton(); }			
+		private function onOkButton(e:MouseEvent = null):void
 		{
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 		}

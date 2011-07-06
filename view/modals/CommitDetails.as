@@ -24,7 +24,8 @@ package view.modals {
 			_view.details_txt.text = cmt.note;
 		}
 		
-		private function onClose(e:MouseEvent):void 
+		override public function onEnterKey():void { onClose(); }		
+		private function onClose(e:MouseEvent = null):void 
 		{
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 		}		

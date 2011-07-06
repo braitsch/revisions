@@ -68,7 +68,8 @@ package view.modals {
 			}
 		}		
 		
-		private function onLoginButton(e:MouseEvent):void
+		override public function onEnterKey():void { onLoginButton(); }
+		private function onLoginButton(e:MouseEvent = null):void
 		{
 			trace("WindowLogin.onLoginButton(e)", _view.name_txt.text, _view.pass_txt.text);
 			if (_account.type == RemoteAccount.GITHUB){

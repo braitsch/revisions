@@ -41,6 +41,7 @@ package view.modals {
 			_view.name_txt.text = n.substr(0,1).toUpperCase() + n.substr(1);
 		}			
 		
+		override public function onEnterKey():void { onOkButton(); }		
 		private function onOkButton(e:MouseEvent = null):void 
 		{	
 			var m:String = Bookmark.validate(_view.name_txt.text, _view.local_txt.text);

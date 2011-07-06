@@ -36,7 +36,8 @@ package view.modals {
 			_config.addEventListener(AppEvent.GIT_SETTINGS, onGitSettings);
 		}
 
-		private function onOkButton(evt:MouseEvent):void
+		override public function onEnterKey():void { onOkButton(); }
+		private function onOkButton(evt:MouseEvent = null):void
 		{
 			var n:String = StringUtil.trim(_view.name_txt.text);
 			var e:String = StringUtil.trim(_view.email_txt.text);

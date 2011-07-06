@@ -47,7 +47,8 @@ package view.modals {
 			_view.local_txt.text = File(e.data).nativePath;	
 		}
 		
-		private function onUpdateBookmark(e:MouseEvent):void 
+		override public function onEnterKey():void { onUpdateBookmark(); }
+		private function onUpdateBookmark(e:MouseEvent = null):void 
 		{
 			var m:String = Bookmark.validate(_view.name_txt.text, _view.local_txt.text, _bookmark);
 			if (m != '') {

@@ -88,7 +88,7 @@ package model.proxies {
 					onInstallComplete();
 				break;				
 				case BashMethods.DETECT_GIT :
-					if (o.result != 0){
+					if (o.result != ''){
 						parseGitDetails(o.result);
 					}	else{
 						dispatchEvent(new AppEvent(AppEvent.GIT_NOT_INSTALLED));								

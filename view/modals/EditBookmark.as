@@ -73,7 +73,8 @@ package view.modals {
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, 'GitHub & Beanstalk integration is coming in the next build.'));			
 		}												
 
-		private function onUpdateBookmark(e:MouseEvent):void
+		override public function onEnterKey():void { onUpdateBookmark(); }
+		private function onUpdateBookmark(e:MouseEvent = null):void
 		{
 			var m:String = Bookmark.validate(_view.name_txt.text, _view.local_txt.text, _bookmark);
 			if (m != '') {
