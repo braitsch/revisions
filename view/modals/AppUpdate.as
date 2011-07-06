@@ -43,6 +43,8 @@ package view.modals {
 		private function onDownload(e:MouseEvent):void
 		{
 			_view.message_txt.text = "Downloading Update..";
+			super.enableButton(_view.skip_btn, false);
+			super.enableButton(_view.download_btn, false);			
 			AppModel.updater.updateApplication();
 			AppModel.updater.addEventListener(AppEvent.APP_UPDATE_FAILURE, onUpdateError);
 			AppModel.updater.addEventListener(AppEvent.APP_UPDATE_PROGRESS, onUpdateProgress);
