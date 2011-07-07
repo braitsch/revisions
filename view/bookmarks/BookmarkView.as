@@ -83,7 +83,7 @@ package view.bookmarks {
 			var v:Vector.<Bookmark> = e.data as Vector.<Bookmark>;
 			for (var i:int = 0; i < v.length; i++) _list.addItem(v[i]);
 			addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.INIT_COMPLETE));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 		}
 
 		private function onBookmarkAdded(e:BookmarkEvent):void 

@@ -24,6 +24,8 @@ package model {
 		public function addBookmark(b:Bookmark):void
 		{
 			_bookmark = b;
+			var s:String = _bookmark.type == Bookmark.FILE ? 'File' : 'Directory Contents';
+			dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Reading '+s));			
 			AppModel.database.addRepository(_bookmark.label, _bookmark.type, _bookmark.path, _bookmark.autosave);
 			AppModel.database.addEventListener(DataBaseEvent.RECORD_ADDED, initBookmark);			
 		}
@@ -53,6 +55,7 @@ package model {
 		{
 			for (var i:int = 0; i < _bookmarks.length; i++) _bookmarks[i].active = false;			
 			_bookmarks.push(_bookmark);
+			dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));			
 			dispatchEvent(new BookmarkEvent(BookmarkEvent.ADDED, _bookmark));
 			dispatchActiveBookmark();
 		}
@@ -142,7 +145,7 @@ package model {
 		
 		private function buildBookmarksFromDatabase():void
 		{
-			dispatchEvent(new AppEvent(AppEvent.INIT_START));
+			dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Initalizing Bookmarks'));
 			AppModel.proxies.branch.getBranches(_bookmarks[_index]);			AppModel.proxies.branch.addEventListener(BookmarkEvent.BRANCHES_READ, getStashOfNextBookmark);			AppModel.proxies.branch.addEventListener(BookmarkEvent.STASH_LIST_READ, onStoredBookmarkReady);
 		}
 		

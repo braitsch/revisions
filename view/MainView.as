@@ -32,8 +32,8 @@ package view{
 			_curtain.addEventListener(MouseEvent.CLICK, onCurtainClick);
 			_summary.addEventListener(UIEvent.SHOW_HISTORY, onShowHistory);
 			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, showSummary);
-			AppModel.engine.addEventListener(AppEvent.INIT_START, showLoader);
-			AppModel.engine.addEventListener(AppEvent.INIT_COMPLETE, hideLoader);
+			AppModel.engine.addEventListener(AppEvent.SHOW_LOADER, showLoader);
+			AppModel.engine.addEventListener(AppEvent.HIDE_LOADER, hideLoader);
 			AppModel.engine.addEventListener(BookmarkEvent.NO_BOOKMARKS, onNoBookmarks);
 		}
 		
@@ -68,6 +68,7 @@ package view{
 		private function refreshHistory():void
 		{
 			_preloader.show();
+			_preloader.label = 'Refreshing History';
 			addEventListener(UIEvent.HISTORY_DRAWN, onHistory);	
 			setTimeout(function():void{AppModel.proxies.history.getHistory();}, 500);
 		}
@@ -94,6 +95,7 @@ package view{
 		private function showLoader(e:AppEvent):void
 		{
 			_preloader.show();
+			_preloader.label = e.data as String;
 		}
 		
 		private function hideLoader(e:AppEvent):void 
