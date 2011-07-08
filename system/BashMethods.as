@@ -11,6 +11,7 @@ package system{
 		public static const GET_USER_NAME		:String = 'getUserName';	
 		public static const SET_USER_EMAIL		:String = 'setUserEmail';
 		public static const GET_USER_EMAIL		:String = 'getUserEmail';	
+		public static const GET_USER_REAL_NAME	:String = 'getLoggedInUsersRealName';
 		
 	// editor methods //		
 		public static const COMMIT				:String = 'commit';
@@ -33,7 +34,7 @@ package system{
 		public static const GET_MODIFIED_FILES	:String = 'getModifiedFiles';
 		public static const GET_TRACKED_FILES	:String = 'getTrackedFiles';
 		public static const GET_UNTRACKED_FILES	:String = 'getUntrackedFiles';
-		public static const GET_IGNORED_FILES:String = 'getIgnoredFiles';
+		public static const GET_IGNORED_FILES	:String = 'getIgnoredFiles';
 		
 	}
 	

@@ -10,7 +10,6 @@ package model.proxies {
 	public class ConfigProxy extends NativeProcessQueue {
 
 		private static var _userName			:String;		private static var _userEmail			:String;
-		private static var _gitReady			:Boolean;
 		private static var _gitInstall			:String;
 		private static var _gitVersion			:String;
 		private static var _loadedFromCache		:String;
@@ -24,7 +23,6 @@ package model.proxies {
 
 		public function get userName():String { return _userName; }
 		public function get userEmail():String { return _userEmail; }
-		public function get gitReady():Boolean { return _gitReady; }
 		public function get gitVersion():String { return _gitVersion; }
 		public function get gitInstall():String { return _gitInstall; }
 		public function get loadedFromCache():String { return _loadedFromCache; }
@@ -50,6 +48,11 @@ package model.proxies {
 				break;
 			}
 		}
+		
+		private function getLoggedInUsersRealName():void
+		{	
+			super.queue = [	Vector.<String>([BashMethods.GET_USER_REAL_NAME]) ];
+		}		
 		
 		public function setUserNameAndEmail(n:String, e:String):void
 		{
@@ -77,6 +80,7 @@ package model.proxies {
 
 		private function detectMethod(o:Object):void
 		{
+			trace(o.method, 'completed', o.result);
 			switch(o.method){
 				case BashMethods.INSTALL_GIT :
 					onInstallComplete();
@@ -86,7 +90,10 @@ package model.proxies {
 				break;					
 				case BashMethods.HOMEBREW :
 					onInstallComplete();
-				break;				
+				break;	
+				case BashMethods.GET_USER_REAL_NAME:
+					onUserRealName(o.result);
+				break;								
 				case BashMethods.DETECT_GIT :
 					if (o.result != ''){
 						parseGitDetails(o.result);
@@ -113,22 +120,30 @@ package model.proxies {
 		private function onInstallComplete():void
 		{
 			dispatchEvent(new AppEvent(AppEvent.GIT_INSTALL_COMPLETE));
-		}		
+		}	
 		
 		private function checkUserNameAndEmail(n:String, e:String):void
 		{
-			_userName = n; _userEmail = e;
-			if (n == '' || e == ''){
-				dispatchEvent(new AppEvent(AppEvent.GIT_NAME_AND_EMAIL));
+			_userEmail = e || 'yourname@yourdomain.com';
+			if (e == ''){
+				getLoggedInUsersRealName();
 			}	else{
-				_gitReady = true;
-				dispatchEvent(new AppEvent(AppEvent.GIT_SETTINGS));
+				_userName = n; 
+				dispatchEvent(new AppEvent(AppEvent.GIT_SETTINGS));			
 			}			
 		}
-
+		
+		private function onUserRealName(n:String):void 
+		{
+			_userName = n;
+			dispatchEvent(new AppEvent(AppEvent.GIT_SETTINGS));			
+		}		
+		
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
 			var s:String = 'ConfigProxy.onProcessFailure(e)';
+			trace(e.data.method);
+			trace(e.data.result);
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_DEBUG, {s:s, m:e.data.method, r:e.data.result}));
 		}
 
