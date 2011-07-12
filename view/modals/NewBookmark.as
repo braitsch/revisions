@@ -1,5 +1,6 @@
 package view.modals {
 
+	import model.remote.AccountManager;
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
@@ -31,8 +32,10 @@ package view.modals {
 					_browser.browseForDirectory('Select a folder to track.');
 				break;	
 				case _view.github_btn :
+					dispatchEvent(new UIEvent(UIEvent.GITHUB));
+	//				trace('github = '+AccountManager.github);
 			//		dispatchEvent(new UIEvent(UIEvent.SHOW_LOGIN, new RemoteAccount(RemoteAccount.GITHUB)));
-					dispatchMessage('GitHub integration is coming in the next build.');
+			//		dispatchMessage('GitHub integration is coming in the next build.');
 				break;	
 				case _view.beanstalk_btn :
 			//		dispatchEvent(new UIEvent(UIEvent.SHOW_LOGIN, new RemoteAccount(RemoteAccount.BEANSTALK)));

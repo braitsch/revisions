@@ -1,5 +1,6 @@
 package {
 
+	import model.remote.AccountManager;
 	import events.AppEvent;
 	import model.AppModel;
 	import system.AirContextMenu;
@@ -63,6 +64,7 @@ package {
 		private function onGitReady(e:AppEvent):void
 		{
 			AppModel.database.init();
+			AccountManager.initialize();
 			AirNativeMenu.initialize(stage);
 			AirContextMenu.initialize(stage);
 			AppModel.proxies.config.removeEventListener(AppEvent.GIT_SETTINGS, onGitReady);

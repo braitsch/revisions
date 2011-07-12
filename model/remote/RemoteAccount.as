@@ -1,27 +1,34 @@
 package model.remote {
 
+	import flash.display.Bitmap;
 	public class RemoteAccount {
 		
 		public static const GITHUB		:String = 'github';
 		public static const BEANSTALK	:String = 'beanstalk';
 		public static const PRIVATE		:String = 'private';
 		
-		private static var _name		:String;
-		private static var _pass		:String;
-		private static var _type		:String;
+		private var _name		:String;
+		private var _pass		:String;
+		private var _type		:String;
+		private var _avatar		:Bitmap;
 
-		public function RemoteAccount(s:String)
+		public function RemoteAccount(s:String, n:String, p:String, a:String)
 		{
 			_type = s;
+			_name = n;
+			_pass = p;
+			loadAvatar(a);
 		}
-		
+
 		public function get type():String { return _type; }
-
 		public function get name():String { return _name; }
-		public function set name(name:String):void { _name = name; }
-
 		public function get pass():String { return _pass; }
-		public function set pass(s:String):void { _pass = s; }
+		public function get avatarURL():Bitmap { return _avatar; }
+		
+		private function loadAvatar(url:String):void
+		{
+			
+		}		
 		
 	}
 	

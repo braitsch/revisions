@@ -4,6 +4,7 @@ package view {
 	import events.UIEvent;
 	import model.AppModel;
 	import model.vo.Bookmark;
+	import view.fonts.Fonts;
 	import view.ui.SmartButton;
 	import view.ui.Tooltip;
 	import flash.display.Bitmap;
@@ -14,7 +15,6 @@ package view {
 	import flash.events.MouseEvent;
 	import flash.filters.DropShadowFilter;
 	import flash.filters.GlowFilter;
-	import flash.text.Font;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
 
@@ -27,10 +27,8 @@ package view {
 		private static var _view		:SummaryViewMC = new SummaryViewMC();
 		private static var _fringe		:Bitmap = new Bitmap(new SummaryBkgdBottom());
 		private static var _pattern		:BitmapData = new SummaryBkgdPattern();
-		private static var _bold		:Font = new HelveticaBold() as Font;		
 		private static var _bookmark	:Bookmark;
-		private static var _tformat1	:TextFormat = new TextFormat();
-		private static var _tformat2	:TextFormat = new TextFormat();
+		private static var _tformat	:TextFormat = new TextFormat();
 		private static var _glowSmall	:GlowFilter = new GlowFilter(0xffffff, 1, 2, 2, 3, 3);
 		private static var _glowLarge	:GlowFilter = new GlowFilter(0xffffff, 1, 6, 6, 3, 3);
 
@@ -73,19 +71,16 @@ package view {
 
 		private function initTextFields():void
 		{
-			_tformat1.color = 0x666666;
-			_tformat1.letterSpacing = .7;
-			_tformat1.bold = _bold.fontName;
-			_tformat2.letterSpacing = 2;
+			_tformat.letterSpacing = 2;
 			_view.name_txt.width = 200;
 			_view.name_txt.wordWrap = true;
 			_view.name_txt.multiline = true;
 			_view.name_txt.filters = [_glowLarge];
 			_details.version_txt.filters = [_glowSmall];
 			_details.lastSaved_txt.filters = [_glowSmall]; 
-			_view.name_txt.defaultTextFormat = _tformat2;
-			_details.version_txt.defaultTextFormat = _tformat1;
-			_details.lastSaved_txt.defaultTextFormat = _tformat1;
+			_view.name_txt.defaultTextFormat = _tformat;
+			_details.version_txt.defaultTextFormat = Fonts.helveticaBold;
+			_details.lastSaved_txt.defaultTextFormat = Fonts.helveticaBold;
 			_view.name_txt.autoSize = TextFieldAutoSize.CENTER;
 			_details.version_txt.autoSize = TextFieldAutoSize.CENTER;
 			_details.lastSaved_txt.autoSize = TextFieldAutoSize.CENTER;

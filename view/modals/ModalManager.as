@@ -29,6 +29,7 @@ package view.modals {
 		private static var _appUpdate		:AppUpdate = new AppUpdate();
 		private static var _appExpired		:AppExpired = new AppExpired();
 		private static var _gitAbout		:GitAbout = new GitAbout();
+		private static var _gitHub			:GitHub = new GitHub();
 		private static var _gitInstall		:GitInstall = new GitInstall();
 		private static var _gitUpgrade		:GitUpgrade = new GitUpgrade();
 		private static var _nameAndEmail	:NameAndEmail = new NameAndEmail();
@@ -73,6 +74,7 @@ package view.modals {
 			stage.addEventListener(UIEvent.DOWNLOAD, downloadVersion);
 			stage.addEventListener(UIEvent.COMMIT_DETAILS, commitDetails);
 			stage.addEventListener(UIEvent.ABOUT_GIT, onAboutGit);
+			stage.addEventListener(UIEvent.GITHUB, onShowGitHub);
 			stage.addEventListener(UIEvent.GLOBAL_SETTINGS, globalSettings);	
 			stage.addEventListener(UIEvent.SHOW_LOGIN, onShowLogin);
 			stage.addEventListener(UIEvent.CLOSE_MODAL_WINDOW, onCloseButton);
@@ -189,7 +191,12 @@ package view.modals {
 		private function onAboutGit(e:UIEvent):void
 		{
 			showModalWindow(_gitAbout);
-		}		
+		}
+		
+		private function onShowGitHub(e:UIEvent):void
+		{
+			showModalWindow(_gitHub);
+		}				
 		
 		private function onAppExpired(e:AppEvent):void
 		{
