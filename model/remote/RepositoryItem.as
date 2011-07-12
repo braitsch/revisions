@@ -13,7 +13,7 @@ package model.remote {
 
 		public function RepositoryItem(o:Object):void
 		{
-			_url = o.url;
+			_url = o.ssh_url;
 			_view.name_txt.defaultTextFormat = Fonts.arialBold;
 			_view.desc_txt.defaultTextFormat = Fonts.arialItalic;
 			_view.name_txt.autoSize = TextFieldAutoSize.LEFT;

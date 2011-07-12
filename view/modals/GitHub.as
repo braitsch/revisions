@@ -1,5 +1,9 @@
 package view.modals {
 
+	import model.remote.RemoteAccount;
+	import model.remote.AccountManager;
+	import events.AppEvent;
+	import model.AppModel;
 	import events.UIEvent;
 	import model.remote.RepositoryList;
 	import flash.display.Sprite;
@@ -10,8 +14,8 @@ package view.modals {
 	public class GitHub extends ModalWindow {
 
 		private static var _view		:GitHubMC = new GitHubMC();
-		private static var _page		:GlowFilter = new GlowFilter(0x000000, .5, 15, 15, 2, 3);
-		private static var _labels		:GlowFilter = new GlowFilter(0x000000, .3, 5, 5, 1, 3);
+		private static var _badgeGlow	:GlowFilter = new GlowFilter(0x000000, .5, 20, 10, 1, 3);
+		private static var _labelGlow	:GlowFilter = new GlowFilter(0x000000, .3, 5, 5, 1, 3);
 		private static var _pages		:Vector.<RepositoryList> = new <RepositoryList>[];
 		private static var _maxPerPage	:uint = 5;
 		private static var _pageIndex	:uint = 0;
@@ -21,33 +25,35 @@ package view.modals {
 		{
 			addChild(_view);	
 			super.addButtons([_view.ok_btn]);	
-			_view.page_txt.text = 'My Github';
-			_view.page_txt.filters = [_page];
+			_view.badgePage.page_txt.text = 'My Github';
+			_view.badgePage.page_txt.filters = [_badgeGlow];
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);
 			_view.nav.pageCounter_txt.autoSize = TextFieldAutoSize.CENTER;
-			_view.nav.pageCounter_txt.filters = _view.repositories_txt.filters = [_labels];
-		// temp //	
-			createTempData();
+			_view.nav.pageCounter_txt.filters = _view.repositories_txt.filters = [_labelGlow];
+			_view.badgePage.filters = _view.badgeUser.filters = [_badgeGlow];
+			AppModel.proxies.github.addEventListener(AppEvent.GITHUB_DATA, onGithubData);
 		}
 
-		private function createTempData():void
+		private function onGithubData(e:AppEvent):void
 		{
-			var a:Array = [];
-			for (var i:int = 0; i < 132; i++) {
-				var o:Object = {};
-				o.name = 'repository # '+(i+1);
-				o.description = 'this is description : '+(i+1);
-				o.url = 'some remote url '+(i+1);
-				a.push(o);
-			}
-			this.repositories = a;
-			this.user = 'Michael Jackson - San Francisco, CA';
+			var g:RemoteAccount = AccountManager.github;
+			_view.badgeUser.user_txt.text = g.realName+' - '+g.location;
+			this.repositories = g.repositories;
 		}
-		
-		public function set user(s:String):void
-		{
-			_view.user_txt.text = s;
-		}
+
+//		private function createTempData():void
+//		{
+//			var a:Array = [];
+//			for (var i:int = 0; i < 87; i++) {
+//				var o:Object = {};
+//				o.name = 'repository # '+(i+1);
+//				o.description = 'this is description : '+(i+1);
+//				o.url = 'some remote url '+(i+1);
+//				a.push(o);
+//			}
+//			this.repositories = a;
+//			_view.user_txt.text = 'Michael Jackson - San Francisco, CA';
+//		}
 		
 		public function set repositories(a:Array):void
 		{
@@ -59,10 +65,14 @@ package view.modals {
 			}
 		// whatever's left over //	
 			_pages.push(new RepositoryList(k));
-		// add the first page /
-			showPage(_pageIndex);
+			onRepositoriesReady();
+		}
+		
+		private function onRepositoriesReady():void
+		{
+			showPage(0);
 			positionNav();
-			drawBackground(500, 130+_activePage.height+20);
+			drawBackground(590, 130+_activePage.height+20);
 			super.addCloseButton();
 		}
 
@@ -81,7 +91,7 @@ package view.modals {
 			if (_activePage) removeChild(_activePage);
 			_pageIndex = n;
 			_activePage = _pages[_pageIndex];
-			_activePage.x = 250;
+			_activePage.x = 251;
 			_activePage.y = 110;
 			_view.nav.pageCounter_txt.text = 'Page '+(_pageIndex+1)+' of '+_pages.length;			
 			_pageIndex==0 ? enableButton(_view.nav.prev_btn, false) : enableButton(_view.nav.prev_btn, true);
@@ -117,7 +127,7 @@ package view.modals {
 			_view.graphics.drawRect(0, 0, w, h);
 			_view.graphics.endFill();
 			_view.graphics.beginBitmapFill(new LtGreyPattern());
-			_view.graphics.drawRect(2, 2, w-4, h-4);
+			_view.graphics.drawRect(4, 4, w-8, h-8);
 			_view.graphics.endFill();
 			_view.ok_btn.y = _view.nav.y = h - 20 - 10;
 		}

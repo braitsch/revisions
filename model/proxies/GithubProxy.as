@@ -1,13 +1,12 @@
 package model.proxies {
 
-	import model.db.AppSettings;
-	import model.remote.AccountManager;
-	import model.remote.RemoteAccount;
-	import com.adobe.serialization.json.JSONDecoder;
 	import events.AppEvent;
 	import events.NativeProcessEvent;
 	import model.AppModel;
 	import model.air.NativeProcessProxy;
+	import model.remote.AccountManager;
+	import model.remote.RemoteAccount;
+	import com.adobe.serialization.json.JSONDecoder;
 
 	public class GithubProxy extends NativeProcessProxy {
 
@@ -23,31 +22,56 @@ package model.proxies {
 		
 		public function login($name:String, $pass:String):void
 		{
+			trace("GithubProxy.login", $name, $pass);
 			_userName = $name; _userPass = $pass;
-			super.call(Vector.<String>(['login', _userName, _userPass]));			
+			super.call(Vector.<String>(['login', _userName, _userPass]));
 		}
+		
+		private function getRepositories():void
+		{
+			super.call(Vector.<String>(['getRepositories', _userName, _userPass]));		
+		}		
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
 			trace("GithubProxy.onProcessComplete(e)", e.data.method);
 			var o:Object = new JSONDecoder(e.data.result, false).getValue();
 			if(o.message){
-				onHandleError(o);	
+				onHandleError(e.data.method, o);	
 			}	else{
-				addNewAccount(o);
+				onHandleSuccess(e.data.method, o);
 			}
 		}
 		
+		private function onHandleSuccess(m:String, o:Object):void
+		{
+			switch(m){
+				case 'login' :
+					addNewAccount(o);
+				break;	
+				case 'getRepositories' :
+					onRepositories(o);
+				break;								
+			}
+		}
+
 		private function addNewAccount(o:Object):void
 		{
-			var ra:RemoteAccount = new RemoteAccount(RemoteAccount.GITHUB, _userName, _userPass, o.avatar_url);
-			AccountManager.addAccount(ra);
-			AppSettings.setSetting(AppSettings.GITHUB_USER, _userName);
-			AppSettings.setSetting(AppSettings.GITHUB_PASS, _userPass);
+			o.pass = _userPass;
+			o.type = RemoteAccount.GITHUB;
+			AccountManager.addAccount(new RemoteAccount(o));
+			getRepositories();
 		}
 		
-		private function onHandleError(o:Object):void
+		private function onRepositories(o:Object):void
 		{
+			AccountManager.github.repositories = o as Array;
+			dispatchEvent(new AppEvent(AppEvent.GITHUB_DATA));
+		}		
+
+		private function onHandleError(m:String, o:Object):void
+		{
+			trace("GithubProxy.onHandleError(o)", m);
 			if (o.message == 'Bad credentials') trace('login failed');
 		}
 
@@ -56,7 +80,7 @@ package model.proxies {
 			var s:String = 'GithubProxy.onProcessFailure(e)';
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_DEBUG, {s:s, m:e.data.method, r:e.data.result}));
 		}
-		
+
 	}
 	
 }

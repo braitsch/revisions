@@ -26,6 +26,8 @@ package events {
 		public static const GIT_NAME_AND_EMAIL		:String = "GIT_NAME_AND_EMAIL";		
 		public static const GIT_DIR_UPDATED			:String = "GIT_DIR_UPDATED";
 		
+		public static const GITHUB_DATA				:String = "GITHUB_DATA";
+		
 		public var data:Object;
 
 		public function AppEvent($type:String, $data:Object = null)

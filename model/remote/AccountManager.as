@@ -10,14 +10,27 @@ package model.remote {
 		{
 			var gn:String = AppSettings.getSetting(AppSettings.GITHUB_USER);
 			var gp:String = AppSettings.getSetting(AppSettings.GITHUB_PASS);
-		//	if (gn && gp) AppModel.proxies.github.login(gn, gp);
+			if (gn && gp) {
+				AppModel.proxies.github.login(gn, gp);
+			}	else{
+				AppModel.proxies.github.login('braitsch', 'aelisch76');
+			}
 		}		
 		
 		public static function addAccount(ra:RemoteAccount):void
 		{
 			if (_accounts == null) _accounts = new Vector.<RemoteAccount>();
 			_accounts.push(ra);
-			trace('AccountManager.addAccount :', ra.type, ra.name, ra.pass, ra.avatarURL);			
+			addAccountSettings(ra);
+		//	trace('AccountManager.addAccount :', ra.type, ra.login, ra.pass, ra.realName, ra.location);			
+		}
+
+		private static function addAccountSettings(ra:RemoteAccount):void
+		{
+			if (ra.type == RemoteAccount.GITHUB){
+				AppSettings.setSetting(AppSettings.GITHUB_USER, ra.login);
+				AppSettings.setSetting(AppSettings.GITHUB_PASS, ra.pass);			
+			}
 		}
 		
 		public static function get github():RemoteAccount

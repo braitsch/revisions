@@ -7,7 +7,7 @@ package view.fonts {
 		private static var _arialBold		:Font = new ArialBold() as Font;			
 		private static var _arialItalic		:Font = new ArialItalic() as Font;			
 		private static var _helveticaBold	:Font = new HelveticaBold() as Font;
-		private static var _kerning			:Number = .5;	
+		private static var _kerning			:Number = .7;	
 		
 		public static var 	arialBold		:TextFormat = new TextFormat(_arialBold.fontName);
 							arialBold.bold = true;
