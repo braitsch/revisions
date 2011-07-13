@@ -21,6 +21,7 @@ package system {
        	private static var _newBkmk		:NativeMenuItem = new NativeMenuItem('New Bookmark');
        	private static var _aboutGit	:NativeMenuItem = new NativeMenuItem('About Git');
        	private static var _updateApp	:NativeMenuItem = new NativeMenuItem('Check For Updates');
+       	private static var _github		:NativeMenuItem = new NativeMenuItem('My Github');
        	private static var _stage		:Stage;
                      
         public static function initialize(s:Stage):void
@@ -36,6 +37,14 @@ package system {
             _aboutGit.addEventListener(Event.SELECT, onOptionSelected);
             _main.submenu.addItemAt(_aboutGit, 1);
             _main.submenu.addItemAt(_updateApp, 2);
+            AppModel.proxies.github.addEventListener(AppEvent.GITHUB_READY, onGitHubReady);
+		}
+
+		private static function onGitHubReady(e:AppEvent):void
+		{
+			var remote:NativeMenuItem = _menu.addSubmenu(new NativeMenu(), "Remote");
+			remote.submenu.addItem(_github);
+			_github.addEventListener(Event.SELECT, onOptionSelected);
 		}
 
 		private static function getMenuByName(s:String):NativeMenuItem
@@ -52,7 +61,10 @@ package system {
         	 	break;
         	 	case _aboutGit : 
         	 		_stage.dispatchEvent(new UIEvent(UIEvent.ABOUT_GIT));
-        	 	break;        	 	
+        	 	break;  
+        	 	case _github : 
+        	 		_stage.dispatchEvent(new UIEvent(UIEvent.GITHUB_HOME));
+        	 	break;          	 	      	 	
         	 	case _updateApp	: 
 					AppSettings.setSetting(AppSettings.CHECK_FOR_UPDATES, true);
         	 		AppModel.updater.addEventListener(AppEvent.APP_UP_TO_DATE, onAppUpToDate);

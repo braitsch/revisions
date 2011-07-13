@@ -24,6 +24,7 @@ package model.proxies {
 		public function login($name:String, $pass:String):void
 		{
 			_userName = $name; _userPass = $pass;
+			trace("GithubProxy.login($name, $pass)", _userName, _userPass);
 			super.call(Vector.<String>([BashMethods.LOGIN, _userName, _userPass]));
 		}
 		

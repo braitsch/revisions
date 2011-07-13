@@ -74,6 +74,7 @@ package view.modals {
 		override public function onEnterKey():void { onLoginButton(); }
 		private function onLoginButton(e:MouseEvent = null):void
 		{
+			if (!validate()) return;
 			enableButton(_view.skip_btn, false);
 			enableButton(_view.login_btn, false);
 			if (_accountType == RemoteAccount.GITHUB){
@@ -86,12 +87,23 @@ package view.modals {
 				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Attemping Login'));
 			}			
 		}
+
+		private function validate():Boolean
+		{
+			if (_view.name_txt.text && _view.pass_txt.text){
+				return true;
+			}	else{
+				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, 'Neither field can be blank.'));
+				return false;
+			}
+		}
 		
 		private function onGitHubReady(e:AppEvent):void
 		{
 			enableButton(_view.skip_btn, true);
 			enableButton(_view.login_btn, true);			
 			dispatchEvent(new UIEvent(UIEvent.GITHUB_HOME));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));			
 			AppModel.proxies.github.removeEventListener(AppEvent.GITHUB_READY, onGitHubReady);
 			AppModel.proxies.github.removeEventListener(AppEvent.LOGIN_FAILED, onLoginFailed);			
 		}
@@ -102,6 +114,7 @@ package view.modals {
 			enableButton(_view.login_btn, true);			
 			var m:String = 'Login Attempt Failed.\nPlease Check Your Credentials.';
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));			
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 		}
 
 		private function onSkipButton(e:MouseEvent):void

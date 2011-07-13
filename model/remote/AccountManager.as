@@ -10,11 +10,7 @@ package model.remote {
 		{
 			var gn:String = AppSettings.getSetting(AppSettings.GITHUB_USER);
 			var gp:String = AppSettings.getSetting(AppSettings.GITHUB_PASS);
-			if (gn && gp) {
-	//			AppModel.proxies.github.login(gn, gp);
-			}	else{
-	//			AppModel.proxies.github.login('braitsch', 'aelisch76');
-			}
+			if (gn && gp) AppModel.proxies.github.login(gn, gp);
 		}		
 		
 		public static function addAccount(ra:RemoteAccount):void

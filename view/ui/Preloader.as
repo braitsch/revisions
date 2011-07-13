@@ -50,6 +50,12 @@ package view.ui {
 			TweenLite.to(this, .5, {alpha:1});
 		}
 		
+		public function resize(w:uint, h:uint, offX:int = 0, offY:int = 0):void
+		{
+			this.x = w / 2 + offX; 
+			this.y = h / 2 + offY;
+		}
+		
 		private function addLabel():void
 		{
 			_format.letterSpacing = 1;

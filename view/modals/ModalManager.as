@@ -1,13 +1,14 @@
 package view.modals {
 
-	import events.BookmarkEvent;
 	import events.AppEvent;
+	import events.BookmarkEvent;
 	import events.UIEvent;
 	import model.AppModel;
 	import model.db.AppSettings;
 	import model.remote.RemoteAccount;
 	import model.vo.Bookmark;
 	import model.vo.Commit;
+	import view.ui.Preloader;
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.KeyboardEvent;
@@ -36,6 +37,7 @@ package view.modals {
 		private static var _gitHub			:GitHub = new GitHub();
 		private static var _alert			:Alert = new Alert();
 		private static var _debug			:DebugScreen = new DebugScreen();
+		private static var _preloader		:Preloader = new Preloader();		
 		
 	// windows that force user to make a decision - autoclose disabled //	
 		private static var _stickies		:Vector.<ModalWindow> = new <ModalWindow>
@@ -47,12 +49,15 @@ package view.modals {
 		public function ModalManager()
 		{
 			addChild(_curtain);
+			addChild(_preloader);			
 			mouseEnabled = false;
 			_curtain.addEventListener(MouseEvent.CLICK, onCurtainClick);
 			AppModel.engine.addEventListener(AppEvent.SHOW_DEBUG, onShowDebug);
 			AppModel.engine.addEventListener(AppEvent.HIDE_DEBUG, onHideDebug);
 			AppModel.engine.addEventListener(AppEvent.SHOW_ALERT, onShowAlert);
-			AppModel.engine.addEventListener(AppEvent.HIDE_ALERT, onHideAlert);			
+			AppModel.engine.addEventListener(AppEvent.HIDE_ALERT, onHideAlert);	
+			AppModel.engine.addEventListener(AppEvent.SHOW_LOADER, showLoader);
+			AppModel.engine.addEventListener(AppEvent.HIDE_LOADER, hideLoader);					
 			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onBookmarkSelected);
 			AppModel.engine.addEventListener(BookmarkEvent.PATH_ERROR, repairBookmark);
 			AppModel.engine.addEventListener(BookmarkEvent.NO_BOOKMARKS, showWelcomeScreen);
@@ -84,11 +89,18 @@ package view.modals {
 		public function resize(w:Number, h:Number):void
 		{
 			_curtain.resize(w, h);
-			if (_window) _window.resize(w, h);
+			if (_window) {
+				_window.resize(w, h);
+			// align with modal window //	
+				_preloader.resize(w, h);
+			}	else{
+			// align with summary view //	
+				_preloader.resize(w, h, 204/2, -20);
+			}
 			if (_alert.stage) _alert.resize(w, h);
 			if (_debug.stage) _debug.resize(w, h);
 		}
-		
+
 		private function checkForEnterKey(e:KeyboardEvent):void
 		{
 			if (e.keyCode == 13 && _window != null) _window.onEnterKey();
@@ -207,7 +219,20 @@ package view.modals {
 		{
 			_appUpdate.newVersion = e.data.n;
 			showModalWindow(_appUpdate);
-		}			
+		}
+		
+		private function showLoader(e:AppEvent):void
+		{
+			_preloader.show();
+			_preloader.label = e.data as String;
+			setChildIndex(_preloader, numChildren-1);
+			resize(stage.stageWidth, stage.stageHeight);
+		}
+		
+		private function hideLoader(e:AppEvent):void 
+		{
+			_preloader.hide();
+		}						
 
 	// adding & removing modal windows //	
 		
