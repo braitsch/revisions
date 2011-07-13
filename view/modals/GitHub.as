@@ -1,11 +1,11 @@
 package view.modals {
 
-	import model.remote.RemoteAccount;
-	import model.remote.AccountManager;
 	import events.AppEvent;
 	import model.AppModel;
-	import events.UIEvent;
+	import model.remote.AccountManager;
+	import model.remote.RemoteAccount;
 	import model.remote.RepositoryList;
+	import com.greensock.TweenLite;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.filters.GlowFilter;
@@ -19,51 +19,50 @@ package view.modals {
 		private static var _pages		:Vector.<RepositoryList> = new <RepositoryList>[];
 		private static var _maxPerPage	:uint = 5;
 		private static var _pageIndex	:uint = 0;
+		private static var _model		:RemoteAccount;
 		private static var _activePage	:RepositoryList;
 
 		public function GitHub()
 		{
 			addChild(_view);	
-			super.addButtons([_view.ok_btn]);	
 			_view.badgePage.page_txt.text = 'My Github';
 			_view.badgePage.page_txt.filters = [_badgeGlow];
-			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);
+			_view.badgePage.filters = _view.badgeUser.filters = [_badgeGlow];
 			_view.nav.pageCounter_txt.autoSize = TextFieldAutoSize.CENTER;
 			_view.nav.pageCounter_txt.filters = _view.repositories_txt.filters = [_labelGlow];
-			_view.badgePage.filters = _view.badgeUser.filters = [_badgeGlow];
-			AppModel.proxies.github.addEventListener(AppEvent.GITHUB_DATA, onGithubData);
+			setupCustomURLField();
+		//	createTempData();
+			AppModel.proxies.github.addEventListener(AppEvent.GITHUB_READY, onGithubData);
 		}
 
 		private function onGithubData(e:AppEvent):void
 		{
-			var g:RemoteAccount = AccountManager.github;
-			_view.badgeUser.user_txt.text = g.realName+' - '+g.location;
-			this.repositories = g.repositories;
+			_model = AccountManager.github;
+			if (_model.avatar) {
+				attachAvatar();
+			}	else{
+				_model.addEventListener(AppEvent.AVATAR_LOADED, attachAvatar);
+			}
+			attachRepositories();
+			_view.badgeUser.user_txt.text = _model.realName+' - '+_model.location;
 		}
 
-//		private function createTempData():void
-//		{
-//			var a:Array = [];
-//			for (var i:int = 0; i < 87; i++) {
-//				var o:Object = {};
-//				o.name = 'repository # '+(i+1);
-//				o.description = 'this is description : '+(i+1);
-//				o.url = 'some remote url '+(i+1);
-//				a.push(o);
-//			}
-//			this.repositories = a;
-//			_view.user_txt.text = 'Michael Jackson - San Francisco, CA';
-//		}
-		
-		public function set repositories(a:Array):void
+		private function attachAvatar(e:AppEvent = null):void
+		{
+			_model.avatar.y = -15;
+			_model.avatar.x = -198;
+			_view.badgeUser.addChild(_model.avatar);			
+		}
+
+		private function attachRepositories():void
 		{
 			var k:Array = [];
+			var a:Array = _model.repositories;
 			for (var i:int = 0; i < a.length; i++) {
 				if (i % _maxPerPage == 0) k = [];
 				k.push(a[i]);
 				if (k.length == _maxPerPage) _pages.push(new RepositoryList(k));
 			}
-		// whatever's left over //	
 			_pages.push(new RepositoryList(k));
 			onRepositoriesReady();
 		}
@@ -71,33 +70,30 @@ package view.modals {
 		private function onRepositoriesReady():void
 		{
 			showPage(0);
-			positionNav();
-			drawBackground(590, 130+_activePage.height+20);
-			super.addCloseButton();
-		}
-
-		private function positionNav():void
-		{
-			_view.nav.visible = _pages.length > 1;
-			_view.nav.pageCounter_txt.text = 'Page 1 of '+_pages.length;
-			var w:uint = _view.nav.pageCounter_txt.width;
-			_view.nav.next_btn.x = w/2 + 20;
-			_view.nav.prev_btn.x = -w/2 - 18;
-			_view.nav.pageCounter_txt.x = -w/2;			
+			positionURLAndNav();
+			drawBackground();
+			super.addCloseButton();			
 		}
 
 		private function showPage(n:uint):void
 		{
-			if (_activePage) removeChild(_activePage);
+			if (_activePage) _view.removeChild(_activePage);
 			_pageIndex = n;
 			_activePage = _pages[_pageIndex];
 			_activePage.x = 251;
-			_activePage.y = 110;
+			_activePage.y = _view.repositories_txt.y + 40;
 			_view.nav.pageCounter_txt.text = 'Page '+(_pageIndex+1)+' of '+_pages.length;			
 			_pageIndex==0 ? enableButton(_view.nav.prev_btn, false) : enableButton(_view.nav.prev_btn, true);
 			_pageIndex==_pages.length-1 ? enableButton(_view.nav.next_btn, false) : enableButton(_view.nav.next_btn, true);
-			addChild(_activePage);
+			_view.addChild(_activePage);
 		}
+
+		private function positionURLAndNav():void
+		{
+			_view.nav.visible = _pages.length > 1;
+			_view.nav.y = _view.repositories_txt.y = 68;
+			_view.custom.y = _view.height + 10;
+		}		
 		
 		override protected function enableButton(btn:Sprite, b:Boolean):void
 		{
@@ -110,7 +106,7 @@ package view.modals {
 				btn.buttonMode = false;
 				btn.removeEventListener(MouseEvent.CLICK, onNavClick);				
 			}
-		}	
+		}
 		
 		private function onNavClick(e:MouseEvent):void
 		{
@@ -121,22 +117,68 @@ package view.modals {
 			}
 		}
 		
-		private function drawBackground(w:int, h:int):void
+		private function drawBackground():void
 		{
+			var w:uint = 590;
+			var h:uint = _view.height + 30;
 			_view.graphics.beginFill(0xFFFFFF);
 			_view.graphics.drawRect(0, 0, w, h);
 			_view.graphics.endFill();
 			_view.graphics.beginBitmapFill(new LtGreyPattern());
 			_view.graphics.drawRect(4, 4, w-8, h-8);
 			_view.graphics.endFill();
-			_view.ok_btn.y = _view.nav.y = h - 20 - 10;
 		}
 		
-		override public function onEnterKey():void { onOkButton(); }		
-		private function onOkButton(e:MouseEvent = null):void
+		private function setupCustomURLField():void
 		{
-			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-		}	
+			_view.custom.label_txt.filters = [_labelGlow];
+			_view.custom.clone_btn.buttonMode = true;
+			_view.custom.clone_btn.addEventListener(MouseEvent.CLICK, onCloneClick);
+			_view.custom.clone_btn.addEventListener(MouseEvent.ROLL_OVER, onCloneRollOver);
+			_view.custom.clone_btn.addEventListener(MouseEvent.ROLL_OUT, onCloneRollOut);
+			_view.custom.url_txt.addEventListener(MouseEvent.CLICK, onURLTextFocus);
+		}
+
+		private function onURLTextFocus(e:MouseEvent):void
+		{
+			_view.custom.url_txt.text = '';	
+			_view.custom.url_txt.removeEventListener(MouseEvent.CLICK, onURLTextFocus);
+		}
+
+		private function onCloneClick(e:MouseEvent):void
+		{
+			trace("GitHub.onCloneClick(e)", _view.custom.url_txt.text);
+		}		
+		
+		private function onCloneRollOut(e:MouseEvent):void {TweenLite.to(e.target.over, .3, {alpha:0});}
+		private function onCloneRollOver(e:MouseEvent):void {TweenLite.to(e.target.over, .5, {alpha:1});}		
+
+		
+//		private function createTempData():void
+//		{
+//			var a:Array = [];
+//			for (var i:int = 0; i < 87; i++) {
+//				var o:Object = {};
+//				o.name = 'repository # '+(i+1);
+//				o.description = 'this is description : '+(i+1);
+//				o.url = 'some remote url '+(i+1);
+//				a.push(o);
+//			}
+//			temp(a);
+//			_view.badgeUser.user_txt.text = 'Michael Jackson - San Francisco, CA';
+//		}	
+//		
+//		private function temp(a:Array):void
+//		{
+//			var k:Array = [];
+//			for (var i:int = 0; i < a.length; i++) {
+//				if (i % _maxPerPage == 0) k = [];
+//				k.push(a[i]);
+//				if (k.length == _maxPerPage) _pages.push(new RepositoryList(k));
+//			}
+//			_pages.push(new RepositoryList(k));
+//			onRepositoriesReady();
+//		}			
 		
 	}
 	

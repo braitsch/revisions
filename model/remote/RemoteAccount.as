@@ -1,10 +1,13 @@
 package model.remote {
 
+	import events.AppEvent;
 	import flash.display.Bitmap;
 	import flash.display.Loader;
+	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.EventDispatcher;
 	import flash.net.URLRequest;
-	public class RemoteAccount {
+	public class RemoteAccount extends EventDispatcher {
 		
 		public static const GITHUB		:String = 'github';
 		public static const BEANSTALK	:String = 'beanstalk';
@@ -13,7 +16,7 @@ package model.remote {
 		private var _type			:String;
 		private var _login			:String;
 		private var _pass			:String;
-		private var _avatar			:Bitmap;
+		private var _avatar			:Sprite;
 		private var _realName		:String;
 		private var _location		:String;
 		private var _repositories	:Array;
@@ -33,7 +36,7 @@ package model.remote {
 		public function get pass():String { return _pass; }
 		public function get realName():String { return _realName; }
 		public function get location():String { return _location; }
-		public function get avatar():Bitmap { return _avatar; }
+		public function get avatar():Sprite { return _avatar; }
 		
 		public function get repositories():Array { return _repositories;}
 		public function set repositories(a:Array):void {_repositories = a;}
@@ -47,7 +50,16 @@ package model.remote {
 
 		private function onAvatarLoaded(e:Event):void
 		{
-			_avatar = e.currentTarget.content as Bitmap;
+			var b:Bitmap = e.currentTarget.content as Bitmap;
+				b.smoothing = true;
+				b.x = b.y = 2;
+				b.width = b.height = 26;
+			_avatar = new Sprite();
+			_avatar.addChild(b);
+			_avatar.graphics.beginFill(0x959595);
+			_avatar.graphics.drawRect(0, 0, 30, 30);
+			_avatar.graphics.endFill();
+			dispatchEvent(new AppEvent(AppEvent.AVATAR_LOADED));
 		}
 
 	}

@@ -29,17 +29,17 @@ package view.modals {
 		private static var _appUpdate		:AppUpdate = new AppUpdate();
 		private static var _appExpired		:AppExpired = new AppExpired();
 		private static var _gitAbout		:GitAbout = new GitAbout();
-		private static var _gitHub			:GitHub = new GitHub();
 		private static var _gitInstall		:GitInstall = new GitInstall();
 		private static var _gitUpgrade		:GitUpgrade = new GitUpgrade();
 		private static var _nameAndEmail	:NameAndEmail = new NameAndEmail();
 		private static var _login			:LoginScreen = new LoginScreen();
+		private static var _gitHub			:GitHub = new GitHub();
 		private static var _alert			:Alert = new Alert();
 		private static var _debug			:DebugScreen = new DebugScreen();
 		
 	// windows that force user to make a decision - autoclose disabled //	
 		private static var _stickies		:Vector.<ModalWindow> = new <ModalWindow>
-					[ _repair, _appExpired, _appUpdate, _gitInstall, _gitUpgrade, _nameAndEmail ];
+				[ _repair, _appExpired, _appUpdate, _gitInstall, _gitUpgrade, _nameAndEmail, _login ];
 				
 		private static var _window			:ModalWindow;	// the active modal window //
 		private static var _curtain			:ModalCurtain = new ModalCurtain();	
@@ -74,9 +74,9 @@ package view.modals {
 			stage.addEventListener(UIEvent.DOWNLOAD, downloadVersion);
 			stage.addEventListener(UIEvent.COMMIT_DETAILS, commitDetails);
 			stage.addEventListener(UIEvent.ABOUT_GIT, onAboutGit);
-			stage.addEventListener(UIEvent.GITHUB, onShowGitHub);
 			stage.addEventListener(UIEvent.GLOBAL_SETTINGS, globalSettings);	
-			stage.addEventListener(UIEvent.SHOW_LOGIN, onShowLogin);
+			stage.addEventListener(UIEvent.GITHUB_HOME, showGitHubHome);
+			stage.addEventListener(UIEvent.GITHUB_LOGIN, showGitHubLogin);
 			stage.addEventListener(UIEvent.CLOSE_MODAL_WINDOW, onCloseButton);
 			stage.addEventListener(KeyboardEvent.KEY_UP, checkForEnterKey);
 		}
@@ -116,9 +116,9 @@ package view.modals {
 			showModalWindow(_gitUpgrade);			
 		}
 		
-		private function onShowLogin(e:UIEvent):void
+		private function showGitHubLogin(e:UIEvent):void
 		{
-			_login.account = e.data as RemoteAccount;
+			_login.accountType = RemoteAccount.GITHUB;
 			showModalWindow(_login);
 		}		
 		
@@ -193,7 +193,7 @@ package view.modals {
 			showModalWindow(_gitAbout);
 		}
 		
-		private function onShowGitHub(e:UIEvent):void
+		private function showGitHubHome(e:UIEvent):void
 		{
 			showModalWindow(_gitHub);
 		}				

@@ -1,5 +1,6 @@
 package model.proxies {
 
+	import system.BashMethods;
 	import events.AppEvent;
 	import events.NativeProcessEvent;
 	import model.AppModel;
@@ -10,8 +11,8 @@ package model.proxies {
 
 	public class GithubProxy extends NativeProcessProxy {
 
-		private static var _userName:String;
-		private static var _userPass:String;
+		private static var _userName	:String;
+		private static var _userPass	:String;
 
 		public function GithubProxy()
 		{
@@ -22,34 +23,33 @@ package model.proxies {
 		
 		public function login($name:String, $pass:String):void
 		{
-			trace("GithubProxy.login", $name, $pass);
 			_userName = $name; _userPass = $pass;
-			super.call(Vector.<String>(['login', _userName, _userPass]));
+			super.call(Vector.<String>([BashMethods.LOGIN, _userName, _userPass]));
 		}
 		
 		private function getRepositories():void
 		{
-			super.call(Vector.<String>(['getRepositories', _userName, _userPass]));		
+			super.call(Vector.<String>([BashMethods.REPOSITORIES, _userName, _userPass]));		
 		}		
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
-			trace("GithubProxy.onProcessComplete(e)", e.data.method);
 			var o:Object = new JSONDecoder(e.data.result, false).getValue();
 			if(o.message){
-				onHandleError(e.data.method, o);	
+				onRequestFailure(e.data.method, o);	
 			}	else{
-				onHandleSuccess(e.data.method, o);
+				onRequestSuccess(e.data.method, o);
 			}
 		}
 		
-		private function onHandleSuccess(m:String, o:Object):void
+		private function onRequestSuccess(m:String, o:Object):void
 		{
 			switch(m){
-				case 'login' :
-					addNewAccount(o);
+				case BashMethods.LOGIN : 
+					addNewAccount(o); 
+					getRepositories();
 				break;	
-				case 'getRepositories' :
+				case BashMethods.REPOSITORIES :
 					onRepositories(o);
 				break;								
 			}
@@ -60,19 +60,18 @@ package model.proxies {
 			o.pass = _userPass;
 			o.type = RemoteAccount.GITHUB;
 			AccountManager.addAccount(new RemoteAccount(o));
-			getRepositories();
 		}
 		
 		private function onRepositories(o:Object):void
 		{
 			AccountManager.github.repositories = o as Array;
-			dispatchEvent(new AppEvent(AppEvent.GITHUB_DATA));
+			dispatchEvent(new AppEvent(AppEvent.GITHUB_READY));
 		}		
 
-		private function onHandleError(m:String, o:Object):void
+		private function onRequestFailure(m:String, o:Object):void
 		{
-			trace("GithubProxy.onHandleError(o)", m);
-			if (o.message == 'Bad credentials') trace('login failed');
+			trace("GithubProxy.onRequestFailure(o)", m);
+			if (o.message == 'Bad credentials') dispatchEvent(new AppEvent(AppEvent.LOGIN_FAILED));
 		}
 
 		private function onProcessFailure(e:NativeProcessEvent):void 

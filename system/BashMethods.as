@@ -36,6 +36,10 @@ package system{
 		public static const GET_UNTRACKED_FILES	:String = 'getUntrackedFiles';
 		public static const GET_IGNORED_FILES	:String = 'getIgnoredFiles';
 		
+	// github & beanstalk	
+		public static const LOGIN				:String = 'login';
+		public static const REPOSITORIES		:String = 'getRepositories';
+		
 	}
 	
 }

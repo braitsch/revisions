@@ -15,9 +15,9 @@ package events {
 		public static const SHOW_HISTORY			:String = "SHOW_HISTORY";
 		public static const HISTORY_DRAWN			:String = "HISTORY_DRAWN";
 		public static const ABOUT_GIT				:String = "ABOUT_GIT";
-		public static const GITHUB					:String = "GITHUB";
 		public static const GLOBAL_SETTINGS			:String = "GLOBAL_SETTINGS";
-		public static const SHOW_LOGIN				:String = "SHOW_LOGIN";
+		public static const GITHUB_HOME				:String = "GITHUB_HOME";
+		public static const GITHUB_LOGIN			:String = "GITHUB_LOGIN";
 		public static const DRAG_AND_DROP			:String = "DRAG_AND_DROP";
 		public static const FILE_BROWSER_SELECTION	:String = "FILE_BROWSER_SELECTION";
 		public static const LIST_ITEM_SELECTED		:String = "LIST_ITEM_SELECTED";

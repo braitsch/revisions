@@ -11,9 +11,9 @@ package model.remote {
 			var gn:String = AppSettings.getSetting(AppSettings.GITHUB_USER);
 			var gp:String = AppSettings.getSetting(AppSettings.GITHUB_PASS);
 			if (gn && gp) {
-				AppModel.proxies.github.login(gn, gp);
+	//			AppModel.proxies.github.login(gn, gp);
 			}	else{
-				AppModel.proxies.github.login('braitsch', 'aelisch76');
+	//			AppModel.proxies.github.login('braitsch', 'aelisch76');
 			}
 		}		
 		
@@ -21,15 +21,17 @@ package model.remote {
 		{
 			if (_accounts == null) _accounts = new Vector.<RemoteAccount>();
 			_accounts.push(ra);
-			addAccountSettings(ra);
-		//	trace('AccountManager.addAccount :', ra.type, ra.login, ra.pass, ra.realName, ra.location);			
+			writeAccountLogin(ra);
 		}
 
-		private static function addAccountSettings(ra:RemoteAccount):void
+		private static function writeAccountLogin(ra:RemoteAccount):void
 		{
 			if (ra.type == RemoteAccount.GITHUB){
 				AppSettings.setSetting(AppSettings.GITHUB_USER, ra.login);
 				AppSettings.setSetting(AppSettings.GITHUB_PASS, ra.pass);			
+			}	else if (ra.type == RemoteAccount.BEANSTALK){
+				AppSettings.setSetting(AppSettings.BEANSTALK_USER, ra.login);
+				AppSettings.setSetting(AppSettings.BEANSTALK_PASS, ra.pass);				
 			}
 		}
 		

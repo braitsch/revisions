@@ -32,10 +32,11 @@ package view.modals {
 					_browser.browseForDirectory('Select a folder to track.');
 				break;	
 				case _view.github_btn :
-					dispatchEvent(new UIEvent(UIEvent.GITHUB));
-	//				trace('github = '+AccountManager.github);
-			//		dispatchEvent(new UIEvent(UIEvent.SHOW_LOGIN, new RemoteAccount(RemoteAccount.GITHUB)));
-			//		dispatchMessage('GitHub integration is coming in the next build.');
+					if (AccountManager.github){
+						dispatchEvent(new UIEvent(UIEvent.GITHUB_HOME));
+					}	else{
+						dispatchEvent(new UIEvent(UIEvent.GITHUB_LOGIN));
+					}
 				break;	
 				case _view.beanstalk_btn :
 			//		dispatchEvent(new UIEvent(UIEvent.SHOW_LOGIN, new RemoteAccount(RemoteAccount.BEANSTALK)));

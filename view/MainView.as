@@ -94,6 +94,7 @@ package view{
 
 		private function showLoader(e:AppEvent):void
 		{
+			trace("MainView.showLoader(e)");
 			_preloader.show();
 			_preloader.label = e.data as String;
 		}

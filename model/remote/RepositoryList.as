@@ -9,7 +9,7 @@ package model.remote {
 		public function RepositoryList(a:Array)
 		{
 			for (var i:int = 0; i < a.length; i++) {
-				var rp:RepositoryItem= new RepositoryItem(a[i]);
+				var rp:RepositoryItem = new RepositoryItem(a[i]);
 				rp.y = (rp.height+_spacing) * i;
 				addChild(rp);
 			}	
