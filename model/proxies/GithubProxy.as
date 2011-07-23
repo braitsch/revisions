@@ -29,24 +29,37 @@ package model.proxies {
 		
 		public function clone(url:String, loc:String):void
 		{
-			trace("GithubProxy.clone(url, loc)", url, loc);
+			super.call(Vector.<String>([BashMethods.CLONE, url, loc]));
 		}		
 		
 		private function getRepositories():void
 		{
-			super.call(Vector.<String>([BashMethods.REPOSITORIES, _userName, _userPass]));		
+			super.call(Vector.<String>([BashMethods.REPOSITORIES, _userName, _userPass]));
 		}		
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
-			if (e.data.result != ''){
-				parseResults(e.data.result, e.data.method);
+			trace("GithubProxy.onProcessComplete(e)", e.data.result == '');
+			if (e.data.result == ''){
+				onSilentResponse(e.data.method);
 			}	else{
-				dispatchEvent(new AppEvent(AppEvent.OFFLINE));
+				parseResponse(e.data.method, e.data.result);
+			}
+		}
+
+		private function onSilentResponse(m:String):void
+		{
+			switch(m){
+				case BashMethods.LOGIN :
+					dispatchEvent(new AppEvent(AppEvent.OFFLINE));
+				break;
+				case BashMethods.CLONE :
+					dispatchEvent(new AppEvent(AppEvent.CLONE_COMPLETE));
+				break;	
 			}
 		}
 		
-		private function parseResults(r:String, m:String):void
+		private function parseResponse(m:String, r:String):void
 		{
 			var o:Object = new JSONDecoder(r, false).getValue();
 			if(o.message){
@@ -68,7 +81,7 @@ package model.proxies {
 				break;								
 			}
 		}
-
+		
 		private function addNewAccount(o:Object):void
 		{
 			o.pass = _userPass;

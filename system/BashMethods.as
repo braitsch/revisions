@@ -38,6 +38,7 @@ package system{
 		
 	// github & beanstalk	
 		public static const LOGIN				:String = 'login';
+		public static const CLONE				:String = 'clone';
 		public static const REPOSITORIES		:String = 'getRepositories';
 		
 	}

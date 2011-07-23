@@ -17,7 +17,7 @@ package view.modals {
 			super.addCloseButton();			
 			super.addButtons([_view.file_btn, _view.folder_btn, _view.github_btn, _view.beanstalk_btn, _view.private_btn]);			
 			_view.addEventListener(MouseEvent.CLICK, onButtonClick);
-			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);				
+			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);
 		}
 
 		private function onButtonClick(e:MouseEvent):void
@@ -30,6 +30,7 @@ package view.modals {
 					super.browseForDirectory('Select a folder to track.');
 				break;	
 				case _view.github_btn :
+			// check if we're already logged in //	
 					if (AccountManager.github){
 						dispatchEvent(new UIEvent(UIEvent.GITHUB_HOME));
 					}	else{
@@ -38,7 +39,6 @@ package view.modals {
 				break;	
 				case _view.beanstalk_btn :
 					dispatchAlert('Beanstalk integration is coming in the next build.');
-			//		dispatchEvent(new UIEvent(UIEvent.SHOW_LOGIN, new RemoteAccount(RemoteAccount.BEANSTALK)));
 				break;	
 				case _view.private_btn :
 					dispatchAlert('Private repositories will be supported in the next build.');

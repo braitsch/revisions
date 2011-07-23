@@ -29,6 +29,7 @@ package events {
 		public static const OFFLINE					:String = 'OFFLINE';
 		public static const LOGIN_FAILED			:String = "LOGIN_FAILED";
 		public static const LOGIN_SUCCESS			:String = "LOGIN_SUCCESS";
+		public static const CLONE_COMPLETE			:String = "CLONE_COMPLETE";
 		public static const GITHUB_READY			:String = "GITHUB_DATA";
 		public static const AVATAR_LOADED			:String = "AVATAR_LOADED";
 		

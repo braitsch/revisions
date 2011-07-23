@@ -17,7 +17,8 @@ package view.modals {
 
 		public function set message(m:String):void
 		{
-			_view.message_txt.htmlText = m;			
+			_view.message_txt.htmlText = m;	
+			trace("Alert.message(m)", m);		
 		}
 		
 		override public function onEnterKey():void { onOkButton(); }		

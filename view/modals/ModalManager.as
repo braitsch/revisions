@@ -268,6 +268,7 @@ package view.modals {
 		private function onShowAlert(e:AppEvent):void
 		{
 			_alert.message = e.data as String;
+			trace("ModalManager.onShowAlert(e)");
 			showAlertOrDebug(_alert);
 		}			
 		

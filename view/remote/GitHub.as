@@ -5,6 +5,7 @@ package view.remote {
 	import model.AppModel;
 	import model.remote.AccountManager;
 	import model.remote.RemoteAccount;
+	import model.vo.Bookmark;
 	import view.modals.ModalWindow;
 	import com.greensock.TweenLite;
 	import flash.display.Sprite;
@@ -21,6 +22,7 @@ package view.remote {
 		private static var _model		:RemoteAccount;
 		private static var _activePage	:Sprite;
 		private static var _cloneURL	:String;
+		private static var _cloneLoc	:String;	// local destination to clone to //
 
 		public function GitHub()
 		{
@@ -31,6 +33,7 @@ package view.remote {
 			addEventListener(UIEvent.CLONE, onCloneClick);		
 			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);
 			AppModel.proxies.github.addEventListener(AppEvent.GITHUB_READY, onGithubData);
+			AppModel.proxies.github.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);
 		}
 
 		private function onGithubData(e:AppEvent):void
@@ -173,8 +176,25 @@ package view.remote {
 
 		private function onBrowserSelection(e:UIEvent):void
 		{
-			AppModel.proxies.github.clone(_cloneURL, File(e.data).nativePath);
+			_cloneLoc = File(e.data).nativePath;
+			AppModel.proxies.github.clone(_cloneURL, _cloneLoc);
 		}
+		
+		private function onCloneComplete(e:AppEvent):void
+		{
+			var n:String = _cloneLoc.substr(_cloneLoc.lastIndexOf('/') + 1);
+				n = n.substr(0,1).toUpperCase() + n.substr(1);
+			var o:Object = {
+				label		:	n,
+				type		: 	Bookmark.FOLDER,
+				path		:	_cloneLoc,
+				remote 		:	_cloneURL,
+				active 		:	1,
+				autosave	:	60
+			};		
+			AppModel.engine.addBookmark(new Bookmark(o));
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));						
+		}			
 		
 		private function onCloneRollOut(e:MouseEvent):void {TweenLite.to(e.target.over, .3, {alpha:0});}
 		private function onCloneRollOver(e:MouseEvent):void {TweenLite.to(e.target.over, .5, {alpha:1});}		
