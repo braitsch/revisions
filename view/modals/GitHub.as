@@ -4,32 +4,25 @@ package view.modals {
 	import model.AppModel;
 	import model.remote.AccountManager;
 	import model.remote.RemoteAccount;
-	import model.remote.RepositoryList;
+	import model.remote.RepositoryItem;
 	import com.greensock.TweenLite;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
-	import flash.filters.GlowFilter;
-	import flash.text.TextFieldAutoSize;
 
 	public class GitHub extends ModalWindow {
 
 		private static var _view		:GitHubMC = new GitHubMC();
-		private static var _badgeGlow	:GlowFilter = new GlowFilter(0x000000, .5, 20, 10, 1, 3);
-		private static var _labelGlow	:GlowFilter = new GlowFilter(0x000000, .3, 5, 5, 1, 3);
-		private static var _pages		:Vector.<RepositoryList> = new <RepositoryList>[];
-		private static var _maxPerPage	:uint = 5;
+//		private static var _badgeGlow	:GlowFilter = new GlowFilter(0x000000, .5, 20, 10, 1, 3);
+		private static var _pages		:Vector.<Sprite> = new <Sprite>[];
+		private static var _maxPerPage	:uint = 4;
 		private static var _pageIndex	:uint = 0;
 		private static var _model		:RemoteAccount;
-		private static var _activePage	:RepositoryList;
+		private static var _activePage	:Sprite;
 
 		public function GitHub()
 		{
 			addChild(_view);	
 			_view.badgePage.page_txt.text = 'My Github';
-			_view.badgePage.page_txt.filters = [_badgeGlow];
-			_view.badgePage.filters = _view.badgeUser.filters = [_badgeGlow];
-			_view.nav.pageCounter_txt.autoSize = TextFieldAutoSize.CENTER;
-			_view.nav.pageCounter_txt.filters = _view.repositories_txt.filters = [_labelGlow];
 			setupCustomURLField();
 		//	createTempData();
 			AppModel.proxies.github.addEventListener(AppEvent.GITHUB_READY, onGithubData);
@@ -49,7 +42,7 @@ package view.modals {
 
 		private function attachAvatar(e:AppEvent = null):void
 		{
-			_model.avatar.y = -15;
+			_model.avatar.y = 7;
 			_model.avatar.x = -198;
 			_view.badgeUser.addChild(_model.avatar);			
 		}
@@ -58,13 +51,26 @@ package view.modals {
 		{
 			var k:Array = [];
 			var a:Array = _model.repositories;
+			a.sortOn('name', Array.CASEINSENSITIVE);
 			for (var i:int = 0; i < a.length; i++) {
-				if (i % _maxPerPage == 0) k = [];
 				k.push(a[i]);
-				if (k.length == _maxPerPage) _pages.push(new RepositoryList(k));
+				if (k.length == _maxPerPage) {
+					_pages.push(buildPage(k)); k = [];
+				}
 			}
-			_pages.push(new RepositoryList(k));
+			if (k.length > 0) _pages.push(buildPage(k));
 			onRepositoriesReady();
+		}
+		
+		private function buildPage(a:Array):Sprite
+		{
+			var p:Sprite = new Sprite();
+			for (var i:int = 0; i < a.length; i++) {
+				var rp:RepositoryItem = new RepositoryItem(a[i]);
+				rp.y = 53 * i;
+				p.addChild(rp);
+			}
+			return p;	
 		}
 		
 		private function onRepositoriesReady():void
@@ -72,7 +78,7 @@ package view.modals {
 			showPage(0);
 			positionURLAndNav();
 			drawBackground();
-			super.addCloseButton();			
+			super.addCloseButton();
 		}
 
 		private function showPage(n:uint):void
@@ -80,9 +86,9 @@ package view.modals {
 			if (_activePage) _view.removeChild(_activePage);
 			_pageIndex = n;
 			_activePage = _pages[_pageIndex];
-			_activePage.x = 251;
-			_activePage.y = _view.repositories_txt.y + 40;
-			_view.nav.pageCounter_txt.text = 'Page '+(_pageIndex+1)+' of '+_pages.length;			
+			_activePage.x = 10;
+			_activePage.y = 90;
+			_view.nav.pageCounter_txt.text = (_pageIndex+1)+' / '+_pages.length;			
 			_pageIndex==0 ? enableButton(_view.nav.prev_btn, false) : enableButton(_view.nav.prev_btn, true);
 			_pageIndex==_pages.length-1 ? enableButton(_view.nav.next_btn, false) : enableButton(_view.nav.next_btn, true);
 			_view.addChild(_activePage);
@@ -91,8 +97,7 @@ package view.modals {
 		private function positionURLAndNav():void
 		{
 			_view.nav.visible = _pages.length > 1;
-			_view.nav.y = _view.repositories_txt.y = 68;
-			_view.custom.y = _view.height + 10;
+			_view.custom.y = _activePage.y + _activePage.height + 10;
 		}		
 		
 		override protected function enableButton(btn:Sprite, b:Boolean):void
@@ -131,7 +136,6 @@ package view.modals {
 		
 		private function setupCustomURLField():void
 		{
-			_view.custom.label_txt.filters = [_labelGlow];
 			_view.custom.clone_btn.buttonMode = true;
 			_view.custom.clone_btn.addEventListener(MouseEvent.CLICK, onCloneClick);
 			_view.custom.clone_btn.addEventListener(MouseEvent.ROLL_OVER, onCloneRollOver);
@@ -174,9 +178,9 @@ package view.modals {
 //			for (var i:int = 0; i < a.length; i++) {
 //				if (i % _maxPerPage == 0) k = [];
 //				k.push(a[i]);
-//				if (k.length == _maxPerPage) _pages.push(new RepositoryList(k));
+//				if (k.length == _maxPerPage) _pages.push(new Sprite(k));
 //			}
-//			_pages.push(new RepositoryList(k));
+//			_pages.push(new Sprite(k));
 //			onRepositoriesReady();
 //		}			
 		
