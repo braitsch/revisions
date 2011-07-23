@@ -6,7 +6,6 @@ package view.modals {
 	import fl.text.TLFTextField;
 	import model.AppModel;
 	import model.vo.Bookmark;
-	import system.FileBrowser;
 	import view.ui.ModalCheckbox;
 	import flash.events.MouseEvent;
 
@@ -14,7 +13,6 @@ package view.modals {
 
 		private static var _view		:EditBookmarkMC = new EditBookmarkMC();
 		private static var _bookmark	:Bookmark;
-		private static var _browser		:FileBrowser = new FileBrowser();
 		private static var _check1		:ModalCheckbox = new ModalCheckbox(_view.check1, true);
 
 		public function EditBookmark()
@@ -26,12 +24,12 @@ package view.modals {
 		
 			_check1.label = 'Autosave Every 60 Minutes';
 			_view.local_txt.selectable = false;
-			_browser.addEventListener(UIEvent.FILE_BROWSER_SELECTION, onFileSelection);
 			_view.browse_btn.addEventListener(MouseEvent.CLICK, onBrowseButton);
 			_view.delete_btn.addEventListener(MouseEvent.CLICK, onDeleteButton);
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onUpdateBookmark);
 			_view.github.addEventListener(MouseEvent.CLICK, onGitHubButton);
 			_view.beanstalk.addEventListener(MouseEvent.CLICK, onBeanstalkButton);
+			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);
 		}
 
 		public function set bookmark(b:Bookmark):void
@@ -44,7 +42,7 @@ package view.modals {
 			_view.browse_btn.visible = false;
 		}
 		
-		private function onFileSelection(e:UIEvent):void
+		private function onBrowserSelection(e:UIEvent):void
 		{
 			_view.local_txt.text = e.data as String;			
 		}
@@ -52,9 +50,9 @@ package view.modals {
 		private function onBrowseButton(e:MouseEvent):void
 		{
 			if (_bookmark.type == Bookmark.FILE){
-				_browser.browseForFile('Select a file to be tracked by : '+_bookmark.label);
+				super.browseForFile('Select a file to be tracked by : '+_bookmark.label);
 			}	else{
-				_browser.browseForDirectory('Select a folder to be tracked by : '+_bookmark.label);
+				super.browseForDirectory('Select a folder to be tracked by : '+_bookmark.label);
 			}
 		}
 		

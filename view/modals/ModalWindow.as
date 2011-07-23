@@ -1,13 +1,14 @@
 package view.modals {
 
-	import flash.events.KeyboardEvent;
 	import events.UIEvent;
 	import fl.text.TLFTextField;
 	import com.greensock.TweenLite;
 	import flash.display.InteractiveObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
+	import flash.filesystem.File;
 	import flash.filters.GlowFilter;
 
 	public class ModalWindow extends Sprite {
@@ -15,6 +16,7 @@ package view.modals {
 		private var _inputs			:Vector.<TLFTextField>;
 		private var _heightOffset	:uint = 50;
 		private var _closeButton	:ModalCloseButton;
+		private static var _file	:File = File.desktopDirectory;
 	
 		public function ModalWindow()
 		{		
@@ -78,7 +80,24 @@ package view.modals {
 		protected function onCloseClick(e:MouseEvent):void 
 		{
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-		}		
+		}	
+		
+		protected function browseForFile($msg:String):void
+		{
+			_file.browseForOpen($msg);	
+			_file.addEventListener(Event.SELECT, onSelect);			
+		}
+
+		protected function browseForDirectory($msg:String):void 
+		{
+			_file.browseForDirectory($msg);	
+			_file.addEventListener(Event.SELECT, onSelect);			
+		}
+
+		protected function onSelect(e:Event):void 
+		{
+			dispatchEvent(new UIEvent(UIEvent.FILE_BROWSER_SELECTION, e.target as File));
+		}
 		
 		private function onAddedToStage(e:Event):void 
 		{

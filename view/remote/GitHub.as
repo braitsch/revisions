@@ -1,23 +1,26 @@
 package view.remote {
 
-	import com.greensock.TweenLite;
 	import events.AppEvent;
-	import flash.display.Sprite;
-	import flash.events.MouseEvent;
+	import events.UIEvent;
 	import model.AppModel;
 	import model.remote.AccountManager;
 	import model.remote.RemoteAccount;
 	import view.modals.ModalWindow;
+	import com.greensock.TweenLite;
+	import flash.display.Sprite;
+	import flash.events.MouseEvent;
+	import flash.filesystem.File;
 
 	public class GitHub extends ModalWindow {
 
 		private static var _view		:GitHubMC = new GitHubMC();
 //		private static var _badgeGlow	:GlowFilter = new GlowFilter(0x000000, .5, 20, 10, 1, 3);
 		private static var _pages		:Vector.<Sprite> = new <Sprite>[];
-		private static var _maxPerPage	:uint = 4;
+		private static var _maxPerPage	:uint = 5;
 		private static var _pageIndex	:uint = 0;
 		private static var _model		:RemoteAccount;
 		private static var _activePage	:Sprite;
+		private static var _cloneURL	:String;
 
 		public function GitHub()
 		{
@@ -25,6 +28,8 @@ package view.remote {
 			_view.badgePage.page_txt.text = 'My Github';
 			setupCustomURLField();
 		//	createTempData();
+			addEventListener(UIEvent.CLONE, onCloneClick);		
+			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);
 			AppModel.proxies.github.addEventListener(AppEvent.GITHUB_READY, onGithubData);
 		}
 
@@ -137,7 +142,7 @@ package view.remote {
 		private function setupCustomURLField():void
 		{
 			_view.custom.clone_btn.buttonMode = true;
-			_view.custom.clone_btn.addEventListener(MouseEvent.CLICK, onCloneClick);
+			_view.custom.clone_btn.addEventListener(MouseEvent.CLICK, onCustomClick);
 			_view.custom.clone_btn.addEventListener(MouseEvent.ROLL_OVER, onCloneRollOver);
 			_view.custom.clone_btn.addEventListener(MouseEvent.ROLL_OUT, onCloneRollOut);
 			_view.custom.url_txt.addEventListener(MouseEvent.CLICK, onURLTextFocus);
@@ -149,10 +154,27 @@ package view.remote {
 			_view.custom.url_txt.removeEventListener(MouseEvent.CLICK, onURLTextFocus);
 		}
 
-		private function onCloneClick(e:MouseEvent):void
+		private function onCloneClick(e:UIEvent):void
 		{
-			trace("GitHub.onCloneClick(e)", _view.custom.url_txt.text);
-		}		
+			_cloneURL = e.data as String;
+			showFileBrowser();
+		}					
+		
+		private function onCustomClick(e:MouseEvent):void
+		{
+			_cloneURL = _view.custom.url_txt.text;
+			showFileBrowser();
+		}
+
+		private function showFileBrowser():void
+		{
+			super.browseForDirectory('Select a location to clone to');
+		}
+
+		private function onBrowserSelection(e:UIEvent):void
+		{
+			AppModel.proxies.github.clone(_cloneURL, File(e.data).nativePath);
+		}
 		
 		private function onCloneRollOut(e:MouseEvent):void {TweenLite.to(e.target.over, .3, {alpha:0});}
 		private function onCloneRollOver(e:MouseEvent):void {TweenLite.to(e.target.over, .5, {alpha:1});}		

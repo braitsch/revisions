@@ -6,13 +6,11 @@ package view.modals {
 	import events.UIEvent;
 	import model.AppModel;
 	import model.vo.Bookmark;
-	import system.FileBrowser;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
 
 	public class RepairBookmark extends ModalWindow {
 
-		private static var _browser		:FileBrowser = new FileBrowser();
 		private static var _view		:RepairBookmarkMC = new RepairBookmarkMC();
 		private static var _bookmark	:Bookmark; // current bkmk being repaired //
 
@@ -23,7 +21,7 @@ package view.modals {
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onUpdateBookmark);
 			_view.browse_btn.addEventListener(MouseEvent.CLICK, onBrowseButton);
 			_view.delete_btn.addEventListener(MouseEvent.CLICK, onDeleteBookmark);
-			_browser.addEventListener(UIEvent.FILE_BROWSER_SELECTION, onDirectorySelection);				
+			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);	
 		}
 		
 		public function set bookmark(b:Bookmark):void
@@ -36,13 +34,13 @@ package view.modals {
 		private function onBrowseButton(e:MouseEvent):void 
 		{
 			if (_bookmark.type == Bookmark.FILE){
-				_browser.browseForFile('Select a file to be tracked by : '+_bookmark.label);
+				super.browseForFile('Select a file to be tracked by : '+_bookmark.label);
 			}	else{
-				_browser.browseForDirectory('Select a folder to be tracked by : '+_bookmark.label);
+				super.browseForDirectory('Select a folder to be tracked by : '+_bookmark.label);
 			}		
 		}
 		
-		private function onDirectorySelection(e:UIEvent):void 
+		private function onBrowserSelection(e:UIEvent):void 
 		{
 			_view.local_txt.text = File(e.data).nativePath;	
 		}

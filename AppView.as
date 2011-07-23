@@ -1,12 +1,12 @@
 package {
 
-	import flash.display.Sprite;
-	import flash.events.Event;
 	import system.AirDragAndDrop;
 	import view.Header;
 	import view.MainView;
 	import view.bookmarks.BookmarkView;
 	import view.modals.ModalManager;
+	import flash.display.Sprite;
+	import flash.events.Event;
 
 	public class AppView extends Sprite {
 		
@@ -41,9 +41,9 @@ package {
 			_modal.resize(w, h);
 			_header.resize(w);
 			_bkmks.resize(h-_bkmks.y);
-			_main.resize(w-_main.x, h-_main.y);
+			_main.resize(w - _main.x, h - _main.y);
 		}
-					
+
 	}
 	
 }

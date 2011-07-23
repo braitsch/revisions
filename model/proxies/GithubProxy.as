@@ -27,6 +27,11 @@ package model.proxies {
 			super.call(Vector.<String>([BashMethods.LOGIN, _userName, _userPass]));
 		}
 		
+		public function clone(url:String, loc:String):void
+		{
+			trace("GithubProxy.clone(url, loc)", url, loc);
+		}		
+		
 		private function getRepositories():void
 		{
 			super.call(Vector.<String>([BashMethods.REPOSITORIES, _userName, _userPass]));		

@@ -2,19 +2,17 @@ package view.modals {
 
 	import events.AppEvent;
 	import events.UIEvent;
-	import flash.events.MouseEvent;
 	import model.AppModel;
 	import model.db.AppSettings;
 	import model.vo.Bookmark;
 	import model.vo.Commit;
-	import system.FileBrowser;
 	import view.ui.ModalCheckbox;
+	import flash.events.MouseEvent;
 
 	public class DownloadVersion extends ModalWindow {
 
 		private static var _commit	:Commit;
 		private static var _view	:WindowDownloadMC = new WindowDownloadMC();
-		private static var _browser	:FileBrowser = new FileBrowser();
 		private static var _check1	:ModalCheckbox = new ModalCheckbox(_view.check1, false);
 
 		public function DownloadVersion()
@@ -26,7 +24,7 @@ package view.modals {
 			_view.check1.addEventListener(MouseEvent.CLICK, onCheckbox);
 			_view.cancel_btn.addEventListener(MouseEvent.CLICK, onCancel);
 			_view.download_btn.addEventListener(MouseEvent.CLICK, onDownload);
-			_browser.addEventListener(UIEvent.FILE_BROWSER_SELECTION, onFileBrowserSelection);
+			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);			
 			AppModel.settings.addEventListener(AppEvent.APP_SETTINGS, onUserSettings);			
 		}
 		
@@ -39,7 +37,7 @@ package view.modals {
 	// called from ModalManager if user chose not to be prompted before downloads //	
 		public function selectDownloadLocation(e:MouseEvent = null):void
 		{
-			_browser.browseForDirectory('Choose a location to save '+AppModel.bookmark.label);
+			super.browseForDirectory('Choose a location to save '+AppModel.bookmark.label);
 		}
 		
 		private function onUserSettings(e:AppEvent):void
@@ -47,18 +45,6 @@ package view.modals {
 			_check1.selected = AppSettings.getSetting(AppSettings.PROMPT_BEFORE_DOWNLOAD) == false;
 		}		
 
-		private function onFileBrowserSelection(e:UIEvent):void
-		{
-			var file:String = '';
-			var bkmk:Bookmark = AppModel.bookmark;
-			var saveAs:String = e.data.nativePath+'/'+bkmk.label+' Version '+_commit.index;
-			if (bkmk.type == Bookmark.FILE){
-				file = bkmk.path;
-				saveAs += bkmk.path.substr(bkmk.path.lastIndexOf('.'));
-			}			
-			AppModel.proxies.checkout.download(_commit.sha1, saveAs, file);
-		}
-		
 	// button event handlers //	
 
 		private function onCheckbox(e:MouseEvent):void
@@ -76,6 +62,18 @@ package view.modals {
 			selectDownloadLocation();
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 		}
+		
+		private function onBrowserSelection(e:UIEvent):void
+		{
+			var file:String = '';
+			var bkmk:Bookmark = AppModel.bookmark;
+			var saveAs:String = e.data.nativePath+'/'+bkmk.label+' Version '+_commit.index;
+			if (bkmk.type == Bookmark.FILE){
+				file = bkmk.path;
+				saveAs += bkmk.path.substr(bkmk.path.lastIndexOf('.'));
+			}			
+			AppModel.proxies.checkout.download(_commit.sha1, saveAs, file);
+		}		
 
 	}
 	

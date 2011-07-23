@@ -1,17 +1,15 @@
 package view.modals {
 
-	import model.remote.AccountManager;
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
-	import system.FileBrowser;
+	import model.remote.AccountManager;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
 
 	public class NewBookmark extends ModalWindow {
 
-		private static var _view		:NewBookmarkMC = new NewBookmarkMC();
-		private static var _browser		:FileBrowser = new FileBrowser();		
+		private static var _view	:NewBookmarkMC = new NewBookmarkMC();
 
 		public function NewBookmark()
 		{
@@ -19,17 +17,17 @@ package view.modals {
 			super.addCloseButton();			
 			super.addButtons([_view.file_btn, _view.folder_btn, _view.github_btn, _view.beanstalk_btn, _view.private_btn]);			
 			_view.addEventListener(MouseEvent.CLICK, onButtonClick);
-			_browser.addEventListener(UIEvent.FILE_BROWSER_SELECTION, onFileSelection);			
+			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);				
 		}
 
 		private function onButtonClick(e:MouseEvent):void
 		{
 			switch(e.target){
 				case _view.file_btn :
-					_browser.browseForFile('Select a file to track.');
+					super.browseForFile('Select a file to track.');
 				break;	
 				case _view.folder_btn :
-					_browser.browseForDirectory('Select a folder to track.');
+					super.browseForDirectory('Select a folder to track.');
 				break;	
 				case _view.github_btn :
 					if (AccountManager.github){
@@ -39,21 +37,21 @@ package view.modals {
 					}
 				break;	
 				case _view.beanstalk_btn :
+					dispatchAlert('Beanstalk integration is coming in the next build.');
 			//		dispatchEvent(new UIEvent(UIEvent.SHOW_LOGIN, new RemoteAccount(RemoteAccount.BEANSTALK)));
-					dispatchMessage('Beanstalk integration is coming in the next build.');
 				break;	
 				case _view.private_btn :
-					dispatchMessage('Private repositories will be supported in the next build.');
+					dispatchAlert('Private repositories will be supported in the next build.');
 				break;																	
 			}
 		}
 		
-		private function onFileSelection(e:UIEvent):void
+		private function onBrowserSelection(e:UIEvent):void
 		{
 			dispatchEvent(new UIEvent(UIEvent.DRAG_AND_DROP, e.data as File));
-		}		
+		}			
 		
-		private function dispatchMessage(m:String):void
+		private function dispatchAlert(m:String):void
 		{
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
 		}	
