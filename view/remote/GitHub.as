@@ -1,13 +1,13 @@
-package view.modals {
+package view.remote {
 
+	import com.greensock.TweenLite;
 	import events.AppEvent;
+	import flash.display.Sprite;
+	import flash.events.MouseEvent;
 	import model.AppModel;
 	import model.remote.AccountManager;
 	import model.remote.RemoteAccount;
-	import model.remote.RepositoryItem;
-	import com.greensock.TweenLite;
-	import flash.display.Sprite;
-	import flash.events.MouseEvent;
+	import view.modals.ModalWindow;
 
 	public class GitHub extends ModalWindow {
 

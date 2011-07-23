@@ -1,4 +1,4 @@
-package model.remote {
+package view.remote {
 
 	import com.greensock.TweenLite;
 	import flash.display.Sprite;

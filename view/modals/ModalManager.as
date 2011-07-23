@@ -3,18 +3,19 @@ package view.modals {
 	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.UIEvent;
-	import model.AppModel;
-	import model.db.AppSettings;
-	import model.remote.RemoteAccount;
-	import model.vo.Bookmark;
-	import model.vo.Commit;
-	import view.ui.Preloader;
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
 	import flash.filters.BlurFilter;
+	import model.AppModel;
+	import model.db.AppSettings;
+	import model.remote.RemoteAccount;
+	import model.vo.Bookmark;
+	import model.vo.Commit;
+	import view.remote.GitHub;
+	import view.ui.Preloader;
 
 	public class ModalManager extends Sprite {
 
