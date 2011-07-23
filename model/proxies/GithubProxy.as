@@ -1,12 +1,12 @@
 package model.proxies {
 
-	import system.BashMethods;
 	import events.AppEvent;
 	import events.NativeProcessEvent;
 	import model.AppModel;
 	import model.air.NativeProcessProxy;
 	import model.remote.AccountManager;
 	import model.remote.RemoteAccount;
+	import system.BashMethods;
 	import com.adobe.serialization.json.JSONDecoder;
 
 	public class GithubProxy extends NativeProcessProxy {
@@ -24,7 +24,6 @@ package model.proxies {
 		public function login($name:String, $pass:String):void
 		{
 			_userName = $name; _userPass = $pass;
-			trace("GithubProxy.login($name, $pass)", _userName, _userPass);
 			super.call(Vector.<String>([BashMethods.LOGIN, _userName, _userPass]));
 		}
 		
@@ -35,12 +34,21 @@ package model.proxies {
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
-			var o:Object = new JSONDecoder(e.data.result, false).getValue();
-			if(o.message){
-				onRequestFailure(e.data.method, o);	
+			if (e.data.result != ''){
+				parseResults(e.data.result, e.data.method);
 			}	else{
-				onRequestSuccess(e.data.method, o);
+				dispatchEvent(new AppEvent(AppEvent.OFFLINE));
 			}
+		}
+		
+		private function parseResults(r:String, m:String):void
+		{
+			var o:Object = new JSONDecoder(r, false).getValue();
+			if(o.message){
+				onRequestFailure(m, o);	
+			}	else{
+				onRequestSuccess(m, o);
+			}			
 		}
 		
 		private function onRequestSuccess(m:String, o:Object):void

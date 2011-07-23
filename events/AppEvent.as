@@ -26,6 +26,7 @@ package events {
 		public static const GIT_NAME_AND_EMAIL		:String = "GIT_NAME_AND_EMAIL";		
 		public static const GIT_DIR_UPDATED			:String = "GIT_DIR_UPDATED";
 		
+		public static const OFFLINE					:String = 'OFFLINE';
 		public static const LOGIN_FAILED			:String = "LOGIN_FAILED";
 		public static const LOGIN_SUCCESS			:String = "LOGIN_SUCCESS";
 		public static const GITHUB_READY			:String = "GITHUB_DATA";

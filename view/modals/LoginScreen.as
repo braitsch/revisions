@@ -24,10 +24,10 @@ package view.modals {
 			super.addInputs(Vector.<TLFTextField>([_view.name_txt, _view.pass_txt]));
 			super.addButtons([_view.skip_btn, _view.login_btn, _view.github, _view.beanstalk]);
 			_view.pass_txt.displayAsPassword = true;
+			_view.skip_btn.addEventListener(MouseEvent.CLICK, onSkipButton);
+			_view.login_btn.addEventListener(MouseEvent.CLICK, onLoginButton);
 			_view.github.addEventListener(MouseEvent.CLICK, gotoNewAccountPage);
 			_view.beanstalk.addEventListener(MouseEvent.CLICK, gotoNewAccountPage);
-			_view.skip_btn.addEventListener(MouseEvent.CLICK, onSkipButton);						
-			_view.login_btn.addEventListener(MouseEvent.CLICK, onLoginButton);						
 		}
 
 		public function set accountType(s:String):void
@@ -75,19 +75,14 @@ package view.modals {
 		private function onLoginButton(e:MouseEvent = null):void
 		{
 			if (!validate()) return;
-			enableButton(_view.skip_btn, false);
-			enableButton(_view.login_btn, false);
+			lockScreen();
 			if (_accountType == RemoteAccount.GITHUB){
-				AppModel.proxies.github.login(_view.name_txt.text, _view.pass_txt.text);
-				AppModel.proxies.github.addEventListener(AppEvent.GITHUB_READY, onGitHubReady);
-				AppModel.proxies.github.addEventListener(AppEvent.LOGIN_FAILED, onLoginFailed);			
-				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Attemping Login'));	
+				AppModel.proxies.github.login(_view.name_txt.text, _view.pass_txt.text);	
 			}	else if (_accountType == RemoteAccount.BEANSTALK){
 				trace('attempting beanstalk login');
-				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Attemping Login'));
 			}			
 		}
-
+		
 		private function validate():Boolean
 		{
 			if (_view.name_txt.text && _view.pass_txt.text){
@@ -96,26 +91,47 @@ package view.modals {
 				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, 'Neither field can be blank.'));
 				return false;
 			}
+		}		
+		
+		private function lockScreen():void
+		{
+			enableButton(_view.skip_btn, false);
+			enableButton(_view.login_btn, false);
+			AppModel.proxies.github.addEventListener(AppEvent.OFFLINE, onOffline);
+			AppModel.proxies.github.addEventListener(AppEvent.LOGIN_FAILED, onLoginFailed);
+			AppModel.proxies.github.addEventListener(AppEvent.GITHUB_READY, onLoginSuccess);
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Attemping Login'));
 		}
 		
-		private function onGitHubReady(e:AppEvent):void
+		private function unlockScreen():void
 		{
 			enableButton(_view.skip_btn, true);
-			enableButton(_view.login_btn, true);			
+			enableButton(_view.login_btn, true);
+			AppModel.proxies.github.removeEventListener(AppEvent.OFFLINE, onOffline);
+			AppModel.proxies.github.removeEventListener(AppEvent.LOGIN_FAILED, onLoginFailed);
+			AppModel.proxies.github.removeEventListener(AppEvent.GITHUB_READY, onLoginSuccess);
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));						
+		}
+		
+		private function onLoginSuccess(e:AppEvent):void
+		{
+			unlockScreen();
 			dispatchEvent(new UIEvent(UIEvent.GITHUB_HOME));
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));			
-			AppModel.proxies.github.removeEventListener(AppEvent.GITHUB_READY, onGitHubReady);
-			AppModel.proxies.github.removeEventListener(AppEvent.LOGIN_FAILED, onLoginFailed);			
 		}
 
 		private function onLoginFailed(e:AppEvent):void
 		{
-			enableButton(_view.skip_btn, true);
-			enableButton(_view.login_btn, true);			
+			unlockScreen();
 			var m:String = 'Login Attempt Failed.\nPlease Check Your Credentials.';
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));			
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 		}
+		
+		private function onOffline(e:AppEvent):void
+		{
+			unlockScreen();
+			var m:String = 'Could Not Connect To Remote Server.\nPlease Check Your Internet Connection';
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));			
+		}		
 
 		private function onSkipButton(e:MouseEvent):void
 		{
