@@ -21,7 +21,7 @@ package model.proxies {
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 		}
 		
-		public function login($name:String, $pass:String):void
+		public function login($name:String = '', $pass:String = ''):void
 		{
 			_userName = $name; _userPass = $pass;
 			super.call(Vector.<String>([BashMethods.LOGIN, _userName, _userPass]));
@@ -34,12 +34,12 @@ package model.proxies {
 		
 		private function getRepositories():void
 		{
-			super.call(Vector.<String>([BashMethods.REPOSITORIES, _userName, _userPass]));
+			super.call(Vector.<String>([BashMethods.REPOSITORIES]));
 		}		
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
-			trace("GithubProxy.onProcessComplete(e)", e.data.result == '');
+			trace("GithubProxy.onProcessComplete(e) - "+e.data.method);
 			if (e.data.result == ''){
 				onSilentResponse(e.data.method);
 			}	else{
@@ -78,7 +78,7 @@ package model.proxies {
 				break;	
 				case BashMethods.REPOSITORIES :
 					onRepositories(o);
-				break;								
+				break;
 			}
 		}
 

@@ -15,11 +15,6 @@ package model.db {
 		public static const SHOW_TOOL_TIPS				:String = "showToolTips";
 		public static const PROMPT_BEFORE_DOWNLOAD		:String = "promptBeforeDownload";
 
-		public static const GITHUB_USER					:String = 'githubUser';
-		public static const GITHUB_PASS					:String = 'githubPass';
-		public static const BEANSTALK_USER				:String = 'beanstalkUser';
-		public static const BEANSTALK_PASS				:String = 'beanstalkPass';
-
 		private static var _file		:File;
 		private static var _xml			:XML;
 		private static var _stage		:Stage;
