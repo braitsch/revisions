@@ -16,7 +16,7 @@ package model.proxies {
 
 		public function GithubProxy()
 		{
-			super.executable = 'Github.sh';
+			super.executable = 'GitHub.sh';
 			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);					
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 		}
@@ -74,12 +74,23 @@ package model.proxies {
 			switch(m){
 				case BashMethods.LOGIN : 
 					addNewAccount(o); 
-					getRepositories();
+					checkForSSHKeys();
 				break;	
 				case BashMethods.REPOSITORIES :
 					onRepositories(o);
 				break;								
 			}
+		}
+
+		private function checkForSSHKeys():void
+		{
+			AppModel.proxies.ssh.checkForKeys();
+			AppModel.proxies.ssh.addEventListener(AppEvent.SSH_KEYS_VALID, onKeysValidated);
+		}
+
+		private function onKeysValidated(e:AppEvent):void
+		{
+			getRepositories();			
 		}
 		
 		private function addNewAccount(o:Object):void

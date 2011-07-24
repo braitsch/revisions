@@ -40,6 +40,8 @@ package system{
 		public static const LOGIN				:String = 'login';
 		public static const CLONE				:String = 'clone';
 		public static const REPOSITORIES		:String = 'getRepositories';
+		public static const DETECT_SSH_KEYS		:String = 'checkForSSHKeys';
+		public static const ADD_KEYS_TO_GITHUB	:String = 'addKeysToGitHub';		
 		
 	}
 	

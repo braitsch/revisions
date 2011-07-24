@@ -11,6 +11,7 @@ package model.proxies {
 		private static var _editor		:EditorProxy 	= new EditorProxy();
 		private static var _checkout	:CheckoutProxy 	= new CheckoutProxy();
 
+		private static var _ssh			:SSHProxy 		= new SSHProxy();
 		private static var _github		:GithubProxy 	= new GithubProxy();
 		private static var _beanstalk	:BeanstalkProxy = new BeanstalkProxy();
 
@@ -44,6 +45,11 @@ package model.proxies {
 		public function get checkout():CheckoutProxy
 		{
 			return _checkout;
+		}
+
+		public function get ssh():SSHProxy
+		{
+			return _ssh;
 		}
 
 		public function get github():GithubProxy
