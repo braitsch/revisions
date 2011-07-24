@@ -165,8 +165,24 @@ package view.remote {
 		
 		private function onCustomClick(e:MouseEvent):void
 		{
+			if (!validate()) return;
 			_cloneURL = _view.custom.url_txt.text;
 			showFileBrowser();
+		}
+
+		private function validate():Boolean
+		{
+			var url:String = _view.custom.url_txt.text;
+			if (url.indexOf('https://') != -1){
+				var m:String = "Cloning over HTTP is not supported, please enter a url that starts with 'git@github.com' or 'git://'";
+				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
+				return false;
+			}
+			if (url.indexOf('git@github.com') == -1 && url.indexOf('git://') == -1){
+				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, "Invalid URL : URL's should start with 'git@github.com' or 'git://'"));
+				return false;				
+			}
+			return true;
 		}
 
 		private function showFileBrowser():void
