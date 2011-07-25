@@ -14,8 +14,6 @@ package model.remote {
 		public static const PRIVATE		:String = 'private';
 		
 		private var _type			:String;
-		private var _login			:String;
-		private var _pass			:String;
 		private var _avatar			:Sprite;
 		private var _realName		:String;
 		private var _location		:String;
@@ -24,19 +22,15 @@ package model.remote {
 		public function RemoteAccount(o:Object)
 		{
 			_type = o.type;
-			_login = o.login;
-			_pass = o.pass;
 			_realName = o.name;
 			_location = o.location;
 			loadAvatar(o.avatar_url);
 		}
 
 		public function get type():String { return _type; }
-		public function get login():String { return _login; }
-		public function get pass():String { return _pass; }
+		public function get avatar():Sprite { return _avatar; }
 		public function get realName():String { return _realName; }
 		public function get location():String { return _location; }
-		public function get avatar():Sprite { return _avatar; }
 		
 		public function get repositories():Array { return _repositories;}
 		public function set repositories(a:Array):void {_repositories = a;}

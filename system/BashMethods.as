@@ -37,11 +37,14 @@ package system{
 		public static const GET_IGNORED_FILES	:String = 'getIgnoredFiles';
 		
 	// github & beanstalk	
+		public static const GET_ACCOUNT_INFO	:String = 'getAccountInfo';
 		public static const LOGIN				:String = 'login';
+		public static const LOGOUT				:String = 'logout';
+		public static const DETECT_SSH_KEYS		:String = 'checkForSSHKeys';
+		public static const ADD_KEYS_TO_GITHUB	:String = 'addKeysToGitHub';
+		
 		public static const CLONE				:String = 'clone';
 		public static const REPOSITORIES		:String = 'getRepositories';
-		public static const DETECT_SSH_KEYS		:String = 'checkForSSHKeys';
-		public static const ADD_KEYS_TO_GITHUB	:String = 'addKeysToGitHub';		
 		
 	}
 	

@@ -7,7 +7,7 @@ package model.remote {
 		
 		public static function initialize():void
 		{
-			AppModel.proxies.github.login();
+			AppModel.proxies.github.getAccountInfo();
 		}		
 		
 		public static function addAccount(ra:RemoteAccount):void
