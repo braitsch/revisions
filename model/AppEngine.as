@@ -26,7 +26,7 @@ package model {
 			_bookmark = b;
 			var s:String = _bookmark.type == Bookmark.FILE ? 'File' : 'Directory Contents';
 			dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Reading '+s));			
-			AppModel.database.addRepository(_bookmark.label, _bookmark.type, _bookmark.path, _bookmark.autosave);
+			AppModel.database.addRepository(_bookmark);
 			AppModel.database.addEventListener(DataBaseEvent.RECORD_ADDED, initBookmark);			
 		}
 		

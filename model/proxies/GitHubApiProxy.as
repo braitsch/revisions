@@ -11,6 +11,9 @@ package model.proxies {
 
 	public class GitHubApiProxy extends NativeProcessProxy {
 
+		private static var _connectionErrors:Array = [	'fatal: unable to connect a socket',
+														'fatal: The remote end hung up unexpectedly'];
+
 		public function GitHubApiProxy()
 		{
 			super.executable = 'GitHubApi.sh';
@@ -41,13 +44,14 @@ package model.proxies {
 		public function getRepositories():void
 		{
 			super.call(Vector.<String>([BashMethods.REPOSITORIES]));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.LOADER_TEXT, 'Fetching Repositories'));
 		}
 		
 	// response handlers - native process exit //			
 		
 		private function handleProcessSuccess(e:NativeProcessEvent):void
 		{
-			trace("GithubApiProxy.handleProcessSuccess(e)", e.data.method);
+	//		trace("GithubApiProxy.handleProcessSuccess(e)", e.data.method);
 			var o:Object = getResultObject(e.data.result);
 			if (o.message){
 				onMessage(e.data.method, o);
@@ -58,16 +62,16 @@ package model.proxies {
 		
 		private function handleProcessFailure(e:NativeProcessEvent):void
 		{
-			trace("GithubApiProxy.handleProcessFailure(e)", e.data.method);
-			switch(e.data.result){
-				case 'fatal: The remote end hung up unexpectedly' :
-					dispatchAlert('Could not find remote repository, please check the URL.');
-				break;
-				default :
-					dispatchDebug(e.data.method, e.data.result);
-				break;
+	//		trace("GithubApiProxy.handleProcessFailure(e)", e.data.method);
+			var errorHandled:Boolean = false;
+			for (var i:int = 0; i < _connectionErrors.length; i++) {
+				if (e.data.result.indexOf(_connectionErrors[i] != -1)){
+					errorHandled = true;
+					dispatchAlert('Could not find remote repository, please check your internet connection & the repository URL.');
+				}
 			}
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
+			if (!errorHandled) dispatchDebug(e.data.method, e.data.result);
 		}
 		
 		private function getResultObject(s:String):Object

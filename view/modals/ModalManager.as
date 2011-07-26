@@ -60,6 +60,7 @@ package view.modals {
 			AppModel.engine.addEventListener(AppEvent.HIDE_ALERT, onHideAlert);	
 			AppModel.engine.addEventListener(AppEvent.SHOW_LOADER, showLoader);
 			AppModel.engine.addEventListener(AppEvent.HIDE_LOADER, hideLoader);					
+			AppModel.engine.addEventListener(AppEvent.LOADER_TEXT, setLoaderText);					
 			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onBookmarkSelected);
 			AppModel.engine.addEventListener(BookmarkEvent.PATH_ERROR, repairBookmark);
 			AppModel.engine.addEventListener(BookmarkEvent.NO_BOOKMARKS, showWelcomeScreen);
@@ -240,7 +241,12 @@ package view.modals {
 		private function hideLoader(e:AppEvent):void 
 		{
 			_preloader.hide();
-		}						
+		}
+		
+		private function setLoaderText(e:AppEvent):void
+		{
+			_preloader.label = e.data as String;			
+		}								
 
 	// adding & removing modal windows //	
 		

@@ -1,6 +1,7 @@
 package model.db {
 
 	import events.DataBaseEvent;
+	import model.vo.Bookmark;
 	import flash.data.SQLStatement;
 	import flash.events.EventDispatcher;
 
@@ -32,10 +33,10 @@ package model.db {
 			_db.execute(_open, true);
 		}
 
-		public function addRepository($label:String, $type:String, $path:String, $autosave:uint):void
+		public function addRepository(bkmk:Bookmark):void
 		{
 			_add = new Vector.<SQLStatement>();
-			_add.push(AppSQLQuery.CLEAR_ACTIVE);				_add.push(AppSQLQuery.INSERT($label, $type, $path, $autosave));
+			_add.push(AppSQLQuery.CLEAR_ACTIVE);				_add.push(AppSQLQuery.INSERT(bkmk));
 			_add.push(AppSQLQuery.READ_REPOSITORIES);
 			_db.execute(_add, true);	
 		}

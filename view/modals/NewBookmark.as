@@ -31,7 +31,7 @@ package view.modals {
 				break;	
 				case _view.github_btn :
 			// check if we're already logged in //	
-					if (AccountManager.github){
+					if (AccountManager.gitHubReady){
 						dispatchEvent(new UIEvent(UIEvent.GITHUB_HOME));
 					}	else{
 						dispatchEvent(new UIEvent(UIEvent.GITHUB_LOGIN));

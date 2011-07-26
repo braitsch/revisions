@@ -9,6 +9,7 @@ package events {
 		public static const HIDE_DEBUG				:String = "HIDE_DEBUG";	
 		public static const SHOW_LOADER				:String = 'SHOW_LOADER';
 		public static const HIDE_LOADER				:String = 'HIDE_LOADER';
+		public static const LOADER_TEXT				:String = "LOADER_TEXT";
 			
 		public static const APP_SETTINGS			:String = "APP_SETTINGS";
 		public static const APP_EXPIRED				:String = "APP_EXPIRED";

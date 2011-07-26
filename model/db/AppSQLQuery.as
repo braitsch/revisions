@@ -1,4 +1,5 @@
 package model.db {
+	import model.vo.Bookmark;
 	import flash.data.SQLStatement;
 
 	public class AppSQLQuery {
@@ -15,11 +16,11 @@ package model.db {
 		public static const CLEAR_ACTIVE:SQLStatement = new SQLStatement();
 		CLEAR_ACTIVE.text = "UPDATE bookmarks SET active=0 WHERE active=1";
 
-		public static function INSERT($label:String, $type:String, $path:String, $autosave:uint):SQLStatement
+		public static function INSERT(b:Bookmark):SQLStatement
 		{
 			var s:SQLStatement = new SQLStatement();
-			s.text = "INSERT INTO bookmarks (label, type, path, autosave, active) ";
-			s.text+= "VALUES ('"+$label+"', '"+$type+"', '"+$path+"', '"+$autosave+"', 1)";
+			s.text = "INSERT INTO bookmarks (label, type, path, remote, autosave, active) ";
+			s.text+= "VALUES ('"+b.label+"', '"+b.type+"', '"+b.path+"', '"+b.remote+"', '"+b.autosave+"', 1)";
 			return s;
 		}
 		

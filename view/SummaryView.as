@@ -1,5 +1,6 @@
 package view {
 
+	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.UIEvent;
 	import model.AppModel;
@@ -171,11 +172,13 @@ package view {
 	// TODO once we have remote integration //		
 		private function onPushButton(e:MouseEvent):void 
 		{ 
-			trace("SummaryView.onPushButton(e)");
+			var m:String = "Pushing & Pulling to remote repositories isn't quite there yet, but will be very soon.";
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
 		}
 		private function onPullButton(e:MouseEvent):void 
 		{ 
-			trace("SummaryView.onPullButton(e)");
+			var m:String = "Pushing & Pulling to remote repositories isn't quite there yet, but will be very soon.";
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
 		}
 		
 	}

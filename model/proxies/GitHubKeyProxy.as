@@ -21,6 +21,7 @@ package model.proxies {
 		{
 			AppModel.proxies.ssh.detectSSHKeys();
 			AppModel.proxies.ssh.addEventListener(AppEvent.SSH_KEYS_READY, onSSHKeysReady);
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.LOADER_TEXT, 'Checking SSH Keys'));			
 		}
 
 		private function onSSHKeysReady(e:AppEvent):void
@@ -87,7 +88,7 @@ package model.proxies {
 		
 		private function onSuccess(m:String, o:Object):void
 		{
-			trace("GitHubKeyProxy.onSuccess(m, o)", m);
+		//	trace("GitHubKeyProxy.onSuccess(m, o)", m);
 			switch(m){	
 				case BashMethods.DETECT_GH_KEY_ID :
 					onGitHubKeyId(o.result);
