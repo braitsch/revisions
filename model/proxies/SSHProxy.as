@@ -14,11 +14,11 @@ package model.proxies {
 		
 		public function SSHProxy()
 		{
-			super.executable = 'SSH.sh';
+			super('SSH.sh');
 			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 		}
-		
+
 		public function detectSSHKeys():void
 		{
 			super.call(Vector.<String>([BashMethods.DETECT_SSH_KEYS]));
@@ -26,9 +26,13 @@ package model.proxies {
 		
 		private function generateKeys():void
 		{
-			trace("SSHProxy.generateKeys()");
 			super.call(Vector.<String>([BashMethods.GENERATE_SSH_KEYS]));
 		}
+		
+		private function registerKeys():void
+		{
+			super.call(Vector.<String>([BashMethods.REGISTER_SSH_KEYS]));
+		}		
 		
 		private function detectGHKeyId():void
 		{
@@ -59,17 +63,23 @@ package model.proxies {
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
-			trace("SSHProxy.onProcessComplete(e)", e.data.method, e.data.result);
+			trace("SSHProxy.onProcessComplete(e)", e.data.method);
 			switch(e.data.method){
 				case BashMethods.DETECT_SSH_KEYS :
 					!e.data.result ? generateKeys() : onKeysDetected(e.data.result);
 				break;		
-				case BashMethods.GENERATE_SSH_KEYS:
-					
-				break;								
 				case BashMethods.DETECT_GH_KEY_ID :
 					onGHKeyIdFound(e.data.result);
-				break;				
+				break;		
+				case BashMethods.GENERATE_SSH_KEYS :
+					registerKeys();
+				break;	
+				case BashMethods.REGISTER_SSH_KEYS :
+					detectSSHKeys();
+				break;	
+				case BashMethods.AUTHENTICATE_GH :
+					AppModel.proxies.github.getRepositories();
+				break;																
 				default :
 					onGitHubApiProcessComplete(e.data.method, e.data.result);		
 				break;										
@@ -78,7 +88,6 @@ package model.proxies {
 		
 		private function onGitHubApiProcessComplete(m:String, r:String):void
 		{
-		//	trace("SSHProxy.onGitHubApiProcessComplete(m, r)", m, r);
 			var o:Object = new JSONDecoder(r, false).getValue();	
 			if (o.message){
 				handleGitHubApiFailure(m, o.message);
@@ -94,7 +103,7 @@ package model.proxies {
 					addKeysToGitHub();
 				break;
 				default :
-			// handle any unknown github api timeouts or errors ..	
+			// TODO handle any unknown github api timeouts or errors ..	
 					dispatchDebug(m, msg);
 				break;		
 			}			
@@ -102,17 +111,16 @@ package model.proxies {
 		
 		private function handleGitHubApiSuccess(m:String, o:Object):void 
 		{
-		//	trace("SSHProxy.handleGitHubApiSuccess(m, o)", m, o);
 			switch(m){
 				case BashMethods.GET_GH_KEYS :
 					onGitHubKeyList(o);
-				break;					
+				break;
 				case BashMethods.ADD_KEYS_TO_GH :
 					authenticateGH(o.id);					
-				break;	
+				break;
 				case BashMethods.REPAIR_GH_KEY :
 					authenticateGH(o.id);
-				break;				
+				break;
 			}
 		}
 		
@@ -148,14 +156,10 @@ package model.proxies {
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
 			var m:String = e.data.method; var r:String = e.data.result;
-			trace("SSHProxy.onProcessFailure(e)", m, r);
-			if (m == BashMethods.GENERATE_SSH_KEYS && r.indexOf('Identity added') !=-1){
-				detectSSHKeys();
-			//	addKeysToGitHub();
+			if (m == BashMethods.REGISTER_SSH_KEYS && r.indexOf('Identity added') !=-1){
+				// ignore this timeout error //
 			}	else if (m == BashMethods.AUTHENTICATE_GH && r.indexOf("You've successfully authenticated") != -1){
-				AppModel.proxies.github.getRepositories();
-			}	else if (m == BashMethods.AUTHENTICATE_GH && r.indexOf("Warning: Permanently added 'github.com") != -1){
-				AppModel.proxies.github.getRepositories();
+				// ignore this timeout error //				
 			}	else{
 				dispatchDebug(m, r);
 			}

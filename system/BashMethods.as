@@ -42,6 +42,7 @@ package system{
 		public static const LOGOUT				:String = 'logout';
 		public static const DETECT_SSH_KEYS		:String = 'detectSSHKeys';
 		public static const GENERATE_SSH_KEYS	:String = 'generateSSHKeys';
+		public static const REGISTER_SSH_KEYS	:String = 'registerSSHKeys';
 		public static const DETECT_GH_KEY_ID	:String = 'detectGHKeyId';
 		public static const GET_GH_KEYS			:String = 'getGHKeys';
 		public static const GET_BS_KEYS			:String = 'getBSKeys';
@@ -51,7 +52,7 @@ package system{
 		public static const AUTHENTICATE_GH		:String = 'authenticateGH';
 		
 		public static const CLONE				:String = 'clone';
-		public static const REPOSITORIES		:String = 'getRepositories';
+		public static const REPOSITORIES:String = 'getRepositories';
 		
 	}
 	

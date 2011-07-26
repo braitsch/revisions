@@ -90,7 +90,7 @@ package model.air {
 		private function onProcessExit(e:NativeProcessExitEvent):void 
 		{
 			log("NativeProcessProxy :: Process Complete");
-			if (!_failed) dispatchEvent(new NativeProcessEvent(NativeProcessEvent.PROCESS_COMPLETE, {method:_method, result:_result}));
+			dispatchEvent(new NativeProcessEvent(NativeProcessEvent.PROCESS_COMPLETE, {method:_method, result:_result}));
 		}
 		
 		private function log(...args):void
