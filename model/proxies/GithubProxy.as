@@ -38,7 +38,7 @@ package model.proxies {
 			super.call(Vector.<String>([BashMethods.CLONE, url, loc]));
 		}		
 		
-		private function getRepositories():void
+		public function getRepositories():void
 		{
 			super.call(Vector.<String>([BashMethods.REPOSITORIES]));
 		}
@@ -64,7 +64,7 @@ package model.proxies {
 				break;
 				case BashMethods.LOGIN :
 					addNewAccount(o); 
-					checkForSSHKeys();
+					AppModel.proxies.ssh.detectSSHKeys();
 				break;					
 				case BashMethods.REPOSITORIES :
 					onRepositories(o);
@@ -92,17 +92,6 @@ package model.proxies {
 			}
 		}		
 
-		private function checkForSSHKeys():void
-		{
-			AppModel.proxies.ssh.checkForKeys();
-			AppModel.proxies.ssh.addEventListener(AppEvent.SSH_KEYS_VALID, onKeysValidated);
-		}
-
-		private function onKeysValidated(e:AppEvent):void
-		{
-			getRepositories();			
-		}
-		
 		private function addNewAccount(o:Object):void
 		{
 			o.type = RemoteAccount.GITHUB;
