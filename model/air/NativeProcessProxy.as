@@ -19,7 +19,7 @@ package model.air {
 		private var _method			:String;
 		private var _result			:String;
 		private var _failed			:Boolean = false;	
-		protected var debug			:Boolean = false;
+		private var _debug			:Boolean = false;
 		
 		public function NativeProcessProxy($exec:String = '')
 		{
@@ -31,20 +31,20 @@ package model.air {
 			if ($exec) _npi.executable = File.applicationDirectory.resolvePath('sh/'+$exec);	
 		}
 		
-		public function set executable($file:String):void
+		protected function set executable($file:String):void
 		{			_npi.executable = File.applicationDirectory.resolvePath('sh/'+$file);			}
 		
-		public function set directory($dir:String):void
+		protected function set directory($dir:String):void
 		{
 			_dir = $dir;
 		}	
 		
-		public function get failed():Boolean
+		protected function get failed():Boolean
 		{
 			return _failed;
 		}			
 		
-		public function call(v:Vector.<String>):void
+		protected function call(v:Vector.<String>):void
 		{
 			v.push(_dir);
 			_method = v[0];
@@ -72,12 +72,13 @@ package model.air {
 		{
 			if (_result!='') _result+='\n'; // linebreak between batches of data received //
 			_result += StringUtils.trim(_np.standardOutput.readUTFBytes(_np.standardOutput.bytesAvailable));
-            log('DataReceived @ '+_method+ ' :: Response = '+_result);		}
+            log('DataReceived @ '+_method+ ' :: Response = '+_result);			dispatchEvent(new NativeProcessEvent(NativeProcessEvent.PROCESS_PROGRESS, {method:_method, result:_result}));
+		}
 		
 		private function onDataError(e:ProgressEvent):void 
 		{
-			_failed = true;
-            _result = StringUtils.trim(_np.standardError.readUTFBytes(_np.standardError.bytesAvailable));            log('DataError @ '+_method+ ' :: Response = '+_result);			dispatchEvent(new NativeProcessEvent(NativeProcessEvent.PROCESS_FAILURE, {method:_method, result:_result}));
+			_failed = true;            _result = StringUtils.trim(_np.standardError.readUTFBytes(_np.standardError.bytesAvailable));            log('DataError @ '+_method+ ' :: Response = '+_result);
+			dispatchEvent(new NativeProcessEvent(NativeProcessEvent.PROCESS_FAILURE, {method:_method, result:_result}));
 		}	
 		
 		private function onIOError(e:IOErrorEvent):void 
@@ -95,7 +96,7 @@ package model.air {
 		
 		private function log(...args):void
 		{
-			if (debug) trace(args);
+			if (_debug) trace(args);
 		}
 		
 	}

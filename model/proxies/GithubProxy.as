@@ -14,7 +14,7 @@ package model.proxies {
 		public function GithubProxy()
 		{
 			super.executable = 'GitHub.sh';
-			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);					
+			super.addEventListener(NativeProcessEvent.PROCESS_PROGRESS, onProcessProgress);
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 		}
 
@@ -36,26 +36,49 @@ package model.proxies {
 		public function clone(url:String, loc:String):void
 		{
 			super.call(Vector.<String>([BashMethods.CLONE, url, loc]));
-		}		
-		
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Connecting to Remote Repository'));
+		}
+
 		public function getRepositories():void
 		{
 			super.call(Vector.<String>([BashMethods.REPOSITORIES]));
 		}
 		
-	// response handlers //			
+	// response handlers - native process exit //			
 		
-		private function onProcessComplete(e:NativeProcessEvent):void 
+		private function handleProcessSuccess(e:NativeProcessEvent):void
 		{
-			trace("GithubProxy.onProcessComplete(e)", e.data.method);
-			var o:Object = new JSONDecoder(e.data.result, false).getValue();
-			if(o.message){
-				onMessage(o.message);
+			trace("GithubProxy.handleProcessSuccess(e)", e.data.method);
+			var o:Object = getResultObject(e.data.result);
+			if (o.message){
+				onMessage(e.data.method, o);
 			}	else{
 				onSuccess(e.data.method, o);
-			}				
+			}
+		}
+		
+		private function getResultObject(s:String):Object
+		{
+			if (s.indexOf('[') == 0 || s.indexOf('{') == 0){
+				return new JSONDecoder(s, false).getValue();
+			}	else{
+				return {result:s};
+			}
 		}
 
+		private function handleProcessFailure(e:NativeProcessEvent):void
+		{
+			trace("GithubProxy.handleProcessFailure(e)", e.data.method);
+			switch(e.data.result){
+				case 'fatal: The remote end hung up unexpectedly' :
+					dispatchAlert('Could not find remote repository, please check the URL.');
+				break;
+				default :
+					dispatchDebug(e.data.method, e.data.result);
+				break;
+			}
+		}
+		
 		private function onSuccess(m:String, o:Object):void
 		{
 			switch(m){
@@ -69,13 +92,15 @@ package model.proxies {
 				case BashMethods.REPOSITORIES :
 					onRepositories(o);
 				break;
+				case BashMethods.CLONE :
+					dispatchEvent(new AppEvent(AppEvent.CLONE_COMPLETE));
+				break;				
 			}
 		}
 		
-		private function onMessage(m:String):void
+		private function onMessage(m:String, o:Object):void
 		{
-			trace("GithubProxy.onMessage(m)", m);
-			switch(m){
+			switch(o.message){
 				case 'No connection' :
 					dispatchEvent(new AppEvent(AppEvent.OFFLINE));
 				break;
@@ -85,9 +110,11 @@ package model.proxies {
 				case 'Clone complete' :				
 					dispatchEvent(new AppEvent(AppEvent.CLONE_COMPLETE));
 				break;
-				case 'Account info unavailable' : break;				
+				case 'Account info unavailable' : 
+					// attempt to auto-login failed, ignore this error.
+				break;				
 				default :
-					dispatchDebug('', m);
+					dispatchDebug(m, o.message);
 				break;						
 			}
 		}		
@@ -104,12 +131,23 @@ package model.proxies {
 			dispatchEvent(new AppEvent(AppEvent.GITHUB_READY));
 		}
 		
-	// handle failures //			
+	// handle native process responses //			
 
-		private function onProcessFailure(e:NativeProcessEvent):void 
+		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
-			dispatchDebug(e.data.method, e.data.result);
-		}
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
+			failed==true ? handleProcessFailure(e) : handleProcessSuccess(e);
+		}	
+		
+		private function onProcessProgress(e:NativeProcessEvent):void
+		{
+			trace("progress = "+e.data.result);
+		}			
+		
+		private function dispatchAlert(m:String):void
+		{
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));				
+		}		
 		
 		private function dispatchDebug(m:String, r:String):void
 		{
