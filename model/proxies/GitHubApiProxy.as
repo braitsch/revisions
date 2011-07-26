@@ -9,11 +9,11 @@ package model.proxies {
 	import system.BashMethods;
 	import com.adobe.serialization.json.JSONDecoder;
 
-	public class GithubProxy extends NativeProcessProxy {
+	public class GitHubApiProxy extends NativeProcessProxy {
 
-		public function GithubProxy()
+		public function GitHubApiProxy()
 		{
-			super.executable = 'GitHub.sh';
+			super.executable = 'GitHubApi.sh';
 			super.addEventListener(NativeProcessEvent.PROCESS_PROGRESS, onProcessProgress);
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 		}
@@ -36,7 +36,6 @@ package model.proxies {
 		public function clone(url:String, loc:String):void
 		{
 			super.call(Vector.<String>([BashMethods.CLONE, url, loc]));
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Connecting to Remote Repository'));
 		}
 
 		public function getRepositories():void
@@ -48,13 +47,27 @@ package model.proxies {
 		
 		private function handleProcessSuccess(e:NativeProcessEvent):void
 		{
-			trace("GithubProxy.handleProcessSuccess(e)", e.data.method);
+			trace("GithubApiProxy.handleProcessSuccess(e)", e.data.method);
 			var o:Object = getResultObject(e.data.result);
 			if (o.message){
 				onMessage(e.data.method, o);
 			}	else{
 				onSuccess(e.data.method, o);
 			}
+		}
+		
+		private function handleProcessFailure(e:NativeProcessEvent):void
+		{
+			trace("GithubApiProxy.handleProcessFailure(e)", e.data.method);
+			switch(e.data.result){
+				case 'fatal: The remote end hung up unexpectedly' :
+					dispatchAlert('Could not find remote repository, please check the URL.');
+				break;
+				default :
+					dispatchDebug(e.data.method, e.data.result);
+				break;
+			}
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 		}
 		
 		private function getResultObject(s:String):Object
@@ -64,20 +77,7 @@ package model.proxies {
 			}	else{
 				return {result:s};
 			}
-		}
-
-		private function handleProcessFailure(e:NativeProcessEvent):void
-		{
-			trace("GithubProxy.handleProcessFailure(e)", e.data.method);
-			switch(e.data.result){
-				case 'fatal: The remote end hung up unexpectedly' :
-					dispatchAlert('Could not find remote repository, please check the URL.');
-				break;
-				default :
-					dispatchDebug(e.data.method, e.data.result);
-				break;
-			}
-		}
+		}		
 		
 		private function onSuccess(m:String, o:Object):void
 		{
@@ -87,7 +87,7 @@ package model.proxies {
 				break;
 				case BashMethods.LOGIN :
 					addNewAccount(o); 
-					AppModel.proxies.ssh.detectSSHKeys();
+					AppModel.proxies.githubKey.validateKeys();
 				break;					
 				case BashMethods.REPOSITORIES :
 					onRepositories(o);
@@ -112,12 +112,15 @@ package model.proxies {
 				break;
 				case 'Account info unavailable' : 
 					// attempt to auto-login failed, ignore this error.
+					trace('GithubApiProxy :: no github credentials found');
 				break;				
 				default :
 					dispatchDebug(m, o.message);
 				break;						
 			}
-		}		
+		}
+		
+	// response callbacks //			
 
 		private function addNewAccount(o:Object):void
 		{
@@ -135,13 +138,12 @@ package model.proxies {
 
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 			failed==true ? handleProcessFailure(e) : handleProcessSuccess(e);
 		}	
 		
 		private function onProcessProgress(e:NativeProcessEvent):void
 		{
-			trace("progress = "+e.data.result);
+		//	trace("progress = "+e.data.result);
 		}			
 		
 		private function dispatchAlert(m:String):void
@@ -151,7 +153,7 @@ package model.proxies {
 		
 		private function dispatchDebug(m:String, r:String):void
 		{
-			var s:String = 'GithubProxy.onProcessFailure(e)';
+			var s:String = 'GithubApiProxy.onProcessFailure(e)';
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_DEBUG, {s:s, m:m, r:r}));				
 		}
 		

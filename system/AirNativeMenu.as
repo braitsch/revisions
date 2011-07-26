@@ -37,7 +37,7 @@ package system {
             _aboutGit.addEventListener(Event.SELECT, onOptionSelected);
             _main.submenu.addItemAt(_aboutGit, 1);
             _main.submenu.addItemAt(_updateApp, 2);
-            AppModel.proxies.github.addEventListener(AppEvent.GITHUB_READY, onGitHubReady);
+            AppModel.proxies.githubApi.addEventListener(AppEvent.GITHUB_READY, onGitHubReady);
 		}
 
 		private static function onGitHubReady(e:AppEvent):void

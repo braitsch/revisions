@@ -32,8 +32,8 @@ package view.remote {
 		//	createTempData();
 			addEventListener(UIEvent.CLONE, onCloneClick);		
 			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);
-			AppModel.proxies.github.addEventListener(AppEvent.GITHUB_READY, onGithubData);
-			AppModel.proxies.github.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);
+			AppModel.proxies.githubApi.addEventListener(AppEvent.GITHUB_READY, onGithubData);
+			AppModel.proxies.githubApi.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);
 		}
 
 		private function onGithubData(e:AppEvent):void
@@ -193,7 +193,8 @@ package view.remote {
 		private function onBrowserSelection(e:UIEvent):void
 		{
 			_cloneLoc = File(e.data).nativePath;
-			AppModel.proxies.github.clone(_cloneURL, _cloneLoc);
+			AppModel.proxies.githubApi.clone(_cloneURL, _cloneLoc);
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Connecting to Remote Repository'));			
 		}
 		
 		private function onCloneComplete(e:AppEvent):void
@@ -209,7 +210,8 @@ package view.remote {
 				autosave	:	60
 			};		
 			AppModel.engine.addBookmark(new Bookmark(o));
-			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));						
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 		}			
 		
 		private function onCloneRollOut(e:MouseEvent):void {TweenLite.to(e.target.over, .3, {alpha:0});}

@@ -5,19 +5,21 @@ package model.proxies {
 	import model.AppModel;
 	import model.air.NativeProcessProxy;
 	import system.BashMethods;
-	import com.adobe.serialization.json.JSONDecoder;
 
 	public class SSHProxy extends NativeProcessProxy {
 		
-		private static var _ghKeyId		:String;
 		private static var _publicKey	:String;
 		
 		public function SSHProxy()
 		{
 			super('SSH.sh');
-			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 		}
+		
+		static public function get publicKey():String
+		{
+			return _publicKey;
+		}		
 
 		public function detectSSHKeys():void
 		{
@@ -32,145 +34,55 @@ package model.proxies {
 		private function registerKeys():void
 		{
 			super.call(Vector.<String>([BashMethods.REGISTER_SSH_KEYS]));
-		}		
-		
-		private function detectGHKeyId():void
-		{
-			super.call(Vector.<String>([BashMethods.DETECT_GH_KEY_ID]));
-		}					
-		
-		private function getGitHubKeys():void
-		{
-			super.call(Vector.<String>([BashMethods.GET_GH_KEYS]));
-		}
-		
-		private function addKeysToGitHub():void
-		{
-			super.call(Vector.<String>([BashMethods.ADD_KEYS_TO_GH]));
-		}	
-		
-		private function repairGitHubKeys():void
-		{
-			super.call(Vector.<String>([BashMethods.REPAIR_GH_KEY]));
-		}		
-		
-		private function authenticateGH(keyId:String):void
-		{
-			super.call(Vector.<String>([BashMethods.AUTHENTICATE_GH, keyId]));
 		}				
-		
+	
 	// response handlers //			
 		
-		private function onProcessComplete(e:NativeProcessEvent):void 
+		private function handleProcessSuccess(e:NativeProcessEvent):void 
 		{
-			trace("SSHProxy.onProcessComplete(e)", e.data.method);
+			trace("SSHProxy.handleProcessSuccess(e)", e.data.method);
 			switch(e.data.method){
 				case BashMethods.DETECT_SSH_KEYS :
-					!e.data.result ? generateKeys() : onKeysDetected(e.data.result);
-				break;		
-				case BashMethods.DETECT_GH_KEY_ID :
-					onGHKeyIdFound(e.data.result);
+					if(e.data.result == '') {
+						generateKeys();
+					}	else{ 
+						onKeysDetected(e.data.result);
+					}
 				break;		
 				case BashMethods.GENERATE_SSH_KEYS :
 					registerKeys();
 				break;	
-				case BashMethods.REGISTER_SSH_KEYS :
-					detectSSHKeys();
-				break;	
-				case BashMethods.AUTHENTICATE_GH :
-					AppModel.proxies.github.getRepositories();
-				break;																
-				default :
-					onGitHubApiProcessComplete(e.data.method, e.data.result);		
-				break;										
 			}
 		}
 		
-		private function onGitHubApiProcessComplete(m:String, r:String):void
+		private function handleProcessFailure(e:NativeProcessEvent):void 
 		{
-			var o:Object = new JSONDecoder(r, false).getValue();	
-			if (o.message){
-				handleGitHubApiFailure(m, o.message);
-			}	else{
-				handleGitHubApiSuccess(m, o);						
-			}
-		}
-
-		private function handleGitHubApiFailure(m:String, msg:String):void
-		{
-			switch(m){
-				case BashMethods.REPAIR_GH_KEY :
-					addKeysToGitHub();
-				break;
-				default :
-			// TODO handle any unknown github api timeouts or errors ..	
-					dispatchDebug(m, msg);
-				break;		
-			}			
-		}
-		
-		private function handleGitHubApiSuccess(m:String, o:Object):void 
-		{
-			switch(m){
-				case BashMethods.GET_GH_KEYS :
-					onGitHubKeyList(o);
-				break;
-				case BashMethods.ADD_KEYS_TO_GH :
-					authenticateGH(o.id);					
-				break;
-				case BashMethods.REPAIR_GH_KEY :
-					authenticateGH(o.id);
-				break;
-			}
-		}
-		
-		private function onKeysDetected(s:String):void
-		{
-	// strip off username so we can compate against github //	
-			_publicKey = s.substr(0, s.indexOf('==')+2);
-			detectGHKeyId();
-		}
-		
-		private function onGHKeyIdFound(s:String):void
-		{
-			_ghKeyId = s;
-			getGitHubKeys();			
-		}
-
-		private function onGitHubKeyList(o:Object):void
-		{
-			var k:Object = compareKeys(o);
-			if (k){
-				authenticateGH(k.id);
-			}	else{
-				_ghKeyId ? repairGitHubKeys() : addKeysToGitHub();
-			}			
-		}
-
-		private function compareKeys(o:Object):Object
-		{
-			for (var i:int = 0; i < o.length; i++) if (o[i].key == _publicKey) return o[i];
-			return null;
-		}
-
-		private function onProcessFailure(e:NativeProcessEvent):void 
-		{
+			trace("SSHProxy.handleProcessFailure(e)", e.data.method);			
 			var m:String = e.data.method; var r:String = e.data.result;
 			if (m == BashMethods.REGISTER_SSH_KEYS && r.indexOf('Identity added') !=-1){
-				// ignore this timeout error //
-			}	else if (m == BashMethods.AUTHENTICATE_GH && r.indexOf("You've successfully authenticated") != -1){
-				// ignore this timeout error //				
+				detectSSHKeys();		
 			}	else{
 				dispatchDebug(m, r);
 			}
+		}		
+		
+		private function onKeysDetected(s:String):void
+		{
+			_publicKey = s;
+			dispatchEvent(new AppEvent(AppEvent.SSH_KEYS_READY));
 		}
+		
+		private function onProcessComplete(e:NativeProcessEvent):void 
+		{
+			failed==true ? handleProcessFailure(e) : handleProcessSuccess(e);
+		}			
 		
 		private function dispatchDebug(m:String, r:String):void
 		{
 			var s:String = 'SSHProxy.onProcessFailure(e)';
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_DEBUG, {s:s, m:m, r:r}));					
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_DEBUG, {s:s, m:m, r:r}));
 		}
-		
+
 	}
 	
 }

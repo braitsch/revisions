@@ -77,7 +77,7 @@ package view.modals {
 			if (!validate()) return;
 			lockScreen();
 			if (_accountType == RemoteAccount.GITHUB){
-				AppModel.proxies.github.login(_view.name_txt.text, _view.pass_txt.text);	
+				AppModel.proxies.githubApi.login(_view.name_txt.text, _view.pass_txt.text);	
 			}	else if (_accountType == RemoteAccount.BEANSTALK){
 				trace('attempting beanstalk login');
 			}			
@@ -97,9 +97,9 @@ package view.modals {
 		{
 			enableButton(_view.skip_btn, false);
 			enableButton(_view.login_btn, false);
-			AppModel.proxies.github.addEventListener(AppEvent.OFFLINE, onOffline);
-			AppModel.proxies.github.addEventListener(AppEvent.LOGIN_FAILED, onLoginFailed);
-			AppModel.proxies.github.addEventListener(AppEvent.GITHUB_READY, onLoginSuccess);
+			AppModel.proxies.githubApi.addEventListener(AppEvent.OFFLINE, onOffline);
+			AppModel.proxies.githubApi.addEventListener(AppEvent.LOGIN_FAILED, onLoginFailed);
+			AppModel.proxies.githubApi.addEventListener(AppEvent.GITHUB_READY, onLoginSuccess);
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Attemping Login'));
 		}
 		
@@ -107,9 +107,9 @@ package view.modals {
 		{
 			enableButton(_view.skip_btn, true);
 			enableButton(_view.login_btn, true);
-			AppModel.proxies.github.removeEventListener(AppEvent.OFFLINE, onOffline);
-			AppModel.proxies.github.removeEventListener(AppEvent.LOGIN_FAILED, onLoginFailed);
-			AppModel.proxies.github.removeEventListener(AppEvent.GITHUB_READY, onLoginSuccess);
+			AppModel.proxies.githubApi.removeEventListener(AppEvent.OFFLINE, onOffline);
+			AppModel.proxies.githubApi.removeEventListener(AppEvent.LOGIN_FAILED, onLoginFailed);
+			AppModel.proxies.githubApi.removeEventListener(AppEvent.GITHUB_READY, onLoginSuccess);
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));						
 		}
 		
