@@ -25,6 +25,7 @@ package events {
 		public static const LIST_ITEM_SELECTED		:String = "LIST_ITEM_SELECTED";
 		public static const DIRECTORY_SELECTED		:String = "DIRECTORY_SELECTED";
 		public static const TOGGLE_OPEN_DIRECTORY:String = "TOGGLE_OPEN_DIRECTORY";
+		public static const ANONYMOUS_CLONE:String = "ANONYMOUS_CLONE";
 		
 		public var data:Object;
 

@@ -35,6 +35,7 @@ package view.modals {
 		private static var _gitUpgrade		:GitUpgrade = new GitUpgrade();
 		private static var _nameAndEmail	:NameAndEmail = new NameAndEmail();
 		private static var _login			:LoginScreen = new LoginScreen();
+		private static var _clone			:AnonymousClone = new AnonymousClone();		
 		private static var _gitHub			:GitHub = new GitHub();
 		private static var _alert			:Alert = new Alert();
 		private static var _debug			:DebugScreen = new DebugScreen();
@@ -83,6 +84,7 @@ package view.modals {
 			stage.addEventListener(UIEvent.GLOBAL_SETTINGS, globalSettings);	
 			stage.addEventListener(UIEvent.GITHUB_HOME, showGitHubHome);
 			stage.addEventListener(UIEvent.GITHUB_LOGIN, showGitHubLogin);
+			stage.addEventListener(UIEvent.ANONYMOUS_CLONE, showAnonymousClone);			
 			stage.addEventListener(UIEvent.CLOSE_MODAL_WINDOW, onCloseButton);
 			stage.addEventListener(KeyboardEvent.KEY_UP, checkForEnterKey);
 		}
@@ -209,7 +211,12 @@ package view.modals {
 		private function showGitHubHome(e:UIEvent):void
 		{
 			showModalWindow(_gitHub);
-		}				
+		}
+		
+		private function showAnonymousClone(e:UIEvent):void
+		{
+			showModalWindow(_clone);	
+		}						
 		
 		private function onAppExpired(e:AppEvent):void
 		{

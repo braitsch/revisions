@@ -135,8 +135,7 @@ package view.modals {
 
 		private function onSkipButton(e:MouseEvent):void
 		{
-		//TODO show user window to checkout anonymous github repo over ssh //	
-			trace("WindowLogin.onSkipButton(e)");
+			dispatchEvent(new UIEvent(UIEvent.ANONYMOUS_CLONE));
 		}
 		
 	}

@@ -5,7 +5,6 @@ package view.remote {
 	import model.AppModel;
 	import model.remote.AccountManager;
 	import model.remote.RemoteAccount;
-	import model.vo.Bookmark;
 	import view.modals.ModalWindow;
 	import com.greensock.TweenLite;
 	import flash.display.Sprite;
@@ -15,25 +14,21 @@ package view.remote {
 	public class GitHub extends ModalWindow {
 
 		private static var _view		:GitHubMC = new GitHubMC();
-//		private static var _badgeGlow	:GlowFilter = new GlowFilter(0x000000, .5, 20, 10, 1, 3);
 		private static var _pages		:Vector.<Sprite> = new <Sprite>[];
 		private static var _maxPerPage	:uint = 5;
 		private static var _pageIndex	:uint = 0;
 		private static var _model		:RemoteAccount;
 		private static var _activePage	:Sprite;
 		private static var _cloneURL	:String;
-		private static var _cloneLoc	:String;	// local destination to clone to //
 
 		public function GitHub()
 		{
 			addChild(_view);	
 			_view.badgePage.page_txt.text = 'My Github';
 			setupCustomURLField();
-		//	createTempData();
 			addEventListener(UIEvent.CLONE, onCloneClick);		
 			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);
 			AppModel.proxies.githubApi.addEventListener(AppEvent.GITHUB_READY, onGithubData);
-			AppModel.proxies.githubApi.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);
 		}
 
 		private function onGithubData(e:AppEvent):void
@@ -192,57 +187,18 @@ package view.remote {
 
 		private function onBrowserSelection(e:UIEvent):void
 		{
-			_cloneLoc = File(e.data).nativePath;
-			AppModel.proxies.githubApi.clone(_cloneURL, _cloneLoc);
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Connecting to Remote Repository'));			
+			RemoteClone.getFromGitHub(_cloneURL, File(e.data).nativePath);
+			AppModel.proxies.githubApi.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);			
 		}
-		
+
 		private function onCloneComplete(e:AppEvent):void
 		{
-			var n:String = _cloneLoc.substr(_cloneLoc.lastIndexOf('/') + 1);
-				n = n.substr(0,1).toUpperCase() + n.substr(1);
-			var o:Object = {
-				label		:	n,
-				type		: 	Bookmark.FOLDER,
-				path		:	_cloneLoc,
-				remote 		:	_cloneURL,
-				active 		:	1,
-				autosave	:	60
-			};		
-			AppModel.engine.addBookmark(new Bookmark(o));
-			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
-		}			
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));			
+			AppModel.proxies.githubApi.removeEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);			
+		}
 		
 		private function onCloneRollOut(e:MouseEvent):void {TweenLite.to(e.target.over, .3, {alpha:0});}
 		private function onCloneRollOver(e:MouseEvent):void {TweenLite.to(e.target.over, .5, {alpha:1});}		
-
-		
-//		private function createTempData():void
-//		{
-//			var a:Array = [];
-//			for (var i:int = 0; i < 87; i++) {
-//				var o:Object = {};
-//				o.name = 'repository # '+(i+1);
-//				o.description = 'this is description : '+(i+1);
-//				o.url = 'some remote url '+(i+1);
-//				a.push(o);
-//			}
-//			temp(a);
-//			_view.badgeUser.user_txt.text = 'Michael Jackson - San Francisco, CA';
-//		}	
-//		
-//		private function temp(a:Array):void
-//		{
-//			var k:Array = [];
-//			for (var i:int = 0; i < a.length; i++) {
-//				if (i % _maxPerPage == 0) k = [];
-//				k.push(a[i]);
-//				if (k.length == _maxPerPage) _pages.push(new Sprite(k));
-//			}
-//			_pages.push(new Sprite(k));
-//			onRepositoriesReady();
-//		}			
 		
 	}
 	

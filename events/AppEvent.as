@@ -27,13 +27,13 @@ package events {
 		public static const GIT_DIR_UPDATED			:String = "GIT_DIR_UPDATED";
 		
 		public static const OFFLINE					:String = 'OFFLINE';
+		public static const SSH_KEYS_READY			:String = "SSH_KEYS_READY";
 		public static const GH_AUTHENTICATED		:String = "SSH_KEYS_VALID";
 		public static const LOGIN_FAILED			:String = "LOGIN_FAILED";
 		public static const LOGIN_SUCCESS			:String = "LOGIN_SUCCESS";
 		public static const CLONE_COMPLETE			:String = "CLONE_COMPLETE";
 		public static const GITHUB_READY			:String = "GITHUB_DATA";
-		public static const AVATAR_LOADED:String = "AVATAR_LOADED";
-		public static const SSH_KEYS_READY:String = "SSH_KEYS_READY";
+		public static const AVATAR_LOADED			:String = "AVATAR_LOADED";
 		
 		public var data:Object;
 
