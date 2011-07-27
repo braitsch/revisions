@@ -120,9 +120,9 @@ package view {
 			_view.name_txt.y = -_offset - 13;
 			_view.name_txt.x = -_view.name_txt.width/2;	
 			getBookmarkIcon();
-			showRemoteButtons(_bookmark.remote != null);								
+			showRemoteButtons(_bookmark.remote != '');
 		}
-
+		
 		private function getBookmarkIcon():void
 		{
 			if (_icon) _view.removeChild(_icon);

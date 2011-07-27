@@ -1,5 +1,6 @@
 package view.modals {
 
+	import events.AppEvent;
 	import flash.events.Event;
 	import events.UIEvent;
 	import fl.text.TLFTextField;
@@ -28,8 +29,13 @@ package view.modals {
 		override public function onEnterKey():void { onCommit(); }
 		private function onCommit(e:MouseEvent = null):void 
 		{
-			AppModel.proxies.editor.commit(_view.note_txt.text);
-			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
+			if (_view.note_txt.text == ''){
+				var m:String = 'Commit Message Cannot Be Empty.';
+				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));				
+			}	else{
+				AppModel.proxies.editor.commit(_view.note_txt.text);
+				dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
+			}
 		}
 		
 	}

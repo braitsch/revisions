@@ -24,10 +24,10 @@ package view.modals {
 		{
 			switch(e.target){
 				case _view.file_btn :
-					super.browseForFile('Select a file to track.');
+					super.browseForFile('Select a file to track');
 				break;	
 				case _view.folder_btn :
-					super.browseForDirectory('Select a folder to track.');
+					super.browseForDirectory('Select a folder to track');
 				break;	
 				case _view.github_btn :
 			// check if we're already logged in //	
