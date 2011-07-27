@@ -1,5 +1,6 @@
 package view.modals {
 
+	import model.remote.RemoteAccount;
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
@@ -30,20 +31,30 @@ package view.modals {
 					super.browseForDirectory('Select a folder to track');
 				break;	
 				case _view.github_btn :
-			// check if we're already logged in //	
-					if (AccountManager.gitHubReady){
-						dispatchEvent(new UIEvent(UIEvent.GITHUB_HOME));
-					}	else{
-						dispatchEvent(new UIEvent(UIEvent.GITHUB_LOGIN));
-					}
+					onGitHubClick();
 				break;	
 				case _view.beanstalk_btn :
-					dispatchAlert('Beanstalk integration is coming in the next build.');
+					onBeanStalkClick();
 				break;	
 				case _view.private_btn :
 					dispatchAlert('Private repositories will be supported in the next build.');
 				break;																	
 			}
+		}
+
+		private function onBeanStalkClick():void
+		{
+			dispatchAlert('Beanstalk integration is coming in the next build.');
+		//	dispatchEvent(new UIEvent(UIEvent.REMOTE_LOGIN, {type:RemoteAccount.BEANSTALK, event:UIEvent.ABOUT_GIT}));			
+		}
+		
+		private function onGitHubClick():void
+		{
+			if (AccountManager.github){
+				dispatchEvent(new UIEvent(UIEvent.GITHUB_HOME));
+			}	else{
+				dispatchEvent(new UIEvent(UIEvent.REMOTE_LOGIN, {type:RemoteAccount.GITHUB, event:UIEvent.GITHUB_HOME}));
+			}			
 		}
 		
 		private function onBrowserSelection(e:UIEvent):void

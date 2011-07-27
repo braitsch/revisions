@@ -1,6 +1,7 @@
 package model.remote {
 
 	import events.AppEvent;
+	import model.AppModel;
 	import flash.display.Bitmap;
 	import flash.display.Loader;
 	import flash.display.Sprite;
@@ -13,29 +14,28 @@ package model.remote {
 		public static const BEANSTALK	:String = 'beanstalk';
 		public static const PRIVATE		:String = 'private';
 		
+		private var _name			:String;
 		private var _type			:String;
-		private var _avatar			:Sprite;
-		private var _realName		:String;
+		private var _repos			:Array;
 		private var _location		:String;
-		private var _repositories	:Array;
+		private var _avatar			:Sprite;
 
 		public function RemoteAccount(o:Object)
 		{
 			_type = o.type;
-			_realName = o.name;
+			_name = o.name;
+			_repos = o.repos;
 			_location = o.location;
-			loadAvatar(o.avatar_url);
+			getAccountAvatar(o.avatar_url);
 		}
 
-		public function get type():String { return _type; }
-		public function get avatar():Sprite { return _avatar; }
-		public function get realName():String { return _realName; }
-		public function get location():String { return _location; }
-		
-		public function get repositories():Array { return _repositories;}
-		public function set repositories(a:Array):void {_repositories = a;}
+		public function get name()			:String { return _name; 		}
+		public function get type()			:String { return _type; 		}
+		public function get repos()			:Array  { return _repos;		}
+		public function get location()		:String { return _location; 	}
+		public function get avatar()		:Sprite { return _avatar;		}
 
-		private function loadAvatar(url:String):void
+		private function getAccountAvatar(url:String):void
 		{
 			var ldr:Loader = new Loader();
 			ldr.contentLoaderInfo.addEventListener(Event.COMPLETE, onAvatarLoaded);
@@ -53,7 +53,7 @@ package model.remote {
 			_avatar.graphics.beginFill(0x959595);
 			_avatar.graphics.drawRect(0, 0, 30, 30);
 			_avatar.graphics.endFill();
-			dispatchEvent(new AppEvent(AppEvent.AVATAR_LOADED));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.REMOTE_READY, this));
 		}
 
 	}

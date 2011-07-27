@@ -36,23 +36,26 @@ package system{
 		public static const GET_UNTRACKED_FILES	:String = 'getUntrackedFiles';
 		public static const GET_IGNORED_FILES	:String = 'getIgnoredFiles';
 		
+	// ssh keys //	
+		public static const DETECT_SSH_KEYS		:String = 'detectSSHKeys';
+		public static const GENERATE_SSH_KEYS	:String = 'generateSSHKeys';
+		public static const REGISTER_SSH_KEYS	:String = 'registerSSHKeys';
+		
 	// github & beanstalk	
 		public static const GET_ACCOUNT_INFO	:String = 'getAccountInfo';
 		public static const LOGIN				:String = 'login';
 		public static const LOGOUT				:String = 'logout';
-		public static const DETECT_SSH_KEYS		:String = 'detectSSHKeys';
-		public static const GENERATE_SSH_KEYS	:String = 'generateSSHKeys';
-		public static const REGISTER_SSH_KEYS	:String = 'registerSSHKeys';
 		public static const DETECT_GH_KEY_ID	:String = 'detectGHKeyId';
 		public static const GET_GH_KEYS			:String = 'getGHKeys';
-		public static const GET_BS_KEYS			:String = 'getBSKeys';
 		public static const ADD_KEYS_TO_GH		:String = 'addKeysToGH';
 		public static const REPAIR_GH_KEY		:String = 'repairGHKeys';
 		public static const SAVE_GH_KEY_ID		:String = 'saveGHKeyId';
 		public static const AUTHENTICATE_GH		:String = 'authenticateGH';
 		
-		public static const CLONE				:String = 'clone';
-		public static const REPOSITORIES:String = 'getRepositories';
+		public static const CLONE_REMOTE		:String = 'cloneRepository';
+		public static const ADD_REPOSITORY		:String = 'addRepository';
+		public static const EDIT_REPOSITORY		:String = 'editRepository';
+		public static const GET_REPOSITORIES	:String = 'getRepositories';
 		
 	}
 	

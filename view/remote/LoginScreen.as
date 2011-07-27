@@ -1,89 +1,58 @@
-package view.modals {
+package view.remote {
 
-	import events.UIEvent;
 	import events.AppEvent;
+	import events.UIEvent;
 	import fl.text.TLFTextField;
 	import model.AppModel;
-	import model.remote.RemoteAccount;
+	import view.modals.ModalWindow;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.events.MouseEvent;
-	import flash.net.URLRequest;
-	import flash.net.navigateToURL;
-
 
 	public class LoginScreen extends ModalWindow {
 
-		private static var _view			:WindowLoginMC = new WindowLoginMC();
-		private static var _accountType		:String;
+		private var _view				:WindowLoginMC = new WindowLoginMC();
+		private var _onSuccessEvent		:String;
 
 		public function LoginScreen()
 		{
 			addChild(_view);
 			super.addCloseButton();			
 			super.addInputs(Vector.<TLFTextField>([_view.name_txt, _view.pass_txt]));
-			super.addButtons([_view.skip_btn, _view.login_btn, _view.github, _view.beanstalk]);
+			super.addButtons([_view.skip_btn, _view.login_btn, _view.github, _view.beanstalk]);				
 			_view.pass_txt.displayAsPassword = true;
-			_view.skip_btn.addEventListener(MouseEvent.CLICK, onSkipButton);
-			_view.login_btn.addEventListener(MouseEvent.CLICK, onLoginButton);
-			_view.github.addEventListener(MouseEvent.CLICK, gotoNewAccountPage);
-			_view.beanstalk.addEventListener(MouseEvent.CLICK, gotoNewAccountPage);
-		}
-
-		public function set accountType(s:String):void
-		{
-			_accountType = s;
 			_view.name_txt.text = _view.pass_txt.text = '';
 			_view.beanstalk.visible = _view.github.visible = false;
-			switch(_accountType){
-				case RemoteAccount.GITHUB :	
-					_view.github.visible = true;		
-					setTextFields('Github');
-					addBadge(new GitLoginBadge());
-				break;
-				case RemoteAccount.BEANSTALK :	
-					_view.beanstalk.visible = true;
-					setTextFields('Beanstalk');
-					addBadge(new BeanstalkLoginBadge());
-				break;				
-			}
+			_view.skip_btn.addEventListener(MouseEvent.CLICK, onSkipButton);
+			_view.login_btn.addEventListener(MouseEvent.CLICK, onLoginButton);			
 		}
 
-		private function addBadge(bmd:BitmapData):void
+		// event to dispatch on login success //
+
+		protected function get view():WindowLoginMC { return _view; }
+		public function set onSuccessEvent(e:String):void 
+		{ 
+			_onSuccessEvent = e;
+			_view.skip_btn.visible = (e == UIEvent.EDIT_GITHUB_REPO);
+		}
+
+		protected function addBadge(bmd:BitmapData):void
 		{
 			var b:Bitmap = new Bitmap(bmd);
 				b.x = 16;
 			_view.addChild(b);			
 		}
 		
-		private function setTextFields(s:String):void
+		protected function setTextFields(s:String):void
 		{
 			_view.sign_up_txt.text = "Don't yet have a "+s+" account?";
 			_view.title_txt.text = 'Have a '+s+' account? Please login. (Required for private repositories)';			
 		}
 		
-		private function gotoNewAccountPage(e:MouseEvent):void
-		{
-			if (_accountType == RemoteAccount.GITHUB){
-				navigateToURL(new URLRequest('https://github.com/signup'));
-			}	else if (_accountType == RemoteAccount.BEANSTALK){
-				navigateToURL(new URLRequest('http://beanstalkapp.com/pricing'));
-			}
-		}		
-		
+		protected function onLoginButton(e:MouseEvent = null):void { }
 		override public function onEnterKey():void { onLoginButton(); }
-		private function onLoginButton(e:MouseEvent = null):void
-		{
-			if (!validate()) return;
-			lockScreen();
-			if (_accountType == RemoteAccount.GITHUB){
-				AppModel.proxies.githubApi.login(_view.name_txt.text, _view.pass_txt.text);	
-			}	else if (_accountType == RemoteAccount.BEANSTALK){
-				trace('attempting beanstalk login');
-			}			
-		}
 		
-		private function validate():Boolean
+		protected function validate():Boolean
 		{
 			if (_view.name_txt.text && _view.pass_txt.text){
 				return true;
@@ -93,13 +62,13 @@ package view.modals {
 			}
 		}		
 		
-		private function lockScreen():void
+		protected function lockScreen():void
 		{
 			enableButton(_view.skip_btn, false);
 			enableButton(_view.login_btn, false);
 			AppModel.proxies.githubApi.addEventListener(AppEvent.OFFLINE, onOffline);
 			AppModel.proxies.githubApi.addEventListener(AppEvent.LOGIN_FAILED, onLoginFailed);
-			AppModel.proxies.githubApi.addEventListener(AppEvent.GITHUB_READY, onLoginSuccess);
+			AppModel.engine.addEventListener(AppEvent.REMOTE_READY, onLoginSuccess);
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Attemping Login'));
 		}
 		
@@ -109,14 +78,14 @@ package view.modals {
 			enableButton(_view.login_btn, true);
 			AppModel.proxies.githubApi.removeEventListener(AppEvent.OFFLINE, onOffline);
 			AppModel.proxies.githubApi.removeEventListener(AppEvent.LOGIN_FAILED, onLoginFailed);
-			AppModel.proxies.githubApi.removeEventListener(AppEvent.GITHUB_READY, onLoginSuccess);
+			AppModel.engine.removeEventListener(AppEvent.REMOTE_READY, onLoginSuccess);
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));						
 		}
 		
 		private function onLoginSuccess(e:AppEvent):void
 		{
 			unlockScreen();
-			dispatchEvent(new UIEvent(UIEvent.GITHUB_HOME));
+			dispatchEvent(new UIEvent(_onSuccessEvent));
 		}
 
 		private function onLoginFailed(e:AppEvent):void

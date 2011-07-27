@@ -14,7 +14,9 @@ package view.modals {
 	import model.remote.RemoteAccount;
 	import model.vo.Bookmark;
 	import model.vo.Commit;
-	import view.remote.GitHub;
+	import view.remote.BeanStalkLogin;
+	import view.remote.GitHubHome;
+	import view.remote.GitHubLogin;
 	import view.ui.Preloader;
 
 	public class ModalManager extends Sprite {
@@ -34,16 +36,17 @@ package view.modals {
 		private static var _gitInstall		:GitInstall = new GitInstall();
 		private static var _gitUpgrade		:GitUpgrade = new GitUpgrade();
 		private static var _nameAndEmail	:NameAndEmail = new NameAndEmail();
-		private static var _login			:LoginScreen = new LoginScreen();
+		private static var _ghLogin			:GitHubLogin = new GitHubLogin();
+		private static var _bsLogin			:BeanStalkLogin = new BeanStalkLogin();
 		private static var _clone			:AnonymousClone = new AnonymousClone();		
-		private static var _gitHub			:GitHub = new GitHub();
+		private static var _gitHub			:GitHubHome = new GitHubHome();
 		private static var _alert			:Alert = new Alert();
 		private static var _debug			:DebugScreen = new DebugScreen();
 		private static var _preloader		:Preloader = new Preloader();		
 		
 	// windows that force user to make a decision - autoclose disabled //	
 		private static var _stickies		:Vector.<ModalWindow> = new <ModalWindow>
-				[ _repair, _appExpired, _appUpdate, _gitInstall, _gitUpgrade, _nameAndEmail, _login ];
+				[ _repair, _appExpired, _appUpdate, _gitInstall, _gitUpgrade, _nameAndEmail, _ghLogin ];
 				
 		private static var _window			:ModalWindow;	// the active modal window //
 		private static var _curtain			:ModalCurtain = new ModalCurtain();	
@@ -84,8 +87,9 @@ package view.modals {
 			stage.addEventListener(UIEvent.ABOUT_GIT, onAboutGit);
 			stage.addEventListener(UIEvent.GLOBAL_SETTINGS, globalSettings);	
 			stage.addEventListener(UIEvent.GITHUB_HOME, showGitHubHome);
-			stage.addEventListener(UIEvent.GITHUB_LOGIN, showGitHubLogin);
+			stage.addEventListener(UIEvent.REMOTE_LOGIN, showRemoteLogin);
 			stage.addEventListener(UIEvent.ANONYMOUS_CLONE, showAnonymousClone);			
+			stage.addEventListener(UIEvent.EDIT_GITHUB_REPO, editGitHubRepo);			
 			stage.addEventListener(UIEvent.CLOSE_MODAL_WINDOW, onCloseButton);
 			stage.addEventListener(KeyboardEvent.KEY_UP, checkForEnterKey);
 		}
@@ -132,10 +136,16 @@ package view.modals {
 			showModalWindow(_gitUpgrade);			
 		}
 		
-		private function showGitHubLogin(e:UIEvent):void
+		private function showRemoteLogin(e:UIEvent):void
 		{
-			_login.accountType = RemoteAccount.GITHUB;
-			showModalWindow(_login);
+			if (e.data.type == RemoteAccount.GITHUB){
+				trace("ModalManager.showRemoteLogin(e) github");
+				showModalWindow(_ghLogin);
+				_ghLogin.onSuccessEvent = e.data.event;
+			}	else if (e.data.type == RemoteAccount.BEANSTALK){
+				showModalWindow(_bsLogin);
+				_bsLogin.onSuccessEvent = e.data.event;
+			}
 		}		
 		
 		private function addNameAndEmail(e:AppEvent):void
@@ -159,6 +169,11 @@ package view.modals {
 			_edit.bookmark = e.data as Bookmark;
 			showModalWindow(_edit);
 		}
+		
+		private function editGitHubRepo(e:UIEvent):void
+		{
+			trace("ModalManager.editGitHubRepo(e)", AppModel.bookmark.label);	
+		}		
 		
 		private function deleteBookmark(e:UIEvent):void
 		{

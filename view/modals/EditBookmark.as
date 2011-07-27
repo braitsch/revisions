@@ -5,6 +5,8 @@ package view.modals {
 	import events.UIEvent;
 	import fl.text.TLFTextField;
 	import model.AppModel;
+	import model.remote.AccountManager;
+	import model.remote.RemoteAccount;
 	import model.vo.Bookmark;
 	import view.ui.ModalCheckbox;
 	import flash.events.MouseEvent;
@@ -27,8 +29,8 @@ package view.modals {
 			_view.browse_btn.addEventListener(MouseEvent.CLICK, onBrowseButton);
 			_view.delete_btn.addEventListener(MouseEvent.CLICK, onDeleteButton);
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onUpdateBookmark);
-			_view.github.addEventListener(MouseEvent.CLICK, onGitHubButton);
-			_view.beanstalk.addEventListener(MouseEvent.CLICK, onBeanstalkButton);
+			_view.github.addEventListener(MouseEvent.CLICK, onGitHubClick);
+			_view.beanstalk.addEventListener(MouseEvent.CLICK, onBeanstalkClick);
 			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);
 		}
 
@@ -58,15 +60,20 @@ package view.modals {
 		
 		private function onDeleteButton(e:MouseEvent):void
 		{
-			dispatchEvent(new UIEvent(UIEvent.DELETE_BOOKMARK, _bookmark));				
+			dispatchEvent(new UIEvent(UIEvent.DELETE_BOOKMARK, _bookmark));		
 		}
 		
-		private function onGitHubButton(e:MouseEvent):void
+		private function onGitHubClick(e:MouseEvent):void
 		{
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, 'GitHub & Beanstalk integration is coming in the next build.'));
+			if (AccountManager.github){
+				dispatchEvent(new UIEvent(UIEvent.EDIT_GITHUB_REPO));
+			}	else{
+				trace("EditBookmark.onGitHubClick(e) showing login");
+				dispatchEvent(new UIEvent(UIEvent.REMOTE_LOGIN, {type:RemoteAccount.GITHUB, event:UIEvent.EDIT_GITHUB_REPO}));
+			}	
 		}
 		
-		private function onBeanstalkButton(e:MouseEvent):void
+		private function onBeanstalkClick(e:MouseEvent):void
 		{
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, 'GitHub & Beanstalk integration is coming in the next build.'));			
 		}												

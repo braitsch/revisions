@@ -9,7 +9,7 @@ package model.proxies {
 
 		public function BeanstalkProxy()
 		{
-			super.executable = 'Beanstalk.sh';
+			super.executable = 'BeanStalkApi.sh';
 			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);					
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 		}

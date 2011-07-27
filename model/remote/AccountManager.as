@@ -1,18 +1,13 @@
 package model.remote {
 
-	import events.AppEvent;
 	import model.AppModel;
 	public class AccountManager {
-
 				
 		private static var _accounts		:Vector.<RemoteAccount>;
-		private static var _gitHubReady		:Boolean;
-//		private static var _beanstalkReady	:Boolean;
 		
 		public static function initialize():void
 		{
 			AppModel.proxies.githubApi.getAccountInfo();
-			AppModel.proxies.githubApi.addEventListener(AppEvent.GITHUB_READY, function(e:AppEvent):void{_gitHubReady = true;});
 		}
 
 		public static function addAccount(ra:RemoteAccount):void
@@ -24,11 +19,6 @@ package model.remote {
 		public static function get github():RemoteAccount
 		{
 			return getAccount(RemoteAccount.GITHUB);
-		}
-		
-		public static function get gitHubReady():Boolean
-		{
-			return _gitHubReady;
 		}
 		
 		public static function get beanstalk():RemoteAccount

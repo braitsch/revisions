@@ -11,7 +11,7 @@ package view.remote {
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
 
-	public class GitHub extends ModalWindow {
+	public class GitHubHome extends ModalWindow {
 
 		private static var _view		:GitHubMC = new GitHubMC();
 		private static var _pages		:Vector.<Sprite> = new <Sprite>[];
@@ -21,39 +21,35 @@ package view.remote {
 		private static var _activePage	:Sprite;
 		private static var _cloneURL	:String;
 
-		public function GitHub()
+		public function GitHubHome()
 		{
 			addChild(_view);	
 			_view.badgePage.page_txt.text = 'My Github';
 			setupCustomURLField();
 			addEventListener(UIEvent.CLONE, onCloneClick);		
 			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);
-			AppModel.proxies.githubApi.addEventListener(AppEvent.GITHUB_READY, onGithubData);
+			AppModel.engine.addEventListener(AppEvent.REMOTE_READY, onGitHubLogin);
 		}
 
-		private function onGithubData(e:AppEvent):void
+		private function onGitHubLogin(e:AppEvent):void
 		{
 			_model = AccountManager.github;
-			if (_model.avatar) {
-				attachAvatar();
-			}	else{
-				_model.addEventListener(AppEvent.AVATAR_LOADED, attachAvatar);
-			}
+			attachAvatar();
 			attachRepositories();
-			_view.badgeUser.user_txt.text = _model.realName+' - '+_model.location;
+			_view.badgeUser.user_txt.text = _model.name+' - '+_model.location;
 		}
 
 		private function attachAvatar(e:AppEvent = null):void
 		{
 			_model.avatar.y = 7;
 			_model.avatar.x = -198;
-			_view.badgeUser.addChild(_model.avatar);			
+			_view.badgeUser.addChild(_model.avatar);
 		}
 
 		private function attachRepositories():void
 		{
 			var k:Array = [];
-			var a:Array = _model.repositories;
+			var a:Array = _model.repos;
 			a.sortOn('name', Array.CASEINSENSITIVE);
 			for (var i:int = 0; i < a.length; i++) {
 				k.push(a[i]);

@@ -4,6 +4,7 @@ package system {
 	import events.UIEvent;
 	import model.AppModel;
 	import model.db.AppSettings;
+	import model.remote.RemoteAccount;
 	import flash.desktop.NativeApplication;
 	import flash.display.NativeMenu;
 	import flash.display.NativeMenuItem;
@@ -15,41 +16,63 @@ package system {
     public class AirNativeMenu extends Sprite 
     { 
     	
-       	private static var _menu		:NativeMenu;
-       	private static var _file		:NativeMenuItem;
-       	private static var _main		:NativeMenuItem;
+       	private static var _stage		:Stage;
+       	private static var _appMenu		:NativeMenu;
+       	private static var _remote		:NativeMenuItem;
+       	private static var _github		:NativeMenuItem;
+       	private static var _beanstalk	:NativeMenuItem;
        	private static var _newBkmk		:NativeMenuItem = new NativeMenuItem('New Bookmark');
        	private static var _aboutGit	:NativeMenuItem = new NativeMenuItem('About Git');
        	private static var _updateApp	:NativeMenuItem = new NativeMenuItem('Check For Updates');
-       	private static var _github		:NativeMenuItem = new NativeMenuItem('My Github');
-       	private static var _stage		:Stage;
                      
         public static function initialize(s:Stage):void
         {
         	_stage = s;
-            _menu = NativeApplication.nativeApplication.menu;
-            _file = getMenuByName('File');
-            _newBkmk.addEventListener(Event.SELECT, onOptionSelected);
-            _file.submenu.addItem(_newBkmk);
-            _main = getMenuByName('adl');
-            if (!_main) _main = getMenuByName('Revisions');
-            _updateApp.addEventListener(Event.SELECT, onOptionSelected);
-            _aboutGit.addEventListener(Event.SELECT, onOptionSelected);
-            _main.submenu.addItemAt(_aboutGit, 1);
-            _main.submenu.addItemAt(_updateApp, 2);
-            AppModel.proxies.githubApi.addEventListener(AppEvent.GITHUB_READY, onGitHubReady);
+            _appMenu = NativeApplication.nativeApplication.menu;
+            addLocalOptions();
+            AppModel.engine.addEventListener(AppEvent.REMOTE_READY, onRemoteReady);
 		}
-
-		private static function onGitHubReady(e:AppEvent):void
+		
+		private static function addLocalOptions():void
 		{
-			var remote:NativeMenuItem = _menu.addSubmenu(new NativeMenu(), "Remote");
-			remote.submenu.addItem(_github);
-			_github.addEventListener(Event.SELECT, onOptionSelected);
+		// file menu //	
+            var f:NativeMenuItem = getMenuByName('File');
+            f.submenu.addItem(_newBkmk);
+            _newBkmk.addEventListener(Event.SELECT, onOptionSelected);
+		// main menu //
+            var m:NativeMenuItem = getMenuByName('adl');
+            if (!m) m = getMenuByName('Revisions');
+            m.submenu.addItemAt(_aboutGit, 1);
+            m.submenu.addItemAt(_updateApp, 2);
+            _aboutGit.addEventListener(Event.SELECT, onOptionSelected);
+            _updateApp.addEventListener(Event.SELECT, onOptionSelected);
+		}
+		
+		private static function onRemoteReady(e:AppEvent):void
+		{
+			if (_remote == null) _remote = _appMenu.addSubmenu(new NativeMenu(), "Remote");
+			addRemoteOption(e.data as RemoteAccount);
+		}
+		
+		private static function addRemoteOption(ra:RemoteAccount):void
+		{
+			switch(ra.type){
+				case RemoteAccount.GITHUB :
+					_github = new NativeMenuItem('My Github');
+					_remote.submenu.addItem(_github);
+					_github.addEventListener(Event.SELECT, onOptionSelected);
+				break;	
+				case RemoteAccount.BEANSTALK:
+					_beanstalk = new NativeMenuItem('My Beanstalk');				
+					_remote.submenu.addItem(_beanstalk);
+					_beanstalk.addEventListener(Event.SELECT, onOptionSelected);
+				break;					
+			}
 		}
 
 		private static function getMenuByName(s:String):NativeMenuItem
 		{
-            for (var i:int = 0; i < _menu.items.length; i++) if (_menu.items[i].label == s) return _menu.items[i];
+            for (var i:int = 0; i < _appMenu.items.length; i++) if (_appMenu.items[i].label == s) return _appMenu.items[i];
             return null;
 		}
                  

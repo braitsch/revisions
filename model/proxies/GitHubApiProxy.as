@@ -11,8 +11,9 @@ package model.proxies {
 
 	public class GitHubApiProxy extends NativeProcessProxy {
 
-		private static var _connectionErrors:Array = [	'fatal: unable to connect a socket',
-														'fatal: The remote end hung up unexpectedly'];
+		private static var _accountData			:Object;
+		private static var _connectionErrors	:Array = [	'fatal: unable to connect a socket',
+															'fatal: The remote end hung up unexpectedly'];
 
 		public function GitHubApiProxy()
 		{
@@ -38,12 +39,12 @@ package model.proxies {
 		
 		public function clone(url:String, loc:String):void
 		{
-			super.call(Vector.<String>([BashMethods.CLONE, url, loc]));
+			super.call(Vector.<String>([BashMethods.CLONE_REMOTE, url, loc]));
 		}
 
 		public function getRepositories():void
 		{
-			super.call(Vector.<String>([BashMethods.REPOSITORIES]));
+			super.call(Vector.<String>([BashMethods.GET_REPOSITORIES]));
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.LOADER_TEXT, 'Fetching Repositories'));
 		}
 		
@@ -90,13 +91,15 @@ package model.proxies {
 					login(o.user, o.pass);
 				break;
 				case BashMethods.LOGIN :
-					addNewAccount(o); 
+					_accountData = o;
+					_accountData.type = RemoteAccount.GITHUB;
 					AppModel.proxies.githubKey.validateKeys();
 				break;					
-				case BashMethods.REPOSITORIES :
-					onRepositories(o);
+				case BashMethods.GET_REPOSITORIES :
+					_accountData.repos = o as Array;
+					AccountManager.addAccount(new RemoteAccount(_accountData));
 				break;
-				case BashMethods.CLONE :
+				case BashMethods.CLONE_REMOTE :
 					dispatchEvent(new AppEvent(AppEvent.CLONE_COMPLETE));
 				break;				
 			}
@@ -122,20 +125,6 @@ package model.proxies {
 					dispatchDebug(m, o.message);
 				break;						
 			}
-		}
-		
-	// response callbacks //			
-
-		private function addNewAccount(o:Object):void
-		{
-			o.type = RemoteAccount.GITHUB;
-			AccountManager.addAccount(new RemoteAccount(o));
-		}
-		
-		private function onRepositories(o:Object):void
-		{
-			AccountManager.github.repositories = o as Array;
-			dispatchEvent(new AppEvent(AppEvent.GITHUB_READY));
 		}
 		
 	// handle native process responses //			
