@@ -1,9 +1,10 @@
-package view.modals {
+package view.modals.local {
 
 	import events.UIEvent;
-	import flash.events.MouseEvent;
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
+	import flash.events.MouseEvent;
+	import view.modals.ModalWindow;
 
 	public class WelcomeScreen extends ModalWindow {
 

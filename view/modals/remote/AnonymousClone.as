@@ -1,12 +1,12 @@
-package view.modals {
+package view.modals.remote {
 
 	import events.AppEvent;
 	import events.UIEvent;
 	import fl.text.TLFTextField;
-	import model.AppModel;
-	import view.remote.RemoteClone;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
+	import model.AppModel;
+	import view.modals.ModalWindow;
 	public class AnonymousClone extends ModalWindow {
 
 		private static var _view		:AnonymousCloneMC = new AnonymousCloneMC();

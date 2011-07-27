@@ -1,12 +1,13 @@
-package view.modals {
+package view.modals.local {
 
-	import flash.events.ProgressEvent;
 	import events.AppEvent;
-	import model.db.AppSettings;
-	import model.AppModel;
 	import events.UIEvent;
-	import view.ui.ModalCheckbox;
 	import flash.events.MouseEvent;
+	import flash.events.ProgressEvent;
+	import model.AppModel;
+	import model.db.AppSettings;
+	import view.modals.ModalWindow;
+	import view.ui.ModalCheckbox;
 
 	public class AppUpdate extends ModalWindow {
 

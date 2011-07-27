@@ -1,8 +1,9 @@
-package view.modals {
+package view.modals.system {
 
 	import events.AppEvent;
-	import model.AppModel;
 	import flash.events.MouseEvent;
+	import model.AppModel;
+	import view.modals.ModalWindow;
 
 	public class Alert extends ModalWindow {
 

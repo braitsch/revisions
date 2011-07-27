@@ -1,9 +1,10 @@
-package view.modals {
+package view.modals.local {
 
-	import model.AppModel;
-	import model.db.AppSettings;
 	import flash.desktop.NativeApplication;
 	import flash.events.MouseEvent;
+	import model.AppModel;
+	import model.db.AppSettings;
+	import view.modals.ModalWindow;
 
 	public class AppExpired extends ModalWindow {
 

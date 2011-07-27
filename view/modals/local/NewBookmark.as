@@ -1,12 +1,13 @@
-package view.modals {
+package view.modals.local {
 
-	import model.remote.RemoteAccount;
 	import events.AppEvent;
 	import events.UIEvent;
-	import model.AppModel;
-	import model.remote.AccountManager;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
+	import model.AppModel;
+	import model.remote.AccountManager;
+	import model.remote.RemoteAccount;
+	import view.modals.ModalWindow;
 
 	public class NewBookmark extends ModalWindow {
 

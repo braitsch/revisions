@@ -1,13 +1,14 @@
-package view.modals {
+package view.modals.local {
 
 	import events.AppEvent;
 	import events.UIEvent;
 	import fl.text.TLFTextField;
-	import model.AppModel;
-	import model.vo.Bookmark;
-	import view.ui.ModalCheckbox;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
+	import model.AppModel;
+	import model.vo.Bookmark;
+	import view.modals.ModalWindow;
+	import view.ui.ModalCheckbox;
 
 	public class AddDragAndDrop extends ModalWindow {
 

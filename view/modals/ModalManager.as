@@ -14,9 +14,29 @@ package view.modals {
 	import model.remote.RemoteAccount;
 	import model.vo.Bookmark;
 	import model.vo.Commit;
-	import view.remote.BeanStalkLogin;
-	import view.remote.GitHubHome;
-	import view.remote.GitHubLogin;
+	import view.modals.git.GitAbout;
+	import view.modals.git.GitInstall;
+	import view.modals.git.GitUpgrade;
+	import view.modals.git.NameAndEmail;
+	import view.modals.local.AddDragAndDrop;
+	import view.modals.local.AppExpired;
+	import view.modals.local.AppUpdate;
+	import view.modals.local.CommitDetails;
+	import view.modals.local.DeleteBookmark;
+	import view.modals.local.DownloadVersion;
+	import view.modals.local.EditBookmark;
+	import view.modals.local.GlobalSettings;
+	import view.modals.local.NewBookmark;
+	import view.modals.local.NewCommit;
+	import view.modals.local.RepairBookmark;
+	import view.modals.local.RevertToVersion;
+	import view.modals.local.WelcomeScreen;
+	import view.modals.remote.AnonymousClone;
+	import view.modals.remote.BeanStalkLogin;
+	import view.modals.remote.GitHubHome;
+	import view.modals.remote.GitHubLogin;
+	import view.modals.system.Alert;
+	import view.modals.system.DebugScreen;
 	import view.ui.Preloader;
 
 	public class ModalManager extends Sprite {

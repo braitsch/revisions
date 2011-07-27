@@ -1,15 +1,16 @@
-package view.modals {
+package view.modals.local {
 
 	import events.AppEvent;
 	import events.DataBaseEvent;
 	import events.UIEvent;
 	import fl.text.TLFTextField;
+	import flash.events.MouseEvent;
 	import model.AppModel;
 	import model.remote.AccountManager;
 	import model.remote.RemoteAccount;
 	import model.vo.Bookmark;
+	import view.modals.ModalWindow;
 	import view.ui.ModalCheckbox;
-	import flash.events.MouseEvent;
 
 	public class EditBookmark extends ModalWindow {
 
@@ -75,7 +76,7 @@ package view.modals {
 		
 		private function onBeanstalkClick(e:MouseEvent):void
 		{
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, 'GitHub & Beanstalk integration is coming in the next build.'));			
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, 'Beanstalk integration is coming in the next build.'));			
 		}												
 
 		override public function onEnterKey():void { onUpdateBookmark(); }

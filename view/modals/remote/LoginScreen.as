@@ -1,4 +1,4 @@
-package view.remote {
+package view.modals.remote {
 
 	import events.AppEvent;
 	import events.UIEvent;
@@ -33,7 +33,7 @@ package view.remote {
 		public function set onSuccessEvent(e:String):void 
 		{ 
 			_onSuccessEvent = e;
-			_view.skip_btn.visible = (e == UIEvent.EDIT_GITHUB_REPO);
+			_view.skip_btn.visible = (e != UIEvent.EDIT_GITHUB_REPO);
 		}
 
 		protected function addBadge(bmd:BitmapData):void

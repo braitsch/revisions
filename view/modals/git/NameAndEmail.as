@@ -1,13 +1,14 @@
-package view.modals {
+package view.modals.git {
 
 	import events.AppEvent;
 	import events.UIEvent;
 	import fl.text.TLFTextField;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
 	import model.AppModel;
 	import model.proxies.ConfigProxy;
 	import mx.utils.StringUtil;
-	import flash.events.Event;
-	import flash.events.MouseEvent;
+	import view.modals.ModalWindow;
 
 	public class NameAndEmail extends ModalWindow {
 

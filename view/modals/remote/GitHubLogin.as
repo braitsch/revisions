@@ -1,4 +1,4 @@
-package view.remote {
+package view.modals.remote {
 
 	import model.AppModel;
 	import flash.events.MouseEvent;

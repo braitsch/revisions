@@ -1,4 +1,4 @@
-package view.remote {
+package view.modals.remote {
 
 	import events.UIEvent;
 	import com.greensock.TweenLite;

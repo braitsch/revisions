@@ -1,4 +1,4 @@
-package view.remote {
+package view.modals.remote {
 
 	import events.AppEvent;
 	import events.UIEvent;

@@ -1,13 +1,14 @@
-package view.modals {
+package view.modals.local {
 
 	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.DataBaseEvent;
 	import events.UIEvent;
-	import model.AppModel;
-	import model.vo.Bookmark;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
+	import model.AppModel;
+	import model.vo.Bookmark;
+	import view.modals.ModalWindow;
 
 	public class RepairBookmark extends ModalWindow {
 

@@ -1,4 +1,4 @@
-package view.modals {
+package view.modals.git {
 
 	public class GitInstall extends GitWindow {
 

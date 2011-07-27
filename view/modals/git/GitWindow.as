@@ -1,14 +1,15 @@
-package view.modals {
+package view.modals.git {
 
 	import events.AppEvent;
 	import events.UIEvent;
-	import model.AppModel;
-	import system.SystemRules;
 	import flash.desktop.NativeApplication;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
+	import model.AppModel;
+	import system.SystemRules;
+	import view.modals.ModalWindow;
 
 	public class GitWindow extends ModalWindow {
 

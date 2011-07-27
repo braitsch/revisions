@@ -1,11 +1,12 @@
-package view.modals {
+package view.modals.local {
 
 	import events.AppEvent;
-	import flash.events.Event;
 	import events.UIEvent;
 	import fl.text.TLFTextField;
-	import model.AppModel;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import model.AppModel;
+	import view.modals.ModalWindow;
 
 	public class NewCommit extends ModalWindow {
 

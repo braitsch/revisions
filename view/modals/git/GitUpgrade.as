@@ -1,4 +1,4 @@
-package view.modals {
+package view.modals.git {
 
 	import model.AppModel;
 	import system.SystemRules;

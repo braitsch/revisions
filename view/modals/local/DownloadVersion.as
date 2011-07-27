@@ -1,13 +1,14 @@
-package view.modals {
+package view.modals.local {
 
 	import events.AppEvent;
 	import events.UIEvent;
+	import flash.events.MouseEvent;
 	import model.AppModel;
 	import model.db.AppSettings;
 	import model.vo.Bookmark;
 	import model.vo.Commit;
+	import view.modals.ModalWindow;
 	import view.ui.ModalCheckbox;
-	import flash.events.MouseEvent;
 
 	public class DownloadVersion extends ModalWindow {
 
