@@ -1,6 +1,7 @@
 package view.modals.remote {
 
 	import events.AppEvent;
+	import events.UIEvent;
 	import fl.text.TLFTextField;
 	import model.AppModel;
 	import model.vo.Bookmark;
@@ -48,13 +49,20 @@ package view.modals.remote {
 
 		private function onRepositoryCreated(e:AppEvent):void
 		{
-			trace("AddRemoteRepo.onRepositoryCreated(e)");
-			_bkmk.github = e.data as String;
-			trace('_bkmk.github: ' + (_bkmk.github));
-		// TODO also need to add this repository to the github home view...	
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
-//			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.LOADER_TEXT, 'Sending Files To Github'));
+			var url:String = e.data as String;
+			_bkmk.addRemote('revisions-github', url, url);
+		// TODO also need to add this repository to the github home view...
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.LOADER_TEXT, 'Sending Files To Github'));
+			AppModel.proxies.remote.linkToGitHub(e.data as String);
+			AppModel.proxies.remote.addEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);
 			AppModel.proxies.githubApi.removeEventListener(AppEvent.REPOSITORY_CREATED, onRepositoryCreated);
+		}
+
+		private function onRemoteSynced(e:AppEvent):void
+		{
+			trace("AddRemoteRepo.onRemoteSynced(e)");
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 		}
 		
 	}

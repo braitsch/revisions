@@ -60,7 +60,6 @@ package view.modals.local {
 				label		:	_view.name_txt.text,
 				type		: 	b ? Bookmark.FOLDER : Bookmark.FILE,
 				path		:	_view.local_txt.text,
-				remote 		:	'',
 				active 		:	1,
 				autosave	:	_check1.selected ? 60 : 0
 			};		

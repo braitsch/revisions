@@ -35,6 +35,7 @@ package events {
 		public static const GH_AUTHENTICATED		:String = "SSH_KEYS_VALID";
 		public static const CLONE_COMPLETE			:String = "CLONE_COMPLETE";
 		public static const REPOSITORY_CREATED		:String = "REPOSITORY_CREATED";
+		public static const REMOTE_SYNCED			:String = "REMOTE_SYNCED";
 		
 		public var data:Object;
 

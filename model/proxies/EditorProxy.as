@@ -95,7 +95,7 @@ package model.proxies {
 				break;				case BashMethods.UNTRACK_FILE : 			//		AppModel.proxies.status.getStatus();				break;
 				case BashMethods.EDIT_GIT_DIR : 
 					dispatchEvent(new AppEvent(AppEvent.GIT_DIR_UPDATED));
-				break;				
+				break;	
 			}
 		}
 		

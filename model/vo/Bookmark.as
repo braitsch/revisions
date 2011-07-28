@@ -1,13 +1,13 @@
 package model.vo {
 
-	import model.AppModel;
-	import flash.events.TimerEvent;
 	import events.BookmarkEvent;
 	import model.AppEngine;
+	import model.AppModel;
 	import system.StringUtils;
 	import com.adobe.crypto.MD5;
 	import flash.display.Bitmap;
 	import flash.events.EventDispatcher;
+	import flash.events.TimerEvent;
 	import flash.filesystem.File;
 	import flash.utils.Timer;
 
@@ -20,8 +20,6 @@ package model.vo {
 		private var _path				:String;	// local file path to the thing we're tracking //
 		private var _type				:String; 	// is either FILE or FOLDER //
 		private var _gitdir				:String;	// location of the actual .git directory	
-		private var _remote				:String;	// github or beanstalk location this links to //
-		private var _github				:String;	// github location this links to //
 		private var _active				:Boolean;
 		private var _autosave			:uint;	
 		
@@ -31,12 +29,12 @@ package model.vo {
 		private var _icon128			:Bitmap;
 		private var _stash				:Array = [];
 		private var _branch				:Branch;	// the currently active branch //
+		private var _remotes			:Vector.<Remote> = new Vector.<Remote>();
 		private var _branches			:Array = [];
 
 		public function Bookmark(o:Object)
 		{
 			_type = o.type;
-			_remote = o.remote;
 			_active = o.active;
 			_autosave = o.autosave;
 			this.path = o.path;
@@ -47,10 +45,6 @@ package model.vo {
 
 		public function get branch():Branch { return _branch; }		
 		public function set branch(b:Branch):void { _branch = b; }
-		public function get remote():String { return _remote; }
-		public function set remote(s:String):void { _remote = s;}
-		public function get github():String { return _github; }
-		public function set github(s:String):void { _github = s;}		
 		public function get active():Boolean { return _active; }
 		public function set active(b:Boolean):void { _active = b; }
 		public function set autosave(n:uint):void { _autosave = n; }
@@ -99,7 +93,33 @@ package model.vo {
 				if (icons[i].width == 32) _icon32 = new Bitmap(icons[i]);
 				if (icons[i].width == 128) _icon128 = new Bitmap(icons[i]);
 			}
-		}		
+		}
+		
+		public function set remotes(a:Array):void
+		{
+			var n:String = a[0];
+			var f:String = a[1].substr(0, a[1].search(/\s/));
+			var p:String = a[3].substr(0, a[3].search(/\s/));
+			_remotes.push(new Remote(n, f, p));
+		}
+		
+		public function addRemote(n:String, f:String, p:String):void
+		{
+			_remotes.push(new Remote(n, f, p));		
+		}
+		
+		public function hasRemotes():Boolean
+		{
+			return _remotes.length != 0;
+		}
+		
+		public function getRemoteByName($name:String):Remote
+		{
+			for (var i:int = 0; i < _remotes.length; i++) {
+				if (_remotes[i].name == $name) return _remotes[i];
+			}
+			return null;
+		}
 		
 	// branches //	
 			
@@ -197,7 +217,7 @@ package model.vo {
 			}
 			return '';
 		}
-		
+
 	}
 	
 }

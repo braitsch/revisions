@@ -29,7 +29,7 @@ package view {
 		private static var _fringe		:Bitmap = new Bitmap(new SummaryBkgdBottom());
 		private static var _pattern		:BitmapData = new SummaryBkgdPattern();
 		private static var _bookmark	:Bookmark;
-		private static var _tformat	:TextFormat = new TextFormat();
+		private static var _tformat		:TextFormat = new TextFormat();
 		private static var _glowSmall	:GlowFilter = new GlowFilter(0xffffff, 1, 2, 2, 3, 3);
 		private static var _glowLarge	:GlowFilter = new GlowFilter(0xffffff, 1, 6, 6, 3, 3);
 
@@ -120,7 +120,7 @@ package view {
 			_view.name_txt.y = -_offset - 13;
 			_view.name_txt.x = -_view.name_txt.width/2;	
 			getBookmarkIcon();
-			showRemoteButtons(_bookmark.remote != '');
+			showRemoteButtons(_bookmark.hasRemotes());
 		}
 		
 		private function getBookmarkIcon():void

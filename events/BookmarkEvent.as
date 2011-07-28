@@ -14,14 +14,15 @@ package events {
 		
 		public static const SUMMARY							:String = "SUMMARY";
 		public static const COMMIT_COUNT					:String = "COMMIT_COUNT";
-		public static const STASH_LIST_READ					:String = "STASH_LIST_READ";
 		public static const BRANCHES_READ					:String = "BRANCHES_READ";
+		public static const STASH_LIST_READ					:String = "STASH_LIST_READ";
+		public static const REMOTES_READ					:String = "REMOTES_READ";
 		public static const QUEUE_BRANCHES_READ				:String = "QUEUE_BRANCHES_READ";
 		public static const BRANCH_ADDED					:String = "BRANCH_ADDED";
 		public static const BRANCH_MODIFIED					:String = "BRANCH_MODIFIED";
 		public static const COMMIT_MODIFIED					:String = "COMMIT_MODIFIED";
 		public static const UNTRACKED_FILES					:String = "UNTRACKED_FILES";
-		public static const COMMIT_COMPLETE					:String = "COMMIT_COMPLETE";
+		public static const COMMIT_COMPLETE:String = "COMMIT_COMPLETE";
 			
 		public var data:Object;
 		

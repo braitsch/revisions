@@ -9,6 +9,7 @@ package model.proxies {
 		private static var _status 		:StatusProxy 	= new StatusProxy();
 		private static var _history		:HistoryProxy 	= new HistoryProxy();	
 		private static var _editor		:EditorProxy 	= new EditorProxy();
+		private static var _remote		:RemoteProxy 	= new RemoteProxy();
 		private static var _checkout	:CheckoutProxy 	= new CheckoutProxy();
 
 		private static var _ssh			:SSHProxy 		= new SSHProxy();
@@ -27,6 +28,11 @@ package model.proxies {
 		{
 			return _editor;
 		}
+		
+		public function get remote():RemoteProxy
+		{
+			return _remote;
+		}		
 
 		public function get branch():BranchProxy
 		{

@@ -19,8 +19,8 @@ package model.db {
 		public static function INSERT(b:Bookmark):SQLStatement
 		{
 			var s:SQLStatement = new SQLStatement();
-			s.text = "INSERT INTO bookmarks (label, type, path, remote, autosave, active) ";
-			s.text+= "VALUES ('"+b.label+"', '"+b.type+"', '"+b.path+"', '"+b.remote+"', '"+b.autosave+"', 1)";
+			s.text = "INSERT INTO bookmarks (label, type, path, autosave, active) ";
+			s.text+= "VALUES ('"+b.label+"', '"+b.type+"', '"+b.path+"', '"+b.autosave+"', 1)";
 			return s;
 		}
 		

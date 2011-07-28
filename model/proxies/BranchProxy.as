@@ -24,11 +24,18 @@ package model.proxies {
 			_bookmark = b;
 			super.call(Vector.<String>([BashMethods.GET_BRANCHES, _bookmark.gitdir]));		}
 		
+		public function getRemotes():void
+		{
+			super.directory = _bookmark.worktree;			
+			super.call(Vector.<String>([BashMethods.GET_REMOTES, _bookmark.gitdir]));	
+		}		
+		
 		public function getStashList():void
 		{
 			super.directory = _bookmark.worktree;			
 			super.call(Vector.<String>([BashMethods.GET_STASH_LIST, _bookmark.gitdir]));	
 		}
+		
 		
 	// response handlers //
 		
@@ -36,13 +43,18 @@ package model.proxies {
 		{
 	//		trace("BranchProxy.onProcessComplete(e)", _bookmark.label, 'method = '+e.data.method, 'result = '+e.data.result);			
 			var m:String = String(e.data.method);
+			var r:Array = e.data.result.split(/[\n\r\t]/g);
 			switch(m){
 				case BashMethods.GET_BRANCHES :
-					_bookmark.attachBranches(e.data.result.split(/[\n\r\t]/g));
+					_bookmark.attachBranches(r);
 					dispatchEvent(new BookmarkEvent(BookmarkEvent.BRANCHES_READ));
 				break;
+				case BashMethods.GET_REMOTES :
+					if (r[0] != '') _bookmark.remotes = r;
+					dispatchEvent(new BookmarkEvent(BookmarkEvent.REMOTES_READ));
+				break;				
 				case BashMethods.GET_STASH_LIST :
-					_bookmark.stash = e.data.result.split(/[\n\r\t]/g);
+					_bookmark.stash = r;
 					dispatchEvent(new BookmarkEvent(BookmarkEvent.STASH_LIST_READ));
 				break;
 			}
