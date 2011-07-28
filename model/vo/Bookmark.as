@@ -21,6 +21,7 @@ package model.vo {
 		private var _type				:String; 	// is either FILE or FOLDER //
 		private var _gitdir				:String;	// location of the actual .git directory	
 		private var _remote				:String;	// github or beanstalk location this links to //
+		private var _github				:String;	// github location this links to //
 		private var _active				:Boolean;
 		private var _autosave			:uint;	
 		
@@ -48,6 +49,8 @@ package model.vo {
 		public function set branch(b:Branch):void { _branch = b; }
 		public function get remote():String { return _remote; }
 		public function set remote(s:String):void { _remote = s;}
+		public function get github():String { return _github; }
+		public function set github(s:String):void { _github = s;}		
 		public function get active():Boolean { return _active; }
 		public function set active(b:Boolean):void { _active = b; }
 		public function set autosave(n:uint):void { _autosave = n; }

@@ -1,5 +1,6 @@
 package view.modals {
 
+	import view.modals.remote.AddRemoteRepo;
 	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.UIEvent;
@@ -58,6 +59,7 @@ package view.modals {
 		private static var _nameAndEmail	:NameAndEmail = new NameAndEmail();
 		private static var _ghLogin			:GitHubLogin = new GitHubLogin();
 		private static var _bsLogin			:BeanStalkLogin = new BeanStalkLogin();
+		private static var _addRemote		:AddRemoteRepo = new AddRemoteRepo();
 		private static var _clone			:AnonymousClone = new AnonymousClone();		
 		private static var _gitHub			:GitHubHome = new GitHubHome();
 		private static var _alert			:Alert = new Alert();
@@ -109,7 +111,7 @@ package view.modals {
 			stage.addEventListener(UIEvent.GITHUB_HOME, showGitHubHome);
 			stage.addEventListener(UIEvent.REMOTE_LOGIN, showRemoteLogin);
 			stage.addEventListener(UIEvent.ANONYMOUS_CLONE, showAnonymousClone);			
-			stage.addEventListener(UIEvent.EDIT_GITHUB_REPO, editGitHubRepo);			
+			stage.addEventListener(UIEvent.ADD_BKMK_TO_GH, addBkmkToGitHub);		
 			stage.addEventListener(UIEvent.CLOSE_MODAL_WINDOW, onCloseButton);
 			stage.addEventListener(KeyboardEvent.KEY_UP, checkForEnterKey);
 		}
@@ -190,9 +192,10 @@ package view.modals {
 			showModalWindow(_edit);
 		}
 		
-		private function editGitHubRepo(e:UIEvent):void
+		private function addBkmkToGitHub(e:UIEvent):void
 		{
-			trace("ModalManager.editGitHubRepo(e)", AppModel.bookmark.label);	
+			_addRemote.bookmark = AppModel.bookmark;
+			showModalWindow(_addRemote);
 		}		
 		
 		private function deleteBookmark(e:UIEvent):void

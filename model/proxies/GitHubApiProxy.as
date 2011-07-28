@@ -41,6 +41,11 @@ package model.proxies {
 		{
 			super.call(Vector.<String>([BashMethods.CLONE_REMOTE, url, loc]));
 		}
+		
+		public function addRepository($name:String, $desc:String, $public:Boolean):void
+		{
+			super.call(Vector.<String>([BashMethods.ADD_REPOSITORY, $name, $desc, $public]));
+		}
 
 		public function getRepositories():void
 		{
@@ -52,7 +57,7 @@ package model.proxies {
 		
 		private function handleProcessSuccess(e:NativeProcessEvent):void
 		{
-	//		trace("GithubApiProxy.handleProcessSuccess(e)", e.data.method);
+		//	trace("GithubApiProxy.handleProcessSuccess(e)", e.data.method);
 			var o:Object = getResultObject(e.data.result);
 			if (o.message){
 				onMessage(e.data.method, o);
@@ -63,7 +68,7 @@ package model.proxies {
 		
 		private function handleProcessFailure(e:NativeProcessEvent):void
 		{
-	//		trace("GithubApiProxy.handleProcessFailure(e)", e.data.method);
+		//	trace("GithubApiProxy.handleProcessFailure(e)", e.data.method, e.data.result);
 			var errorHandled:Boolean = false;
 			for (var i:int = 0; i < _connectionErrors.length; i++) {
 				if (e.data.result.indexOf(_connectionErrors[i] != -1)){
@@ -77,12 +82,15 @@ package model.proxies {
 		
 		private function getResultObject(s:String):Object
 		{
-			if (s.indexOf('[') == 0 || s.indexOf('{') == 0){
-				return new JSONDecoder(s, false).getValue();
+		// strip off any post headers we receive before parsing json //	
+			if (s.indexOf('[') != -1) {
+				return new JSONDecoder(s.substr(s.indexOf('[')), false).getValue();
+			}	else if (s.indexOf('{') != -1){
+				return new JSONDecoder(s.substr(s.indexOf('{')), false).getValue();
 			}	else{
 				return {result:s};
-			}
-		}		
+			}					
+		}
 		
 		private function onSuccess(m:String, o:Object):void
 		{
@@ -101,12 +109,16 @@ package model.proxies {
 				break;
 				case BashMethods.CLONE_REMOTE :
 					dispatchEvent(new AppEvent(AppEvent.CLONE_COMPLETE));
-				break;				
+				break;	
+				case BashMethods.ADD_REPOSITORY :
+					dispatchEvent(new AppEvent(AppEvent.REPOSITORY_CREATED, o.ssh_url));
+				break;								
 			}
 		}
 		
 		private function onMessage(m:String, o:Object):void
 		{
+			trace("GitHubApiProxy.onMessage(m, o)", m, o);			
 			switch(o.message){
 				case 'No connection' :
 					dispatchEvent(new AppEvent(AppEvent.OFFLINE));

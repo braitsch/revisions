@@ -33,6 +33,16 @@ package view.modals {
 			this.y = (h - _heightOffset) / 2 - this.height / 2 + _heightOffset;			
 		}
 		
+		protected function drawBackground(w:uint, h:uint):void
+		{
+			graphics.beginFill(0xFFFFFF);
+			graphics.drawRect(0, 0, w, h);
+			graphics.endFill();
+			graphics.beginBitmapFill(new LtGreyPattern());
+			graphics.drawRect(4, 4, w-8, h-8);
+			graphics.endFill();
+		}		
+		
 		protected function addButtons(a:Array):void
 		{			for (var i:int=0; i < a.length; i++) {
 				a[i].buttonMode = true;

@@ -33,7 +33,7 @@ package view.modals.remote {
 		public function set onSuccessEvent(e:String):void 
 		{ 
 			_onSuccessEvent = e;
-			_view.skip_btn.visible = (e != UIEvent.EDIT_GITHUB_REPO);
+			_view.skip_btn.visible = (e != UIEvent.ADD_BKMK_TO_GH);
 		}
 
 		protected function addBadge(bmd:BitmapData):void

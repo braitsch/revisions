@@ -24,14 +24,14 @@ package view.modals.remote {
 		public function GitHubHome()
 		{
 			addChild(_view);	
-			_view.badgePage.page_txt.text = 'My Github';
+			_view.badgePage.label_txt.text = 'My Github';
 			setupCustomURLField();
 			addEventListener(UIEvent.CLONE, onCloneClick);		
 			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);
-			AppModel.engine.addEventListener(AppEvent.REMOTE_READY, onGitHubLogin);
+			AppModel.engine.addEventListener(AppEvent.REMOTE_READY, onAccountReady);
 		}
 
-		private function onGitHubLogin(e:AppEvent):void
+		private function onAccountReady(e:AppEvent):void
 		{
 			_model = AccountManager.github;
 			attachAvatar();
@@ -39,7 +39,7 @@ package view.modals.remote {
 			_view.badgeUser.user_txt.text = _model.name+' - '+_model.location;
 		}
 
-		private function attachAvatar(e:AppEvent = null):void
+		private function attachAvatar():void
 		{
 			_model.avatar.y = 7;
 			_model.avatar.x = -198;
@@ -76,7 +76,7 @@ package view.modals.remote {
 		{
 			showPage(0);
 			positionURLAndNav();
-			drawBackground();
+			super.drawBackground(590, _view.height + 30);
 			super.addCloseButton();
 		}
 
@@ -119,18 +119,6 @@ package view.modals.remote {
 			}	else if (e.target.name == 'prev_btn'){
 				showPage(--_pageIndex);
 			}
-		}
-		
-		private function drawBackground():void
-		{
-			var w:uint = 590;
-			var h:uint = _view.height + 30;
-			_view.graphics.beginFill(0xFFFFFF);
-			_view.graphics.drawRect(0, 0, w, h);
-			_view.graphics.endFill();
-			_view.graphics.beginBitmapFill(new LtGreyPattern());
-			_view.graphics.drawRect(4, 4, w-8, h-8);
-			_view.graphics.endFill();
 		}
 		
 		private function setupCustomURLField():void
