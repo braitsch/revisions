@@ -7,6 +7,7 @@ package view.modals.git {
 		public function GitInstall()
 		{
 			super(_view);
+			super.drawBackground(500, 202);
 		}
 		
 		public function promptToInstall():void

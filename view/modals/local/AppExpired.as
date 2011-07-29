@@ -13,6 +13,7 @@ package view.modals.local {
 		public function AppExpired()
 		{
 			addChild(_view);
+			super.drawBackground(500, 202);
 			super.addButtons([_view.cancel_btn, _view.ok_btn]);
 			_view.message_txt.text = 'This beta version of Revisions has expired.\n';
 			_view.message_txt.text+= 'Please update to the most current version.';

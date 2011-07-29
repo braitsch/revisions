@@ -23,7 +23,8 @@ package view.modals.local {
 		public function GlobalSettings()
 		{
 			addChild(_view);
-			super.addCloseButton();			
+			super.addCloseButton();	
+			super.drawBackground(500, 267);
 			super.addButtons([_view.ok_btn]);
 			super.addInputs(Vector.<TLFTextField>([_view.name_txt, _view.email_txt]));
 			_check1.label = 'Automatically check for updates';

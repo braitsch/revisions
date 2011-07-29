@@ -1,6 +1,6 @@
 package view.modals {
 
-	import view.modals.remote.AddRemoteRepo;
+	import view.modals.remote.NewRemoteRepo;
 	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.UIEvent;
@@ -59,7 +59,7 @@ package view.modals {
 		private static var _nameAndEmail	:NameAndEmail = new NameAndEmail();
 		private static var _ghLogin			:GitHubLogin = new GitHubLogin();
 		private static var _bsLogin			:BeanStalkLogin = new BeanStalkLogin();
-		private static var _addRemote		:AddRemoteRepo = new AddRemoteRepo();
+		private static var _addRemote		:NewRemoteRepo = new NewRemoteRepo();
 		private static var _clone			:AnonymousClone = new AnonymousClone();		
 		private static var _gitHub			:GitHubHome = new GitHubHome();
 		private static var _alert			:Alert = new Alert();

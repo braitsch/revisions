@@ -14,7 +14,8 @@ package view.modals.local {
 		public function RevertToVersion()
 		{
 			addChild(_view);
-			super.addCloseButton();			
+			super.addCloseButton();	
+			super.drawBackground(500, 243);		
 			super.addButtons([_view.revert_btn, _view.cancel_btn]);
 			_view.revert_btn.addEventListener(MouseEvent.CLICK, onRevert);
 			_view.cancel_btn.addEventListener(MouseEvent.CLICK, onCancel);

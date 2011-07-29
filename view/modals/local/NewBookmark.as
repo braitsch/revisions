@@ -16,7 +16,8 @@ package view.modals.local {
 		public function NewBookmark()
 		{
 			addChild(_view);
-			super.addCloseButton();			
+			super.addCloseButton();
+			super.drawBackground(500, 227);			
 			super.addButtons([_view.file_btn, _view.folder_btn, _view.github_btn, _view.beanstalk_btn, _view.private_btn]);			
 			_view.addEventListener(MouseEvent.CLICK, onButtonClick);
 			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);

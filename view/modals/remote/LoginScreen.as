@@ -19,7 +19,8 @@ package view.modals.remote {
 		public function LoginScreen()
 		{
 			addChild(_view);
-			super.addCloseButton();			
+			super.addCloseButton();
+			super.drawBackground(540, 233);	
 			super.addButtons([_view.skip_btn, _view.login_btn, _view.github, _view.beanstalk]);
 			_view.pass_txt.displayAsPassword = true;
 			_view.name_txt.text = _view.pass_txt.text = '';

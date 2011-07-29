@@ -15,7 +15,8 @@ package view.modals.local {
 		public function NewCommit()
 		{
 			addChild(_view);
-			super.addCloseButton();			
+			super.addCloseButton();	
+			super.drawBackground(500, 219);		
 			super.addButtons([_view.save_btn]);
 			super.addInputs(Vector.<TLFTextField>([_view.note_txt]));
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);

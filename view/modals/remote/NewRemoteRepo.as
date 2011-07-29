@@ -9,13 +9,13 @@ package view.modals.remote {
 	import view.ui.ModalCheckbox;
 	import flash.events.MouseEvent;
 
-	public class AddRemoteRepo extends ModalWindow {
+	public class NewRemoteRepo extends ModalWindow {
 
 		private static var _bkmk	:Bookmark;
 		private static var _view	:NewRemoteMC = new NewRemoteMC();
 		private static var _check	:ModalCheckbox = new ModalCheckbox(_view.check, false);		
 
-		public function AddRemoteRepo()
+		public function NewRemoteRepo()
 		{
 			addChild(_view);
 			drawBackground(550, 210);

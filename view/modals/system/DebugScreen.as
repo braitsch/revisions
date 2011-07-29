@@ -12,6 +12,7 @@ package view.modals.system {
 		public function DebugScreen()
 		{
 			addChild(_view);
+			super.drawBackground(500, 400);
 			super.addButtons([_view.ok_btn]);
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);
 		}

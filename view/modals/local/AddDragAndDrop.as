@@ -19,6 +19,7 @@ package view.modals.local {
 		{
 			addChild(_view);
 			super.addCloseButton();
+			super.drawBackground(500, 195);
 			super.addButtons([_view.ok_btn]);
 			super.addInputs(Vector.<TLFTextField>([_view.name_txt]));
 			_check1.label = 'Autosave Every 60 Minutes';			

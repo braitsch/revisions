@@ -18,6 +18,7 @@ package view.modals.git {
 		public function NameAndEmail()
 		{
 			addChild(_view);
+			super.drawBackground(500, 225);
 			super.addButtons([_view.ok_btn]);
 			super.addInputs(Vector.<TLFTextField>([_view.name_txt, _view.email_txt]));
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);

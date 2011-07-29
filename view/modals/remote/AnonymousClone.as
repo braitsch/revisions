@@ -16,6 +16,7 @@ package view.modals.remote {
 		{
 			addChild(_view);
 			super.addCloseButton();
+			super.drawBackground(540, 196);
 			super.addButtons([_view.clone_btn]);
 			super.addInputs(Vector.<TLFTextField>([_view.url_txt]));			
 			_view.clone_btn.addEventListener(MouseEvent.CLICK, onCloneClick);

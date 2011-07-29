@@ -20,6 +20,7 @@ package view.modals.local {
 		{
 			addChild(_view);
 			super.addCloseButton();
+			super.drawBackground(500, 215);
 			super.addButtons([_view.cancel_btn, _view.download_btn]);
 			_check1.label = "Next time just do it and don't ask me";
 			_view.check1.addEventListener(MouseEvent.CLICK, onCheckbox);

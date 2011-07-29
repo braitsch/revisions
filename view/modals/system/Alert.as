@@ -12,6 +12,7 @@ package view.modals.system {
 		public function Alert()
 		{
 			addChild(_view);
+			super.drawBackground(500, 196);
 			super.addButtons([_view.ok_btn]);
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);
 		}

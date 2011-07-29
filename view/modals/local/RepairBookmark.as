@@ -18,6 +18,7 @@ package view.modals.local {
 		public function RepairBookmark()
 		{
 			addChild(_view);
+			super.drawBackground(500, 227);
 			super.addButtons([_view.browse_btn, _view.ok_btn, _view.delete_btn]);
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onUpdateBookmark);
 			_view.browse_btn.addEventListener(MouseEvent.CLICK, onBrowseButton);

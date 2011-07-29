@@ -17,6 +17,7 @@ package view.modals.local {
 		public function AppUpdate()
 		{
 			addChild(_view);
+			super.drawBackground(500, 202);
 			super.addButtons([_view.skip_btn, _view.download_btn]);
 			_check1.label = "Don't prompt me to update again.";
 			_view.check1.addEventListener(MouseEvent.CLICK, onCheckbox);

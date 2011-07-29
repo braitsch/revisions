@@ -13,6 +13,7 @@ package view.modals.local {
 		{
 			addChild(_view);
 			super.addCloseButton();
+			super.drawBackground(500, 258);
 			super.addButtons([_view.ok_btn]);
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onClose);
 		}

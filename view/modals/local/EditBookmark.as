@@ -22,6 +22,7 @@ package view.modals.local {
 		{
 			addChild(_view);
 			super.addCloseButton();
+			super.drawBackground(500, 273);
 			super.addInputs(Vector.<TLFTextField>([_view.name_txt]));
 			super.addButtons([_view.browse_btn, _view.delete_btn, _view.ok_btn, _view.github, _view.beanstalk]);
 		

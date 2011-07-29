@@ -10,6 +10,7 @@ package view.modals.git {
 		public function GitUpgrade()
 		{
 			super(_view);
+			super.drawBackground(500, 226);
 		}
 		
 		public function promptToUpgrade():void
