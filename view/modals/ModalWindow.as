@@ -29,18 +29,23 @@ package view.modals {
 		
 		public function resize(w:Number, h:Number):void
 		{
-			this.x = w / 2 - this.width / 2;
-			this.y = (h - _heightOffset) / 2 - this.height / 2 + _heightOffset;			
+			this.x = uint(w / 2 - this.width / 2);
+			this.y = uint((h - _heightOffset) / 2 - this.height / 2 + _heightOffset);
 		}
 		
 		protected function drawBackground(w:uint, h:uint):void
 		{
+			graphics.clear();
 			graphics.beginFill(0xFFFFFF);
 			graphics.drawRect(0, 0, w, h);
 			graphics.endFill();
 			graphics.beginBitmapFill(new LtGreyPattern());
 			graphics.drawRect(4, 4, w-8, h-8);
 			graphics.endFill();
+			if (_closeButton){
+				_closeButton.y = 10;
+				_closeButton.x = w - 10;			
+			}
 		}		
 		
 		protected function addButtons(a:Array):void
@@ -56,8 +61,6 @@ package view.modals {
 		protected function addCloseButton():void
 		{
 			_closeButton = new ModalCloseButton();
-			_closeButton.y = 10;
-			_closeButton.x = this.width - 10;
 			_closeButton.over.alpha = 0;
 			_closeButton.buttonMode = true;
 			_closeButton.addEventListener(MouseEvent.CLICK, onCloseClick);

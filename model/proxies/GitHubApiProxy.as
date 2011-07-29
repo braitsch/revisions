@@ -101,7 +101,7 @@ package model.proxies {
 				case BashMethods.LOGIN :
 					_accountData = o;
 					_accountData.type = RemoteAccount.GITHUB;
-					AppModel.proxies.githubKey.validateKeys();
+					AppModel.proxies.githubKey.validateKeys(o.login);
 				break;
 				case BashMethods.LOGOUT:
 					dispatchEvent(new AppEvent(AppEvent.LOGOUT));

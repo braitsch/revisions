@@ -9,50 +9,38 @@ package model.proxies {
 
 	public class GitHubKeyProxy extends NativeProcessProxy {
 
-		private static var _ghKeyId		:String;
-
 		public function GitHubKeyProxy()
 		{
 			super.executable = 'GitHubKeys.sh';
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 		}
 		
-		public function validateKeys():void
+		public function validateKeys($keyName:String):void
 		{
-			AppModel.proxies.ssh.detectSSHKeys();
+			AppModel.proxies.ssh.detectSSHKeys($keyName);
 			AppModel.proxies.ssh.addEventListener(AppEvent.SSH_KEYS_READY, onSSHKeysReady);
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.LOADER_TEXT, 'Checking SSH Keys'));			
 		}
 
 		private function onSSHKeysReady(e:AppEvent):void
 		{
-			detectGHKeyId();
-			AppModel.proxies.ssh.removeEventListener(AppEvent.SSH_KEYS_READY, onSSHKeysReady);
-		}
-		
-		private function detectGHKeyId():void
-		{
-			super.call(Vector.<String>([BashMethods.DETECT_GH_KEY_ID]));
-		}					
-		
-		private function getGitHubKeys():void
-		{
 			super.call(Vector.<String>([BashMethods.GET_GH_KEYS]));
+			AppModel.proxies.ssh.removeEventListener(AppEvent.SSH_KEYS_READY, onSSHKeysReady);
 		}
 		
 		private function addKeysToGitHub():void
 		{
-			super.call(Vector.<String>([BashMethods.ADD_KEYS_TO_GH]));
+			super.call(Vector.<String>([BashMethods.ADD_KEYS_TO_GH, SSHProxy.pbKeyName]));
 		}	
 		
 		private function repairGitHubKeys():void
 		{
-			super.call(Vector.<String>([BashMethods.REPAIR_GH_KEY]));
+			super.call(Vector.<String>([BashMethods.REPAIR_GH_KEY, SSHProxy.pbKeyName, SSHProxy.pbKeyId]));
 		}		
 		
 		private function authenticateGH(keyId:String):void
 		{
-			super.call(Vector.<String>([BashMethods.AUTHENTICATE_GH, keyId]));
+			super.call(Vector.<String>([BashMethods.AUTHENTICATE_GH, SSHProxy.pbKeyName, keyId]));
 		}
 		
 	// repsonse handlers //	
@@ -90,9 +78,6 @@ package model.proxies {
 		{
 		//	trace("GitHubKeyProxy.onSuccess(m, o)", m);
 			switch(m){	
-				case BashMethods.DETECT_GH_KEY_ID :
-					onGitHubKeyId(o.result);
-				break;	
 				case BashMethods.GET_GH_KEYS :
 					onGitHubKeyList(o);
 				break;
@@ -123,26 +108,20 @@ package model.proxies {
 		
 	// response callbacks //			
 
-		private function onGitHubKeyId(s:String):void
-		{
-			_ghKeyId = s;
-			getGitHubKeys();		
-		}
-
 		private function onGitHubKeyList(o:Object):void
 		{
 			var k:Object = compareKeys(o);
 			if (k){
 				authenticateGH(k.id);
 			}	else{
-				_ghKeyId ? repairGitHubKeys() : addKeysToGitHub();
+				SSHProxy.pbKeyId ? repairGitHubKeys() : addKeysToGitHub();
 			}			
 		}
 
 		private function compareKeys(o:Object):Object
 		{
-			var k:String = SSHProxy.publicKey;
-	// strip off username so we can compate against github //			
+			var k:String = SSHProxy.pbKey;
+	// strip off username so we can compare against github //			
 			k = k.substr(0, k.indexOf('==') + 2);
 			for (var i:int = 0; i < o.length; i++) if (o[i].key == k) return o[i];
 			return null;

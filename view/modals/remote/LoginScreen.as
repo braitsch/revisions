@@ -6,6 +6,9 @@ package view.modals.remote {
 	import view.modals.ModalWindow;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.display.InteractiveObject;
+	import flash.events.Event;
+	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 
 	public class LoginScreen extends ModalWindow {
@@ -20,16 +23,18 @@ package view.modals.remote {
 			super.addButtons([_view.skip_btn, _view.login_btn, _view.github, _view.beanstalk]);
 			_view.pass_txt.displayAsPassword = true;
 			_view.name_txt.text = _view.pass_txt.text = '';
-			_view.name_txt.tabIndex = 0;
-			_view.pass_txt.tabIndex = 1;
+			InteractiveObject(_view.name_txt.getChildAt(1)).tabIndex = 1;
+			_view.pass_txt.tabIndex = 2;
 			_view.beanstalk.visible = _view.github.visible = false;
 			_view.skip_btn.addEventListener(MouseEvent.CLICK, onSkipButton);
 			_view.login_btn.addEventListener(MouseEvent.CLICK, onLoginButton);
+			addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 
-		// event to dispatch on login success //
-
 		protected function get view():WindowLoginMC { return _view; }
+		
+	// the event to dispatch on login success //
 		public function set onSuccessEvent(e:String):void 
 		{ 
 			_onSuccessEvent = e;
@@ -106,6 +111,21 @@ package view.modals.remote {
 		{
 			dispatchEvent(new UIEvent(UIEvent.ANONYMOUS_CLONE));
 		}
+		
+		private function onAddedToStage(e:Event):void 
+		{
+			resize(stage.stageWidth, stage.stageHeight);
+			_view.name_txt.setSelection(0, _view.name_txt.length);
+			_view.name_txt.textFlow.interactionManager.setFocus();
+		}	
+		
+		private function onKeyUp(e:KeyboardEvent):void
+		{
+	// listen for tab key between the two different types of textfields //	
+			if (this.stage && e.keyCode == 9){
+				if (stage.focus == _view.pass_txt) _view.name_txt.setSelection(0, _view.name_txt.length);
+			}
+		}			
 		
 	}
 	

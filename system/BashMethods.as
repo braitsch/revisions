@@ -39,6 +39,7 @@ package system{
 		
 	// ssh keys //	
 		public static const DETECT_SSH_KEYS		:String = 'detectSSHKeys';
+		public static const DETECT_KEY_ID		:String = 'detectKeyId';
 		public static const GENERATE_SSH_KEYS	:String = 'generateSSHKeys';
 		public static const REGISTER_SSH_KEYS	:String = 'registerSSHKeys';
 		
@@ -46,7 +47,6 @@ package system{
 		public static const GET_ACCOUNT_INFO	:String = 'getAccountInfo';
 		public static const LOGIN				:String = 'login';
 		public static const LOGOUT				:String = 'logout';
-		public static const DETECT_GH_KEY_ID	:String = 'detectGHKeyId';
 		public static const GET_GH_KEYS			:String = 'getGHKeys';
 		public static const ADD_KEYS_TO_GH		:String = 'addKeysToGH';
 		public static const REPAIR_GH_KEY		:String = 'repairGHKeys';

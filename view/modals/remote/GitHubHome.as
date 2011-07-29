@@ -37,7 +37,8 @@ package view.modals.remote {
 			_model = AccountManager.github;
 			attachAvatar();
 			attachRepositories();
-			_view.badgeUser.user_txt.text = _model.name+' - '+_model.location;
+			if (_model.name) _view.badgeUser.user_txt.text = _model.name;
+			if (_model.name && _model.location) _view.badgeUser.user_txt.appendText(' - '+_model.location);
 		}
 
 		private function attachAvatar():void
@@ -79,8 +80,8 @@ package view.modals.remote {
 			showPage(0);
 			resetURLField();
 			positionURLAndNav();
-			super.drawBackground(590, _view.height + 15);
 			super.addCloseButton();
+			super.drawBackground(590, _view.height + 15);
 		}
 
 		private function showPage(n:uint):void
@@ -202,6 +203,8 @@ package view.modals.remote {
 			_pageIndex = 0;
 			AccountManager.github.purge();
 			AccountManager.killAccount(AccountManager.github);
+			_view.removeChild(_activePage);
+			_view.badgeUser.user_txt.text = '';
 			_activePage = null; _pages = null; _model = null;
 		}
 		

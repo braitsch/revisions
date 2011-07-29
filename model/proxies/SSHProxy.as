@@ -8,7 +8,9 @@ package model.proxies {
 
 	public class SSHProxy extends NativeProcessProxy {
 		
-		private static var _publicKey	:String;
+		private static var _pbKey		:String;
+		private static var _pbKeyId		:String;
+		private static var _pbKeyName	:String;
 		
 		public function SSHProxy()
 		{
@@ -16,25 +18,31 @@ package model.proxies {
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 		}
 		
-		static public function get publicKey():String
-		{
-			return _publicKey;
-		}		
+		static public function get pbKey():String { return _pbKey; }		
+		static public function get pbKeyId():String { return _pbKeyId; }	
+		static public function get pbKeyName():String { return _pbKeyName; }			
 
-		public function detectSSHKeys():void
+		public function detectSSHKeys($keyName:String):void
 		{
-			super.call(Vector.<String>([BashMethods.DETECT_SSH_KEYS]));
+			_pbKeyName = $keyName;
+			super.call(Vector.<String>([BashMethods.DETECT_SSH_KEYS, _pbKeyName]));
 		}	
+		
+		private function detectKeyId():void
+		{
+			super.call(Vector.<String>([BashMethods.DETECT_KEY_ID, _pbKeyName]));
+		}							
 		
 		private function generateKeys():void
 		{
-			super.call(Vector.<String>([BashMethods.GENERATE_SSH_KEYS]));
+			super.call(Vector.<String>([BashMethods.GENERATE_SSH_KEYS, _pbKeyName]));
 		}
 		
 		private function registerKeys():void
 		{
-			super.call(Vector.<String>([BashMethods.REGISTER_SSH_KEYS]));
-		}				
+			super.call(Vector.<String>([BashMethods.REGISTER_SSH_KEYS, _pbKeyName]));
+		}
+		
 	
 	// response handlers //			
 		
@@ -42,15 +50,20 @@ package model.proxies {
 		{
 			switch(e.data.method){
 				case BashMethods.DETECT_SSH_KEYS :
-					if(e.data.result == '') {
-						generateKeys();
+					if(e.data.result != '') {
+						_pbKey = e.data.result;
+						detectKeyId();
 					}	else{ 
-						onKeysDetected(e.data.result);
+						generateKeys();
 					}
 				break;		
 				case BashMethods.GENERATE_SSH_KEYS :
 					registerKeys();
 				break;	
+				case BashMethods.DETECT_KEY_ID :
+					_pbKeyId = e.data.result;
+					dispatchEvent(new AppEvent(AppEvent.SSH_KEYS_READY));
+				break;					
 			}
 		}
 		
@@ -58,17 +71,11 @@ package model.proxies {
 		{
 			var m:String = e.data.method; var r:String = e.data.result;
 			if (m == BashMethods.REGISTER_SSH_KEYS && r.indexOf('Identity added') !=-1){
-				detectSSHKeys();		
+				detectSSHKeys(_pbKeyName);		
 			}	else{
 				dispatchDebug(e.data);
 			}
 		}		
-		
-		private function onKeysDetected(s:String):void
-		{
-			_publicKey = s;
-			dispatchEvent(new AppEvent(AppEvent.SSH_KEYS_READY));
-		}
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
