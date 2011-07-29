@@ -57,7 +57,7 @@ package model.proxies {
 		
 		private function handleProcessSuccess(e:NativeProcessEvent):void
 		{
-		//	trace("GithubApiProxy.handleProcessSuccess(e)", e.data.method);
+	//		trace("GithubApiProxy.handleProcessSuccess(e)", e.data.method);
 			var o:Object = getResultObject(e.data.result);
 			if (o.message){
 				onMessage(e.data.method, o);
@@ -68,7 +68,7 @@ package model.proxies {
 		
 		private function handleProcessFailure(e:NativeProcessEvent):void
 		{
-		//	trace("GithubApiProxy.handleProcessFailure(e)", e.data.method, e.data.result);
+	//		trace("GithubApiProxy.handleProcessFailure(e)", e.data.method, e.data.result);
 			var errorHandled:Boolean = false;
 			for (var i:int = 0; i < _connectionErrors.length; i++) {
 				if (e.data.result.indexOf(_connectionErrors[i] != -1)){
@@ -77,7 +77,7 @@ package model.proxies {
 				}
 			}
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
-			if (!errorHandled) dispatchDebug(e.data.method, e.data.result);
+			if (!errorHandled) dispatchDebug(e.data);
 		}
 		
 		private function getResultObject(s:String):Object
@@ -118,7 +118,6 @@ package model.proxies {
 		
 		private function onMessage(m:String, o:Object):void
 		{
-			trace("GitHubApiProxy.onMessage(m, o)", m, o);			
 			switch(o.message){
 				case 'No connection' :
 					dispatchEvent(new AppEvent(AppEvent.OFFLINE));
@@ -134,7 +133,8 @@ package model.proxies {
 					trace('GithubApiProxy :: no github credentials found');
 				break;				
 				default :
-					dispatchDebug(m, o.message);
+					o.method = m;
+					dispatchDebug(o);
 				break;						
 			}
 		}
@@ -156,10 +156,10 @@ package model.proxies {
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));				
 		}		
 		
-		private function dispatchDebug(m:String, r:String):void
+		private function dispatchDebug(o:Object):void
 		{
-			var s:String = 'GithubApiProxy.onProcessFailure(e)';
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_DEBUG, {s:s, m:m, r:r}));				
+			o.source = 'GithubApiProxy.onProcessFailure(e)';
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_DEBUG, o));
 		}
 		
 	}

@@ -69,7 +69,6 @@ package view.modals.local {
 			if (AccountManager.github){
 				dispatchEvent(new UIEvent(UIEvent.ADD_BKMK_TO_GH));
 			}	else{
-				trace("EditBookmark.onGitHubClick(e) showing login");
 				dispatchEvent(new UIEvent(UIEvent.REMOTE_LOGIN, {type:RemoteAccount.GITHUB, event:UIEvent.ADD_BKMK_TO_GH}));
 			}	
 		}

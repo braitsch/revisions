@@ -33,9 +33,11 @@ package events {
 		public static const AVATAR_LOADED			:String = "AVATAR_LOADED";
 		public static const SSH_KEYS_READY			:String = "SSH_KEYS_READY";
 		public static const GH_AUTHENTICATED		:String = "SSH_KEYS_VALID";
+		
+	// remote calls //	
+		public static const REMOTE_SYNCED			:String = "REMOTE_SYNCED";
 		public static const CLONE_COMPLETE			:String = "CLONE_COMPLETE";
 		public static const REPOSITORY_CREATED		:String = "REPOSITORY_CREATED";
-		public static const REMOTE_SYNCED			:String = "REMOTE_SYNCED";
 		
 		public var data:Object;
 

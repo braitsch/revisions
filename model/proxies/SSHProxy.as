@@ -40,7 +40,6 @@ package model.proxies {
 		
 		private function handleProcessSuccess(e:NativeProcessEvent):void 
 		{
-			trace("SSHProxy.handleProcessSuccess(e)", e.data.method);
 			switch(e.data.method){
 				case BashMethods.DETECT_SSH_KEYS :
 					if(e.data.result == '') {
@@ -57,12 +56,11 @@ package model.proxies {
 		
 		private function handleProcessFailure(e:NativeProcessEvent):void 
 		{
-			trace("SSHProxy.handleProcessFailure(e)", e.data.method);			
 			var m:String = e.data.method; var r:String = e.data.result;
 			if (m == BashMethods.REGISTER_SSH_KEYS && r.indexOf('Identity added') !=-1){
 				detectSSHKeys();		
 			}	else{
-				dispatchDebug(m, r);
+				dispatchDebug(e.data);
 			}
 		}		
 		
@@ -77,10 +75,10 @@ package model.proxies {
 			failed==true ? handleProcessFailure(e) : handleProcessSuccess(e);
 		}			
 		
-		private function dispatchDebug(m:String, r:String):void
+		private function dispatchDebug(o:Object):void
 		{
-			var s:String = 'SSHProxy.onProcessFailure(e)';
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_DEBUG, {s:s, m:m, r:r}));
+			o.source = 'SSHProxy.onProcessFailure(e)';
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_DEBUG, o));			
 		}
 
 	}

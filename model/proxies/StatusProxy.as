@@ -216,8 +216,8 @@ package model.proxies {
 		
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
-			var s:String = 'StatusProxy.onProcessFailure(e)';
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_DEBUG, {s:s, m:e.data.method, r:e.data.result}));
+			e.data.source = 'StatusProxy.onProcessFailure(e)';
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_DEBUG, e.data));			
 		}
 		
 	}

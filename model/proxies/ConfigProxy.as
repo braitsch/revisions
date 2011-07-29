@@ -141,10 +141,8 @@ package model.proxies {
 		
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
-			var s:String = 'ConfigProxy.onProcessFailure(e)';
-			trace(e.data.method);
-			trace(e.data.result);
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_DEBUG, {s:s, m:e.data.method, r:e.data.result}));
+			e.data.source = 'ConfigProxy.onProcessFailure(e)';
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_DEBUG, e.data));			
 		}
 
 	}

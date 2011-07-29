@@ -2,7 +2,6 @@ package view.modals.remote {
 
 	import events.AppEvent;
 	import events.UIEvent;
-	import fl.text.TLFTextField;
 	import model.AppModel;
 	import view.modals.ModalWindow;
 	import flash.display.Bitmap;
@@ -18,13 +17,14 @@ package view.modals.remote {
 		{
 			addChild(_view);
 			super.addCloseButton();			
-			super.addInputs(Vector.<TLFTextField>([_view.name_txt, _view.pass_txt]));
-			super.addButtons([_view.skip_btn, _view.login_btn, _view.github, _view.beanstalk]);				
+			super.addButtons([_view.skip_btn, _view.login_btn, _view.github, _view.beanstalk]);
 			_view.pass_txt.displayAsPassword = true;
 			_view.name_txt.text = _view.pass_txt.text = '';
+			_view.name_txt.tabIndex = 0;
+			_view.pass_txt.tabIndex = 1;
 			_view.beanstalk.visible = _view.github.visible = false;
 			_view.skip_btn.addEventListener(MouseEvent.CLICK, onSkipButton);
-			_view.login_btn.addEventListener(MouseEvent.CLICK, onLoginButton);			
+			_view.login_btn.addEventListener(MouseEvent.CLICK, onLoginButton);
 		}
 
 		// event to dispatch on login success //

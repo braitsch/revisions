@@ -58,7 +58,7 @@ package system{
 		public static const EDIT_REPOSITORY		:String = 'editRepository';
 		public static const GET_REPOSITORIES	:String = 'getRepositories';
 		public static const LINK_TO_GITHUB		:String = 'linkToGitHub';
-		public static const PUSH_TO_GITHUB:String = 'pushToGitHub';
+		public static const PUSH_TO_GITHUB		:String = 'pushToGitHub';
 		
 	}
 	

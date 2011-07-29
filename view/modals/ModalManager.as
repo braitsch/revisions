@@ -161,7 +161,6 @@ package view.modals {
 		private function showRemoteLogin(e:UIEvent):void
 		{
 			if (e.data.type == RemoteAccount.GITHUB){
-				trace("ModalManager.showRemoteLogin(e) github");
 				showModalWindow(_ghLogin);
 				_ghLogin.onSuccessEvent = e.data.event;
 			}	else if (e.data.type == RemoteAccount.BEANSTALK){

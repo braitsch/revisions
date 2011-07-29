@@ -11,9 +11,6 @@ package model.vo {
 			_name = $name;
 			_fetch = $fetch;
 			_push = $push;
-			trace('_name:'+_name+'::');
-			trace('_fetch:'+_fetch+'::');
-			trace('_push:'+_push+'::');
 		}
 
 		public function get name():String

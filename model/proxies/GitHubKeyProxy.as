@@ -73,7 +73,7 @@ package model.proxies {
 			if (m == BashMethods.AUTHENTICATE_GH && r.indexOf("You've successfully authenticated") != -1){
 				AppModel.proxies.githubApi.getRepositories();
 			}	else{
-				dispatchDebug(m, r);
+				dispatchDebug(e.data);
 			}		
 		}
 		
@@ -115,7 +115,8 @@ package model.proxies {
 					addKeysToGitHub();
 				break;
 				default :
-					dispatchDebug(m, o.message);
+					o.method = m;
+					dispatchDebug(o);
 				break;		
 			}			
 		}	
@@ -154,10 +155,10 @@ package model.proxies {
 			failed==true ? handleProcessFailure(e) : handleProcessSuccess(e);
 		}	
 		
-		private function dispatchDebug(m:String, r:String):void
+		private function dispatchDebug(o:Object):void
 		{
-			var s:String = 'GithubKeyProxy.onProcessFailure(e)';
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_DEBUG, {s:s, m:m, r:r}));				
+			o.source = 'GithubKeyProxy.onProcessFailure(e)';
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_DEBUG, o));			
 		}					
 		
 	}

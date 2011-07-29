@@ -11,7 +11,6 @@ package model.proxies {
 		public function RemoteProxy()
 		{
 			super.executable = 'Remote.sh';
-			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 		}
 		
@@ -27,24 +26,35 @@ package model.proxies {
 			super.call(Vector.<String>([BashMethods.PUSH_TO_GITHUB]));
 		}			
 
-		private function onProcessComplete(e:NativeProcessEvent):void
+		private function handleProcessSuccess(e:NativeProcessEvent):void
 		{
-			trace("RemoteProxy.onProcessComplete(e)", e.data.method, e.data.result);
+		//	trace("RemoteProxy.onProcessComplete(e)", e.data.method, e.data.result);
 			switch(e.data.method){
 				case BashMethods.LINK_TO_GITHUB : 
 					pushToGitHub();
 				break;	
 				case BashMethods.PUSH_TO_GITHUB : 
-					dispatchEvent(new AppEvent(AppEvent.GIT_DIR_UPDATED));
+					dispatchEvent(new AppEvent(AppEvent.REMOTE_SYNCED));
 				break;	
 			}
 		}
-
-		private function onProcessFailure(e:NativeProcessEvent):void
+		
+		private function handleProcessFailure(e:NativeProcessEvent):void
 		{
-			trace("RemoteProxy.onProcessFailure(e)", e.data.method, e.data.result);
+			dispatchDebug(e.data);
 		}
 		
+		private function onProcessComplete(e:NativeProcessEvent):void 
+		{
+			failed==true ? handleProcessFailure(e) : handleProcessSuccess(e);
+		}			
+		
+		private function dispatchDebug(o:Object):void
+		{
+			o.source = 'RemoteProxy.onProcessFailure(e)';
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_DEBUG, o));
+		}		
+
 	}
 	
 }
