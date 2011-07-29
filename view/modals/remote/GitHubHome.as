@@ -6,7 +6,6 @@ package view.modals.remote {
 	import model.remote.AccountManager;
 	import model.remote.RemoteAccount;
 	import view.modals.ModalWindow;
-	import com.greensock.TweenLite;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
@@ -14,7 +13,7 @@ package view.modals.remote {
 	public class GitHubHome extends ModalWindow {
 
 		private static var _view		:GitHubMC = new GitHubMC();
-		private static var _pages		:Vector.<Sprite> = new <Sprite>[];
+		private static var _pages		:Vector.<Sprite>;
 		private static var _maxPerPage	:uint = 5;
 		private static var _pageIndex	:uint = 0;
 		private static var _model		:RemoteAccount;
@@ -23,9 +22,11 @@ package view.modals.remote {
 
 		public function GitHubHome()
 		{
-			addChild(_view);	
+			addChild(_view);
+			super.addButtons([_view.logOut, _view.custom.clone_btn]);
 			_view.badgePage.label_txt.text = 'My Github';
-			setupCustomURLField();
+			_view.logOut.addEventListener(MouseEvent.CLICK, onLogOutClick);
+			_view.custom.clone_btn.addEventListener(MouseEvent.CLICK, onCustomClick);			
 			addEventListener(UIEvent.CLONE, onCloneClick);		
 			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);
 			AppModel.engine.addEventListener(AppEvent.REMOTE_READY, onAccountReady);
@@ -51,6 +52,7 @@ package view.modals.remote {
 			var k:Array = [];
 			var a:Array = _model.repos;
 			a.sortOn('name', Array.CASEINSENSITIVE);
+			_pages = new <Sprite>[];
 			for (var i:int = 0; i < a.length; i++) {
 				k.push(a[i]);
 				if (k.length == _maxPerPage) {
@@ -75,8 +77,9 @@ package view.modals.remote {
 		private function onRepositoriesReady():void
 		{
 			showPage(0);
+			resetURLField();
 			positionURLAndNav();
-			super.drawBackground(590, _view.height + 30);
+			super.drawBackground(590, _view.height + 15);
 			super.addCloseButton();
 		}
 
@@ -97,6 +100,7 @@ package view.modals.remote {
 		{
 			_view.nav.visible = _pages.length > 1;
 			_view.custom.y = _activePage.y + _activePage.height + 10;
+			_view.logOut.y = _view.custom.y + 96;
 		}		
 		
 		override protected function enableButton(btn:Sprite, b:Boolean):void
@@ -121,19 +125,16 @@ package view.modals.remote {
 			}
 		}
 		
-		private function setupCustomURLField():void
+		private function resetURLField():void
 		{
-			_view.custom.clone_btn.buttonMode = true;
-			_view.custom.clone_btn.addEventListener(MouseEvent.CLICK, onCustomClick);
-			_view.custom.clone_btn.addEventListener(MouseEvent.ROLL_OVER, onCloneRollOver);
-			_view.custom.clone_btn.addEventListener(MouseEvent.ROLL_OUT, onCloneRollOut);
-			_view.custom.url_txt.addEventListener(MouseEvent.CLICK, onURLTextFocus);
+			_view.custom.url_txt.addEventListener(MouseEvent.CLICK, onURLTextFieldClick);
+			_view.custom.url_txt.text = 'git@github.com:user-name/repository-name.git';
 		}
 
-		private function onURLTextFocus(e:MouseEvent):void
+		private function onURLTextFieldClick(e:MouseEvent):void
 		{
 			_view.custom.url_txt.text = '';	
-			_view.custom.url_txt.removeEventListener(MouseEvent.CLICK, onURLTextFocus);
+			_view.custom.url_txt.removeEventListener(MouseEvent.CLICK, onURLTextFieldClick);
 		}
 
 		private function onCloneClick(e:UIEvent):void
@@ -147,6 +148,12 @@ package view.modals.remote {
 			if (!validate()) return;
 			_cloneURL = _view.custom.url_txt.text;
 			showFileBrowser();
+		}
+		
+		private function onLogOutClick(e:MouseEvent):void
+		{
+			AppModel.proxies.githubApi.logout();
+			AppModel.proxies.githubApi.addEventListener(AppEvent.LOGOUT, onLogout);
 		}
 
 		private function validate():Boolean
@@ -177,12 +184,26 @@ package view.modals.remote {
 
 		private function onCloneComplete(e:AppEvent):void
 		{
-			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));			
+			resetURLField();
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 			AppModel.proxies.githubApi.removeEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);			
 		}
 		
-		private function onCloneRollOut(e:MouseEvent):void {TweenLite.to(e.target.over, .3, {alpha:0});}
-		private function onCloneRollOver(e:MouseEvent):void {TweenLite.to(e.target.over, .5, {alpha:1});}		
+		private function onLogout(e:AppEvent):void
+		{
+			destroyReferences();
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
+			AppModel.proxies.githubApi.removeEventListener(AppEvent.LOGOUT, onLogout);
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, 'You Have Successfully Logged Out.'));
+		}
+
+		private function destroyReferences():void
+		{
+			_pageIndex = 0;
+			AccountManager.github.purge();
+			AccountManager.killAccount(AccountManager.github);
+			_activePage = null; _pages = null; _model = null;
+		}
 		
 	}
 	

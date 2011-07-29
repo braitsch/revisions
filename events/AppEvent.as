@@ -28,6 +28,7 @@ package events {
 		public static const GIT_DIR_UPDATED			:String = "GIT_DIR_UPDATED";
 		
 		public static const OFFLINE					:String = 'OFFLINE';
+		public static const LOGOUT					:String = "LOGOUT";
 		public static const LOGIN_FAILED			:String = "LOGIN_FAILED";
 		public static const REMOTE_READY			:String = "LOGIN_SUCCESS";
 		public static const AVATAR_LOADED			:String = "AVATAR_LOADED";
@@ -37,7 +38,7 @@ package events {
 	// remote calls //	
 		public static const REMOTE_SYNCED			:String = "REMOTE_SYNCED";
 		public static const CLONE_COMPLETE			:String = "CLONE_COMPLETE";
-		public static const REPOSITORY_CREATED		:String = "REPOSITORY_CREATED";
+		public static const REPOSITORY_CREATED:String = "REPOSITORY_CREATED";
 		
 		public var data:Object;
 

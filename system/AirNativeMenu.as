@@ -4,6 +4,7 @@ package system {
 	import events.UIEvent;
 	import model.AppModel;
 	import model.db.AppSettings;
+	import model.remote.AccountManager;
 	import model.remote.RemoteAccount;
 	import flash.desktop.NativeApplication;
 	import flash.display.NativeMenu;
@@ -86,7 +87,7 @@ package system {
         	 		_stage.dispatchEvent(new UIEvent(UIEvent.ABOUT_GIT));
         	 	break;  
         	 	case _github : 
-        	 		_stage.dispatchEvent(new UIEvent(UIEvent.GITHUB_HOME));
+        	 		onGitHubClick();
         	 	break;          	 	      	 	
         	 	case _updateApp	: 
 					AppSettings.setSetting(AppSettings.CHECK_FOR_UPDATES, true);
@@ -96,6 +97,15 @@ package system {
         	 	break;	       	 	
         	 }
 		}
+		
+		private static function onGitHubClick():void
+		{
+			if (AccountManager.github){
+        	 	_stage.dispatchEvent(new UIEvent(UIEvent.GITHUB_HOME));
+			}	else{
+				_stage.dispatchEvent(new UIEvent(UIEvent.REMOTE_LOGIN, {type:RemoteAccount.GITHUB, event:UIEvent.GITHUB_HOME}));
+			}			
+		}		
 
 		private static function onUpdateUnavailable(e:AppEvent):void
 		{

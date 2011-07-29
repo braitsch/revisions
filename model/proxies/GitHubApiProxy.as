@@ -102,7 +102,10 @@ package model.proxies {
 					_accountData = o;
 					_accountData.type = RemoteAccount.GITHUB;
 					AppModel.proxies.githubKey.validateKeys();
-				break;					
+				break;
+				case BashMethods.LOGOUT:
+					dispatchEvent(new AppEvent(AppEvent.LOGOUT));
+				break;									
 				case BashMethods.GET_REPOSITORIES :
 					_accountData.repos = o as Array;
 					AccountManager.addAccount(new RemoteAccount(_accountData));

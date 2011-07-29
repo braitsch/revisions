@@ -28,6 +28,12 @@ package model.remote {
 			_location = o.location;
 			getAccountAvatar(o.avatar_url);
 		}
+		
+		public function purge():void
+		{
+			_repos = null; _avatar = null;
+			_name = _type = _location = null;
+		}
 
 		public function get name()			:String { return _name; 		}
 		public function get type()			:String { return _type; 		}
