@@ -4,9 +4,12 @@ package model.proxies {
 	import events.NativeProcessEvent;
 	import model.AppModel;
 	import model.air.NativeProcessProxy;
+	import model.vo.Remote;
 	import system.BashMethods;
 	
 	public class RemoteProxy extends NativeProcessProxy {
+		
+		private static var _remote:Remote;
 		
 		public function RemoteProxy()
 		{
@@ -14,26 +17,29 @@ package model.proxies {
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 		}
 		
-		public function linkToGitHub($url:String):void
+		public function addRemote($remote:Remote):void
 		{
+			_remote = $remote;
 			super.directory = AppModel.bookmark.gitdir;
-			super.call(Vector.<String>([BashMethods.LINK_TO_GITHUB, $url]));
+			super.call(Vector.<String>([BashMethods.ADD_REMOTE, _remote.name, _remote.push]));
 		}
 		
-		public function pushToGitHub():void
+		public function pushToRemote($remote:Remote, $branch:String):void
 		{
+			_remote = $remote;			
 			super.directory = AppModel.bookmark.gitdir;
-			super.call(Vector.<String>([BashMethods.PUSH_TO_GITHUB]));
+			super.call(Vector.<String>([BashMethods.PUSH_TO_REMOTE, _remote.name, $branch]));
 		}			
 
 		private function handleProcessSuccess(e:NativeProcessEvent):void
 		{
 		//	trace("RemoteProxy.onProcessComplete(e)", e.data.method, e.data.result);
+		// TODO need to pass in a real branch var instead of 'master'
 			switch(e.data.method){
-				case BashMethods.LINK_TO_GITHUB : 
-					pushToGitHub();
+				case BashMethods.ADD_REMOTE : 
+					pushToRemote(_remote, 'master');
 				break;	
-				case BashMethods.PUSH_TO_GITHUB : 
+				case BashMethods.PUSH_TO_REMOTE : 
 					dispatchEvent(new AppEvent(AppEvent.REMOTE_SYNCED));
 				break;	
 			}

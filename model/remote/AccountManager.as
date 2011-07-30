@@ -18,8 +18,13 @@ package model.remote {
 		
 		public static function killAccount(ra:RemoteAccount):void
 		{
-			for (var i:int = 0; i < _accounts.length; i++) if (_accounts[i] == ra) _accounts.splice(i, 1);
-		}		
+			for (var i:int = 0; i < _accounts.length; i++) {
+				if (_accounts[i] == ra) {
+					_accounts[i].purge();
+					_accounts.splice(i, 1);
+				}
+			}
+		}
 
 		public static function get github():RemoteAccount
 		{

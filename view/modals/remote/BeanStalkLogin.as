@@ -1,11 +1,13 @@
 package view.modals.remote {
 
-
+	import events.UIEvent;
 	import model.AppModel;
 	import flash.events.MouseEvent;
 	import flash.net.URLRequest;
 	import flash.net.navigateToURL;
 	public class BeanStalkLogin extends LoginScreen {
+
+		private var _onSuccessEvent		:String;
 
 		public function BeanStalkLogin()
 		{
@@ -14,6 +16,12 @@ package view.modals.remote {
 			super.addBadge(new BeanstalkLoginBadge());
 			super.view.beanstalk.addEventListener(MouseEvent.CLICK, gotoNewAccountPage);
 		}
+		
+		public function set onSuccessEvent(e:String):void 
+		{ 
+			_onSuccessEvent = e;
+			super.allowSkip = (e != UIEvent.ADD_REMOTE);
+		}			
 
 		private function gotoNewAccountPage(e:MouseEvent):void
 		{

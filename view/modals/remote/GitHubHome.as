@@ -201,11 +201,10 @@ package view.modals.remote {
 		private function destroyReferences():void
 		{
 			_pageIndex = 0;
-			AccountManager.github.purge();
-			AccountManager.killAccount(AccountManager.github);
 			_view.removeChild(_activePage);
 			_view.badgeUser.user_txt.text = '';
 			_activePage = null; _pages = null; _model = null;
+			AccountManager.killAccount(AccountManager.github);
 		}
 		
 	}

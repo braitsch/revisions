@@ -39,7 +39,7 @@ package model.proxies {
 		
 		public function clone(url:String, loc:String):void
 		{
-			super.call(Vector.<String>([BashMethods.CLONE_REMOTE, url, loc]));
+			super.call(Vector.<String>([BashMethods.CLONE_REPOSITORY, url, loc]));
 		}
 		
 		public function addRepository($name:String, $desc:String, $public:Boolean):void
@@ -110,7 +110,7 @@ package model.proxies {
 					_accountData.repos = o as Array;
 					AccountManager.addAccount(new RemoteAccount(_accountData));
 				break;
-				case BashMethods.CLONE_REMOTE :
+				case BashMethods.CLONE_REPOSITORY :
 					dispatchEvent(new AppEvent(AppEvent.CLONE_COMPLETE));
 				break;	
 				case BashMethods.ADD_REPOSITORY :

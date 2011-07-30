@@ -103,9 +103,11 @@ package model.vo {
 			_remotes.push(new Remote(n, f, p));
 		}
 		
-		public function addRemote(n:String, f:String, p:String):void
+		public function addRemote(n:String, f:String, p:String):Remote
 		{
-			_remotes.push(new Remote(n, f, p));		
+			var rmt:Remote = new Remote(n, f, p);
+			_remotes.push(rmt);
+			return rmt;
 		}
 		
 		public function hasRemotes():Boolean
@@ -113,11 +115,9 @@ package model.vo {
 			return _remotes.length != 0;
 		}
 		
-		public function getRemoteByName($name:String):Remote
+		public function getRemoteByProp($prop:String, $value:String):Remote
 		{
-			for (var i:int = 0; i < _remotes.length; i++) {
-				if (_remotes[i].name == $name) return _remotes[i];
-			}
+			for (var i:int = 0; i < _remotes.length; i++) if (_remotes[i][$prop] == $value) return _remotes[i];
 			return null;
 		}
 		

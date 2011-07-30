@@ -4,13 +4,13 @@ package view.modals.local {
 	import events.DataBaseEvent;
 	import events.UIEvent;
 	import fl.text.TLFTextField;
-	import flash.events.MouseEvent;
 	import model.AppModel;
 	import model.remote.AccountManager;
 	import model.remote.RemoteAccount;
 	import model.vo.Bookmark;
 	import view.modals.ModalWindow;
 	import view.ui.ModalCheckbox;
+	import flash.events.MouseEvent;
 
 	public class EditBookmark extends ModalWindow {
 
@@ -68,9 +68,9 @@ package view.modals.local {
 		private function onGitHubClick(e:MouseEvent):void
 		{
 			if (AccountManager.github){
-				dispatchEvent(new UIEvent(UIEvent.ADD_BKMK_TO_GH));
+				dispatchEvent(new UIEvent(UIEvent.ADD_REMOTE, RemoteAccount.GITHUB));
 			}	else{
-				dispatchEvent(new UIEvent(UIEvent.REMOTE_LOGIN, {type:RemoteAccount.GITHUB, event:UIEvent.ADD_BKMK_TO_GH}));
+				dispatchEvent(new UIEvent(UIEvent.REMOTE_LOGIN, {type:RemoteAccount.GITHUB, event:UIEvent.ADD_REMOTE}));
 			}	
 		}
 		

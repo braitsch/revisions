@@ -1,15 +1,9 @@
 package view.modals {
 
-	import view.modals.remote.NewRemoteRepo;
+	import flash.events.KeyboardEvent;
 	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.UIEvent;
-	import flash.display.Sprite;
-	import flash.display.Stage;
-	import flash.events.KeyboardEvent;
-	import flash.events.MouseEvent;
-	import flash.filesystem.File;
-	import flash.filters.BlurFilter;
 	import model.AppModel;
 	import model.db.AppSettings;
 	import model.remote.RemoteAccount;
@@ -32,13 +26,21 @@ package view.modals {
 	import view.modals.local.RepairBookmark;
 	import view.modals.local.RevertToVersion;
 	import view.modals.local.WelcomeScreen;
+	import view.modals.remote.AddBeanstalkRepo;
+	import view.modals.remote.AddGitHubRepo;
 	import view.modals.remote.AnonymousClone;
 	import view.modals.remote.BeanStalkLogin;
 	import view.modals.remote.GitHubHome;
 	import view.modals.remote.GitHubLogin;
+	import view.modals.remote.RemoteRepo;
 	import view.modals.system.Alert;
 	import view.modals.system.DebugScreen;
 	import view.ui.Preloader;
+	import flash.display.Sprite;
+	import flash.display.Stage;
+	import flash.events.MouseEvent;
+	import flash.filesystem.File;
+	import flash.filters.BlurFilter;
 
 	public class ModalManager extends Sprite {
 
@@ -59,7 +61,8 @@ package view.modals {
 		private static var _nameAndEmail	:NameAndEmail = new NameAndEmail();
 		private static var _ghLogin			:GitHubLogin = new GitHubLogin();
 		private static var _bsLogin			:BeanStalkLogin = new BeanStalkLogin();
-		private static var _addRemote		:NewRemoteRepo = new NewRemoteRepo();
+		private static var _addToGitHub		:AddGitHubRepo = new AddGitHubRepo();
+		private static var _addToBeanstalk	:AddBeanstalkRepo = new AddBeanstalkRepo();
 		private static var _clone			:AnonymousClone = new AnonymousClone();		
 		private static var _gitHub			:GitHubHome = new GitHubHome();
 		private static var _alert			:Alert = new Alert();
@@ -98,6 +101,7 @@ package view.modals {
 
 		public function init(stage:Stage):void
 		{
+			stage.stageFocusRect = false;
 			stage.addEventListener(UIEvent.DRAG_AND_DROP, onDragAndDrop);
 			stage.addEventListener(UIEvent.ADD_BOOKMARK, onNewButtonClick);
 			stage.addEventListener(UIEvent.EDIT_BOOKMARK, editBookmark);
@@ -111,9 +115,22 @@ package view.modals {
 			stage.addEventListener(UIEvent.GITHUB_HOME, showGitHubHome);
 			stage.addEventListener(UIEvent.REMOTE_LOGIN, showRemoteLogin);
 			stage.addEventListener(UIEvent.ANONYMOUS_CLONE, showAnonymousClone);			
-			stage.addEventListener(UIEvent.ADD_BKMK_TO_GH, addBkmkToGitHub);		
+			stage.addEventListener(UIEvent.ADD_REMOTE, addBkmkToRemote);
 			stage.addEventListener(UIEvent.CLOSE_MODAL_WINDOW, onCloseButton);
-			stage.addEventListener(KeyboardEvent.KEY_UP, checkForEnterKey);
+			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUpEvent);			
+		}
+
+		private function onKeyUpEvent(e:KeyboardEvent):void
+		{
+			if (e.keyCode == 13){
+				if (_alert.stage) {
+					_alert.onEnterKey();
+				}	else if (_debug.stage){
+					_debug.onEnterKey();
+				}	else if (_window != null){
+					_window.onEnterKey();
+				}
+			}
 		}
 
 		public function resize(w:Number, h:Number):void
@@ -131,11 +148,6 @@ package view.modals {
 			if (_debug.stage) _debug.resize(w, h);
 		}
 
-		private function checkForEnterKey(e:KeyboardEvent):void
-		{
-			if (e.keyCode == 13 && _window != null) _window.onEnterKey();
-		}
-		
 		private function onBookmarkSelected(e:BookmarkEvent):void
 		{
 			if (_window == _welcome) hideModalWindow();
@@ -191,11 +203,17 @@ package view.modals {
 			showModalWindow(_edit);
 		}
 		
-		private function addBkmkToGitHub(e:UIEvent):void
+		private function addBkmkToRemote(e:UIEvent):void
 		{
-			_addRemote.bookmark = AppModel.bookmark;
-			showModalWindow(_addRemote);
-		}		
+			trace("ModalManager.addBkmkToRemote(e)", e.data);
+			var w:RemoteRepo;
+			switch(e.data){
+				case RemoteAccount.GITHUB :	w = _addToGitHub; break;
+				case RemoteAccount.BEANSTALK : w = _addToBeanstalk; break;
+			}
+			w.bookmark = AppModel.bookmark;
+			showModalWindow(w);
+		}
 		
 		private function deleteBookmark(e:UIEvent):void
 		{
@@ -341,14 +359,23 @@ package view.modals {
 		{
 			addChild(w);
 			_curtain.show();
-			if (_window) _window.filters = [new BlurFilter(5, 5, 3)];			
+			stage.focus = w;
+			if (_window) {
+				_window.locked = true;
+				_window.filters = [new BlurFilter(5, 5, 3)];			
+			}
 		}
 		
 		private function hideAlertOrDebug(w:ModalWindow):void
 		{
 			removeChild(w);
-			if (_window) _window.filters = [];
-			if (_window == null) _curtain.hide();			
+			if (_window) {
+				stage.focus = _window;
+				_window.filters = [];
+				_window.locked = false;
+			}	else{
+				 _curtain.hide();
+			}
 		}		
 		
 	}

@@ -14,17 +14,17 @@ package model.remote {
 		public static const BEANSTALK	:String = 'beanstalk';
 		public static const PRIVATE		:String = 'private';
 		
-		private var _name			:String;
 		private var _type			:String;
 		private var _repos			:Array;
-		private var _location		:String;
+		private var _name			:String;	// user's full name //
+		private var _location		:String;	// user's location //
 		private var _avatar			:Sprite;
 
 		public function RemoteAccount(o:Object)
 		{
 			_type = o.type;
-			_name = o.name;
 			_repos = o.repos;
+			_name = o.name;
 			_location = o.location;
 			getAccountAvatar(o.avatar_url);
 		}
@@ -35,11 +35,11 @@ package model.remote {
 			_name = _type = _location = null;
 		}
 
-		public function get name()			:String { return _name; 		}
 		public function get type()			:String { return _type; 		}
 		public function get repos()			:Array  { return _repos;		}
-		public function get location()		:String { return _location; 	}
+		public function get name()			:String { return _name; 		}
 		public function get avatar()		:Sprite { return _avatar;		}
+		public function get location()		:String { return _location; 	}
 
 		private function getAccountAvatar(url:String):void
 		{

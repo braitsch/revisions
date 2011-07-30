@@ -53,12 +53,12 @@ package system{
 		public static const SAVE_GH_KEY_ID		:String = 'saveGHKeyId';
 		public static const AUTHENTICATE_GH		:String = 'authenticateGH';
 		
-		public static const CLONE_REMOTE		:String = 'cloneRepository';
 		public static const ADD_REPOSITORY		:String = 'addRepository';
 		public static const EDIT_REPOSITORY		:String = 'editRepository';
 		public static const GET_REPOSITORIES	:String = 'getRepositories';
-		public static const LINK_TO_GITHUB		:String = 'linkToGitHub';
-		public static const PUSH_TO_GITHUB		:String = 'pushToGitHub';
+		public static const CLONE_REPOSITORY	:String = 'cloneRepository';
+		public static const ADD_REMOTE			:String = 'addRemote';
+		public static const PUSH_TO_REMOTE		:String = 'pushToRemote';
 		
 	}
 	
