@@ -20,8 +20,8 @@ package system {
        	private static var _stage		:Stage;
        	private static var _appMenu		:NativeMenu;
        	private static var _remote		:NativeMenuItem;
-       	private static var _github		:NativeMenuItem;
-       	private static var _beanstalk	:NativeMenuItem;
+       	private static var _github		:NativeMenuItem = new NativeMenuItem('My Github');
+       	private static var _beanstalk	:NativeMenuItem = new NativeMenuItem('My Beanstalk');
        	private static var _newBkmk		:NativeMenuItem = new NativeMenuItem('New Bookmark');
        	private static var _aboutGit	:NativeMenuItem = new NativeMenuItem('About Git');
        	private static var _updateApp	:NativeMenuItem = new NativeMenuItem('Check For Updates');
@@ -31,7 +31,7 @@ package system {
         	_stage = s;
             _appMenu = NativeApplication.nativeApplication.menu;
             addLocalOptions();
-            AppModel.engine.addEventListener(AppEvent.REMOTE_READY, onRemoteReady);
+            addRemoteOptions();
 		}
 		
 		private static function addLocalOptions():void
@@ -49,28 +49,16 @@ package system {
             _updateApp.addEventListener(Event.SELECT, onOptionSelected);
 		}
 		
-		private static function onRemoteReady(e:AppEvent):void
+		private static function addRemoteOptions():void
 		{
-			if (_remote == null) _remote = _appMenu.addSubmenu(new NativeMenu(), "Remote");
-			addRemoteOption(e.data as RemoteAccount);
+			_remote = _appMenu.addSubmenu(new NativeMenu(), "Remote");
+			_remote.submenu.addItem(_github);
+			_remote.submenu.addItem(_beanstalk);
+			_github.addEventListener(Event.SELECT, onOptionSelected);
+			_beanstalk.addEventListener(Event.SELECT, onOptionSelected);
+			
 		}
 		
-		private static function addRemoteOption(ra:RemoteAccount):void
-		{
-			switch(ra.type){
-				case RemoteAccount.GITHUB :
-					_github = new NativeMenuItem('My Github');
-					_remote.submenu.addItem(_github);
-					_github.addEventListener(Event.SELECT, onOptionSelected);
-				break;	
-				case RemoteAccount.BEANSTALK:
-					_beanstalk = new NativeMenuItem('My Beanstalk');				
-					_remote.submenu.addItem(_beanstalk);
-					_beanstalk.addEventListener(Event.SELECT, onOptionSelected);
-				break;					
-			}
-		}
-
 		private static function getMenuByName(s:String):NativeMenuItem
 		{
             for (var i:int = 0; i < _appMenu.items.length; i++) if (_appMenu.items[i].label == s) return _appMenu.items[i];
@@ -88,13 +76,13 @@ package system {
         	 	break;  
         	 	case _github : 
         	 		onGitHubClick();
-        	 	break;          	 	      	 	
+        	 	break;   
+        	 	case _beanstalk : 
+        	 		onBeanstalkClick();
+        	 	break;           	 	       	 	      	 	
         	 	case _updateApp	: 
-					AppSettings.setSetting(AppSettings.CHECK_FOR_UPDATES, true);
-        	 		AppModel.updater.addEventListener(AppEvent.APP_UP_TO_DATE, onAppUpToDate);
-        	 		AppModel.updater.addEventListener(AppEvent.APP_UPDATE_FAILURE, onUpdateUnavailable);
-        	 		AppModel.updater.checkForUpdate();
-        	 	break;	       	 	
+					onUpdateAppClick();
+        	 	break;
         	 }
 		}
 		
@@ -105,7 +93,21 @@ package system {
 			}	else{
 				_stage.dispatchEvent(new UIEvent(UIEvent.REMOTE_LOGIN, {type:RemoteAccount.GITHUB, event:UIEvent.GITHUB_HOME}));
 			}			
-		}		
+		}
+		
+		private static function onBeanstalkClick():void
+		{
+			var m:String = 'Beanstalk integration is coming in the next build.';
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));						
+		}
+		
+		private static function onUpdateAppClick():void
+		{
+			AppSettings.setSetting(AppSettings.CHECK_FOR_UPDATES, true);
+	 		AppModel.updater.addEventListener(AppEvent.APP_UP_TO_DATE, onAppUpToDate);
+	 		AppModel.updater.addEventListener(AppEvent.APP_UPDATE_FAILURE, onUpdateUnavailable);
+	 		AppModel.updater.checkForUpdate();			
+		}
 
 		private static function onUpdateUnavailable(e:AppEvent):void
 		{

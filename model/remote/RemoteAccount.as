@@ -1,5 +1,6 @@
 package model.remote {
 
+	import flash.events.IOErrorEvent;
 	import events.AppEvent;
 	import model.AppModel;
 	import flash.display.Bitmap;
@@ -45,6 +46,7 @@ package model.remote {
 		{
 			var ldr:Loader = new Loader();
 			ldr.contentLoaderInfo.addEventListener(Event.COMPLETE, onAvatarLoaded);
+			ldr.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onAvatarFailure);
 			ldr.load(new URLRequest(url));
 		}
 
@@ -61,6 +63,12 @@ package model.remote {
 			_avatar.graphics.endFill();
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.REMOTE_READY, this));
 		}
+		
+		private function onAvatarFailure(e:IOErrorEvent):void
+		{
+			trace("--------RemoteAccount.onAvatarFailure(e)--------");
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.REMOTE_READY, this));
+		}		
 
 	}
 	

@@ -94,6 +94,7 @@ package model.proxies {
 		
 		private function onSuccess(m:String, o:Object):void
 		{
+			trace("GitHubApiProxy.onSuccess(m, o)", m, o);
 			switch(m){
 				case BashMethods.GET_ACCOUNT_INFO :
 					login(o.user, o.pass);
@@ -104,6 +105,7 @@ package model.proxies {
 					AppModel.proxies.githubKey.validateKeys(o.login);
 				break;
 				case BashMethods.LOGOUT:
+					AccountManager.killAccount(AccountManager.github);					
 					dispatchEvent(new AppEvent(AppEvent.LOGOUT));
 				break;									
 				case BashMethods.GET_REPOSITORIES :
@@ -121,6 +123,7 @@ package model.proxies {
 		
 		private function onMessage(m:String, o:Object):void
 		{
+		//	trace("GitHubApiProxy.onMessage(m, o)", m, o.message);
 			switch(o.message){
 				case 'No connection' :
 					dispatchEvent(new AppEvent(AppEvent.OFFLINE));

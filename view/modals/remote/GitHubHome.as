@@ -17,8 +17,8 @@ package view.modals.remote {
 		private static var _maxPerPage	:uint = 5;
 		private static var _pageIndex	:uint = 0;
 		private static var _model		:RemoteAccount;
-		private static var _activePage	:Sprite;
 		private static var _cloneURL	:String;
+		private static var _activePage	:Sprite;
 
 		public function GitHubHome()
 		{
@@ -35,11 +35,21 @@ package view.modals.remote {
 		private function onAccountReady(e:AppEvent):void
 		{
 			_model = AccountManager.github;
+			resetAccount();
 			attachAvatar();
 			attachRepositories();
 			if (_model.name) _view.badgeUser.user_txt.text = _model.name;
 			if (_model.name && _model.location) _view.badgeUser.user_txt.appendText(' - '+_model.location);
 		}
+		
+		private function resetAccount():void
+		{
+			_pageIndex = 0;
+			_view.badgeUser.user_txt.text = '';
+			if (_activePage){
+				 _view.removeChild(_activePage); _activePage = null;
+			}
+		}		
 
 		private function attachAvatar():void
 		{
@@ -192,21 +202,10 @@ package view.modals.remote {
 		
 		private function onLogout(e:AppEvent):void
 		{
-			destroyReferences();
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-			AppModel.proxies.githubApi.removeEventListener(AppEvent.LOGOUT, onLogout);
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, 'You Have Successfully Logged Out.'));
 		}
 
-		private function destroyReferences():void
-		{
-			_pageIndex = 0;
-			_view.removeChild(_activePage);
-			_view.badgeUser.user_txt.text = '';
-			_activePage = null; _pages = null; _model = null;
-			AccountManager.killAccount(AccountManager.github);
-		}
-		
 	}
 	
 }
