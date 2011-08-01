@@ -1,6 +1,7 @@
 package system {
 
 	import com.adobe.crypto.SHA1;
+	
 	public class LicenseManager {
 
 		private static var _key		:String = '56afea94f7c9cda8f96b6cebe53023c64d157a9f';

@@ -10,7 +10,6 @@ package model.proxies {
 	public class RemoteProxy extends NativeProcessProxy {
 		
 		private static var _remote	:Remote;
-		private static var _branch	:String;
 		
 		public function RemoteProxy()
 		{
@@ -25,25 +24,26 @@ package model.proxies {
 			super.call(Vector.<String>([BashMethods.ADD_REMOTE, _remote.name, _remote.push]));
 		}
 		
-		public function syncWithRemote($remote:Remote, $branch:String):void
+		public function syncWithRemote($remote:Remote):void
 		{
-			_remote = $remote; _branch = $branch;		
+			_remote = $remote;
 			super.directory = AppModel.bookmark.gitdir;
-			super.call(Vector.<String>([BashMethods.PULL_REMOTE, _remote.name, _branch]));						
-		}		
+			super.call(Vector.<String>([BashMethods.PULL_REMOTE, _remote.name, AppModel.bookmark.branch.name]));						
+		}
 		
 		private function pushToRemote():void
 		{
 			super.directory = AppModel.bookmark.gitdir;
-			super.call(Vector.<String>([BashMethods.PUSH_REMOTE, _remote.name, _branch]));
-		}
+			super.call(Vector.<String>([BashMethods.PUSH_REMOTE, _remote.name, AppModel.bookmark.branch.name]));
+		}				
 		
 		private function handleProcessSuccess(e:NativeProcessEvent):void
 		{
 			trace("RemoteProxy.onProcessComplete(e)", e.data.method, e.data.result);
 			switch(e.data.method){
 				case BashMethods.ADD_REMOTE : 
-					syncWithRemote(_remote, 'master');
+					AppModel.bookmark.addRemote(_remote);
+					pushToRemote();
 				break;	
 				case BashMethods.PULL_REMOTE : 
 					pushToRemote();

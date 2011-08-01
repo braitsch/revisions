@@ -2,13 +2,14 @@ package model {
 
 	import events.BookmarkEvent;
 	import events.DataBaseEvent;
-	import flash.events.EventDispatcher;
 	import model.db.AppDatabase;
 	import model.db.AppSettings;
 	import model.proxies.AppProxies;
 	import model.vo.Bookmark;
 	import model.vo.Branch;
+	import system.PreloadManager;
 	import system.UpdateManager;
+	import flash.events.EventDispatcher;
 
 	public class AppModel extends EventDispatcher {
 
@@ -17,10 +18,12 @@ package model {
 		private static var _database		:AppDatabase = new AppDatabase();
 		private static var _settings		:AppSettings = new AppSettings();
 		private static var _updater			:UpdateManager = new UpdateManager();
+		private static var _preloader		:PreloadManager = new PreloadManager();
 		private static var _bookmark		:Bookmark; // the active bookmark //
 
 		public function AppModel() 
 		{
+			_preloader.initialize();
 			_proxies.status.addListenersToResetTimer();
 			_engine.addEventListener(BookmarkEvent.SELECTED, onBookmarkSet);
 			_database.addEventListener(DataBaseEvent.BOOKMARKS_READ, onBookmarksRead);

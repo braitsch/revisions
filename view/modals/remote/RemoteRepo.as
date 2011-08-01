@@ -44,9 +44,7 @@ package view.modals.remote {
 		override public function onEnterKey():void { onOkButton();}		
 		protected function onOkButton(e:MouseEvent = null):void 
 		{ 
-			if (validate()){
-				addRepository();
-			}
+			if (validate()) addRepository();
 		}
 		
 		private function validate():Boolean
@@ -65,7 +63,6 @@ package view.modals.remote {
 		protected function checkForDuplicate():Boolean
 		{
 			_name = 'rvgh-'+_view.name_txt.text.replace(/\s/, '-').toLowerCase();
-			trace('_name: ' + (_name));
 			if (_bkmk.getRemoteByProp('name', _name)){
 				return true;
 			}	else{
@@ -75,20 +72,23 @@ package view.modals.remote {
 		
 		protected function addRepository():void
 		{
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Creating New Github Repository'));
 			_proxy.addRepository(_view.name_txt.text, _view.desc_txt.text, _check.selected==false);
-			_proxy.addEventListener(AppEvent.REPOSITORY_CREATED, onRepositoryCreated);			
+			_proxy.addEventListener(AppEvent.REPOSITORY_CREATED, onRepositoryCreated);
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Creating New Github Repository'));
 		}
 		
 		private function onRepositoryCreated(e:AppEvent):void
 		{
 			var url:String = e.data as String;
-			var rmt:Remote = _bkmk.addRemote(_name, url, url);
-		// TODO also need to add this repository to the github home view...
+			addNewRemote(new Remote(_name, url, url));
+			_proxy.removeEventListener(AppEvent.REPOSITORY_CREATED, onRepositoryCreated);
+		}
+		
+		private function addNewRemote(rmt:Remote):void
+		{
 			AppModel.proxies.remote.addRemote(rmt);
 			AppModel.proxies.remote.addEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);
-			AppModel.proxies.githubApi.removeEventListener(AppEvent.REPOSITORY_CREATED, onRepositoryCreated);
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.LOADER_TEXT, 'Sending Files To Github'));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.LOADER_TEXT, 'Sending Files To Github'));			
 		}
 
 		private function onRemoteSynced(e:AppEvent):void
@@ -96,6 +96,7 @@ package view.modals.remote {
 			trace("AddRemoteRepo.onRemoteSynced(e)");
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
+			AppModel.proxies.remote.removeEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);	
 		}
 		
 	}

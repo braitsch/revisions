@@ -148,7 +148,14 @@ package view {
 				_details.save_btn.removeEventListener(MouseEvent.CLICK, onSaveButton);
 			}					
 			_details.version_txt.text = 'Version #'+_bookmark.branch.totalCommits as String;
-			_details.lastSaved_txt.text = 'Last Saved : '+_bookmark.branch.lastCommit.date;
+			if (_bookmark.branch.lastCommit.date){
+				_details.lastSaved_txt.text = 'Last Saved : '+_bookmark.branch.lastCommit.date;
+			}	else{
+				trace("SummaryView.drawView(e) ---- _bookmark.branch.lastCommit.date == NULL!!!");
+				trace('_bookmark: ' + (_bookmark));
+				trace('_bookmark.branch ' + (_bookmark.branch));
+				trace('_bookmark.branch.lastCommit ' + (_bookmark.branch.lastCommit));
+			}
 		}
 
 	// button events //
@@ -185,7 +192,7 @@ package view {
 				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
 			}	else{
 				_locked = true;
-				AppModel.proxies.remote.syncWithRemote(_bookmark.remotes[0], 'master');
+				AppModel.proxies.remote.syncWithRemote(_bookmark.remotes[0]);
 				AppModel.proxies.remote.addEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);
 				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Syncing Bookmark'));
 			}

@@ -103,11 +103,9 @@ package model.vo {
 			_remotes.push(new Remote(n, f, p));
 		}
 		
-		public function addRemote(n:String, f:String, p:String):Remote
+		public function addRemote(r:Remote):void
 		{
-			var rmt:Remote = new Remote(n, f, p);
-			_remotes.push(rmt);
-			return rmt;
+			_remotes.push(r);
 		}
 		
 		public function get remotes():Vector.<Remote>
