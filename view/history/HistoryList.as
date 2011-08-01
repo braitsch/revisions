@@ -10,7 +10,8 @@ package view.history {
 	public class HistoryList extends Sprite {
 
 		private var _hLength			:uint;	// cached history length
-		private var _mLength			:uint;	// cached modified length
+//		private var _mLength			:uint;	// cached modified length
+		private var _modified			:Boolean;
 		private var _bookmark			:Bookmark;
 		private var _unsaved			:HistoryItemUnsaved;
 
@@ -46,14 +47,25 @@ package view.history {
 
 		private function modifiedHasChanged():Boolean
 		{
-			var n:uint = _bookmark.branch.modified.length;
-			if (isNaN(_mLength) || _mLength != n) {
-				_mLength = n;
+			var m:Boolean = _bookmark.branch.isModified();
+			if (_modified != m) {
+				_modified = m;
 				return true;
 			}	else{
 				return false;
 			}
 		}
+
+//		private function modifiedHasChanged():Boolean
+//		{
+//			var n:uint = _bookmark.branch.modified.length;
+//			if (isNaN(_mLength) || _mLength != n) {
+//				_mLength = n;
+//				return true;
+//			}	else{
+//				return false;
+//			}
+//		}
 		
 		private function historyHasChanged():Boolean
 		{
@@ -88,9 +100,10 @@ package view.history {
 		
 		private function showHideUnsaved():void
 		{
-			if (_mLength > 0) {
+			var m:Boolean = _bookmark.branch.isModified();
+			if (m == true) {
 				addChildAt(_unsaved, 0);
-			}	else if (_mLength == 0 && _unsaved.stage) {
+			}	else if (m == false && _unsaved.stage) {
 				removeChildAt(0);
 			}				
 		}

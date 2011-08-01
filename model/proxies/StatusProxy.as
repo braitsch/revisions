@@ -96,7 +96,6 @@ package model.proxies {
 		private function killTimer(e:BookmarkEvent):void
 		{
 			_timer.stop();
-			trace("StatusProxy.killTimer(e)");
 		}		
 		
 	// private handlers //

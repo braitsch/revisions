@@ -95,7 +95,7 @@ package model.vo {
 			}
 		}
 		
-		public function set remotes(a:Array):void
+		public function parseRemotes(a:Array):void
 		{
 			var n:String = a[0];
 			var f:String = a[1].substr(0, a[1].search(/\s/));
@@ -110,10 +110,10 @@ package model.vo {
 			return rmt;
 		}
 		
-		public function hasRemotes():Boolean
+		public function get remotes():Vector.<Remote>
 		{
-			return _remotes.length != 0;
-		}
+			return _remotes;
+		}			
 		
 		public function getRemoteByProp($prop:String, $value:String):Remote
 		{

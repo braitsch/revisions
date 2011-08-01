@@ -25,12 +25,17 @@ package model.vo {
 		
 		public function get lastCommit():Commit { return _lastCommit; }
 		public function get totalCommits():uint { return _totalCommits; }
-		public function get modified():Array { return _status[StatusProxy.M]; }
+//		public function get modified():Array { return _status[StatusProxy.M]; }
 //		public function get untracked():uint { return _status[StatusProxy.U]; }
 				
 		public function set status(a:Array):void 
 		{ 
-			_status = a; 
+			_status = a;
+		}
+		
+		public function isModified():Boolean
+		{
+			return (_status[StatusProxy.M].length || _status[StatusProxy.U].length);
 		}
 		
 		public function clearModified():void

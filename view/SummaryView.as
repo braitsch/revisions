@@ -120,7 +120,7 @@ package view {
 			_view.name_txt.y = -_offset - 13;
 			_view.name_txt.x = -_view.name_txt.width/2;	
 			getBookmarkIcon();
-			showRemoteButtons(_bookmark.hasRemotes());
+			showRemoteButtons(_bookmark.remotes.length > 0);
 		}
 		
 		private function getBookmarkIcon():void
@@ -138,8 +138,7 @@ package view {
 		{
 		// ignore if we're not showing the bookmark that just updated //
 			if (e.data != _bookmark) return;
-			var m:uint = _bookmark.branch.modified.length;
-			if (m > 0){
+			if (_bookmark.branch.isModified()){
 				_details.save_btn.over.alpha = 1;
 				_details.save_btn.buttonMode = true;
 				_details.save_btn.addEventListener(MouseEvent.CLICK, onSaveButton);
@@ -169,17 +168,39 @@ package view {
 			dispatchEvent(new UIEvent(UIEvent.EDIT_BOOKMARK, _bookmark));			
 		}
 
-	// TODO once we have remote integration //		
 		private function onPushButton(e:MouseEvent):void 
 		{ 
-			var m:String = "Pushing & Pulling to remote repositories isn't quite there yet, but will be very soon.";
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
+			syncRemote();
 		}
+		
 		private function onPullButton(e:MouseEvent):void 
-		{ 
-			var m:String = "Pushing & Pulling to remote repositories isn't quite there yet, but will be very soon.";
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
+		{
+			syncRemote(); 
 		}
+		
+		private function syncRemote():void
+		{
+			if (_bookmark.remotes.length == 1){
+				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Syncing Bookmark'));
+				AppModel.proxies.remote.syncWithRemote(_bookmark.remotes[0], 'master');
+				AppModel.proxies.remote.addEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);
+			}	else{
+				var m:String = 'This bookmark has multiple remotes. A remote chooser is coming soon.';
+				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
+			}
+		}
+
+		private function onRemoteSynced(e:AppEvent):void
+		{
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
+			AppModel.proxies.remote.removeEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);			
+		}
+		
+//		private function dispatchAlert():void
+//		{
+//			var m:String = "Pushing & Pulling to remote repositories isn't quite there yet, but will be very soon.";
+//			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));			
+//		}
 		
 	}
 	

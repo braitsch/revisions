@@ -11,7 +11,7 @@ package model.vo {
 			_name = $name;
 			_fetch = $fetch;
 			_push = $push;
-			trace("Remote.Remote($name, $fetch, $push)", _name, _fetch);
+		//	trace("Remote.Remote($name, $fetch, $push)", _name, _fetch);
 		}
 
 		public function get name():String

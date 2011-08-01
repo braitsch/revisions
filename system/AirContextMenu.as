@@ -45,7 +45,7 @@ package system {
 		{
 			if (e.mouseTarget is BookmarkListItem){
 				var b:Bookmark = getBookmark(e.mouseTarget);
-				_bkmkOptions[0].enabled = b.branch.modified.length != 0;
+				_bkmkOptions[0].enabled = b.branch.isModified();
 				_menu.customItems = _bkmkOptions;			}	else{
 				_menu.customItems = _fileOptions;
 			}

@@ -50,7 +50,7 @@ package model.proxies {
 					dispatchEvent(new BookmarkEvent(BookmarkEvent.BRANCHES_READ));
 				break;
 				case BashMethods.GET_REMOTES :
-					if (r[0] != '') _bookmark.remotes = r;
+					if (r[0] != '') _bookmark.parseRemotes(r);
 					dispatchEvent(new BookmarkEvent(BookmarkEvent.REMOTES_READ));
 				break;				
 				case BashMethods.GET_STASH_LIST :

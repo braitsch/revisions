@@ -94,7 +94,7 @@ package model.proxies {
 		
 		private function onSuccess(m:String, o:Object):void
 		{
-			trace("GitHubApiProxy.onSuccess(m, o)", m, o);
+		//	trace("GitHubApiProxy.onSuccess(m, o)", m, o);
 			switch(m){
 				case BashMethods.GET_ACCOUNT_INFO :
 					login(o.user, o.pass);

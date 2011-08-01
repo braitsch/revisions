@@ -9,7 +9,8 @@ package model.proxies {
 	
 	public class RemoteProxy extends NativeProcessProxy {
 		
-		private static var _remote:Remote;
+		private static var _remote	:Remote;
+		private static var _branch	:String;
 		
 		public function RemoteProxy()
 		{
@@ -24,22 +25,30 @@ package model.proxies {
 			super.call(Vector.<String>([BashMethods.ADD_REMOTE, _remote.name, _remote.push]));
 		}
 		
-		public function pushToRemote($remote:Remote, $branch:String):void
+		public function syncWithRemote($remote:Remote, $branch:String):void
 		{
-			_remote = $remote;			
+			_remote = $remote; _branch = $branch;		
 			super.directory = AppModel.bookmark.gitdir;
-			super.call(Vector.<String>([BashMethods.PUSH_TO_REMOTE, _remote.name, $branch]));
-		}			
-
+			super.call(Vector.<String>([BashMethods.PULL_REMOTE, _remote.name, _branch]));						
+		}		
+		
+		private function pushToRemote():void
+		{
+			super.directory = AppModel.bookmark.gitdir;
+			super.call(Vector.<String>([BashMethods.PUSH_REMOTE, _remote.name, _branch]));
+		}
+		
 		private function handleProcessSuccess(e:NativeProcessEvent):void
 		{
-		//	trace("RemoteProxy.onProcessComplete(e)", e.data.method, e.data.result);
-		// TODO need to pass in a real branch var instead of 'master'
+			trace("RemoteProxy.onProcessComplete(e)", e.data.method, e.data.result);
 			switch(e.data.method){
 				case BashMethods.ADD_REMOTE : 
-					pushToRemote(_remote, 'master');
+					syncWithRemote(_remote, 'master');
 				break;	
-				case BashMethods.PUSH_TO_REMOTE : 
+				case BashMethods.PULL_REMOTE : 
+					pushToRemote();
+				break;	
+				case BashMethods.PULL_REMOTE : 
 					dispatchEvent(new AppEvent(AppEvent.REMOTE_SYNCED));
 				break;	
 			}

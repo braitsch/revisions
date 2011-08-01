@@ -205,7 +205,6 @@ package view.modals {
 		
 		private function addBkmkToRemote(e:UIEvent):void
 		{
-			trace("ModalManager.addBkmkToRemote(e)", e.data);
 			var w:RemoteRepo;
 			switch(e.data){
 				case RemoteAccount.GITHUB :	w = _addToGitHub; break;

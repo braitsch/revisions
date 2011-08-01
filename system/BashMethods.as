@@ -57,8 +57,11 @@ package system{
 		public static const EDIT_REPOSITORY		:String = 'editRepository';
 		public static const GET_REPOSITORIES	:String = 'getRepositories';
 		public static const CLONE_REPOSITORY	:String = 'cloneRepository';
+		
+	// remote proxy methods //	
 		public static const ADD_REMOTE			:String = 'addRemote';
-		public static const PUSH_TO_REMOTE		:String = 'pushToRemote';
+		public static const PULL_REMOTE			:String = 'pullFromRemote';
+		public static const PUSH_REMOTE			:String = 'pushToRemote';
 		
 	}
 	

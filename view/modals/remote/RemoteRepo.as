@@ -28,6 +28,7 @@ package view.modals.remote {
 			_view.form.label1.text = 'Name';
 			_view.form.label2.text = 'Description';
 			_check.label = 'Make Repository Private';
+			_view.pageBadge.label_txt.text = 'Add To Github';
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);
 		}
 		
