@@ -29,6 +29,7 @@ package view {
 		private static var _fringe		:Bitmap = new Bitmap(new SummaryBkgdBottom());
 		private static var _pattern		:BitmapData = new SummaryBkgdPattern();
 		private static var _bookmark	:Bookmark;
+		private static var _locked		:Boolean;
 		private static var _tformat		:TextFormat = new TextFormat();
 		private static var _glowSmall	:GlowFilter = new GlowFilter(0xffffff, 1, 2, 2, 3, 3);
 		private static var _glowLarge	:GlowFilter = new GlowFilter(0xffffff, 1, 6, 6, 3, 3);
@@ -60,12 +61,11 @@ package view {
 		
 		private function initButtons():void
 		{
-			var l:Array = ['Settings', 'Pull Remote', 'Push Remote', 'History'];
-			var a:Array = [_details.settings_btn, _details.pull_btn, _details.push_btn, _details.history_btn];
-			for (var i:int = 0; i < 4; i++) new SmartButton(a[i], new Tooltip(l[i]));
+			var l:Array = ['Settings', 'Sync Remote', 'History'];
+			var a:Array = [_details.settings_btn, _details.sync_btn, _details.history_btn];
+			for (var i:int = 0; i < 3; i++) new SmartButton(a[i], new Tooltip(l[i]));
 			_details.save_btn.over.alpha = 0;
-			_details.pull_btn.addEventListener(MouseEvent.CLICK, onPullButton);
-			_details.push_btn.addEventListener(MouseEvent.CLICK, onPushButton);
+			_details.sync_btn.addEventListener(MouseEvent.CLICK, onSyncButton);
 			_details.history_btn.addEventListener(MouseEvent.CLICK, onHistoryButton);
 			_details.settings_btn.addEventListener(MouseEvent.CLICK, onSettingsButton);
 		}
@@ -97,9 +97,9 @@ package view {
 
 		private function showRemoteButtons(b:Boolean):void
 		{
-			_details.pull_btn.visible = _details.push_btn.visible = b;
-			_details.history_btn.x = b ? 58 : 20;
-			_details.settings_btn.x = b ? -56 : -18;
+			_details.sync_btn.visible = b;
+			_details.history_btn.x = b ? 40 : 20;
+			_details.settings_btn.x = b ? -40 : -20;
 		}
 
 		private function addBookmarkListeners():void
@@ -153,6 +153,11 @@ package view {
 
 	// button events //
 		
+		private function onSyncButton(e:MouseEvent):void 
+		{
+			if (!_locked) syncRemote(); 
+		}
+				
 		private function onSaveButton(e:MouseEvent):void
 		{
 			dispatchEvent(new UIEvent(UIEvent.COMMIT));
@@ -167,40 +172,31 @@ package view {
 		{
 			dispatchEvent(new UIEvent(UIEvent.EDIT_BOOKMARK, _bookmark));			
 		}
-
-		private function onPushButton(e:MouseEvent):void 
-		{ 
-			syncRemote();
-		}
-		
-		private function onPullButton(e:MouseEvent):void 
-		{
-			syncRemote(); 
-		}
 		
 		private function syncRemote():void
 		{
-			if (_bookmark.remotes.length == 1){
-				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Syncing Bookmark'));
+			var m:String;
+			if (_bookmark.branch.isModified()){
+				m = 'Please saves your lastest changes before syncing with the server.';
+			}	else if (_bookmark.remotes.length != 1){
+				m = 'This bookmark has multiple remotes. A remote chooser is coming soon.';
+			}
+			if (m){
+				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
+			}	else{
+				_locked = true;
 				AppModel.proxies.remote.syncWithRemote(_bookmark.remotes[0], 'master');
 				AppModel.proxies.remote.addEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);
-			}	else{
-				var m:String = 'This bookmark has multiple remotes. A remote chooser is coming soon.';
-				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
+				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Syncing Bookmark'));
 			}
 		}
 
 		private function onRemoteSynced(e:AppEvent):void
 		{
+			_locked = false;
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 			AppModel.proxies.remote.removeEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);			
 		}
-		
-//		private function dispatchAlert():void
-//		{
-//			var m:String = "Pushing & Pulling to remote repositories isn't quite there yet, but will be very soon.";
-//			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));			
-//		}
 		
 	}
 	

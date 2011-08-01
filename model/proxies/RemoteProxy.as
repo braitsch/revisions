@@ -48,7 +48,7 @@ package model.proxies {
 				case BashMethods.PULL_REMOTE : 
 					pushToRemote();
 				break;	
-				case BashMethods.PULL_REMOTE : 
+				case BashMethods.PUSH_REMOTE : 
 					dispatchEvent(new AppEvent(AppEvent.REMOTE_SYNCED));
 				break;	
 			}
