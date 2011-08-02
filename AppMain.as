@@ -1,8 +1,9 @@
 package {
 
-	import model.remote.AccountManager;
 	import events.AppEvent;
+	import events.BookmarkEvent;
 	import model.AppModel;
+	import model.remote.AccountManager;
 	import system.AirContextMenu;
 	import system.AirNativeMenu;
 	import system.LicenseManager;
@@ -64,10 +65,16 @@ package {
 		private function onGitReady(e:AppEvent):void
 		{
 			AppModel.engine.initialize();
-			AccountManager.initialize();
 			AirNativeMenu.initialize(stage);
 			AirContextMenu.initialize(stage);
+			AppModel.engine.addEventListener(BookmarkEvent.LOADED, onBookmarksRendered);
 			AppModel.proxies.config.removeEventListener(AppEvent.GIT_SETTINGS, onGitReady);
+		}
+		
+		private function onBookmarksRendered(e:BookmarkEvent):void
+		{
+			AccountManager.initialize();
+			AppModel.engine.removeEventListener(BookmarkEvent.LOADED, onBookmarksRendered);
 		}
 		
 	}

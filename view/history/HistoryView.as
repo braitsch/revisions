@@ -57,7 +57,7 @@ package view.history {
 		// create a list object for each bookmark in the database //	
 			var a:Vector.<Bookmark> = e.data as Vector.<Bookmark>;
 			for (var i:int = 0;i < a.length; i++) _lists.push(new HistoryList(a[i]));
-			addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);			
+			addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);	
 		}
 		
 		private function onAddition(e:BookmarkEvent):void 
