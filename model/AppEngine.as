@@ -1,8 +1,8 @@
 package model {
 
+	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.DataBaseEvent;
-	import events.AppEvent;
 	import model.vo.Bookmark;
 	import flash.events.EventDispatcher;
 
@@ -12,107 +12,110 @@ package model {
 		
 		private static var _index			:uint = 0;
 		private static var _bookmark		:Bookmark;
-		private static var _broken			:Vector.<Bookmark> = new Vector.<Bookmark>();
-		private static var _bookmarks		:Vector.<Bookmark> = new Vector.<Bookmark>();
+		private static var _broken			:Vector.<Bookmark>;
+		private static var _bookmarks		:Vector.<Bookmark>;
+
+		public function initialize():void
+		{
+			AppModel.database.initialize();
+			AppModel.database.addEventListener(DataBaseEvent.BOOKMARKS_READ, generateBookmarks);			
+		}
 
 	// expose bookmarks to check against duplicates being added //
 			
 		static public function get bookmarks():Vector.<Bookmark> { return _bookmarks; }
 		
-	// sequence to initalize a new bookmark //
+	// ---------- ADDING NEW BOOKMARKS ---------- //
 
 		public function addBookmark(b:Bookmark):void
 		{
 			_bookmark = b;
-			var s:String = _bookmark.type == Bookmark.FILE ? 'File' : 'Directory Contents';
-			dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Reading '+s));			
-			AppModel.database.addRepository(_bookmark);
-			AppModel.database.addEventListener(DataBaseEvent.RECORD_ADDED, initBookmark);			
-		}
-		
-		private function initBookmark(e:DataBaseEvent):void
-		{
-			AppModel.database.removeEventListener(DataBaseEvent.RECORD_ADDED, initBookmark);
 			AppModel.proxies.editor.initBookmark(_bookmark);
-			AppModel.proxies.editor.addEventListener(BookmarkEvent.INITIALIZED, readBranches);
-		}
-
-		private function readBranches(e:BookmarkEvent = null):void 
-		{
-			AppModel.proxies.editor.removeEventListener(BookmarkEvent.INITIALIZED, readBranches);
-			AppModel.proxies.branch.getBranches(_bookmark);
-			AppModel.proxies.branch.addEventListener(BookmarkEvent.BRANCHES_READ, getRemotes);
+			AppModel.proxies.editor.addEventListener(BookmarkEvent.INITIALIZED, readRepository);		
 		}
 		
-		private function getRemotes(e:BookmarkEvent):void
+		private function readRepository(e:BookmarkEvent):void
 		{
-			AppModel.proxies.branch.removeEventListener(BookmarkEvent.BRANCHES_READ, getRemotes);
-			AppModel.proxies.branch.getRemotes();			
-			AppModel.proxies.branch.addEventListener(BookmarkEvent.REMOTES_READ, getStashList);
+			AppModel.proxies.editor.removeEventListener(BookmarkEvent.INITIALIZED, readRepository);
+			AppModel.proxies.reader.getRepositoryInfo(_bookmark);
+			AppModel.proxies.reader.addEventListener(AppEvent.REPOSITORY_READY, addBkmkToDatabase);
+		}
+		
+		private function addBkmkToDatabase(e:AppEvent):void
+		{
+			AppModel.proxies.reader.removeEventListener(AppEvent.REPOSITORY_READY, addBkmkToDatabase);
+			AppModel.database.addRepository(_bookmark);
+			AppModel.database.addEventListener(DataBaseEvent.RECORD_ADDED, onAddedToDatabase);			
 		}
 
-		private function getStashList(e:BookmarkEvent):void 
+		private function onAddedToDatabase(e:DataBaseEvent):void 
 		{
-			AppModel.proxies.branch.removeEventListener(BookmarkEvent.REMOTES_READ, getStashList);
-			AppModel.proxies.branch.getStashList();
-			AppModel.proxies.branch.addEventListener(BookmarkEvent.STASH_LIST_READ, onBookmarkReady);
-		}
-
-		private function onBookmarkReady(e:BookmarkEvent):void 
-		{
-			for (var i:int = 0; i < _bookmarks.length; i++) _bookmarks[i].active = false;			
 			_bookmarks.push(_bookmark);
-			dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));			
 			dispatchEvent(new BookmarkEvent(BookmarkEvent.ADDED, _bookmark));
+			AppModel.database.removeEventListener(DataBaseEvent.RECORD_ADDED, onAddedToDatabase);
 			dispatchActiveBookmark();
 		}
 
-	// sequence to remove a bookmark //	
+	// ---------- DELETING BOOKMARKS ---------- //
 
-		public function deleteBookmark(bkmk:Bookmark, trashGit:Boolean, trashFiles:Boolean):void
+		public function deleteBookmark(bkmk:Bookmark, killGit:Boolean, killFiles:Boolean):void
 		{
 			_bookmark = bkmk;
-			if (!trashGit && !trashFiles){
-		// no need to edit the filesystem //	
-				removeFromDatabase();
+			if (!killGit && !killFiles){
+				removeFromBkmkView();
 			}	else{
-				AppModel.proxies.editor.deleteBookmark(bkmk, trashGit, trashFiles);		
-				AppModel.proxies.editor.addEventListener(BookmarkEvent.DELETED, removeFromDatabase);
+				AppModel.proxies.editor.deleteBookmark(_bookmark, killGit, killFiles);		
+				AppModel.proxies.editor.addEventListener(AppEvent.FILES_DELETED, removeFromBkmkView);	
 			}
 		}
-			
-		private function removeFromDatabase(e:BookmarkEvent = null):void 
+		
+		private function removeFromBkmkView(e:AppEvent = null):void
 		{
+			AppModel.proxies.editor.removeEventListener(AppEvent.FILES_DELETED, removeFromBkmkView);
 			AppModel.database.deleteRepository(_bookmark.label);
 			AppModel.database.addEventListener(DataBaseEvent.RECORD_DELETED, onRemovedFromDatabase);
 		}
-
+			
 		private function onRemovedFromDatabase(e:DataBaseEvent):void 
 		{
+			dispatchEvent(new BookmarkEvent(BookmarkEvent.DELETED, _bookmark));
 			AppModel.database.removeEventListener(DataBaseEvent.RECORD_DELETED, onRemovedFromDatabase);
-			removeBookmarkFromList(e.data as Array);
+			deleteAndSetNewActiveBookmark(e.data as Array);
 		}
-
-		private function removeBookmarkFromList(a:Array):void 
+		
+		private function deleteAndSetNewActiveBookmark(a:Array):void
 		{
 			for (var i:int = 0; i < _bookmarks.length; i++) if (_bookmarks[i] == _bookmark) _bookmarks.splice(i, 1);
-			for (var j:int = 0; j < a.length; j++) _bookmarks[j].active = a[j].active;
-			
-			dispatchEvent(new BookmarkEvent(BookmarkEvent.DELETED, _bookmark));
-			
-		// don't parse bookmarks until all the broken paths have been repaired //	
-			if (_broken.length != 0) return;
-			if (_bookmarks.length > 0) {
-				dispatchActiveBookmark();
-			}	else{
-				dispatchEvent(new BookmarkEvent(BookmarkEvent.NO_BOOKMARKS));
-			}				
+			for (var j:int = 0; j < a.length; j++) if (a[j].active == 1) _bookmark = _bookmarks[j];
+			if (_broken.length == 0) {
+				if (_bookmarks.length > 0) {
+					dispatchActiveBookmark();
+				}	else{
+					dispatchEvent(new BookmarkEvent(BookmarkEvent.NO_BOOKMARKS));
+				}		
+			}			
 		}
 		
-	// generate bookmarks from database records //		
+	// ---------- GENERATE FROM DATABASE ---------- //
 		
-		public function generateBookmarks(a:Array):void 
+		private function generateBookmarks(e:DataBaseEvent):void 
 		{
+			buildBkmksFromDatabase(e.data as Array);
+			if (_bookmarks.length == 0){
+				dispatchEvent(new BookmarkEvent(BookmarkEvent.NO_BOOKMARKS));	
+			}	else{
+				checkForBrokenPaths();
+				if (_broken.length == 0) {
+					readBookmarkData();
+				}	else{
+					dispatchEvent(new BookmarkEvent(BookmarkEvent.PATH_ERROR, _broken[0]));
+				}
+			}
+		}
+		
+		private function buildBkmksFromDatabase(a:Array):void
+		{
+			_bookmarks = new Vector.<Bookmark>();
 			for (var i:int = 0; i < a.length; i++) {
 				var o:Object = {
 					label		:	a[i].label,
@@ -120,17 +123,17 @@ package model {
 					path		:	a[i].path,
 					local		:	a[i].local,
 					active 		:	a[i].active,
-					autosave	:	a[i].autosave
-				};
+					autosave	:	a[i].autosave};
 				var b:Bookmark = new Bookmark(o);
 				_bookmarks.push(b);
-				if (b.exists == false) _broken.push(b);
-			}
-			if (_broken.length == 0) {
-				buildBookmarksFromDatabase();
-			}	else{
-				dispatchEvent(new BookmarkEvent(BookmarkEvent.PATH_ERROR, _broken[0]));
-			}
+				if (b.active) _bookmark = b;
+			}			
+		}		
+		
+		private function checkForBrokenPaths():void
+		{
+			_broken = new Vector.<Bookmark>();
+			for (var i:int = 0; i < _bookmarks.length; i++) if (!_bookmarks[i].exists) _broken.push(_bookmarks[i]);			
 		}
 		
 	// called from everytime a bkmk is repaired //			
@@ -141,7 +144,7 @@ package model {
 			}	else{
 				_broken.splice(0, 1);
 				if (_broken.length == 0){
-					buildBookmarksFromDatabase();
+					readBookmarkData();
 					return null;
 				}	else{
 					return _broken[0];
@@ -149,41 +152,29 @@ package model {
 			}
 		}
 		
-		private function buildBookmarksFromDatabase():void
+		private function readBookmarkData():void
 		{
 			dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Initalizing Bookmarks'));
-			AppModel.proxies.branch.getBranches(_bookmarks[_index]);			AppModel.proxies.branch.addEventListener(BookmarkEvent.BRANCHES_READ, getRemotesOfNextBookmark);
-			AppModel.proxies.branch.addEventListener(BookmarkEvent.REMOTES_READ, getStashOfNextBookmark);			AppModel.proxies.branch.addEventListener(BookmarkEvent.STASH_LIST_READ, onStoredBookmarkReady);
-		}
-		
-		private function getRemotesOfNextBookmark(e:BookmarkEvent):void 
-		{
-			AppModel.proxies.branch.getRemotes();
-		}		
-		
-		private function getStashOfNextBookmark(e:BookmarkEvent):void 
-		{
-			AppModel.proxies.branch.getStashList();
+			AppModel.proxies.reader.getRepositoryInfo(_bookmarks[_index]);
+			AppModel.proxies.reader.addEventListener(AppEvent.REPOSITORY_READY, onRepositoryReady);
 		}
 
-		private function onStoredBookmarkReady(e:BookmarkEvent):void 
+		private function onRepositoryReady(e:AppEvent):void 
 		{
 			if (++_index < _bookmarks.length){
-				AppModel.proxies.branch.getBranches(_bookmarks[_index]);	
+				AppModel.proxies.reader.getRepositoryInfo(_bookmarks[_index]);	
 			}	else{
-				AppModel.proxies.branch.removeEventListener(BookmarkEvent.BRANCHES_READ, getRemotesOfNextBookmark);
-				AppModel.proxies.branch.removeEventListener(BookmarkEvent.REMOTES_READ, getStashOfNextBookmark);
-				AppModel.proxies.branch.removeEventListener(BookmarkEvent.STASH_LIST_READ, onStoredBookmarkReady);			
 				dispatchEvent(new BookmarkEvent(BookmarkEvent.LOADED, _bookmarks));
 				dispatchActiveBookmark();
+				AppModel.proxies.reader.removeEventListener(AppEvent.REPOSITORY_READY, onRepositoryReady);
 			}
 		}
 		
 		private function dispatchActiveBookmark():void
 		{
-			var ab:Bookmark; // active bookmark //
-			for (var i:int = 0; i < _bookmarks.length; i++) if (_bookmarks[i].active == true) ab = _bookmarks[i];
-			if (ab != null) dispatchEvent(new BookmarkEvent(BookmarkEvent.SELECTED, ab));
+		// protect against potential database errors //	
+			if (_bookmark == null) _bookmark = _bookmarks[0];
+			dispatchEvent(new BookmarkEvent(BookmarkEvent.SELECTED, _bookmark));
 		}
 
 	}

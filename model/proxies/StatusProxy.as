@@ -26,7 +26,7 @@ package model.proxies {
 		static public function get working():Boolean { return _working; }		
 				public function StatusProxy()
 		{
-			super('Status.sh');
+			super.executable = 'Status.sh';
 			super.addEventListener(NativeProcessEvent.QUEUE_COMPLETE, onQueueComplete);
 			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);
 			_timer.addEventListener(TimerEvent.TIMER, getStatus);

@@ -27,6 +27,8 @@ package model.proxies {
 		public function syncWithRemote($remote:Remote):void
 		{
 			_remote = $remote;
+			trace("RemoteProxy.syncWithRemote($remote)", _remote.name, AppModel.bookmark.branch.name);
+			return;
 			super.directory = AppModel.bookmark.gitdir;
 			super.call(Vector.<String>([BashMethods.PULL_REMOTE, _remote.name, AppModel.bookmark.branch.name]));						
 		}

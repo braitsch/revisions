@@ -50,6 +50,7 @@ package model.proxies {
 				super.directory =  File.applicationStorageDirectory.nativePath;
 				super.call(Vector.<String>([BashMethods.INIT_FILE, bkmk.path, MD5.hash(bkmk.path), bkmk.worktree]));
 			}
+			dispatchEvent(new AppEvent(AppEvent.INITIALIZING_BOOKMARK, bkmk));
 		}	
 
 		public function deleteBookmark(bkmk:Bookmark, trashGit:Boolean, trashFiles:Boolean):void 
@@ -85,10 +86,10 @@ package model.proxies {
 					dispatchEvent(new BookmarkEvent(BookmarkEvent.INITIALIZED));
 				break;	
 				case BashMethods.KILL_FILE : 
-					dispatchEvent(new BookmarkEvent(BookmarkEvent.DELETED));
+					dispatchEvent(new AppEvent(AppEvent.FILES_DELETED));
 				break;
 				case BashMethods.KILL_FOLDER : 
-					dispatchEvent(new BookmarkEvent(BookmarkEvent.DELETED));
+					dispatchEvent(new AppEvent(AppEvent.FILES_DELETED));
 				break;								
 				case BashMethods.TRACK_FILE : 
 			//		AppModel.proxies.status.getStatus();

@@ -25,7 +25,7 @@ package model.db {
 
 		// public methods //
 
-		public function init():void 
+		public function initialize():void 
 		{
 			_open = new Vector.<SQLStatement>();	
 			_open.push(AppSQLQuery.INIT_DATABASE);	
@@ -83,18 +83,18 @@ package model.db {
 		{
 			switch(e.data.transaction as Vector.<SQLStatement>){
 				case _open:	
-					trace("AppDatabase.onTransactionComplete(e) : initDataBase", e.data.result);
+			//		trace("AppDatabase.onTransactionComplete(e) : initDataBase", e.data.result);
 					_bookmarks = e.data.result[1].data || [];					dispatchEvent(new DataBaseEvent(DataBaseEvent.BOOKMARKS_READ, _bookmarks));
 				break;				case _add:	
-					trace("AppDatabase.onTransactionComplete(e) : addRepository");					_bookmarks = e.data.result[2].data || [];					dispatchEvent(new DataBaseEvent(DataBaseEvent.RECORD_ADDED, _bookmarks));
-				break;				case _edit:						trace("AppDatabase.onTransactionComplete(e) : editRepository");
+			//		trace("AppDatabase.onTransactionComplete(e) : addRepository");					_bookmarks = e.data.result[2].data || [];					dispatchEvent(new DataBaseEvent(DataBaseEvent.RECORD_ADDED, _bookmarks));
+				break;				case _edit:				//		trace("AppDatabase.onTransactionComplete(e) : editRepository");
 					_bookmarks = e.data.result[1].data || [];
 					dispatchEvent(new DataBaseEvent(DataBaseEvent.RECORD_EDITED, _bookmarks));
 				break;				
 				case _delete:	
+			//		trace("AppDatabase.onTransactionComplete(e) : deleteRepository");
 					_bookmarks = e.data.result[2].data || [];
 					dispatchEvent(new DataBaseEvent(DataBaseEvent.RECORD_DELETED, _bookmarks));
-					trace("AppDatabase.onTransactionComplete(e) : deleteRepository");
 				break;	
 				case _setActive:	
 				//	trace("AppDatabase.onTransactionComplete(e) : setActiveBookmark");

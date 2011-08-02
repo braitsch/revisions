@@ -38,7 +38,10 @@ package events {
 		public static const CLONE_COMPLETE			:String = "CLONE_COMPLETE";
 		public static const REPOSITORY_CREATED		:String = "REPOSITORY_CREATED";
 		public static const HISTORY_RENDERED		:String = "HISTORY_READY";
-		public static const REQUESTING_HISTORY		:String = "REQUESTING_HISTORY";
+		public static const REQUESTING_HISTORY:String = "REQUESTING_HISTORY";
+		public static const REPOSITORY_READY:String = "REPOSITORY_READY";
+		public static const INITIALIZING_BOOKMARK:String = "INITIALIZING_BOOKMARK";
+		public static const FILES_DELETED:String = "FILES_DELETED";
 		
 		public var data:Object;
 

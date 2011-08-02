@@ -16,7 +16,7 @@ package model.proxies {
 
 		public function ConfigProxy()
 		{
-			super('Config.sh');
+			super.executable = 'Config.sh';
 			super.addEventListener(NativeProcessEvent.QUEUE_COMPLETE, onQueueComplete);
 			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);
 		}
@@ -80,7 +80,6 @@ package model.proxies {
 
 		private function detectMethod(o:Object):void
 		{
-			trace(o.method, 'completed', o.result);
 			switch(o.method){
 				case BashMethods.INSTALL_GIT :
 					onInstallComplete();

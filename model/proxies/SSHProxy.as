@@ -14,7 +14,7 @@ package model.proxies {
 		
 		public function SSHProxy()
 		{
-			super('SSH.sh');
+			super.executable = 'SSH.sh';
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 		}
 		

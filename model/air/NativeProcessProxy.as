@@ -21,14 +21,13 @@ package model.air {
 		private var _failed			:Boolean = false;	
 		private var _debug			:Boolean = false;
 		
-		public function NativeProcessProxy($exec:String = '')
+		public function NativeProcessProxy()
 		{
 			if (NativeProcess.isSupported){
 				init();
 			}	else{
 				log('Error : NativeProcess is NOT Supported');
 			}
-			if ($exec) _npi.executable = File.applicationDirectory.resolvePath('sh/'+$exec);	
 		}
 		
 		protected function set executable($file:String):void

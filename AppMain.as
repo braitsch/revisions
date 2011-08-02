@@ -63,7 +63,7 @@ package {
 
 		private function onGitReady(e:AppEvent):void
 		{
-			AppModel.database.init();
+			AppModel.engine.initialize();
 			AccountManager.initialize();
 			AirNativeMenu.initialize(stage);
 			AirContextMenu.initialize(stage);

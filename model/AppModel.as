@@ -1,7 +1,6 @@
 package model {
 
 	import events.BookmarkEvent;
-	import events.DataBaseEvent;
 	import model.db.AppDatabase;
 	import model.db.AppSettings;
 	import model.proxies.AppProxies;
@@ -26,7 +25,6 @@ package model {
 			_preloader.initialize();
 			_proxies.status.addListenersToResetTimer();
 			_engine.addEventListener(BookmarkEvent.SELECTED, onBookmarkSet);
-			_database.addEventListener(DataBaseEvent.BOOKMARKS_READ, onBookmarksRead);
 		}
 		
 		static public function onBookmarkSet(e:BookmarkEvent):void
@@ -40,25 +38,12 @@ package model {
 		
 		static public function get bookmark()	:Bookmark 		{ return _bookmark; }
 		static public function get branch()		:Branch 		{ return _bookmark.branch; }
-		static public function get engine()		:AppEngine 		{ return _engine; }	
-		static public function get proxies()	:AppProxies 	{ return _proxies; }																			
+		static public function get engine()		:AppEngine 		{ return _engine; }
+		static public function get proxies()	:AppProxies 	{ return _proxies; }
 		static public function get database()	:AppDatabase 	{ return _database; }
 		static public function get settings()	:AppSettings 	{ return _settings; }
-		static public function get updater()	:UpdateManager 	{ return _updater; }				
+		static public function get updater()	:UpdateManager 	{ return _updater; }
 		
-	// event handlers //	
-	
-		private function onBookmarksRead(e:DataBaseEvent):void
-		{
-			var a:Array = e.data as Array;
-			if (a.length > 0) {
-			// pass the db records to the bookmark engine //	
-				_engine.generateBookmarks(a);
-			}	else{
-				_engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.NO_BOOKMARKS));
-			}
-		}
-
 	}
 	
 }

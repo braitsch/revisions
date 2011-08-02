@@ -8,9 +8,8 @@ package model.air {
 		private var _queue			:Array; // an array of vectors //
 		private var _results		:Array = [];
 
-		public function NativeProcessQueue($exec:String = '')
+		public function NativeProcessQueue()
 		{
-			super.executable = $exec;
 			addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);			addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);		}
 
 		public function set queue($a:Array):void

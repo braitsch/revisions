@@ -16,7 +16,7 @@ package model.proxies {
 		
 		public function HistoryProxy()
 		{
-			super('History.sh');
+			super.executable = 'History.sh';
 			super.addEventListener(NativeProcessEvent.QUEUE_COMPLETE, onQueueComplete);
 			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);			
 		}
