@@ -5,7 +5,7 @@ package view.layout {
 
 		public function NestedList()
 		{
-			addEventListener(UIEvent.TOGGLE_OPEN_DIRECTORY, onToggleSubItems);			
+			addEventListener(UIEvent.TOGGLE_DIRECTORY, onToggleSubItems);			
 		}
 
 		private function onToggleSubItems(e:UIEvent):void 

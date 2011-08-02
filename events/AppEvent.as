@@ -31,14 +31,14 @@ package events {
 		public static const LOGOUT					:String = "LOGOUT";
 		public static const LOGIN_FAILED			:String = "LOGIN_FAILED";
 		public static const REMOTE_READY			:String = "LOGIN_SUCCESS";
-		public static const AVATAR_LOADED			:String = "AVATAR_LOADED";
 		public static const SSH_KEYS_READY			:String = "SSH_KEYS_READY";
-		public static const GH_AUTHENTICATED		:String = "SSH_KEYS_VALID";
 		
 	// remote calls //	
 		public static const REMOTE_SYNCED			:String = "REMOTE_SYNCED";
 		public static const CLONE_COMPLETE			:String = "CLONE_COMPLETE";
 		public static const REPOSITORY_CREATED		:String = "REPOSITORY_CREATED";
+		public static const HISTORY_RENDERED		:String = "HISTORY_READY";
+		public static const REQUESTING_HISTORY		:String = "REQUESTING_HISTORY";
 		
 		public var data:Object;
 

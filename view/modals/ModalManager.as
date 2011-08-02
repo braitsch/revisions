@@ -109,13 +109,13 @@ package view.modals {
 			stage.addEventListener(UIEvent.COMMIT, addNewCommit);
 			stage.addEventListener(UIEvent.REVERT, revertProject);
 			stage.addEventListener(UIEvent.DOWNLOAD, downloadVersion);
-			stage.addEventListener(UIEvent.COMMIT_DETAILS, commitDetails);
+			stage.addEventListener(UIEvent.SHOW_COMMIT, commitDetails);
 			stage.addEventListener(UIEvent.ABOUT_GIT, onAboutGit);
 			stage.addEventListener(UIEvent.GLOBAL_SETTINGS, globalSettings);	
 			stage.addEventListener(UIEvent.GITHUB_HOME, showGitHubHome);
 			stage.addEventListener(UIEvent.REMOTE_LOGIN, showRemoteLogin);
 			stage.addEventListener(UIEvent.ANONYMOUS_CLONE, showAnonymousClone);			
-			stage.addEventListener(UIEvent.ADD_REMOTE, addBkmkToRemote);
+			stage.addEventListener(UIEvent.ADD_REMOTE_TO_BOOKMARK, addBkmkToRemote);
 			stage.addEventListener(UIEvent.CLOSE_MODAL_WINDOW, onCloseButton);
 			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUpEvent);			
 		}

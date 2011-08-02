@@ -2,31 +2,41 @@ package events {
 	import flash.events.Event;
 
 	// events dispatched from user interaction that bubble through the display list //
+	// generally these should bring up a modal window from within the modal manager //
 	public class UIEvent extends Event {
 		
-	// bookmark and branch commands //	
+	// adding and editing local bookmarks //	
 		public static const ADD_BOOKMARK			:String = "ADD_BOOKMARK";
-		public static const EDIT_BOOKMARK			:String = "EDIT_BOOKMARK";		public static const REPAIR_BOOKMARK			:String = "REPAIR_BOOKMARK";
-		public static const DELETE_BOOKMARK			:String = "DELETE_BOOKMARK";
-				public static const CLONE					:String = "CLONE";		public static const COMMIT					:String = "COMMIT";
+		public static const DRAG_AND_DROP			:String = "DRAG_AND_DROP";		public static const EDIT_BOOKMARK			:String = "EDIT_BOOKMARK";
+		public static const DELETE_BOOKMARK			:String = "DELETE_BOOKMARK";		public static const ADD_REMOTE_TO_BOOKMARK	:String = "ADD_REMOTE_TO_BOOKMARK";
+			// history view actions //	
 		public static const REVERT					:String = "REVERT";
 		public static const DOWNLOAD				:String = "DOWNLOAD";
-		public static const COMMIT_DETAILS			:String = "COMMIT_DETAILS";
-		public static const CLOSE_MODAL_WINDOW		:String = "CLOSE_MODAL_WINDOW";
-		public static const SHOW_HISTORY			:String = "SHOW_HISTORY";
-		public static const HISTORY_DRAWN			:String = "HISTORY_DRAWN";
+		public static const SHOW_COMMIT				:String = "SHOW_COMMIT";
+		
+	// main toolbar actions //
 		public static const ABOUT_GIT				:String = "ABOUT_GIT";
 		public static const GLOBAL_SETTINGS			:String = "GLOBAL_SETTINGS";
+		
+	// summary view actions //	
+		public static const COMMIT					:String = "COMMIT";
+		public static const SYNC_REMOTES			:String = "SYNC_REMOTES";
+		public static const SHOW_HISTORY			:String = "SHOW_HISTORY";
+
+	// remote specific views //
+		public static const REMOTE_LOGIN			:String = "REMOTE_LOGIN";
 		public static const GITHUB_HOME				:String = "GITHUB_HOME";
-		public static const REMOTE_LOGIN			:String = "GITHUB_LOGIN";
-		public static const DRAG_AND_DROP			:String = "DRAG_AND_DROP";
-		public static const FILE_BROWSER_CANCELED	:String = "FILE_BROWSER_CANCELED";
-		public static const FILE_BROWSER_SELECTION	:String = "FILE_BROWSER_SELECTION";
-		public static const LIST_ITEM_SELECTED		:String = "LIST_ITEM_SELECTED";
-		public static const DIRECTORY_SELECTED		:String = "DIRECTORY_SELECTED";
-		public static const TOGGLE_OPEN_DIRECTORY	:String = "TOGGLE_OPEN_DIRECTORY";
-		public static const ADD_REMOTE				:String = "ADD_REMOTE";
+		public static const BEANSTALK_HOME			:String = "BEANSTALK_HOME";
+		public static const LOGGED_IN_CLONE			:String = "LOGGED_IN_CLONE";
 		public static const ANONYMOUS_CLONE			:String = "ANONYMOUS_CLONE";
+	
+	// miscellaneous //	
+		public static const CLOSE_MODAL_WINDOW		:String = "CLOSE_MODAL_WINDOW";
+		public static const FILE_BROWSER_SELECTION	:String = "FILE_BROWSER_SELECTION";
+		
+	// file viewer actions //	
+		public static const FILE_SELECTED			:String = "FILE_SELECTED";
+		public static const TOGGLE_DIRECTORY		:String = "TOGGLE_DIRECTORY";
 		
 		public var data:Object;
 

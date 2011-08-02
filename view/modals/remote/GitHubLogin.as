@@ -25,7 +25,7 @@ package view.modals.remote {
 		public function set onSuccessEvent(e:String):void 
 		{ 
 			_onSuccessEvent = e;
-			super.allowSkip = (e != UIEvent.ADD_REMOTE);
+			super.allowSkip = (e != UIEvent.ADD_REMOTE_TO_BOOKMARK);
 		}		
 
 		private function gotoNewAccountPage(e:MouseEvent):void

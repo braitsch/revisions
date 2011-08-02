@@ -27,7 +27,7 @@ package view.modals.remote {
 			_view.badgePage.label_txt.text = 'My Github';
 			_view.logOut.addEventListener(MouseEvent.CLICK, onLogOutClick);
 			_view.custom.clone_btn.addEventListener(MouseEvent.CLICK, onCustomClick);			
-			addEventListener(UIEvent.CLONE, onCloneClick);		
+			addEventListener(UIEvent.LOGGED_IN_CLONE, onCloneClick);		
 			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);
 			AppModel.engine.addEventListener(AppEvent.REMOTE_READY, onAccountReady);
 		}

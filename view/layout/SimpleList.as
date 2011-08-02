@@ -27,7 +27,7 @@ package view.layout {
 			addChild(_scrollbar);
 			
 			_container.addEventListener(MouseEvent.CLICK, onItemSelection);			_container.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			addEventListener(UIEvent.TOGGLE_OPEN_DIRECTORY, onListHeightChanged);			
+			addEventListener(UIEvent.TOGGLE_DIRECTORY, onListHeightChanged);			
 		}
 		
 	// public getters / setters //	
@@ -104,7 +104,7 @@ package view.layout {
 				k = k.parent;
 			}
 			this.activeItem = k as ListItem;
-			dispatchEvent(new UIEvent(UIEvent.LIST_ITEM_SELECTED));
+			dispatchEvent(new UIEvent(UIEvent.FILE_SELECTED));
 		}
 		
 		private function onAddedToStage(e:Event):void 

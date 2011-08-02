@@ -58,7 +58,7 @@ package view.history {
 					dispatchEvent(new UIEvent(UIEvent.REVERT, _commit));
 				break;	
 				case 'info' 	: 
-					dispatchEvent(new UIEvent(UIEvent.COMMIT_DETAILS, _commit));
+					dispatchEvent(new UIEvent(UIEvent.SHOW_COMMIT, _commit));
 				break;
 				case 'download'	:
 					dispatchEvent(new UIEvent(UIEvent.DOWNLOAD, _commit));

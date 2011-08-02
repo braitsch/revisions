@@ -10,7 +10,6 @@ package view{
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.filters.BlurFilter;
-	import flash.utils.setTimeout;
 
 	public class MainView extends Sprite {
 
@@ -60,26 +59,24 @@ package view{
 		
 		private function refreshHistory():void
 		{
-			addEventListener(UIEvent.HISTORY_DRAWN, onHistory);	
-			setTimeout(function():void{AppModel.proxies.history.getHistory();}, 500);
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Refreshing History'));
+			AppModel.proxies.history.getHistory();
+			AppModel.engine.addEventListener(AppEvent.HISTORY_RENDERED, onHistoryRendered);
 		}
 		
-		private function onHistory(e:UIEvent):void
+		private function onHistoryRendered(e:AppEvent):void
 		{
-			setTimeout(hideSummary, 500);
-			removeEventListener(UIEvent.HISTORY_DRAWN, onHistory);
+			hideSummary();
+			AppModel.engine.removeEventListener(AppEvent.HISTORY_RENDERED, onHistoryRendered);
 		}
 		
 		private function onNoBookmarks(e:BookmarkEvent):void
 		{
-			if (_summary.visible) hideSummary();
+			hideSummary();
 		}
 		
 		private function hideSummary():void
 		{
 			_history.filters = [];
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 			TweenLite.to(_curtain, .3, {alpha:0, onComplete:function():void{_curtain.visible=false; _curtain.alpha=1;}});
 			TweenLite.to(_summary, .3, {alpha:0, onComplete:function():void{_summary.visible=false; _summary.alpha=1;}});
 		}

@@ -34,7 +34,7 @@ package view.modals.remote {
 		
 		private function onButtonClick(e:MouseEvent):void
 		{
-			dispatchEvent(new UIEvent(UIEvent.CLONE, _url));
+			dispatchEvent(new UIEvent(UIEvent.LOGGED_IN_CLONE, _url));
 		}
 		
 		private function onButtonRollOut(e:MouseEvent):void {TweenLite.to(e.target.over, .3, {alpha:0});}

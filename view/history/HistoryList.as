@@ -1,11 +1,13 @@
 package view.history {
 
-	import events.UIEvent;
+	import events.AppEvent;
+	import model.AppModel;
 	import model.vo.Bookmark;
 	import model.vo.Commit;
 	import com.greensock.TweenLite;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.utils.setTimeout;
 
 	public class HistoryList extends Sprite {
 
@@ -38,8 +40,7 @@ package view.history {
 			}	else if (m == true){
 				sortList();
 			}	else{
-		// dispatch event to kill the preloader //		
-				dispatchEvent(new UIEvent(UIEvent.HISTORY_DRAWN));				
+				dispatchRenderComplete();				
 			}
 		}
 
@@ -56,17 +57,6 @@ package view.history {
 			}
 		}
 
-//		private function modifiedHasChanged():Boolean
-//		{
-//			var n:uint = _bookmark.branch.modified.length;
-//			if (isNaN(_mLength) || _mLength != n) {
-//				_mLength = n;
-//				return true;
-//			}	else{
-//				return false;
-//			}
-//		}
-		
 		private function historyHasChanged():Boolean
 		{
 			var h:uint = _bookmark.branch.history.length;			
@@ -95,8 +85,17 @@ package view.history {
 				if (stage) k.resize(stage.stageWidth - 204);
 				TweenLite.from(getChildAt(i), .2, {alpha:0, delay:i*.05});
 			}
-			dispatchEvent(new UIEvent(UIEvent.HISTORY_DRAWN));
+			dispatchRenderComplete();
 		}
+		
+		
+		private function dispatchRenderComplete():void
+		{
+		// add slight delay so the list has time to finish drawing itself //	
+			setTimeout(function():void{
+				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HISTORY_RENDERED));
+			}, 500);
+		}		
 		
 		private function showHideUnsaved():void
 		{

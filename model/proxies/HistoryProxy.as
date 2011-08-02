@@ -8,6 +8,7 @@ package model.proxies {
 	import model.vo.Bookmark;
 	import model.vo.Commit;
 	import system.BashMethods;
+	import flash.utils.setTimeout;
 
 	public class HistoryProxy extends NativeProcessQueue {
 		
@@ -20,10 +21,17 @@ package model.proxies {
 			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);			
 		}
 		
-		public function getHistory($b:Bookmark = null):void
+		public function getHistory():void
 		{
-			_bookmark = $b ? $b : AppModel.bookmark;			
+			_bookmark = AppModel.bookmark;			
 			super.directory = _bookmark.gitdir;
+		// add slight delay so we have time to display the preloader //	
+			setTimeout(makeRequest, 500);
+			dispatchEvent(new AppEvent(AppEvent.REQUESTING_HISTORY));
+		}
+		
+		private function makeRequest():void
+		{
 			super.queue = [	Vector.<String>([BashMethods.GET_HISTORY]) ];
 		}
 		

@@ -68,9 +68,9 @@ package view.modals.local {
 		private function onGitHubClick(e:MouseEvent):void
 		{
 			if (AccountManager.github){
-				dispatchEvent(new UIEvent(UIEvent.ADD_REMOTE, RemoteAccount.GITHUB));
+				dispatchEvent(new UIEvent(UIEvent.ADD_REMOTE_TO_BOOKMARK, RemoteAccount.GITHUB));
 			}	else{
-				dispatchEvent(new UIEvent(UIEvent.REMOTE_LOGIN, {type:RemoteAccount.GITHUB, event:UIEvent.ADD_REMOTE}));
+				dispatchEvent(new UIEvent(UIEvent.REMOTE_LOGIN, {type:RemoteAccount.GITHUB, event:UIEvent.ADD_REMOTE_TO_BOOKMARK}));
 			}	
 		}
 		
