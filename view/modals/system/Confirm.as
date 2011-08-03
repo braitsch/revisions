@@ -24,7 +24,7 @@ package view.modals.system {
 			_view.message_txt.htmlText = m;	
 		}
 		
-		private function onOkButton():void
+		private function onOkButton(e:MouseEvent):void
 		{
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_CONFIRM, true));
 		}

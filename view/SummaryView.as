@@ -197,14 +197,12 @@ package view {
 				var v:Vector.<Remote> = _bookmark.remotes.concat();
 				AppModel.proxies.remote.syncRemotes(v);
 				AppModel.proxies.remote.addEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);
-				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Syncing Bookmark'));
 			}
 		}
 
 		private function onRemoteSynced(e:AppEvent):void
 		{
 			_locked = false;
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 			AppModel.proxies.remote.removeEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);			
 		}
 		

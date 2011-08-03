@@ -3,16 +3,12 @@ package model.vo {
 	public class Remote {
 
 		private var _name		:String;
-		private var _fetch		:String;
-		private var _push		:String;
+		private var _url		:String;
 		private var _branches	:Array = [];
 
-		public function Remote($name:String, $fetch:String, $push:String)
+		public function Remote($name:String, $url:String)
 		{
-			_name = $name;
-			_fetch = $fetch;
-			_push = $push;
-		//	trace("Remote.Remote($name, $fetch, $push)", _name, _fetch);
+			_name = $name; _url = $url;
 		}
 
 		public function get name():String
@@ -20,14 +16,9 @@ package model.vo {
 			return _name;
 		}
 
-		public function get fetch():String
+		public function get url():String
 		{
-			return _fetch;
-		}
-
-		public function get push():String
-		{
-			return _push;
+			return _url;
 		}
 		
 		public function addBranch(s:String):void

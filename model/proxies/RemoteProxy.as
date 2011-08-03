@@ -18,13 +18,15 @@ package model.proxies {
 			super.executable = 'Remote.sh';
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 		}
+		
 	// called only from RemoRepo //	
 		public function addRemote($remote:Remote):void
 		{
 			_remote = $remote;
 			super.directory = AppModel.bookmark.gitdir;
-			super.call(Vector.<String>([BashMethods.ADD_REMOTE, _remote.name, _remote.push]));
+			super.call(Vector.<String>([BashMethods.ADD_REMOTE, _remote.name, _remote.url]));
 		}
+		
 	// called only from SummaryView	
 		public function syncRemotes(v:Vector.<Remote>):void
 		{
@@ -34,22 +36,16 @@ package model.proxies {
 		
 		public function onConfirm(b:Boolean):void
 		{
-			trace("RemoteProxy.onConfirm(b)", b);
 			b ? syncNextRemote(false) : onSyncComplete();
 		}
 		
 		private function syncNextRemote(warn:Boolean = true):void
 		{
 			_remote = _remotes[_index];
-			trace("RemoteProxy.syncNextRemote()", _remote.name);
 			if (_remote.hasBranch(AppModel.branch.name)){
 				pullRemote();				
 			}	else{
-				if (!warn){
-					pushRemote();
-				}	else{
-					dispatchConfirm();
-				}
+				warn ? dispatchConfirm() : pushRemote();
 			}			
 		}
 		
@@ -57,12 +53,14 @@ package model.proxies {
 		{
 			super.directory = AppModel.bookmark.gitdir;
 			super.call(Vector.<String>([BashMethods.PULL_REMOTE, _remote.name, AppModel.branch.name]));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Receiving Files'));
 		}
 		
 		private function pushRemote():void
 		{
 			super.directory = AppModel.bookmark.gitdir;
 			super.call(Vector.<String>([BashMethods.PUSH_REMOTE, _remote.name, AppModel.branch.name]));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Sending Files'));
 		}				
 		
 		private function handleProcessSuccess(e:NativeProcessEvent):void
@@ -88,7 +86,8 @@ package model.proxies {
 			if (_remotes.length){
 				_index++; syncNextRemote();
 			}	else{
-				dispatchEvent(new AppEvent(AppEvent.REMOTE_SYNCED));							
+				dispatchEvent(new AppEvent(AppEvent.REMOTE_SYNCED));
+				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 			}
 		}		
 		
@@ -110,7 +109,7 @@ package model.proxies {
 		
 		private function dispatchConfirm():void
 		{
-			var m:String = 'The current branch '+AppModel.branch.name+' is not currently being tracked by the remote account you are about to sync to.';
+			var m:String = 'The current branch "'+AppModel.branch.name+'" is not currently being tracked by the remote account: "'+_remote.name+'".';
 				m+= 'Are you sure you want to continue?';
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_CONFIRM, {target:this, message:m}));			
 		}			

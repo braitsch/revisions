@@ -103,9 +103,8 @@ package model.vo {
 		{
 			if (a[0] == '') return;
 			var n:String = a[0];
-			var f:String = a[1].substr(0, a[1].search(/\s/));
-			var p:String = a[3].substr(0, a[3].search(/\s/));
-			_remotes.push(new Remote(n, f, p));
+			var u:String = a[1].substr(0, a[1].search(/\s/));
+			_remotes.push(new Remote(n, u));
 		}
 		
 		public function addRemote(r:Remote):void { _remotes.push(r); }

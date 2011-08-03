@@ -45,6 +45,7 @@ package model.proxies {
 		public function addRepository($name:String, $desc:String, $public:Boolean):void
 		{
 			super.call(Vector.<String>([BashMethods.ADD_REPOSITORY, $name, $desc, $public]));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Creating New Github Repository'));
 		}
 
 		public function getRepositories():void

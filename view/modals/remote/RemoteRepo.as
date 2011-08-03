@@ -74,23 +74,18 @@ package view.modals.remote {
 		{
 			_proxy.addRepository(_view.name_txt.text, _view.desc_txt.text, _check.selected==false);
 			_proxy.addEventListener(AppEvent.REPOSITORY_CREATED, onRepositoryCreated);
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Creating New Github Repository'));
 		}
 		
 		private function onRepositoryCreated(e:AppEvent):void
 		{
-			var url:String = e.data as String;
 			_proxy.removeEventListener(AppEvent.REPOSITORY_CREATED, onRepositoryCreated);
-			AppModel.proxies.remote.addRemote(new Remote(_name, url, url));
+			AppModel.proxies.remote.addRemote(new Remote(_name, e.data as String));
 			AppModel.proxies.remote.addEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.LOADER_TEXT, 'Sending Files To Github'));			
 		}
 		
 		private function onRemoteSynced(e:AppEvent):void
 		{
-			trace("AddRemoteRepo.onRemoteSynced(e)");
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 			AppModel.proxies.remote.removeEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);	
 		}
 		
