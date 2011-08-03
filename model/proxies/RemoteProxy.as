@@ -4,6 +4,7 @@ package model.proxies {
 	import events.NativeProcessEvent;
 	import model.AppModel;
 	import model.air.NativeProcessProxy;
+	import model.vo.Branch;
 	import model.vo.Remote;
 	import system.BashMethods;
 	
@@ -27,10 +28,12 @@ package model.proxies {
 		public function syncWithRemote($remote:Remote):void
 		{
 			_remote = $remote;
-			trace("RemoteProxy.syncWithRemote($remote)", _remote.name, AppModel.bookmark.branch.name);
+			var b:Branch = AppModel.bookmark.branch;
+			var isNew:Boolean = _remote.hasBranch(b.name);
+			trace("RemoteProxy.syncWithRemote($remote)", b.name, isNew);
 			return;
 			super.directory = AppModel.bookmark.gitdir;
-			super.call(Vector.<String>([BashMethods.PULL_REMOTE, _remote.name, AppModel.bookmark.branch.name]));						
+			super.call(Vector.<String>([BashMethods.PULL_REMOTE, _remote.name, b.name]));						
 		}
 		
 		private function pushToRemote():void

@@ -2,9 +2,10 @@ package model.vo {
 
 	public class Remote {
 
-		private var _name	:String;
-		private var _fetch	:String;
-		private var _push	:String;
+		private var _name		:String;
+		private var _fetch		:String;
+		private var _push		:String;
+		private var _branches	:Array = [];
 
 		public function Remote($name:String, $fetch:String, $push:String)
 		{
@@ -27,6 +28,17 @@ package model.vo {
 		public function get push():String
 		{
 			return _push;
+		}
+		
+		public function addBranch(s:String):void
+		{
+			_branches.push(s);
+		}
+		
+		public function hasBranch(s:String):Boolean
+		{
+			for (var i:int = 0; i < _branches.length; i++) if (_branches[i] == s) return true;
+			return false;
 		}
 
 	}

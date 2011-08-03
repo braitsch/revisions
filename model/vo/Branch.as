@@ -23,6 +23,8 @@ package model.vo {
 		
 		public function set history(v:Vector.<Commit>):void { _history = v; }
 		public function get history():Vector.<Commit> { return _history; }
+		public function set hasRemote(b:Boolean):void { _hasRemote = b; }
+		public function get hasRemote():Boolean { return _hasRemote; }
 		
 		public function get lastCommit():Commit { return _lastCommit; }
 		public function get totalCommits():uint { return _totalCommits; }
@@ -59,17 +61,6 @@ package model.vo {
 			_status[StatusProxy.M] = mod;
 		}
 
-		public function get hasRemote():Boolean
-		{
-			return _hasRemote;
-		}
-
-		public function set hasRemote(hasRemote:Boolean):void
-		{
-			_hasRemote = hasRemote;
-			trace("Branch.hasRemote(hasRemote)", name, _hasRemote);
-		}
-	
 	}
 	
 }

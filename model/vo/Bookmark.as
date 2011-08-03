@@ -133,16 +133,27 @@ package model.vo {
 		
 		public function addRemoteBranches(a:Array):void
 		{
-			trace("Bookmark.addRemoteBranches(a)", a);
-			for (var i:int = 0; i < _branches.length; i++) {
+			for (var i:int = 0; i < _remotes.length; i++) {
 				for (var j:int = 0; j < a.length; j++) {
-					var s:String = a[j].substr(a[j].lastIndexOf('/') + 1);
-					if (_branches[i].name == s) {
-						branches[i].hasRemote = true; break;
+					var r:String = a[j].substr(0, a[j].lastIndexOf('/'));
+					if (_remotes[i].name == r) {
+						_remotes[i].addBranch(a[j].substr(a[j].lastIndexOf('/') + 1)); break;
 					}
 				}
 			}
-		}
+		}		
+		
+//		public function addRemoteBranches(a:Array):void
+//		{
+//			for (var i:int = 0; i < _branches.length; i++) {
+//				for (var j:int = 0; j < a.length; j++) {
+//					var s:String = a[j].substr(a[j].lastIndexOf('/') + 1);
+//					if (_branches[i].name == s) {
+//						branches[i].hasRemote = true; break;
+//					}
+//				}
+//			}
+//		}
 		
 	// auto-saving on timeout //	
 		
