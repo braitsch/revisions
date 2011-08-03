@@ -22,9 +22,10 @@ package system{
 		public static const KILL_FILE			:String = 'killFile';
 		public static const KILL_FOLDER			:String = 'killFolder';
 		
-		public static const GET_BRANCHES		:String = 'getBranches';
+		public static const GET_LOCAL_BRANCHES	:String = 'getLocalBranches';
+		public static const GET_REMOTE_BRANCHES	:String = 'getRemoteBranches';		
 		public static const GET_REMOTES			:String = 'getRemotes';
-		public static const GET_STASH_LIST		:String = 'getStashList';
+		public static const GET_STASH		:String = 'getStashList';
 		public static const DOWNLOAD_VERSION	:String = 'downloadVersion';
 		public static const REVERT_TO_VERSION	:String = 'revertToVersion';
 		

@@ -11,6 +11,7 @@ package model.vo {
 		private var _history		:Vector.<Commit>;
 		private var _status			:Array = [[], [], [], []];
 		private var _lastCommit		:Commit;
+		private var _hasRemote		:Boolean;
 		private var _totalCommits	:uint = 0;
 
 		public function Branch(n:String) 
@@ -56,6 +57,17 @@ package model.vo {
  			_lastCommit = lc;
 			_totalCommits = tc;
 			_status[StatusProxy.M] = mod;
+		}
+
+		public function get hasRemote():Boolean
+		{
+			return _hasRemote;
+		}
+
+		public function set hasRemote(hasRemote:Boolean):void
+		{
+			_hasRemote = hasRemote;
+			trace("Branch.hasRemote(hasRemote)", name, _hasRemote);
 		}
 	
 	}

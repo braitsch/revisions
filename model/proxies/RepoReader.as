@@ -22,24 +22,24 @@ package model.proxies {
 		{
 			_bookmark = b;
 			super.directory = _bookmark.worktree;
-			super.queue = [	Vector.<String>([BashMethods.GET_BRANCHES, _bookmark.gitdir]),
+			super.queue = [	Vector.<String>([BashMethods.GET_STASH, _bookmark.gitdir]),
 							Vector.<String>([BashMethods.GET_REMOTES, _bookmark.gitdir]),
-							Vector.<String>([BashMethods.GET_STASH_LIST, _bookmark.gitdir])];
+							Vector.<String>([BashMethods.GET_LOCAL_BRANCHES, _bookmark.gitdir]),
+							Vector.<String>([BashMethods.GET_REMOTE_BRANCHES, _bookmark.gitdir])];
 		}
 
-	// response handlers //
-		
 		private function onQueueComplete(e:NativeProcessEvent):void 
 		{
 			var a:Array = e.data as Array;
 		// strip the method names off the result array //	
 			for (var i:int = 0; i < a.length; i++) a[i] = a[i].result.split(/[\n\r\t]/g);
-			_bookmark.attachBranches(a[0]);
-			if (a[1] != '') _bookmark.parseRemotes(a[1]);
-			_bookmark.stash = a[2];
+			_bookmark.addStash(a[0]);
+			_bookmark.addRemotes(a[1]);
+			_bookmark.addLocalBranches(a[2]);
+			_bookmark.addRemoteBranches(a[3]);
 			dispatchEvent(new AppEvent(AppEvent.REPOSITORY_READY));
 		}
-
+		
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
 			e.data.source = 'BranchProxy.onProcessFailure(e)';

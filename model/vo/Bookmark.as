@@ -56,7 +56,9 @@ package model.vo {
 		public function get exists():Boolean { return _file.exists; }
 		public function get gitdir():String { return _gitdir;}
 		public function get worktree():String { return _file.parent.nativePath; }
+		public function get stash():Array { return _stash; }		
 		public function get branches():Array { return _branches; }
+		public function get remotes():Vector.<Remote> { return _remotes; }		
 		
 		public function get label():String { return _label; }		
 		public function set label(s:String):void
@@ -64,6 +66,7 @@ package model.vo {
 			_label = s;
 			dispatchEvent(new BookmarkEvent(BookmarkEvent.EDITED));
 		}
+		
 		public function get path():String { return _path; }
 		public function set path(p:String):void
 		{
@@ -77,15 +80,6 @@ package model.vo {
 			getFileSystemIcons();
 		}
 		
-		public function get stash():Array { return _stash; }
-		public function set stash(a:Array):void
-		{
-			for (var i:int = 0; i < a.length; i++) {
-				var n:String = a[i].replace(/stash@\{[0-9]*}: WIP on /, '');
-				_stash.push(n.substring(0, n.indexOf(':')));	
-			}
-		}
-		
 		private function getFileSystemIcons():void
 		{
 			var icons:Array = _file.icon.bitmaps;
@@ -95,23 +89,26 @@ package model.vo {
 			}
 		}
 		
-		public function parseRemotes(a:Array):void
+	// ----- From RepoReader.as ----- //
+		
+		public function addStash(a:Array):void
 		{
+			for (var i:int = 0; i < a.length; i++) {
+				var n:String = a[i].replace(/stash@\{[0-9]*}: WIP on /, '');
+				_stash.push(n.substring(0, n.indexOf(':')));	
+			}
+		}
+		
+		public function addRemotes(a:Array):void
+		{
+			if (a[0] == '') return;
 			var n:String = a[0];
 			var f:String = a[1].substr(0, a[1].search(/\s/));
 			var p:String = a[3].substr(0, a[3].search(/\s/));
 			_remotes.push(new Remote(n, f, p));
 		}
 		
-		public function addRemote(r:Remote):void
-		{
-			_remotes.push(r);
-		}
-		
-		public function get remotes():Vector.<Remote>
-		{
-			return _remotes;
-		}			
+		public function addRemote(r:Remote):void { _remotes.push(r); }
 		
 		public function getRemoteByProp($prop:String, $value:String):Remote
 		{
@@ -119,9 +116,7 @@ package model.vo {
 			return null;
 		}
 		
-	// branches //	
-			
-		public function attachBranches(a:Array):void
+		public function addLocalBranches(a:Array):void
 		{
 			for (var i:int = 0; i < a.length; i++) {
 				var s:String = a[i];
@@ -134,22 +129,22 @@ package model.vo {
 					_branches.push(new Branch(s));
 				}
 			}
-			sortBranches();
 		}
 		
-		private function sortBranches():void
+		public function addRemoteBranches(a:Array):void
 		{
-		// ensure master is always the first in the list //	
-			var m:Branch = getBranchByName('master');
-			_branches.splice(_branches.indexOf(m), 1);
-			_branches.unshift(m);
+			trace("Bookmark.addRemoteBranches(a)", a);
+			for (var i:int = 0; i < _branches.length; i++) {
+				for (var j:int = 0; j < a.length; j++) {
+					var s:String = a[j].substr(a[j].lastIndexOf('/') + 1);
+					if (_branches[i].name == s) {
+						branches[i].hasRemote = true; break;
+					}
+				}
+			}
 		}
 		
-		private function getBranchByName(n:String):Branch 
-		{
-			for (var i:int = 0;i < _branches.length; i++) if (n == _branches[i].name) break;
-			return _branches[i];
-		}
+	// auto-saving on timeout //	
 		
 		private function initAutoSave():void
 		{
