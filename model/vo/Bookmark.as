@@ -134,10 +134,8 @@ package model.vo {
 		{
 			for (var i:int = 0; i < _remotes.length; i++) {
 				for (var j:int = 0; j < a.length; j++) {
-					var r:String = a[j].substr(0, a[j].lastIndexOf('/'));
-					if (_remotes[i].name == r) {
-						_remotes[i].addBranch(a[j].substr(a[j].lastIndexOf('/') + 1)); break;
-					}
+					var r:String = StringUtils.trim(a[j].substr(0, a[j].lastIndexOf('/')));
+					if (_remotes[i].name == r) _remotes[i].addBranch(a[j].substr(a[j].lastIndexOf('/') + 1));
 				}
 			}
 		}		

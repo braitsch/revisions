@@ -185,11 +185,11 @@ package view {
 		private function syncRemote():void
 		{
 			var m:String;
-//			if (_bookmark.branch.isModified()){
-//				m = 'Please saves your lastest changes before syncing with the server.';
-//			}	else if (_bookmark.remotes.length != 1){
-//				m = 'This bookmark has multiple remotes. A remote chooser is coming soon.';
-//			}
+			if (_bookmark.branch.isModified()){
+				m = 'Please saves your lastest changes before syncing with the server.';
+			}	else if (_bookmark.remotes.length != 1){
+				m = 'This bookmark has multiple remotes. A remote chooser is coming soon.';
+			}
 			if (m){
 				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
 			}	else{
