@@ -5,6 +5,7 @@ package view {
 	import events.UIEvent;
 	import model.AppModel;
 	import model.vo.Bookmark;
+	import model.vo.Remote;
 	import view.fonts.Fonts;
 	import view.ui.SmartButton;
 	import view.ui.Tooltip;
@@ -193,7 +194,8 @@ package view {
 				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
 			}	else{
 				_locked = true;
-				AppModel.proxies.remote.syncWithRemote(_bookmark.remotes[0]);
+				var v:Vector.<Remote> = _bookmark.remotes.concat();
+				AppModel.proxies.remote.syncRemotes(v);
 				AppModel.proxies.remote.addEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);
 				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Syncing Bookmark'));
 			}

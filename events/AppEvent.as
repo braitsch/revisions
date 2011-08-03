@@ -7,6 +7,8 @@ package events {
 		public static const HIDE_ALERT				:String = "HIDE_ALERT";		
 		public static const SHOW_DEBUG				:String = "SHOW_DEBUG";
 		public static const HIDE_DEBUG				:String = "HIDE_DEBUG";	
+		public static const SHOW_CONFIRM			:String = "SHOW_CONFIRM";
+		public static const HIDE_CONFIRM			:String = "HIDE_CONFIRM";
 		public static const SHOW_LOADER				:String = 'SHOW_LOADER';
 		public static const HIDE_LOADER				:String = 'HIDE_LOADER';
 		public static const LOADER_TEXT				:String = "LOADER_TEXT";
@@ -42,7 +44,7 @@ package events {
 		public static const REQUESTING_HISTORY		:String = "REQUESTING_HISTORY";
 		public static const REPOSITORY_READY		:String = "REPOSITORY_READY";
 		public static const FILES_DELETED			:String = "FILES_DELETED";
-		public static const INITIALIZING_BOOKMARK	:String = "INITIALIZING_BOOKMARK";
+		public static const INITIALIZING_BOOKMARK:String = "INITIALIZING_BOOKMARK";
 		
 		public var data:Object;
 

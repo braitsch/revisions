@@ -80,17 +80,12 @@ package view.modals.remote {
 		private function onRepositoryCreated(e:AppEvent):void
 		{
 			var url:String = e.data as String;
-			addNewRemote(new Remote(_name, url, url));
 			_proxy.removeEventListener(AppEvent.REPOSITORY_CREATED, onRepositoryCreated);
-		}
-		
-		private function addNewRemote(rmt:Remote):void
-		{
-			AppModel.proxies.remote.addRemote(rmt);
+			AppModel.proxies.remote.addRemote(new Remote(_name, url, url));
 			AppModel.proxies.remote.addEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.LOADER_TEXT, 'Sending Files To Github'));			
 		}
-
+		
 		private function onRemoteSynced(e:AppEvent):void
 		{
 			trace("AddRemoteRepo.onRemoteSynced(e)");

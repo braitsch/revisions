@@ -28,11 +28,6 @@ package view.modals.system {
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_ALERT));
 		}
 		
-		override protected function onCloseClick(e:MouseEvent):void 
-		{
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_ALERT));
-		}		
-		
 	}
 	
 }

@@ -1,6 +1,5 @@
 package view.modals {
 
-	import flash.events.KeyboardEvent;
 	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.UIEvent;
@@ -34,10 +33,12 @@ package view.modals {
 	import view.modals.remote.GitHubLogin;
 	import view.modals.remote.RemoteRepo;
 	import view.modals.system.Alert;
-	import view.modals.system.DebugScreen;
+	import view.modals.system.Confirm;
+	import view.modals.system.Debug;
 	import view.ui.Preloader;
 	import flash.display.Sprite;
 	import flash.display.Stage;
+	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
 	import flash.filters.BlurFilter;
@@ -66,7 +67,8 @@ package view.modals {
 		private static var _clone			:AnonymousClone = new AnonymousClone();		
 		private static var _gitHub			:GitHubHome = new GitHubHome();
 		private static var _alert			:Alert = new Alert();
-		private static var _debug			:DebugScreen = new DebugScreen();
+		private static var _debug			:Debug = new Debug();
+		private static var _confirm			:Confirm = new Confirm();
 		private static var _preloader		:Preloader = new Preloader();		
 		
 	// windows that force user to make a decision - autoclose disabled //	
@@ -86,6 +88,8 @@ package view.modals {
 			AppModel.engine.addEventListener(AppEvent.HIDE_DEBUG, onHideDebug);
 			AppModel.engine.addEventListener(AppEvent.SHOW_ALERT, onShowAlert);
 			AppModel.engine.addEventListener(AppEvent.HIDE_ALERT, onHideAlert);	
+			AppModel.engine.addEventListener(AppEvent.SHOW_CONFIRM, onShowConfirm);
+			AppModel.engine.addEventListener(AppEvent.HIDE_CONFIRM, onHideConfirm);				
 			AppModel.engine.addEventListener(AppEvent.SHOW_LOADER, showLoader);
 			AppModel.engine.addEventListener(AppEvent.HIDE_LOADER, hideLoader);					
 			AppModel.engine.addEventListener(AppEvent.LOADER_TEXT, setLoaderText);					
@@ -330,7 +334,7 @@ package view.modals {
 			_curtain.hide();
 		}
 
-	// special windows alert & debug //
+	// special windows alert, debug & confirm //
 
 		private function onShowAlert(e:AppEvent):void
 		{
@@ -375,7 +379,21 @@ package view.modals {
 			}	else{
 				 _curtain.hide();
 			}
-		}		
+		}
+		
+		private static var _confirmTarget:*;
+		private function onShowConfirm(e:AppEvent):void 
+		{
+			_confirmTarget = e.data.target;
+			_confirm.message = e.data.message;
+			showAlertOrDebug(_confirm);
+		}
+		
+		private function onHideConfirm(e:AppEvent):void
+		{
+			_confirmTarget.onConfirm(e.data as Boolean);
+			hideAlertOrDebug(_confirm);
+		}				
 		
 	}
 	

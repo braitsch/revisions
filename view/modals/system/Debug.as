@@ -5,11 +5,11 @@ package view.modals.system {
 	import model.AppModel;
 	import view.modals.ModalWindow;
 
-	public class DebugScreen extends ModalWindow {
+	public class Debug extends ModalWindow {
 
 		private static var _view:WindowDebugMC = new WindowDebugMC();
 
-		public function DebugScreen()
+		public function Debug()
 		{
 			addChild(_view);
 			super.drawBackground(500, 400);
