@@ -150,6 +150,7 @@ package view.modals {
 			}
 			if (_alert.stage) _alert.resize(w, h);
 			if (_debug.stage) _debug.resize(w, h);
+			if (_confirm.stage) _confirm.resize(w, h);			
 		}
 
 		private function onBookmarkSelected(e:BookmarkEvent):void
@@ -339,26 +340,40 @@ package view.modals {
 		private function onShowAlert(e:AppEvent):void
 		{
 			_alert.message = e.data as String;
-			showAlertOrDebug(_alert);
+			showSpecial(_alert);
 		}			
 		
 		private function onHideAlert(e:AppEvent):void
 		{
-			hideAlertOrDebug(_alert);
+			hideSpecial(_alert);
 		}
 		
 		private function onShowDebug(e:AppEvent):void
 		{
 			_debug.message = e.data as Object;
-			showAlertOrDebug(_debug);
+			showSpecial(_debug);
 		}			
 		
 		private function onHideDebug(e:AppEvent):void
 		{
-			hideAlertOrDebug(_debug);
+			hideSpecial(_debug);
 		}
 		
-		private function showAlertOrDebug(w:ModalWindow):void
+		private static var _confirmTarget:*;
+		private function onShowConfirm(e:AppEvent):void 
+		{
+			_confirmTarget = e.data.target;
+			_confirm.message = e.data.message;
+			showSpecial(_confirm);
+		}
+		
+		private function onHideConfirm(e:AppEvent):void
+		{
+			_confirmTarget.onConfirm(e.data as Boolean);
+			hideSpecial(_confirm);
+		}			
+		
+		private function showSpecial(w:ModalWindow):void
 		{
 			addChild(w);
 			_curtain.show();
@@ -369,7 +384,7 @@ package view.modals {
 			}
 		}
 		
-		private function hideAlertOrDebug(w:ModalWindow):void
+		private function hideSpecial(w:ModalWindow):void
 		{
 			removeChild(w);
 			if (_window) {
@@ -380,20 +395,6 @@ package view.modals {
 				 _curtain.hide();
 			}
 		}
-		
-		private static var _confirmTarget:*;
-		private function onShowConfirm(e:AppEvent):void 
-		{
-			_confirmTarget = e.data.target;
-			_confirm.message = e.data.message;
-			showAlertOrDebug(_confirm);
-		}
-		
-		private function onHideConfirm(e:AppEvent):void
-		{
-			_confirmTarget.onConfirm(e.data as Boolean);
-			hideAlertOrDebug(_confirm);
-		}				
 		
 	}
 	

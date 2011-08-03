@@ -109,8 +109,8 @@ package model.proxies {
 		
 		private function dispatchConfirm():void
 		{
-			var m:String = 'The current branch "'+AppModel.branch.name+'" is not currently being tracked by the remote account: "'+_remote.name+'".';
-				m+= 'Are you sure you want to continue?';
+			var m:String = 'The current branch "'+AppModel.branch.name+'" is not currently being tracked by your '+_remote.type+' account: "'+_remote.realName+'".';
+				m+= '\nAre you sure you want to continue?';
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_CONFIRM, {target:this, message:m}));			
 		}			
 
