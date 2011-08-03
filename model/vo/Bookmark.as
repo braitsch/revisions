@@ -143,18 +143,6 @@ package model.vo {
 			}
 		}		
 		
-//		public function addRemoteBranches(a:Array):void
-//		{
-//			for (var i:int = 0; i < _branches.length; i++) {
-//				for (var j:int = 0; j < a.length; j++) {
-//					var s:String = a[j].substr(a[j].lastIndexOf('/') + 1);
-//					if (_branches[i].name == s) {
-//						branches[i].hasRemote = true; break;
-//					}
-//				}
-//			}
-//		}
-		
 	// auto-saving on timeout //	
 		
 		private function initAutoSave():void

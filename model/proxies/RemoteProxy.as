@@ -29,11 +29,11 @@ package model.proxies {
 		{
 			_remote = $remote;
 			var b:Branch = AppModel.bookmark.branch;
-			var isNew:Boolean = _remote.hasBranch(b.name);
-			trace("RemoteProxy.syncWithRemote($remote)", b.name, isNew);
+			var create:Boolean = _remote.hasBranch(b.name);
+			trace("RemoteProxy.syncWithRemote($remote)", b.name, create);
 			return;
 			super.directory = AppModel.bookmark.gitdir;
-			super.call(Vector.<String>([BashMethods.PULL_REMOTE, _remote.name, b.name]));						
+			super.call(Vector.<String>([BashMethods.PULL_REMOTE, _remote.name, b.name, create]));						
 		}
 		
 		private function pushToRemote():void

@@ -11,7 +11,6 @@ package model.vo {
 		private var _history		:Vector.<Commit>;
 		private var _status			:Array = [[], [], [], []];
 		private var _lastCommit		:Commit;
-		private var _hasRemote		:Boolean;
 		private var _totalCommits	:uint = 0;
 
 		public function Branch(n:String) 
@@ -23,8 +22,6 @@ package model.vo {
 		
 		public function set history(v:Vector.<Commit>):void { _history = v; }
 		public function get history():Vector.<Commit> { return _history; }
-		public function set hasRemote(b:Boolean):void { _hasRemote = b; }
-		public function get hasRemote():Boolean { return _hasRemote; }
 		
 		public function get lastCommit():Commit { return _lastCommit; }
 		public function get totalCommits():uint { return _totalCommits; }
