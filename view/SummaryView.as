@@ -47,9 +47,10 @@ package view {
 			this.filters = [new DropShadowFilter(5, 45, 0, .5, 10, 10)];
 			AppModel.engine.addEventListener(BookmarkEvent.STATUS, drawView);
 			AppModel.engine.addEventListener(BookmarkEvent.SUMMARY, drawView);
-			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onSelected);			
+			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onSelected);
+			AppModel.proxies.checkout.addEventListener(BookmarkEvent.BRANCH_CHANGED, onBranchChanged);					
 		}
-		
+
 		public function resize(h:uint):void
 		{
 			_view.y = (h - 100) / 2;
@@ -151,6 +152,11 @@ package view {
 			_details.version_txt.text = 'Version #'+_bookmark.branch.totalCommits as String;
 			_details.lastSaved_txt.text = 'Last Saved : '+_bookmark.branch.lastCommit.date;
 		}
+		
+		private function onBranchChanged(e:BookmarkEvent):void
+		{
+			//TODO update the branch name on the banner
+		}		
 
 	// button events //
 		

@@ -19,7 +19,8 @@ package view.modals.bkmk {
 			_view.label_txt.text = _branch.name;
 			_view.label_txt.mouseEnabled = false;
 			_view.label_txt.mouseChildren = false;
-			if (_branch.name != 'master') addKillButton();
+		// TODO implement branch deleting //	
+		//	if (_branch.name != 'master') addKillButton();
 		}
 		
 		public function get branch():Branch { return _branch; }		
@@ -39,22 +40,15 @@ package view.modals.bkmk {
 			}
 		}
 		
-		private function onRollOut(e:MouseEvent = null):void
-		{
-			TweenLite.to(_view.over, .3, {alpha:0});
-		}
-
-		private function onRollOver(e:MouseEvent = null):void
-		{
-			TweenLite.to(_view.over, .3, {alpha:1});
-		}
+		private function onRollOut(e:MouseEvent = null):void { TweenLite.to(_view.over, .3, {alpha:0}); }
+		private function onRollOver(e:MouseEvent = null):void { TweenLite.to(_view.over, .3, {alpha:1}); }
 		
-		private function addKillButton():void
-		{
-			var k:BranchItemDelete = new BranchItemDelete();
-				k.x = 162; k.y = 5;
-			addChild(k);
-		}
+//		private function addKillButton():void
+//		{
+//			var k:BranchItemDelete = new BranchItemDelete();
+//				k.x = 162; k.y = 5;
+//			addChild(k);
+//		}
 
 	}
 	
