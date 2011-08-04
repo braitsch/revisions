@@ -25,6 +25,7 @@ package view.modals.bkmk {
 
 		private function attachBranches():void
 		{
+			while(_branches.numChildren) _branches.removeChildAt(0);			
 			for (var i:int = 0; i < _bookmark.branches.length; i++) {
 				var bi:BranchItem = new BranchItem(_bookmark.branches[i]);
 				bi.y = 40*i;
