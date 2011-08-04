@@ -13,8 +13,8 @@ package view.modals.bkmk {
 	public class BookmarkRemotes extends ModalWindowBasic {
 
 		private static var _view		:BookmarkRemotesMC = new BookmarkRemotesMC();
-		private static var _remotes		:Sprite = new Sprite();
 		private static var _bookmark	:Bookmark;
+		private static var _remotes		:Sprite = new Sprite();
 
 		public function BookmarkRemotes()
 		{
