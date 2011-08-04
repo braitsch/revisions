@@ -23,7 +23,9 @@ package model.proxies {
 		
 		public function getHistory():void
 		{
-			_bookmark = AppModel.bookmark;			
+			_bookmark = AppModel.bookmark;
+		// TODO resolve bug that's causing history to look funky
+			if (!_bookmark.branch.totalCommits)	trace("HistoryProxy.getHistory() - requesting history w/o total commits");
 			super.directory = _bookmark.gitdir;
 		// add slight delay so we have time to display the preloader //	
 			setTimeout(makeRequest, 500);

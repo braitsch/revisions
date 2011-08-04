@@ -2,21 +2,15 @@ package view.modals {
 
 	import events.UIEvent;
 	import fl.text.TLFTextField;
-	import com.greensock.TweenLite;
 	import flash.display.InteractiveObject;
-	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.filesystem.File;
 	import flash.filters.GlowFilter;
 
-	public class ModalWindow extends Sprite {
+	public class ModalWindow extends ModalWindowBasic {
 
-		public var locked			:Boolean;
-		private var _inputs			:Vector.<TLFTextField>;
 		private var _heightOffset	:uint = 50;
 		private var _closeButton	:ModalCloseButton;
-		private static var _file	:File = File.desktopDirectory;
 	
 		public function ModalWindow()
 		{		
@@ -24,42 +18,18 @@ package view.modals {
 			this.filters = [new GlowFilter(0x000000, .5, 20, 20, 2, 2)];
 		}
 		
-	// override this in any windows that should listen for the enter key //	
-		public function onEnterKey():void { }
-		
 		public function resize(w:Number, h:Number):void
 		{
 			this.x = uint(w / 2 - this.width / 2);
 			this.y = uint((h - _heightOffset) / 2 - this.height / 2 + _heightOffset);
 		}
 		
-		protected function drawBackground(w:uint, h:uint):void
-		{
-			graphics.clear();
-			graphics.beginFill(0xFFFFFF);
-			graphics.drawRect(0, 0, w, h);
-			graphics.endFill();
-			graphics.beginBitmapFill(new LtGreyPattern());
-			graphics.drawRect(4, 4, w-8, h-8);
-			graphics.endFill();
-			if (_closeButton){
-				_closeButton.y = 10;
-				_closeButton.x = w - 10;			
-			}
-		}		
-		
-		protected function addButtons(a:Array):void
-		{			for (var i:int=0; i < a.length; i++) {
-				a[i]['over'].alpha = 0;
-				a[i].mouseChildren = false;
-				enableButton(a[i], true);
-			}
-		}
-		
-		protected function addCloseButton():void
+		protected function addCloseButton(x:uint = 500):void
 		{
 			_closeButton = new ModalCloseButton();
 			_closeButton.over.alpha = 0;
+			_closeButton.y = 10;
+			_closeButton.x = x - 10;
 			_closeButton.buttonMode = true;
 			_closeButton.addEventListener(MouseEvent.CLICK, onCloseClick);
 			_closeButton.addEventListener(MouseEvent.ROLL_OUT, onButtonRollOut);
@@ -67,63 +37,22 @@ package view.modals {
 			addChild(_closeButton);				
 		}
 		
-		protected function enableButton(b:Sprite, on:Boolean):void
-		{
-			if (on){
-				b.alpha = 1;
-				b.buttonMode = true;
-				b.addEventListener(MouseEvent.ROLL_OUT, onButtonRollOut);
-				b.addEventListener(MouseEvent.ROLL_OVER, onButtonRollOver);
-			}	else{
-				b.alpha = .5;
-				b.buttonMode = false;
-				b.removeEventListener(MouseEvent.ROLL_OUT, onButtonRollOut);
-				b.removeEventListener(MouseEvent.ROLL_OVER, onButtonRollOver);				
-			}
-		}
-		
-		protected function addInputs(v:Vector.<TLFTextField>):void
-		{
-			_inputs = v;
-			for (var i:int=0; i < v.length; i++) v[i].tabIndex = i;
-		}
-		
 		protected function onCloseClick(e:MouseEvent):void 
 		{
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 		}	
 		
-		protected function browseForFile($msg:String):void
-		{
-			_file.browseForOpen($msg);	
-			_file.addEventListener(Event.SELECT, onSelect);			
-		}
-
-		protected function browseForDirectory($msg:String):void 
-		{
-			_file.browseForDirectory($msg);	
-			_file.addEventListener(Event.SELECT, onSelect);			
-		}
-
-		protected function onSelect(e:Event):void 
-		{
-			dispatchEvent(new UIEvent(UIEvent.FILE_BROWSER_SELECTION, e.target as File));
-		}
-		
 		private function onAddedToStage(e:Event):void 
 		{
 			resize(stage.stageWidth, stage.stageHeight);	
-			if (_inputs) {
-				var txt:TLFTextField = _inputs[0];
+			if (super.inputs) {
+				var txt:TLFTextField = super.inputs[0];
 				txt.setSelection(0, txt.length);
 				txt.textFlow.interactionManager.setFocus();
-				for (var i:int = 0; i < _inputs.length; i++) InteractiveObject(_inputs[i].getChildAt(1)).tabIndex = i;
+				for (var i:int = 0; i < super.inputs.length; i++) InteractiveObject(super.inputs[i].getChildAt(1)).tabIndex = i;
 			}
 		}
 		
-		private function onButtonRollOut(e:MouseEvent):void {TweenLite.to(e.target.over, .3, {alpha:0});}
-		private function onButtonRollOver(e:MouseEvent):void {TweenLite.to(e.target.over, .5, {alpha:1});}
-
 	}
 	
 }

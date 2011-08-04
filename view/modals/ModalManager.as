@@ -3,11 +3,18 @@ package view.modals {
 	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.UIEvent;
+	import flash.display.Sprite;
+	import flash.display.Stage;
+	import flash.events.KeyboardEvent;
+	import flash.events.MouseEvent;
+	import flash.filesystem.File;
+	import flash.filters.BlurFilter;
 	import model.AppModel;
 	import model.db.AppSettings;
 	import model.remote.RemoteAccount;
 	import model.vo.Bookmark;
 	import model.vo.Commit;
+	import view.modals.bkmk.BookmarkEditor;
 	import view.modals.git.GitAbout;
 	import view.modals.git.GitInstall;
 	import view.modals.git.GitUpgrade;
@@ -18,7 +25,6 @@ package view.modals {
 	import view.modals.local.CommitDetails;
 	import view.modals.local.DeleteBookmark;
 	import view.modals.local.DownloadVersion;
-	import view.modals.local.EditBookmark;
 	import view.modals.local.GlobalSettings;
 	import view.modals.local.NewBookmark;
 	import view.modals.local.NewCommit;
@@ -36,18 +42,12 @@ package view.modals {
 	import view.modals.system.Confirm;
 	import view.modals.system.Debug;
 	import view.ui.Preloader;
-	import flash.display.Sprite;
-	import flash.display.Stage;
-	import flash.events.KeyboardEvent;
-	import flash.events.MouseEvent;
-	import flash.filesystem.File;
-	import flash.filters.BlurFilter;
 
 	public class ModalManager extends Sprite {
 
 		private static var _welcome			:WelcomeScreen = new WelcomeScreen();
 		private static var _new				:NewBookmark = new NewBookmark();
-		private static var _edit			:EditBookmark = new EditBookmark();
+		private static var _edit			:BookmarkEditor = new BookmarkEditor();
 		private static var _repair			:RepairBookmark = new RepairBookmark();
 		private static var _delete			:DeleteBookmark = new DeleteBookmark();		private static var _dragAndDrop		:AddDragAndDrop = new AddDragAndDrop();
 		private static var _commit			:NewCommit = new NewCommit();

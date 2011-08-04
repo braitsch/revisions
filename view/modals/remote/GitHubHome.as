@@ -90,7 +90,7 @@ package view.modals.remote {
 			showPage(0);
 			resetURLField();
 			positionURLAndNav();
-			super.addCloseButton();
+			super.addCloseButton(590);
 			super.drawBackground(590, _view.height + 15);
 		}
 

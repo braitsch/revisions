@@ -149,15 +149,7 @@ package view {
 				_details.save_btn.removeEventListener(MouseEvent.CLICK, onSaveButton);
 			}					
 			_details.version_txt.text = 'Version #'+_bookmark.branch.totalCommits as String;
-			//TODO must fix - lastCommit = null
-			if (_bookmark.branch.lastCommit){
-				_details.lastSaved_txt.text = 'Last Saved : '+_bookmark.branch.lastCommit.date;
-			}	else{
-				trace("SummaryView.drawView(e) ---- _bookmark.branch.lastCommit.date == NULL!!!");
-				trace('_bookmark: ' + (_bookmark.label));
-				trace('_bookmark.branch ' + (_bookmark.branch.name));
-				trace('_bookmark.branch.lastCommit ' + (_bookmark.branch.lastCommit));
-			}
+			_details.lastSaved_txt.text = 'Last Saved : '+_bookmark.branch.lastCommit.date;
 		}
 
 	// button events //

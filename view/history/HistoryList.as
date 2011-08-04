@@ -11,8 +11,7 @@ package view.history {
 
 	public class HistoryList extends Sprite {
 
-		private var _hLength			:uint;	// cached history length
-//		private var _mLength			:uint;	// cached modified length
+		private var _hLength			:uint;		// cached history length
 		private var _modified			:Boolean;
 		private var _bookmark			:Bookmark;
 		private var _unsaved			:HistoryItemUnsaved;

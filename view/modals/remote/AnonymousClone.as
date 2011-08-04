@@ -15,7 +15,7 @@ package view.modals.remote {
 		public function AnonymousClone()
 		{
 			addChild(_view);
-			super.addCloseButton();
+			super.addCloseButton(540);
 			super.drawBackground(540, 196);
 			super.addButtons([_view.clone_btn]);
 			super.addInputs(Vector.<TLFTextField>([_view.url_txt]));			
