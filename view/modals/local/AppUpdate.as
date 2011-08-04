@@ -11,7 +11,7 @@ package view.modals.local {
 
 	public class AppUpdate extends ModalWindow {
 
-		private static var _view	:WindowUpdateMC = new WindowUpdateMC();
+		private static var _view	:AppUpdateMC = new AppUpdateMC();
 		private static var _check1	:ModalCheckbox = new ModalCheckbox(_view.check1, false);
 
 		public function AppUpdate()

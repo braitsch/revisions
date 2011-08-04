@@ -96,7 +96,7 @@ package view {
 			addBookmarkListeners();
 		}
 
-		private function showRemoteButtons(b:Boolean):void
+		private function positionButtons(b:Boolean):void
 		{
 			_details.sync_btn.visible = b;
 			_details.history_btn.x = b ? 40 : 20;
@@ -121,7 +121,7 @@ package view {
 			_view.name_txt.y = -_offset - 13;
 			_view.name_txt.x = -_view.name_txt.width/2;	
 			getBookmarkIcon();
-			showRemoteButtons(_bookmark.remotes.length > 0);
+			positionButtons(_bookmark.remotes.length > 0);
 		}
 		
 		private function getBookmarkIcon():void

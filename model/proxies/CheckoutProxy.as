@@ -1,6 +1,7 @@
 package model.proxies {
 
 	import events.AppEvent;
+	import events.BookmarkEvent;
 	import events.NativeProcessEvent;
 	import model.AppModel;
 	import model.air.NativeProcessProxy;
@@ -8,11 +9,18 @@ package model.proxies {
 
 	public class CheckoutProxy extends NativeProcessProxy {
 
+
 		public function CheckoutProxy()
 		{
 			super.executable = 'Checkout.sh';
 			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);					
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
+		}
+		
+		public function changeBranch(name:String):void
+		{
+			super.directory = AppModel.bookmark.gitdir;
+			super.call(Vector.<String>([BashMethods.CHANGE_BRANCH, name]));
 		}
 		
 		public function revert(sha1:String):void
@@ -31,7 +39,12 @@ package model.proxies {
 		{
 			switch(e.data.method) {
 			// auto update the history after reverting to an earlier version //	
-				case BashMethods.REVERT_TO_VERSION : AppModel.proxies.history.getHistory();	break;
+				case BashMethods.REVERT_TO_VERSION : 
+					AppModel.proxies.history.getHistory();	
+				break;
+				case BashMethods.CHANGE_BRANCH : 
+					dispatchEvent(new BookmarkEvent(BookmarkEvent.BRANCH_CHANGED));
+				break;
 			}
 		}
 		

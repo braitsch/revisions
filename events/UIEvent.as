@@ -9,7 +9,10 @@ package events {
 		public static const ADD_BOOKMARK			:String = "ADD_BOOKMARK";
 		public static const DRAG_AND_DROP			:String = "DRAG_AND_DROP";		public static const EDIT_BOOKMARK			:String = "EDIT_BOOKMARK";
 		public static const DELETE_BOOKMARK			:String = "DELETE_BOOKMARK";		public static const ADD_REMOTE_TO_BOOKMARK	:String = "ADD_REMOTE_TO_BOOKMARK";
-			// history view actions //	
+			// adding and editing local branches //	
+		public static const DELETE_BRANCH			:String = "DELETE_BRANCH";
+		
+	// history view actions //	
 		public static const REVERT					:String = "REVERT";
 		public static const DOWNLOAD				:String = "DOWNLOAD";
 		public static const SHOW_COMMIT				:String = "SHOW_COMMIT";
@@ -36,7 +39,7 @@ package events {
 		
 	// file viewer actions //	
 		public static const FILE_SELECTED			:String = "FILE_SELECTED";
-		public static const TOGGLE_DIRECTORY		:String = "TOGGLE_DIRECTORY";
+		public static const TOGGLE_DIRECTORY:String = "TOGGLE_DIRECTORY";
 		
 		public var data:Object;
 

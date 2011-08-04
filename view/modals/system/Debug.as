@@ -7,7 +7,7 @@ package view.modals.system {
 
 	public class Debug extends ModalWindow {
 
-		private static var _view:WindowDebugMC = new WindowDebugMC();
+		private static var _view:DebugMC = new DebugMC();
 
 		public function Debug()
 		{

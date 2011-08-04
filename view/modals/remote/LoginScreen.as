@@ -13,7 +13,7 @@ package view.modals.remote {
 
 	public class LoginScreen extends ModalWindow {
 
-		private var _view			:WindowLoginMC = new WindowLoginMC();
+		private var _view:LoginMC = new LoginMC();
 
 		public function LoginScreen()
 		{
@@ -27,7 +27,7 @@ package view.modals.remote {
 			_view.login_btn.addEventListener(MouseEvent.CLICK, onLoginButton);	
 		}
 
-		protected function get view():WindowLoginMC { return _view; }
+		protected function get view():LoginMC { return _view; }
 		
 		protected function set allowSkip(b:Boolean):void
 		{	

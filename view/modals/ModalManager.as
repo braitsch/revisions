@@ -110,6 +110,7 @@ package view.modals {
 			stage.addEventListener(UIEvent.ADD_BOOKMARK, onNewButtonClick);
 			stage.addEventListener(UIEvent.EDIT_BOOKMARK, editBookmark);
 			stage.addEventListener(UIEvent.DELETE_BOOKMARK, deleteBookmark);
+			stage.addEventListener(UIEvent.DELETE_BRANCH, deleteBranch);
 			stage.addEventListener(UIEvent.COMMIT, addNewCommit);
 			stage.addEventListener(UIEvent.REVERT, revertProject);
 			stage.addEventListener(UIEvent.DOWNLOAD, downloadVersion);
@@ -229,7 +230,13 @@ package view.modals {
 		{
 			_repair.bookmark = e.data as Bookmark;
 			showModalWindow(_repair);
-		}			
+		}
+		
+		private function deleteBranch(e:UIEvent):void
+		{
+			_alert.message = 'you are trying to delete branch '+e.data.name;
+			showSpecial(_alert);			
+		}					
 		
 		private function addNewCommit(e:UIEvent):void 
 		{

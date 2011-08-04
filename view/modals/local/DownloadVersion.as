@@ -13,7 +13,7 @@ package view.modals.local {
 	public class DownloadVersion extends ModalWindow {
 
 		private static var _commit	:Commit;
-		private static var _view	:WindowDownloadMC = new WindowDownloadMC();
+		private static var _view	:DownloadMC = new DownloadMC();
 		private static var _check1	:ModalCheckbox = new ModalCheckbox(_view.check1, false);
 
 		public function DownloadVersion()

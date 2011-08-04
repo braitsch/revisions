@@ -7,7 +7,7 @@ package view.modals.system {
 
 	public class Alert extends ModalWindow {
 
-		private static var _view:WindowAlertMC = new WindowAlertMC();
+		private static var _view:AlertMC = new AlertMC();
 
 		public function Alert()
 		{

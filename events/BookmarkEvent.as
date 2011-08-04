@@ -11,6 +11,7 @@ package events {
 		public static const HISTORY							:String = "received";
 		public static const EDITED							:String = "edited";
 		public static const PATH_ERROR						:String = "path_error";
+		public static const BRANCH_CHANGED					:String = "branch_changed";
 		
 		public static const SUMMARY							:String = "SUMMARY";
 		public static const BRANCHES_READ					:String = "BRANCHES_READ";

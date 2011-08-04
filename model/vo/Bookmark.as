@@ -30,7 +30,7 @@ package model.vo {
 		private var _stash				:Array = [];
 		private var _branch				:Branch;	// the currently active branch //
 		private var _remotes			:Vector.<Remote> = new Vector.<Remote>();
-		private var _branches			:Array = [];
+		private var _branches			:Vector.<Branch> = new Vector.<Branch>();
 
 		public function Bookmark(o:Object)
 		{
@@ -57,8 +57,8 @@ package model.vo {
 		public function get gitdir():String { return _gitdir;}
 		public function get worktree():String { return _file.parent.nativePath; }
 		public function get stash():Array { return _stash; }		
-		public function get branches():Array { return _branches; }
-		public function get remotes():Vector.<Remote> { return _remotes; }		
+		public function get remotes():Vector.<Remote> { return _remotes; }
+		public function get branches():Vector.<Branch>{ return _branches; }
 		
 		public function get label():String { return _label; }		
 		public function set label(s:String):void

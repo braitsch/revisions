@@ -8,7 +8,7 @@ package view.modals.local {
 
 	public class RevertToVersion extends ModalWindow {
 
-		private static var _view		:WindowRevertMC = new WindowRevertMC();
+		private static var _view		:RevertMC = new RevertMC();
 		private static var _commit		:Commit;
 
 		public function RevertToVersion()

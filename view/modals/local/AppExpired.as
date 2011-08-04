@@ -8,7 +8,7 @@ package view.modals.local {
 
 	public class AppExpired extends ModalWindow {
 
-		private static var _view	:WindowExpiredMC = new WindowExpiredMC();
+		private static var _view	:AppExpiredMC = new AppExpiredMC();
 
 		public function AppExpired()
 		{

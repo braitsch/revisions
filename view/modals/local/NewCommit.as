@@ -10,7 +10,7 @@ package view.modals.local {
 
 	public class NewCommit extends ModalWindow {
 
-		private static var _view		:WindowCommitMC = new WindowCommitMC();
+		private static var _view:CommitMC = new CommitMC();
 
 		public function NewCommit()
 		{
