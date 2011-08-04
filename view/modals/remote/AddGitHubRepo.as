@@ -8,6 +8,7 @@ package view.modals.remote {
 		{
 			super.drawBackground(550, 210);
 			super.proxy = AppModel.proxies.githubApi;
+			super.view.pageBadge.label_txt.text = 'Add To Github';			
 		}
 		
 //			var m:String = 'This bookmark is already associated with a GitHub account.\n';

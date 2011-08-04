@@ -22,13 +22,12 @@ package view.modals.remote {
 		public function RemoteRepo()
 		{
 			addChild(_view);
-			super.addCloseButton();
+			super.addCloseButton(550);
 			super.addButtons([_view.ok_btn]);
 			super.addInputs(Vector.<TLFTextField>([_view.name_txt, _view.desc_txt]));
 			_view.form.label1.text = 'Name';
 			_view.form.label2.text = 'Description';
 			_check.label = 'Make Repository Private';
-			_view.pageBadge.label_txt.text = 'Add To Github';
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);
 		}
 		

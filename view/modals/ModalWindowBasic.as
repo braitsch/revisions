@@ -11,7 +11,7 @@ package view.modals {
 	public class ModalWindowBasic extends Sprite {
 
 		public var locked			:Boolean;
-		protected var inputs			:Vector.<TLFTextField>;
+		protected var inputs		:Vector.<TLFTextField>;
 		private static var _file	:File = File.desktopDirectory;
 	
 	// override this in any windows that should listen for the enter key //	
