@@ -13,7 +13,7 @@ package view.modals.remote {
 		{
 			super.view.beanstalk.visible = true;
 			super.setTextFields('Beanstalk');
-			super.addBadge(new BeanstalkLoginBadge());
+			super.setTitle(super.view, 'Login To Beanstalk');
 			super.view.beanstalk.addEventListener(MouseEvent.CLICK, gotoNewAccountPage);
 		}
 		

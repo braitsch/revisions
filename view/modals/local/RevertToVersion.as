@@ -15,7 +15,8 @@ package view.modals.local {
 		{
 			addChild(_view);
 			super.addCloseButton();	
-			super.drawBackground(500, 243);		
+			super.drawBackground(550, 250);			
+			super.setTitle(_view, 'Revert Project');
 			super.addButtons([_view.revert_btn, _view.cancel_btn]);
 			_view.revert_btn.addEventListener(MouseEvent.CLICK, onRevert);
 			_view.cancel_btn.addEventListener(MouseEvent.CLICK, onCancel);
@@ -24,8 +25,8 @@ package view.modals.local {
 		public function set commit(cmt:Commit):void
 		{
 			_commit = cmt;
-			_view.message_txt.text = 'Are you sure you want to revert "'+AppModel.bookmark.label;
-			_view.message_txt.text+= '" back to revision "'+_commit.note+'" aka what it looked like '+_commit.date+' ago?';
+			_view.textArea.message_txt.text = 'Are you sure you want to revert "'+AppModel.bookmark.label;
+			_view.textArea.message_txt.text+= '" back to revision "'+_commit.note+'" aka what it looked like '+_commit.date+' ago?';
 		}
 
 		private function onCancel(e:MouseEvent):void
