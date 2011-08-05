@@ -1,5 +1,6 @@
 package view {
 
+	import system.StringUtils;
 	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.UIEvent;
@@ -77,12 +78,15 @@ package view {
 			_view.name_txt.wordWrap = true;
 			_view.name_txt.multiline = true;
 			_view.name_txt.filters = [_glowLarge];
+			_details.branch_txt.filters = [_glowSmall];
 			_details.version_txt.filters = [_glowSmall];
 			_details.lastSaved_txt.filters = [_glowSmall]; 
 			_view.name_txt.defaultTextFormat = _tformat;
+			_details.branch_txt.defaultTextFormat = Fonts.helveticaBold;
 			_details.version_txt.defaultTextFormat = Fonts.helveticaBold;
 			_details.lastSaved_txt.defaultTextFormat = Fonts.helveticaBold;
 			_view.name_txt.autoSize = TextFieldAutoSize.CENTER;
+			_details.branch_txt.autoSize = TextFieldAutoSize.CENTER;
 			_details.version_txt.autoSize = TextFieldAutoSize.CENTER;
 			_details.lastSaved_txt.autoSize = TextFieldAutoSize.CENTER;
 		}
@@ -118,9 +122,10 @@ package view {
 			_offset = (_view.name_txt.height-26)/2;
 			_details.y = 20 + _offset;
 			_view.name_txt.y = -_offset - 13;
-			_view.name_txt.x = -_view.name_txt.width/2;	
+			_view.name_txt.x = -_view.name_txt.width/2;
 			getBookmarkIcon();
 			positionButtons(_bookmark.remotes.length > 0);
+			_details.branch_txt.text = 'Active Branch : '+StringUtils.capitalize(_bookmark.branch.name);
 		}
 		
 		private function getBookmarkIcon():void

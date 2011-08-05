@@ -12,6 +12,11 @@ package system {
 			return s.search(/\s+$/)!=-1;			
 		}
 		
+		public static function capitalize(s:String):String
+		{
+			return s.substr(0, 1).toUpperCase()+s.substr(1);
+		}
+		
 	}
 	
 }
