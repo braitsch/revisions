@@ -3,6 +3,7 @@ package view.history {
 	import events.AppEvent;
 	import model.AppModel;
 	import model.vo.Bookmark;
+	import model.vo.Branch;
 	import model.vo.Commit;
 	import com.greensock.TweenLite;
 	import flash.display.Sprite;
@@ -11,6 +12,7 @@ package view.history {
 
 	public class HistoryList extends Sprite {
 
+		private var _branch				:Branch;
 		private var _modified			:Boolean;
 		private var _bookmark			:Bookmark;
 		private var _itemUnsaved		:HistoryItemUnsaved = new HistoryItemUnsaved();
@@ -26,30 +28,18 @@ package view.history {
 		
 		public function get bookmark():Bookmark { return _bookmark; }
 		
-	// on status, summary & history updates //
+	// on summary & history updates //
 		public function checkIfChanged():void
 		{
-			var m:Boolean = modifiedHasChanged();
-			trace('m: ' + (m));
-			if (m == true) {
-				drawList();
+			var m:Boolean = _bookmark.branch.modified;			
+			if (_modified != m || numChildren == 0 || _bookmark.branch != _branch){
+				_modified = m; _branch = _bookmark.branch; drawList();
 			}	else{
-				dispatchRenderComplete();				
+				dispatchRenderComplete();		
 			}
 		}
-
+		
 	// private //
-
-		private function modifiedHasChanged():Boolean
-		{
-			var m:Boolean = _bookmark.branch.modified;
-			if (_modified != m) {
-				_modified = m;
-				return true;
-			}	else{
-				return false;
-			}
-		}
 
 		private function drawList():void
 		{

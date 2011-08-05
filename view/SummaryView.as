@@ -47,7 +47,6 @@ package view {
 			this.filters = [new DropShadowFilter(5, 45, 0, .5, 10, 10)];
 			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onSelected);
 			AppModel.engine.addEventListener(BookmarkEvent.SUMMARY_RECEIVED, drawView);
-			AppModel.proxies.checkout.addEventListener(BookmarkEvent.BRANCH_CHANGED, onBranchChanged);					
 		}
 
 		public function resize(h:uint):void
@@ -152,11 +151,6 @@ package view {
 			_details.lastSaved_txt.text = 'Last Saved : '+_bookmark.branch.lastCommit.date;
 		}
 		
-		private function onBranchChanged(e:BookmarkEvent):void
-		{
-			//TODO update the branch name on the banner
-		}		
-
 	// button events //
 		
 		private function onSyncButton(e:MouseEvent):void 

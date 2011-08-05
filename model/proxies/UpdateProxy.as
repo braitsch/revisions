@@ -22,11 +22,13 @@ package model.proxies {
 			AppModel.engine.addEventListener(BookmarkEvent.NO_BOOKMARKS, killTimer);
 			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onBookmarkSelected);
 			AppModel.engine.addEventListener(AppEvent.HISTORY_REQUESTED, onHistoryRequested);
-			AppModel.engine.addEventListener(AppEvent.MODIFIED_REQUESTED, onModifiedRequested);			
+			AppModel.engine.addEventListener(AppEvent.MODIFIED_REQUESTED, onModifiedRequested);
 			AppModel.proxies.checkout.addEventListener(BookmarkEvent.REVERTED, onBookmarkReverted);
 			AppModel.proxies.editor.addEventListener(BookmarkEvent.COMMIT_COMPLETE, onCommitComplete);
+			AppModel.proxies.checkout.addEventListener(BookmarkEvent.BRANCH_CHANGED, onBranchChanged);
 		}
 
+		private function onBranchChanged(e:BookmarkEvent):void {		getHistory();   }
 		private function onCommitComplete(e:BookmarkEvent):void { 		getHistory();  	}
 		private function onHistoryRequested(e:AppEvent):void {			getHistory();	}
 		private function onBookmarkReverted(e:BookmarkEvent):void {		getHistory();	}
