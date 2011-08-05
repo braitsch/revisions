@@ -42,6 +42,7 @@ package view.modals.bkmk {
 				_branches.addChild(bi);
 				_branches.addEventListener(MouseEvent.CLICK, onBranchClick);
 			}
+			_branch = _bookmark.branch;
 			_branches.x = 10; _branches.y = 90;
 			super.drawBackground(550, _branches.y + _branches.height + 20);		
 		}
@@ -50,6 +51,7 @@ package view.modals.bkmk {
 		private function onBranchClick(e:MouseEvent):void
 		{
 			if (e.target is BranchItem){
+				if (e.target.branch == _branch) return;
 				_branch = e.target.branch;
 				checkoutBranch();
 			}	else if (e.target is BranchItemDelete){

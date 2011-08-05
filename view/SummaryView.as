@@ -125,7 +125,6 @@ package view {
 			_view.name_txt.x = -_view.name_txt.width/2;
 			getBookmarkIcon();
 			positionButtons(_bookmark.remotes.length > 0);
-			_details.branch_txt.text = 'Active Branch : '+StringUtils.capitalize(_bookmark.branch.name);
 		}
 		
 		private function getBookmarkIcon():void
@@ -154,6 +153,7 @@ package view {
 			}					
 			_details.version_txt.text = 'Version #'+_bookmark.branch.totalCommits as String;
 			_details.lastSaved_txt.text = 'Last Saved : '+_bookmark.branch.lastCommit.date;
+			_details.branch_txt.text = 'On Branch : '+StringUtils.capitalize(_bookmark.branch.name);			
 		}
 		
 	// button events //
