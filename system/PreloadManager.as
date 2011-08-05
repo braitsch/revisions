@@ -11,7 +11,7 @@ package system {
 		{
 			AppModel.engine.addEventListener(BookmarkEvent.LOADED, onBkmksRendered);
 			AppModel.engine.addEventListener(AppEvent.HISTORY_RENDERED, hideLoader);
-			AppModel.proxies.history.addEventListener(AppEvent.REQUESTING_HISTORY, onGetHistory);
+			AppModel.proxies.update.addEventListener(AppEvent.REQUESTING_HISTORY, onGetHistory);
 			AppModel.proxies.editor.addEventListener(AppEvent.INITIALIZING_BOOKMARK, onBookmarkInit);
 		}
 

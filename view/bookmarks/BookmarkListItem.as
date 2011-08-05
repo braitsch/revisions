@@ -1,13 +1,12 @@
 package view.bookmarks {
 
-	import model.proxies.StatusProxy;
-	import com.greensock.TweenLite;
 	import events.BookmarkEvent;
+	import model.AppModel;
+	import model.vo.Bookmark;
+	import com.greensock.TweenLite;
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
-	import model.AppModel;
-	import model.vo.Bookmark;
 
 	public class BookmarkListItem extends Sprite {
 
@@ -51,9 +50,7 @@ package view.bookmarks {
 
 		private function onBookmarkSelected(e:MouseEvent):void
 		{
-			if (StatusProxy.working == false){
-				AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.SELECTED, _bookmark));
-			}
+			AppModel.bookmark = _bookmark;
 		}
 
 	}

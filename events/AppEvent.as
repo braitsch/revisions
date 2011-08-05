@@ -44,7 +44,9 @@ package events {
 		public static const REQUESTING_HISTORY		:String = "REQUESTING_HISTORY";
 		public static const REPOSITORY_READY		:String = "REPOSITORY_READY";
 		public static const FILES_DELETED			:String = "FILES_DELETED";
-		public static const INITIALIZING_BOOKMARK	:String = "INITIALIZING_BOOKMARK";
+		public static const INITIALIZING_BOOKMARK:String = "INITIALIZING_BOOKMARK";
+		public static const HISTORY_REQUESTED:String = "HISTORY_REQUESTED";
+		public static const MODIFIED_REQUESTED:String = "MODIFIED_REQUESTED";
 		
 		public var data:Object;
 

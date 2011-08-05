@@ -23,15 +23,15 @@ package model {
 		public function AppModel() 
 		{
 			_preloader.initialize();
-			_proxies.status.addListenersToResetTimer();
-			_engine.addEventListener(BookmarkEvent.SELECTED, onBookmarkSet);
+			_proxies.update.initialize();
 		}
 		
-		static public function onBookmarkSet(e:BookmarkEvent):void
+		static public function set bookmark(b:Bookmark):void
 		{
-			_bookmark = e.data as Bookmark;
+			_bookmark = b;
 			_database.setActiveBookmark(_bookmark.label);
-			AppModel.proxies.status.getSummary();
+		// TODO remove argument, all listeners should just access AppModel.bookmark	
+			_engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.SELECTED, _bookmark));
 		}
 		
 	// public getters //

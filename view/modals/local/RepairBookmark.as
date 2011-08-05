@@ -91,7 +91,6 @@ package view.modals.local {
 			if (bkmk) {
 				this.bookmark = bkmk;
 			}	else{
-				AppModel.proxies.status.resetTimer();
 				dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 			}
 			AppModel.database.removeEventListener(DataBaseEvent.RECORD_EDITED, onEditSuccessful);

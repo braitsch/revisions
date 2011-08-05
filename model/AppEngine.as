@@ -173,9 +173,9 @@ package model {
 		
 		private function dispatchActiveBookmark():void
 		{
-		// protect against potential database errors //	
+		// on database error, default to the first bookmark //	
 			if (_bookmark == null) _bookmark = _bookmarks[0];
-			dispatchEvent(new BookmarkEvent(BookmarkEvent.SELECTED, _bookmark));
+			AppModel.bookmark = _bookmark;
 		}
 
 	}

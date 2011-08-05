@@ -45,8 +45,7 @@ package view {
 			initButtons();
 			initTextFields();
 			this.filters = [new DropShadowFilter(5, 45, 0, .5, 10, 10)];
-			AppModel.engine.addEventListener(BookmarkEvent.STATUS, drawView);
-			AppModel.engine.addEventListener(BookmarkEvent.SUMMARY, drawView);
+			AppModel.engine.addEventListener(BookmarkEvent.SUMMARY_RECEIVED, drawView);
 			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onSelected);
 			AppModel.proxies.checkout.addEventListener(BookmarkEvent.BRANCH_CHANGED, onBranchChanged);					
 		}

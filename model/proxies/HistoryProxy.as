@@ -5,14 +5,10 @@ package model.proxies {
 	import events.NativeProcessEvent;
 	import model.AppModel;
 	import model.air.NativeProcessQueue;
-	import model.vo.Bookmark;
 	import model.vo.Commit;
 	import system.BashMethods;
-	import flash.utils.setTimeout;
 
 	public class HistoryProxy extends NativeProcessQueue {
-		
-		private static var _bookmark		:Bookmark;		
 		
 		public function HistoryProxy()
 		{
@@ -23,17 +19,7 @@ package model.proxies {
 		
 		public function getHistory():void
 		{
-			_bookmark = AppModel.bookmark;
-		// TODO resolve bug that's causing history to look funky
-			if (!_bookmark.branch.totalCommits)	trace("HistoryProxy.getHistory() - requesting history w/o total commits");
-			super.directory = _bookmark.gitdir;
-		// add slight delay so we have time to display the preloader //	
-			setTimeout(makeRequest, 500);
-			dispatchEvent(new AppEvent(AppEvent.REQUESTING_HISTORY));
-		}
-		
-		private function makeRequest():void
-		{
+			super.directory = AppModel.bookmark.gitdir;
 			super.queue = [	Vector.<String>([BashMethods.GET_HISTORY]) ];
 		}
 		
@@ -47,9 +33,9 @@ package model.proxies {
 		{
 			var a:Array = s.split(/[\n\r\t]/g);
 			var v:Vector.<Commit> = new Vector.<Commit>();
-			for (var i:int = 0; i < a.length; i++) v.push(new Commit(a[i], _bookmark.branch.totalCommits-i));
-			_bookmark.branch.history = v;
-			AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.HISTORY, _bookmark));			
+			for (var i:int = 0; i < a.length; i++) v.push(new Commit(a[i], AppModel.bookmark.branch.totalCommits-i));
+			AppModel.bookmark.branch.history = v;
+			AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.HISTORY_RECEIVED, AppModel.bookmark));			
 		}
 		
 		private function onProcessFailure(e:NativeProcessEvent):void 

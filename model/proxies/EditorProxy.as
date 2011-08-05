@@ -6,15 +6,12 @@ package model.proxies {
 	import model.AppModel;
 	import model.air.NativeProcessProxy;
 	import model.vo.Bookmark;
-	import model.vo.Commit;
 	import system.BashMethods;
 	import com.adobe.crypto.MD5;
 	import flash.filesystem.File;
 
 	public class EditorProxy extends NativeProcessProxy {
 		
-		private static var _bookmark:Bookmark;
-
 		public function EditorProxy()
 		{
 			super.executable = 'Editor.sh';
@@ -22,10 +19,9 @@ package model.proxies {
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 		}
 		
-		public function commit($msg:String, $b:Bookmark = null):void
+		public function commit($msg:String):void
 		{
-			_bookmark = $b ? $b : AppModel.bookmark;
-			super.directory = _bookmark.gitdir;
+			super.directory = AppModel.bookmark.gitdir;
 			super.call(Vector.<String>([BashMethods.COMMIT, $msg]));
 		}
 		
@@ -77,7 +73,7 @@ package model.proxies {
 		//	trace("EditorProxy.onProcessComplete(e)", e.data.method, e.data.result);
 			switch(e.data.method){
 				case BashMethods.COMMIT : 
-					onCommitComplete(e.data.result);
+					dispatchEvent(new BookmarkEvent(BookmarkEvent.COMMIT_COMPLETE));
 				break;
 				case BashMethods.INIT_FILE: 
 					dispatchEvent(new BookmarkEvent(BookmarkEvent.INITIALIZED));
@@ -92,25 +88,11 @@ package model.proxies {
 					dispatchEvent(new AppEvent(AppEvent.FILES_DELETED));
 				break;								
 				case BashMethods.TRACK_FILE : 
-			//		AppModel.proxies.status.getStatus();
-				break;				case BashMethods.UNTRACK_FILE : 			//		AppModel.proxies.status.getStatus();				break;
+				break;				case BashMethods.UNTRACK_FILE : 				break;
 				case BashMethods.EDIT_GIT_DIR : 
 					dispatchEvent(new AppEvent(AppEvent.GIT_DIR_UPDATED));
 				break;	
 			}
-		}
-		
-		private function onCommitComplete(s:String):void
-		{
-			if (_bookmark.branch.history == null){
-				_bookmark.branch.clearModified();
-				AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.STATUS, _bookmark));
-			}	else{	
-			// if we have a history, we always have a status & totalCommit from getSummary //	
-				_bookmark.branch.addCommit(new Commit(s, _bookmark.branch.totalCommits + 1));
-				AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.SUMMARY, _bookmark));
-			}
-			AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.COMMIT_COMPLETE));
 		}
 		
 		private function onProcessFailure(e:NativeProcessEvent):void 

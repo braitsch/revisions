@@ -59,7 +59,7 @@ package view{
 		
 		private function refreshHistory():void
 		{
-			AppModel.proxies.history.getHistory();
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HISTORY_REQUESTED));
 			AppModel.engine.addEventListener(AppEvent.HISTORY_RENDERED, onHistoryRendered);
 		}
 		

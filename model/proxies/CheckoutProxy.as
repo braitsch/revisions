@@ -40,7 +40,7 @@ package model.proxies {
 			switch(e.data.method) {
 			// auto update the history after reverting to an earlier version //	
 				case BashMethods.REVERT_TO_VERSION : 
-					AppModel.proxies.history.getHistory();	
+					dispatchEvent(new BookmarkEvent(BookmarkEvent.REVERTED));
 				break;
 				case BashMethods.CHANGE_BRANCH : 
 					dispatchEvent(new BookmarkEvent(BookmarkEvent.BRANCH_CHANGED));

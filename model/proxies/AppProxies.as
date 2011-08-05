@@ -6,8 +6,7 @@ package model.proxies {
 		
 		private static var _config		:ConfigProxy 	= new ConfigProxy();
 		private static var _reader		:RepoReader 	= new RepoReader();
-		private static var _status 		:StatusProxy 	= new StatusProxy();
-		private static var _history		:HistoryProxy 	= new HistoryProxy();	
+		private static var _update		:UpdateProxy 	= new UpdateProxy();
 		private static var _editor		:EditorProxy 	= new EditorProxy();
 		private static var _remote		:RemoteProxy 	= new RemoteProxy();
 		private static var _checkout	:CheckoutProxy 	= new CheckoutProxy();
@@ -39,15 +38,10 @@ package model.proxies {
 			return _reader;
 		}
 		
-		public function get status():StatusProxy
+		public function get update():UpdateProxy
 		{
-			return _status;
-		}
-		
-		public function get history():HistoryProxy
-		{
-			return _history;
-		}
+			return _update;
+		}		
 		
 		public function get checkout():CheckoutProxy
 		{
