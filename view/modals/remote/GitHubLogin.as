@@ -17,7 +17,7 @@ package view.modals.remote {
 		{
 			super.view.github.visible = true;		
 			super.setTextFields('Github');
-			super.addBadge(new GitLoginBadge());
+			super.setTitle(super.view, 'Login To Github');
 			super.view.github.addEventListener(MouseEvent.CLICK, gotoNewAccountPage);
 			AppModel.proxies.githubApi.addEventListener(AppEvent.LOGOUT, onLogout);			
 		}

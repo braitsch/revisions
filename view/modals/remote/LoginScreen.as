@@ -18,11 +18,13 @@ package view.modals.remote {
 		public function LoginScreen()
 		{
 			addChild(_view);
-			super.addCloseButton(540);
-			super.drawBackground(540, 233);	
+			super.addCloseButton();
+			super.drawBackground(550, 240);
 			super.addButtons([_view.skip_btn, _view.login_btn, _view.github, _view.beanstalk]);
 			setupTextFields();
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			_view.form.label1.text = 'Username';
+			_view.form.label2.text = 'Password';
 			_view.skip_btn.addEventListener(MouseEvent.CLICK, onSkipButton);
 			_view.login_btn.addEventListener(MouseEvent.CLICK, onLoginButton);	
 		}
@@ -44,7 +46,7 @@ package view.modals.remote {
 		protected function setTextFields(s:String):void
 		{
 			_view.sign_up_txt.text = "Don't yet have a "+s+" account?";
-			_view.title_txt.text = 'Have a '+s+' account? Please login. (Required for private repositories)';			
+			_view.heading.label_txt.text = 'Have a '+s+' account? Please login. (Required for private repositories)';			
 		}
 		
 		protected function onLoginButton(e:MouseEvent = null):void { }

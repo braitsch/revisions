@@ -18,10 +18,14 @@ package view.modals.git {
 		public function NameAndEmail()
 		{
 			addChild(_view);
-			super.drawBackground(500, 225);
+			super.drawBackground(550, 240);
+			super.setTitle(_view, 'Name & Email');			
 			super.addButtons([_view.ok_btn]);
 			super.addInputs(Vector.<TLFTextField>([_view.name_txt, _view.email_txt]));
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			_view.form.label1.text = 'Name';
+			_view.form.label2.text = 'Email';
+			_view.heading.label_txt.text = 'Please enter your name & email so we can keep track of your versions.';
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);
 		}
 		

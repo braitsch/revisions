@@ -10,24 +10,25 @@ package view.modals.git {
 		public function GitUpgrade()
 		{
 			super(_view);
-			super.drawBackground(500, 226);
+			super.drawBackground(550, 230);
+			super.setTitle(_view, 'Upgrade Git');
 		}
 		
 		public function promptToUpgrade():void
 		{
-			_view.message_txt.text = '';			
+			_view.textArea.message_txt.text = '';			
 			var v:String = AppModel.proxies.config.gitVersion;
 			var i:String = AppModel.proxies.config.gitInstall;
 			var n:String = super.checkForPackageInstaller();
 			if (n){
-				_view.message_txt.appendText('I see you have Git '+v+' installed at '+i+'\n');
-				_view.message_txt.appendText('This looks like a '+n+' install.\n');
-				_view.message_txt.appendText('Revisions requires version '+SystemRules.MIN_GIT_VERSION+'\n');
-				_view.message_txt.appendText('Would you like me to try to upgrade for you?');
+				_view.textArea.message_txt.appendText('I see you have Git '+v+' installed at '+i+'\n');
+				_view.textArea.message_txt.appendText('This looks like a '+n+' install.\n');
+				_view.textArea.message_txt.appendText('Revisions requires version '+SystemRules.MIN_GIT_VERSION+'\n');
+				_view.textArea.message_txt.appendText('Would you like me to try to upgrade for you?');
 			}	else{
-				_view.message_txt.appendText('I need to update your Git version of '+v+' to ');
-				_view.message_txt.appendText(SystemRules.MIN_GIT_VERSION+'\nIs that OK?\n');
-				_view.message_txt.appendText('It should only take a few seconds.');
+				_view.textArea.message_txt.appendText('I need to update your Git version of '+v+' to ');
+				_view.textArea.message_txt.appendText(SystemRules.MIN_GIT_VERSION+'\nIs that OK?\n');
+				_view.textArea.message_txt.appendText('It should only take a few seconds.');
 			}
 		}
 		

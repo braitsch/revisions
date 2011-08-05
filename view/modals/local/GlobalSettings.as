@@ -24,12 +24,16 @@ package view.modals.local {
 		{
 			addChild(_view);
 			super.addCloseButton();	
-			super.drawBackground(500, 267);
+			super.drawBackground(550, 265);
+			super.setTitle(_view, 'Global Settings');
 			super.addButtons([_view.ok_btn]);
 			super.addInputs(Vector.<TLFTextField>([_view.name_txt, _view.email_txt]));
 			_check1.label = 'Automatically check for updates';
 			_check2.label = 'Show tooltips';
 			_check3.label = 'Prompt before downloading a previous version';
+			_view.form.label1.text = 'Name';
+			_view.form.label2.text = 'Email';
+			_view.form.label3.text = 'License Key';
 			_view.check1.addEventListener(MouseEvent.CLICK, onCheck1);
 			_view.check2.addEventListener(MouseEvent.CLICK, onCheck2);
 			_view.check3.addEventListener(MouseEvent.CLICK, onCheck3);

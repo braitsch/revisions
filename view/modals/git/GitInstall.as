@@ -7,14 +7,15 @@ package view.modals.git {
 		public function GitInstall()
 		{
 			super(_view);
-			super.drawBackground(500, 202);
+			super.drawBackground(550, 210);
+			super.setTitle(_view, 'Install Git');
 		}
 		
 		public function promptToInstall():void
 		{
-			_view.message_txt.text = '';
-			_view.message_txt.appendText('Revisions requires the Git library to run correctly.\n');	
-			_view.message_txt.appendText('It only takes a second to install. Okay if I add that for you?');	
+			_view.textArea.message_txt.text = '';
+			_view.textArea.message_txt.appendText('Revisions requires the Git library to run correctly.\n');	
+			_view.textArea.message_txt.appendText('It only takes a second to install. Okay if I add that for you?');	
 		}
 		
 	}

@@ -15,7 +15,8 @@ package view.modals.git {
 		{
 			addChild(_view);
 			super.addCloseButton();
-			super.drawBackground(500, 202);
+			super.drawBackground(550, 210);
+			super.setTitle(_view, 'About Git');
 			super.addButtons([_view.ok_btn]);
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
@@ -24,10 +25,10 @@ package view.modals.git {
 		private function onAddedToStage(e:Event):void
 		{
 			var c:ConfigProxy = AppModel.proxies.config;
-			_view.message_txt.text = '';	
-			_view.message_txt.appendText('Version : '+c.gitVersion+'\n');
-			_view.message_txt.appendText('Installed at : '+c.gitInstall+'\n');
-			_view.message_txt.appendText('Loaded from cache : '+c.loadedFromCache+'\n');
+			_view.textArea.message_txt.text = '';	
+			_view.textArea.message_txt.appendText('Version : '+c.gitVersion+'\n');
+			_view.textArea.message_txt.appendText('Installed at : '+c.gitInstall+'\n');
+			_view.textArea.message_txt.appendText('Loaded from cache : '+c.loadedFromCache+'\n');
 		}
 		
 		override public function onEnterKey():void { onOkButton(); }			

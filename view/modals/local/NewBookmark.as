@@ -17,7 +17,9 @@ package view.modals.local {
 		{
 			addChild(_view);
 			super.addCloseButton();
-			super.drawBackground(500, 227);			
+			super.drawBackground(550, 240);
+			super.setTitle(_view, 'New Bookmark');
+			super.setHeading(_view, 'Select below to track a new file, folder, or checkout from a remote repository.');
 			super.addButtons([_view.file_btn, _view.folder_btn, _view.github_btn, _view.beanstalk_btn, _view.private_btn]);			
 			_view.addEventListener(MouseEvent.CLICK, onButtonClick);
 			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);
