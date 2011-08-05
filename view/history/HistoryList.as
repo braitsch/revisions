@@ -11,7 +11,6 @@ package view.history {
 
 	public class HistoryList extends Sprite {
 
-		private var _hLength			:uint;		// cached history length
 		private var _modified			:Boolean;
 		private var _bookmark			:Bookmark;
 		private var _itemUnsaved		:HistoryItemUnsaved = new HistoryItemUnsaved();
@@ -30,15 +29,10 @@ package view.history {
 	// on status, summary & history updates //
 		public function checkIfChanged():void
 		{
-			trace("HistoryList.checkIfChanged()");
-			var h:Boolean = historyHasChanged();
-			trace('h: ' + (h));
 			var m:Boolean = modifiedHasChanged();
 			trace('m: ' + (m));
-			if (h == true) {
+			if (m == true) {
 				drawList();
-			}	else if (m == true){
-				sortList();
 			}	else{
 				dispatchRenderComplete();				
 			}
@@ -48,7 +42,7 @@ package view.history {
 
 		private function modifiedHasChanged():Boolean
 		{
-			var m:Boolean = _bookmark.branch.isModified();
+			var m:Boolean = _bookmark.branch.modified;
 			if (_modified != m) {
 				_modified = m;
 				return true;
@@ -57,17 +51,6 @@ package view.history {
 			}
 		}
 
-		private function historyHasChanged():Boolean
-		{
-			var h:uint = _bookmark.branch.history.length;			
-			if (isNaN(_hLength) || _hLength != h) {
-				_hLength = h;
-				return true;
-			}	else{
-				return false;
-			}
-		}
-		
 		private function drawList():void
 		{
 			while(numChildren) removeChildAt(0);
@@ -99,7 +82,7 @@ package view.history {
 		
 		private function showHideUnsaved():void
 		{
-			var m:Boolean = _bookmark.branch.isModified();
+			var m:Boolean = _bookmark.branch.modified;
 			if (m == true) {
 				addChildAt(_itemUnsaved, 0);
 			}	else if (m == false && _itemUnsaved.stage) {

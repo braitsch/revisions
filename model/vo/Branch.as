@@ -19,36 +19,26 @@ package model.vo {
 		}
 		
 		public function get name():String { return _name; }
+		public function set status(a:Array):void {  _status = a; }
 		
 		public function set history(v:Vector.<Commit>):void { _history = v; }
 		public function get history():Vector.<Commit> { return _history; }
 		
 		public function get lastCommit():Commit { return _lastCommit; }
 		public function get totalCommits():uint { return _totalCommits; }
-//		public function get modified():Array { return _status[StatusProxy.M]; }
-//		public function get untracked():uint { return _status[StatusProxy.U]; }
 				
-		public function set status(a:Array):void 
-		{ 
-			_status = a;
+		
+		public function set modified(b:Boolean):void
+		{
+			if (b == false){
+				_status[StatusProxy.M] = [];
+				_status[StatusProxy.U] = [];
+			}
 		}
 		
-		public function isModified():Boolean
+		public function get modified():Boolean
 		{
 			return (_status[StatusProxy.M].length || _status[StatusProxy.U].length);
-		}
-		
-		public function clearModified():void
-		{
-			_status[StatusProxy.M] = [];
-		}
-		
-		public function addCommit(c:Commit):void
-		{
- 			_lastCommit = c;
-			_totalCommits += 1;
-			_status[StatusProxy.M] = [];
-			_history.unshift(c);
 		}
 		
 		public function setSummary(lc:Commit, tc:uint, mod:Array):void

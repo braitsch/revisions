@@ -139,7 +139,7 @@ package view {
 		{
 		// ignore if we're not showing the bookmark that just updated //
 			if (e.data != _bookmark) return;
-			if (_bookmark.branch.isModified()){
+			if (_bookmark.branch.modified){
 				_details.save_btn.over.alpha = 1;
 				_details.save_btn.buttonMode = true;
 				_details.save_btn.addEventListener(MouseEvent.CLICK, onSaveButton);
@@ -182,7 +182,7 @@ package view {
 		private function syncRemote():void
 		{
 			var m:String;
-			if (_bookmark.branch.isModified()){
+			if (_bookmark.branch.modified){
 				m = 'Please saves your lastest changes before syncing with the server.';
 			}	else if (_bookmark.remotes.length != 1){
 				m = 'This bookmark has multiple remotes. A remote chooser is coming soon.';
