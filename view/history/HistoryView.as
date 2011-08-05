@@ -86,7 +86,7 @@ package view.history {
 		private function onSummary(e:BookmarkEvent):void
 		{
 			var hl:HistoryList = getListByBookmark(e.data as Bookmark);
-			if (hl) hl.checkIfChanged();
+			if (hl && e.data.branch.history) hl.checkIfChanged();
 		}							
 		
 		private function onSelection(e:BookmarkEvent):void 

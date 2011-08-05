@@ -5,7 +5,6 @@ package model.proxies {
 	import model.AppModel;
 	import model.vo.Bookmark;
 	import flash.events.EventDispatcher;
-	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	import flash.utils.setTimeout;
 	

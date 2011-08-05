@@ -14,12 +14,11 @@ package view.history {
 		private var _hLength			:uint;		// cached history length
 		private var _modified			:Boolean;
 		private var _bookmark			:Bookmark;
-		private var _unsaved			:HistoryItemUnsaved;
+		private var _itemUnsaved		:HistoryItemUnsaved = new HistoryItemUnsaved();
 
 		public function HistoryList($bkmk:Bookmark)
 		{
 			_bookmark = $bkmk;
-			_unsaved = new HistoryItemUnsaved();
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
 		}
@@ -31,9 +30,11 @@ package view.history {
 	// on status, summary & history updates //
 		public function checkIfChanged():void
 		{
-			if (_bookmark.branch.history == null) return;
+			trace("HistoryList.checkIfChanged()");
 			var h:Boolean = historyHasChanged();
+			trace('h: ' + (h));
 			var m:Boolean = modifiedHasChanged();
+			trace('m: ' + (m));
 			if (h == true) {
 				drawList();
 			}	else if (m == true){
@@ -100,11 +101,13 @@ package view.history {
 		{
 			var m:Boolean = _bookmark.branch.isModified();
 			if (m == true) {
-				addChildAt(_unsaved, 0);
-			}	else if (m == false && _unsaved.stage) {
+				addChildAt(_itemUnsaved, 0);
+			}	else if (m == false && _itemUnsaved.stage) {
 				removeChildAt(0);
 			}				
 		}
+		
+	// adjust list items on stage resizing //	
 		
 		private function onAddedToStage(e:Event):void
 		{
