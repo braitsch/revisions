@@ -62,7 +62,7 @@ package model.proxies {
 		{
 			var n:uint = uint(a[2]) + 1; // total commits //
 			AppModel.branch.setSummary(new Commit(a[1], n), n, splitAndTrim(a[0]));
-			AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.SUMMARY_RECEIVED, AppModel.bookmark));			
+			AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.SUMMARY_RECEIVED, AppModel.bookmark));
 		}
 
 		private function splitAndTrim(s:String):Array

@@ -16,6 +16,7 @@ package model.proxies {
 		private static var _history			:HistoryProxy 	= new HistoryProxy();		
 		private static var _working			:Boolean = false;
 		private static var _autoSaveQueue	:Array = [];
+		private static var _refreshHistory	:Boolean;
 
 		public function initialize():void
 		{
@@ -23,27 +24,34 @@ package model.proxies {
 			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onBookmarkSelected);
 			AppModel.engine.addEventListener(AppEvent.HISTORY_REQUESTED, onHistoryRequested);
 			AppModel.engine.addEventListener(AppEvent.MODIFIED_REQUESTED, onModifiedRequested);
+			AppModel.engine.addEventListener(BookmarkEvent.SUMMARY_RECEIVED, onSummaryReceived);				
 			AppModel.proxies.checkout.addEventListener(BookmarkEvent.REVERTED, onBookmarkReverted);
 			AppModel.proxies.editor.addEventListener(BookmarkEvent.COMMIT_COMPLETE, onCommitComplete);
 			AppModel.proxies.checkout.addEventListener(BookmarkEvent.BRANCH_CHANGED, onBranchChanged);
 		}
 
-		private function onBranchChanged(e:BookmarkEvent):void {		getHistory();   }
-		private function onCommitComplete(e:BookmarkEvent):void { 		getHistory();  	}
-		private function onHistoryRequested(e:AppEvent):void {			getHistory();	}
-		private function onBookmarkReverted(e:BookmarkEvent):void {		getHistory();	}
-		private function onBookmarkSelected(e:BookmarkEvent):void { 	getSummary();	}
+		private function onBranchChanged(e:BookmarkEvent):void {		getSummary(true);   }
+		private function onCommitComplete(e:BookmarkEvent):void { 		getHistory();  		}
+		private function onHistoryRequested(e:AppEvent):void {			getHistory();		}
+		private function onBookmarkReverted(e:BookmarkEvent):void {		getHistory();		}
+		private function onBookmarkSelected(e:BookmarkEvent):void { 	getSummary(false);	}
 		
 		private function onModifiedRequested(e:AppEvent):void
 		{
 			getModified(e.data as Bookmark);
-		}		
+		}
 		
-		private function getSummary():void
+		private function onSummaryReceived(e:BookmarkEvent):void
+		{	
+			if (_refreshHistory) getHistory(); _refreshHistory = false;
+		}					
+		
+		private function getSummary(b:Boolean):void
 		{
 			resetTimer();
 			_working = true;
 			_status.getSummary();
+			_refreshHistory = b;
 		}
 		
 		private function getModified(b:Bookmark):void
