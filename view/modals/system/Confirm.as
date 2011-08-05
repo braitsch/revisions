@@ -7,13 +7,13 @@ package view.modals.system {
 
 	public class Confirm extends ModalWindow {
 
-		private static var _view:ConfirmMC = new ConfirmMC();
+		private static var _view	:ConfirmMC = new ConfirmMC();
 
 		public function Confirm()
 		{
 			addChild(_view);
-			_view.pageBadge.label_txt.text = 'Confirm';
-			super.drawBackground(500, 196);
+			super.drawBackground(550, 210);
+			super.setTitle(_view, 'Confirm');			
 			super.addButtons([_view.cancel_btn, _view.ok_btn]);
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);
 			_view.cancel_btn.addEventListener(MouseEvent.CLICK, onCancelButton);
@@ -21,7 +21,7 @@ package view.modals.system {
 
 		public function set message(m:String):void
 		{
-			_view.message_txt.htmlText = m;	
+			_view.textArea.message_txt.htmlText = m;	
 		}
 		
 		private function onOkButton(e:MouseEvent):void

@@ -24,7 +24,7 @@ package view.modals {
 			this.y = uint((h - _heightOffset) / 2 - this.height / 2 + _heightOffset);
 		}
 		
-		protected function addCloseButton(x:uint = 500):void
+		protected function addCloseButton(x:uint = 550):void
 		{
 			_closeButton = new ModalCloseButton();
 			_closeButton.over.alpha = 0;

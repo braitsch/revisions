@@ -22,6 +22,7 @@ package view.modals.bkmk {
 			addChild(_view);
 			addChild(_branches);
 			super.drawBackground(550, 273);
+			super.setHeading(_view, "These are your branches, aren't they schnazzy?");
 			AppModel.proxies.checkout.addEventListener(BookmarkEvent.BRANCH_CHANGED, onBranchChanged);
 		}
 		

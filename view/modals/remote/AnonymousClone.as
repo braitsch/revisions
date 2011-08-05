@@ -15,10 +15,13 @@ package view.modals.remote {
 		public function AnonymousClone()
 		{
 			addChild(_view);
-			super.addCloseButton(540);
-			super.drawBackground(540, 196);
+			super.addCloseButton();
+			super.drawBackground(550, 200);
 			super.addButtons([_view.clone_btn]);
-			super.addInputs(Vector.<TLFTextField>([_view.url_txt]));			
+			super.addInputs(Vector.<TLFTextField>([_view.url_txt]));
+			super.setTitle(_view, 'Clone Repository');
+			super.setHeading(_view, "Please enter the URL of the repository you'd like to clone.");	
+			_view.form.label1.text = 'Repository';					
 			_view.clone_btn.addEventListener(MouseEvent.CLICK, onCloneClick);
 			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);
 		}

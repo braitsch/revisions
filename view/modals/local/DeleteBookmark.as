@@ -18,7 +18,8 @@ package view.modals.local {
 		{
 			addChild(_view);
 			super.addCloseButton();
-			super.drawBackground(500, 234);
+			super.drawBackground(550, 230);
+			super.setTitle(_view, 'Delete Bookmark');
 			super.addButtons([_view.delete_btn]);
 			_trashFiles.label = 'Also Move Files to Trash';
 			_trashGit.label = 'Destroy History (warning this cannot be undone)';

@@ -8,15 +8,16 @@ package view.modals.local {
 
 	public class AppExpired extends ModalWindow {
 
-		private static var _view	:AppExpiredMC = new AppExpiredMC();
+		private static var _view	:ConfirmMC = new ConfirmMC();
 
 		public function AppExpired()
 		{
 			addChild(_view);
-			super.drawBackground(500, 202);
+			super.drawBackground(550, 210);
+			super.setTitle(_view, 'Trial Expired');			
 			super.addButtons([_view.cancel_btn, _view.ok_btn]);
-			_view.message_txt.text = 'This beta version of Revisions has expired.\n';
-			_view.message_txt.text+= 'Please update to the most current version.';
+			_view.textArea.message_txt.text = 'This beta version of Revisions has expired.\n';
+			_view.textArea.message_txt.text+= 'Please update to the most current version.';
 			_view.cancel_btn.addEventListener(MouseEvent.CLICK, onCancel);
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onCheckForUpdates);
 		}

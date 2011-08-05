@@ -18,7 +18,7 @@ package view.modals.bkmk {
 			addChild(_view);
 			initializeTabs();
 			super.addCloseButton(550);
-			_view.pageBadge.label_txt.text = 'Bookmark Editor';
+			super.setTitle(_view, 'Bookmark Editor');
 			_view.tabs.addEventListener(MouseEvent.CLICK, onTabSelection);
 		}
 		

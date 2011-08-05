@@ -21,6 +21,7 @@ package view.modals.bkmk {
 			addChild(_view); 
 			addChild(_remotes);
 			super.addButtons([_view.addNew.github, _view.addNew.beanstalk]);
+			super.setHeading(_view, 'Remote accounts linked to this bookmark');
 			_view.addNew.github.addEventListener(MouseEvent.CLICK, onGitHubClick);
 			_view.addNew.beanstalk.addEventListener(MouseEvent.CLICK, onBeanstalkClick);
 		}

@@ -16,6 +16,16 @@ package view.modals {
 	
 	// override this in any windows that should listen for the enter key //	
 		public function onEnterKey():void { }
+
+		protected function setTitle(view:*, s:String):void
+		{
+			view.pageBadge.label_txt.text = s;
+		}
+		
+		protected function setHeading(view:*, s:String):void
+		{
+			view.heading.label_txt.htmlText = s;
+		}
 		
 		protected function drawBackground(w:uint, h:uint):void
 		{

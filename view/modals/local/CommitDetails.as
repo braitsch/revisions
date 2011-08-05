@@ -13,8 +13,13 @@ package view.modals.local {
 		{
 			addChild(_view);
 			super.addCloseButton();
-			super.drawBackground(500, 258);
+			super.drawBackground(550, 260);
 			super.addButtons([_view.ok_btn]);
+			super.setTitle(_view, 'Version Details');
+			_view.form.label1.text = 'Date';
+			_view.form.label2.text = 'Author';
+			_view.form.label3.text = 'Commit';
+			_view.form.label4.text = 'Details';
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onClose);
 		}
 
