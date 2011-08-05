@@ -13,16 +13,19 @@ package view.modals.local {
 	public class AddDragAndDrop extends ModalWindow {
 
 		private static var _view		:DragAndDropMC = new DragAndDropMC();
-		private static var _check1		:ModalCheckbox = new ModalCheckbox(_view.check1, true);			
+		private static var _check		:ModalCheckbox = new ModalCheckbox(_view.check, true);			
 
 		public function AddDragAndDrop()
 		{
 			addChild(_view);
 			super.addCloseButton();
-			super.drawBackground(500, 195);
+			super.drawBackground(550, 210);
+			super.setTitle(_view, 'New Bookmark');
 			super.addButtons([_view.ok_btn]);
 			super.addInputs(Vector.<TLFTextField>([_view.name_txt]));
-			_check1.label = 'Autosave Every 60 Minutes';			
+			_check.label = 'Autosave Every 60 Minutes';
+			_view.form.label1.text = 'Name';
+			_view.form.label2.text = 'Location';
 			_view.name_txt.text = _view.local_txt.text = ''; 
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);
 		}
@@ -62,7 +65,7 @@ package view.modals.local {
 				type		: 	b ? Bookmark.FOLDER : Bookmark.FILE,
 				path		:	_view.local_txt.text,
 				active 		:	1,
-				autosave	:	_check1.selected ? 60 : 0
+				autosave	:	_check.selected ? 60 : 0
 			};		
 			AppModel.engine.addBookmark(new Bookmark(o));
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));						

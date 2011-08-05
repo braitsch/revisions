@@ -14,16 +14,17 @@ package view.modals.local {
 
 		private static var _commit	:Commit;
 		private static var _view	:DownloadMC = new DownloadMC();
-		private static var _check1	:ModalCheckbox = new ModalCheckbox(_view.check1, false);
+		private static var _check	:ModalCheckbox = new ModalCheckbox(_view.check, false);
 
 		public function DownloadVersion()
 		{
 			addChild(_view);
 			super.addCloseButton();
-			super.drawBackground(500, 215);
+			super.drawBackground(550, 210);
+			super.setTitle(_view, 'Download Version');
 			super.addButtons([_view.cancel_btn, _view.download_btn]);
-			_check1.label = "Next time just do it and don't ask me";
-			_view.check1.addEventListener(MouseEvent.CLICK, onCheckbox);
+			_check.label = "Next time just do it and don't ask me";
+			_view.check.addEventListener(MouseEvent.CLICK, onCheckbox);
 			_view.cancel_btn.addEventListener(MouseEvent.CLICK, onCancel);
 			_view.download_btn.addEventListener(MouseEvent.CLICK, onDownload);
 			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);			
@@ -33,7 +34,7 @@ package view.modals.local {
 		public function set commit(cmt:Commit):void
 		{
 			_commit = cmt;
-			_view.message_txt.text = 'Are you sure you want to download "'+AppModel.bookmark.label+'" revision "'+cmt.note+'"?';
+			_view.textArea.message_txt.text = 'Are you sure you want to download "'+AppModel.bookmark.label+'" revision "'+cmt.note+'"?';
 		}
 		
 	// called from ModalManager if user chose not to be prompted before downloads //	
@@ -44,14 +45,14 @@ package view.modals.local {
 		
 		private function onUserSettings(e:AppEvent):void
 		{
-			_check1.selected = AppSettings.getSetting(AppSettings.PROMPT_BEFORE_DOWNLOAD) == false;
+			_check.selected = AppSettings.getSetting(AppSettings.PROMPT_BEFORE_DOWNLOAD) == false;
 		}		
 
 	// button event handlers //	
 
 		private function onCheckbox(e:MouseEvent):void
 		{
-			AppSettings.setSetting(AppSettings.PROMPT_BEFORE_DOWNLOAD, _check1.selected == false);				
+			AppSettings.setSetting(AppSettings.PROMPT_BEFORE_DOWNLOAD, _check.selected == false);				
 		}		
 		
 		private function onCancel(e:MouseEvent):void
