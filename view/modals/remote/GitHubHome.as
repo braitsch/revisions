@@ -54,7 +54,7 @@ package view.modals.remote {
 		private function attachAvatar():void
 		{
 			_model.avatar.y = 7;
-			_model.avatar.x = -198;
+			_model.avatar.x = -190;
 			_view.badgeUser.addChild(_model.avatar);
 		}
 
