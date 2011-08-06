@@ -9,7 +9,6 @@ package model.proxies {
 
 	public class CheckoutProxy extends NativeProcessProxy {
 
-
 		public function CheckoutProxy()
 		{
 			super.executable = 'Checkout.sh';

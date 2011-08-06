@@ -2,6 +2,7 @@ package view.modals.bkmk {
 
 	import model.vo.Bookmark;
 	import view.modals.ModalWindow;
+	import com.greensock.TweenLite;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 
@@ -11,7 +12,10 @@ package view.modals.bkmk {
 		private static var _home		:BookmarkHome = new BookmarkHome();
 		private static var _branches	:BookmarkBranches = new BookmarkBranches();
 		private static var _remotes		:BookmarkRemotes = new BookmarkRemotes();
-		private static var _tabLabels	:Array = ['General', 'Branches', 'Remotes'];
+		private static var _activeTab	:Sprite;
+		private static var _tabMap		:Array = [	{tab:_home, btn:_view.tabs.tab1, lbl:'General'},
+													{tab:_branches, btn:_view.tabs.tab2, lbl:'Branches'},
+													{tab:_remotes, btn:_view.tabs.tab3, lbl:'Remotes'}];
 
 		public function BookmarkEditor()
 		{
@@ -29,26 +33,58 @@ package view.modals.bkmk {
 		
 		private function initializeTabs():void
 		{
-			var tabs:Array = [_view.tabs.tab1, _view.tabs.tab2, _view.tabs.tab3];
-			for (var i:int = 0; i < 3; i++) tabs[i].label_txt.text = _tabLabels[i];
-			attachTab(_home);
-			super.addButtons(tabs);
+			for (var i:int = 0; i < 3; i++) {
+				_tabMap[i].btn.buttonMode = true;				
+				_tabMap[i].btn.mouseChildren = false;
+				_tabMap[i].btn.label_txt.text = _tabMap[i].lbl;
+				_tabMap[i].btn.addEventListener(MouseEvent.ROLL_OUT, onTabRollOut);
+				_tabMap[i].btn.addEventListener(MouseEvent.ROLL_OVER, onTabRollOver);
+			}
+			tabOut(_tabMap[1].btn);
+			tabOut(_tabMap[2].btn);
+			setTab(_tabMap[0].btn, _tabMap[0].tab);
+		}
+		
+		private function onTabRollOver(e:MouseEvent):void
+		{
+			if (e.target != _activeTab) tabOver(e.target as Sprite);
+		}
+		
+		 private function onTabRollOut(e:MouseEvent):void
+		{
+			if (e.target != _activeTab) tabOut(e.target as Sprite);
 		}
 
 		private function onTabSelection(e:MouseEvent):void
 		{
-			switch(e.target){
-				case _view.tabs.tab1 : attachTab(_home); 	break;
-				case _view.tabs.tab2 : attachTab(_branches);break;
-				case _view.tabs.tab3 : attachTab(_remotes); break;
-			}
+			if (e.target == _activeTab) return;
+			for (var i:int = 0; i < 3; i++) {
+				if (e.target != _tabMap[i].btn) {
+					tabOut(_tabMap[i].btn);
+				}	else{
+					setTab(_tabMap[i].btn, _tabMap[i].tab);
+				}
+			}				
 		}
 		
-		private function attachTab(s:Sprite):void
+		private function tabOver(s:Sprite):void
 		{
-			if (numChildren > 1) removeChildAt(0); addChildAt(s, 0);
+			TweenLite.to(s['grey'], .3, {alpha:1});
 		}
-
+		
+		private function tabOut(s:Sprite):void
+		{
+			TweenLite.to(s['blue'], .3, {alpha:0});	
+			TweenLite.to(s['grey'], .3, {alpha:.5});
+		}
+		
+		private function setTab(btn:Sprite, tab:Sprite):void
+		{
+			if (numChildren > 1) removeChildAt(0);			
+			_activeTab = btn; addChildAt(tab, 0);	
+			TweenLite.to(_activeTab['blue'], .3, {alpha:1});		
+		}
+		
 	}
 	
 }

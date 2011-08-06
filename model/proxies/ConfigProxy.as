@@ -62,7 +62,6 @@ package model.proxies {
 		
 		private function getUserNameAndEmail():void
 		{
-			trace("ConfigProxy.getUserNameAndEmail()");
 			super.queue = [	Vector.<String>([BashMethods.GET_USER_NAME]),
 							Vector.<String>([BashMethods.GET_USER_EMAIL])];				
 		}		

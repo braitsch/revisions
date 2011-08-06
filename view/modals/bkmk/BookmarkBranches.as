@@ -14,7 +14,6 @@ package view.modals.bkmk {
 
 		private static var _view		:BookmarkBranchesMC = new BookmarkBranchesMC();
 		private static var _bookmark	:Bookmark;
-		private static var _branch		:Branch;
 		private static var _branches	:Sprite = new Sprite();
 		
 		public function BookmarkBranches()
@@ -43,32 +42,29 @@ package view.modals.bkmk {
 				_branches.addChild(bi);
 				_branches.addEventListener(MouseEvent.CLICK, onBranchClick);
 			}
-			_branch = _bookmark.branch;
 			_branches.x = 10; _branches.y = 90;
 			super.drawBackground(550, _branches.y + _branches.height + 20);		
 		}
 		
-		
 		private function onBranchClick(e:MouseEvent):void
 		{
 			if (e.target is BranchItem){
-				if (e.target.branch == _branch) return;
-				_branch = e.target.branch;
-				checkoutBranch();
+				if (e.target.branch != _bookmark.branch) checkoutBranch(e.target.branch);
 			}	else if (e.target is BranchItemDelete){
-				_branch = e.target.parent.branch;
-				dispatchEvent(new UIEvent(UIEvent.DELETE_BRANCH, _branch));
+				dispatchEvent(new UIEvent(UIEvent.DELETE_BRANCH, e.target.parent.branch));
 			}
 		}
 		
-		private function checkoutBranch():void
+		private function checkoutBranch(b:Branch):void
 		{
-			if (validate()) AppModel.proxies.checkout.changeBranch(_branch.name);
+			if (validate()) {
+				AppModel.bookmark.branch = b;
+				AppModel.proxies.checkout.changeBranch(b.name);
+			}
 		}
 
 		private function onBranchChanged(e:BookmarkEvent):void
 		{
-			_bookmark.branch = _branch;
 			for (var i:int = 0; i < _bookmark.branches.length; i++) {
 				var k:BranchItem = _branches.getChildAt(i) as BranchItem;
 				k.selected = k.branch == _bookmark.branch;
@@ -78,7 +74,7 @@ package view.modals.bkmk {
 		
 		private function validate():Boolean
 		{
-			if (AppModel.branch.modified){
+			if (_bookmark.branch.modified){
 				var m:String = 'Please save your changes before moving to a new branch.';
 				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
 				return false;
