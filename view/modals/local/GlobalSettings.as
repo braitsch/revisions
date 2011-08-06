@@ -3,15 +3,14 @@ package view.modals.local {
 	import events.AppEvent;
 	import events.UIEvent;
 	import fl.text.TLFTextField;
-	import flash.events.Event;
-	import flash.events.MouseEvent;
 	import model.AppModel;
 	import model.db.AppSettings;
-	import mx.utils.StringUtil;
 	import system.LicenseManager;
 	import view.modals.ModalWindow;
-	import view.modals.git.NameAndEmail;
 	import view.ui.ModalCheckbox;
+	import mx.utils.StringUtil;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
 
 	public class GlobalSettings extends ModalWindow {
 
@@ -83,13 +82,23 @@ package view.modals.local {
 		{
 			var n:String = StringUtil.trim(_view.name_txt.text);
 			var e:String = StringUtil.trim(_view.email_txt.text);
-			var m:String = NameAndEmail.validate(n, e);
+			var m:String = validate(n, e);
 			if (m == ''){
 				AppModel.proxies.config.setUserNameAndEmail(n, e);
 			}	else{
 				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
 			}	
 		}
+		
+		private function validate(n:String, e:String):String
+		{
+			if (n == '') return 'Please enter your name.';
+			if (e == '') return 'Please enter your email.';
+			if (e.indexOf('@') == -1) return 'The email you entered is invalid.';
+			if (e.indexOf('.') == -1) return 'The email you entered is invalid.';
+			if (e.search(/\s/g) != -1) return 'Your email cannot contain spaces.';
+			return '';			
+		}		
 		
 	}
 	

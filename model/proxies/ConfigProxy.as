@@ -62,6 +62,7 @@ package model.proxies {
 		
 		private function getUserNameAndEmail():void
 		{
+			trace("ConfigProxy.getUserNameAndEmail()");
 			super.queue = [	Vector.<String>([BashMethods.GET_USER_NAME]),
 							Vector.<String>([BashMethods.GET_USER_EMAIL])];				
 		}		
@@ -124,10 +125,10 @@ package model.proxies {
 		private function checkUserNameAndEmail(n:String, e:String):void
 		{
 			_userEmail = e || 'yourname@yourdomain.com';
-			if (e == ''){
+			if (!n){
 				getLoggedInUsersRealName();
 			}	else{
-				_userName = n; 
+				_userName = n;
 				dispatchEvent(new AppEvent(AppEvent.GIT_SETTINGS));			
 			}			
 		}
@@ -135,7 +136,7 @@ package model.proxies {
 		private function onUserRealName(n:String):void 
 		{
 			_userName = n;
-			dispatchEvent(new AppEvent(AppEvent.GIT_SETTINGS));			
+			setUserNameAndEmail(_userName , _userEmail);
 		}		
 		
 		private function onProcessFailure(e:NativeProcessEvent):void 

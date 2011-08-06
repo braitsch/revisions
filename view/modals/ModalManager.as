@@ -3,12 +3,6 @@ package view.modals {
 	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.UIEvent;
-	import flash.display.Sprite;
-	import flash.display.Stage;
-	import flash.events.KeyboardEvent;
-	import flash.events.MouseEvent;
-	import flash.filesystem.File;
-	import flash.filters.BlurFilter;
 	import model.AppModel;
 	import model.db.AppSettings;
 	import model.remote.RemoteAccount;
@@ -18,7 +12,6 @@ package view.modals {
 	import view.modals.git.GitAbout;
 	import view.modals.git.GitInstall;
 	import view.modals.git.GitUpgrade;
-	import view.modals.git.NameAndEmail;
 	import view.modals.local.AddDragAndDrop;
 	import view.modals.local.AppExpired;
 	import view.modals.local.AppUpdate;
@@ -42,6 +35,12 @@ package view.modals {
 	import view.modals.system.Confirm;
 	import view.modals.system.Debug;
 	import view.ui.Preloader;
+	import flash.display.Sprite;
+	import flash.display.Stage;
+	import flash.events.KeyboardEvent;
+	import flash.events.MouseEvent;
+	import flash.filesystem.File;
+	import flash.filters.BlurFilter;
 
 	public class ModalManager extends Sprite {
 
@@ -59,7 +58,6 @@ package view.modals {
 		private static var _gitAbout		:GitAbout = new GitAbout();
 		private static var _gitInstall		:GitInstall = new GitInstall();
 		private static var _gitUpgrade		:GitUpgrade = new GitUpgrade();
-		private static var _nameAndEmail	:NameAndEmail = new NameAndEmail();
 		private static var _ghLogin			:GitHubLogin = new GitHubLogin();
 		private static var _bsLogin			:BeanStalkLogin = new BeanStalkLogin();
 		private static var _addToGitHub		:AddGitHubRepo = new AddGitHubRepo();
@@ -73,7 +71,7 @@ package view.modals {
 		
 	// windows that force user to make a decision - autoclose disabled //	
 		private static var _stickies		:Vector.<ModalWindow> = new <ModalWindow>
-				[ _repair, _appExpired, _appUpdate, _gitInstall, _gitUpgrade, _nameAndEmail, _ghLogin ];
+				[ _repair, _appExpired, _appUpdate, _gitInstall, _gitUpgrade, _ghLogin ];
 				
 		private static var _window			:ModalWindow;	// the active modal window //
 		private static var _curtain			:ModalCurtain = new ModalCurtain();	
@@ -98,7 +96,6 @@ package view.modals {
 			AppModel.engine.addEventListener(BookmarkEvent.NO_BOOKMARKS, showWelcomeScreen);
 			AppModel.engine.addEventListener(AppEvent.APP_EXPIRED, onAppExpired);
 			AppModel.updater.addEventListener(AppEvent.APP_UPDATE_AVAILABLE, promptToUpdate);
-			AppModel.proxies.config.addEventListener(AppEvent.GIT_NAME_AND_EMAIL, addNameAndEmail);
 			AppModel.proxies.config.addEventListener(AppEvent.GIT_NOT_INSTALLED, installGit);
 			AppModel.proxies.config.addEventListener(AppEvent.GIT_NEEDS_UPDATING, upgradeGit);
 		}
@@ -187,11 +184,6 @@ package view.modals {
 			}
 		}		
 		
-		private function addNameAndEmail(e:AppEvent):void
-		{
-			showModalWindow(_nameAndEmail);
-		}		
-
 		private function onDragAndDrop(e:UIEvent):void 
 		{
 			_dragAndDrop.file = e.data as File;
