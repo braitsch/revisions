@@ -18,7 +18,7 @@ package model {
 		public function initialize():void
 		{
 			AppModel.database.initialize();
-			AppModel.database.addEventListener(DataBaseEvent.BOOKMARKS_READ, generateBookmarks);	
+			AppModel.database.addEventListener(DataBaseEvent.DATABASE_READ, generateBookmarks);	
 		}
 
 	// expose bookmarks to check against duplicates being added //
@@ -111,7 +111,7 @@ package model {
 					dispatchEvent(new BookmarkEvent(BookmarkEvent.PATH_ERROR, _broken[0]));
 				}
 			}
-			AppModel.database.removeEventListener(DataBaseEvent.BOOKMARKS_READ, generateBookmarks);	
+			AppModel.database.removeEventListener(DataBaseEvent.DATABASE_READ, generateBookmarks);	
 		}
 		
 		private function buildBkmksFromDatabase(a:Array):void

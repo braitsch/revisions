@@ -27,7 +27,7 @@ package model.db {
 			_conn.openAsync(File.applicationStorageDirectory.resolvePath($file));	
 		}
 				
-		public function execute(v:Vector.<SQLStatement>, $commit:Boolean = false):void 
+		protected function execute(v:Vector.<SQLStatement>, $commit:Boolean = false):void 
 		{
 			_queue = v;
 			_results = new Vector.<SQLResult>();
@@ -62,7 +62,7 @@ package model.db {
 		private function onDatabaseOpen(e:SQLEvent):void 
 		{
             _conn.removeEventListener(SQLEvent.OPEN, onDatabaseOpen);            _conn.addEventListener(SQLEvent.BEGIN, transactionStart);            _conn.addEventListener(SQLEvent.COMMIT, transactionComplete);            _conn.addEventListener(SQLEvent.ROLLBACK, transactionComplete);
-			dispatchEvent(new DataBaseEvent(DataBaseEvent.DATABASE_READY));
+			dispatchEvent(new DataBaseEvent(DataBaseEvent.DATABASE_OPENED));
 		}
 
 		private function transactionStart(e:SQLEvent):void 		{

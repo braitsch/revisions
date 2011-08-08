@@ -4,14 +4,25 @@ package model.db {
 
 	public class AppSQLQuery {
 
-		public static const INIT_DATABASE:SQLStatement = new SQLStatement();
-		INIT_DATABASE.text = "CREATE TABLE IF NOT EXISTS bookmarks ";
-		INIT_DATABASE.text+= "(id INTEGER PRIMARY KEY AUTOINCREMENT, ";
-		INIT_DATABASE.text+= "label TEXT, type TEXT, path TEXT, remote TEXT, ";
-		INIT_DATABASE.text+= "active tinyint(1) default 0, autosave tinyint(1) default 60)";
+		public static const INIT_TABLE_BOOKMARKS:SQLStatement = new SQLStatement();
+		INIT_TABLE_BOOKMARKS.text = "CREATE TABLE IF NOT EXISTS bookmarks ";
+		INIT_TABLE_BOOKMARKS.text+= "(id INTEGER PRIMARY KEY AUTOINCREMENT, ";
+		INIT_TABLE_BOOKMARKS.text+= "label VARCHAR, type VARCHAR, path VARCHAR, ";
+		INIT_TABLE_BOOKMARKS.text+= "active TINYINT UNSIGNED NOT NULL DEFAULT 0, ";
+		INIT_TABLE_BOOKMARKS.text+= "autosave TINYINT UNSIGNED NOT NULL DEFAULT 60)";
+		
+		public static const INIT_TABLE_ACCOUNTS:SQLStatement = new SQLStatement();
+		INIT_TABLE_ACCOUNTS.text = "CREATE TABLE IF NOT EXISTS accounts ";
+		INIT_TABLE_ACCOUNTS.text+= "(id INTEGER PRIMARY KEY AUTOINCREMENT, ";
+		INIT_TABLE_ACCOUNTS.text+= "type VARCHAR, user VARCHAR, pass VARCHAR, main TINYINT UNSIGNED NOT NULL DEFAULT 0)";
 
-		public static const READ_REPOSITORIES:SQLStatement = new SQLStatement();
-		READ_REPOSITORIES.text = "SELECT * FROM bookmarks";
+		public static const READ_BOOKMARKS:SQLStatement = new SQLStatement();
+		READ_BOOKMARKS.text = "SELECT * FROM bookmarks";
+		
+		public static const READ_ACCOUNTS:SQLStatement = new SQLStatement();
+		READ_ACCOUNTS.text = "SELECT * FROM accounts";
+		
+	// bookmark actions //	
 		
 		public static const CLEAR_ACTIVE:SQLStatement = new SQLStatement();
 		CLEAR_ACTIVE.text = "UPDATE bookmarks SET active=0 WHERE active=1";

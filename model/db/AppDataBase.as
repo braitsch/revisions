@@ -3,42 +3,37 @@ package model.db {
 	import events.DataBaseEvent;
 	import model.vo.Bookmark;
 	import flash.data.SQLStatement;
-	import flash.events.EventDispatcher;
 
-	public class AppDatabase extends EventDispatcher {
+	public class AppDatabase extends SQLLiteDataBase {
 	
-		private static var _db					:SQLLiteDataBase;
 		private static var _open				:Vector.<SQLStatement>;		private static var _add					:Vector.<SQLStatement>;
 		private static var _edit				:Vector.<SQLStatement>;		private static var _delete				:Vector.<SQLStatement>;		private static var _setActive			:Vector.<SQLStatement>;
 		private static var _bookmarks			:Array;
 		
 		public function AppDatabase()
 		{
-			_db = new SQLLiteDataBase('Revisions.db');
-			_db.addEventListener(DataBaseEvent.DATABASE_READY, onDataBaseReady);			_db.addEventListener(DataBaseEvent.TRANSACTION_COMPLETE, onTransactionComplete);
-		}
-
-		private function onDataBaseReady(e:DataBaseEvent):void 
-		{
-			dispatchEvent(new DataBaseEvent(DataBaseEvent.DATABASE_READY));
+			super('Revisions.db');
+			super.addEventListener(DataBaseEvent.TRANSACTION_COMPLETE, onTransactionComplete);
 		}
 
 		// public methods //
 
 		public function initialize():void 
 		{
-			_open = new Vector.<SQLStatement>();	
-			_open.push(AppSQLQuery.INIT_DATABASE);	
-			_open.push(AppSQLQuery.READ_REPOSITORIES);
-			_db.execute(_open, true);
+			_open = new Vector.<SQLStatement>();
+			_open.push(AppSQLQuery.INIT_TABLE_BOOKMARKS);
+			_open.push(AppSQLQuery.READ_BOOKMARKS);
+			_open.push(AppSQLQuery.INIT_TABLE_ACCOUNTS);
+			_open.push(AppSQLQuery.READ_ACCOUNTS);
+			super.execute(_open, true);
 		}
 
 		public function addRepository(bkmk:Bookmark):void
 		{
 			_add = new Vector.<SQLStatement>();
 			_add.push(AppSQLQuery.CLEAR_ACTIVE);				_add.push(AppSQLQuery.INSERT(bkmk));
-			_add.push(AppSQLQuery.READ_REPOSITORIES);
-			_db.execute(_add, true);	
+			_add.push(AppSQLQuery.READ_BOOKMARKS);
+			super.execute(_add, true);	
 		}
 		
 		public function deleteRepository($label:String):void
@@ -46,23 +41,23 @@ package model.db {
 			var n:String = getNextActiveRepository($label);
 			_delete = new Vector.<SQLStatement>();	
 			_delete.push(AppSQLQuery.DELETE($label));									_delete.push(AppSQLQuery.SET_ACTIVE(n));
-			_delete.push(AppSQLQuery.READ_REPOSITORIES);
-			_db.execute(_delete, true);
+			_delete.push(AppSQLQuery.READ_BOOKMARKS);
+			super.execute(_delete, true);
 		}	
 
 		public function editRepository($oldId:String, $newId:String, $path:String, $autosave:uint):void 
 		{
 			_edit = new Vector.<SQLStatement>();	
 			_edit.push(AppSQLQuery.EDIT($oldId, $newId, $path, $autosave));						
-			_edit.push(AppSQLQuery.READ_REPOSITORIES);
-			_db.execute(_edit, true);			
+			_edit.push(AppSQLQuery.READ_BOOKMARKS);
+			super.execute(_edit, true);			
 		}		
 		
 		public function setActiveBookmark(label:String):void
 		{
 			_setActive = new Vector.<SQLStatement>();
 			_setActive.push(AppSQLQuery.CLEAR_ACTIVE);				_setActive.push(AppSQLQuery.SET_ACTIVE(label));	
-			_db.execute(_setActive, true);	
+			super.execute(_setActive, true);	
 		}			
 			//	private methods //	
 		
@@ -84,7 +79,7 @@ package model.db {
 			switch(e.data.transaction as Vector.<SQLStatement>){
 				case _open:	
 			//		trace("AppDatabase.onTransactionComplete(e) : initDataBase", e.data.result);
-					_bookmarks = e.data.result[1].data || [];					dispatchEvent(new DataBaseEvent(DataBaseEvent.BOOKMARKS_READ, _bookmarks));
+					_bookmarks = e.data.result[1].data || [];					dispatchEvent(new DataBaseEvent(DataBaseEvent.DATABASE_READ, _bookmarks));
 				break;				case _add:	
 			//		trace("AppDatabase.onTransactionComplete(e) : addRepository");					_bookmarks = e.data.result[2].data || [];					dispatchEvent(new DataBaseEvent(DataBaseEvent.RECORD_ADDED, _bookmarks));
 				break;				case _edit:				//		trace("AppDatabase.onTransactionComplete(e) : editRepository");
