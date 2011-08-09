@@ -1,5 +1,7 @@
 package model.remote {
 
+	import events.AppEvent;
+	import model.AppModel;
 	import flash.display.Bitmap;
 	import flash.display.Loader;
 	import flash.display.Sprite;
@@ -16,7 +18,7 @@ package model.remote {
 		private var _type			:String;
 		private var _user			:String;
 		private var _pass			:String;
-		private var _main			:Boolean;
+		private var _primary		:uint;
 		
 		private var _name			:String;	// user's full name //
 		private var _location		:String;	// user's location //
@@ -28,27 +30,32 @@ package model.remote {
 			_type = o.type;
 			_user = o.user;
 			_pass = o.pass;
-			_main = o.main;
+			_primary = o.pAccount;
 		}
+		
+		public function set primary(n:uint):void
+		{
+			_primary = n;
+		}			
 		
 		public function set loginData(o:Object):void
 		{
 			_name = o.name;
 			_location = o.location;
 			getAccountAvatar(o.avatar_url);
-			trace("RemoteAccount.loginData(o)");
 		}
 		
 		public function set repositories(a:Array):void
 		{
 			_repositories = a;
-			trace('_repositories: ' + (_repositories));
+			if (_avatar) dispatchAccountReady();
 		}
 
 		public function get type()			:String 	{ return _type; 		}
-		public function get user()			:String 	{ return _user; 		}		
-		public function get pass()			:String 	{ return _pass; 		}		
-		public function get main()			:Boolean 	{ return _main; 		}		
+		public function get user()			:String 	{ return _user; 		}
+		public function get pass()			:String 	{ return _pass; 		}
+		public function get primary()		:uint 		{ return _primary; 		}
+		
 		public function get name()			:String 	{ return _name; 		}
 		public function get location()		:String 	{ return _location; 	}
 		public function get avatar()		:Sprite 	{ return _avatar;		}
@@ -73,14 +80,19 @@ package model.remote {
 			_avatar.graphics.beginFill(0x959595);
 			_avatar.graphics.drawRect(0, 0, 30, 30);
 			_avatar.graphics.endFill();
-		//	AppModel.engine.dispatchEvent(new AppEvent(AppEvent.REMOTE_READY, this));
+			if (_repositories) dispatchAccountReady();
 		}
+		
+		private function dispatchAccountReady():void
+		{
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.REMOTE_READY, this));
+		}		
 		
 		private function onAvatarFailure(e:IOErrorEvent):void
 		{
+			if (_repositories) dispatchAccountReady();
 			trace("--------RemoteAccount.onAvatarFailure(e)--------");
-		//	AppModel.engine.dispatchEvent(new AppEvent(AppEvent.REMOTE_READY, this));
-		}		
+		}
 
 	}
 	

@@ -3,7 +3,7 @@ package view.modals.remote {
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
-	import model.remote.AccountManager;
+	import model.remote.Accounts;
 	import model.remote.RemoteAccount;
 	import flash.events.MouseEvent;
 	import flash.net.URLRequest;
@@ -36,12 +36,12 @@ package view.modals.remote {
 		override protected function onLoginButton(e:MouseEvent = null):void
 		{
 			if (!validate()) return;
-			if (AccountManager.github){
+			if (Accounts.github){
 				AppModel.proxies.githubApi.logout();
 				AppModel.proxies.githubApi.addEventListener(AppEvent.LOGOUT, onLogout);
 			}	else{
 				lockScreen();
-				var o:Object = {user:super.view.name_txt.text, pass:super.view.pass_txt.text, type:RemoteAccount.GITHUB};
+				var o:Object = {type:RemoteAccount.GITHUB, user:super.view.name_txt.text, pass:super.view.pass_txt.text};
 				var a:RemoteAccount = new RemoteAccount(o);
 				AppModel.proxies.githubApi.login(a);
 			}

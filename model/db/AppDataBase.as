@@ -1,15 +1,22 @@
 package model.db {
 
+	import model.remote.RemoteAccount;
 	import events.DataBaseEvent;
 	import model.vo.Bookmark;
 	import flash.data.SQLStatement;
 
 	public class AppDatabase extends SQLLiteDataBase {
 	
-		private static var _open				:Vector.<SQLStatement>;		private static var _add					:Vector.<SQLStatement>;
-		private static var _edit				:Vector.<SQLStatement>;		private static var _delete				:Vector.<SQLStatement>;		private static var _setActive			:Vector.<SQLStatement>;
+		private static var _readDB				:Vector.<SQLStatement>;
+				private static var _addBkmk				:Vector.<SQLStatement>;
+		private static var _delBkmk				:Vector.<SQLStatement>;		private static var _editBkmk			:Vector.<SQLStatement>;		private static var _setActiveBkmk		:Vector.<SQLStatement>;
+		
+		private static var _addAccount			:Vector.<SQLStatement>;
+		private static var _delAccount			:Vector.<SQLStatement>;
+		private static var _setPrimaryAcct		:Vector.<SQLStatement>;
+		
 		private static var _bkmks				:Array;
-		private static var _accounts			:Array;
+		private static var _accts				:Array;
 		
 		public function AppDatabase()
 		{
@@ -21,45 +28,69 @@ package model.db {
 
 		public function initialize():void 
 		{
-			_open = new Vector.<SQLStatement>();
-			_open.push(AppSQLQuery.INIT_TABLE_BOOKMARKS);
-			_open.push(AppSQLQuery.READ_BOOKMARKS);
-			_open.push(AppSQLQuery.INIT_TABLE_ACCOUNTS);
-			_open.push(AppSQLQuery.READ_ACCOUNTS);
-			super.execute(_open, true);
+			_readDB = new Vector.<SQLStatement>();
+			_readDB.push(AppSQLQuery.INIT_TABLE_BOOKMARKS);
+			_readDB.push(AppSQLQuery.READ_BOOKMARKS);
+			_readDB.push(AppSQLQuery.INIT_TABLE_ACCOUNTS);
+			_readDB.push(AppSQLQuery.READ_ACCOUNTS);
+			super.execute(_readDB, true);
 		}
 
 		public function addRepository(bkmk:Bookmark):void
 		{
-			_add = new Vector.<SQLStatement>();
-			_add.push(AppSQLQuery.CLEAR_ACTIVE);				_add.push(AppSQLQuery.INSERT(bkmk));
-			_add.push(AppSQLQuery.READ_BOOKMARKS);
-			super.execute(_add, true);	
+			_addBkmk = new Vector.<SQLStatement>();
+			_addBkmk.push(AppSQLQuery.CLEAR_ACTIVE_BKMK);				_addBkmk.push(AppSQLQuery.ADD_BKMK(bkmk));
+			_addBkmk.push(AppSQLQuery.READ_BOOKMARKS);
+			super.execute(_addBkmk, true);	
 		}
 		
 		public function deleteRepository($label:String):void
 		{
 			var n:String = getNextActiveRepository($label);
-			_delete = new Vector.<SQLStatement>();	
-			_delete.push(AppSQLQuery.DELETE($label));									_delete.push(AppSQLQuery.SET_ACTIVE(n));
-			_delete.push(AppSQLQuery.READ_BOOKMARKS);
-			super.execute(_delete, true);
+			_delBkmk = new Vector.<SQLStatement>();	
+			_delBkmk.push(AppSQLQuery.DEL_BKMK($label));									_delBkmk.push(AppSQLQuery.SET_ACTIVE_BKMK(n));
+			_delBkmk.push(AppSQLQuery.READ_BOOKMARKS);
+			super.execute(_delBkmk, true);
 		}	
 
 		public function editRepository($oldId:String, $newId:String, $path:String, $autosave:uint):void 
 		{
-			_edit = new Vector.<SQLStatement>();	
-			_edit.push(AppSQLQuery.EDIT($oldId, $newId, $path, $autosave));						
-			_edit.push(AppSQLQuery.READ_BOOKMARKS);
-			super.execute(_edit, true);			
+			_editBkmk = new Vector.<SQLStatement>();	
+			_editBkmk.push(AppSQLQuery.EDIT_BKMK($oldId, $newId, $path, $autosave));						
+			_editBkmk.push(AppSQLQuery.READ_BOOKMARKS);
+			super.execute(_editBkmk, true);			
 		}		
 		
 		public function setActiveBookmark(label:String):void
 		{
-			_setActive = new Vector.<SQLStatement>();
-			_setActive.push(AppSQLQuery.CLEAR_ACTIVE);				_setActive.push(AppSQLQuery.SET_ACTIVE(label));	
-			super.execute(_setActive, true);	
-		}			
+			_setActiveBkmk = new Vector.<SQLStatement>();
+			_setActiveBkmk.push(AppSQLQuery.CLEAR_ACTIVE_BKMK);				_setActiveBkmk.push(AppSQLQuery.SET_ACTIVE_BKMK(label));	
+			super.execute(_setActiveBkmk, true);	
+		}
+		
+	// accounts //	
+		
+		public function addAccount(a:RemoteAccount):void
+		{
+			_addAccount = new Vector.<SQLStatement>();
+			_addAccount.push(AppSQLQuery.ADD_ACCOUNT(a));
+			super.execute(_addAccount, true);
+		}	
+		
+		public function deleteAccount(a:RemoteAccount):void
+		{
+			_delAccount = new Vector.<SQLStatement>();
+			_delAccount.push(AppSQLQuery.DEL_ACCOUNT(a));
+			super.execute(_delAccount, true);
+		}	
+		
+		public function setPrimaryAccount(a:RemoteAccount):void
+		{
+			_setPrimaryAcct = new Vector.<SQLStatement>();
+			_setPrimaryAcct.push(AppSQLQuery.CLEAR_PRIMARY_ACCT);				
+			_setPrimaryAcct.push(AppSQLQuery.SET_PRIMARY_ACCT(a));
+			super.execute(_setPrimaryAcct, true);
+		}									
 			//	private methods //	
 		
 		private function getNextActiveRepository($old:String):String 
@@ -78,27 +109,24 @@ package model.db {
 		private function onTransactionComplete(e:DataBaseEvent):void 
 		{
 			switch(e.data.transaction as Vector.<SQLStatement>){
-				case _open:	
-			//		trace("AppDatabase.onTransactionComplete(e) : initDataBase", e.data.result);
+				case _readDB:	
 					_bkmks = e.data.result[1].data || [];
-					_accounts =  e.data.result[3].data || [];					dispatchEvent(new DataBaseEvent(DataBaseEvent.DATABASE_READ, {bookmarks:_bkmks, accounts:_accounts}));
-				break;				case _add:	
-			//		trace("AppDatabase.onTransactionComplete(e) : addRepository");					_bkmks = e.data.result[2].data || [];					dispatchEvent(new DataBaseEvent(DataBaseEvent.RECORD_ADDED, _bkmks));
-				break;				case _edit:				//		trace("AppDatabase.onTransactionComplete(e) : editRepository");
-					_bkmks = e.data.result[1].data || [];
+					_accts =  e.data.result[3].data || [];					dispatchEvent(new DataBaseEvent(DataBaseEvent.DATABASE_READ, {bookmarks:_bkmks, accounts:_accts}));
+				break;				case _addBkmk:	
+					_bkmks = e.data.result[2].data || [];					dispatchEvent(new DataBaseEvent(DataBaseEvent.RECORD_ADDED, _bkmks));
+				break;				case _editBkmk:						_bkmks = e.data.result[1].data || [];
 					dispatchEvent(new DataBaseEvent(DataBaseEvent.RECORD_EDITED, _bkmks));
 				break;				
-				case _delete:	
-			//		trace("AppDatabase.onTransactionComplete(e) : deleteRepository");
+				case _delBkmk:	
 					_bkmks = e.data.result[2].data || [];
 					dispatchEvent(new DataBaseEvent(DataBaseEvent.RECORD_DELETED, _bkmks));
 				break;	
-				case _setActive:	
-				//	trace("AppDatabase.onTransactionComplete(e) : setActiveBookmark");
+				case _addAccount:
+					trace("AppDatabase.onTransactionComplete(e) -- new account added!!");	
 				break;					
 			}
 		}
-		
+
 	}
 	
 }

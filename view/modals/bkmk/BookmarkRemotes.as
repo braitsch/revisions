@@ -3,7 +3,7 @@ package view.modals.bkmk {
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
-	import model.remote.AccountManager;
+	import model.remote.Accounts;
 	import model.remote.RemoteAccount;
 	import model.vo.Bookmark;
 	import view.modals.ModalWindowBasic;
@@ -47,7 +47,7 @@ package view.modals.bkmk {
 		
 		private function onGitHubClick(e:MouseEvent):void
 		{
-			if (AccountManager.github){
+			if (Accounts.github){
 				dispatchEvent(new UIEvent(UIEvent.ADD_REMOTE_TO_BOOKMARK, RemoteAccount.GITHUB));
 			}	else{
 				dispatchEvent(new UIEvent(UIEvent.REMOTE_LOGIN, {type:RemoteAccount.GITHUB, event:UIEvent.ADD_REMOTE_TO_BOOKMARK}));

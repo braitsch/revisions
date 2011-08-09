@@ -3,7 +3,7 @@ package {
 	import events.AppEvent;
 	import events.DataBaseEvent;
 	import model.AppModel;
-	import model.remote.AccountManager;
+	import model.remote.Accounts;
 	import system.AirContextMenu;
 	import system.AirNativeMenu;
 	import system.LicenseManager;
@@ -64,16 +64,23 @@ package {
 
 		private function onGitReady(e:AppEvent):void
 		{
-			AppModel.database.initialize();
 			AirNativeMenu.initialize(stage);
 			AirContextMenu.initialize(stage);
+			AppModel.proxies.ssh.detectApplicationKey();
+			AppModel.proxies.ssh.addEventListener(AppEvent.SSH_KEY_READY, onSSHKeyReady);
 			AppModel.proxies.config.removeEventListener(AppEvent.GIT_SETTINGS, onGitReady);
-			AppModel.database.addEventListener(DataBaseEvent.DATABASE_READ, onDatabaseRead);
 		}
-
+		
+		private function onSSHKeyReady(e:AppEvent):void
+		{
+			AppModel.database.initialize();
+			AppModel.database.addEventListener(DataBaseEvent.DATABASE_READ, onDatabaseRead);
+			AppModel.proxies.ssh.removeEventListener(AppEvent.SSH_KEY_READY, onSSHKeyReady);
+		}
+		
 		private function onDatabaseRead(e:DataBaseEvent):void
 		{
-			AccountManager.initialize(e.data.accounts as Array);
+			Accounts.initialize(e.data.accounts as Array);
 			AppModel.engine.initialize(e.data.bookmarks as Array);
 			AppModel.database.removeEventListener(DataBaseEvent.DATABASE_READ, onDatabaseRead);
 		}

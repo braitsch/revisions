@@ -5,7 +5,7 @@ package view.modals.local {
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
 	import model.AppModel;
-	import model.remote.AccountManager;
+	import model.remote.Accounts;
 	import model.remote.RemoteAccount;
 	import view.modals.ModalWindow;
 
@@ -54,7 +54,7 @@ package view.modals.local {
 		
 		private function onGitHubClick():void
 		{
-			if (AccountManager.github){
+			if (Accounts.github){
 				dispatchEvent(new UIEvent(UIEvent.GITHUB_HOME));
 			}	else{
 				dispatchEvent(new UIEvent(UIEvent.REMOTE_LOGIN, {type:RemoteAccount.GITHUB, event:UIEvent.GITHUB_HOME}));

@@ -3,7 +3,6 @@ package view.modals.remote {
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
-	import model.remote.AccountManager;
 	import model.remote.RemoteAccount;
 	import view.modals.ModalWindow;
 	import flash.display.Sprite;
@@ -34,7 +33,7 @@ package view.modals.remote {
 
 		private function onAccountReady(e:AppEvent):void
 		{
-			_model = AccountManager.github;
+			_model = e.data as RemoteAccount;
 			resetAccount();
 			attachAvatar();
 			attachRepositories();

@@ -9,8 +9,6 @@ package model.proxies {
 	public class SSHProxy extends NativeProcessProxy {
 		
 		private static var _pbKey		:String;
-		private static var _pbKeyId		:String;
-		private static var _pbKeyName	:String;
 		
 		public function SSHProxy()
 		{
@@ -19,28 +17,20 @@ package model.proxies {
 		}
 		
 		static public function get pbKey():String { return _pbKey; }		
-		static public function get pbKeyId():String { return _pbKeyId; }	
-		static public function get pbKeyName():String { return _pbKeyName; }			
 
-		public function detectSSHKeys($keyName:String):void
+		public function detectApplicationKey():void
 		{
-			_pbKeyName = $keyName;
-			super.call(Vector.<String>([BashMethods.DETECT_SSH_KEYS, _pbKeyName]));
+			super.call(Vector.<String>([BashMethods.DETECT_SSH_KEY]));
 		}	
-		
-		private function detectKeyId():void
-		{
-			super.call(Vector.<String>([BashMethods.DETECT_KEY_ID, _pbKeyName]));
-		}							
 		
 		private function generateKeys():void
 		{
-			super.call(Vector.<String>([BashMethods.GENERATE_SSH_KEYS, _pbKeyName]));
+			super.call(Vector.<String>([BashMethods.GENERATE_SSH_KEY]));
 		}
 		
 		private function registerKeys():void
 		{
-			super.call(Vector.<String>([BashMethods.REGISTER_SSH_KEYS, _pbKeyName]));
+			super.call(Vector.<String>([BashMethods.REGISTER_SSH_KEY]));
 		}
 		
 	
@@ -49,29 +39,25 @@ package model.proxies {
 		private function handleProcessSuccess(e:NativeProcessEvent):void 
 		{
 			switch(e.data.method){
-				case BashMethods.DETECT_SSH_KEYS :
-					if(e.data.result != '') {
-						_pbKey = e.data.result;
-						detectKeyId();
-					}	else{ 
+				case BashMethods.DETECT_SSH_KEY :
+					if(e.data.result == '') {
 						generateKeys();
+					}	else{ 
+						_pbKey = e.data.result;
+						dispatchEvent(new AppEvent(AppEvent.SSH_KEY_READY));
 					}
 				break;		
-				case BashMethods.GENERATE_SSH_KEYS :
+				case BashMethods.GENERATE_SSH_KEY :
 					registerKeys();
 				break;	
-				case BashMethods.DETECT_KEY_ID :
-					_pbKeyId = e.data.result;
-					dispatchEvent(new AppEvent(AppEvent.SSH_KEYS_READY));
-				break;					
 			}
 		}
 		
 		private function handleProcessFailure(e:NativeProcessEvent):void 
 		{
 			var m:String = e.data.method; var r:String = e.data.result;
-			if (m == BashMethods.REGISTER_SSH_KEYS && r.indexOf('Identity added') !=-1){
-				detectSSHKeys(_pbKeyName);		
+			if (m == BashMethods.REGISTER_SSH_KEY && r.indexOf('Identity added') !=-1){
+				detectApplicationKey();
 			}	else{
 				dispatchDebug(e.data);
 			}

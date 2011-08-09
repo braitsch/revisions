@@ -10,7 +10,6 @@ package model.proxies {
 
 	public class GitHubApiProxy extends NativeProcessProxy {
 
-
 		private static var _account				:RemoteAccount;
 		private static var _connectionErrors	:Array = [	'fatal: unable to connect a socket',
 															'fatal: The remote end hung up unexpectedly'];
@@ -22,11 +21,6 @@ package model.proxies {
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 		}
 		
-		public function getLastLoggedInAccount():void
-		{
-			super.call(Vector.<String>([BashMethods.GET_ACCOUNT_INFO]));
-		}		
-
 		public function login(a:RemoteAccount):void
 		{
 			_account = a;
@@ -98,9 +92,6 @@ package model.proxies {
 		{
 		//	trace("GitHubApiProxy.onSuccess(m, o)", m, o);
 			switch(m){
-				case BashMethods.GET_ACCOUNT_INFO :
-			//		dispatchEvent(new AppEvent(AppEvent.CACHED_ACCOUNT));
-				break;				
 				case BashMethods.LOGIN :
 					_account.loginData = o; 
 					getRepositories();
@@ -110,7 +101,7 @@ package model.proxies {
 				break;									
 				case BashMethods.GET_REPOSITORIES :
 					_account.repositories = o as Array;
-					dispatchEvent(new AppEvent(AppEvent.LOGIN, _account));
+					dispatchEvent(new AppEvent(AppEvent.LOGIN_SUCCESS, _account));
 				break;
 				case BashMethods.CLONE_REPOSITORY :
 					dispatchEvent(new AppEvent(AppEvent.CLONE_COMPLETE));

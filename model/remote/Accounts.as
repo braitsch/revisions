@@ -1,6 +1,6 @@
 package model.remote {
 
-	public class AccountManager {
+	public class Accounts {
 		
 		private static var _github			:GitHubManager = new GitHubManager();
 		private static var _beanstalk		:BeanstalkManager = new BeanstalkManager();
@@ -8,18 +8,14 @@ package model.remote {
 		public static function initialize(a:Array):void
 		{
 			for (var i:int = 0; i < a.length; i++) {
-				if (a.type == RemoteAccount.GITHUB){
-					_github.addAccount(a[i]);
-				}	else if (a.type == RemoteAccount.BEANSTALK){
-					_beanstalk.addAccount(a[i]);
+				if (a[i].type == RemoteAccount.GITHUB){
+					_github.addAccount(new RemoteAccount(a[i]));
+				}	else if (a[i].type == RemoteAccount.BEANSTALK){
+					_beanstalk.addAccount(new RemoteAccount(a[i]));
 				}		
 			}
-			_github.getLastLoggedInAccount();
 		}
-			
-		//AppModel.proxies.githubApi.login(a);
-		
-		
+
 //		public static function killAccount(ra:RemoteAccount):void
 //		{
 //			for (var i:int = 0; i < _accounts.length; i++) {

@@ -4,7 +4,7 @@ package system {
 	import events.UIEvent;
 	import model.AppModel;
 	import model.db.AppSettings;
-	import model.remote.AccountManager;
+	import model.remote.Accounts;
 	import model.remote.RemoteAccount;
 	import flash.desktop.NativeApplication;
 	import flash.display.NativeMenu;
@@ -88,7 +88,7 @@ package system {
 		
 		private static function onGitHubClick():void
 		{
-			if (AccountManager.github){
+			if (Accounts.github){
         	 	_stage.dispatchEvent(new UIEvent(UIEvent.GITHUB_HOME));
 			}	else{
 				_stage.dispatchEvent(new UIEvent(UIEvent.REMOTE_LOGIN, {type:RemoteAccount.GITHUB, event:UIEvent.GITHUB_HOME}));
