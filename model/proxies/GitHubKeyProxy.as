@@ -19,7 +19,7 @@ package model.proxies {
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 		}
 		
-		public function checkKeysOnPrimaryAccount(ra:RemoteAccount):void
+		public function validateKeyAgainstAccount(ra:RemoteAccount):void
 		{
 			_primary = ra; getCachedKeyId();
 		}
@@ -121,8 +121,14 @@ package model.proxies {
 		private function onKeyAddedToRemote(s:String):void
 		{
 			var o:Object = getResultObject(s);
-			_ghKeyId = o.id;
-			authenticate();
+			if (o.message == null){
+				_ghKeyId = o.id;
+				authenticate();
+			}	else {
+			//TODO generate better handler to notify user when revisions-key is already in use //	
+				o.method = BashMethods.ADD_KEY_TO_REMOTE;
+				dispatchDebug(o);
+			}
 		}
 
 		private function onKeyRemovedFromRemote():void
@@ -171,7 +177,7 @@ package model.proxies {
 
 		private function dispatchKeyReady():void
 		{
-			dispatchEvent(new AppEvent(AppEvent.PRIMARY_ACCOUNT_SET, _primary));
+			dispatchEvent(new AppEvent(AppEvent.REMOTE_KEY_VALIDATED, _primary));
 		}							
 		
 		private function dispatchDebug(o:Object):void

@@ -36,7 +36,7 @@ package view.modals.remote {
 		override protected function onLoginButton(e:MouseEvent = null):void
 		{
 			if (!validate()) return;
-			if (Accounts.github){
+			if (Accounts.github.loggedIn){
 				AppModel.proxies.githubApi.logout();
 				AppModel.proxies.githubApi.addEventListener(AppEvent.LOGOUT, onLogout);
 			}	else{

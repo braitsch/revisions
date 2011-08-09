@@ -120,10 +120,13 @@ package model.db {
 				case _delBkmk:	
 					_bkmks = e.data.result[2].data || [];
 					dispatchEvent(new DataBaseEvent(DataBaseEvent.RECORD_DELETED, _bkmks));
-				break;	
-				case _addAccount:
-					trace("AppDatabase.onTransactionComplete(e) -- new account added!!");	
-				break;					
+				break;
+				case _addAccount :
+			//		trace("AppDatabase.onTransactionComplete(e) -- new account added!!");	
+				break;		
+				case _setPrimaryAcct :
+			//		trace("AppDatabase.onTransactionComplete(e) -- primary account set !!");	
+				break;									
 			}
 		}
 

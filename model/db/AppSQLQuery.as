@@ -63,7 +63,6 @@ package model.db {
 
 		public static function ADD_ACCOUNT(a:RemoteAccount):SQLStatement
 		{
-			trace("AppSQLQuery.ADD_ACCOUNT(a)", a.type, a.user, a.pass, a.primary);
 			var s:SQLStatement = new SQLStatement();
 			s.text = "INSERT INTO accounts (type, user, pass, pAccount) ";
 			s.text+= "VALUES ('"+a.type+"', '"+a.user+"', '"+a.pass+"', '"+a.primary+"')";
@@ -73,7 +72,7 @@ package model.db {
 		public static function DEL_ACCOUNT(a:RemoteAccount):SQLStatement
 		{
 			var s:SQLStatement = new SQLStatement();
-			s.text = "DELETE FROM accounts WHERE type='"+a.type+"' AND user="+a.user+"'";
+			s.text = "DELETE FROM accounts WHERE type='"+a.type+"' AND user='"+a.user+"'";
 			return s;				
 		}
 		
@@ -83,7 +82,7 @@ package model.db {
 		public static function SET_PRIMARY_ACCT(a:RemoteAccount):SQLStatement
 		{
 			var s:SQLStatement = new SQLStatement();
-			s.text = "UPDATE accounts SET pAccount=1 WHERE type='"+a.type+"' AND user="+a.user+"'";
+			s.text = "UPDATE accounts SET pAccount=1 WHERE type='"+a.type+"' AND user='"+a.user+"'";
 			return s;				
 		}
 		

@@ -16,31 +16,16 @@ package model.remote {
 			}
 		}
 
-//		public static function killAccount(ra:RemoteAccount):void
-//		{
-//			for (var i:int = 0; i < _accounts.length; i++) {
-//				if (_accounts[i] == ra) {
-//					_accounts.splice(i, 1);
-//				}
-//			}
-//		}
-
-		public static function get github():RemoteAccount
+		public static function get github():*
 		{
-			return null; //getAccount(RemoteAccount.GITHUB);
+			return _github;
 		}
 		
-		public static function get beanstalk():RemoteAccount
+		public static function get beanstalk():*
 		{
-			return null; //getAccount(RemoteAccount.BEANSTALK);
+			return _beanstalk;
 		}		
 		
-//		private static function getAccount(s:String):RemoteAccount
-//		{
-//			if (_accounts) for (var i:int = 0; i < _accounts.length; i++) if (_accounts[i].type == s) return _accounts[i];
-//			return null;
-//		}
-
 	}
 	
 }

@@ -54,7 +54,7 @@ package view.modals.local {
 		
 		private function onGitHubClick():void
 		{
-			if (Accounts.github){
+			if (Accounts.github.loggedIn){
 				dispatchEvent(new UIEvent(UIEvent.GITHUB_HOME));
 			}	else{
 				dispatchEvent(new UIEvent(UIEvent.REMOTE_LOGIN, {type:RemoteAccount.GITHUB, event:UIEvent.GITHUB_HOME}));

@@ -88,7 +88,7 @@ package system {
 		
 		private static function onGitHubClick():void
 		{
-			if (Accounts.github){
+			if (Accounts.github.loggedIn){
         	 	_stage.dispatchEvent(new UIEvent(UIEvent.GITHUB_HOME));
 			}	else{
 				_stage.dispatchEvent(new UIEvent(UIEvent.REMOTE_LOGIN, {type:RemoteAccount.GITHUB, event:UIEvent.GITHUB_HOME}));

@@ -47,8 +47,8 @@ package events {
 		public static const FILES_DELETED			:String = "FILES_DELETED";
 		public static const INITIALIZING_BOOKMARK	:String = "INITIALIZING_BOOKMARK";
 		public static const HISTORY_REQUESTED		:String = "HISTORY_REQUESTED";
-		public static const MODIFIED_REQUESTED:String = "MODIFIED_REQUESTED";
-		public static const PRIMARY_ACCOUNT_SET:String = "PRIMARY_ACCOUNT_SET";
+		public static const MODIFIED_REQUESTED		:String = "MODIFIED_REQUESTED";
+		public static const REMOTE_KEY_VALIDATED	:String = "REMOTE_KEY_VALIDATED";
 		
 		public var data:Object;
 
