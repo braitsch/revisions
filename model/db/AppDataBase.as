@@ -8,7 +8,8 @@ package model.db {
 	
 		private static var _open				:Vector.<SQLStatement>;		private static var _add					:Vector.<SQLStatement>;
 		private static var _edit				:Vector.<SQLStatement>;		private static var _delete				:Vector.<SQLStatement>;		private static var _setActive			:Vector.<SQLStatement>;
-		private static var _bookmarks			:Array;
+		private static var _bkmks				:Array;
+		private static var _accounts			:Array;
 		
 		public function AppDatabase()
 		{
@@ -63,15 +64,15 @@ package model.db {
 		
 		private function getNextActiveRepository($old:String):String 
 		{
-			if (_bookmarks.length == 1) return '';
-			for (var i:int = 0; i < _bookmarks.length; i++) if (_bookmarks[i].label == $old) break;
-			if (i == _bookmarks.length - 1) {
+			if (_bkmks.length == 1) return '';
+			for (var i:int = 0; i < _bkmks.length; i++) if (_bkmks[i].label == $old) break;
+			if (i == _bkmks.length - 1) {
 				i --;
 			}	else if (i == 0){
 				i = 1;
 			}	else{
 				i ++;			}
-			return _bookmarks[i].label;
+			return _bkmks[i].label;
 		}		
 
 		private function onTransactionComplete(e:DataBaseEvent):void 
@@ -79,17 +80,18 @@ package model.db {
 			switch(e.data.transaction as Vector.<SQLStatement>){
 				case _open:	
 			//		trace("AppDatabase.onTransactionComplete(e) : initDataBase", e.data.result);
-					_bookmarks = e.data.result[1].data || [];					dispatchEvent(new DataBaseEvent(DataBaseEvent.DATABASE_READ, _bookmarks));
+					_bkmks = e.data.result[1].data || [];
+					_accounts =  e.data.result[3].data || [];					dispatchEvent(new DataBaseEvent(DataBaseEvent.DATABASE_READ, {bookmarks:_bkmks, accounts:_accounts}));
 				break;				case _add:	
-			//		trace("AppDatabase.onTransactionComplete(e) : addRepository");					_bookmarks = e.data.result[2].data || [];					dispatchEvent(new DataBaseEvent(DataBaseEvent.RECORD_ADDED, _bookmarks));
+			//		trace("AppDatabase.onTransactionComplete(e) : addRepository");					_bkmks = e.data.result[2].data || [];					dispatchEvent(new DataBaseEvent(DataBaseEvent.RECORD_ADDED, _bkmks));
 				break;				case _edit:				//		trace("AppDatabase.onTransactionComplete(e) : editRepository");
-					_bookmarks = e.data.result[1].data || [];
-					dispatchEvent(new DataBaseEvent(DataBaseEvent.RECORD_EDITED, _bookmarks));
+					_bkmks = e.data.result[1].data || [];
+					dispatchEvent(new DataBaseEvent(DataBaseEvent.RECORD_EDITED, _bkmks));
 				break;				
 				case _delete:	
 			//		trace("AppDatabase.onTransactionComplete(e) : deleteRepository");
-					_bookmarks = e.data.result[2].data || [];
-					dispatchEvent(new DataBaseEvent(DataBaseEvent.RECORD_DELETED, _bookmarks));
+					_bkmks = e.data.result[2].data || [];
+					dispatchEvent(new DataBaseEvent(DataBaseEvent.RECORD_DELETED, _bkmks));
 				break;	
 				case _setActive:	
 				//	trace("AppDatabase.onTransactionComplete(e) : setActiveBookmark");

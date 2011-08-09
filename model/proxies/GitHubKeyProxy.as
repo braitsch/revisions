@@ -59,7 +59,7 @@ package model.proxies {
 		{
 			var m:String = e.data.method; var r:String = e.data.result;
 			if (m == BashMethods.AUTHENTICATE_GH && r.indexOf("You've successfully authenticated") != -1){
-				AppModel.proxies.githubApi.getRepositories();
+		//		AppModel.proxies.githubApi.getRepositories();
 			}	else{
 				dispatchDebug(e.data);
 			}		
@@ -88,7 +88,6 @@ package model.proxies {
 					authenticateGH(o.id);
 				break;																				
 				case BashMethods.AUTHENTICATE_GH :
-					AppModel.proxies.githubApi.getRepositories();
 				break;
 			}				
 		}

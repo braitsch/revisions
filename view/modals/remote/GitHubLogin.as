@@ -41,7 +41,9 @@ package view.modals.remote {
 				AppModel.proxies.githubApi.addEventListener(AppEvent.LOGOUT, onLogout);
 			}	else{
 				lockScreen();
-				AppModel.proxies.githubApi.login(super.view.name_txt.text, super.view.pass_txt.text);				
+				var o:Object = {user:super.view.name_txt.text, pass:super.view.pass_txt.text, type:RemoteAccount.GITHUB};
+				var a:RemoteAccount = new RemoteAccount(o);
+				AppModel.proxies.githubApi.login(a);
 			}
 		}
 		

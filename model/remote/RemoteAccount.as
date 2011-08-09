@@ -1,13 +1,11 @@
 package model.remote {
 
-	import flash.events.IOErrorEvent;
-	import events.AppEvent;
-	import model.AppModel;
 	import flash.display.Bitmap;
 	import flash.display.Loader;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
+	import flash.events.IOErrorEvent;
 	import flash.net.URLRequest;
 	public class RemoteAccount extends EventDispatcher {
 		
@@ -16,31 +14,45 @@ package model.remote {
 		public static const PRIVATE		:String = 'private';
 		
 		private var _type			:String;
-		private var _repos			:Array;
+		private var _user			:String;
+		private var _pass			:String;
+		private var _main			:Boolean;
+		
 		private var _name			:String;	// user's full name //
 		private var _location		:String;	// user's location //
 		private var _avatar			:Sprite;
+		private var _repositories	:Array;
 
 		public function RemoteAccount(o:Object)
 		{
 			_type = o.type;
-			_repos = o.repos;
+			_user = o.user;
+			_pass = o.pass;
+			_main = o.main;
+		}
+		
+		public function set loginData(o:Object):void
+		{
 			_name = o.name;
 			_location = o.location;
 			getAccountAvatar(o.avatar_url);
+			trace("RemoteAccount.loginData(o)");
 		}
 		
-		public function purge():void
+		public function set repositories(a:Array):void
 		{
-			_repos = null; _avatar = null;
-			_name = _type = _location = null;
+			_repositories = a;
+			trace('_repositories: ' + (_repositories));
 		}
 
-		public function get type()			:String { return _type; 		}
-		public function get repos()			:Array  { return _repos;		}
-		public function get name()			:String { return _name; 		}
-		public function get avatar()		:Sprite { return _avatar;		}
-		public function get location()		:String { return _location; 	}
+		public function get type()			:String 	{ return _type; 		}
+		public function get user()			:String 	{ return _user; 		}		
+		public function get pass()			:String 	{ return _pass; 		}		
+		public function get main()			:Boolean 	{ return _main; 		}		
+		public function get name()			:String 	{ return _name; 		}
+		public function get location()		:String 	{ return _location; 	}
+		public function get avatar()		:Sprite 	{ return _avatar;		}
+		public function get repositories()	:Array  	{ return _repositories;	}
 
 		private function getAccountAvatar(url:String):void
 		{
@@ -61,13 +73,13 @@ package model.remote {
 			_avatar.graphics.beginFill(0x959595);
 			_avatar.graphics.drawRect(0, 0, 30, 30);
 			_avatar.graphics.endFill();
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.REMOTE_READY, this));
+		//	AppModel.engine.dispatchEvent(new AppEvent(AppEvent.REMOTE_READY, this));
 		}
 		
 		private function onAvatarFailure(e:IOErrorEvent):void
 		{
 			trace("--------RemoteAccount.onAvatarFailure(e)--------");
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.REMOTE_READY, this));
+		//	AppModel.engine.dispatchEvent(new AppEvent(AppEvent.REMOTE_READY, this));
 		}		
 
 	}

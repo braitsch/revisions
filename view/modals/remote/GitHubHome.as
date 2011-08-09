@@ -61,7 +61,7 @@ package view.modals.remote {
 		private function attachRepositories():void
 		{
 			var k:Array = [];
-			var a:Array = _model.repos;
+			var a:Array = _model.repositories;
 			a.sortOn('name', Array.CASEINSENSITIVE);
 			_pages = new <Sprite>[];
 			for (var i:int = 0; i < a.length; i++) {

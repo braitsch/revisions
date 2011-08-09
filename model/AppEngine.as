@@ -15,12 +15,6 @@ package model {
 		private static var _broken			:Vector.<Bookmark>;
 		private static var _bookmarks		:Vector.<Bookmark>;
 
-		public function initialize():void
-		{
-			AppModel.database.initialize();
-			AppModel.database.addEventListener(DataBaseEvent.DATABASE_READ, generateBookmarks);	
-		}
-
 	// expose bookmarks to check against duplicates being added //
 			
 		static public function get bookmarks():Vector.<Bookmark> { return _bookmarks; }
@@ -98,9 +92,9 @@ package model {
 		
 	// ---------- GENERATE FROM DATABASE ---------- //
 		
-		private function generateBookmarks(e:DataBaseEvent):void 
+		public function initialize(a:Array):void 
 		{
-			buildBkmksFromDatabase(e.data as Array);
+			buildBkmksFromDatabase(a);
 			if (_bookmarks.length == 0){
 				dispatchEvent(new BookmarkEvent(BookmarkEvent.NO_BOOKMARKS));	
 			}	else{
@@ -111,7 +105,6 @@ package model {
 					dispatchEvent(new BookmarkEvent(BookmarkEvent.PATH_ERROR, _broken[0]));
 				}
 			}
-			AppModel.database.removeEventListener(DataBaseEvent.DATABASE_READ, generateBookmarks);	
 		}
 		
 		private function buildBkmksFromDatabase(a:Array):void

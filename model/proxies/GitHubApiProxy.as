@@ -4,14 +4,14 @@ package model.proxies {
 	import events.NativeProcessEvent;
 	import model.AppModel;
 	import model.air.NativeProcessProxy;
-	import model.remote.AccountManager;
 	import model.remote.RemoteAccount;
 	import system.BashMethods;
 	import com.adobe.serialization.json.JSONDecoder;
 
 	public class GitHubApiProxy extends NativeProcessProxy {
 
-		private static var _accountData			:Object;
+
+		private static var _account				:RemoteAccount;
 		private static var _connectionErrors	:Array = [	'fatal: unable to connect a socket',
 															'fatal: The remote end hung up unexpectedly'];
 
@@ -21,15 +21,16 @@ package model.proxies {
 			super.addEventListener(NativeProcessEvent.PROCESS_PROGRESS, onProcessProgress);
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 		}
-
-		public function getAccountInfo():void
+		
+		public function getLastLoggedInAccount():void
 		{
 			super.call(Vector.<String>([BashMethods.GET_ACCOUNT_INFO]));
-		}
-		
-		public function login($name:String, $pass:String):void
+		}		
+
+		public function login(a:RemoteAccount):void
 		{
-			super.call(Vector.<String>([BashMethods.LOGIN, $name, $pass]));
+			_account = a;
+			super.call(Vector.<String>([BashMethods.LOGIN, _account.user, _account.pass]));
 		}
 		
 		public function logout():void
@@ -48,10 +49,10 @@ package model.proxies {
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Creating New Github Repository'));
 		}
 
-		public function getRepositories():void
+		private function getRepositories():void
 		{
 			super.call(Vector.<String>([BashMethods.GET_REPOSITORIES]));
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.LOADER_TEXT, 'Fetching Repositories'));
+		//	AppModel.engine.dispatchEvent(new AppEvent(AppEvent.LOADER_TEXT, 'Fetching Repositories'));
 		}
 		
 	// response handlers - native process exit //			
@@ -98,20 +99,18 @@ package model.proxies {
 		//	trace("GitHubApiProxy.onSuccess(m, o)", m, o);
 			switch(m){
 				case BashMethods.GET_ACCOUNT_INFO :
-					login(o.user, o.pass);
-				break;
+			//		dispatchEvent(new AppEvent(AppEvent.CACHED_ACCOUNT));
+				break;				
 				case BashMethods.LOGIN :
-					_accountData = o;
-					_accountData.type = RemoteAccount.GITHUB;
-					AppModel.proxies.githubKey.validateKeys(o.login);
+					_account.loginData = o; 
+					getRepositories();
 				break;
 				case BashMethods.LOGOUT:
-					AccountManager.killAccount(AccountManager.github);					
 					dispatchEvent(new AppEvent(AppEvent.LOGOUT));
 				break;									
 				case BashMethods.GET_REPOSITORIES :
-					_accountData.repos = o as Array;
-					AccountManager.addAccount(new RemoteAccount(_accountData));
+					_account.repositories = o as Array;
+					dispatchEvent(new AppEvent(AppEvent.LOGIN, _account));
 				break;
 				case BashMethods.CLONE_REPOSITORY :
 					dispatchEvent(new AppEvent(AppEvent.CLONE_COMPLETE));

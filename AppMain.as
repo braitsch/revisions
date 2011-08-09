@@ -1,7 +1,7 @@
 package {
 
 	import events.AppEvent;
-	import events.BookmarkEvent;
+	import events.DataBaseEvent;
 	import model.AppModel;
 	import model.remote.AccountManager;
 	import system.AirContextMenu;
@@ -64,17 +64,18 @@ package {
 
 		private function onGitReady(e:AppEvent):void
 		{
-			AppModel.engine.initialize();
+			AppModel.database.initialize();
 			AirNativeMenu.initialize(stage);
 			AirContextMenu.initialize(stage);
-			AppModel.engine.addEventListener(BookmarkEvent.LOADED, onBookmarksRendered);
 			AppModel.proxies.config.removeEventListener(AppEvent.GIT_SETTINGS, onGitReady);
+			AppModel.database.addEventListener(DataBaseEvent.DATABASE_READ, onDatabaseRead);
 		}
-		
-		private function onBookmarksRendered(e:BookmarkEvent):void
+
+		private function onDatabaseRead(e:DataBaseEvent):void
 		{
-			AccountManager.initialize();
-			AppModel.engine.removeEventListener(BookmarkEvent.LOADED, onBookmarksRendered);
+			AccountManager.initialize(e.data.accounts as Array);
+			AppModel.engine.initialize(e.data.bookmarks as Array);
+			AppModel.database.removeEventListener(DataBaseEvent.DATABASE_READ, onDatabaseRead);
 		}
 		
 	}

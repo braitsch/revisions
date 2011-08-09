@@ -29,8 +29,9 @@ package events {
 		public static const GIT_NAME_AND_EMAIL		:String = "GIT_NAME_AND_EMAIL";		
 		public static const GIT_DIR_UPDATED			:String = "GIT_DIR_UPDATED";
 		
-		public static const OFFLINE					:String = 'OFFLINE';
+		public static const LOGIN					:String = "LOGIN";
 		public static const LOGOUT					:String = "LOGOUT";
+		public static const OFFLINE					:String = 'OFFLINE';
 		public static const LOGIN_FAILED			:String = "LOGIN_FAILED";
 		public static const REMOTE_READY			:String = "LOGIN_SUCCESS";
 		public static const SSH_KEYS_READY			:String = "SSH_KEYS_READY";

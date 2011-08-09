@@ -1,7 +1,6 @@
 package view.modals.remote {
 
 	import events.UIEvent;
-	import model.AppModel;
 	import flash.events.MouseEvent;
 	import flash.net.URLRequest;
 	import flash.net.navigateToURL;
@@ -33,7 +32,7 @@ package view.modals.remote {
 			if (!validate()) return;
 			lockScreen();
 		//TODO need to obviously request this against the beanstalk api...	
-			AppModel.proxies.githubApi.login(super.view.name_txt.text, super.view.pass_txt.text);	
+		//	AppModel.proxies.githubApi.login(super.view.name_txt.text, super.view.pass_txt.text);	
 		}				
 		
 	}
