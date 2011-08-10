@@ -12,7 +12,7 @@ package model.proxies {
 		private static var _checkout	:CheckoutProxy 	= new CheckoutProxy();
 
 		private static var _ssh			:SSHProxy 		= new SSHProxy();
-		private static var _githubApi	:GitHubApiProxy = new GitHubApiProxy();
+		private static var _githubApi	:GitHubLoginProxy = new GitHubLoginProxy();
 		private static var _githubKey	:GitHubKeyProxy = new GitHubKeyProxy();
 		private static var _beanstalk	:BeanstalkProxy = new BeanstalkProxy();
 
@@ -53,7 +53,7 @@ package model.proxies {
 			return _ssh;
 		}
 
-		public function get githubApi():GitHubApiProxy
+		public function get githubApi():GitHubLoginProxy
 		{
 			return _githubApi;
 		}

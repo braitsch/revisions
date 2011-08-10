@@ -3,6 +3,7 @@ package view.modals.remote {
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
+	import model.remote.Accounts;
 	import model.remote.RemoteAccount;
 	import view.modals.ModalWindow;
 	import flash.display.Sprite;
@@ -162,15 +163,15 @@ package view.modals.remote {
 		
 		private function onLogOutClick(e:MouseEvent):void
 		{
-			AppModel.proxies.githubApi.logout();
-			AppModel.proxies.githubApi.addEventListener(AppEvent.LOGOUT, onLogout);
+			Accounts.github.loggedIn = false;
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 		}
 
 		private function validate():Boolean
 		{
 			var url:String = _view.custom.url_txt.text;
 			if (url.indexOf('https://') != -1){
-				var m:String = "Cloning over HTTP is not supported, please enter a url that starts with 'git@github.com' or 'git://'";
+				var m:String = "Cloning over HTTPS is not yet supported, please enter a url that starts with 'git@github.com' or 'git://'";
 				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
 				return false;
 			}
@@ -199,12 +200,6 @@ package view.modals.remote {
 			AppModel.proxies.githubApi.removeEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);			
 		}
 		
-		private function onLogout(e:AppEvent):void
-		{
-			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, 'You Have Successfully Logged Out.'));
-		}
-
 	}
 	
 }

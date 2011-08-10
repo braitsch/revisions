@@ -13,10 +13,11 @@ package model.db {
 		
 		private static var _addAccount			:Vector.<SQLStatement>;
 		private static var _delAccount			:Vector.<SQLStatement>;
-		private static var _setPrimaryAcct		:Vector.<SQLStatement>;
+		private static var _editAccount			:Vector.<SQLStatement>;
+		private static var _setSSHKeyId			:Vector.<SQLStatement>;
 		
 		private static var _bkmks				:Array;
-		private static var _accts				:Array;
+		private static var _accts:Array;
 		
 		public function AppDatabase()
 		{
@@ -75,7 +76,15 @@ package model.db {
 			_addAccount = new Vector.<SQLStatement>();
 			_addAccount.push(AppSQLQuery.ADD_ACCOUNT(a));
 			super.execute(_addAccount, true);
-		}	
+		}
+		
+		public function editAccount(a:RemoteAccount):void
+		{
+			trace("AppDatabase.editAccount(a)", a.sshKeyId);
+			_editAccount = new Vector.<SQLStatement>();
+			_editAccount.push(AppSQLQuery.EDIT_ACCOUNT(a));
+			super.execute(_editAccount, true);						
+		}
 		
 		public function deleteAccount(a:RemoteAccount):void
 		{
@@ -84,12 +93,12 @@ package model.db {
 			super.execute(_delAccount, true);
 		}	
 		
-		public function setPrimaryAccount(a:RemoteAccount):void
+		public function setSSHKeyId(a:RemoteAccount):void
 		{
-			_setPrimaryAcct = new Vector.<SQLStatement>();
-			_setPrimaryAcct.push(AppSQLQuery.CLEAR_PRIMARY_ACCT);				
-			_setPrimaryAcct.push(AppSQLQuery.SET_PRIMARY_ACCT(a));
-			super.execute(_setPrimaryAcct, true);
+			_setSSHKeyId = new Vector.<SQLStatement>();
+			_setSSHKeyId.push(AppSQLQuery.CLEAR_SSH_KEY_ID);
+			_setSSHKeyId.push(AppSQLQuery.SET_SSH_KEY_ID(a));
+			super.execute(_setSSHKeyId, true);
 		}									
 			//	private methods //	
 		
@@ -123,9 +132,12 @@ package model.db {
 				break;
 				case _addAccount :
 			//		trace("AppDatabase.onTransactionComplete(e) -- new account added!!");	
-				break;		
-				case _setPrimaryAcct :
-			//		trace("AppDatabase.onTransactionComplete(e) -- primary account set !!");	
+				break;	
+				case _editAccount :
+					trace("AppDatabase.onTransactionComplete(e) -- account edited !!");	
+				break;						
+				case _setSSHKeyId :
+					trace("AppDatabase.onTransactionComplete(e) -- primary account set !!");	
 				break;									
 			}
 		}

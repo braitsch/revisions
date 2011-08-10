@@ -13,7 +13,7 @@ package view.modals.remote {
 		public static function getFromGitHub($url:String, $loc:String):void
 		{
 			_cloneURL = $url; _cloneLoc = $loc;
-			AppModel.proxies.githubApi.clone(_cloneURL, _cloneLoc);
+		//	AppModel.proxies.githubApi.clone(_cloneURL, _cloneLoc);
 			AppModel.proxies.githubApi.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Connecting to Remote Repository'));				
 		}

@@ -38,7 +38,7 @@ package model.proxies {
 		
 		private function getRemoteKeys(ra:RemoteAccount):void
 		{
-			super.call(Vector.<String>([BashMethods.GET_REMOTE_KEYS, ra.user, ra.pass]));	
+			super.call(Vector.<String>([BashMethods.GET_REMOTE_KEY, ra.user, ra.pass]));	
 		}	
 		
 		private function addKeyToRemote(ra:RemoteAccount):void
@@ -71,7 +71,7 @@ package model.proxies {
 				case BashMethods.GET_CACHED_KEY_ID :
 					onGetCachedKeyId(e.data.result);
 				break;
-				case BashMethods.GET_REMOTE_KEYS :
+				case BashMethods.GET_REMOTE_KEY :
 					onRemoteKeysReceived(e.data.result);
 				break;				
 				case BashMethods.ADD_KEY_TO_REMOTE :
@@ -113,7 +113,7 @@ package model.proxies {
 			if (o.message == null){
 				checkKeyIsOnServer(o);
 			}	else{
-				o.method = BashMethods.GET_REMOTE_KEYS;
+				o.method = BashMethods.GET_REMOTE_KEY;
 				dispatchDebug(o);
 			}
 		}
@@ -177,7 +177,7 @@ package model.proxies {
 
 		private function dispatchKeyReady():void
 		{
-			dispatchEvent(new AppEvent(AppEvent.REMOTE_KEY_VALIDATED, _primary));
+			dispatchEvent(new AppEvent(AppEvent.REMOTE_KEY_SET, _primary));
 		}							
 		
 		private function dispatchDebug(o:Object):void

@@ -38,14 +38,12 @@ package view.modals.login {
 		{
 			if (!validate()) return;
 			if (Accounts.github.loggedIn){
-				AppModel.proxies.githubApi.logout();
-				AppModel.proxies.githubApi.addEventListener(AppEvent.LOGOUT, onLogout);
+				Accounts.github.loggedIn = false;
 			}	else{
 				lockScreen();
-			// check db account for a match and retrieve ssh-key-id	
-				var o:Object = {type:RemoteAccount.GITHUB, user:super.name, pass:super.pass};
-				var a:RemoteAccount = new RemoteAccount(o);
-				AppModel.proxies.githubApi.login(a);
+				var k:uint = Accounts.getAccountSSHKey(RemoteAccount.GITHUB, super.name);
+				var o:Object = {type:RemoteAccount.GITHUB, user:super.name, pass:super.pass, sshKeyId:k};
+				AppModel.proxies.githubApi.login(new RemoteAccount(o));
 			}
 		}
 		

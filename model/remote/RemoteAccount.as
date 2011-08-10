@@ -19,6 +19,7 @@ package model.remote {
 		private var _user			:String;
 		private var _pass			:String;
 		private var _primary		:uint;
+		private var _sshKeyId		:uint;
 		
 		private var _name			:String;	// user's full name //
 		private var _location		:String;	// user's location //
@@ -30,13 +31,23 @@ package model.remote {
 			_type = o.type;
 			_user = o.user;
 			_pass = o.pass;
-			_primary = o.pAccount;
+			_sshKeyId = o.sshKeyId;
 		}
 		
 		public function set primary(n:uint):void
 		{
 			_primary = n;
-		}			
+		}
+		
+		public function get sshKeyId():uint
+		{
+			return _sshKeyId;
+		}	
+		
+		public function set sshKeyId(n:uint):void
+		{
+			_sshKeyId = n;
+		}						
 		
 		public function set loginData(o:Object):void
 		{

@@ -10,7 +10,7 @@ package model.db {
 		INIT_TABLE_ACCOUNTS.text = "CREATE TABLE IF NOT EXISTS accounts ";
 		INIT_TABLE_ACCOUNTS.text+= "(id INTEGER PRIMARY KEY AUTOINCREMENT, ";
 		INIT_TABLE_ACCOUNTS.text+= "type VARCHAR, user VARCHAR, pass VARCHAR, ";
-		INIT_TABLE_ACCOUNTS.text+= "pAccount TINYINT UNSIGNED NOT NULL DEFAULT 0)";
+		INIT_TABLE_ACCOUNTS.text+= "sshKeyId TINYINT UNSIGNED NOT NULL DEFAULT 0)";
 
 		public static const INIT_TABLE_BOOKMARKS:SQLStatement = new SQLStatement();
 		INIT_TABLE_BOOKMARKS.text = "CREATE TABLE IF NOT EXISTS bookmarks ";
@@ -64,9 +64,16 @@ package model.db {
 		public static function ADD_ACCOUNT(a:RemoteAccount):SQLStatement
 		{
 			var s:SQLStatement = new SQLStatement();
-			s.text = "INSERT INTO accounts (type, user, pass, pAccount) ";
+			s.text = "INSERT INTO accounts (type, user, pass, sshKeyId) ";
 			s.text+= "VALUES ('"+a.type+"', '"+a.user+"', '"+a.pass+"', '"+a.primary+"')";
 			return s;			
+		}
+
+		public static function EDIT_ACCOUNT(a:RemoteAccount):SQLStatement
+		{
+			var s:SQLStatement = new SQLStatement();
+			s.text = "UPDATE accounts SET pass='"+a.pass+"', sshKeyId='"+a.sshKeyId+"' WHERE type='"+a.type+"' AND user='"+a.user+"'";
+			return s;
 		}
 
 		public static function DEL_ACCOUNT(a:RemoteAccount):SQLStatement
@@ -76,13 +83,13 @@ package model.db {
 			return s;				
 		}
 		
-		public static const CLEAR_PRIMARY_ACCT:SQLStatement = new SQLStatement();
-		CLEAR_PRIMARY_ACCT.text = "UPDATE accounts SET pAccount=0 WHERE pAccount=1";		
+		public static const CLEAR_SSH_KEY_ID:SQLStatement = new SQLStatement();
+		CLEAR_SSH_KEY_ID.text = "UPDATE accounts SET sshKeyId=0 WHERE sshKeyId=1";		
 		
-		public static function SET_PRIMARY_ACCT(a:RemoteAccount):SQLStatement
+		public static function SET_SSH_KEY_ID(a:RemoteAccount):SQLStatement
 		{
 			var s:SQLStatement = new SQLStatement();
-			s.text = "UPDATE accounts SET pAccount=1 WHERE type='"+a.type+"' AND user='"+a.user+"'";
+			s.text = "UPDATE accounts SET sshKeyId='"+a.sshKeyId+"' WHERE type='"+a.type+"' AND user='"+a.user+"'";
 			return s;				
 		}
 		

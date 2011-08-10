@@ -2,8 +2,8 @@ package model.remote {
 
 	public class Accounts {
 		
-		private static var _github			:GitHubManager = new GitHubManager();
-		private static var _beanstalk		:BeanstalkManager = new BeanstalkManager();
+		private static var _github			:AccountManager = new AccountManager(RemoteAccount.GITHUB);
+		private static var _beanstalk		:AccountManager = new AccountManager(RemoteAccount.BEANSTALK);
 		
 		public static function initialize(a:Array):void
 		{
@@ -16,15 +16,33 @@ package model.remote {
 			}
 		}
 
-		public static function get github():*
+		public static function get github():AccountManager
 		{
 			return _github;
 		}
 		
-		public static function get beanstalk():*
+		public static function get beanstalk():AccountManager
 		{
 			return _beanstalk;
+		}
+		
+		public static function getAccountSSHKey(type:String, name:String):uint
+		{
+			var a:RemoteAccount = getAccount(type, name);
+			if (a) return a.sshKeyId;
+			return 0;
 		}		
+		
+		private static function getAccount(type:String, name:String):RemoteAccount	
+		{
+			var am:AccountManager;
+			if (type == RemoteAccount.GITHUB){
+				am = _github;
+			}	else if (type == RemoteAccount.BEANSTALK){
+				am = _beanstalk;
+			}
+			return am.getAccountByName(name);
+		}
 		
 	}
 	

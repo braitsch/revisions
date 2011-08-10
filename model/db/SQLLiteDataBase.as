@@ -13,7 +13,7 @@ package model.db {
 	public class SQLLiteDataBase extends EventDispatcher{
 		
 		private var _conn				:SQLConnection;
-		private var _debug				:Boolean = false;
+		private var _debug				:Boolean = true;
 		private var _queue				:Vector.<SQLStatement>;
 		private var _results			:Vector.<SQLResult>;
 		private var _commitOnComplete	:Boolean = false;
