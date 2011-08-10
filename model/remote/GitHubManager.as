@@ -4,6 +4,7 @@ package model.remote {
 	import model.AppModel;
 	import model.proxies.GitHubApiProxy;
 	import model.proxies.GitHubKeyProxy;
+	import model.vo.Remote;
 	import flash.events.EventDispatcher;
 	
 	public class GitHubManager extends EventDispatcher {
@@ -41,6 +42,29 @@ package model.remote {
 		{
 			_key.changePrimaryAccount(_primary, a);
 		}
+		
+		public function getRemoteURL(r:Remote):String
+		{
+			if (r.url.indexOf('git@github.com:'+_primary.user) != -1) return r.url;
+			for (var i:int = 0; i < _accounts.length; i++) {
+				var u:String = _accounts[i].user;
+				if (r.url.indexOf('git@github.com:'+u) != -1){
+					return buildHTTP(r.url, _accounts[i]);
+				}	else if (r.url.indexOf('https://'+u) != -1){
+					return buildHTTP(r.url, _accounts[i]);
+				}
+			}
+			return null;
+		}
+
+		private function buildHTTP(u:String, a:RemoteAccount):String
+		{
+			var r:String = u.substr(u.lastIndexOf('/'));
+			return 'https://'+a.user+':'+a.pass+'@github.com/'+a.user+r;
+		}
+//git@braitsch.beanstalkapp.com:/testing.git
+//git@github.com:braitsch/Revisions-Source.git
+//https://braitsch@github.com/braitsch/Revisions-Source.git
 		
 		private function onLoginSuccess(e:AppEvent):void
 		{

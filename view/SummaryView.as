@@ -181,15 +181,15 @@ package view {
 		private function syncRemote():void
 		{
 			var m:String;
-			if (_bookmark.branch.modified){
-				m = 'Please saves your lastest changes before syncing with the server.';
-			}	else if (_bookmark.remotes.length != 1){
-				m = 'This bookmark has multiple remotes. A remote chooser is coming soon.';
-			}
+//			if (_bookmark.branch.modified){
+//				m = 'Please saves your lastest changes before syncing with the server.';
+//			}	else if (_bookmark.remotes.length != 1){
+//				m = 'This bookmark has multiple remotes. A remote chooser is coming very soon.';
+//			}
 			if (m){
 				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
 			}	else{
-				_locked = true;
+			//	_locked = true;
 				var v:Vector.<Remote> = _bookmark.remotes.concat();
 				AppModel.proxies.remote.syncRemotes(v);
 				AppModel.proxies.remote.addEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);

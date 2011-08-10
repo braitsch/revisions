@@ -1,5 +1,7 @@
 package model.proxies {
 
+	import model.remote.RemoteAccount;
+	import model.remote.Accounts;
 	import events.AppEvent;
 	import events.NativeProcessEvent;
 	import model.AppModel;
@@ -10,6 +12,7 @@ package model.proxies {
 	public class RemoteProxy extends NativeProcessProxy {
 		
 		private static var _index	:uint;
+		private static var _url		:String;
 		private static var _remote	:Remote;
 		private static var _remotes	:Vector.<Remote>;
 		
@@ -42,6 +45,11 @@ package model.proxies {
 		private function syncNextRemote(warn:Boolean = true):void
 		{
 			_remote = _remotes[_index];
+			_url = getRemoteURL(_remote);
+			if (_url == null){
+				//TODO dispatch alert for user to check remote url
+				_index++; syncNextRemote();
+			}
 			if (_remote.hasBranch(AppModel.branch.name)){
 				pullRemote();				
 			}	else{
@@ -62,6 +70,16 @@ package model.proxies {
 			super.call(Vector.<String>([BashMethods.PUSH_REMOTE, _remote.name, AppModel.branch.name]));
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Sending Files'));
 		}				
+		
+		private function getRemoteURL(r:Remote):String
+		{
+			if (r.type == RemoteAccount.GITHUB){
+				return Accounts.github.getRemoteURL(r);
+			}	else if (r.type == RemoteAccount.BEANSTALK){
+			// coming soon	
+			}
+			return r.name;
+		}
 		
 		private function handleProcessSuccess(e:NativeProcessEvent):void
 		{
