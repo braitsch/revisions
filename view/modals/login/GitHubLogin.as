@@ -1,34 +1,35 @@
-package view.modals.remote {
+package view.modals.login {
 
 	import events.AppEvent;
 	import events.UIEvent;
-	import model.AppModel;
-	import model.remote.Accounts;
-	import model.remote.RemoteAccount;
 	import flash.events.MouseEvent;
 	import flash.net.URLRequest;
 	import flash.net.navigateToURL;
+	import model.AppModel;
+	import model.remote.Accounts;
+	import model.remote.RemoteAccount;
 	
-	public class GitHubLogin extends LoginScreen {
+	public class GitHubLogin extends BaseAccountLogin {
 
+		private static var _view				:LoginMC = new LoginMC();
 		private static var _onSuccessEvent		:String;
 
 		public function GitHubLogin()
 		{
-			super.view.github.visible = true;		
+			super(_view);
 			super.setTextFields('Github');
-			super.setTitle(super.view, 'Login To Github');
-			super.view.github.addEventListener(MouseEvent.CLICK, gotoNewAccountPage);
+			super.setTitle(_view, 'Login To Github');
+			super.accountBtn = new GitHubButton();
 			AppModel.proxies.githubApi.addEventListener(AppEvent.LOGOUT, onLogout);			
 		}
-		
+
 		public function set onSuccessEvent(e:String):void 
 		{ 
 			_onSuccessEvent = e;
 			super.allowSkip = (e != UIEvent.ADD_REMOTE_TO_BOOKMARK);
-		}		
-
-		private function gotoNewAccountPage(e:MouseEvent):void
+		}	
+		
+		override protected function gotoNewAccountPage(e:MouseEvent):void
 		{
 			navigateToURL(new URLRequest('https://github.com/signup'));			
 		}
@@ -41,7 +42,7 @@ package view.modals.remote {
 				AppModel.proxies.githubApi.addEventListener(AppEvent.LOGOUT, onLogout);
 			}	else{
 				lockScreen();
-				var o:Object = {type:RemoteAccount.GITHUB, user:super.view.name_txt.text, pass:super.view.pass_txt.text};
+				var o:Object = {type:RemoteAccount.GITHUB, user:_view.name_txt.text, pass:_view.pass_txt.text};
 				var a:RemoteAccount = new RemoteAccount(o);
 				AppModel.proxies.githubApi.login(a);
 			}

@@ -3,11 +3,18 @@ package view.modals {
 	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.UIEvent;
+	import flash.display.Sprite;
+	import flash.display.Stage;
+	import flash.events.KeyboardEvent;
+	import flash.events.MouseEvent;
+	import flash.filesystem.File;
+	import flash.filters.BlurFilter;
 	import model.AppModel;
 	import model.db.AppSettings;
 	import model.remote.RemoteAccount;
 	import model.vo.Bookmark;
 	import model.vo.Commit;
+	import model.vo.Remote;
 	import view.modals.bkmk.BookmarkEditor;
 	import view.modals.git.GitAbout;
 	import view.modals.git.GitInstall;
@@ -24,23 +31,17 @@ package view.modals {
 	import view.modals.local.RepairBookmark;
 	import view.modals.local.RevertToVersion;
 	import view.modals.local.WelcomeScreen;
+	import view.modals.login.BeanStalkLogin;
+	import view.modals.login.GitHubLogin;
 	import view.modals.remote.AddBeanstalkRepo;
 	import view.modals.remote.AddGitHubRepo;
 	import view.modals.remote.AnonymousClone;
-	import view.modals.remote.BeanStalkLogin;
 	import view.modals.remote.GitHubHome;
-	import view.modals.remote.GitHubLogin;
 	import view.modals.remote.RemoteRepo;
 	import view.modals.system.Alert;
 	import view.modals.system.Confirm;
 	import view.modals.system.Debug;
 	import view.ui.Preloader;
-	import flash.display.Sprite;
-	import flash.display.Stage;
-	import flash.events.KeyboardEvent;
-	import flash.events.MouseEvent;
-	import flash.filesystem.File;
-	import flash.filters.BlurFilter;
 
 	public class ModalManager extends Sprite {
 
@@ -98,6 +99,7 @@ package view.modals {
 			AppModel.updater.addEventListener(AppEvent.APP_UPDATE_AVAILABLE, promptToUpdate);
 			AppModel.proxies.config.addEventListener(AppEvent.GIT_NOT_INSTALLED, installGit);
 			AppModel.proxies.config.addEventListener(AppEvent.GIT_NEEDS_UPDATING, upgradeGit);
+			AppModel.proxies.remote.addEventListener(AppEvent.PROMPT_FOR_REMOTE_PSWD, showPasswordPrompt);
 		}
 
 		public function init(stage:Stage):void
@@ -287,6 +289,12 @@ package view.modals {
 			_appUpdate.newVersion = e.data.n;
 			showModalWindow(_appUpdate);
 		}
+		
+		private function showPasswordPrompt(e:AppEvent):void
+		{
+			var r:Remote = e.data as Remote;
+			trace("ModalManager.showPasswordPrompt(e) for", r.url);
+		}		
 		
 		private function showLoader(e:AppEvent):void
 		{

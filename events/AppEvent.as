@@ -49,6 +49,7 @@ package events {
 		public static const HISTORY_REQUESTED		:String = "HISTORY_REQUESTED";
 		public static const MODIFIED_REQUESTED		:String = "MODIFIED_REQUESTED";
 		public static const REMOTE_KEY_VALIDATED	:String = "REMOTE_KEY_VALIDATED";
+		public static const PROMPT_FOR_REMOTE_PSWD	:String = "PROMPT_FOR_REMOTE_PSWD";
 		
 		public var data:Object;
 

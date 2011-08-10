@@ -46,28 +46,28 @@ package model.proxies {
 		{
 			_remote = _remotes[_index];
 			_url = getRemoteURL(_remote);
-			if (_url == null){
-				//TODO dispatch alert for user to check remote url
-				_index++; syncNextRemote();
-			}
-			if (_remote.hasBranch(AppModel.branch.name)){
-				pullRemote();				
+			if (_url != null){
+				if (_remote.hasBranch(AppModel.branch.name)){
+					pullRemote();				
+				}	else{
+					warn ? dispatchConfirm() : pushRemote();
+				}
 			}	else{
-				warn ? dispatchConfirm() : pushRemote();
-			}			
+				dispatchEvent(new AppEvent(AppEvent.PROMPT_FOR_REMOTE_PSWD, _remote));
+			}
 		}
 		
 		private function pullRemote():void
 		{
 			super.directory = AppModel.bookmark.gitdir;
-			super.call(Vector.<String>([BashMethods.PULL_REMOTE, _remote.name, AppModel.branch.name]));
+			super.call(Vector.<String>([BashMethods.PULL_REMOTE, _url, AppModel.branch.name]));
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Receiving Files'));
 		}
 		
 		private function pushRemote():void
 		{
 			super.directory = AppModel.bookmark.gitdir;
-			super.call(Vector.<String>([BashMethods.PUSH_REMOTE, _remote.name, AppModel.branch.name]));
+			super.call(Vector.<String>([BashMethods.PUSH_REMOTE, _url, AppModel.branch.name]));
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Sending Files'));
 		}				
 		
