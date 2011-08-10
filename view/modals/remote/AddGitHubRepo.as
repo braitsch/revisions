@@ -7,7 +7,7 @@ package view.modals.remote {
 		public function AddGitHubRepo()
 		{
 			super.drawBackground(550, 210);
-			super.proxy = AppModel.proxies.githubApi;
+			super.proxy = AppModel.proxies.ghLogin;
 			super.view.pageBadge.label_txt.text = 'Add To Github';			
 		}
 		

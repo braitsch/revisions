@@ -39,13 +39,13 @@ package view.modals.remote {
 		private function onBrowserSelection(e:UIEvent):void
 		{
 			RemoteClone.getFromGitHub(_cloneURL, File(e.data).nativePath);			
-			AppModel.proxies.githubApi.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);			
+			AppModel.proxies.ghLogin.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);			
 		}
 
 		private function onCloneComplete(e:AppEvent):void
 		{
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));			
-			AppModel.proxies.githubApi.removeEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);			
+			AppModel.proxies.ghLogin.removeEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);			
 		}	
 		
 		private function dispatchAlert():void

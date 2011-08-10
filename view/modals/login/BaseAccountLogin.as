@@ -52,8 +52,8 @@ package view.modals.login {
 			_view.skip_btn.removeEventListener(MouseEvent.CLICK, onSkipButton);
 			_view.login_btn.removeEventListener(MouseEvent.CLICK, onLoginButton);			
 			AppModel.engine.addEventListener(AppEvent.REMOTE_READY, onLoginSuccess);
-			AppModel.proxies.githubApi.addEventListener(AppEvent.OFFLINE, onOffline);
-			AppModel.proxies.githubApi.addEventListener(AppEvent.LOGIN_FAILED, onLoginFailed);
+			AppModel.proxies.ghLogin.addEventListener(AppEvent.OFFLINE, onOffline);
+			AppModel.proxies.ghLogin.addEventListener(AppEvent.LOGIN_FAILED, onLoginFailed);
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Attemping Login'));			
 		}
 		
@@ -65,8 +65,8 @@ package view.modals.login {
 			_view.skip_btn.addEventListener(MouseEvent.CLICK, onSkipButton);
 			_view.login_btn.addEventListener(MouseEvent.CLICK, onLoginButton);				
 			AppModel.engine.removeEventListener(AppEvent.REMOTE_READY, onLoginSuccess);
-			AppModel.proxies.githubApi.removeEventListener(AppEvent.OFFLINE, onOffline);
-			AppModel.proxies.githubApi.removeEventListener(AppEvent.LOGIN_FAILED, onLoginFailed);
+			AppModel.proxies.ghLogin.removeEventListener(AppEvent.OFFLINE, onOffline);
+			AppModel.proxies.ghLogin.removeEventListener(AppEvent.LOGIN_FAILED, onLoginFailed);
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));					
 		}
 		

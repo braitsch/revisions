@@ -191,15 +191,15 @@ package view {
 			}	else{
 			//	_locked = true;
 				var v:Vector.<Remote> = _bookmark.remotes.concat();
-				AppModel.proxies.remote.syncRemotes(v);
-				AppModel.proxies.remote.addEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);
+				AppModel.proxies.ghRemote.syncRemotes(v);
+				AppModel.proxies.ghRemote.addEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);
 			}
 		}
 
 		private function onRemoteSynced(e:AppEvent):void
 		{
 			_locked = false;
-			AppModel.proxies.remote.removeEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);			
+			AppModel.proxies.ghRemote.removeEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);			
 		}
 		
 	}

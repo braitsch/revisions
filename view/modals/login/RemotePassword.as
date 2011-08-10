@@ -33,12 +33,12 @@ package view.modals.login {
 		private function onOkButton(e:MouseEvent):void
 		{
 			var https:String = 'https://'+super.name+':'+super.pass+'@github.com/'+_remote.acctName+'/'+_remote.repoName;
-			AppModel.proxies.remote.attemptSyncOverHTTPS(https);
+			AppModel.proxies.ghRemote.attemptSyncOverHTTPS(https);
 		}		
 		
 		private function onSkipButton(e:MouseEvent):void
 		{
-			AppModel.proxies.remote.skipRemoteSync();
+			AppModel.proxies.ghRemote.skipRemoteSync();
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 		}
 		

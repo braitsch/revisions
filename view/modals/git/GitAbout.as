@@ -4,7 +4,7 @@ package view.modals.git {
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import model.AppModel;
-	import model.proxies.ConfigProxy;
+	import model.proxies.local.ConfigProxy;
 	import view.modals.ModalWindow;
 
 	public class GitAbout extends ModalWindow {

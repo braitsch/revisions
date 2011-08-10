@@ -78,14 +78,14 @@ package view.modals.remote {
 		private function onRepositoryCreated(e:AppEvent):void
 		{
 			_proxy.removeEventListener(AppEvent.REPOSITORY_CREATED, onRepositoryCreated);
-			AppModel.proxies.remote.addRemote(new Remote(_name, e.data as String));
-			AppModel.proxies.remote.addEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);
+			AppModel.proxies.ghRemote.addRemote(new Remote(_name, e.data as String));
+			AppModel.proxies.ghRemote.addEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);
 		}
 		
 		private function onRemoteSynced(e:AppEvent):void
 		{
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-			AppModel.proxies.remote.removeEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);	
+			AppModel.proxies.ghRemote.removeEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);	
 		}
 		
 	}

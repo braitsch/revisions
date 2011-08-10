@@ -14,7 +14,7 @@ package view.modals.remote {
 		{
 			_cloneURL = $url; _cloneLoc = $loc;
 		//	AppModel.proxies.githubApi.clone(_cloneURL, _cloneLoc);
-			AppModel.proxies.githubApi.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);
+			AppModel.proxies.ghLogin.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Connecting to Remote Repository'));				
 		}
 		
@@ -32,7 +32,7 @@ package view.modals.remote {
 			};		
 			AppModel.engine.addBookmark(new Bookmark(o));
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
-			AppModel.proxies.githubApi.removeEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);
+			AppModel.proxies.ghLogin.removeEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);
 		}			
 		
 	}

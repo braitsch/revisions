@@ -1,4 +1,4 @@
-package model.proxies {
+package model.proxies.local {
 
 	import events.AppEvent;
 	import events.NativeProcessEvent;

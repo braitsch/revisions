@@ -1,5 +1,13 @@
 package model.proxies {
 
+	import model.proxies.local.CheckoutProxy;
+	import model.proxies.local.ConfigProxy;
+	import model.proxies.local.EditorProxy;
+	import model.proxies.local.RepoReader;
+	import model.proxies.local.SSHProxy;
+	import model.proxies.local.UpdateProxy;
+	import model.proxies.remote.LoginProxy;
+	import model.proxies.remote.RemoteProxy;
 	import flash.events.EventDispatcher;
 
 	public class AppProxies extends EventDispatcher {
@@ -8,13 +16,12 @@ package model.proxies {
 		private static var _reader		:RepoReader 	= new RepoReader();
 		private static var _update		:UpdateProxy 	= new UpdateProxy();
 		private static var _editor		:EditorProxy 	= new EditorProxy();
-		private static var _remote		:RemoteProxy 	= new RemoteProxy();
 		private static var _checkout	:CheckoutProxy 	= new CheckoutProxy();
 
 		private static var _ssh			:SSHProxy 		= new SSHProxy();
-		private static var _githubApi	:GitHubLoginProxy = new GitHubLoginProxy();
-		private static var _githubKey	:GitHubKeyProxy = new GitHubKeyProxy();
-		private static var _beanstalk	:BeanstalkProxy = new BeanstalkProxy();
+		private static var _ghLogin		:LoginProxy 	= new LoginProxy();
+		private static var _bsLogin		:LoginProxy 	= new LoginProxy();
+		private static var _ghRemote	:RemoteProxy 	= new RemoteProxy();
 
 	// public getters //	
 
@@ -28,11 +35,6 @@ package model.proxies {
 			return _editor;
 		}
 		
-		public function get remote():RemoteProxy
-		{
-			return _remote;
-		}		
-
 		public function get reader():RepoReader
 		{
 			return _reader;
@@ -52,21 +54,23 @@ package model.proxies {
 		{
 			return _ssh;
 		}
+		
+	// remote proxies //	
 
-		public function get githubApi():GitHubLoginProxy
+		public function get ghLogin():LoginProxy
 		{
-			return _githubApi;
+			return _ghLogin;
 		}
 		
-		public function get githubKey():GitHubKeyProxy
+		public function get bsLogin():LoginProxy
 		{
-			return _githubKey;
-		}		
-
-		public function get beanstalk():BeanstalkProxy
-		{
-			return _beanstalk;
+			return _bsLogin;
 		}
+		
+		public function get ghRemote():RemoteProxy
+		{
+			return _ghRemote;
+		}			
 
 	}
 	

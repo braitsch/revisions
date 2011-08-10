@@ -1,4 +1,4 @@
-package model.proxies {
+package model.proxies.remote {
 
 	import model.remote.RemoteAccount;
 	import model.remote.Accounts;
@@ -16,6 +16,9 @@ package model.proxies {
 		private static var _remote	:Remote;
 		private static var _remotes	:Vector.<Remote>;
 		
+//		private static var _connectionErrors	:Array = [	'fatal: unable to connect a socket',
+//															'fatal: The remote end hung up unexpectedly'];		
+		
 		public function RemoteProxy()
 		{
 			super.executable = 'Remote.sh';
@@ -29,6 +32,16 @@ package model.proxies {
 			super.directory = AppModel.bookmark.gitdir;
 			super.call(Vector.<String>([BashMethods.ADD_REMOTE, _remote.name, _remote.url]));
 		}
+		
+		public function clone(url:String, loc:String):void
+		{
+			super.call(Vector.<String>([BashMethods.CLONE_REPOSITORY, url, loc]));
+		}
+		
+		public function addRepository($name:String, $desc:String, $public:Boolean):void
+		{
+			super.call(Vector.<String>([BashMethods.ADD_REPOSITORY, $name, $desc, $public]));
+		}		
 		
 	// called only from SummaryView	
 		public function syncRemotes(v:Vector.<Remote>):void

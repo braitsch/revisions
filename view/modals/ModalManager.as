@@ -101,7 +101,7 @@ package view.modals {
 			AppModel.updater.addEventListener(AppEvent.APP_UPDATE_AVAILABLE, promptToUpdate);
 			AppModel.proxies.config.addEventListener(AppEvent.GIT_NOT_INSTALLED, installGit);
 			AppModel.proxies.config.addEventListener(AppEvent.GIT_NEEDS_UPDATING, upgradeGit);
-			AppModel.proxies.remote.addEventListener(AppEvent.PROMPT_FOR_REMOTE_PSWD, showPasswordPrompt);
+			AppModel.proxies.ghRemote.addEventListener(AppEvent.PROMPT_FOR_REMOTE_PSWD, showPasswordPrompt);
 		}
 
 		public function init(stage:Stage):void

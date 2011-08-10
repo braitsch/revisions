@@ -1,7 +1,7 @@
 package model.vo {
 
-	import model.proxies.StatusProxy;
 	import flash.events.EventDispatcher;
+	import model.proxies.local.StatusProxy;
 
 	public class Branch extends EventDispatcher{
 

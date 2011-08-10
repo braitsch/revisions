@@ -1,18 +1,19 @@
-package model.proxies {
+package model.proxies.remote {
 
+	import com.adobe.serialization.json.JSONDecoder;
 	import events.AppEvent;
 	import events.NativeProcessEvent;
 	import model.AppModel;
 	import model.air.NativeProcessProxy;
+	import model.proxies.local.SSHProxy;
 	import model.remote.RemoteAccount;
 	import system.BashMethods;
-	import com.adobe.serialization.json.JSONDecoder;
 
-	public class GitHubLoginProxy extends NativeProcessProxy {
+	public class LoginProxy extends NativeProcessProxy {
 
 		private static var _account		:RemoteAccount;
 
-		public function GitHubLoginProxy()
+		public function LoginProxy()
 		{
 			super.executable = 'GitHubLogin.sh';
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
@@ -46,7 +47,7 @@ package model.proxies {
 		
 		private function repairRemoteKey():void
 		{
-			super.call(Vector.<String>([BashMethods.REPAIR_REMOTE_KEY, _account.user, _account.pass]));	
+			super.call(Vector.<String>([BashMethods.REPAIR_REMOTE_KEY, _account.user, _account.pass, _account.sshKeyId]));	
 		}	
 		
 		private function authenticate():void
@@ -62,7 +63,7 @@ package model.proxies {
 			var m:String = e.data.method; var r:String = e.data.result;
 			switch(e.data.method){
 				case BashMethods.LOGIN :
-					if (!message(m, r)) onLoginSuccess(r);
+					onLoginResult(r);
 				break;
 				case BashMethods.GET_REPOSITORIES :
 					if (!message(m, r)) onRepositories(r);
@@ -74,13 +75,13 @@ package model.proxies {
 					onKeyAddedToRemote(r);
 				break;
 				case BashMethods.REPAIR_REMOTE_KEY :
-					if (!message(m, r)) onRemoteKeyRepaired();
+					if (!message(m, r)) dispatchLoginComplete();
 				break;				
 				case BashMethods.REMOVE_KEY_FROM_REMOTE :
-					if (!message(m, r)) onKeyRemovedFromRemote();
+					if (!message(m, r)) dispatchLoginComplete();
 				break;
 				case BashMethods.AUTHENTICATE :
-					onRemoteKeyAuthenticated(r);
+					dispatchEvent(new AppEvent(AppEvent.REMOTE_KEY_SET, _account));
 				break;				
 			}
 		}
@@ -97,10 +98,20 @@ package model.proxies {
 			}
 		}
 		
-		private function onLoginSuccess(s:String):void
+		private function onLoginResult(s:String):void
 		{
-			_account.loginData = getResultObject(s);
-			getRepositories();
+			var o:Object = getResultObject(s);
+			if (o.message == 'Bad credentials'){
+				dispatchEvent(new AppEvent(AppEvent.LOGIN_FAILED));			
+			}	else if (o.message == 'No connection') {
+				dispatchEvent(new AppEvent(AppEvent.OFFLINE));
+			}	else if (o.message){
+			// handle any other mysterious errors //
+				o.method = BashMethods.LOGIN; dispatchDebug(o);
+			}	else{
+				_account.loginData = getResultObject(s);
+				getRepositories();
+			}
 		}
 
 		private function onRepositories(s:String):void
@@ -147,31 +158,19 @@ package model.proxies {
 			}
 		}
 		
-		private function onRemoteKeyAuthenticated(s:String):void
-		{
-			trace("GitHubLoginProxy.onRemoteKeyAuthenticated(s)", s);
-			dispatchEvent(new AppEvent(AppEvent.REMOTE_KEY_SET, _account));			
-		}
-		
-
-		private function onKeyRemovedFromRemote():void
-		{
-		}
-
-		private function onRemoteKeyRepaired():void
-		{
-		}
-		
 	// helpers //			
 		
 		private function getResultObject(s:String):Object
 		{
-			if (s.indexOf('[') == 0 || s.indexOf('{') == 0){
-				return new JSONDecoder(s, false).getValue();
+		// strip off any post headers we receive before parsing json //	
+			if (s.indexOf('[') != -1) {
+				return new JSONDecoder(s.substr(s.indexOf('[')), false).getValue();
+			}	else if (s.indexOf('{') != -1){
+				return new JSONDecoder(s.substr(s.indexOf('{')), false).getValue();
 			}	else{
 				return {result:s};
-			}
-		}
+			}					
+		}		
 				
 		private function dispatchLoginComplete():void
 		{

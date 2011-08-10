@@ -1,14 +1,14 @@
 package model.remote {
 
 	import events.AppEvent;
-	import model.AppModel;
-	import model.proxies.GitHubLoginProxy;
-	import model.vo.Remote;
 	import flash.events.EventDispatcher;
+	import model.AppModel;
+	import model.proxies.remote.LoginProxy;
+	import model.vo.Remote;
 	
 	public class AccountManager extends EventDispatcher {
 
-		private var _login			:GitHubLoginProxy = AppModel.proxies.githubApi;
+		private var _login			:LoginProxy = AppModel.proxies.ghLogin;
 		private var _loggedIn		:Boolean;
 		private var _primary		:RemoteAccount;
 		private var _accounts		:Vector.<RemoteAccount> = new Vector.<RemoteAccount>();

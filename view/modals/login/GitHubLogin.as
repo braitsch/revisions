@@ -20,7 +20,7 @@ package view.modals.login {
 			super.setTextFields('Github');
 			super.setTitle(_view, 'Login To Github');
 			super.accountBtn = new GitHubButton();
-			AppModel.proxies.githubApi.addEventListener(AppEvent.LOGOUT, onLogout);			
+			AppModel.proxies.ghLogin.addEventListener(AppEvent.LOGOUT, onLogout);			
 		}
 
 		public function set onSuccessEvent(e:String):void 
@@ -43,14 +43,14 @@ package view.modals.login {
 				lockScreen();
 				var k:uint = Accounts.getAccountSSHKey(RemoteAccount.GITHUB, super.name);
 				var o:Object = {type:RemoteAccount.GITHUB, user:super.name, pass:super.pass, sshKeyId:k};
-				AppModel.proxies.githubApi.login(new RemoteAccount(o));
+				AppModel.proxies.ghLogin.login(new RemoteAccount(o));
 			}
 		}
 		
 		private function onLogout(e:AppEvent):void
 		{
 			onLoginButton();
-			AppModel.proxies.githubApi.removeEventListener(AppEvent.LOGOUT, onLogout);
+			AppModel.proxies.ghLogin.removeEventListener(AppEvent.LOGOUT, onLogout);
 		}
 		
 		override protected function onLoginSuccess(e:AppEvent):void
