@@ -42,7 +42,8 @@ package view.modals.login {
 				AppModel.proxies.githubApi.addEventListener(AppEvent.LOGOUT, onLogout);
 			}	else{
 				lockScreen();
-				var o:Object = {type:RemoteAccount.GITHUB, user:_view.name_txt.text, pass:_view.pass_txt.text};
+			// check db account for a match and retrieve ssh-key-id	
+				var o:Object = {type:RemoteAccount.GITHUB, user:super.name, pass:super.pass};
 				var a:RemoteAccount = new RemoteAccount(o);
 				AppModel.proxies.githubApi.login(a);
 			}
