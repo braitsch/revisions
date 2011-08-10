@@ -21,6 +21,9 @@ package view.modals.login {
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		
+		override public function get name():String { return _view.name_txt.text; }
+		protected function get pass():String { return _view.pass_txt.text; }
+		
 		protected function validate():Boolean
 		{
 			if (_view.name_txt.text && _view.pass_txt.text){

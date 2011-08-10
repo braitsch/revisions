@@ -3,15 +3,19 @@ package model.vo {
 
 	public class Remote {
 
-		private var _name		:String;
+		private var _name		:String; //TODO can we get rid of this????
 		private var _url		:String;
 		private var _type		:String;
+		private var _acctName	:String;
+		private var _repoName	:String;
 		private var _branches	:Array = [];
 
 		public function Remote($name:String, $url:String)
 		{
 			_name = $name; _url = $url;
 			detectAccountType();
+			detectAccountName();
+			_repoName = _url.substr(_url.lastIndexOf('/')+1);
 		}
 
 		private function detectAccountType():void
@@ -24,7 +28,20 @@ package model.vo {
 				_type = RemoteAccount.PRIVATE;
 			}
 		}
-
+		
+		private function detectAccountName():void
+		{
+			if (_url.indexOf('https://') != -1){
+				_acctName = _url.substring(8, _url.indexOf('@'));
+			}	else if (_url.indexOf('git@') != -1){
+				if (_url.indexOf('github') != -1){
+					_acctName = _url.substring(15, _url.indexOf('/'));
+				}	else if (_url.indexOf('beanstalk') != -1){
+					_acctName = _url.substring(4, _url.indexOf('.'));
+				}
+			}
+		}
+		
 		public function get name():String
 		{
 			return _name;
@@ -33,7 +50,17 @@ package model.vo {
 		public function get type():String
 		{
 			return _type;
-		}		
+		}	
+		
+		public function get acctName():String
+		{
+			return _acctName;
+		}	
+		
+		public function get repoName():String
+		{
+			return _repoName;
+		}						
 		
 		public function get realName():String
 		{

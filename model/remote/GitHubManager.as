@@ -79,7 +79,7 @@ package model.remote {
 			return null;
 		}
 		
-		public function getHttpsURL(url:String):String
+		private function getHttpsURL(url:String):String
 		{
 			for (var i:int = 0; i < _accounts.length; i++) {
 				var usr:String = _accounts[i].user;
@@ -103,8 +103,8 @@ package model.remote {
 		
 		private function buildHttpsURL(u:String, a:RemoteAccount):String
 		{
-			var r:String = u.substr(u.lastIndexOf('/'));
-			return 'https://'+a.user+':'+a.pass+'@github.com/'+a.user+r;
+			var repo:String = u.substr(u.lastIndexOf('/'));
+			return 'https://'+a.user+':'+a.pass+'@github.com/'+a.user+repo;
 		}
 		
 //git@braitsch.beanstalkapp.com:/testing.git

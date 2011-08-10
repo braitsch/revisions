@@ -11,7 +11,7 @@ package view.modals.login {
 	
 	public class GitHubLogin extends BaseAccountLogin {
 
-		private static var _view				:LoginMC = new LoginMC();
+		private static var _view				:AccountLoginMC = new AccountLoginMC();
 		private static var _onSuccessEvent		:String;
 
 		public function GitHubLogin()

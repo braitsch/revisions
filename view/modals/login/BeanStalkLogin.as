@@ -6,7 +6,7 @@ package view.modals.login {
 	import flash.net.navigateToURL;
 	public class BeanStalkLogin extends BaseAccountLogin {
 
-		private static var _view				:LoginMC = new LoginMC();
+		private static var _view				:AccountLoginMC = new AccountLoginMC();
 		private static var _onSuccessEvent		:String;
 
 		public function BeanStalkLogin()

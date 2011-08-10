@@ -1,5 +1,6 @@
 package view.modals {
 
+	import view.modals.login.RemotePassword;
 	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.UIEvent;
@@ -61,6 +62,7 @@ package view.modals {
 		private static var _gitUpgrade		:GitUpgrade = new GitUpgrade();
 		private static var _ghLogin			:GitHubLogin = new GitHubLogin();
 		private static var _bsLogin			:BeanStalkLogin = new BeanStalkLogin();
+		private static var _remotePswd		:RemotePassword = new RemotePassword();
 		private static var _addToGitHub		:AddGitHubRepo = new AddGitHubRepo();
 		private static var _addToBeanstalk	:AddBeanstalkRepo = new AddBeanstalkRepo();
 		private static var _clone			:AnonymousClone = new AnonymousClone();		
@@ -292,8 +294,8 @@ package view.modals {
 		
 		private function showPasswordPrompt(e:AppEvent):void
 		{
-			var r:Remote = e.data as Remote;
-			trace("ModalManager.showPasswordPrompt(e) for", r.url);
+			_remotePswd.remote = e.data as Remote;
+			showModalWindow(_remotePswd);	
 		}		
 		
 		private function showLoader(e:AppEvent):void

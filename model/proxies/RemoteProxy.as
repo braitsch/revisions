@@ -42,19 +42,35 @@ package model.proxies {
 			b ? syncNextRemote(false) : onSyncComplete();
 		}
 		
+		public function skipRemoteSync():void
+		{
+			onSyncComplete();
+		}
+		
+		public function attemptSyncOverHTTPS(https:String):void
+		{
+			_url = https;
+			checkToPushOrPull(true);
+		}
+		
 		private function syncNextRemote(warn:Boolean = true):void
 		{
 			_remote = _remotes[_index];
 			_url = getRemoteURL(_remote);
 			if (_url != null){
-				if (_remote.hasBranch(AppModel.branch.name)){
-					pullRemote();				
-				}	else{
-					warn ? dispatchConfirm() : pushRemote();
-				}
+				checkToPushOrPull(warn);
 			}	else{
 				dispatchEvent(new AppEvent(AppEvent.PROMPT_FOR_REMOTE_PSWD, _remote));
 			}
+		}
+		
+		private function checkToPushOrPull(warn:Boolean = true):void
+		{
+			if (_remote.hasBranch(AppModel.branch.name)){
+				pullRemote();				
+			}	else{
+				warn ? dispatchConfirm() : pushRemote();
+			}			
 		}
 		
 		private function pullRemote():void
