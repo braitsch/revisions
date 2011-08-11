@@ -15,9 +15,10 @@ package model.remote {
 		{
 			if (type == RemoteAccount.BEANSTALK) return;
 			_login.addEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);
+			_login.addEventListener(AppEvent.LOGOUT_SUCCESS, onLogoutSuccess);
 			_login.addEventListener(AppEvent.REMOTE_KEY_SET, onPrimaryAccountSet);
 		}
-		
+
 		public function addAccount(a:RemoteAccount):void
 		{
 			_accounts.push(a);
@@ -27,12 +28,6 @@ package model.remote {
 		{
 			return _loggedIn;
 		}	
-		
-		public function set loggedIn(b:Boolean):void
-		{
-			_loggedIn = b;
-			if (b == false) dispatchLoggedOutAlert();
-		}				
 		
 		public function getAccountByName(n:String):RemoteAccount
 		{
@@ -57,6 +52,12 @@ package model.remote {
 			setPrimaryAccount();
 		}
 		
+		private function onLogoutSuccess(e:AppEvent):void
+		{
+			_loggedIn = false;
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, 'You Have Successfully Logged Out.'));			
+		}
+		
 		private function checkAccountAlreadyExists(a:RemoteAccount):RemoteAccount
 		{
 			for (var i:int = 0; i < _accounts.length; i++) if (_accounts[i].type == a.type && _accounts[i].user == a.user) return _accounts[i];
@@ -73,11 +74,6 @@ package model.remote {
 		{
 			AppModel.database.setSSHKeyId(e.data as RemoteAccount);
 		}		
-		
-		private function dispatchLoggedOutAlert():void
-		{
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, 'You Have Successfully Logged Out.'));				
-		}
 		
 //git@braitsch.beanstalkapp.com:/testing.git
 //git@github.com:braitsch/Revisions-Source.git

@@ -25,6 +25,11 @@ package model.proxies.remote {
 			super.call(Vector.<String>([BashMethods.LOGIN, _account.user, _account.pass]));
 		}
 		
+		public function logout():void
+		{
+			super.call(Vector.<String>([BashMethods.LOGOUT]));
+		}		
+		
 		public function setPrimaryAccount(n:RemoteAccount, o:RemoteAccount = null):void
 		{
 			_account = n;
@@ -37,17 +42,17 @@ package model.proxies.remote {
 		
 		private function getRepositories():void
 		{
-			super.call(Vector.<String>([BashMethods.GET_REPOSITORIES, _account.user, _account.pass]));
+			super.call(Vector.<String>([BashMethods.GET_REPOSITORIES]));
 		}		
 		
 		private function getRemoteKeyById():void
 		{
-			super.call(Vector.<String>([BashMethods.GET_REMOTE_KEY, _account.user, _account.pass, _account.sshKeyId]));	
+			super.call(Vector.<String>([BashMethods.GET_REMOTE_KEY, _account.sshKeyId]));	
 		}
 		
 		private function repairRemoteKey():void
 		{
-			super.call(Vector.<String>([BashMethods.REPAIR_REMOTE_KEY, _account.user, _account.pass, _account.sshKeyId]));	
+			super.call(Vector.<String>([BashMethods.REPAIR_REMOTE_KEY, _account.sshKeyId]));	
 		}	
 		
 		private function authenticate():void
@@ -65,6 +70,9 @@ package model.proxies.remote {
 				case BashMethods.LOGIN :
 					onLoginResult(r);
 				break;
+				case BashMethods.LOGOUT :
+					dispatchEvent(new AppEvent(AppEvent.LOGOUT_SUCCESS));
+				break;				
 				case BashMethods.GET_REPOSITORIES :
 					if (!message(m, r)) onRepositories(r);
 				break;				
@@ -102,7 +110,7 @@ package model.proxies.remote {
 		{
 			var o:Object = getResultObject(s);
 			if (o.message == 'Bad credentials'){
-				dispatchEvent(new AppEvent(AppEvent.LOGIN_FAILED));			
+				dispatchEvent(new AppEvent(AppEvent.LOGIN_FAILED));
 			}	else if (o.message == 'No connection') {
 				dispatchEvent(new AppEvent(AppEvent.OFFLINE));
 			}	else if (o.message){

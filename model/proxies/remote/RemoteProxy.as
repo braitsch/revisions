@@ -7,6 +7,7 @@ package model.proxies.remote {
 	import model.db.AppSettings;
 	import model.vo.Remote;
 	import system.BashMethods;
+	import com.adobe.serialization.json.JSONDecoder;
 	
 	public class RemoteProxy extends NativeProcessProxy {
 		
@@ -106,7 +107,7 @@ package model.proxies.remote {
 		{
 			var m:String = e.data.method;
 			var r:String = e.data.result;
-			if (checkForErrors(r)) return;
+			if (hasStringErrors(r)) return;
 			trace("RemoteProxy.onProcessComplete(e)", m, r);
 			switch(e.data.method){
 				case BashMethods.ADD_REPOSITORY : 
@@ -127,6 +128,10 @@ package model.proxies.remote {
 	//TODO
 		private function onRepositoryCreated(s:String):void
 		{
+			var o:Object = getResultObject(s);
+			if (hasJSONErrors(o) == false){
+				
+			}
 	//		AppModel.proxies.ghRemote.addRemote(new Remote(_name, e.data as String));
 		}
 		
@@ -138,7 +143,31 @@ package model.proxies.remote {
 			AppModel.bookmark.addRemote(_remote);			
 		}
 		
-		private function checkForErrors(s:String):Boolean
+		private function getResultObject(s:String):Object
+		{
+		// strip off any post headers we receive before parsing json //	
+			if (s.indexOf('[') != -1) {
+				return new JSONDecoder(s.substr(s.indexOf('[')), false).getValue();
+			}	else if (s.indexOf('{') != -1){
+				return new JSONDecoder(s.substr(s.indexOf('{')), false).getValue();
+			}	else{
+				return {result:s};
+			}					
+		}
+		
+		private function hasJSONErrors(o:Object):Boolean
+		{
+			var f:Boolean;
+			trace("RemoteProxy.hasJSONErrors(o)", o.message);
+			trace("RemoteProxy.hasJSONErrors(o)", o.errors);
+			if (o.message == null) return false;
+			if (o.errors.message == 'name is already taken'){
+				trace('repo taken, try something else');
+			}
+			return f;			
+		}
+		
+		private function hasStringErrors(s:String):Boolean
 		{
 			var f:Boolean;
 			if (hasString(s, 'The requested URL returned error: 403')){

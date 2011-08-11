@@ -46,6 +46,7 @@ package system{
 		
 	// github & beanstalk login methods //
 		public static const LOGIN					:String = 'login';
+		public static const LOGOUT					:String = 'logout';
 		public static const GET_REPOSITORIES		:String = 'getRepositories';
 		public static const GET_REMOTE_KEY			:String = 'getKeyById';
 		public static const ADD_KEY_TO_REMOTE		:String = 'addKeyToRemote';
@@ -53,10 +54,7 @@ package system{
 		public static const REMOVE_KEY_FROM_REMOTE	:String = 'deleteKeyFromRemote';
 		public static const AUTHENTICATE			:String = 'authenticate';
 		
-		public static const LOGOUT					:String = 'logout';
-		public static const GET_CACHED_KEY_ID		:String = 'getCachedKeyId';
-		
-		public static const ADD_REPOSITORY			:String = 'addRepository';
+		public static const ADD_REPOSITORY			:String = 'newRepositoryOnAccount';
 		public static const EDIT_REPOSITORY			:String = 'editRepository';
 		public static const CLONE_REPOSITORY		:String = 'cloneRepository';
 		

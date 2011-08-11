@@ -1,5 +1,6 @@
 package view.modals.remote {
 
+	import model.remote.RemoteAccount;
 	import events.AppEvent;
 	import events.UIEvent;
 	import fl.text.TLFTextField;
@@ -13,7 +14,6 @@ package view.modals.remote {
 	public class AddRemoteRepo extends ModalWindow {
 
 		private var _bkmk	:Bookmark;
-		private var _name	:String;
 		private var _view	:NewRemoteMC = new NewRemoteMC();
 		private var _check	:ModalCheckbox = new ModalCheckbox(_view.check, false);	
 		private var _proxy	:RemoteProxy;	
@@ -36,13 +36,16 @@ package view.modals.remote {
 		public function set bookmark(b:Bookmark):void
 		{
 			_bkmk = b;
-			_view.name_txt.text = _bkmk.label;	
+			_view.name_txt.text = _bkmk.label.toLowerCase().replace(' ', '-');
 		}
 		
 		override public function onEnterKey():void { onOkButton();}		
 		protected function onOkButton(e:MouseEvent = null):void 
 		{ 
-			if (validate()) addRepository();
+			if (validate()) {
+				_proxy.createRemoteRepository(_view.name_txt.text, _view.desc_txt.text, _check.selected==false);
+				AppModel.proxies.ghRemote.addEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);				
+			}
 		}
 		
 		private function validate():Boolean
@@ -58,21 +61,15 @@ package view.modals.remote {
 			}
 		}
 		
+		// github-revisions-source
 		protected function checkForDuplicate():Boolean
 		{
-		//TODO this shit needs to be updated //	
-			_name = 'rvgh-'+_view.name_txt.text.replace(/\s/, '-').toLowerCase();
-			if (_bkmk.getRemoteByProp('name', _name)){
+			var n:String = _view.name_txt.text.replace(/\s/, '-').toLowerCase();
+			if (_bkmk.getRemoteByProp('name', RemoteAccount.GITHUB+'-'+n)){
 				return true;
 			}	else{
 				return false;
 			}
-		}
-		
-		protected function addRepository():void
-		{
-			_proxy.createRemoteRepository(_view.name_txt.text, _view.desc_txt.text, _check.selected==false);
-			AppModel.proxies.ghRemote.addEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);
 		}
 		
 		private function onRemoteSynced(e:AppEvent):void

@@ -3,7 +3,6 @@ package view.modals.remote {
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
-	import model.remote.Accounts;
 	import model.remote.RemoteAccount;
 	import view.modals.ModalWindow;
 	import flash.display.Sprite;
@@ -30,6 +29,7 @@ package view.modals.remote {
 			addEventListener(UIEvent.LOGGED_IN_CLONE, onCloneClick);		
 			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);
 			AppModel.engine.addEventListener(AppEvent.REMOTE_READY, onAccountReady);
+			AppModel.proxies.ghLogin.addEventListener(AppEvent.LOGOUT_SUCCESS, onLogout);			
 		}
 
 		private function onAccountReady(e:AppEvent):void
@@ -163,7 +163,11 @@ package view.modals.remote {
 		
 		private function onLogOutClick(e:MouseEvent):void
 		{
-			Accounts.github.loggedIn = false;
+			AppModel.proxies.ghLogin.logout();
+		}
+
+		private function onLogout(e:AppEvent):void
+		{
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 		}
 
