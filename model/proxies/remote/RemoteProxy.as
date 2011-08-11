@@ -1,12 +1,10 @@
 package model.proxies.remote {
 
-	import model.db.AppSettings;
-	import model.remote.RemoteAccount;
-	import model.remote.Accounts;
 	import events.AppEvent;
 	import events.NativeProcessEvent;
 	import model.AppModel;
 	import model.air.NativeProcessProxy;
+	import model.db.AppSettings;
 	import model.vo.Remote;
 	import system.BashMethods;
 	
@@ -26,14 +24,6 @@ package model.proxies.remote {
 			super.executable = 'Remote.sh';
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 		}
-		
-	// called only from RemoRepo //	
-//		public function addRemote($remote:Remote):void
-//		{
-//			_remote = $remote;
-//			super.directory = AppModel.bookmark.gitdir;
-//			super.call(Vector.<String>([BashMethods.ADD_REMOTE, _remote.name, _remote.url]));
-//		}
 		
 		public function cloneRemoteRepository(url:String, loc:String):void
 		{
@@ -87,6 +77,13 @@ package model.proxies.remote {
 			checkToPushOrPull();
 		}
 		
+		private function addRemote(r:Remote):void
+		{
+			_remote = r;
+			super.directory = AppModel.bookmark.gitdir;
+			super.call(Vector.<String>([BashMethods.ADD_REMOTE, _remote.name, _remote.defaultURL]));
+		}		
+		
 		private function pullRemote():void
 		{
 			super.directory = AppModel.bookmark.gitdir;
@@ -106,21 +103,33 @@ package model.proxies.remote {
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
-			trace("RemoteProxy.onProcessComplete(e)", e.data.method, e.data.result);
-			return;
+			var m:String = e.data.method;
+			var r:String = e.data.result;
+			if (checkForErrors(m, r)) return;
+			trace("RemoteProxy.onProcessComplete(e)", m, r);
 			switch(e.data.method){
+				case BashMethods.ADD_REPOSITORY : 
+					onRepositoryCreated(r);
+				break;					
 				case BashMethods.ADD_REMOTE : 
-					onAddRemoteComplete(e.data.result);
+					onAddRemoteComplete(r);
 				break;	
 				case BashMethods.PULL_REMOTE : 
-					onPullComplete(e.data.result);
+					pushRemote();
 				break;	
 				case BashMethods.PUSH_REMOTE : 
-					onPushComplete(e.data.result);
+					onSyncComplete();
 				break;	
-			}			
+			}
+		}
+
+	//TODO
+		private function onRepositoryCreated(s:String):void
+		{
+	//		AppModel.proxies.ghRemote.addRemote(new Remote(_name, e.data as String));
 		}
 		
+	//TODO	
 		private function onAddRemoteComplete(s:String):void
 		{
 		// if no errors //			
@@ -128,17 +137,21 @@ package model.proxies.remote {
 			AppModel.bookmark.addRemote(_remote);			
 		}
 		
-		private function onPullComplete(s:String):void
+		private function checkForErrors(m:String, s:String):Boolean
 		{
-		// if no errors //	
-			pushRemote();
+			var msg:String;
+			if (hasString(s, 'The requested URL returned error: 403')){
+				msg = 'RemoteProxy.noErrors(s) -- username/pass failed';
+			}	else if (hasString(s, "Couldn't resolve host")){
+				msg = 'Host URL error';
+			}	else if (hasString(s, 'fatal:')){
+				msg = 'Some other error occurred, check the URL';
+			}
+			if (msg) trace(m, 'failed ::', msg);
+			return msg == null;
 		}
 		
-		private function onPushComplete(s:String):void
-		{
-		// if no errors //	
-			onSyncComplete();
-		}		
+		private function hasString(s1:String, s2:String):Boolean { return s1.indexOf(s2) != -1; }
 		
 		private function onSyncComplete():void
 		{

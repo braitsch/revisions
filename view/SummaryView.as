@@ -189,7 +189,7 @@ package view {
 			if (m){
 				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
 			}	else{
-			//	_locked = true;
+				_locked = true;
 				var v:Vector.<Remote> = _bookmark.remotes.concat();
 				AppModel.proxies.ghRemote.syncRemotes(v);
 				AppModel.proxies.ghRemote.addEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);
