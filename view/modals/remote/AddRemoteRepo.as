@@ -10,7 +10,7 @@ package view.modals.remote {
 	import view.ui.ModalCheckbox;
 	import flash.events.MouseEvent;
 
-	public class RemoteRepo extends ModalWindow {
+	public class AddRemoteRepo extends ModalWindow {
 
 		private var _bkmk	:Bookmark;
 		private var _name	:String;
@@ -18,11 +18,11 @@ package view.modals.remote {
 		private var _check	:ModalCheckbox = new ModalCheckbox(_view.check, false);	
 		private var _proxy	:RemoteProxy;	
 
-		public function RemoteRepo()
+		public function AddRemoteRepo()
 		{
 			addChild(_view);
 			super.addCloseButton(550);
-			super.addButtons([_view.ok_btn]);
+			super.defaultButton = _view.ok_btn;			
 			super.addInputs(Vector.<TLFTextField>([_view.name_txt, _view.desc_txt]));
 			_view.form.label1.text = 'Name';
 			_view.form.label2.text = 'Description';

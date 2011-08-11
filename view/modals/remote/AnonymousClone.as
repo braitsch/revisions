@@ -17,7 +17,7 @@ package view.modals.remote {
 			addChild(_view);
 			super.addCloseButton();
 			super.drawBackground(550, 200);
-			super.addButtons([_view.clone_btn]);
+			super.defaultButton = _view.clone_btn;
 			super.addInputs(Vector.<TLFTextField>([_view.url_txt]));
 			super.setTitle(_view, 'Clone Repository');
 			super.setHeading(_view, "Please enter the URL of the repository you'd like to clone.");	

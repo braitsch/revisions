@@ -17,8 +17,53 @@ package model.vo {
 		{
 			_name = name; 
 			inspectURL(url);
+		}		
+		
+		public function get name()			:String { return _name; }
+		public function get type()			:String { return _type; }	
+		public function get acctName()		:String { return _acctName; }	
+		public function get repoName()		:String { return _repoName; }
+		public function get defaultURL()	:String { return _ssh || this.https; }
+		
+		public function get https():String
+		{
+			var a:RemoteAccount = Accounts.getAccountByName(_type, _acctName);
+			if (a == null) {
+				return null;
+			}	else{
+				return buildHttpsURL(a.user, a.pass);
+			}
 		}
 
+		public function buildHttpsURL(u:String, p:String):String
+		{
+			return 'https://' + u + ':' + p + '@github.com/' + u +'/'+ _repoName;
+		}
+		
+		public function get realName():String
+		{
+			var rn:String = _name;
+			if (_name.indexOf('rvgh-') != -1) rn = _name.substr(5);
+			if (_name.indexOf('rvbs-') != -1) rn = _name.substr(5);
+			if (_name.indexOf('rvpr-') != -1) rn = _name.substr(5);
+			var a:Array = rn.split('-');
+			for (var i:int = 0; i < a.length; i++) a[i] = a[i].substr(0, 1).toUpperCase() + a[i].substr(1);
+			return a.join(' ');
+		}		
+
+		public function addBranch(s:String):void
+		{
+			_branches.push(s);
+		}
+		
+		public function hasBranch(s:String):Boolean
+		{
+			for (var i:int = 0; i < _branches.length; i++) if (_branches[i] == s) return true;
+			return false;
+		}
+	
+	// private //	
+		
 		private function inspectURL(s:String):void
 		{
 			if (s.indexOf('git') == 0){
@@ -46,64 +91,7 @@ package model.vo {
 			_https = s;
 			_type = RemoteAccount.GITHUB;
 			_acctName = s.substring(8, s.indexOf('@'));			
-		}
-		
-		public function get defaultURL():String
-		{
-			return _ssh || this.https;
-		}
-		
-		public function get https():String
-		{
-			var a:RemoteAccount = Accounts.getAccountByName(_type, _acctName);
-			if (a == null) {
-				return null;
-			}	else{
-				return 'https://' + a.user + ':' + a.pass + '@github.com/' + a.user +'/'+ _repoName;
-			}
-		}
-
-		public function get name():String
-		{
-			return _name;
-		}
-		
-		public function get type():String
-		{
-			return _type;
-		}	
-		
-		public function get acctName():String
-		{
-			return _acctName;
-		}	
-		
-		public function get repoName():String
-		{
-			return _repoName;
-		}						
-		
-		public function get realName():String
-		{
-			var rn:String = _name;
-			if (_name.indexOf('rvgh-') != -1) rn = _name.substr(5);
-			if (_name.indexOf('rvbs-') != -1) rn = _name.substr(5);
-			if (_name.indexOf('rvpr-') != -1) rn = _name.substr(5);
-			var a:Array = rn.split('-');
-			for (var i:int = 0; i < a.length; i++) a[i] = a[i].substr(0, 1).toUpperCase() + a[i].substr(1);
-			return a.join(' ');
 		}		
-
-		public function addBranch(s:String):void
-		{
-			_branches.push(s);
-		}
-		
-		public function hasBranch(s:String):Boolean
-		{
-			for (var i:int = 0; i < _branches.length; i++) if (_branches[i] == s) return true;
-			return false;
-		}
 
 	}
 	

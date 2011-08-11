@@ -15,9 +15,7 @@ package model.proxies.remote {
 
 		private static var _remote		:Remote;
 		private static var _remoteURL	:String;
-		
-//		private static var _connectionErrors	:Array = [	'fatal: unable to connect a socket',
-//															'fatal: The remote end hung up unexpectedly'];		
+		private static var _prompt		:Boolean;
 		
 		public function RemoteProxy()
 		{
@@ -40,12 +38,33 @@ package model.proxies.remote {
 			_index = 0; _remotes = v; syncNextRemote();
 		}
 		
+	// callbacks //	
+		
+		public function onConfirm(b:Boolean):void
+		{
+			_prompt = b;
+			_prompt ? onSyncComplete() : pushRemote();
+		}		
+		
+		public function skipRemoteSync():void 
+		{ 
+			onSyncComplete(); 
+		}
+		
+		public function attemptManualHttpsSync(u:String, p:String):void
+		{
+			_remoteURL = _remote.buildHttpsURL(u, p);
+			checkToPushOrPull();
+		}		
+		
+	// private //	
+		
 		private function syncNextRemote():void
 		{
+			trace("RemoteProxy -- syncing remote "+(_index+1));
 			_remote = _remotes[_index];
 			_remoteURL = _remote.defaultURL;
 			checkToPushOrPull();
-	//		dispatchEvent(new AppEvent(AppEvent.PROMPT_FOR_REMOTE_PSWD, _remote));
 		}
 		
 		private function checkToPushOrPull():void
@@ -54,27 +73,12 @@ package model.proxies.remote {
 				pullRemote();				
 			}	else{
 				var w:Boolean = AppSettings.getSetting(AppSettings.PROMPT_NEW_REMOTE_BRANCHES);
-				if (w == false){
+				if (w == false || _prompt == false){
 					pushRemote();
 				}	else{
-					dispatchConfirm();
+					dispatchConfirmPushNewBranch();
 				}
 			}			
-		}
-		
-		public function onConfirm(b:Boolean):void
-		{
-			b ? onSyncComplete() : pushRemote();
-		}		
-		
-		public function skipRemoteSync():void
-		{
-			onSyncComplete();
-		}
-		
-		public function attemptManualHttpsSync(url:String):void
-		{
-			checkToPushOrPull();
 		}
 		
 		private function addRemote(r:Remote):void
@@ -86,26 +90,23 @@ package model.proxies.remote {
 		
 		private function pullRemote():void
 		{
+			trace("Attempting.pullRemote() -- ", _remoteURL);
 			super.directory = AppModel.bookmark.gitdir;
 			super.call(Vector.<String>([BashMethods.PULL_REMOTE, _remoteURL, AppModel.branch.name]));
 		}
 		
 		private function pushRemote():void
 		{
+			trace("Attempting.pushRemote() -- ", _remoteURL);
 			super.directory = AppModel.bookmark.gitdir;
 			super.call(Vector.<String>([BashMethods.PUSH_REMOTE, _remoteURL, AppModel.branch.name]));
 		}
-		
-	// when pushing / pulling  
-	// always attempt over ssh if an ssh url exists //
-	// if ssh fails, attempt over https if we have an https url
-	// if no https url or https fails, prompt user for https user/pass				
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
 			var m:String = e.data.method;
 			var r:String = e.data.result;
-			if (checkForErrors(m, r)) return;
+			if (checkForErrors(r)) return;
 			trace("RemoteProxy.onProcessComplete(e)", m, r);
 			switch(e.data.method){
 				case BashMethods.ADD_REPOSITORY : 
@@ -137,28 +138,41 @@ package model.proxies.remote {
 			AppModel.bookmark.addRemote(_remote);			
 		}
 		
-		private function checkForErrors(m:String, s:String):Boolean
+		private function checkForErrors(s:String):Boolean
 		{
-			var msg:String;
+			var f:Boolean;
 			if (hasString(s, 'The requested URL returned error: 403')){
-				msg = 'RemoteProxy.noErrors(s) -- username/pass failed';
-			}	else if (hasString(s, "Couldn't resolve host")){
-				msg = 'Host URL error';
+				f = true;
+				dispatchEvent(new AppEvent(AppEvent.PROMPT_FOR_REMOTE_PSWD, _remote));
+			}	else if (hasString(s, 'Permission denied (publickey)')){
+				f = true;
+				dispatchEvent(new AppEvent(AppEvent.PROMPT_FOR_REMOTE_PSWD, _remote));
+			}	else if (hasString(s, 'Authentication failed')){
+				f = true;
+				dispatchEvent(new AppEvent(AppEvent.PROMPT_FOR_REMOTE_PSWD, _remote));				
+			}	else if (hasString(s, 'Couldn\'t resolve host')){
+				f = true;
+				dispatchAlert('Could not connect to server, did you enter the URL correctly?');
+			}	else if (hasString(s, 'fatal: The remote end hung up unexpectedly')){
+				f = true;
+				dispatchAlert('Whoops! Connection attempt failed, please check your internetz.');
 			}	else if (hasString(s, 'fatal:')){
-				msg = 'Some other error occurred, check the URL';
+				f = true;
+				dispatchAlert('Eek, not sure what just happened, here are the details : '+s);
 			}
-			if (msg) trace(m, 'failed ::', msg);
-			return msg != null;
+			return f;
 		}
 		
 		private function hasString(s1:String, s2:String):Boolean { return s1.indexOf(s2) != -1; }
 		
 		private function onSyncComplete():void
 		{
+			_prompt = true;
 			_remotes.splice(_index, 1);
 			if (_remotes.length){
 				syncNextRemote();
 			}	else{
+				trace("RemoteProxy -- all remotes sunk! ");				
 				dispatchEvent(new AppEvent(AppEvent.REMOTE_SYNCED));
 				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 			}
@@ -166,13 +180,12 @@ package model.proxies.remote {
 		
 	// dispatch messages //	
 		
-		private function dispatchDebug(o:Object):void
+		private function dispatchAlert(m:String):void
 		{
-			o.source = 'RemoteProxy.onProcessFailure(e)';
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_DEBUG, o));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
 		}	
 		
-		private function dispatchConfirm():void
+		private function dispatchConfirmPushNewBranch():void
 		{
 			var m:String = 'The current branch "'+AppModel.branch.name+'" is not currently being tracked by your '+_remote.type+' repository: "'+_remote.realName+'".';
 				m+= '\nAre you sure you want to continue?';

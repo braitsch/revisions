@@ -2,7 +2,7 @@ package view.modals.remote {
 
 	import model.AppModel;
 
-	public class AddGitHubRepo extends RemoteRepo {
+	public class AddGitHubRepo extends AddRemoteRepo {
 
 		public function AddGitHubRepo()
 		{

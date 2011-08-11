@@ -38,7 +38,7 @@ package view.modals {
 	import view.modals.remote.AddGitHubRepo;
 	import view.modals.remote.AnonymousClone;
 	import view.modals.remote.GitHubHome;
-	import view.modals.remote.RemoteRepo;
+	import view.modals.remote.AddRemoteRepo;
 	import view.modals.system.Alert;
 	import view.modals.system.Confirm;
 	import view.modals.system.Debug;
@@ -207,7 +207,7 @@ package view.modals {
 		
 		private function addBkmkToRemote(e:UIEvent):void
 		{
-			var w:RemoteRepo;
+			var w:AddRemoteRepo;
 			switch(e.data){
 				case RemoteAccount.GITHUB :	w = _addToGitHub; break;
 				case RemoteAccount.BEANSTALK : w = _addToBeanstalk; break;

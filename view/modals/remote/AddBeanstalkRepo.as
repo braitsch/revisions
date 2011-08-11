@@ -1,8 +1,8 @@
 package view.modals.remote {
 
-	import view.modals.remote.RemoteRepo;
+	import view.modals.remote.AddRemoteRepo;
 
-	public class AddBeanstalkRepo extends RemoteRepo {
+	public class AddBeanstalkRepo extends AddRemoteRepo {
 
 		public function AddBeanstalkRepo()
 		{

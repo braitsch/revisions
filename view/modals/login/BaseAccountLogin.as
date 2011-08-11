@@ -15,7 +15,8 @@ package view.modals.login {
 			super(_view);
 			super.addCloseButton();
 			super.drawBackground(550, 240);
-			super.addButtons([_view.skip_btn, _view.login_btn]);
+			super.addButtons([_view.skip_btn]);
+			super.defaultButton = _view.login_btn;
 			_view.skip_btn.addEventListener(MouseEvent.CLICK, onSkipButton);
 			_view.login_btn.addEventListener(MouseEvent.CLICK, onLoginButton);	
 		}

@@ -16,7 +16,8 @@ package view.modals.login {
 			super(_view);
 			super.setTitle(_view, 'Credentials');
 			super.drawBackground(550, 240);
-			super.addButtons([_view.skip_btn, _view.ok_btn]);
+			super.addButtons([_view.skip_btn]);
+			super.defaultButton = _view.ok_btn;
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);
 			_view.skip_btn.addEventListener(MouseEvent.CLICK, onSkipButton);
 		}
@@ -26,25 +27,23 @@ package view.modals.login {
 			_remote = r;
 			_view.name_txt.text = _remote.acctName;
 			var t:String = StringUtils.capitalize(r.type);
-			var n:String = StringUtils.capitalize(r.acctName);
-			super.setHeading(_view, 'Please enter the password for the '+t+' account "'+n+'"');
+			super.setHeading(_view, 'Attempt to sync failed, please enter the password for the '+t+' account "'+r.acctName+'"');
 		}
 		
-		private function onOkButton(e:MouseEvent):void
+		override public function onEnterKey():void { onOkButton(); }
+		private function onOkButton(e:MouseEvent = null):void
 		{
-			var https:String = 'https://'+super.name+':'+super.pass+'@github.com/'+_remote.acctName+'/'+_remote.repoName;
-			AppModel.proxies.ghRemote.attemptManualHttpsSync(https);
-		}		
+			if (super.validate()) {
+				dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));		
+				AppModel.proxies.ghRemote.attemptManualHttpsSync(super.name, super.pass);
+			}
+		}
 		
 		private function onSkipButton(e:MouseEvent):void
 		{
 			AppModel.proxies.ghRemote.skipRemoteSync();
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 		}
-		
-//git@braitsch.beanstalkapp.com:/testing.git
-//git@github.com:braitsch/Revisions-Source.git
-//https://braitsch@github.com/braitsch/Revisions-Source.git		
 		
 	}
 	

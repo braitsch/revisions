@@ -36,7 +36,13 @@ package view.modals {
 			graphics.beginBitmapFill(new LtGreyPattern());
 			graphics.drawRect(4, 4, w-8, h-8);
 			graphics.endFill();
-		}		
+		}
+
+		protected function set defaultButton(b:Sprite):void
+		{
+			b['over'].alpha = 1;
+			b.mouseChildren = false;
+		}
 		
 		protected function addButtons(a:Array):void
 		{

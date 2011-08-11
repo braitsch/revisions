@@ -14,7 +14,7 @@ package view.modals.system {
 			addChild(_view);
 			super.drawBackground(550, 210);			
 			super.setTitle(_view, 'Achtung!');
-			super.addButtons([_view.ok_btn]);
+			super.defaultButton = _view.ok_btn;
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);
 		}
 
