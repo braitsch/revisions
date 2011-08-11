@@ -54,8 +54,6 @@ package model.proxies.remote {
 		{
 			_remote = _remotes[_index];
 			_remoteURL = _remote.defaultURL;
-			trace('_remoteURL: ' + (_remoteURL));
-			return;
 			checkToPushOrPull();
 	//		dispatchEvent(new AppEvent(AppEvent.PROMPT_FOR_REMOTE_PSWD, _remote));
 		}
