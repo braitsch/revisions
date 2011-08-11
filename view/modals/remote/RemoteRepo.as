@@ -78,7 +78,7 @@ package view.modals.remote {
 		private function onRepositoryCreated(e:AppEvent):void
 		{
 			_proxy.removeEventListener(AppEvent.REPOSITORY_CREATED, onRepositoryCreated);
-			AppModel.proxies.ghRemote.addRemote(new Remote(_name, e.data as String));
+	//		AppModel.proxies.ghRemote.addRemote(new Remote(_name, e.data as String));
 			AppModel.proxies.ghRemote.addEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);
 		}
 		

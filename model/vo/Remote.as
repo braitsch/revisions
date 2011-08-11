@@ -1,47 +1,68 @@
 package model.vo {
+
+	import model.remote.Accounts;
 	import model.remote.RemoteAccount;
 
 	public class Remote {
 
-		private var _name		:String; //TODO can we get rid of this????
-		private var _url		:String;
+		private var _name		:String; // ex. rvgh-revisions-source //
+		private var _ssh		:String;
+		private var _https		:String;
 		private var _type		:String;
 		private var _acctName	:String;
 		private var _repoName	:String;
 		private var _branches	:Array = [];
 
-		public function Remote($name:String, $url:String)
+		public function Remote(name:String, url:String)
 		{
-			_name = $name; _url = $url;
-			detectAccountType();
-			detectAccountName();
-			_repoName = _url.substr(_url.lastIndexOf('/')+1);
+			_name = name; 
+			inspectURL(url);
 		}
 
-		private function detectAccountType():void
+		private function inspectURL(s:String):void
 		{
-			if (_url.indexOf('github.com') != -1) {
+			if (s.indexOf('git') == 0){
+				parseSSH(s);
+			}	else if (s.indexOf('https') == 0){
+				parseHTTPS(s);
+			}
+			_repoName = s.substr(s.lastIndexOf('/') + 1);			
+		}
+		
+		private function parseSSH(s:String):void
+		{
+			_ssh = s;
+			if (s.indexOf('github.com') != -1){
 				_type = RemoteAccount.GITHUB;
-			}	else if (_url.indexOf('beanstalkapp.com') != -1) {
+				_acctName = _ssh.substring(15, _ssh.indexOf('/'));
+			}	else if (s.indexOf('beanstalkapp.com') != -1){
 				_type = RemoteAccount.BEANSTALK;
-			}	else {
-				_type = RemoteAccount.PRIVATE;
-			}
+				_acctName = _ssh.substring(4, _ssh.indexOf('.'));
+			}			
 		}
 		
-		private function detectAccountName():void
+		private function parseHTTPS(s:String):void
 		{
-			if (_url.indexOf('https://') != -1){
-				_acctName = _url.substring(8, _url.indexOf('@'));
-			}	else if (_url.indexOf('git@') != -1){
-				if (_url.indexOf('github') != -1){
-					_acctName = _url.substring(15, _url.indexOf('/'));
-				}	else if (_url.indexOf('beanstalk') != -1){
-					_acctName = _url.substring(4, _url.indexOf('.'));
-				}
-			}
+			_https = s;
+			_type = RemoteAccount.GITHUB;
+			_acctName = s.substring(8, s.indexOf('@'));			
 		}
 		
+		public function get defaultURL():String
+		{
+			return _ssh || this.https;
+		}
+		
+		public function get https():String
+		{
+			var a:RemoteAccount = Accounts.getAccountByName(_type, _acctName);
+			if (a == null) {
+				return null;
+			}	else{
+				return 'https://' + a.user + ':' + a.pass + '@github.com/' + a.user +'/'+ _repoName;
+			}
+		}
+
 		public function get name():String
 		{
 			return _name;
@@ -73,11 +94,6 @@ package model.vo {
 			return a.join(' ');
 		}		
 
-		public function get url():String
-		{
-			return _url;
-		}
-		
 		public function addBranch(s:String):void
 		{
 			_branches.push(s);

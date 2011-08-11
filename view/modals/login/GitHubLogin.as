@@ -41,8 +41,8 @@ package view.modals.login {
 				Accounts.github.loggedIn = false;
 			}	else{
 				lockScreen();
-				var k:uint = Accounts.getAccountSSHKey(RemoteAccount.GITHUB, super.name);
-				var o:Object = {type:RemoteAccount.GITHUB, user:super.name, pass:super.pass, sshKeyId:k};
+				var a:RemoteAccount = Accounts.getAccountByName(RemoteAccount.GITHUB, super.name);
+				var o:Object = {type:RemoteAccount.GITHUB, user:super.name, pass:super.pass, sshKeyId:a ? a.sshKeyId : 0};
 				AppModel.proxies.ghLogin.login(new RemoteAccount(o));
 			}
 		}

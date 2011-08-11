@@ -15,7 +15,7 @@ package view.modals.bkmk {
 			_remote = rmt;
 			_view.url_txt.autoSize = TextFieldAutoSize.LEFT;
 			_view.name_txt.autoSize = TextFieldAutoSize.LEFT;
-			_view.url_txt.text = rmt.url;
+			_view.url_txt.text = rmt.defaultURL;
 			_view.name_txt.text = rmt.realName;
 			if (_view.name_txt.width <= 190){
 				_view.url_txt.x = 200;

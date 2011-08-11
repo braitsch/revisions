@@ -1,16 +1,14 @@
 package model.remote {
 
 	import events.AppEvent;
-	import flash.events.EventDispatcher;
 	import model.AppModel;
 	import model.proxies.remote.LoginProxy;
-	import model.vo.Remote;
+	import flash.events.EventDispatcher;
 	
 	public class AccountManager extends EventDispatcher {
 
 		private var _login			:LoginProxy = AppModel.proxies.ghLogin;
 		private var _loggedIn		:Boolean;
-		private var _primary		:RemoteAccount;
 		private var _accounts		:Vector.<RemoteAccount> = new Vector.<RemoteAccount>();
 
 		public function AccountManager(type:String)
@@ -81,48 +79,6 @@ package model.remote {
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, 'You Have Successfully Logged Out.'));				
 		}
 		
-	//////	
-		
-		
-		
-		public function getRemoteURL(r:Remote):String
-		{
-			if (isInPrimaryAccount(r.url)) {
-				return r.url;
-			}	else{
-				return getHttpsURL(r.url);
-			}
-			return null;
-		}
-		
-		private function getHttpsURL(url:String):String
-		{
-			for (var i:int = 0; i < _accounts.length; i++) {
-				var usr:String = _accounts[i].user;
-				if (url.indexOf('git@github.com:'+usr) != -1){
-					return buildHttpsURL(url, _accounts[i]);
-				}	else if (url.indexOf('https://'+usr) != -1){
-					return buildHttpsURL(url, _accounts[i]);
-				}
-			}
-			return null;
-		}
-		
-		private function isInPrimaryAccount(url:String):Boolean
-		{
-			if (_primary == null) {
-				return false;
-			}	else{
-				return (url.indexOf('git@github.com:'+_primary.user) != -1);
-			}
-		}		
-		
-		private function buildHttpsURL(u:String, a:RemoteAccount):String
-		{
-			var repo:String = u.substr(u.lastIndexOf('/'));
-			return 'https://' + a.user + ':' + a.pass + '@github.com/' + a.user + repo;
-		}
-
 //git@braitsch.beanstalkapp.com:/testing.git
 //git@github.com:braitsch/Revisions-Source.git
 //https://braitsch@github.com/braitsch/Revisions-Source.git

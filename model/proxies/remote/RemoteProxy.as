@@ -1,5 +1,6 @@
 package model.proxies.remote {
 
+	import model.db.AppSettings;
 	import model.remote.RemoteAccount;
 	import model.remote.Accounts;
 	import events.AppEvent;
@@ -11,10 +12,11 @@ package model.proxies.remote {
 	
 	public class RemoteProxy extends NativeProcessProxy {
 		
-		private static var _index	:uint;
-		private static var _url		:String;
-		private static var _remote	:Remote;
-		private static var _remotes	:Vector.<Remote>;
+		private static var _index		:uint;
+		private static var _remotes		:Vector.<Remote>;
+
+		private static var _remote		:Remote;
+		private static var _remoteURL	:String;
 		
 //		private static var _connectionErrors	:Array = [	'fatal: unable to connect a socket',
 //															'fatal: The remote end hung up unexpectedly'];		
@@ -26,127 +28,132 @@ package model.proxies.remote {
 		}
 		
 	// called only from RemoRepo //	
-		public function addRemote($remote:Remote):void
-		{
-			_remote = $remote;
-			super.directory = AppModel.bookmark.gitdir;
-			super.call(Vector.<String>([BashMethods.ADD_REMOTE, _remote.name, _remote.url]));
-		}
+//		public function addRemote($remote:Remote):void
+//		{
+//			_remote = $remote;
+//			super.directory = AppModel.bookmark.gitdir;
+//			super.call(Vector.<String>([BashMethods.ADD_REMOTE, _remote.name, _remote.url]));
+//		}
 		
-		public function clone(url:String, loc:String):void
+		public function cloneRemoteRepository(url:String, loc:String):void
 		{
 			super.call(Vector.<String>([BashMethods.CLONE_REPOSITORY, url, loc]));
 		}
 		
-		public function addRepository($name:String, $desc:String, $public:Boolean):void
+		public function createRemoteRepository(name:String, desc:String, publik:Boolean):void
 		{
-			super.call(Vector.<String>([BashMethods.ADD_REPOSITORY, $name, $desc, $public]));
+			super.call(Vector.<String>([BashMethods.ADD_REPOSITORY, name, desc, publik]));
 		}		
 		
-	// called only from SummaryView	
 		public function syncRemotes(v:Vector.<Remote>):void
 		{
-			_index = 0; _remotes = v;
-			syncNextRemote();
+			_index = 0; _remotes = v; syncNextRemote();
+		}
+		
+		private function syncNextRemote():void
+		{
+			_remote = _remotes[_index];
+			_remoteURL = _remote.defaultURL;
+			trace('_remoteURL: ' + (_remoteURL));
+			return;
+			checkToPushOrPull();
+	//		dispatchEvent(new AppEvent(AppEvent.PROMPT_FOR_REMOTE_PSWD, _remote));
+		}
+		
+		private function checkToPushOrPull():void
+		{
+			if (_remote.hasBranch(AppModel.branch.name)){
+				pullRemote();				
+			}	else{
+				var w:Boolean = AppSettings.getSetting(AppSettings.PROMPT_NEW_REMOTE_BRANCHES);
+				if (w == false){
+					pushRemote();
+				}	else{
+					dispatchConfirm();
+				}
+			}			
 		}
 		
 		public function onConfirm(b:Boolean):void
 		{
-			b ? syncNextRemote(false) : onSyncComplete();
-		}
+			b ? onSyncComplete() : pushRemote();
+		}		
 		
 		public function skipRemoteSync():void
 		{
 			onSyncComplete();
 		}
 		
-		public function attemptSyncOverHTTPS(https:String):void
+		public function attemptManualHttpsSync(url:String):void
 		{
-			_url = https;
-			checkToPushOrPull(true);
-		}
-		
-		private function syncNextRemote(warn:Boolean = true):void
-		{
-			_remote = _remotes[_index];
-			_url = getRemoteURL(_remote);
-			if (_url != null){
-				checkToPushOrPull(warn);
-			}	else{
-				dispatchEvent(new AppEvent(AppEvent.PROMPT_FOR_REMOTE_PSWD, _remote));
-			}
-		}
-		
-		private function checkToPushOrPull(warn:Boolean = true):void
-		{
-			if (_remote.hasBranch(AppModel.branch.name)){
-				pullRemote();				
-			}	else{
-				warn ? dispatchConfirm() : pushRemote();
-			}			
+			checkToPushOrPull();
 		}
 		
 		private function pullRemote():void
 		{
 			super.directory = AppModel.bookmark.gitdir;
-			super.call(Vector.<String>([BashMethods.PULL_REMOTE, _url, AppModel.branch.name]));
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Receiving Files'));
+			super.call(Vector.<String>([BashMethods.PULL_REMOTE, _remoteURL, AppModel.branch.name]));
 		}
 		
 		private function pushRemote():void
 		{
 			super.directory = AppModel.bookmark.gitdir;
-			super.call(Vector.<String>([BashMethods.PUSH_REMOTE, _url, AppModel.branch.name]));
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Sending Files'));
-		}				
-		
-		private function getRemoteURL(r:Remote):String
-		{
-			if (r.type == RemoteAccount.GITHUB){
-				return Accounts.github.getRemoteURL(r);
-			}	else if (r.type == RemoteAccount.BEANSTALK){
-			// coming soon	
-			}
-			return r.name;
+			super.call(Vector.<String>([BashMethods.PUSH_REMOTE, _remoteURL, AppModel.branch.name]));
 		}
 		
-		private function handleProcessSuccess(e:NativeProcessEvent):void
+	// when pushing / pulling  
+	// always attempt over ssh if an ssh url exists //
+	// if ssh fails, attempt over https if we have an https url
+	// if no https url or https fails, prompt user for https user/pass				
+		
+		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
 			trace("RemoteProxy.onProcessComplete(e)", e.data.method, e.data.result);
+			return;
 			switch(e.data.method){
 				case BashMethods.ADD_REMOTE : 
-					pushRemote();
-					AppModel.bookmark.addRemote(_remote);
+					onAddRemoteComplete(e.data.result);
 				break;	
 				case BashMethods.PULL_REMOTE : 
-					pushRemote();
+					onPullComplete(e.data.result);
 				break;	
 				case BashMethods.PUSH_REMOTE : 
-					onSyncComplete();
+					onPushComplete(e.data.result);
 				break;	
-			}
+			}			
 		}
+		
+		private function onAddRemoteComplete(s:String):void
+		{
+		// if no errors //			
+			pushRemote();
+			AppModel.bookmark.addRemote(_remote);			
+		}
+		
+		private function onPullComplete(s:String):void
+		{
+		// if no errors //	
+			pushRemote();
+		}
+		
+		private function onPushComplete(s:String):void
+		{
+		// if no errors //	
+			onSyncComplete();
+		}		
 		
 		private function onSyncComplete():void
 		{
 			_remotes.splice(_index, 1);
 			if (_remotes.length){
-				_index++; syncNextRemote();
+				syncNextRemote();
 			}	else{
 				dispatchEvent(new AppEvent(AppEvent.REMOTE_SYNCED));
 				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 			}
-		}		
-		
-		private function handleProcessFailure(e:NativeProcessEvent):void
-		{
-			dispatchDebug(e.data);
 		}
 		
-		private function onProcessComplete(e:NativeProcessEvent):void 
-		{
-			failed==true ? handleProcessFailure(e) : handleProcessSuccess(e);
-		}			
+	// dispatch messages //	
 		
 		private function dispatchDebug(o:Object):void
 		{

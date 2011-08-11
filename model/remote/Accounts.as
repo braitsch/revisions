@@ -26,14 +26,7 @@ package model.remote {
 			return _beanstalk;
 		}
 		
-		public static function getAccountSSHKey(type:String, name:String):uint
-		{
-			var a:RemoteAccount = getAccount(type, name);
-			if (a) return a.sshKeyId;
-			return 0;
-		}		
-		
-		private static function getAccount(type:String, name:String):RemoteAccount	
+		public static function getAccountByName(type:String, name:String):RemoteAccount	
 		{
 			var am:AccountManager;
 			if (type == RemoteAccount.GITHUB){
