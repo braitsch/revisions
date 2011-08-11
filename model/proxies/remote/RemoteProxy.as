@@ -148,7 +148,7 @@ package model.proxies.remote {
 				msg = 'Some other error occurred, check the URL';
 			}
 			if (msg) trace(m, 'failed ::', msg);
-			return msg == null;
+			return msg != null;
 		}
 		
 		private function hasString(s1:String, s2:String):Boolean { return s1.indexOf(s2) != -1; }
