@@ -21,7 +21,7 @@ package view.modals.local {
 			super.addCloseButton();
 			super.drawBackground(550, 210);
 			super.setTitle(_view, 'New Bookmark');
-			super.addButtons([_view.ok_btn]);
+			super.defaultButton = _view.ok_btn;
 			super.addInputs(Vector.<TLFTextField>([_view.name_txt]));
 			_check.label = 'Autosave Every 60 Minutes';
 			_view.form.label1.text = 'Name';

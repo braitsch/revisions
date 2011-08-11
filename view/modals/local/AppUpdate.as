@@ -19,7 +19,8 @@ package view.modals.local {
 			addChild(_view);
 			super.drawBackground(550, 210);
 			super.setTitle(_view, 'Update Available');
-			super.addButtons([_view.skip_btn, _view.download_btn]);
+			super.addButtons([_view.skip_btn]);
+			super.defaultButton = _view.download_btn;
 			_check.label = "Don't prompt me to update again.";
 			_view.check.addEventListener(MouseEvent.CLICK, onCheckbox);
 			_view.skip_btn.addEventListener(MouseEvent.CLICK, onSkipUpdate);
@@ -43,7 +44,8 @@ package view.modals.local {
 			AppModel.updater.dispatchEvent(new AppEvent(AppEvent.APP_UPDATE_IGNORED));
 		}
 
-		private function onDownload(e:MouseEvent):void
+		override public function onEnterKey():void { onDownload(); }
+		private function onDownload(e:MouseEvent = null):void
 		{
 			_view.textArea.message_txt.text = "Downloading Update..";
 			super.enableButton(_view.skip_btn, false);

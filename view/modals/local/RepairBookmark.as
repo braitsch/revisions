@@ -21,7 +21,8 @@ package view.modals.local {
 			super.drawBackground(550, 230);
 			super.setTitle(_view, 'Repair Bookmark');
 			super.setHeading(_view, 'The file this bookmark was pointing to appears to be missing. Please locate it.');
-			super.addButtons([_view.browse_btn, _view.ok_btn, _view.delete_btn]);
+			super.defaultButton = _view.ok_btn;
+			super.addButtons([_view.browse_btn, _view.delete_btn]);
 			_view.form.label1.text = 'Name';
 			_view.form.label2.text = 'Location';
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onUpdateBookmark);

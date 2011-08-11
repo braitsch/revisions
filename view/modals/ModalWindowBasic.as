@@ -5,6 +5,7 @@ package view.modals {
 	import com.greensock.TweenLite;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
 
@@ -71,7 +72,15 @@ package view.modals {
 		protected function addInputs(v:Vector.<TLFTextField>):void
 		{
 			inputs = v;
-			for (var i:int=0; i < v.length; i++) v[i].tabIndex = i;
+			for (var i:int=0; i < v.length; i++) {
+				v[i].tabIndex = i;
+				v[i].getChildAt(1).addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+			}
+		}
+
+		private function onKeyUp(e:KeyboardEvent):void
+		{
+			if (this.stage && e.keyCode == 13) onEnterKey();			
 		}
 		
 		protected function browseForFile($msg:String):void

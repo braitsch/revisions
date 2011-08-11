@@ -14,7 +14,7 @@ package view.modals.local {
 			addChild(_view);
 			super.addCloseButton();
 			super.drawBackground(550, 260);
-			super.addButtons([_view.ok_btn]);
+			super.defaultButton = _view.ok_btn;
 			super.setTitle(_view, 'Version Details');
 			_view.form.label1.text = 'Date';
 			_view.form.label2.text = 'Author';

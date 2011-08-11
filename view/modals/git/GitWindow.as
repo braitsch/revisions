@@ -19,7 +19,8 @@ package view.modals.git {
 		{
 			_view = v;
 			addChild(_view);
-			super.addButtons([_view.cancel_btn, _view.ok_btn]);	
+			super.addButtons([_view.cancel_btn]);
+			super.defaultButton = _view.ok_btn;	
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, installAndUpdate);
 			_view.cancel_btn.addEventListener(MouseEvent.CLICK, quitApplication);
 		}
@@ -51,7 +52,8 @@ package view.modals.git {
 			_view.cancel_btn.removeEventListener(MouseEvent.CLICK, quitApplication);
 		}
 		
-		private function installAndUpdate(e:MouseEvent):void
+		override public function onEnterKey():void { installAndUpdate(); }
+		private function installAndUpdate(e:MouseEvent = null):void
 		{
 			disableButtons();
 			_view.message_txt.text = getInstallMessage();

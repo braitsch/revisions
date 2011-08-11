@@ -1,5 +1,6 @@
 package view.modals.bkmk {
 
+	import system.StringUtils;
 	import flash.text.TextFieldAutoSize;
 	import model.vo.Remote;
 	import flash.display.Sprite;
@@ -15,7 +16,7 @@ package view.modals.bkmk {
 			_remote = rmt;
 			_view.url_txt.autoSize = TextFieldAutoSize.LEFT;
 			_view.name_txt.autoSize = TextFieldAutoSize.LEFT;
-			_view.url_txt.text = rmt.defaultURL;
+			_view.url_txt.text = StringUtils.capitalize(rmt.type);
 			_view.name_txt.text = rmt.realName;
 			if (_view.name_txt.width <= 190){
 				_view.url_txt.x = 200;

@@ -17,7 +17,7 @@ package view.modals.git {
 			super.addCloseButton();
 			super.drawBackground(550, 210);
 			super.setTitle(_view, 'About Git');
-			super.addButtons([_view.ok_btn]);
+			super.defaultButton = _view.ok_btn;
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}

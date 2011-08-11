@@ -15,7 +15,8 @@ package view.modals.local {
 			addChild(_view);
 			super.drawBackground(550, 210);
 			super.setTitle(_view, 'Trial Expired');			
-			super.addButtons([_view.cancel_btn, _view.ok_btn]);
+			super.addButtons([_view.cancel_btn]);
+			super.defaultButton = _view.ok_btn;
 			_view.textArea.message_txt.text = 'This beta version of Revisions has expired.\n';
 			_view.textArea.message_txt.text+= 'Please update to the most current version.';
 			_view.cancel_btn.addEventListener(MouseEvent.CLICK, onCancel);
@@ -27,7 +28,8 @@ package view.modals.local {
 			NativeApplication.nativeApplication.exit();			
 		}
 		
-		private function onCheckForUpdates(e:MouseEvent):void
+		override public function onEnterKey():void { onCheckForUpdates(); }			
+		private function onCheckForUpdates(e:MouseEvent = null):void
 		{
 			AppSettings.setSetting(AppSettings.CHECK_FOR_UPDATES, true);			
 			AppModel.updater.checkForUpdate();	

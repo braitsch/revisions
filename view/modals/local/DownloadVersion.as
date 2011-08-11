@@ -22,7 +22,8 @@ package view.modals.local {
 			super.addCloseButton();
 			super.drawBackground(550, 210);
 			super.setTitle(_view, 'Download Version');
-			super.addButtons([_view.cancel_btn, _view.download_btn]);
+			super.addButtons([_view.cancel_btn]);
+			super.defaultButton = _view.download_btn;
 			_check.label = "Next time just do it and don't ask me";
 			_view.check.addEventListener(MouseEvent.CLICK, onCheckbox);
 			_view.cancel_btn.addEventListener(MouseEvent.CLICK, onCancel);
@@ -60,7 +61,8 @@ package view.modals.local {
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 		}
 
-		private function onDownload(e:MouseEvent):void
+		override public function onEnterKey():void { onDownload(); }
+		private function onDownload(e:MouseEvent = null):void
 		{
 			selectDownloadLocation();
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));

@@ -25,7 +25,7 @@ package view.modals.local {
 			super.addCloseButton();	
 			super.drawBackground(550, 265);
 			super.setTitle(_view, 'Global Settings');
-			super.addButtons([_view.ok_btn]);
+			super.defaultButton = _view.ok_btn;
 			super.addInputs(Vector.<TLFTextField>([_view.name_txt, _view.email_txt]));
 			_check1.label = 'Automatically check for updates';
 			_check2.label = 'Show tooltips';

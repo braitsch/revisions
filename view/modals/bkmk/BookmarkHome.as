@@ -20,15 +20,16 @@ package view.modals.bkmk {
 		{
 			addChild(_view);
 			super.drawBackground(550, 210);
-			super.addButtons([_view.delete_btn, _view.ok_btn]);
+			super.addButtons([_view.delete_btn]);
+			super.defaultButton = _view.ok_btn;
 			super.addInputs(Vector.<TLFTextField>([_view.name_txt]));
 		
 			_check.label = 'Autosave Every 60 Minutes';
 			_view.form.label1.text = 'Name';
 			_view.form.label2.text = 'Location';
 			_view.local_txt.selectable = false;
-			_view.delete_btn.addEventListener(MouseEvent.CLICK, onDeleteButton);
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onUpdateBookmark);
+			_view.delete_btn.addEventListener(MouseEvent.CLICK, onDeleteButton);
 		}
 		
 		public function set bookmark(b:Bookmark):void
