@@ -13,15 +13,16 @@ package view.modals.remote {
 
 	public class AddRemoteRepo extends ModalWindow {
 
-		private var _bkmk	:Bookmark;
-		private var _view	:NewRemoteMC = new NewRemoteMC();
-		private var _check	:ModalCheckbox = new ModalCheckbox(_view.check, false);	
-		private var _proxy	:RemoteProxy;	
+		private var _bkmk		:Bookmark;
+		private var _view		:NewRemoteMC = new NewRemoteMC();
+		private var _check		:ModalCheckbox = new ModalCheckbox(_view.check, false);	
+		private var _proxy		:RemoteProxy;	
+		private var _newRepo	:Object;
 
 		public function AddRemoteRepo()
 		{
 			addChild(_view);
-			super.addCloseButton(550);
+			super.addCloseButton();
 			super.defaultButton = _view.ok_btn;			
 			super.addInputs(Vector.<TLFTextField>([_view.name_txt, _view.desc_txt]));
 			_view.form.label1.text = 'Name';
@@ -44,10 +45,11 @@ package view.modals.remote {
 		{ 
 			if (validate()) {
 				_proxy.createRemoteRepository(_view.name_txt.text, _view.desc_txt.text, _check.selected==false);
-				AppModel.proxies.ghRemote.addEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);				
+				_proxy.addEventListener(AppEvent.REPOSITORY_CREATED, onRepoCreated);
+				_proxy.addEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);
 			}
 		}
-		
+
 		private function validate():Boolean
 		{
 			if (_view.name_txt.text == '' || _view.desc_txt.text == '') {
@@ -72,10 +74,18 @@ package view.modals.remote {
 			}
 		}
 		
+		private function onRepoCreated(e:AppEvent):void
+		{
+			_newRepo = e.data as Object;
+		}		
+		
 		private function onRemoteSynced(e:AppEvent):void
 		{
-			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-			AppModel.proxies.ghRemote.removeEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);	
+			trace("AddRemoteRepo.onRemoteSynced(e) -- yay!!");
+			trace('bookmark added to github successfully - goto account / show on github');
+			dispatchEvent(new UIEvent(UIEvent.SHOW_NEW_REPO_CONFIRM, _newRepo));
+			_proxy.removeEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);	
+			_proxy.removeEventListener(AppEvent.REPOSITORY_CREATED, onRepoCreated);	
 		}
 		
 	}

@@ -39,7 +39,8 @@ package events {
 		
 	// file viewer actions //	
 		public static const FILE_SELECTED			:String = "FILE_SELECTED";
-		public static const TOGGLE_DIRECTORY:String = "TOGGLE_DIRECTORY";
+		public static const TOGGLE_DIRECTORY		:String = "TOGGLE_DIRECTORY";
+		public static const SHOW_NEW_REPO_CONFIRM	:String = "SHOW_NEW_REPO_CONFIRM";
 		
 		public var data:Object;
 

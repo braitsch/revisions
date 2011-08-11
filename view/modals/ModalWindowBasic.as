@@ -42,6 +42,7 @@ package view.modals {
 		protected function set defaultButton(b:Sprite):void
 		{
 			b['over'].alpha = 1;
+			b.buttonMode = true;
 			b.mouseChildren = false;
 		}
 		

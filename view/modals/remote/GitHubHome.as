@@ -29,7 +29,8 @@ package view.modals.remote {
 			addEventListener(UIEvent.LOGGED_IN_CLONE, onCloneClick);		
 			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);
 			AppModel.engine.addEventListener(AppEvent.REMOTE_READY, onAccountReady);
-			AppModel.proxies.ghLogin.addEventListener(AppEvent.LOGOUT_SUCCESS, onLogout);			
+			AppModel.proxies.ghLogin.addEventListener(AppEvent.LOGOUT_SUCCESS, onLogout);
+			AppModel.proxies.ghRemote.addEventListener(AppEvent.REPOSITORY_CREATED, onNewRepo);
 		}
 
 		private function onAccountReady(e:AppEvent):void
@@ -38,17 +39,14 @@ package view.modals.remote {
 			resetAccount();
 			attachAvatar();
 			attachRepositories();
-			if (_model.name) _view.badgeUser.user_txt.text = _model.name;
+			_view.badgeUser.user_txt.text = _model.name ? _model.name : '';
 			if (_model.name && _model.location) _view.badgeUser.user_txt.appendText(' - '+_model.location);
 		}
 		
 		private function resetAccount():void
 		{
 			_pageIndex = 0;
-			_view.badgeUser.user_txt.text = '';
-			if (_activePage){
-				 _view.removeChild(_activePage); _activePage = null;
-			}
+			if (_activePage){ _view.removeChild(_activePage); _activePage = null; }
 		}		
 
 		private function attachAvatar():void
@@ -56,6 +54,25 @@ package view.modals.remote {
 			_model.avatar.y = 7;
 			_model.avatar.x = -190;
 			_view.badgeUser.addChild(_model.avatar);
+		}
+
+//		private function onNewRepo(e:AppEvent):void
+//		{
+//			var lp:Sprite = _pages[_pages.length-1];
+//			var ri:RepositoryItem = new RepositoryItem(e.data as Object);
+//			if (lp.numChildren == _maxPerPage){
+//				lp = new Sprite();
+//				_pages.push(lp);
+//			}
+//			lp.addChild(ri);
+//			ri.y = 53 * lp.numChildren;			
+//		}
+
+		private function onNewRepo(e:AppEvent):void
+		{
+			_model.repositories.push(e.data);
+			resetAccount();
+			attachRepositories();
 		}
 
 		private function attachRepositories():void

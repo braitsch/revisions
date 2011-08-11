@@ -65,6 +65,7 @@ package view.modals {
 		private static var _remotePswd		:RemotePassword = new RemotePassword();
 		private static var _addToGitHub		:AddGitHubRepo = new AddGitHubRepo();
 		private static var _addToBeanstalk	:AddBeanstalkRepo = new AddBeanstalkRepo();
+		private static var _newRepoConfirm	:NewRepoConfirm = new NewRepoConfirm();
 		private static var _clone			:AnonymousClone = new AnonymousClone();		
 		private static var _gitHub			:GitHubHome = new GitHubHome();
 		private static var _alert			:Alert = new Alert();
@@ -77,7 +78,7 @@ package view.modals {
 				[ _repair, _appExpired, _appUpdate, _gitInstall, _gitUpgrade, _ghLogin ];
 				
 		private static var _window			:ModalWindow;	// the active modal window //
-		private static var _curtain			:ModalCurtain = new ModalCurtain();	
+		private static var _curtain:ModalCurtain = new ModalCurtain();
 
 		public function ModalManager()
 		{
@@ -121,6 +122,7 @@ package view.modals {
 			stage.addEventListener(UIEvent.GITHUB_HOME, showGitHubHome);
 			stage.addEventListener(UIEvent.REMOTE_LOGIN, showRemoteLogin);
 			stage.addEventListener(UIEvent.ANONYMOUS_CLONE, showAnonymousClone);			
+			stage.addEventListener(UIEvent.SHOW_NEW_REPO_CONFIRM, showNewRepoConfirm);			
 			stage.addEventListener(UIEvent.ADD_REMOTE_TO_BOOKMARK, addBkmkToRemote);
 			stage.addEventListener(UIEvent.CLOSE_MODAL_WINDOW, onCloseButton);
 			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUpEvent);			
@@ -296,7 +298,13 @@ package view.modals {
 		{
 			_remotePswd.remote = e.data as Remote;
 			showModalWindow(_remotePswd);	
-		}		
+		}
+		
+		private function showNewRepoConfirm(e:UIEvent):void
+		{
+			_newRepoConfirm.repository = e.data as Object;
+			showModalWindow(_newRepoConfirm);
+		}				
 		
 		private function showLoader(e:AppEvent):void
 		{

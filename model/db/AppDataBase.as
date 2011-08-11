@@ -80,7 +80,6 @@ package model.db {
 		
 		public function editAccount(a:RemoteAccount):void
 		{
-			trace("AppDatabase.editAccount(a)", a.sshKeyId);
 			_editAccount = new Vector.<SQLStatement>();
 			_editAccount.push(AppSQLQuery.EDIT_ACCOUNT(a));
 			super.execute(_editAccount, true);						
@@ -134,10 +133,10 @@ package model.db {
 			//		trace("AppDatabase.onTransactionComplete(e) -- new account added!!");	
 				break;	
 				case _editAccount :
-			//		trace("AppDatabase.onTransactionComplete(e) -- account edited !!");	
+					trace("AppDatabase.onTransactionComplete(e) -- account edited !!");	
 				break;						
 				case _setSSHKeyId :
-			//		trace("AppDatabase.onTransactionComplete(e) -- primary account set !!");	
+					trace("AppDatabase.onTransactionComplete(e) -- primary account set !!");	
 				break;									
 			}
 		}

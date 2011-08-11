@@ -5,6 +5,7 @@ package model.proxies.remote {
 	import model.AppModel;
 	import model.air.NativeProcessProxy;
 	import model.db.AppSettings;
+	import model.remote.RemoteAccount;
 	import model.vo.Remote;
 	import system.BashMethods;
 	import com.adobe.serialization.json.JSONDecoder;
@@ -62,10 +63,10 @@ package model.proxies.remote {
 		
 		private function syncNextRemote():void
 		{
-			trace("RemoteProxy -- syncing remote "+(_index+1));
 			_remote = _remotes[_index];
 			_remoteURL = _remote.defaultURL;
 			checkToPushOrPull();
+		// dispatch loader //	
 		}
 		
 		private function checkToPushOrPull():void
@@ -82,9 +83,8 @@ package model.proxies.remote {
 			}			
 		}
 		
-		private function addRemote(r:Remote):void
+		private function addRemoteToLocalRepository():void
 		{
-			_remote = r;
 			super.directory = AppModel.bookmark.gitdir;
 			super.call(Vector.<String>([BashMethods.ADD_REMOTE, _remote.name, _remote.defaultURL]));
 		}		
@@ -106,15 +106,14 @@ package model.proxies.remote {
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
 			var m:String = e.data.method;
-			var r:String = e.data.result;
-			if (hasStringErrors(r)) return;
-			trace("RemoteProxy.onProcessComplete(e)", m, r);
+			if (hasStringErrors(e.data.result)) return;
+			trace("RemoteProxy.onProcessComplete(e)", m);
 			switch(e.data.method){
 				case BashMethods.ADD_REPOSITORY : 
-					onRepositoryCreated(r);
+					onRepositoryCreated(e.data.result);
 				break;					
 				case BashMethods.ADD_REMOTE : 
-					onAddRemoteComplete(r);
+					onAddRemoteComplete();
 				break;	
 				case BashMethods.PULL_REMOTE : 
 					pushRemote();
@@ -125,20 +124,19 @@ package model.proxies.remote {
 			}
 		}
 
-	//TODO
 		private function onRepositoryCreated(s:String):void
 		{
 			var o:Object = getResultObject(s);
 			if (hasJSONErrors(o) == false){
-				
+				_remote = new Remote(RemoteAccount.GITHUB+'-'+o.name, o.ssh_url);
+				_remoteURL = _remote.defaultURL;
+				addRemoteToLocalRepository();
+				dispatchEvent(new AppEvent(AppEvent.REPOSITORY_CREATED, o));
 			}
-	//		AppModel.proxies.ghRemote.addRemote(new Remote(_name, e.data as String));
 		}
 		
-	//TODO	
-		private function onAddRemoteComplete(s:String):void
-		{
-		// if no errors //			
+		private function onAddRemoteComplete():void
+		{	
 			pushRemote();
 			AppModel.bookmark.addRemote(_remote);			
 		}
@@ -146,23 +144,23 @@ package model.proxies.remote {
 		private function getResultObject(s:String):Object
 		{
 		// strip off any post headers we receive before parsing json //	
-			if (s.indexOf('[') != -1) {
-				return new JSONDecoder(s.substr(s.indexOf('[')), false).getValue();
-			}	else if (s.indexOf('{') != -1){
+			if (s.indexOf('{') != -1){
 				return new JSONDecoder(s.substr(s.indexOf('{')), false).getValue();
 			}	else{
 				return {result:s};
-			}					
+			}
 		}
 		
 		private function hasJSONErrors(o:Object):Boolean
 		{
 			var f:Boolean;
-			trace("RemoteProxy.hasJSONErrors(o)", o.message);
-			trace("RemoteProxy.hasJSONErrors(o)", o.errors);
 			if (o.message == null) return false;
-			if (o.errors.message == 'name is already taken'){
-				trace('repo taken, try something else');
+			if (o.errors[0].message == 'name is already taken'){
+				f = true;
+				dispatchAlert('That repository name is already taken, please choose something else');
+			} else if (o.errors[0].message == 'name can\'t be private. You are over your quota.'){
+				f = true;
+				dispatchAlert('Whoops! Looks like you\'re all out of private repositories, consider making this one public or upgrade your account.');
 			}
 			return f;			
 		}
@@ -197,14 +195,22 @@ package model.proxies.remote {
 		private function onSyncComplete():void
 		{
 			_prompt = true;
-			_remotes.splice(_index, 1);
-			if (_remotes.length){
-				syncNextRemote();
+			if (_remotes) {
+				_remotes.splice(_index, 1);
+				if (_remotes.length){
+					syncNextRemote();
+				}	else{
+					dispatchSyncComplete();
+				}
 			}	else{
-				trace("RemoteProxy -- all remotes sunk! ");				
-				dispatchEvent(new AppEvent(AppEvent.REMOTE_SYNCED));
-				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
+				dispatchSyncComplete();
 			}
+		}
+
+		private function dispatchSyncComplete():void
+		{
+			dispatchEvent(new AppEvent(AppEvent.REMOTE_SYNCED));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));			
 		}
 		
 	// dispatch messages //	
