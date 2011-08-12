@@ -20,20 +20,21 @@ package model.proxies.local {
 		public function getHistory():void
 		{
 			super.directory = AppModel.bookmark.gitdir;
-			super.queue = [	Vector.<String>([BashMethods.GET_HISTORY]) ];
+			super.queue = [	Vector.<String>([BashMethods.GET_HISTORY]), 
+							Vector.<String>([BashMethods.GET_TOTAL_COMMITS]) ];
 		}
 		
 		private function onQueueComplete(e:NativeProcessEvent):void 
 		{
 			var a:Array = e.data as Array;
-			parseHistory(a[0].result); 
+			parseHistory(a[0].result, uint(a[1].result) + 1); 
 		}
 
-		private function parseHistory(s:String):void
+		private function parseHistory(s:String, n:uint):void
 		{
 			var a:Array = s.split(/[\n\r\t]/g);
 			var v:Vector.<Commit> = new Vector.<Commit>();
-			for (var i:int = 0; i < a.length; i++) v.push(new Commit(a[i], AppModel.bookmark.branch.totalCommits-i));
+			for (var i:int = 0; i < a.length; i++) v.push(new Commit(a[i], n-i));
 			AppModel.bookmark.branch.history = v;
 			AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.HISTORY_RECEIVED, AppModel.bookmark));			
 		}

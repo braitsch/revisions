@@ -14,7 +14,6 @@ package model.proxies.local {
 	// automatically call getStatus every five seconds // 	
 		private static var _timer			:Timer = new Timer(5000);
 		private static var _status 			:StatusProxy 	= new StatusProxy();
-		private static var _history			:HistoryProxy 	= new HistoryProxy();		
 		private static var _autoSaveQueue	:Array = [];
 
 		public function initialize():void
@@ -25,7 +24,6 @@ package model.proxies.local {
 			AppModel.engine.addEventListener(AppEvent.HISTORY_REQUESTED, onHistoryRequested);
 			AppModel.engine.addEventListener(AppEvent.MODIFIED_REQUESTED, onModifiedRequested);
 			AppModel.engine.addEventListener(BookmarkEvent.SUMMARY_RECEIVED, onSummaryReceived);				
-			AppModel.engine.addEventListener(BookmarkEvent.HISTORY_RECEIVED, onHistoryReceived);				
 			AppModel.proxies.checkout.addEventListener(BookmarkEvent.REVERTED, onBookmarkReverted);
 			AppModel.proxies.editor.addEventListener(BookmarkEvent.COMMIT_COMPLETE, onCommitComplete);
 			AppModel.proxies.checkout.addEventListener(BookmarkEvent.BRANCH_CHANGED, onBranchChanged);
@@ -43,11 +41,6 @@ package model.proxies.local {
 	// allows us to force check modified before executing a cmd, say like switching branches //	
 			getModified(e.data as Bookmark);
 		}
-		
-		private function onHistoryReceived(e:BookmarkEvent):void
-		{
-			getSummary();
-		}		
 		
 		private function onSummaryReceived(e:BookmarkEvent):void
 		{	
@@ -70,7 +63,7 @@ package model.proxies.local {
 		{
 			resetTimer();
 		// add slight delay so we have time to display the preloader //	
-			setTimeout(_history.getHistory, 500);
+			setTimeout(_status.getHistory, 500);
 			dispatchEvent(new AppEvent(AppEvent.REQUESTING_HISTORY));			
 		}
 		

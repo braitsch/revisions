@@ -20,13 +20,18 @@ package model.vo {
 		public function set status(a:Array)					:void {  _status = a; }
 		public function get name()							:String { return _name; }
 		
-		public function set history(v:Vector.<Commit>)		:void { _history = v; }
 		public function get history()						:Vector.<Commit> { return _history; }
 		
 		public function set lastCommit(c:Commit)			:void { _lastCommit = c; }
 		public function get lastCommit()					:Commit { return _lastCommit; }
 		
 		public function get totalCommits()					:uint { return _lastCommit.index; }
+
+		public function set history(v:Vector.<Commit>):void
+		{ 
+			_history = v;
+			_lastCommit = v[v.length -1];
+		}
 		
 		public function set modified(a:Array):void
 		{
