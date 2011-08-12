@@ -59,8 +59,6 @@ package model.proxies.local {
 			for (var i:int = 0; i < a.length; i++) a[i] = a[i].result;
 			var m:Array = ignoreHiddenFiles(splitAndTrim(a[0]));
 			var u:Array = ignoreHiddenFiles(splitAndTrim(a[1]));
-			trace("StatusProxy.onModified(a)", m.length, m);
-			trace("StatusProxy.onModified(a)", u.length, u);
 			_bookmark.branch.modified = [m , u];
 			AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.MODIFIED_RECEIVED, _bookmark));			
 		}

@@ -91,6 +91,7 @@ package system {
 		
 		private function onUpdateXMLLoadError(e:IOErrorEvent):void
 		{
+			trace("UpdateManager.onUpdateXMLLoadError(e)");
 			if (_timeout.running) dispatchUpdateUnavailable(e.text);
 			killUpdateXMLLoader(URLLoader(e.currentTarget));
 		}
@@ -210,6 +211,7 @@ package system {
 	
 		private function onTimeout(e:TimerEvent):void
 		{
+			trace("UpdateManager.onTimeout(e)");
 			dispatchUpdateUnavailable();
 		}
 		
