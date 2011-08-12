@@ -30,7 +30,7 @@ package model.vo {
 		public function set history(v:Vector.<Commit>):void
 		{ 
 			_history = v;
-			_lastCommit = v[v.length -1];
+			_lastCommit = v[0];
 		}
 		
 		public function set modified(a:Array):void
