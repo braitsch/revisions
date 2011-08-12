@@ -115,7 +115,6 @@ package model {
 					label		:	a[i].label,
 					type		:	a[i].type,
 					path		:	a[i].path,
-					local		:	a[i].local,
 					active 		:	a[i].active,
 					autosave	:	a[i].autosave};
 				var b:Bookmark = new Bookmark(o);

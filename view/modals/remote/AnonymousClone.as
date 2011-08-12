@@ -3,10 +3,9 @@ package view.modals.remote {
 	import events.AppEvent;
 	import events.UIEvent;
 	import fl.text.TLFTextField;
-	import flash.events.MouseEvent;
-	import flash.filesystem.File;
 	import model.AppModel;
 	import view.modals.ModalWindow;
+	import flash.events.MouseEvent;
 	public class AnonymousClone extends ModalWindow {
 
 		private static var _view		:AnonymousCloneMC = new AnonymousCloneMC();
@@ -38,7 +37,7 @@ package view.modals.remote {
 		
 		private function onBrowserSelection(e:UIEvent):void
 		{
-			RemoteClone.getFromGitHub(_cloneURL, File(e.data).nativePath);			
+		//	RemoteClone.getFromGitHub(_cloneURL, File(e.data).nativePath);			
 			AppModel.proxies.ghLogin.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);			
 		}
 

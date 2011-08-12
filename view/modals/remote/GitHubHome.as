@@ -1,9 +1,11 @@
 package view.modals.remote {
 
+	import system.StringUtils;
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
 	import model.remote.RemoteAccount;
+	import model.vo.Bookmark;
 	import view.modals.ModalWindow;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -17,6 +19,7 @@ package view.modals.remote {
 		private static var _pageIndex	:uint = 0;
 		private static var _model		:RemoteAccount;
 		private static var _cloneURL	:String;
+		private static var _savePath	:String;
 		private static var _activePage	:Sprite;
 
 		public function GitHubHome()
@@ -210,15 +213,31 @@ package view.modals.remote {
 
 		private function onBrowserSelection(e:UIEvent):void
 		{
-			RemoteClone.getFromGitHub(_cloneURL, File(e.data).nativePath);
-			AppModel.proxies.ghLogin.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);			
+			_savePath = File(e.data).nativePath;
+			AppModel.proxies.ghRemote.cloneRemoteRepository(_cloneURL, _savePath);
+			AppModel.proxies.ghRemote.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);			
 		}
 
 		private function onCloneComplete(e:AppEvent):void
 		{
 			resetURLField();
+			dispatchNewBookmark();
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-			AppModel.proxies.ghLogin.removeEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);			
+			AppModel.proxies.ghRemote.removeEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);			
+		}
+
+		private function dispatchNewBookmark():void
+		{
+			var n:String = _savePath.substr(_savePath.lastIndexOf('/') + 1);
+			var o:Object = {
+				label		:	StringUtils.capitalize(n),
+				type		: 	Bookmark.FOLDER,
+				path		:	_savePath,
+				active 		:	1,
+				autosave	:	60 
+			};	
+			AppModel.engine.addBookmark(new Bookmark(o));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 		}
 		
 	}

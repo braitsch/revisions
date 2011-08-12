@@ -17,13 +17,15 @@ package view.modals.login {
 			super.drawBackground(550, 240);
 			super.addButtons([_view.skip_btn]);
 			super.defaultButton = _view.login_btn;
+		//TODO implement non-logged in clones ( ssh & https )	
+			_view.skip_btn.visible = false;
 			_view.skip_btn.addEventListener(MouseEvent.CLICK, onSkipButton);
 			_view.login_btn.addEventListener(MouseEvent.CLICK, onLoginButton);	
 		}
 
 		protected function set allowSkip(b:Boolean):void
 		{	
-			_view.skip_btn.visible = b;
+		//	_view.skip_btn.visible = b;
 		}
 		
 		protected function set accountBtn(btn:*):void

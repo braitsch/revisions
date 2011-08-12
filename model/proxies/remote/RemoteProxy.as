@@ -1,5 +1,6 @@
 package model.proxies.remote {
 
+	import system.StringUtils;
 	import events.AppEvent;
 	import events.NativeProcessEvent;
 	import model.AppModel;
@@ -66,7 +67,6 @@ package model.proxies.remote {
 			_remote = _remotes[_index];
 			_remoteURL = _remote.defaultURL;
 			checkToPushOrPull();
-		// dispatch loader //	
 		}
 		
 		private function checkToPushOrPull():void
@@ -91,27 +91,30 @@ package model.proxies.remote {
 		
 		private function pullRemote():void
 		{
-			trace("Attempting.pullRemote() -- ", _remoteURL);
 			super.directory = AppModel.bookmark.gitdir;
 			super.call(Vector.<String>([BashMethods.PULL_REMOTE, _remoteURL, AppModel.branch.name]));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Fetching files from '+StringUtils.capitalize(_remote.type)));
 		}
 		
 		private function pushRemote():void
 		{
-			trace("Attempting.pushRemote() -- ", _remoteURL);
 			super.directory = AppModel.bookmark.gitdir;
 			super.call(Vector.<String>([BashMethods.PUSH_REMOTE, _remoteURL, AppModel.branch.name]));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Sending files to '+StringUtils.capitalize(_remote.type)));
 		}
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
 			var m:String = e.data.method;
 			if (hasStringErrors(e.data.result)) return;
-			trace("RemoteProxy.onProcessComplete(e)", m);
+			trace("RemoteProxy.onProcessComplete(e)", m, e.data.result);
 			switch(e.data.method){
 				case BashMethods.ADD_REPOSITORY : 
 					onRepositoryCreated(e.data.result);
 				break;					
+				case BashMethods.CLONE_REPOSITORY :
+					dispatchEvent(new AppEvent(AppEvent.CLONE_COMPLETE));
+				break;
 				case BashMethods.ADD_REMOTE : 
 					onAddRemoteComplete();
 				break;	
@@ -162,18 +165,23 @@ package model.proxies.remote {
 				f = true;
 				dispatchAlert('Whoops! Looks like you\'re all out of private repositories, consider making this one public or upgrade your account.');
 			}
+			if (f) AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 			return f;			
 		}
 		
 		private function hasStringErrors(s:String):Boolean
 		{
 			var f:Boolean;
+		// TODO if it was an ssh url that failed, attempt to generate a user/pass https url before prompting user for credentials
 			if (hasString(s, 'The requested URL returned error: 403')){
 				f = true;
 				dispatchEvent(new AppEvent(AppEvent.PROMPT_FOR_REMOTE_PSWD, _remote));
 			}	else if (hasString(s, 'Permission denied (publickey)')){
 				f = true;
 				dispatchEvent(new AppEvent(AppEvent.PROMPT_FOR_REMOTE_PSWD, _remote));
+			}	else if (hasString(s, 'ERROR: Permission')){
+				f = true;
+				dispatchEvent(new AppEvent(AppEvent.PROMPT_FOR_REMOTE_PSWD, _remote));						
 			}	else if (hasString(s, 'Authentication failed')){
 				f = true;
 				dispatchEvent(new AppEvent(AppEvent.PROMPT_FOR_REMOTE_PSWD, _remote));				
@@ -187,6 +195,7 @@ package model.proxies.remote {
 				f = true;
 				dispatchAlert('Eek, not sure what just happened, here are the details : '+s);
 			}
+			if (f) AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));			
 			return f;
 		}
 		
@@ -210,7 +219,7 @@ package model.proxies.remote {
 		private function dispatchSyncComplete():void
 		{
 			dispatchEvent(new AppEvent(AppEvent.REMOTE_SYNCED));
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));			
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 		}
 		
 	// dispatch messages //	
