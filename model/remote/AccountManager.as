@@ -39,13 +39,13 @@ package model.remote {
 		
 		private function onLoginSuccess(e:AppEvent):void
 		{
-			var a:RemoteAccount = e.data as RemoteAccount;
+			var a:RemoteAccount = e.data as RemoteAccount; // new password
 			var b:RemoteAccount = checkAccountAlreadyExists(a);
 			if (b == null){
 				addAccount(a);
 				AppModel.database.addAccount(a);
 			}	else{
-				b = a;
+				a.sshKeyId = b.sshKeyId;
 				AppModel.database.editAccount(a);
 			}
 			_loggedIn = true;

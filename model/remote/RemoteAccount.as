@@ -47,7 +47,7 @@ package model.remote {
 		public function set sshKeyId(n:uint):void
 		{
 			_sshKeyId = n;
-		}						
+		}		
 		
 		public function set loginData(o:Object):void
 		{

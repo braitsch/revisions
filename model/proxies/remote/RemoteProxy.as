@@ -29,6 +29,7 @@ package model.proxies.remote {
 		public function cloneRemoteRepository(url:String, loc:String):void
 		{
 			super.call(Vector.<String>([BashMethods.CLONE_REPOSITORY, url, loc]));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Cloning Remote Repository'));			
 		}
 		
 		public function createRemoteRepository(name:String, desc:String, publik:Boolean):void
@@ -231,7 +232,7 @@ package model.proxies.remote {
 		
 		private function dispatchConfirmPushNewBranch():void
 		{
-			var m:String = 'The current branch "'+AppModel.branch.name+'" is not currently being tracked by your '+_remote.type+' repository: "'+_remote.realName+'".';
+			var m:String = 'The current branch "'+AppModel.branch.name+'" is not currently being tracked by your '+_remote.type+' repository: "'+_remote.repoName.substr(0, -4)+'".';
 				m+= '\nAre you sure you want to continue?';
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_CONFIRM, {target:this, message:m}));			
 		}			

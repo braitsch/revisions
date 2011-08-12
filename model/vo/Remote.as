@@ -5,7 +5,7 @@ package model.vo {
 
 	public class Remote {
 
-		private var _name		:String; // ex. rvgh-revisions-source //
+		private var _name		:String; // ex. github-revisions-source //
 		private var _ssh		:String;
 		private var _https		:String;
 		private var _type		:String;
@@ -40,17 +40,6 @@ package model.vo {
 			return 'https://' + u + ':' + p + '@github.com/' + u +'/'+ _repoName;
 		}
 		
-		public function get realName():String
-		{
-			var rn:String = _name;
-			if (_name.indexOf('rvgh-') != -1) rn = _name.substr(5);
-			if (_name.indexOf('rvbs-') != -1) rn = _name.substr(5);
-			if (_name.indexOf('rvpr-') != -1) rn = _name.substr(5);
-			var a:Array = rn.split('-');
-			for (var i:int = 0; i < a.length; i++) a[i] = a[i].substr(0, 1).toUpperCase() + a[i].substr(1);
-			return a.join(' ');
-		}		
-
 		public function addBranch(s:String):void
 		{
 			_branches.push(s);
