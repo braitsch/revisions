@@ -1,5 +1,6 @@
 package model.proxies.local {
 
+	import system.SystemRules;
 	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.NativeProcessEvent;
@@ -58,6 +59,8 @@ package model.proxies.local {
 			for (var i:int = 0; i < a.length; i++) a[i] = a[i].result;
 			var m:Array = ignoreHiddenFiles(splitAndTrim(a[0]));
 			var u:Array = ignoreHiddenFiles(splitAndTrim(a[1]));
+			trace("StatusProxy.onModified(a)", m.length, m);
+			trace("StatusProxy.onModified(a)", u.length, u);
 			_bookmark.branch.modified = [m , u];
 			AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.MODIFIED_RECEIVED, _bookmark));			
 		}
@@ -80,7 +83,10 @@ package model.proxies.local {
 		
 		private function ignoreHiddenFiles(a:Array):Array
 		{
-			for (var i:int = 0; i < a.length; i++) if (a[i].indexOf('.') == 0) a.splice(i, 1);
+			var f:Vector.<String> = SystemRules.FORBIDDEN_FILES;
+			for (var i:int = 0; i < a.length; i++) {
+				for (var j:int = 0; j < f.length; j++) if (a[i].indexOf(f[j]) != -1) {a.splice(i, 1); --i;}
+			}
 			return a;
 		}
 
