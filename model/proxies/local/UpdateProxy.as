@@ -15,60 +15,60 @@ package model.proxies.local {
 		private static var _timer			:Timer = new Timer(5000);
 		private static var _status 			:StatusProxy 	= new StatusProxy();
 		private static var _history			:HistoryProxy 	= new HistoryProxy();		
-		private static var _working			:Boolean = false;
 		private static var _autoSaveQueue	:Array = [];
-		private static var _refreshHistory	:Boolean;
 
 		public function initialize():void
 		{
+			_timer.addEventListener(TimerEvent.TIMER, onTimerCheckModified);
 			AppModel.engine.addEventListener(BookmarkEvent.NO_BOOKMARKS, killTimer);
 			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onBookmarkSelected);
 			AppModel.engine.addEventListener(AppEvent.HISTORY_REQUESTED, onHistoryRequested);
 			AppModel.engine.addEventListener(AppEvent.MODIFIED_REQUESTED, onModifiedRequested);
 			AppModel.engine.addEventListener(BookmarkEvent.SUMMARY_RECEIVED, onSummaryReceived);				
+			AppModel.engine.addEventListener(BookmarkEvent.HISTORY_RECEIVED, onHistoryReceived);				
 			AppModel.proxies.checkout.addEventListener(BookmarkEvent.REVERTED, onBookmarkReverted);
 			AppModel.proxies.editor.addEventListener(BookmarkEvent.COMMIT_COMPLETE, onCommitComplete);
 			AppModel.proxies.checkout.addEventListener(BookmarkEvent.BRANCH_CHANGED, onBranchChanged);
-			_timer.addEventListener(TimerEvent.TIMER, onTimerCheckModified);
 		}
 
-		private function onBranchChanged(e:BookmarkEvent):void {		getSummary(true);   }
+		private function onBranchChanged(e:BookmarkEvent):void {		getHistory();   	}
 		private function onCommitComplete(e:BookmarkEvent):void { 		getHistory();  		}
 		private function onHistoryRequested(e:AppEvent):void {			getHistory();		}
 		private function onBookmarkReverted(e:BookmarkEvent):void {		getHistory();		}
-		private function onBookmarkSelected(e:BookmarkEvent):void { 	getSummary(false);	}
-		private function onTimerCheckModified(e:TimerEvent):void {		getModified(AppModel.bookmark);}		
+		private function onBookmarkSelected(e:BookmarkEvent):void { 	getSummary();		}
+		private function onTimerCheckModified(e:TimerEvent):void {		getModified();		}		
 		
 		private function onModifiedRequested(e:AppEvent):void
 		{
+	// allows us to force check modified before executing a cmd, say like switching branches //	
 			getModified(e.data as Bookmark);
 		}
 		
+		private function onHistoryReceived(e:BookmarkEvent):void
+		{
+			getSummary();
+		}		
+		
 		private function onSummaryReceived(e:BookmarkEvent):void
 		{	
-			if (_refreshHistory) getHistory(); _refreshHistory = false;
+			getModified(AppModel.bookmark); 
 		}					
 		
-		private function getSummary(b:Boolean):void
+		private function getSummary():void
 		{
 			resetTimer();
-			_working = true;
 			_status.getSummary();
-			_refreshHistory = b;
 		}
 		
-		private function getModified(b:Bookmark):void
+		private function getModified(b:Bookmark = null):void
 		{
-			trace("UpdateProxy.getModified(b)", b.label);
 			resetTimer();
-			_working = true;
-			_status.getModified(b);
+			_status.getModified(b || AppModel.bookmark);
 		}
 		
 		private function getHistory():void
 		{
 			resetTimer();
-			_working = true;
 		// add slight delay so we have time to display the preloader //	
 			setTimeout(_history.getHistory, 500);
 			dispatchEvent(new AppEvent(AppEvent.REQUESTING_HISTORY));			

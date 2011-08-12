@@ -48,6 +48,7 @@ package view {
 			this.filters = [new DropShadowFilter(5, 45, 0, .5, 10, 10)];
 			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onSelected);
 			AppModel.engine.addEventListener(BookmarkEvent.SUMMARY_RECEIVED, drawView);
+			AppModel.engine.addEventListener(BookmarkEvent.MODIFIED_RECEIVED, enableSaveButton);
 		}
 
 		public function resize(h:uint):void
@@ -142,6 +143,14 @@ package view {
 		{
 		// ignore if we're not showing the bookmark that just updated //
 			if (e.data != _bookmark) return;
+			enableSaveButton();
+			_details.version_txt.text = 'Version #'+_bookmark.branch.totalCommits as String;
+			_details.lastSaved_txt.text = 'Last Saved : '+_bookmark.branch.lastCommit.date;
+			_details.branch_txt.text = 'On Branch : '+StringUtils.capitalize(_bookmark.branch.name);			
+		}
+		
+		private function enableSaveButton(a:BookmarkEvent = null):void
+		{
 			if (_bookmark.branch.isModified){
 				_details.save_btn.over.alpha = 1;
 				_details.save_btn.buttonMode = true;
@@ -150,10 +159,7 @@ package view {
 				_details.save_btn.over.alpha = 0;
 				_details.save_btn.buttonMode = false;
 				_details.save_btn.removeEventListener(MouseEvent.CLICK, onSaveButton);
-			}					
-			_details.version_txt.text = 'Version #'+_bookmark.branch.totalCommits as String;
-			_details.lastSaved_txt.text = 'Last Saved : '+_bookmark.branch.lastCommit.date;
-			_details.branch_txt.text = 'On Branch : '+StringUtils.capitalize(_bookmark.branch.name);			
+			}				
 		}
 		
 	// button events //

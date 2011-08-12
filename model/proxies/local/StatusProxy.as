@@ -26,8 +26,7 @@ package model.proxies.local {
 		public function getSummary(e:BookmarkEvent = null):void
 		{
 			super.directory = AppModel.bookmark.gitdir;
-			super.queue = [	Vector.<String>([BashMethods.GET_MODIFIED_FILES]),
-							Vector.<String>([BashMethods.GET_LAST_COMMIT]),
+			super.queue = [	Vector.<String>([BashMethods.GET_LAST_COMMIT]),
 							Vector.<String>([BashMethods.GET_TOTAL_COMMITS]) ];
 		}
 		
@@ -44,34 +43,45 @@ package model.proxies.local {
 		private function onQueueComplete(e:NativeProcessEvent):void
 		{
 			var a:Array = e.data as Array;
-		// strip the method names off the result array //	
-			for (var i:int = 0; i < a.length; i++) a[i] = a[i].result;			
-			switch (a.length){
-				case 2 : onModified(a);		break;
-				case 3 : onSummary(a);		break;
+			switch(a[0].method){
+				case BashMethods.GET_LAST_COMMIT :
+					onSummary(a);	
+				break;
+				case BashMethods.GET_MODIFIED_FILES :
+					onModified(a);
+				break;				
 			}
 		}
 		
 		private function onModified(a:Array):void
 		{
-			var m:Array = splitAndTrim(a[0]);
-			var u:Array = splitAndTrim(a[1]);
+			for (var i:int = 0; i < a.length; i++) a[i] = a[i].result;
+			var m:Array = ignoreHiddenFiles(splitAndTrim(a[0]));
+			var u:Array = ignoreHiddenFiles(splitAndTrim(a[1]));
 			_bookmark.branch.modified = [m , u];
+			AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.MODIFIED_RECEIVED, _bookmark));			
 		}
 		//AppModel.proxies.editor.commit('AutoSaved : '+new Date().toLocaleString(), _bookmark);
 
 		private function onSummary(a:Array):void
 		{
-			var n:uint = uint(a[2]) + 1; // total commits //
-			AppModel.branch.setSummary(new Commit(a[1], n), n, splitAndTrim(a[0]));
+			getModified(AppModel.bookmark);
+			for (var i:int = 0; i < a.length; i++) a[i] = a[i].result;
+			AppModel.branch.lastCommit = new Commit(a[0], uint(a[1]) + 1);
 			AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.SUMMARY_RECEIVED, AppModel.bookmark));
 		}
 
 		private function splitAndTrim(s:String):Array
 		{
-			var x:Array = s.split(/[\n\r\t]/g);
-			for (var i:int = 0; i < x.length; i++) if (x[i]=='') x.splice(i, 1);
-			return x;		
+			var a:Array = s.split(/[\n\r\t]/g);
+			for (var i:int = 0; i < a.length; i++) if (a[i]=='') a.splice(i, 1);
+			return a;		
+		}
+		
+		private function ignoreHiddenFiles(a:Array):Array
+		{
+			for (var i:int = 0; i < a.length; i++) if (a[i].indexOf('.') == 0) a.splice(i, 1);
+			return a;
 		}
 
 		private function onProcessFailure(e:NativeProcessEvent):void 

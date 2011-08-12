@@ -24,8 +24,8 @@ package view.history {
 			AppModel.engine.addEventListener(BookmarkEvent.ADDED, onAddition);
 			AppModel.engine.addEventListener(BookmarkEvent.DELETED, onDeletion);
 			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onSelection);
-			AppModel.engine.addEventListener(BookmarkEvent.SUMMARY_RECEIVED, onSummary);
 			AppModel.engine.addEventListener(BookmarkEvent.HISTORY_RECEIVED, onHistory);
+			AppModel.engine.addEventListener(BookmarkEvent.MODIFIED_RECEIVED, onModified);
 		}
 
 		private function onMouseWheel(e:MouseEvent):void
@@ -83,11 +83,11 @@ package view.history {
 			if (hl) hl.checkIfChanged();
 		}
 
-		private function onSummary(e:BookmarkEvent):void
+		private function onModified(e:BookmarkEvent):void
 		{
 			var hl:HistoryList = getListByBookmark(e.data as Bookmark);
-			if (hl && e.data.branch.history) hl.checkIfChanged();
-		}							
+			if (hl && e.data.branch.history) hl.checkIfChanged();			
+		}									
 		
 		private function onSelection(e:BookmarkEvent):void 
 		{
