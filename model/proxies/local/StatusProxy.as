@@ -35,7 +35,8 @@ package model.proxies.local {
 		{
 			_bookmark = b;
 			super.directory = _bookmark.gitdir;			
-			super.queue = [	Vector.<String>([BashMethods.GET_MODIFIED_FILES]) ]; 			
+			super.queue = [	Vector.<String>([BashMethods.GET_MODIFIED_FILES]),
+							Vector.<String>([BashMethods.GET_UNTRACKED_FILES]) ]; 			
 		}
 		
 	// private handlers //
@@ -46,15 +47,16 @@ package model.proxies.local {
 		// strip the method names off the result array //	
 			for (var i:int = 0; i < a.length; i++) a[i] = a[i].result;			
 			switch (a.length){
-				case 1 : onModified(a);		break;
+				case 2 : onModified(a);		break;
 				case 3 : onSummary(a);		break;
 			}
 		}
 		
 		private function onModified(a:Array):void
 		{
-			var k:Array = splitAndTrim(a[0]);
-			trace("StatusProxy.onModified(a)", k);
+			var m:Array = splitAndTrim(a[0]);
+			var u:Array = splitAndTrim(a[1]);
+			_bookmark.branch.modified = [m , u];
 		}
 		//AppModel.proxies.editor.commit('AutoSaved : '+new Date().toLocaleString(), _bookmark);
 

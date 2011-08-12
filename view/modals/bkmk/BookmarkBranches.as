@@ -74,7 +74,7 @@ package view.modals.bkmk {
 		
 		private function validate():Boolean
 		{
-			if (_bookmark.branch.modified){
+			if (_bookmark.branch.isModified){
 				var m:String = 'Please save your changes before moving to a new branch.';
 				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
 				return false;

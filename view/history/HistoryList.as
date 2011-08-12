@@ -31,7 +31,7 @@ package view.history {
 	// on summary & history updates //
 		public function checkIfChanged():void
 		{
-			var m:Boolean = _bookmark.branch.modified;			
+			var m:Boolean = _bookmark.branch.isModified;			
 			if (_modified != m || numChildren == 0 || _bookmark.branch != _branch){
 				_modified = m; _branch = _bookmark.branch; drawList();
 			}	else{
@@ -72,7 +72,7 @@ package view.history {
 		
 		private function showHideUnsaved():void
 		{
-			var m:Boolean = _bookmark.branch.modified;
+			var m:Boolean = _bookmark.branch.isModified;
 			if (m == true) {
 				addChildAt(_itemUnsaved, 0);
 			}	else if (m == false && _itemUnsaved.stage) {

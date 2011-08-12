@@ -142,7 +142,7 @@ package view {
 		{
 		// ignore if we're not showing the bookmark that just updated //
 			if (e.data != _bookmark) return;
-			if (_bookmark.branch.modified){
+			if (_bookmark.branch.isModified){
 				_details.save_btn.over.alpha = 1;
 				_details.save_btn.buttonMode = true;
 				_details.save_btn.addEventListener(MouseEvent.CLICK, onSaveButton);

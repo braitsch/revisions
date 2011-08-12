@@ -1,5 +1,7 @@
 package view.ui {
 
+	import events.AppEvent;
+	import model.AppModel;
 	import com.greensock.TweenLite;
 	import flash.display.Shape;
 	import flash.display.Sprite;
@@ -30,25 +32,23 @@ package view.ui {
 			_view.addChildAt(_bkgd, 0);
 			_view.filters = [_glow];
 			_label.filters = [_glow];
+			AppModel.engine.addEventListener(AppEvent.LOADER_TEXT, setLoaderText);			
 		}
 
-		public function set label(s:String):void
+		public function show(s:String):void
 		{
-			_text.text = s;
-			var w:Number = _text.width + 18;
-			_label.graphics.clear();
-			_label.graphics.beginBitmapFill(new DkGreyPattern());
-			_label.graphics.drawRoundRect(-w/2, 0, w, 20, 5);
-			_label.graphics.endFill();			
-		}
-
-		public function show():void
-		{
+			setLabel(s);
 			_view.light.gotoAndPlay(1);
 			_view.dark.gotoAndStop(1);
 			_view.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			TweenLite.to(this, .5, {alpha:1});
 		}
+		
+		public function hide():void
+		{
+			TweenLite.to(this, .5, {alpha:0});
+			_view.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+		}		
 		
 		public function resize(w:uint, h:uint, offX:int = 0, offY:int = 0):void
 		{
@@ -68,6 +68,21 @@ package view.ui {
 			_label.y = 48;
 			_label.addChild(_text);
 		}
+		
+		private function setLabel(s:String):void
+		{
+			_text.text = s;
+			var w:Number = _text.width + 18;
+			_label.graphics.clear();
+			_label.graphics.beginBitmapFill(new DkGreyPattern());
+			_label.graphics.drawRoundRect(-w/2, 0, w, 20, 5);
+			_label.graphics.endFill();				
+		}		
+		
+		private function setLoaderText(e:AppEvent):void
+		{
+			setLabel(e.data as String);
+		}			
 
 		private function onEnterFrame(e:Event):void
 		{
@@ -86,12 +101,6 @@ package view.ui {
 			if (_view.getChildIndex(a) > _view.getChildIndex(b)) _view.swapChildren(a, b);
 		}
 
-		public function hide():void
-		{
-			TweenLite.to(this, .5, {alpha:0});
-			_view.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
-		}
-		
 	}
 	
 }

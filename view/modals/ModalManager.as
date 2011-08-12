@@ -94,7 +94,6 @@ package view.modals {
 			AppModel.engine.addEventListener(AppEvent.HIDE_CONFIRM, onHideConfirm);				
 			AppModel.engine.addEventListener(AppEvent.SHOW_LOADER, showLoader);
 			AppModel.engine.addEventListener(AppEvent.HIDE_LOADER, hideLoader);					
-			AppModel.engine.addEventListener(AppEvent.LOADER_TEXT, setLoaderText);					
 			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onBookmarkSelected);
 			AppModel.engine.addEventListener(BookmarkEvent.PATH_ERROR, repairBookmark);
 			AppModel.engine.addEventListener(BookmarkEvent.NO_BOOKMARKS, showWelcomeScreen);
@@ -192,9 +191,24 @@ package view.modals {
 		
 		private function onDragAndDrop(e:UIEvent):void 
 		{
-			_dragAndDrop.file = e.data as File;
-			showModalWindow(_dragAndDrop);
-		}	
+			if (dirIsEmpty(e.data as File) == false){
+				_dragAndDrop.file = e.data as File;
+				showModalWindow(_dragAndDrop);
+			} 	else{
+				var m:String = 'Please add some files to this folder before attempting to track it.';
+				onShowAlert(new AppEvent(AppEvent.SHOW_ALERT, m));				
+			}
+		}
+
+		private function dirIsEmpty(f:File):Boolean
+		{
+			if (f.isDirectory) {
+				var a:Array = f.getDirectoryListing();
+				for (var i:int = 0; i < a.length; i++) if (a[i].isHidden == false) return false;
+				return true;
+			}
+			return false;
+		}			
 
 		private function onNewButtonClick(e:UIEvent):void 
 		{
@@ -308,10 +322,9 @@ package view.modals {
 		
 		private function showLoader(e:AppEvent):void
 		{
-			_preloader.show();
-			_preloader.label = e.data as String;
-			setChildIndex(_preloader, numChildren-1);
+			_preloader.show(e.data as String);
 			resize(stage.stageWidth, stage.stageHeight);
+			setChildIndex(_preloader, numChildren-1);
 		}
 		
 		private function hideLoader(e:AppEvent):void 
@@ -319,11 +332,6 @@ package view.modals {
 			_preloader.hide();
 		}
 		
-		private function setLoaderText(e:AppEvent):void
-		{
-			_preloader.label = e.data as String;			
-		}								
-
 	// adding & removing modal windows //	
 		
 		private function onCloseButton(e:UIEvent):void { hideModalWindow(); }

@@ -1,5 +1,6 @@
 package model.proxies.local {
 
+	import flash.events.TimerEvent;
 	import events.AppEvent;
 	import events.BookmarkEvent;
 	import model.AppModel;
@@ -28,6 +29,7 @@ package model.proxies.local {
 			AppModel.proxies.checkout.addEventListener(BookmarkEvent.REVERTED, onBookmarkReverted);
 			AppModel.proxies.editor.addEventListener(BookmarkEvent.COMMIT_COMPLETE, onCommitComplete);
 			AppModel.proxies.checkout.addEventListener(BookmarkEvent.BRANCH_CHANGED, onBranchChanged);
+			_timer.addEventListener(TimerEvent.TIMER, onTimerCheckModified);
 		}
 
 		private function onBranchChanged(e:BookmarkEvent):void {		getSummary(true);   }
@@ -35,6 +37,7 @@ package model.proxies.local {
 		private function onHistoryRequested(e:AppEvent):void {			getHistory();		}
 		private function onBookmarkReverted(e:BookmarkEvent):void {		getHistory();		}
 		private function onBookmarkSelected(e:BookmarkEvent):void { 	getSummary(false);	}
+		private function onTimerCheckModified(e:TimerEvent):void {		getModified(AppModel.bookmark);}		
 		
 		private function onModifiedRequested(e:AppEvent):void
 		{
@@ -56,6 +59,7 @@ package model.proxies.local {
 		
 		private function getModified(b:Bookmark):void
 		{
+			trace("UpdateProxy.getModified(b)", b.label);
 			resetTimer();
 			_working = true;
 			_status.getModified(b);

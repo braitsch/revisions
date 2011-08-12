@@ -28,15 +28,13 @@ package model.vo {
 		public function get totalCommits():uint { return _totalCommits; }
 				
 		
-		public function set modified(b:Boolean):void
+		public function set modified(a:Array):void
 		{
-			if (b == false){
-				_status[StatusProxy.M] = [];
-				_status[StatusProxy.U] = [];
-			}
+			_status[StatusProxy.M] = a[0];
+			_status[StatusProxy.U] = a[1];
 		}
 		
-		public function get modified():Boolean
+		public function get isModified():Boolean
 		{
 			return (_status[StatusProxy.M].length || _status[StatusProxy.U].length);
 		}

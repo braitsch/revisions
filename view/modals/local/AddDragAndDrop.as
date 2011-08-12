@@ -34,7 +34,7 @@ package view.modals.local {
 		{
 			parseTargetNameAndLocation(f);
 		}
-		
+
 		private function parseTargetNameAndLocation($file:File):void
 		{
 			var p:String = $file.nativePath;
@@ -67,9 +67,9 @@ package view.modals.local {
 				active 		:	1,
 				autosave	:	_check.selected ? 60 : 0
 			};		
-			AppModel.engine.addBookmark(new Bookmark(o));
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));						
-		}		
+			AppModel.engine.addBookmark(new Bookmark(o));
+		}
 		
 	}
 	

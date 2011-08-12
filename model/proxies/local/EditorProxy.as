@@ -73,7 +73,7 @@ package model.proxies.local {
 		//	trace("EditorProxy.onProcessComplete(e)", e.data.method, e.data.result);
 			switch(e.data.method){
 				case BashMethods.COMMIT : 
-					AppModel.branch.modified = false;
+					AppModel.branch.modified = [[], []];
 					dispatchEvent(new BookmarkEvent(BookmarkEvent.COMMIT_COMPLETE));
 				break;
 				case BashMethods.INIT_FILE: 
