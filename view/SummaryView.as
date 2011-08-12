@@ -48,6 +48,7 @@ package view {
 			this.filters = [new DropShadowFilter(5, 45, 0, .5, 10, 10)];
 			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onSelected);
 			AppModel.engine.addEventListener(BookmarkEvent.SUMMARY_RECEIVED, drawView);
+			AppModel.engine.addEventListener(BookmarkEvent.HISTORY_RECEIVED, drawView);
 			AppModel.engine.addEventListener(BookmarkEvent.MODIFIED_RECEIVED, enableSaveButton);
 		}
 
