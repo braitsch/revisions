@@ -12,6 +12,7 @@ package system {
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.Event;
+	import flash.ui.Keyboard;
  
  
     public class AirNativeMenu extends Sprite 
@@ -32,8 +33,19 @@ package system {
             _appMenu = NativeApplication.nativeApplication.menu;
             addLocalOptions();
             addRemoteOptions();
+            setKeyEquivalents();
 		}
-		
+
+		private static function setKeyEquivalents():void
+		{
+       		_newBkmk.keyEquivalent = 'n';
+       		_newBkmk.keyEquivalentModifiers = [Keyboard.COMMAND];
+       		_github.keyEquivalent = 'g';
+       		_github.keyEquivalentModifiers = [Keyboard.COMMAND];
+       		_beanstalk.keyEquivalent = 'b';
+       		_beanstalk.keyEquivalentModifiers = [Keyboard.COMMAND];
+		}
+
 		private static function addLocalOptions():void
 		{
 		// file menu //	
@@ -69,7 +81,7 @@ package system {
         { 
         	 switch(e.target){
         	 	case _newBkmk	: 
-        	 		_stage.dispatchEvent(new UIEvent(UIEvent.ADD_BOOKMARK));	
+        	 		_stage.dispatchEvent(new UIEvent(UIEvent.ADD_BOOKMARK));
         	 	break;
         	 	case _aboutGit : 
         	 		_stage.dispatchEvent(new UIEvent(UIEvent.ABOUT_GIT));

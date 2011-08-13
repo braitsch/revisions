@@ -67,7 +67,7 @@ package view.modals.local {
 		private function onKeyUp(e:KeyboardEvent):void
 		{
 			if (!_allowClone) enableCloneButton(true);
-			if (this.stage && e.keyCode == 13 && _allowClone) onEnterKey();				
+			if (this.stage && e.keyCode == 13 && e.keyCode != 15 && _allowClone) onEnterKey();				
 		}
 		
 		private function onURLTextFieldClick(e:MouseEvent):void
@@ -80,7 +80,6 @@ package view.modals.local {
 			if (b){
 				_allowClone = true;
 				super.enableButton(_view.custom.clone_btn, true);
-				_view.custom.url_txt.text = '';	
 				_view.custom.url_txt.removeEventListener(MouseEvent.CLICK, onURLTextFieldClick);
 				_view.custom.clone_btn.addEventListener(MouseEvent.CLICK, onCloneClick);
 			}	else{
