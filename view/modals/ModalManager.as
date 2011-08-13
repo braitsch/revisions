@@ -1,15 +1,8 @@
 package view.modals {
 
-	import view.modals.login.RemotePassword;
 	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.UIEvent;
-	import flash.display.Sprite;
-	import flash.display.Stage;
-	import flash.events.KeyboardEvent;
-	import flash.events.MouseEvent;
-	import flash.filesystem.File;
-	import flash.filters.BlurFilter;
 	import model.AppModel;
 	import model.db.AppSettings;
 	import model.remote.RemoteAccount;
@@ -34,15 +27,21 @@ package view.modals {
 	import view.modals.local.WelcomeScreen;
 	import view.modals.login.BeanStalkLogin;
 	import view.modals.login.GitHubLogin;
+	import view.modals.login.RemotePassword;
 	import view.modals.remote.AddBeanstalkRepo;
 	import view.modals.remote.AddGitHubRepo;
-	import view.modals.remote.AnonymousClone;
-	import view.modals.remote.GitHubHome;
 	import view.modals.remote.AddRemoteRepo;
+	import view.modals.remote.GitHubHome;
 	import view.modals.system.Alert;
 	import view.modals.system.Confirm;
 	import view.modals.system.Debug;
 	import view.ui.Preloader;
+	import flash.display.Sprite;
+	import flash.display.Stage;
+	import flash.events.KeyboardEvent;
+	import flash.events.MouseEvent;
+	import flash.filesystem.File;
+	import flash.filters.BlurFilter;
 
 	public class ModalManager extends Sprite {
 
@@ -66,7 +65,6 @@ package view.modals {
 		private static var _addToGitHub		:AddGitHubRepo = new AddGitHubRepo();
 		private static var _addToBeanstalk	:AddBeanstalkRepo = new AddBeanstalkRepo();
 		private static var _newRepoConfirm	:NewRepoConfirm = new NewRepoConfirm();
-		private static var _clone			:AnonymousClone = new AnonymousClone();		
 		private static var _gitHub			:GitHubHome = new GitHubHome();
 		private static var _alert			:Alert = new Alert();
 		private static var _debug			:Debug = new Debug();
@@ -120,7 +118,6 @@ package view.modals {
 			stage.addEventListener(UIEvent.GLOBAL_SETTINGS, globalSettings);	
 			stage.addEventListener(UIEvent.GITHUB_HOME, showGitHubHome);
 			stage.addEventListener(UIEvent.REMOTE_LOGIN, showRemoteLogin);
-			stage.addEventListener(UIEvent.ANONYMOUS_CLONE, showAnonymousClone);			
 			stage.addEventListener(UIEvent.SHOW_NEW_REPO_CONFIRM, showNewRepoConfirm);			
 			stage.addEventListener(UIEvent.ADD_REMOTE_TO_BOOKMARK, addBkmkToRemote);
 			stage.addEventListener(UIEvent.CLOSE_MODAL_WINDOW, onCloseButton);
@@ -291,11 +288,6 @@ package view.modals {
 		{
 			showModalWindow(_gitHub);
 		}
-		
-		private function showAnonymousClone(e:UIEvent):void
-		{
-			showModalWindow(_clone);	
-		}						
 		
 		private function onAppExpired(e:AppEvent):void
 		{

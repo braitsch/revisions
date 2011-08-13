@@ -115,6 +115,7 @@ package model.proxies.remote {
 				break;					
 				case BashMethods.CLONE_REPOSITORY :
 					dispatchEvent(new AppEvent(AppEvent.CLONE_COMPLETE));
+					AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 				break;
 				case BashMethods.ADD_REMOTE : 
 					onAddRemoteComplete();

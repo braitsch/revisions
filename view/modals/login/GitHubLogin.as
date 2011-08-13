@@ -25,7 +25,6 @@ package view.modals.login {
 		public function set onSuccessEvent(e:String):void 
 		{ 
 			_onSuccessEvent = e;
-			super.allowSkip = (e != UIEvent.ADD_REMOTE_TO_BOOKMARK);
 		}	
 		
 		override protected function gotoNewAccountPage(e:MouseEvent):void

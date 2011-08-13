@@ -31,7 +31,6 @@ package events {
 		public static const GITHUB_HOME				:String = "GITHUB_HOME";
 		public static const BEANSTALK_HOME			:String = "BEANSTALK_HOME";
 		public static const LOGGED_IN_CLONE			:String = "LOGGED_IN_CLONE";
-		public static const ANONYMOUS_CLONE			:String = "ANONYMOUS_CLONE";
 	
 	// miscellaneous //	
 		public static const CLOSE_MODAL_WINDOW		:String = "CLOSE_MODAL_WINDOW";

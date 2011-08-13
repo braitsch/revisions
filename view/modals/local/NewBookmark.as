@@ -2,69 +2,146 @@ package view.modals.local {
 
 	import events.AppEvent;
 	import events.UIEvent;
-	import flash.events.MouseEvent;
-	import flash.filesystem.File;
 	import model.AppModel;
 	import model.remote.Accounts;
 	import model.remote.RemoteAccount;
+	import model.vo.Bookmark;
+	import system.StringUtils;
 	import view.modals.ModalWindow;
+	import flash.events.Event;
+	import flash.events.KeyboardEvent;
+	import flash.events.MouseEvent;
+	import flash.filesystem.File;
 
 	public class NewBookmark extends ModalWindow {
 
-		private static var _view	:NewBookmarkMC = new NewBookmarkMC();
+		private static var _view		:NewBookmarkMC = new NewBookmarkMC();
+		private static var _cloneURL	:String;
+		private static var _savePath	:String;
+		private static var _allowClone	:Boolean;
 
 		public function NewBookmark()
 		{
 			addChild(_view);
-			super.addCloseButton();
-			super.drawBackground(550, 240);
+			super.addCloseButton(600);
+			super.drawBackground(600, 330);
 			super.setTitle(_view, 'New Bookmark');
-			super.setHeading(_view, 'Select below to track a new file, folder, or checkout from a remote repository.');
-			super.addButtons([_view.file_btn, _view.folder_btn, _view.github_btn, _view.beanstalk_btn, _view.private_btn]);			
-			_view.addEventListener(MouseEvent.CLICK, onButtonClick);
+			super.addButtons([_view.trackFile, _view.trackFolder, _view.loginGithub]);			
+			super.addButtons([_view.loginBeanstalk, _view.viewGithub, _view.viewBeanstalk, _view.custom.clone_btn]);			
+			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);
+			_view.addEventListener(MouseEvent.CLICK, onButtonClick);
+			_view.custom.url_txt.getChildAt(1).addEventListener(KeyboardEvent.KEY_UP, onKeyUp);			
 		}
 
 		private function onButtonClick(e:MouseEvent):void
 		{
 			switch(e.target){
-				case _view.file_btn :
+				case _view.trackFile :
 					super.browseForFile('Select a file to track');
 				break;	
-				case _view.folder_btn :
+				case _view.trackFolder :
 					super.browseForDirectory('Select a folder to track');
 				break;	
-				case _view.github_btn :
-					onGitHubClick();
+				case _view.viewGithub :
+					dispatchEvent(new UIEvent(UIEvent.GITHUB_HOME));
 				break;	
-				case _view.beanstalk_btn :
-					onBeanStalkClick();
+				case _view.loginGithub :
+					dispatchEvent(new UIEvent(UIEvent.REMOTE_LOGIN, {type:RemoteAccount.GITHUB, event:UIEvent.GITHUB_HOME}));
 				break;	
-				case _view.private_btn :
-					dispatchAlert('Private repositories will be supported in the next build.');
-				break;																	
+				case _view.viewBeanstalk :
+					dispatchAlert('Beanstalk support is coming very soon.');
+				break;	
+				case _view.loginBeanstalk :
+					dispatchAlert('Beanstalk support is coming very soon.');
+				break;					
 			}
 		}
-
-		private function onBeanStalkClick():void
+		
+		private function onAddedToStage(e:Event):void
 		{
-			dispatchAlert('Beanstalk integration is coming in the next build.');
-		//	dispatchEvent(new UIEvent(UIEvent.REMOTE_LOGIN, {type:RemoteAccount.BEANSTALK, event:UIEvent.ABOUT_GIT}));			
+			enableCloneButton(false);
+			_view.loginGithub.visible = Accounts.github.loggedIn == false;
+		}
+
+		private function onKeyUp(e:KeyboardEvent):void
+		{
+			if (!_allowClone) enableCloneButton(true);
+			if (this.stage && e.keyCode == 13 && _allowClone) onEnterKey();				
 		}
 		
-		private function onGitHubClick():void
+		private function onURLTextFieldClick(e:MouseEvent):void
 		{
-			if (Accounts.github.loggedIn){
-				dispatchEvent(new UIEvent(UIEvent.GITHUB_HOME));
-			}	else{
-				dispatchEvent(new UIEvent(UIEvent.REMOTE_LOGIN, {type:RemoteAccount.GITHUB, event:UIEvent.GITHUB_HOME}));
-			}			
+			if (!_allowClone) enableCloneButton(true);
 		}
+		
+		private function enableCloneButton(b:Boolean):void
+		{
+			if (b){
+				_allowClone = true;
+				super.enableButton(_view.custom.clone_btn, true);
+				_view.custom.url_txt.text = '';	
+				_view.custom.url_txt.removeEventListener(MouseEvent.CLICK, onURLTextFieldClick);
+				_view.custom.clone_btn.addEventListener(MouseEvent.CLICK, onCloneClick);
+			}	else{
+				_allowClone = false;
+				super.enableButton(_view.custom.clone_btn, false);
+				_view.custom.url_txt.text = 'git@github.com:user-name/repository-name.git';
+				_view.custom.url_txt.setSelection(0, _view.custom.url_txt.length);
+				_view.custom.url_txt.textFlow.interactionManager.setFocus();			
+				_view.custom.url_txt.addEventListener(MouseEvent.CLICK, onURLTextFieldClick);
+				_view.custom.clone_btn.removeEventListener(MouseEvent.CLICK, onCloneClick);				
+			}
+		}
+		
+		override public function onEnterKey():void { onCloneClick(); }
+		private function onCloneClick(e:MouseEvent = null):void
+		{
+			if (!validate()) return;
+			_cloneURL = _view.custom.url_txt.text;
+			super.browseForDirectory('Select a location to clone to');
+		}		
+		
+		private function validate():Boolean
+		{
+			var url:String = _view.custom.url_txt.text;
+			if (url.indexOf('git') == -1 && url.indexOf('https://') == -1){
+				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, "Invalid URL : URL's should start with 'git' or 'https://'"));
+				return false;				
+			}
+			return true;
+		}		
 		
 		private function onBrowserSelection(e:UIEvent):void
 		{
-			dispatchEvent(new UIEvent(UIEvent.DRAG_AND_DROP, e.data as File));
-		}			
+			if (_cloneURL == ''){
+				dispatchEvent(new UIEvent(UIEvent.DRAG_AND_DROP, e.data as File));
+			}	else{
+				_savePath = File(e.data).nativePath;
+				AppModel.proxies.ghRemote.cloneRemoteRepository(_cloneURL, _savePath);
+				AppModel.proxies.ghRemote.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);
+			}
+		}
+
+		private function onCloneComplete(e:AppEvent):void
+		{
+			dispatchNewBookmark();
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
+			AppModel.proxies.ghRemote.removeEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);			
+		}
+
+		private function dispatchNewBookmark():void
+		{
+			var n:String = _savePath.substr(_savePath.lastIndexOf('/') + 1);
+			var o:Object = {
+				label		:	StringUtils.capitalize(n),
+				type		: 	Bookmark.FOLDER,
+				path		:	_savePath,
+				active 		:	1,
+				autosave	:	60 
+			};	
+			AppModel.engine.addBookmark(new Bookmark(o));
+		}
 		
 		private function dispatchAlert(m:String):void
 		{

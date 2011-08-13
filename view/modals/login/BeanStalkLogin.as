@@ -1,6 +1,5 @@
 package view.modals.login {
 
-	import events.UIEvent;
 	import flash.events.MouseEvent;
 	import flash.net.URLRequest;
 	import flash.net.navigateToURL;
@@ -20,7 +19,6 @@ package view.modals.login {
 		public function set onSuccessEvent(e:String):void 
 		{ 
 			_onSuccessEvent = e;
-			super.allowSkip = (e != UIEvent.ADD_REMOTE_TO_BOOKMARK);
 		}
 		
 		override protected function gotoNewAccountPage(e:MouseEvent):void

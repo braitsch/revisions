@@ -25,7 +25,7 @@ package view.modals.remote {
 		public function GitHubHome()
 		{
 			addChild(_view);
-			super.addButtons([_view.logOut, _view.custom.clone_btn]);
+			super.addButtons([_view.logOut]);
 			_view.badgePage.label_txt.text = 'My Github';
 			_view.logOut.addEventListener(MouseEvent.CLICK, onLogOutClick);
 			addEventListener(UIEvent.LOGGED_IN_CLONE, onCloneClick);
@@ -95,7 +95,6 @@ package view.modals.remote {
 		private function onRepositoriesReady():void
 		{
 			showPage(0);
-			resetURLField();
 			positionURLAndNav();
 			super.addCloseButton(590);
 			super.drawBackground(590, _view.height + 15);
@@ -117,8 +116,7 @@ package view.modals.remote {
 		private function positionURLAndNav():void
 		{
 			_view.nav.visible = _pages.length > 1;
-			_view.custom.y = _activePage.y + _activePage.height + 10;
-			_view.logOut.y = _view.custom.y + 96;
+			_view.logOut.y = _activePage.y + _activePage.height + 30;
 		}		
 		
 		override protected function enableButton(btn:Sprite, b:Boolean):void
@@ -143,34 +141,11 @@ package view.modals.remote {
 			}
 		}
 		
-		private function resetURLField():void
-		{
-			super.enableButton(_view.custom.clone_btn, false);
-			_view.custom.url_txt.addEventListener(MouseEvent.CLICK, onURLTextFieldClick);
-			_view.custom.url_txt.text = 'git@github.com:user-name/repository-name.git';
-			_view.custom.clone_btn.removeEventListener(MouseEvent.CLICK, onCustomClick);
-		}
-
-		private function onURLTextFieldClick(e:MouseEvent):void
-		{
-			super.enableButton(_view.custom.clone_btn, true);
-			_view.custom.url_txt.text = '';	
-			_view.custom.url_txt.removeEventListener(MouseEvent.CLICK, onURLTextFieldClick);
-			_view.custom.clone_btn.addEventListener(MouseEvent.CLICK, onCustomClick);
-		}
-
 		private function onCloneClick(e:UIEvent):void
 		{
 			_cloneURL = e.data as String;
-			showFileBrowser();
+			super.browseForDirectory('Select a location to clone to');
 		}					
-		
-		private function onCustomClick(e:MouseEvent):void
-		{
-			if (!validate()) return;
-			_cloneURL = _view.custom.url_txt.text;
-			showFileBrowser();
-		}
 		
 		private function onLogOutClick(e:MouseEvent):void
 		{
@@ -182,21 +157,6 @@ package view.modals.remote {
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 		}
 
-		private function validate():Boolean
-		{
-			var url:String = _view.custom.url_txt.text;
-			if (url.indexOf('git') == -1 && url.indexOf('https://') == -1){
-				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, "Invalid URL : URL's should start with 'git' or 'https://'"));
-				return false;				
-			}
-			return true;
-		}
-
-		private function showFileBrowser():void
-		{
-			super.browseForDirectory('Select a location to clone to');
-		}
-
 		private function onBrowserSelection(e:UIEvent):void
 		{
 			_savePath = File(e.data).nativePath;
@@ -206,7 +166,6 @@ package view.modals.remote {
 
 		private function onCloneComplete(e:AppEvent):void
 		{
-			resetURLField();
 			dispatchNewBookmark();
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 			AppModel.proxies.ghRemote.removeEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);			
@@ -223,7 +182,6 @@ package view.modals.remote {
 				autosave	:	60 
 			};	
 			AppModel.engine.addBookmark(new Bookmark(o));
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 		}
 		
 	}
