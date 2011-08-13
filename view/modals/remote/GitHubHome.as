@@ -28,8 +28,7 @@ package view.modals.remote {
 			super.addButtons([_view.logOut, _view.custom.clone_btn]);
 			_view.badgePage.label_txt.text = 'My Github';
 			_view.logOut.addEventListener(MouseEvent.CLICK, onLogOutClick);
-			_view.custom.clone_btn.addEventListener(MouseEvent.CLICK, onCustomClick);			
-			addEventListener(UIEvent.LOGGED_IN_CLONE, onCloneClick);		
+			addEventListener(UIEvent.LOGGED_IN_CLONE, onCloneClick);
 			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);
 			AppModel.engine.addEventListener(AppEvent.REMOTE_READY, onAccountReady);
 			AppModel.proxies.ghLogin.addEventListener(AppEvent.LOGOUT_SUCCESS, onLogout);
@@ -58,18 +57,6 @@ package view.modals.remote {
 			_model.avatar.x = -190;
 			_view.badgeUser.addChild(_model.avatar);
 		}
-
-//		private function onNewRepo(e:AppEvent):void
-//		{
-//			var lp:Sprite = _pages[_pages.length-1];
-//			var ri:RepositoryItem = new RepositoryItem(e.data as Object);
-//			if (lp.numChildren == _maxPerPage){
-//				lp = new Sprite();
-//				_pages.push(lp);
-//			}
-//			lp.addChild(ri);
-//			ri.y = 53 * lp.numChildren;			
-//		}
 
 		private function onNewRepo(e:AppEvent):void
 		{
@@ -158,14 +145,18 @@ package view.modals.remote {
 		
 		private function resetURLField():void
 		{
+			super.enableButton(_view.custom.clone_btn, false);
 			_view.custom.url_txt.addEventListener(MouseEvent.CLICK, onURLTextFieldClick);
 			_view.custom.url_txt.text = 'git@github.com:user-name/repository-name.git';
+			_view.custom.clone_btn.removeEventListener(MouseEvent.CLICK, onCustomClick);
 		}
 
 		private function onURLTextFieldClick(e:MouseEvent):void
 		{
+			super.enableButton(_view.custom.clone_btn, true);
 			_view.custom.url_txt.text = '';	
 			_view.custom.url_txt.removeEventListener(MouseEvent.CLICK, onURLTextFieldClick);
+			_view.custom.clone_btn.addEventListener(MouseEvent.CLICK, onCustomClick);
 		}
 
 		private function onCloneClick(e:UIEvent):void
@@ -194,13 +185,8 @@ package view.modals.remote {
 		private function validate():Boolean
 		{
 			var url:String = _view.custom.url_txt.text;
-			if (url.indexOf('https://') != -1){
-				var m:String = "Cloning over HTTPS is not yet supported, please enter a url that starts with 'git@github.com' or 'git://'";
-				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
-				return false;
-			}
-			if (url.indexOf('git@github.com') == -1 && url.indexOf('git://') == -1){
-				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, "Invalid URL : URL's should start with 'git@github.com' or 'git://'"));
+			if (url.indexOf('git') == -1 && url.indexOf('https://') == -1){
+				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, "Invalid URL : URL's should start with 'git' or 'https://'"));
 				return false;				
 			}
 			return true;

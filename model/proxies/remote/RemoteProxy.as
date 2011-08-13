@@ -189,6 +189,12 @@ package model.proxies.remote {
 			}	else if (hasString(s, 'Couldn\'t resolve host')){
 				f = true;
 				dispatchAlert('Could not connect to server, did you enter the URL correctly?');
+			}	else if (hasString(s, 'does not exist')){
+				f = true;
+				dispatchAlert('Could not connect to server, did you enter the URL correctly?');
+			}	else if (hasString(s, 'doesn\'t exist. Did you enter it correctly?')){
+				f = true;
+				dispatchAlert('Could not find that repository, did you enter the URL correctly?');
 			}	else if (hasString(s, 'fatal: The remote end hung up unexpectedly')){
 				f = true;
 				dispatchAlert('Whoops! Connection attempt failed, please check your internetz.');
