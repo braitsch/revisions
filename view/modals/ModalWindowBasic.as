@@ -3,17 +3,27 @@ package view.modals {
 	import events.UIEvent;
 	import fl.text.TLFTextField;
 	import com.greensock.TweenLite;
+	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
+	import flash.filters.GlowFilter;
 
 	public class ModalWindowBasic extends Sprite {
 
 		public var locked			:Boolean;
 		protected var inputs		:Vector.<TLFTextField>;
+		private var _bkgd			:Shape = new Shape();
 		private static var _file	:File = File.desktopDirectory;
+		private static var _glow	:GlowFilter = new GlowFilter(0x000000, .5, 20, 20, 2, 2);
+
+		public function ModalWindowBasic()
+		{
+			addChild(_bkgd);
+			_bkgd.filters = [_glow];	
+		}
 	
 	// override this in any windows that should listen for the enter key //	
 		public function onEnterKey():void { }
@@ -30,13 +40,13 @@ package view.modals {
 		
 		protected function drawBackground(w:uint, h:uint):void
 		{
-			graphics.clear();
-			graphics.beginFill(0xFFFFFF);
-			graphics.drawRect(0, 0, w, h);
-			graphics.endFill();
-			graphics.beginBitmapFill(new LtGreyPattern());
-			graphics.drawRect(4, 4, w-8, h-8);
-			graphics.endFill();
+			_bkgd.graphics.clear();
+			_bkgd.graphics.beginFill(0xFFFFFF);
+			_bkgd.graphics.drawRect(0, 0, w, h);
+			_bkgd.graphics.endFill();
+			_bkgd.graphics.beginBitmapFill(new LtGreyPattern());
+			_bkgd.graphics.drawRect(4, 4, w-8, h-8);
+			_bkgd.graphics.endFill();
 		}
 
 		protected function set defaultButton(b:Sprite):void

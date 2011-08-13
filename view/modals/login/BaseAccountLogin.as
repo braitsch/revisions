@@ -2,8 +2,8 @@ package view.modals.login {
 
 	import events.AppEvent;
 	import events.UIEvent;
-	import flash.events.MouseEvent;
 	import model.AppModel;
+	import flash.events.MouseEvent;
 
 	public class BaseAccountLogin extends BaseNameAndPass {
 

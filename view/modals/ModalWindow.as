@@ -5,7 +5,6 @@ package view.modals {
 	import flash.display.InteractiveObject;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.filters.GlowFilter;
 
 	public class ModalWindow extends ModalWindowBasic {
 
@@ -15,7 +14,6 @@ package view.modals {
 		public function ModalWindow()
 		{		
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			this.filters = [new GlowFilter(0x000000, .5, 20, 20, 2, 2)];
 		}
 		
 		public function resize(w:Number, h:Number):void
