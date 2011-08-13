@@ -60,6 +60,7 @@ package view.modals.local {
 		
 		private function onAddedToStage(e:Event):void
 		{
+			_cloneURL = null;
 			enableCloneButton(false);
 			_view.loginGithub.visible = Accounts.github.loggedIn == false;
 		}
@@ -113,7 +114,7 @@ package view.modals.local {
 		
 		private function onBrowserSelection(e:UIEvent):void
 		{
-			if (_cloneURL == ''){
+			if (_cloneURL == null) {
 				dispatchEvent(new UIEvent(UIEvent.DRAG_AND_DROP, e.data as File));
 			}	else{
 				_savePath = File(e.data).nativePath;
