@@ -1,6 +1,5 @@
 package model.proxies.local {
 
-	import system.SystemRules;
 	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.NativeProcessEvent;
@@ -9,6 +8,7 @@ package model.proxies.local {
 	import model.vo.Bookmark;
 	import model.vo.Commit;
 	import system.BashMethods;
+	import system.SystemRules;
 
 	public class StatusProxy extends NativeProcessQueue {
 
@@ -34,9 +34,20 @@ package model.proxies.local {
 		public function getModified(b:Bookmark):void
 		{
 			_bookmark = b;
+			if (bookmarkExists() == false) return;
 			super.directory = _bookmark.gitdir;			
 			super.queue = [	Vector.<String>([BashMethods.GET_MODIFIED_FILES]),
 							Vector.<String>([BashMethods.GET_UNTRACKED_FILES]) ]; 			
+		}
+
+		private function bookmarkExists():Boolean
+		{
+			if (_bookmark.exists){
+				return true;
+			}	else{
+				AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.PATH_ERROR, _bookmark));
+				return false;
+			}	
 		}
 		
 		public function getHistory():void

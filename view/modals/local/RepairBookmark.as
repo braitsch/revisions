@@ -28,14 +28,14 @@ package view.modals.local {
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onUpdateBookmark);
 			_view.browse_btn.addEventListener(MouseEvent.CLICK, onBrowseButton);
 			_view.delete_btn.addEventListener(MouseEvent.CLICK, onDeleteBookmark);
-			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);	
+			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);
 		}
 		
 		public function set bookmark(b:Bookmark):void
 		{
 			_bookmark = b;
 			_view.name_txt.text = b.label;
-			_view.local_txt.text = b.path;			
+			_view.path_txt.text = b.path;
 		}
 
 		private function onBrowseButton(e:MouseEvent):void 
@@ -49,13 +49,13 @@ package view.modals.local {
 		
 		private function onBrowserSelection(e:UIEvent):void 
 		{
-			_view.local_txt.text = File(e.data).nativePath;	
+			_view.path_txt.text = File(e.data).nativePath;	
 		}
 		
 		override public function onEnterKey():void { onUpdateBookmark(); }
 		private function onUpdateBookmark(e:MouseEvent = null):void 
 		{
-			var m:String = Bookmark.validate(_view.name_txt.text, _view.local_txt.text, _bookmark);
+			var m:String = Bookmark.validate(_view.name_txt.text, _view.path_txt.text, _bookmark);
 			if (m != '') {
 				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
 			}	else {
@@ -65,11 +65,11 @@ package view.modals.local {
 		
 		private function updateGitDir():void
 		{
-			if (_view.local_txt.text == _bookmark.path){
+			if (_view.path_txt.text == _bookmark.path){
 				updateDatabase();		
 			}	else{
 		// the file path has changed //		
-				AppModel.proxies.editor.editAppStorageGitDirName(_bookmark.path, _view.local_txt.text);
+				AppModel.proxies.editor.editAppStorageGitDirName(_bookmark.path, _view.path_txt.text);
 				AppModel.proxies.editor.addEventListener(AppEvent.GIT_DIR_UPDATED, onGitDirUpdated);
 			}
 		}
@@ -77,19 +77,19 @@ package view.modals.local {
 		private function onGitDirUpdated(e:AppEvent):void
 		{
 			updateDatabase();
-			_bookmark.path = _view.local_txt.text;
+			_bookmark.path = _view.path_txt.text;
 			AppModel.proxies.editor.removeEventListener(AppEvent.GIT_DIR_UPDATED, onGitDirUpdated);			
 		}
 		
 		private function updateDatabase():void
 		{
 			AppModel.database.addEventListener(DataBaseEvent.RECORD_EDITED, onEditSuccessful);
-			AppModel.database.editRepository(_bookmark.label, _view.name_txt.text, _view.local_txt.text, _bookmark.autosave);				
+			AppModel.database.editRepository(_bookmark.label, _view.name_txt.text, _view.path_txt.text, _bookmark.autosave);				
 		}		
 		
 		private function onEditSuccessful(e:DataBaseEvent = null):void
 		{
-			_bookmark.path = _view.local_txt.text;
+			_bookmark.path = _view.path_txt.text;
 			_bookmark.label = _view.name_txt.text;
 		// always check if there are more broken bkmks in the engine queue //	
 			var bkmk:Bookmark = AppModel.engine.getNextBrokenBookmark();
