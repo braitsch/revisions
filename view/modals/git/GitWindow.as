@@ -19,8 +19,8 @@ package view.modals.git {
 		{
 			_view = v;
 			addChild(_view);
+			super.defaultButton = _view.ok_btn;
 			super.addButtons([_view.cancel_btn]);
-			super.defaultButton = _view.ok_btn;	
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, installAndUpdate);
 			_view.cancel_btn.addEventListener(MouseEvent.CLICK, quitApplication);
 		}
@@ -56,7 +56,7 @@ package view.modals.git {
 		private function installAndUpdate(e:MouseEvent = null):void
 		{
 			disableButtons();
-			_view.message_txt.text = getInstallMessage();
+			_view.textArea.message_txt.text = getInstallMessage();
 			if (checkForPackageInstaller() == ''){
 				AppModel.proxies.config.installGit();
 			}	else{
@@ -82,9 +82,9 @@ package view.modals.git {
 		{
 			super.enableButton(_view.ok_btn, true);
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, closeWindow);
-			_view.message_txt.text = "You're All Set - ";
-			_view.message_txt.text+= AppModel.proxies.config.gitVersion ? 'Update' : 'Install';
-			_view.message_txt.text+= ' Complete!!';
+			_view.textArea.message_txt.text = "You're All Set - ";
+			_view.textArea.message_txt.text+= AppModel.proxies.config.gitVersion ? 'Update' : 'Install';
+			_view.textArea.message_txt.text+= ' Complete!!';
 			AppModel.proxies.config.removeEventListener(AppEvent.GIT_INSTALL_COMPLETE, onInstallComplete);
 		// read and update the gui with newly installed git version //	
 			AppModel.proxies.config.detectGit();			
