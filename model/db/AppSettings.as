@@ -69,7 +69,7 @@ package model.db {
 		
 		private function setDefaultSettings():void
 		{
-			_settings[START_AT_LOGIN] = true;
+			_settings[START_AT_LOGIN] = false;
 			_settings[CHECK_FOR_UPDATES] = true;
 			_settings[SHOW_TOOL_TIPS] = true;
 			_settings[PROMPT_BEFORE_DOWNLOAD] = true;

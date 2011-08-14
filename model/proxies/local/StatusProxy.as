@@ -36,10 +36,18 @@ package model.proxies.local {
 			_bookmark = b;
 			if (bookmarkExists() == false) return;
 			super.directory = _bookmark.gitdir;			
-			super.queue = [	Vector.<String>([BashMethods.GET_MODIFIED_FILES]),
-							Vector.<String>([BashMethods.GET_UNTRACKED_FILES]) ]; 			
+			super.queue = [	Vector.<String>([BashMethods.GET_IGNORED_FILES]),
+							Vector.<String>([BashMethods.GET_MODIFIED_FILES]),
+							Vector.<String>([BashMethods.GET_UNTRACKED_FILES]) ];
 		}
 
+		public function getHistory():void
+		{
+			super.directory = AppModel.bookmark.gitdir;
+			super.queue = [	Vector.<String>([BashMethods.GET_HISTORY]), 
+							Vector.<String>([BashMethods.GET_TOTAL_COMMITS]) ];
+		}
+		
 		private function bookmarkExists():Boolean
 		{
 			if (_bookmark.exists){
@@ -48,14 +56,7 @@ package model.proxies.local {
 				AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.PATH_ERROR, _bookmark));
 				return false;
 			}	
-		}
-		
-		public function getHistory():void
-		{
-			super.directory = AppModel.bookmark.gitdir;
-			super.queue = [	Vector.<String>([BashMethods.GET_HISTORY]), 
-							Vector.<String>([BashMethods.GET_TOTAL_COMMITS]) ];
-		}
+		}		
 		
 	// private handlers //
 		
@@ -66,7 +67,7 @@ package model.proxies.local {
 				case BashMethods.GET_LAST_COMMIT :
 					onSummary(a);	
 				break;
-				case BashMethods.GET_MODIFIED_FILES :
+				case BashMethods.GET_IGNORED_FILES:
 					onModified(a);
 				break;
 				case BashMethods.GET_HISTORY :
@@ -77,11 +78,27 @@ package model.proxies.local {
 		
 		private function onModified(a:Array):void
 		{
-			for (var i:int = 0; i < a.length; i++) a[i] = a[i].result;
-			var m:Array = ignoreHiddenFiles(splitAndTrim(a[0]));
-			var u:Array = ignoreHiddenFiles(splitAndTrim(a[1]));
+			for (var k:int = 0; k < a.length; k++) a[k] = a[k].result;
+			var i:Array = ignoreHiddenFiles(splitAndTrim(a[0]));
+			var m:Array = ignoreHiddenFiles(splitAndTrim(a[1]));
+			var u:Array = ignoreHiddenFiles(splitAndTrim(a[2]));
+		// remove all the ignored files from the untracked array //	
+			u = stripDuplicates(u, i);
 			_bookmark.branch.modified = [m , u];
 			AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.MODIFIED_RECEIVED, _bookmark));			
+		}
+
+		private function stripDuplicates(a:Array, b:Array):Array
+		{
+			for (var j:int = 0; j < a.length; j++) {
+				for (var k:int = 0; k < b.length; k++) {
+					if (a[j] == b[k]) {
+						a.splice(j, 1); --j; 
+						b.splice(k, 1); continue; 
+					}
+				}		
+			}
+			return a;
 		}
 		//AppModel.proxies.editor.commit('AutoSaved : '+new Date().toLocaleString(), _bookmark);
 
