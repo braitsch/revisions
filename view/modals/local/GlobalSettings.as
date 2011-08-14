@@ -16,26 +16,29 @@ package view.modals.local {
 
 		private static var _view		:GlobalSettingsMC = new GlobalSettingsMC();
 		private static var _check1		:ModalCheckbox = new ModalCheckbox(_view.check1, true);
-		private static var _check2		:ModalCheckbox = new ModalCheckbox(_view.check2, true);		
-		private static var _check3		:ModalCheckbox = new ModalCheckbox(_view.check3, true);		
+		private static var _check2		:ModalCheckbox = new ModalCheckbox(_view.check2, true);
+		private static var _check3		:ModalCheckbox = new ModalCheckbox(_view.check3, true);
+		private static var _check4		:ModalCheckbox = new ModalCheckbox(_view.check4, true);
 
 		public function GlobalSettings()
 		{
 			addChild(_view);
 			super.addCloseButton();	
-			super.drawBackground(550, 265);
+			super.drawBackground(550, 285);
 			super.setTitle(_view, 'Global Settings');
 			super.defaultButton = _view.ok_btn;
 			super.addInputs(Vector.<TLFTextField>([_view.name_txt, _view.email_txt]));
-			_check1.label = 'Automatically check for updates';
-			_check2.label = 'Show tooltips';
-			_check3.label = 'Prompt before downloading a previous version';
 			_view.form.label1.text = 'Name';
 			_view.form.label2.text = 'Email';
 			_view.form.label3.text = 'License Key';
-			_view.check1.addEventListener(MouseEvent.CLICK, onCheck1);
-			_view.check2.addEventListener(MouseEvent.CLICK, onCheck2);
-			_view.check3.addEventListener(MouseEvent.CLICK, onCheck3);
+			_check1.label = 'Automatically check for updates';
+			_check2.label = 'Show tooltips';
+			_check3.label = 'Prompt before downloading a previous version';
+			_check4.label = 'Start Revisions on system startup';
+			_check1.addEventListener(MouseEvent.CLICK, onCheck1);
+			_check2.addEventListener(MouseEvent.CLICK, onCheck2);
+			_check3.addEventListener(MouseEvent.CLICK, onCheck3);
+			_check4.addEventListener(MouseEvent.CLICK, onCheck4);
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			AppModel.settings.addEventListener(AppEvent.APP_SETTINGS, onUserSettings);
@@ -54,6 +57,7 @@ package view.modals.local {
 			_check1.selected = AppSettings.getSetting(AppSettings.CHECK_FOR_UPDATES);
 			_check2.selected = AppSettings.getSetting(AppSettings.SHOW_TOOL_TIPS);
 			_check3.selected = AppSettings.getSetting(AppSettings.PROMPT_BEFORE_DOWNLOAD);
+			_check4.selected = AppSettings.getSetting(AppSettings.START_AT_LOGIN);
 		}
 
 		private function onGitSettings(e:AppEvent):void
@@ -76,6 +80,11 @@ package view.modals.local {
 		{
 			AppSettings.setSetting(AppSettings.PROMPT_BEFORE_DOWNLOAD, _check3.selected);
 		}
+		
+		private function onCheck4(e:MouseEvent):void
+		{
+			AppSettings.setSetting(AppSettings.START_AT_LOGIN, _check4.selected);			
+		}		
 		
 		override public function onEnterKey():void { onOkButton(); }		
 		private function onOkButton(evt:MouseEvent = null):void

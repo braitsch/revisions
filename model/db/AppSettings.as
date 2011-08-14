@@ -11,6 +11,7 @@ package model.db {
 	
 	public class AppSettings extends EventDispatcher {
 
+		public static const START_AT_LOGIN				:String = "startAtLogin";
 		public static const CHECK_FOR_UPDATES			:String = 'checkForUpdates';
 		public static const SHOW_TOOL_TIPS				:String = "showToolTips";
 		public static const PROMPT_BEFORE_DOWNLOAD		:String = "promptBeforeDownload";
@@ -68,6 +69,7 @@ package model.db {
 		
 		private function setDefaultSettings():void
 		{
+			_settings[START_AT_LOGIN] = true;
 			_settings[CHECK_FOR_UPDATES] = true;
 			_settings[SHOW_TOOL_TIPS] = true;
 			_settings[PROMPT_BEFORE_DOWNLOAD] = true;

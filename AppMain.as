@@ -1,5 +1,6 @@
 package {
 
+	import model.db.AppSettings;
 	import events.AppEvent;
 	import events.DataBaseEvent;
 	import model.AppModel;
@@ -38,6 +39,7 @@ package {
 		{
 			stage.nativeWindow.visible = true;
 			AppModel.settings.removeEventListener(AppEvent.APP_SETTINGS, onAppSettings);
+			NativeApplication.nativeApplication.startAtLogin = AppSettings.getSetting(AppSettings.START_AT_LOGIN);
 			checkExpiredAndUpdates();
 		}
 		

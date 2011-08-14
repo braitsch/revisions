@@ -36,6 +36,9 @@ package view.modals {
 	import view.modals.system.Confirm;
 	import view.modals.system.Debug;
 	import view.ui.Preloader;
+	import flash.desktop.DockIcon;
+	import flash.desktop.NativeApplication;
+	import flash.desktop.NotificationType;
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.KeyboardEvent;
@@ -239,6 +242,9 @@ package view.modals {
 		{
 			_repair.bookmark = e.data as Bookmark;
 			showModalWindow(_repair);
+			if(NativeApplication.supportsDockIcon){
+ 				DockIcon(NativeApplication.nativeApplication.icon).bounce(NotificationType.CRITICAL);
+			}
 		}
 		
 		private function deleteBranch(e:UIEvent):void
