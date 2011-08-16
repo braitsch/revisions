@@ -67,6 +67,8 @@ package model.proxies.remote {
 				dispatchEvent(new AppEvent(AppEvent.FAILURE, ErrorType.LOGIN_FAILURE));
 			}	else if (o.message == 'No connection') {
 				dispatchEvent(new AppEvent(AppEvent.FAILURE, ErrorType.NO_CONNECTION));
+			}	else if (o.message == 'Failed to connect to host') {
+				dispatchEvent(new AppEvent(AppEvent.FAILURE, ErrorType.SERVER_FAILURE));				
 			}	else if (o.message){
 			// handle any other mysterious errors //
 				o.method = BashMethods.LOGIN; dispatchDebug(o);
