@@ -34,7 +34,7 @@ package model.remote {
 			}	else if (type == RemoteAccount.BEANSTALK){
 				am = _beanstalk;
 			}
-			return am.getAccountByName(name);
+			return am.getAccountByProp('user', name);
 		}
 		
 	}

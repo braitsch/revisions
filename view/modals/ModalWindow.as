@@ -42,7 +42,7 @@ package view.modals {
 		
 		private function onAddedToStage(e:Event):void 
 		{
-			resize(stage.stageWidth, stage.stageHeight);	
+			resize(stage.stageWidth, stage.stageHeight);
 			if (super.inputs) {
 				var txt:TLFTextField = super.inputs[0];
 				txt.setSelection(0, txt.length);

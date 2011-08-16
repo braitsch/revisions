@@ -42,10 +42,9 @@ package view.modals.login {
 			super.locked = true;
 			enableButton(_view.login_btn, false);
 			_view.login_btn.removeEventListener(MouseEvent.CLICK, onLoginButton);			
+			AppModel.engine.addEventListener(AppEvent.FAILURE, onLoginFailure);
 			AppModel.engine.addEventListener(AppEvent.REMOTE_READY, onLoginSuccess);
-			AppModel.proxies.ghLogin.addEventListener(AppEvent.OFFLINE, onOffline);
-			AppModel.proxies.ghLogin.addEventListener(AppEvent.LOGIN_FAILED, onLoginFailed);
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Attemping Login'));			
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Attemping Login'));
 		}
 		
 		override protected function unlockScreen():void
@@ -53,27 +52,13 @@ package view.modals.login {
 			super.locked = false;
 			enableButton(_view.login_btn, true);
 			_view.login_btn.addEventListener(MouseEvent.CLICK, onLoginButton);				
+			AppModel.engine.removeEventListener(AppEvent.FAILURE, onLoginFailure);
 			AppModel.engine.removeEventListener(AppEvent.REMOTE_READY, onLoginSuccess);
-			AppModel.proxies.ghLogin.removeEventListener(AppEvent.OFFLINE, onOffline);
-			AppModel.proxies.ghLogin.removeEventListener(AppEvent.LOGIN_FAILED, onLoginFailed);
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));					
 		}
 		
-		protected function onLoginSuccess(e:AppEvent):void { }
-
-		private function onLoginFailed(e:AppEvent):void
-		{
-			unlockScreen();
-			var m:String = 'Login Attempt Failed.\nPlease Check Your Credentials.';
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
-		}
-		
-		private function onOffline(e:AppEvent):void
-		{
-			unlockScreen();
-			var m:String = 'Could Not Connect To Remote Server.\nPlease Check Your Internet Connection';
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
-		}	
+		private function onLoginSuccess(e:AppEvent):void { unlockScreen(); }
+		private function onLoginFailure(e:AppEvent):void { unlockScreen(); }
 		
 	}
 	

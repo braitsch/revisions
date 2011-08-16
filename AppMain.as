@@ -68,8 +68,8 @@ package {
 		{
 			AirNativeMenu.initialize(stage);
 			AirContextMenu.initialize(stage);
-			AppModel.proxies.ssh.detectApplicationKey();
-			AppModel.proxies.ssh.addEventListener(AppEvent.SSH_KEY_READY, onSSHKeyReady);
+			AppModel.proxies.sshKeyGen.detectApplicationKey();
+			AppModel.proxies.sshKeyGen.addEventListener(AppEvent.SSH_KEY_READY, onSSHKeyReady);
 			AppModel.proxies.config.removeEventListener(AppEvent.GIT_SETTINGS, onGitReady);
 		}
 		
@@ -77,7 +77,7 @@ package {
 		{
 			AppModel.database.initialize();
 			AppModel.database.addEventListener(DataBaseEvent.DATABASE_READ, onDatabaseRead);
-			AppModel.proxies.ssh.removeEventListener(AppEvent.SSH_KEY_READY, onSSHKeyReady);
+			AppModel.proxies.sshKeyGen.removeEventListener(AppEvent.SSH_KEY_READY, onSSHKeyReady);
 		}
 		
 		private function onDatabaseRead(e:DataBaseEvent):void

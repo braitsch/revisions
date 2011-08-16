@@ -30,10 +30,8 @@ package events {
 		public static const GIT_DIR_UPDATED			:String = "GIT_DIR_UPDATED";
 		
 		public static const LOGOUT					:String = "LOGOUT";
-		public static const OFFLINE					:String = 'OFFLINE';
 		public static const LOGIN_SUCCESS			:String = "LOGIN_SUCCESS";
 		public static const LOGOUT_SUCCESS			:String = "LOGOUT_SUCCESS";
-		public static const LOGIN_FAILED			:String = "LOGIN_FAILED";
 		public static const REMOTE_READY			:String = "REMOTE_READY";
 		public static const SSH_KEY_READY			:String = "SSH_KEYS_READY";
 		
@@ -51,6 +49,8 @@ package events {
 		public static const MODIFIED_REQUESTED		:String = "MODIFIED_REQUESTED";
 		public static const REMOTE_KEY_SET			:String = "REMOTE_KEY_VALIDATED";
 		public static const PROMPT_FOR_REMOTE_PSWD	:String = "PROMPT_FOR_REMOTE_PSWD";
+		
+		public static const FAILURE : String = "FAILURE";
 		
 		public var data:Object;
 

@@ -87,6 +87,7 @@ package view.modals {
 			addChild(_preloader);			
 			mouseEnabled = false;
 			_curtain.addEventListener(MouseEvent.CLICK, onCurtainClick);
+			AppModel.engine.addEventListener(AppEvent.FAILURE, onShowAlert);
 			AppModel.engine.addEventListener(AppEvent.SHOW_DEBUG, onShowDebug);
 			AppModel.engine.addEventListener(AppEvent.HIDE_DEBUG, onHideDebug);
 			AppModel.engine.addEventListener(AppEvent.SHOW_ALERT, onShowAlert);

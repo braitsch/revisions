@@ -5,7 +5,7 @@ package view.modals.remote {
 	import events.UIEvent;
 	import fl.text.TLFTextField;
 	import model.AppModel;
-	import model.proxies.remote.RemoteProxy;
+	import model.proxies.remote.RepositoryProxy;
 	import model.vo.Bookmark;
 	import view.modals.ModalWindow;
 	import view.ui.ModalCheckbox;
@@ -16,7 +16,7 @@ package view.modals.remote {
 		private var _bkmk		:Bookmark;
 		private var _view		:NewRemoteMC = new NewRemoteMC();
 		private var _check		:ModalCheckbox = new ModalCheckbox(_view.check, false);	
-		private var _proxy		:RemoteProxy;	
+		private var _proxy		:RepositoryProxy;	
 		private var _newRepo	:Object;
 
 		public function AddRemoteRepo()
@@ -32,7 +32,7 @@ package view.modals.remote {
 		}
 		
 		protected function get view():NewRemoteMC { return _view; }
-		protected function set proxy(p:RemoteProxy):void { _proxy = p; }
+		protected function set proxy(p:RepositoryProxy):void { _proxy = p; }
 		
 		public function set bookmark(b:Bookmark):void
 		{

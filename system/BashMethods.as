@@ -48,10 +48,11 @@ package system{
 		public static const LOGIN					:String = 'login';
 		public static const LOGOUT					:String = 'logout';
 		public static const GET_REPOSITORIES		:String = 'getRepositories';
-		public static const GET_REMOTE_KEY			:String = 'getKeyById';
+		public static const GET_KEY_BY_ID			:String = 'getKeyById';
+		public static const GET_ALL_REMOTE_KEYS		:String = 'getAllKeys';
 		public static const ADD_KEY_TO_REMOTE		:String = 'addKeyToRemote';
 		public static const REPAIR_REMOTE_KEY		:String = 'repairRemoteKey';
-		public static const REMOVE_KEY_FROM_REMOTE	:String = 'deleteKeyFromRemote';
+		public static const DELETE_KEY_FROM_REMOTE	:String = 'deleteKeyFromRemote';
 		public static const AUTHENTICATE			:String = 'authenticate';
 		
 		public static const ADD_REPOSITORY			:String = 'newRepositoryOnAccount';
@@ -61,7 +62,7 @@ package system{
 	// remote proxy methods //	
 		public static const ADD_REMOTE				:String = 'addRemote';
 		public static const PULL_REMOTE				:String = 'pullFromRemote';
-		public static const PUSH_REMOTE				:String = 'pushToRemote';
+		public static const PUSH_REMOTE:String = 'pushToRemote';
 		
 	}
 	

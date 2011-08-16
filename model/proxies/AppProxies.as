@@ -4,10 +4,10 @@ package model.proxies {
 	import model.proxies.local.ConfigProxy;
 	import model.proxies.local.EditorProxy;
 	import model.proxies.local.RepoReader;
-	import model.proxies.local.SSHProxy;
+	import model.proxies.local.SSHKeyGenerator;
 	import model.proxies.local.UpdateProxy;
-	import model.proxies.remote.LoginProxy;
-	import model.proxies.remote.RemoteProxy;
+	import model.proxies.remote.AccountProxy;
+	import model.proxies.remote.RepositoryProxy;
 	import flash.events.EventDispatcher;
 
 	public class AppProxies extends EventDispatcher {
@@ -17,11 +17,10 @@ package model.proxies {
 		private static var _update		:UpdateProxy 	= new UpdateProxy();
 		private static var _editor		:EditorProxy 	= new EditorProxy();
 		private static var _checkout	:CheckoutProxy 	= new CheckoutProxy();
+		private static var _sshKeyGen	:SSHKeyGenerator = new SSHKeyGenerator();
 
-		private static var _ssh			:SSHProxy 		= new SSHProxy();
-		private static var _ghLogin		:LoginProxy 	= new LoginProxy();
-		private static var _bsLogin		:LoginProxy 	= new LoginProxy();
-		private static var _ghRemote	:RemoteProxy 	= new RemoteProxy();
+		private static var _bsLogin		:AccountProxy 	= new AccountProxy();
+		private static var _ghRemote	:RepositoryProxy 	= new RepositoryProxy();
 
 	// public getters //	
 
@@ -50,24 +49,19 @@ package model.proxies {
 			return _checkout;
 		}
 
-		public function get ssh():SSHProxy
+		public function get sshKeyGen():SSHKeyGenerator
 		{
-			return _ssh;
+			return _sshKeyGen;
 		}
 		
 	// remote proxies //	
 
-		public function get ghLogin():LoginProxy
-		{
-			return _ghLogin;
-		}
-		
-		public function get bsLogin():LoginProxy
+		public function get bsLogin():AccountProxy
 		{
 			return _bsLogin;
 		}
 		
-		public function get ghRemote():RemoteProxy
+		public function get ghRemote():RepositoryProxy
 		{
 			return _ghRemote;
 		}			

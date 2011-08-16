@@ -6,13 +6,13 @@ package model.proxies.local {
 	import model.air.NativeProcessProxy;
 	import system.BashMethods;
 
-	public class SSHProxy extends NativeProcessProxy {
+	public class SSHKeyGenerator extends NativeProcessProxy {
 		
 		private static var _pbKey		:String;
 		
-		public function SSHProxy()
+		public function SSHKeyGenerator()
 		{
-			super.executable = 'SSH.sh';
+			super.executable = 'SSHKeyGenerator.sh';
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 		}
 		

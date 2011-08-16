@@ -1,5 +1,6 @@
 package view.modals.remote {
 
+	import model.remote.Accounts;
 	import system.StringUtils;
 	import events.AppEvent;
 	import events.UIEvent;
@@ -31,7 +32,7 @@ package view.modals.remote {
 			addEventListener(UIEvent.LOGGED_IN_CLONE, onCloneClick);
 			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);
 			AppModel.engine.addEventListener(AppEvent.REMOTE_READY, onAccountReady);
-			AppModel.proxies.ghLogin.addEventListener(AppEvent.LOGOUT_SUCCESS, onLogout);
+			Accounts.github.addEventListener(AppEvent.LOGOUT_SUCCESS, onLogout);
 			AppModel.proxies.ghRemote.addEventListener(AppEvent.REPOSITORY_CREATED, onNewRepo);
 		}
 
@@ -98,6 +99,7 @@ package view.modals.remote {
 			positionURLAndNav();
 			super.addCloseButton(590);
 			super.drawBackground(590, _view.height + 15);
+			super.resize(stage.stageWidth, stage.stageHeight);
 		}
 
 		private function showPage(n:uint):void
@@ -149,7 +151,7 @@ package view.modals.remote {
 		
 		private function onLogOutClick(e:MouseEvent):void
 		{
-			AppModel.proxies.ghLogin.logout();
+			Accounts.github.logout();
 		}
 
 		private function onLogout(e:AppEvent):void
