@@ -33,6 +33,7 @@ package model.proxies.local {
 		
 		public function getModified(b:Bookmark):void
 		{
+			return;
 			_bookmark = b;
 			if (bookmarkExists() == false) return;
 			super.directory = _bookmark.gitdir;			

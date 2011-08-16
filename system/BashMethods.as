@@ -13,15 +13,17 @@ package system{
 		public static const GET_USER_EMAIL			:String = 'getUserEmail';	
 		public static const GET_USER_REAL_NAME		:String = 'getLoggedInUsersRealName';
 		
-	// editor methods //		
-		public static const COMMIT					:String = 'commit';
+	// repository creation & deletion methods //		
+		public static const INIT_FILE				:String = 'initFile';
+		public static const INIT_FOLDER				:String = 'initFolder';		public static const KILL_FILE				:String = 'killFile';
+		public static const KILL_FOLDER				:String = 'killFolder';
 		public static const TRACK_FILE				:String = 'trackFile';
 		public static const UNTRACK_FILE			:String = 'unTrackFile';
 		public static const EDIT_GIT_DIR			:String = 'editGitDir';
-		public static const INIT_FOLDER				:String = 'initFolder';		public static const INIT_FILE				:String = 'initFile';
-		public static const KILL_FILE				:String = 'killFile';
-		public static const KILL_FOLDER				:String = 'killFolder';
+		public static const GET_DIRECTORY_FILES		:String = 'getDirectoryFiles';		
+		public static const ADD_INITIAL_COMMIT		:String = 'addInitialCommit';
 		
+		public static const COMMIT					:String = 'commit';		
 		public static const GET_STASH				:String = 'getStash';
 		public static const GET_REMOTES				:String = 'getRemotes';
 		public static const GET_LOCAL_BRANCHES		:String = 'getLocalBranches';
@@ -62,7 +64,8 @@ package system{
 	// remote proxy methods //	
 		public static const ADD_REMOTE				:String = 'addRemote';
 		public static const PULL_REMOTE				:String = 'pullFromRemote';
-		public static const PUSH_REMOTE:String = 'pushToRemote';
+		public static const PUSH_REMOTE				:String = 'pushToRemote';
+		
 		
 	}
 	

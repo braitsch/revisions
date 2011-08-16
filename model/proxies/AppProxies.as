@@ -3,6 +3,7 @@ package model.proxies {
 	import model.proxies.local.CheckoutProxy;
 	import model.proxies.local.ConfigProxy;
 	import model.proxies.local.EditorProxy;
+	import model.proxies.local.InitProxy;
 	import model.proxies.local.RepoReader;
 	import model.proxies.local.SSHKeyGenerator;
 	import model.proxies.local.UpdateProxy;
@@ -15,7 +16,8 @@ package model.proxies {
 		private static var _config		:ConfigProxy 	= new ConfigProxy();
 		private static var _reader		:RepoReader 	= new RepoReader();
 		private static var _update		:UpdateProxy 	= new UpdateProxy();
-		private static var _editor		:EditorProxy 	= new EditorProxy();
+		private static var _initP		:InitProxy 		= new InitProxy();
+		private static var _editor		:EditorProxy	= new EditorProxy();
 		private static var _checkout	:CheckoutProxy 	= new CheckoutProxy();
 		private static var _sshKeyGen	:SSHKeyGenerator = new SSHKeyGenerator();
 
@@ -29,9 +31,9 @@ package model.proxies {
 			return _config;
 		}
 		
-		public function get editor():EditorProxy
+		public function get init():InitProxy
 		{
-			return _editor;
+			return _initP;
 		}
 		
 		public function get reader():RepoReader
@@ -42,7 +44,12 @@ package model.proxies {
 		public function get update():UpdateProxy
 		{
 			return _update;
-		}		
+		}
+
+		public function get editor():EditorProxy
+		{
+			return _editor;
+		}				
 		
 		public function get checkout():CheckoutProxy
 		{
@@ -64,7 +71,8 @@ package model.proxies {
 		public function get ghRemote():RepositoryProxy
 		{
 			return _ghRemote;
-		}			
+		}
+
 
 	}
 	
