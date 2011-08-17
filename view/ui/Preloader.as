@@ -32,29 +32,48 @@ package view.ui {
 			_view.addChildAt(_bkgd, 0);
 			_view.filters = [_glow];
 			_label.filters = [_glow];
-			AppModel.engine.addEventListener(AppEvent.LOADER_TEXT, setLoaderText);			
+			AppModel.engine.addEventListener(AppEvent.SHOW_LOADER, showLoader);
+			AppModel.engine.addEventListener(AppEvent.HIDE_LOADER, hideLoader);			
+			AppModel.engine.addEventListener(AppEvent.LOADER_TEXT, setLoaderText);		
+			AppModel.engine.addEventListener(AppEvent.LOADER_PERCENT, setLoaderPercent);		
 		}
 
-		public function show(s:String):void
-		{
-			setLabel(s);
-			_view.light.gotoAndPlay(1);
-			_view.dark.gotoAndStop(1);
-			_view.addEventListener(Event.ENTER_FRAME, onEnterFrame);
-			TweenLite.to(this, .5, {alpha:1});
-		}
-		
-		public function hide():void
-		{
-			TweenLite.to(this, .5, {alpha:0});
-			_view.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
-		}		
-		
 		public function resize(w:uint, h:uint, offX:int = 0, offY:int = 0):void
 		{
 			this.x = w / 2 + offX; 
 			this.y = h / 2 + offY;
+		}		
+
+	// show, hide, text & percentage //
+
+		private function showLoader(e:AppEvent):void
+		{
+			setLabel(e.data as String);
+			_view.dark.gotoAndStop(1);
+			_view.light.gotoAndPlay(1);
+			_view.addEventListener(Event.ENTER_FRAME, onEnterFrame);
+			TweenLite.to(this, .5, {alpha:1});
 		}
+		
+		private function hideLoader(e:AppEvent):void
+		{
+			TweenLite.to(this, .5, {alpha:0});
+			_view.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+		}
+		
+		private function setLoaderText(e:AppEvent):void
+		{
+			setLabel(e.data as String);
+		}			
+		
+		private function setLoaderPercent(e:AppEvent):void
+		{
+			var t:uint = e.data.total;
+			var l:uint = e.data.loaded;
+			trace("Preloader.setLoaderPercent(e)", l, 'of', t, 'complete');
+		}	
+		
+	// draw & render methods //				
 		
 		private function addLabel():void
 		{
@@ -79,11 +98,6 @@ package view.ui {
 			_label.graphics.endFill();				
 		}		
 		
-		private function setLoaderText(e:AppEvent):void
-		{
-			setLabel(e.data as String);
-		}			
-
 		private function onEnterFrame(e:Event):void
 		{
 			if (_view.light.currentFrame == 29) {

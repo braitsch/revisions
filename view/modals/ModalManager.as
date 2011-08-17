@@ -88,14 +88,13 @@ package view.modals {
 			mouseEnabled = false;
 			_curtain.addEventListener(MouseEvent.CLICK, onCurtainClick);
 			AppModel.engine.addEventListener(AppEvent.FAILURE, onShowAlert);
+			AppModel.engine.addEventListener(AppEvent.SHOW_LOADER, showLoader);
 			AppModel.engine.addEventListener(AppEvent.SHOW_DEBUG, onShowDebug);
 			AppModel.engine.addEventListener(AppEvent.HIDE_DEBUG, onHideDebug);
 			AppModel.engine.addEventListener(AppEvent.SHOW_ALERT, onShowAlert);
 			AppModel.engine.addEventListener(AppEvent.HIDE_ALERT, onHideAlert);	
 			AppModel.engine.addEventListener(AppEvent.SHOW_CONFIRM, onShowConfirm);
 			AppModel.engine.addEventListener(AppEvent.HIDE_CONFIRM, onHideConfirm);				
-			AppModel.engine.addEventListener(AppEvent.SHOW_LOADER, showLoader);
-			AppModel.engine.addEventListener(AppEvent.HIDE_LOADER, hideLoader);					
 			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onBookmarkSelected);
 			AppModel.engine.addEventListener(BookmarkEvent.PATH_ERROR, repairBookmark);
 			AppModel.engine.addEventListener(BookmarkEvent.NO_BOOKMARKS, showWelcomeScreen);
@@ -321,14 +320,8 @@ package view.modals {
 		
 		private function showLoader(e:AppEvent):void
 		{
-			_preloader.show(e.data as String);
-			resize(stage.stageWidth, stage.stageHeight);
 			setChildIndex(_preloader, numChildren-1);
-		}
-		
-		private function hideLoader(e:AppEvent):void 
-		{
-			_preloader.hide();
+			resize(stage.stageWidth, stage.stageHeight);
 		}
 		
 	// adding & removing modal windows //	

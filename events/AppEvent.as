@@ -12,6 +12,7 @@ package events {
 		public static const SHOW_LOADER				:String = 'SHOW_LOADER';
 		public static const HIDE_LOADER				:String = 'HIDE_LOADER';
 		public static const LOADER_TEXT				:String = "LOADER_TEXT";
+		public static const LOADER_PERCENT			:String = "LOADER_PERCENT";
 			
 		public static const APP_SETTINGS			:String = "APP_SETTINGS";
 		public static const APP_EXPIRED				:String = "APP_EXPIRED";
@@ -44,13 +45,12 @@ package events {
 		public static const REQUESTING_HISTORY		:String = "REQUESTING_HISTORY";
 		public static const REPOSITORY_READY		:String = "REPOSITORY_READY";
 		public static const FILES_DELETED			:String = "FILES_DELETED";
-		public static const INITIALIZING_BOOKMARK	:String = "INITIALIZING_BOOKMARK";
 		public static const HISTORY_REQUESTED		:String = "HISTORY_REQUESTED";
 		public static const MODIFIED_REQUESTED		:String = "MODIFIED_REQUESTED";
 		public static const REMOTE_KEY_SET			:String = "REMOTE_KEY_VALIDATED";
 		public static const PROMPT_FOR_REMOTE_PSWD	:String = "PROMPT_FOR_REMOTE_PSWD";
 		
-		public static const FAILURE : String = "FAILURE";
+		public static const FAILURE:String = "FAILURE";
 		
 		public var data:Object;
 

@@ -58,8 +58,8 @@ package model {
 			if (!killGit && !killFiles){
 				removeFromBkmkView();
 			}	else{
+				AppModel.proxies.init.addEventListener(AppEvent.FILES_DELETED, removeFromBkmkView);
 				AppModel.proxies.init.killBookmark(_bookmark, killGit, killFiles);		
-				AppModel.proxies.init.addEventListener(AppEvent.FILES_DELETED, removeFromBkmkView);	
 			}
 		}
 		

@@ -12,9 +12,9 @@ package model.proxies.local {
 
 	public class InitProxy extends NativeProcessProxy {
 		
-		private static var _files	:Array;
-		private static var _index	:uint;
-		private static var _bookmark:Bookmark;
+		private static var _files		:Array;
+		private static var _index		:uint;
+		private static var _bookmark	:Bookmark;
 		
 		public function InitProxy()
 		{
@@ -25,25 +25,22 @@ package model.proxies.local {
 
 		public function initBookmark(bkmk:Bookmark):void 
 		{
-			_bookmark = bkmk;
-			if (_bookmark.type == Bookmark.FOLDER){
-				super.directory = _bookmark.path;			
-				super.call(Vector.<String>([BashMethods.INIT_FOLDER]));
-			}	else{
-				super.directory =  File.applicationStorageDirectory.nativePath;
-				super.call(Vector.<String>([BashMethods.INIT_FILE, _bookmark.path, MD5.hash(_bookmark.path), _bookmark.worktree]));
-			}
+			_bookmark = bkmk; _files = null;
+			_bookmark.type == Bookmark.FILE ? initFile() : initFolder();
 		}
 		
 		public function killBookmark(bkmk:Bookmark, trashGit:Boolean, trashFiles:Boolean):void 
 		{
-			super.directory = bkmk.gitdir;
-			var path:String = trashFiles ? bkmk.path : '';
-			if (bkmk.type == Bookmark.FOLDER){
-				super.call(Vector.<String>([BashMethods.KILL_FOLDER, trashGit, path]));
-			}	else{
-				super.call(Vector.<String>([BashMethods.KILL_FILE, trashGit, path]));
+			if (trashGit){
+				var p:String = bkmk.type == Bookmark.FILE ? bkmk.gitdir : bkmk.gitdir+'/.git';
+				var g:File = File.desktopDirectory.resolvePath(p);
+					g.deleteDirectory(true);
 			}
+			if (trashFiles){
+				var f:File = File.desktopDirectory.resolvePath(bkmk.path);
+					f.moveToTrash();
+			}
+			dispatchEvent(new AppEvent(AppEvent.FILES_DELETED));
 		}
 		
 		public function editAppStorageGitDirName($old:String, $new:String):void
@@ -52,96 +49,119 @@ package model.proxies.local {
 			super.call(Vector.<String>([BashMethods.EDIT_GIT_DIR, $old, $new]));
 		}
 		
-	// private //						
+	// bookmark initialization sequence //
+	
+		private function initFile():void
+		{
+			var hash:String = MD5.hash(_bookmark.path);
+			var path:File = File.applicationStorageDirectory.resolvePath(hash);
+			if (path.exists == false) path.createDirectory();
+			super.directory =  path.nativePath;
+			super.call(Vector.<String>([BashMethods.INIT_FILE, _bookmark.path, _bookmark.worktree]));			
+		}
+		
+		private function initFolder():void
+		{
+			super.directory = _bookmark.path;			
+			super.call(Vector.<String>([BashMethods.INIT_FOLDER]));
+		}
+		
+	// sub-routines //	
 		
 		private function getDirectoryFiles():void
 		{
 			super.call(Vector.<String>([BashMethods.GET_DIRECTORY_FILES]));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Reading Directory Contents'));
 		}
 		
-		private function trackFile(s:String):void
+		private function addFileToRepository(f:String):void
 		{
-			super.call(Vector.<String>([BashMethods.TRACK_FILE, s]));
-			// dispatch event that updates the preloader with progress of files added.
+			super.call(Vector.<String>([BashMethods.TRACK_FILE, f]));
 		}
 		
 		private function addFirstCommit():void
 		{
-			if (_bookmark.type == Bookmark.FOLDER){
-				super.directory = _bookmark.path;			
-				super.call(Vector.<String>([BashMethods.ADD_INITIAL_COMMIT]));
-			}	else{
-				super.directory =  File.applicationStorageDirectory.nativePath;
-				super.call(Vector.<String>([BashMethods.ADD_INITIAL_COMMIT]));
-			}				
+			super.directory = _bookmark.gitdir;
+			super.call(Vector.<String>([BashMethods.ADD_INITIAL_COMMIT]));
 		}
 
 	// response handlers //			
 
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
-		//	trace("InitProxy.onProcessComplete(e)", e.data.method, e.data.result);
+			trace("InitProxy.onProcessComplete(e)", e.data.method);
 			switch(e.data.method){
 				case BashMethods.INIT_FILE: 
-					onRepositoryInitialized(e.data.result);
+					onFileInitialized();
 				break;					
 				case BashMethods.INIT_FOLDER : 
-					onRepositoryInitialized(e.data.result);
+					onFolderInitialized(e.data.result);
 				break;	
 				case BashMethods.GET_DIRECTORY_FILES : 
-					onDirectoryFiles(e.data.result);
+					onDirectoryListing(e.data.result);
 				break;	
 				case BashMethods.TRACK_FILE : 
-					onFileAdded();
+					onFileAddedToRepository();
 				break;									
 				case BashMethods.ADD_INITIAL_COMMIT : 
 					dispatchEvent(new BookmarkEvent(BookmarkEvent.INITIALIZED));
 				break;					
-				case BashMethods.KILL_FILE : 
-					dispatchEvent(new AppEvent(AppEvent.FILES_DELETED));
-				break;
-				case BashMethods.KILL_FOLDER : 
-					dispatchEvent(new AppEvent(AppEvent.FILES_DELETED));
-				break;								
 				case BashMethods.EDIT_GIT_DIR : 
 					dispatchEvent(new AppEvent(AppEvent.GIT_DIR_UPDATED));
 				break;	
 			}
 		}
-		
-	// callbacks //	
-		
-		private function onRepositoryInitialized(s:String):void
-		{
-			if (s.indexOf('is already a git repository') != -1){
-				trace("InitProxy -- ", s);
-			// still need to check that this repo has had files added to it
-			// otherwise git branch will fail	
-				dispatchEvent(new BookmarkEvent(BookmarkEvent.INITIALIZED));
-			}	else{
-				getDirectoryFiles();
-				dispatchEvent(new AppEvent(AppEvent.INITIALIZING_BOOKMARK, _bookmark));
-			}
-		}		
 
-		private function onDirectoryFiles(s:String):void
+	// callbacks //	
+	
+		private function onFileInitialized():void
 		{
-			_files = s.split(/[\n\r\t]/g);
+			addFileToRepository(_bookmark.path);
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Reading File Contents'));
+		}	
+		
+		private function onFolderInitialized(s:String):void
+		{
+			if (s == ''){
+			// we have no branches, add all files and a first commit //
+				getDirectoryFiles();
+			}	else{
+				dispatchEvent(new BookmarkEvent(BookmarkEvent.INITIALIZED));
+			}
+		}	
+
+		private function onDirectoryListing(s:String):void
+		{
 			_index = 0;
-			trackFile(_files[_index]);
+			_files = s.split(/[\n\r\t]/g);
+			addFileToRepository(_files[_index]);
 		}
 		
-		private function onFileAdded():void
+		private function onFileAddedToRepository():void
 		{
-			_index++;
-			if (_index < _files.length){
-				trackFile(_files[_index]);	
-			}	else{
+			if (_files == null){
 				addFirstCommit();
+			}	else{
+				addNextFileInQueue();
 			}
 		}	
 		
+		private function addNextFileInQueue():void
+		{
+			if (++_index == _files.length){
+				addFirstCommit();
+			}	else{
+				addFileToRepository(_files[_index]);
+			}
+			dispatchLoadPercent();
+		}
+		
 	// dispatch //
+	
+		private function dispatchLoadPercent():void
+		{
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.LOADER_PERCENT, {loaded:_index, total:_files.length}));
+		}
 			
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
