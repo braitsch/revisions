@@ -36,7 +36,6 @@ package view.ui {
 			_view.addChildAt(_bkgd, 0);
 			_view.filters = [_glow];
 			_label.filters = [_glow];
-			_progressBkgd.filters = [_glow];
 			AppModel.engine.addEventListener(AppEvent.SHOW_LOADER, showLoader);
 			AppModel.engine.addEventListener(AppEvent.HIDE_LOADER, hideLoader);			
 			AppModel.engine.addEventListener(AppEvent.LOADER_TEXT, setLoaderText);		
@@ -90,14 +89,14 @@ package view.ui {
 			_text.textColor = 0xDDDDDD;
 			_text.defaultTextFormat = _format;
 			_text.autoSize = TextFieldAutoSize.CENTER;
-			_text.filters = [new GlowFilter(0x000000, .8, 3, 3, 1, 3)];
+		//	_text.filters = [new GlowFilter(0x000000, .8, 3, 3, 1, 3)];
 			_label.y = 48;
 			_label.addChild(_text);
 		}
 		
 		private function addProgressBar():void
 		{
-			addChild(_progressBkgd);
+			_label.addChild(_progressBkgd);
 			_progressBkgd.addChild(_progressBar);			
 		}		
 		
@@ -114,7 +113,7 @@ package view.ui {
 		
 		private function setProgressBar():void
 		{
-			_progressBkgd.y = _label.y + _label.height + 5;
+			_progressBkgd.y = 22;
 			_progressBkgd.graphics.clear();
 			_progressBkgd.graphics.beginBitmapFill(new DkGreyPattern());
 			_progressBkgd.graphics.drawRoundRect(-_width/2, 0, _width, 9, 3);

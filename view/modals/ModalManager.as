@@ -146,10 +146,10 @@ package view.modals {
 			if (_window) {
 				_window.resize(w, h);
 			// align with modal window //	
-				_preloader.resize(w, h);
+				_preloader.resize(w, h - 30);
 			}	else{
 			// align with summary view //	
-				_preloader.resize(w, h, 204/2, -20);
+				_preloader.resize(w, h, 204/2, -50);
 			}
 			if (_alert.stage) _alert.resize(w, h);
 			if (_debug.stage) _debug.resize(w, h);

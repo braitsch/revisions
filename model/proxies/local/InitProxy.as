@@ -25,12 +25,14 @@ package model.proxies.local {
 
 		public function initBookmark(bkmk:Bookmark):void 
 		{
+			AppModel.proxies.update.lock(true);			
 			_bookmark = bkmk; _files = null;
 			_bookmark.type == Bookmark.FILE ? initFile() : initFolder();
 		}
 		
 		public function killBookmark(bkmk:Bookmark, trashGit:Boolean, trashFiles:Boolean):void 
 		{
+			AppModel.proxies.update.lock(true);
 			if (trashGit){
 				var p:String = bkmk.type == Bookmark.FILE ? bkmk.gitdir : bkmk.gitdir+'/.git';
 				var g:File = File.desktopDirectory.resolvePath(p);
@@ -40,6 +42,7 @@ package model.proxies.local {
 				var f:File = File.desktopDirectory.resolvePath(bkmk.path);
 					f.moveToTrash();
 			}
+			AppModel.proxies.update.lock(false);
 			dispatchEvent(new AppEvent(AppEvent.FILES_DELETED));
 		}
 		
@@ -71,7 +74,6 @@ package model.proxies.local {
 		private function getDirectoryFiles():void
 		{
 			super.call(Vector.<String>([BashMethods.GET_DIRECTORY_FILES]));
-			AppModel.proxies.update.lock(true);
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Reading Directory Contents', prog:true}));
 		}
 		
@@ -136,8 +138,18 @@ package model.proxies.local {
 		private function onDirectoryListing(s:String):void
 		{
 			_index = 0;
-			_files = s.split(/[\n\r\t]/g);
+			_files = s.split(/\n/g);
+			checkArrayForLineBreaks();
 			addFileToRepository(_files[_index]);
+		}
+		
+		private function checkArrayForLineBreaks():void
+		{
+			for (var i:int = 0; i < _files.length; i++) {
+				if (_files[i].indexOf('.') != 0){
+					_files[i-1]+=_files[i]; _files.splice(i, 1);
+				}
+			}			
 		}
 		
 		private function onFileAddedToRepository():void
