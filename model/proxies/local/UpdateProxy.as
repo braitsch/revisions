@@ -1,11 +1,11 @@
 package model.proxies.local {
 
-	import flash.events.TimerEvent;
 	import events.AppEvent;
 	import events.BookmarkEvent;
 	import model.AppModel;
 	import model.vo.Bookmark;
 	import flash.events.EventDispatcher;
+	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	import flash.utils.setTimeout;
 	
@@ -64,16 +64,16 @@ package model.proxies.local {
 			resetTimer();
 		// add slight delay so we have time to display the preloader //	
 			setTimeout(_status.getHistory, 500);
-			dispatchEvent(new AppEvent(AppEvent.REQUESTING_HISTORY));			
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Refreshing History'}));
 		}
 		
 		public function autoSave(b:Bookmark):void
 		{
 			_autoSaveQueue.push(b);
 		//	if (!_working) getModified(_autoSaveQueue[0]);
-		}	
+		}
 		
-		public function lock(b:Boolean):void
+		public function set lock(b:Boolean):void
 		{		
 			b ? _timer.stop() : resetTimer();
 		}

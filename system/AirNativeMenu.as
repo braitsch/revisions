@@ -1,6 +1,8 @@
 package system {
 
 	import events.AppEvent;
+	import events.BookmarkEvent;
+	import events.ErrorType;
 	import events.UIEvent;
 	import model.AppModel;
 	import model.db.AppSettings;
@@ -24,6 +26,7 @@ package system {
        	private static var _github		:NativeMenuItem = new NativeMenuItem('My Github');
        	private static var _beanstalk	:NativeMenuItem = new NativeMenuItem('My Beanstalk');
        	private static var _newBkmk		:NativeMenuItem = new NativeMenuItem('New Bookmark');
+       	private static var _commit		:NativeMenuItem = new NativeMenuItem('New Commit');
        	private static var _aboutGit	:NativeMenuItem = new NativeMenuItem('About Git');
        	private static var _updateApp	:NativeMenuItem = new NativeMenuItem('Check For Updates');
                      
@@ -34,12 +37,15 @@ package system {
             addLocalOptions();
             addRemoteOptions();
             setKeyEquivalents();
+            AppModel.engine.addEventListener(BookmarkEvent.MODIFIED_RECEIVED, enableSaveCommit);
 		}
 
 		private static function setKeyEquivalents():void
 		{
        		_newBkmk.keyEquivalent = 'n';
        		_newBkmk.keyEquivalentModifiers = [Keyboard.COMMAND];
+       		_commit.keyEquivalent = 's';
+       		_commit.keyEquivalentModifiers = [Keyboard.COMMAND];
        		_github.keyEquivalent = 'g';
        		_github.keyEquivalentModifiers = [Keyboard.COMMAND];
        		_beanstalk.keyEquivalent = 'b';
@@ -50,13 +56,14 @@ package system {
 		{
 		// file menu //	
             var f:NativeMenuItem = getMenuByName('File');
-            f.submenu.addItem(_newBkmk);
+            	f.submenu.addItem(_newBkmk);
+            	f.submenu.addItem(_commit);
+            _commit.addEventListener(Event.SELECT, onOptionSelected);            
             _newBkmk.addEventListener(Event.SELECT, onOptionSelected);
 		// main menu //
-            var m:NativeMenuItem = getMenuByName('adl');
-            if (!m) m = getMenuByName('Revisions');
-            m.submenu.addItemAt(_aboutGit, 1);
-            m.submenu.addItemAt(_updateApp, 2);
+            var m:NativeMenuItem = getMenuByName('adl') || getMenuByName('Revisions');
+         	   	m.submenu.addItemAt(_aboutGit, 1);
+				m.submenu.addItemAt(_updateApp, 2);
             _aboutGit.addEventListener(Event.SELECT, onOptionSelected);
             _updateApp.addEventListener(Event.SELECT, onOptionSelected);
 		}
@@ -76,6 +83,11 @@ package system {
             for (var i:int = 0; i < _appMenu.items.length; i++) if (_appMenu.items[i].label == s) return _appMenu.items[i];
             return null;
 		}
+		
+		private static function enableSaveCommit(e:BookmarkEvent):void
+		{
+			_commit.enabled = AppModel.bookmark.branch.isModified;
+		}		
                  
         private static function onOptionSelected(e:Event):void 
         { 
@@ -83,6 +95,9 @@ package system {
         	 	case _newBkmk	: 
         	 		_stage.dispatchEvent(new UIEvent(UIEvent.ADD_BOOKMARK));
         	 	break;
+        	 	case _commit	: 
+        	 		if (AppModel.bookmark.branch.isModified) _stage.dispatchEvent(new UIEvent(UIEvent.COMMIT));
+        	 	break;        	 	
         	 	case _aboutGit : 
         	 		_stage.dispatchEvent(new UIEvent(UIEvent.ABOUT_GIT));
         	 	break;  
@@ -125,7 +140,7 @@ package system {
 		{
 			AppModel.updater.removeEventListener(AppEvent.APP_UP_TO_DATE, onAppUpToDate);			
 			AppModel.updater.removeEventListener(AppEvent.APP_UPDATE_FAILURE, onUpdateUnavailable);			
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, 'Update server unavailable.\nPlease check your internet connection'));			
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, ErrorType.NO_CONNECTION));			
 		}
 
 		private static function onAppUpToDate(e:AppEvent):void

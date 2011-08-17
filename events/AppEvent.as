@@ -30,23 +30,21 @@ package events {
 		public static const GIT_NAME_AND_EMAIL		:String = "GIT_NAME_AND_EMAIL";		
 		public static const GIT_DIR_UPDATED			:String = "GIT_DIR_UPDATED";
 		
-		public static const LOGOUT					:String = "LOGOUT";
 		public static const LOGIN_SUCCESS			:String = "LOGIN_SUCCESS";
-		public static const LOGOUT_SUCCESS			:String = "LOGOUT_SUCCESS";
 		public static const REMOTE_READY			:String = "REMOTE_READY";
+		public static const LOGOUT_SUCCESS			:String = "LOGOUT_SUCCESS";
 		public static const SSH_KEY_READY			:String = "SSH_KEYS_READY";
 		
 	// remote calls //	
 		public static const REMOTE_SYNCED			:String = "REMOTE_SYNCED";
 		public static const CLONE_COMPLETE			:String = "CLONE_COMPLETE";
 		public static const REPOSITORY_CREATED		:String = "REPOSITORY_CREATED";
-		public static const HISTORY_RENDERED		:String = "HISTORY_READY";
 		
-		public static const REQUESTING_HISTORY		:String = "REQUESTING_HISTORY";
 		public static const REPOSITORY_READY		:String = "REPOSITORY_READY";
 		public static const FILES_DELETED			:String = "FILES_DELETED";
 		public static const HISTORY_REQUESTED		:String = "HISTORY_REQUESTED";
 		public static const MODIFIED_REQUESTED		:String = "MODIFIED_REQUESTED";
+		public static const HISTORY_RENDERED		:String = "HISTORY_READY";
 		public static const REMOTE_KEY_SET			:String = "REMOTE_KEY_VALIDATED";
 		public static const PROMPT_FOR_REMOTE_PSWD	:String = "PROMPT_FOR_REMOTE_PSWD";
 		

@@ -25,14 +25,12 @@ package model.proxies.local {
 
 		public function initBookmark(bkmk:Bookmark):void 
 		{
-			AppModel.proxies.update.lock(true);			
 			_bookmark = bkmk; _files = null;
 			_bookmark.type == Bookmark.FILE ? initFile() : initFolder();
 		}
 		
 		public function killBookmark(bkmk:Bookmark, trashGit:Boolean, trashFiles:Boolean):void 
 		{
-			AppModel.proxies.update.lock(true);
 			if (trashGit){
 				var p:String = bkmk.type == Bookmark.FILE ? bkmk.gitdir : bkmk.gitdir+'/.git';
 				var g:File = File.desktopDirectory.resolvePath(p);
@@ -42,7 +40,6 @@ package model.proxies.local {
 				var f:File = File.desktopDirectory.resolvePath(bkmk.path);
 					f.moveToTrash();
 			}
-			AppModel.proxies.update.lock(false);
 			dispatchEvent(new AppEvent(AppEvent.FILES_DELETED));
 		}
 		
@@ -60,13 +57,15 @@ package model.proxies.local {
 			var path:File = File.applicationStorageDirectory.resolvePath(hash);
 			if (path.exists == false) path.createDirectory();
 			super.directory =  path.nativePath;
-			super.call(Vector.<String>([BashMethods.INIT_FILE, _bookmark.path, _bookmark.worktree]));			
+			super.call(Vector.<String>([BashMethods.INIT_FILE, _bookmark.path, _bookmark.worktree]));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Reading File Contents'}));						
 		}
 		
 		private function initFolder():void
 		{
 			super.directory = _bookmark.path;			
 			super.call(Vector.<String>([BashMethods.INIT_FOLDER]));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Reading Directory Contents', prog:true}));
 		}
 		
 	// sub-routines //	
@@ -74,7 +73,6 @@ package model.proxies.local {
 		private function getDirectoryFiles():void
 		{
 			super.call(Vector.<String>([BashMethods.GET_DIRECTORY_FILES]));
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Reading Directory Contents', prog:true}));
 		}
 		
 		private function addFileToRepository(f:String):void
@@ -107,7 +105,6 @@ package model.proxies.local {
 					onFileAddedToRepository();
 				break;									
 				case BashMethods.ADD_INITIAL_COMMIT : 
-					AppModel.proxies.update.lock(false);
 					dispatchEvent(new BookmarkEvent(BookmarkEvent.INITIALIZED));
 				break;					
 				case BashMethods.EDIT_GIT_DIR : 
@@ -121,7 +118,6 @@ package model.proxies.local {
 		private function onFileInitialized():void
 		{
 			addFileToRepository(_bookmark.path);
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Reading File Contents'}));
 		}	
 		
 		private function onFolderInitialized(s:String):void
@@ -130,7 +126,6 @@ package model.proxies.local {
 			// we have no branches, add all files and a first commit //
 				getDirectoryFiles();
 			}	else{
-				trace("InitProxy.onFolderInitialized(s)");
 				dispatchEvent(new BookmarkEvent(BookmarkEvent.INITIALIZED));
 			}
 		}	

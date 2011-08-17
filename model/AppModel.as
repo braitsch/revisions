@@ -6,7 +6,6 @@ package model {
 	import model.proxies.AppProxies;
 	import model.vo.Bookmark;
 	import model.vo.Branch;
-	import system.PreloadManager;
 	import system.UpdateManager;
 	import flash.events.EventDispatcher;
 
@@ -17,12 +16,10 @@ package model {
 		private static var _database		:AppDatabase = new AppDatabase();
 		private static var _settings		:AppSettings = new AppSettings();
 		private static var _updater			:UpdateManager = new UpdateManager();
-		private static var _preloader		:PreloadManager = new PreloadManager();
 		private static var _bookmark		:Bookmark; // the active bookmark //
 
 		public function AppModel() 
 		{
-			_preloader.initialize();
 			_proxies.update.initialize();
 		}
 		

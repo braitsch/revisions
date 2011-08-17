@@ -66,6 +66,7 @@ package view{
 		private function onHistoryRendered(e:AppEvent):void
 		{
 			hideSummary();
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 			AppModel.engine.removeEventListener(AppEvent.HISTORY_RENDERED, onHistoryRendered);
 		}
 		

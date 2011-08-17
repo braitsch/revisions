@@ -37,9 +37,9 @@ package view.ui {
 			_view.filters = [_glow];
 			_label.filters = [_glow];
 			AppModel.engine.addEventListener(AppEvent.SHOW_LOADER, showLoader);
-			AppModel.engine.addEventListener(AppEvent.HIDE_LOADER, hideLoader);			
-			AppModel.engine.addEventListener(AppEvent.LOADER_TEXT, setLoaderText);		
-			AppModel.engine.addEventListener(AppEvent.LOADER_PERCENT, setLoaderPercent);		
+			AppModel.engine.addEventListener(AppEvent.HIDE_LOADER, hideLoader);
+			AppModel.engine.addEventListener(AppEvent.LOADER_TEXT, setLoaderText);
+			AppModel.engine.addEventListener(AppEvent.LOADER_PERCENT, setLoaderPercent);
 		}
 
 		public function resize(w:uint, h:uint, offX:int = 0, offY:int = 0):void
@@ -62,8 +62,9 @@ package view.ui {
 		
 		private function hideLoader(e:AppEvent):void
 		{
-			TweenLite.to(this, .5, {alpha:0});
-			_view.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+			TweenLite.to(this, .5, {alpha:0, delay:e.data || 0, onComplete:function():void{
+				_view.removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+			}});
 		}
 		
 		private function setLoaderText(e:AppEvent):void
