@@ -33,7 +33,7 @@ package view.modals.remote {
 			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);
 			AppModel.engine.addEventListener(AppEvent.REMOTE_READY, onAccountReady);
 			Accounts.github.addEventListener(AppEvent.LOGOUT_SUCCESS, onLogout);
-			AppModel.proxies.ghRemote.addEventListener(AppEvent.REPOSITORY_CREATED, onNewRepo);
+			Accounts.github.proxy.repo.addEventListener(AppEvent.REPOSITORY_CREATED, onNewRepo);
 		}
 
 		private function onAccountReady(e:AppEvent):void
@@ -99,7 +99,7 @@ package view.modals.remote {
 			positionURLAndNav();
 			super.addCloseButton(590);
 			super.drawBackground(590, _view.height + 15);
-			super.resize(stage.stageWidth, stage.stageHeight);
+			if (stage) super.resize(stage.stageWidth, stage.stageHeight);
 		}
 
 		private function showPage(n:uint):void
@@ -110,8 +110,8 @@ package view.modals.remote {
 			_activePage.x = 10;
 			_activePage.y = 90;
 			_view.nav.pageCounter_txt.text = (_pageIndex+1)+' / '+_pages.length;			
-			_pageIndex==0 ? enableButton(_view.nav.prev_btn, false) : enableButton(_view.nav.prev_btn, true);
-			_pageIndex==_pages.length-1 ? enableButton(_view.nav.next_btn, false) : enableButton(_view.nav.next_btn, true);
+			_pageIndex==0 ? enableNavButton(_view.nav.prev_btn, false) : enableNavButton(_view.nav.prev_btn, true);
+			_pageIndex==_pages.length-1 ? enableNavButton(_view.nav.next_btn, false) : enableNavButton(_view.nav.next_btn, true);
 			_view.addChild(_activePage);
 		}
 
@@ -121,7 +121,7 @@ package view.modals.remote {
 			_view.logOut.y = _activePage.y + _activePage.height + 30;
 		}		
 		
-		override protected function enableButton(btn:Sprite, b:Boolean):void
+		private function enableNavButton(btn:Sprite, b:Boolean):void
 		{
 			if (b){
 				btn.alpha = 1;
@@ -151,7 +151,7 @@ package view.modals.remote {
 		
 		private function onLogOutClick(e:MouseEvent):void
 		{
-			Accounts.github.logout();
+			Accounts.github.proxy.logout();
 		}
 
 		private function onLogout(e:AppEvent):void
@@ -162,15 +162,15 @@ package view.modals.remote {
 		private function onBrowserSelection(e:UIEvent):void
 		{
 			_savePath = File(e.data).nativePath;
-			AppModel.proxies.ghRemote.cloneRemoteRepository(_cloneURL, _savePath);
-			AppModel.proxies.ghRemote.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);			
+			Accounts.github.proxy.repo.cloneRemoteRepository(_cloneURL, _savePath);
+			Accounts.github.proxy.repo.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);			
 		}
 
 		private function onCloneComplete(e:AppEvent):void
 		{
 			dispatchNewBookmark();
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-			AppModel.proxies.ghRemote.removeEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);			
+			Accounts.github.proxy.repo.removeEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);			
 		}
 
 		private function dispatchNewBookmark():void

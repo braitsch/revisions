@@ -37,10 +37,7 @@ package view.modals.login {
 		{
 			if (!validate()) return;
 			lockScreen();
-		//	var a:RemoteAccount = Accounts.getAccountByName(RemoteAccount.GITHUB, super.name);
-		//	var o:Object = {type:RemoteAccount.GITHUB, user:super.name, pass:super.pass, sshKeyId:a ? a.sshKeyId : 0};
-		//	AppModel.proxies.ghLogin.login(new RemoteAccount(o));
-			Accounts.github.login(super.name, super.pass);
+			Accounts.github.proxy.login(super.name, super.pass);
 		}
 		
 		private function onLoginSuccess(e:AppEvent):void

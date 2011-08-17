@@ -7,8 +7,7 @@ package model.proxies {
 	import model.proxies.local.RepoReader;
 	import model.proxies.local.SSHKeyGenerator;
 	import model.proxies.local.UpdateProxy;
-	import model.proxies.remote.AccountProxy;
-	import model.proxies.remote.RepositoryProxy;
+	import model.proxies.remote.UserProxy;
 	import flash.events.EventDispatcher;
 
 	public class AppProxies extends EventDispatcher {
@@ -21,8 +20,7 @@ package model.proxies {
 		private static var _checkout	:CheckoutProxy 	= new CheckoutProxy();
 		private static var _sshKeyGen	:SSHKeyGenerator = new SSHKeyGenerator();
 
-		private static var _bsLogin		:AccountProxy 	= new AccountProxy();
-		private static var _ghRemote	:RepositoryProxy 	= new RepositoryProxy();
+		private static var _bsLogin		:UserProxy 	= new UserProxy();
 
 	// public getters //	
 
@@ -63,16 +61,11 @@ package model.proxies {
 		
 	// remote proxies //	
 
-		public function get bsLogin():AccountProxy
+		public function get bsLogin():UserProxy
 		{
 			return _bsLogin;
 		}
 		
-		public function get ghRemote():RepositoryProxy
-		{
-			return _ghRemote;
-		}
-
 
 	}
 	

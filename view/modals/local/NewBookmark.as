@@ -118,8 +118,8 @@ package view.modals.local {
 				dispatchEvent(new UIEvent(UIEvent.DRAG_AND_DROP, e.data as File));
 			}	else{
 				_savePath = File(e.data).nativePath;
-				AppModel.proxies.ghRemote.cloneRemoteRepository(_cloneURL, _savePath);
-				AppModel.proxies.ghRemote.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);
+				Accounts.github.proxy.repo.cloneRemoteRepository(_cloneURL, _savePath);
+				Accounts.github.proxy.repo.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);
 			}
 		}
 
@@ -127,7 +127,7 @@ package view.modals.local {
 		{
 			dispatchNewBookmark();
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-			AppModel.proxies.ghRemote.removeEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);			
+			Accounts.github.proxy.repo.removeEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);			
 		}
 
 		private function dispatchNewBookmark():void

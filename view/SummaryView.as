@@ -1,5 +1,6 @@
 package view {
 
+	import model.remote.Accounts;
 	import system.StringUtils;
 	import events.AppEvent;
 	import events.BookmarkEvent;
@@ -198,15 +199,15 @@ package view {
 			}	else{
 				_locked = true;
 				var v:Vector.<Remote> = _bookmark.remotes.concat();
-				AppModel.proxies.ghRemote.syncRemotes(v);
-				AppModel.proxies.ghRemote.addEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);
+				Accounts.github.proxy.repo.syncRemotes(v);
+				Accounts.github.proxy.repo.addEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);
 			}
 		}
 
 		private function onRemoteSynced(e:AppEvent):void
 		{
 			_locked = false;
-			AppModel.proxies.ghRemote.removeEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);			
+			Accounts.github.proxy.repo.removeEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);			
 		}
 		
 	}

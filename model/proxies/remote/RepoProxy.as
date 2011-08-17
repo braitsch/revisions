@@ -9,7 +9,7 @@ package model.proxies.remote {
 	import system.BashMethods;
 	import system.StringUtils;
 	
-	public class RepositoryProxy extends RemoteProxy {
+	public class RepoProxy extends RemoteProxy {
 		
 		private static var _index		:uint;
 		private static var _remotes		:Vector.<Remote>;
@@ -18,7 +18,7 @@ package model.proxies.remote {
 		private static var _remoteURL	:String;
 		private static var _prompt		:Boolean;
 		
-		public function RepositoryProxy()
+		public function RepoProxy()
 		{
 			super.executable = 'GitHubRepo.sh';
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);

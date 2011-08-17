@@ -5,6 +5,7 @@ package view.modals {
 	import events.UIEvent;
 	import model.AppModel;
 	import model.db.AppSettings;
+	import model.remote.Accounts;
 	import model.remote.RemoteAccount;
 	import model.vo.Bookmark;
 	import model.vo.Commit;
@@ -62,13 +63,13 @@ package view.modals {
 		private static var _gitAbout		:GitAbout = new GitAbout();
 		private static var _gitInstall		:GitInstall = new GitInstall();
 		private static var _gitUpgrade		:GitUpgrade = new GitUpgrade();
+		private static var _gitHub			:GitHubHome = new GitHubHome();
 		private static var _ghLogin			:GitHubLogin = new GitHubLogin();
 		private static var _bsLogin			:BeanStalkLogin = new BeanStalkLogin();
 		private static var _remotePswd		:RemotePassword = new RemotePassword();
 		private static var _addToGitHub		:AddGitHubRepo = new AddGitHubRepo();
 		private static var _addToBeanstalk	:AddBeanstalkRepo = new AddBeanstalkRepo();
 		private static var _newRepoConfirm	:NewRepoConfirm = new NewRepoConfirm();
-		private static var _gitHub			:GitHubHome = new GitHubHome();
 		private static var _alert			:Alert = new Alert();
 		private static var _debug			:Debug = new Debug();
 		private static var _confirm			:Confirm = new Confirm();
@@ -102,7 +103,7 @@ package view.modals {
 			AppModel.updater.addEventListener(AppEvent.APP_UPDATE_AVAILABLE, promptToUpdate);
 			AppModel.proxies.config.addEventListener(AppEvent.GIT_NOT_INSTALLED, installGit);
 			AppModel.proxies.config.addEventListener(AppEvent.GIT_NEEDS_UPDATING, upgradeGit);
-			AppModel.proxies.ghRemote.addEventListener(AppEvent.PROMPT_FOR_REMOTE_PSWD, showPasswordPrompt);
+			Accounts.github.proxy.repo.addEventListener(AppEvent.PROMPT_FOR_REMOTE_PSWD, showPasswordPrompt);
 		}
 
 		public function init(stage:Stage):void

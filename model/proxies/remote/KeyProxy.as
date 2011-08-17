@@ -6,11 +6,11 @@ package model.proxies.remote {
 	import model.remote.RemoteAccount;
 	import system.BashMethods;
 
-	public class SSHKeyProxy extends RemoteProxy {
+	public class KeyProxy extends RemoteProxy {
 
 		private static var _account		:RemoteAccount;
 
-		public function SSHKeyProxy()
+		public function KeyProxy()
 		{
 			super.executable = 'SSHKeyValidator.sh';
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);

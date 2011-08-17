@@ -1,13 +1,13 @@
 package view.modals.remote {
 
-	import model.AppModel;
+	import model.remote.Accounts;
 
 	public class AddGitHubRepo extends AddRemoteRepo {
 
 		public function AddGitHubRepo()
 		{
 			super.drawBackground(550, 210);
-			super.proxy = AppModel.proxies.ghRemote;
+			super.proxy = Accounts.github.proxy.repo;
 			super.view.pageBadge.label_txt.text = 'Add To Github';			
 		}
 		
