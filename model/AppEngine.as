@@ -147,7 +147,7 @@ package model {
 		
 		private function readBookmarkData():void
 		{
-			dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Initalizing Bookmarks'));
+			dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Initalizing Bookmarks'}));
 			AppModel.proxies.reader.getRepositoryInfo(_bookmarks[_index]);
 			AppModel.proxies.reader.addEventListener(AppEvent.REPOSITORY_READY, onRepositoryReady);
 		}

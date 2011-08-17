@@ -71,7 +71,7 @@ package model.proxies.local {
 		private function getDirectoryFiles():void
 		{
 			super.call(Vector.<String>([BashMethods.GET_DIRECTORY_FILES]));
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Reading Directory Contents'));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Reading Directory Contents', prog:true}));
 		}
 		
 		private function addFileToRepository(f:String):void
@@ -89,7 +89,7 @@ package model.proxies.local {
 
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
-			trace("InitProxy.onProcessComplete(e)", e.data.method);
+	//		trace("InitProxy.onProcessComplete(e)", e.data.method);
 			switch(e.data.method){
 				case BashMethods.INIT_FILE: 
 					onFileInitialized();
@@ -117,7 +117,7 @@ package model.proxies.local {
 		private function onFileInitialized():void
 		{
 			addFileToRepository(_bookmark.path);
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Reading File Contents'));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Reading File Contents'}));
 		}	
 		
 		private function onFolderInitialized(s:String):void

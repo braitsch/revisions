@@ -27,7 +27,7 @@ package model.proxies.remote {
 		public function cloneRemoteRepository(url:String, loc:String):void
 		{
 			super.call(Vector.<String>([BashMethods.CLONE_REPOSITORY, url, loc]));
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Cloning Remote Repository'));			
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Cloning Remote Repository'}));
 		}
 		
 		public function createRemoteRepository(name:String, desc:String, publik:Boolean):void
@@ -92,14 +92,14 @@ package model.proxies.remote {
 		{
 			super.directory = AppModel.bookmark.gitdir;
 			super.call(Vector.<String>([BashMethods.PULL_REMOTE, _remoteURL, AppModel.branch.name]));
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Fetching files from '+StringUtils.capitalize(_remote.type)));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Fetching files from '+StringUtils.capitalize(_remote.type)}));
 		}
 		
 		private function pushRemote():void
 		{
 			super.directory = AppModel.bookmark.gitdir;
 			super.call(Vector.<String>([BashMethods.PUSH_REMOTE, _remoteURL, AppModel.branch.name]));
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Sending files to '+StringUtils.capitalize(_remote.type)));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Sending files to '+StringUtils.capitalize(_remote.type)}));
 		}
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 

@@ -44,7 +44,7 @@ package view.modals.login {
 			_view.login_btn.removeEventListener(MouseEvent.CLICK, onLoginButton);			
 			AppModel.engine.addEventListener(AppEvent.FAILURE, onLoginFailure);
 			AppModel.engine.addEventListener(AppEvent.REMOTE_READY, onLoginSuccess);
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, 'Attemping Login'));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Attemping Login'}));
 		}
 		
 		override protected function unlockScreen():void

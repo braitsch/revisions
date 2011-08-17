@@ -29,7 +29,7 @@ package system {
 		
 		private function showLoader(m:String):void
 		{
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, m));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:m}));
 		}
 
 		private function hideLoader(e:*, d:uint = 0):void
