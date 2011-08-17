@@ -66,6 +66,7 @@ package view.history {
 		{
 		// add slight delay so the list has time to finish drawing itself //	
 			setTimeout(function():void{
+				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HISTORY_RENDERED));
 			}, 500);
 		}		
