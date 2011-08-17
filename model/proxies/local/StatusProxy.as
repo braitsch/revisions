@@ -104,7 +104,6 @@ package model.proxies.local {
 
 		private function onSummary(a:Array):void
 		{
-			getModified(AppModel.bookmark);
 			for (var i:int = 0; i < a.length; i++) a[i] = a[i].result;
 			AppModel.branch.lastCommit = new Commit(a[0], uint(a[1]) + 1);
 			AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.SUMMARY_RECEIVED, AppModel.bookmark));
@@ -137,7 +136,7 @@ package model.proxies.local {
 
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
-			e.data.source = 'StatusProxy.onProcessFailure(e)';
+			e.data.source = 'StatusProxy.onProcessFailure(e) -- request on '+_bookmark.label, _bookmark.branch.name;
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_DEBUG, e.data));			
 		}
 		

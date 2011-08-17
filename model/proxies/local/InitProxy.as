@@ -71,6 +71,7 @@ package model.proxies.local {
 		private function getDirectoryFiles():void
 		{
 			super.call(Vector.<String>([BashMethods.GET_DIRECTORY_FILES]));
+			AppModel.proxies.update.lock(true);
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Reading Directory Contents', prog:true}));
 		}
 		
@@ -104,6 +105,7 @@ package model.proxies.local {
 					onFileAddedToRepository();
 				break;									
 				case BashMethods.ADD_INITIAL_COMMIT : 
+					AppModel.proxies.update.lock(false);
 					dispatchEvent(new BookmarkEvent(BookmarkEvent.INITIALIZED));
 				break;					
 				case BashMethods.EDIT_GIT_DIR : 
@@ -126,6 +128,7 @@ package model.proxies.local {
 			// we have no branches, add all files and a first commit //
 				getDirectoryFiles();
 			}	else{
+				trace("InitProxy.onFolderInitialized(s)");
 				dispatchEvent(new BookmarkEvent(BookmarkEvent.INITIALIZED));
 			}
 		}	

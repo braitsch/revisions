@@ -71,7 +71,12 @@ package model.proxies.local {
 		{
 			_autoSaveQueue.push(b);
 		//	if (!_working) getModified(_autoSaveQueue[0]);
-		}			
+		}	
+		
+		public function lock(b:Boolean):void
+		{		
+			b ? _timer.stop() : resetTimer();
+		}
 		
 		private function resetTimer(e:BookmarkEvent = null):void
 		{
