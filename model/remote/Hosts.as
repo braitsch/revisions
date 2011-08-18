@@ -2,8 +2,8 @@ package model.remote {
 
 	public class Hosts {
 		
-		private static var _github			:HostingProvider = new HostingProvider(new GitHub());
-		private static var _beanstalk		:HostingProvider = new HostingProvider(new Beanstalk());
+		private static var _github			:HostingProvider = new GitHub();
+		private static var _beanstalk		:HostingProvider = new Beanstalk();
 		
 		public static function initialize(a:Array):void
 		{

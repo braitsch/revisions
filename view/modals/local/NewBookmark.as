@@ -44,10 +44,10 @@ package view.modals.local {
 					super.browseForDirectory('Select a folder to track');
 				break;	
 				case _view.viewGithub :
-					dispatchEvent(new UIEvent(UIEvent.GITHUB_HOME));
+					dispatchEvent(new UIEvent(UIEvent.ACCOUNT_HOME));
 				break;	
 				case _view.loginGithub :
-					dispatchEvent(new UIEvent(UIEvent.REMOTE_LOGIN, {type:Account.GITHUB, event:UIEvent.GITHUB_HOME}));
+					dispatchEvent(new UIEvent(UIEvent.REMOTE_LOGIN, {type:Account.GITHUB, event:UIEvent.ACCOUNT_HOME}));
 				break;	
 				case _view.viewBeanstalk :
 					dispatchAlert('Beanstalk support is coming very soon.');

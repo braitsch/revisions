@@ -1,59 +1,42 @@
 package model.remote {
 
 	import events.AppEvent;
+	import model.proxies.remote.AccountProxy;
 	import model.proxies.remote.GitHubProxy;
 	import model.proxies.remote.KeyProxy;
-	import view.modals.login.GitHubLogin;
 	import view.modals.remote.AccountHome;
+	import view.modals.remote.AddBkmkToAccount;
 	import view.modals.remote.AddBkmkToGitHub;
 	import view.modals.remote.GitHubHome;
 	
-	public class GitHub {
+	public class GitHub extends HostingProvider {
 		
-		private static var _key 		:KeyProxy = new KeyProxy();
-		private static var _user 		:GitHubProxy = new GitHubProxy();
-		private static var _home 		:GitHubHome	= new GitHubHome(_user);
-		private static var _login 		:GitHubLogin = new GitHubLogin();
-		private static var _addRepo		:AddBkmkToGitHub = new AddBkmkToGitHub(_user);
+		private static var _type		:String = Account.GITHUB;
+		private static var _proxy 		:GitHubProxy = new GitHubProxy();
+		private static var _home 		:GitHubHome	= new GitHubHome(_proxy);
+		private static var _addRepo		:AddBkmkToGitHub = new AddBkmkToGitHub(_proxy);
+		
+		private static var _loginObj	:Object = {	title	:	'Login To Github',
+													button	:	new GitHubButton(), 
+													signup	:	'https://github.com/signup' };
 
 		public function GitHub()
 		{
-			_login.addEventListener(AppEvent.ATTEMPT_LOGIN, attemptLogin);
-		}
-
-		private function attemptLogin(e:AppEvent):void
-		{
-			e.data.type = Account.GITHUB;
-			_user.login(new Account(e.data));
+			super(new KeyProxy());
+			_proxy.addEventListener(AppEvent.LOGIN_SUCCESS, super.onLoginSuccess);
+			_proxy.addEventListener(AppEvent.LOGOUT_SUCCESS, super.onLogoutSuccess);
 		}
 		
-		public function get key():KeyProxy
-		{
-			return _key;
-		}
+		override public function get type():String { return _type; }
 
-		public function get user():GitHubProxy
-		{
-			return _user;
-		}
+		override public function get proxy():AccountProxy { return _proxy; }
 
-		public function get home():AccountHome
-		{
-			return _home;
-		}
+		override public function get home():AccountHome { return _home; }
 
-		public function get login():GitHubLogin
-		{
-			return _login;
-		}
+		override public function get addRepo():AddBkmkToAccount { return _addRepo; }
 
-		public function get addRepo():AddBkmkToGitHub
-		{
-			return _addRepo;
-		}
-		
+		override public function get loginObj():Object { return _loginObj; }
 		
 	}
-	
 	
 }

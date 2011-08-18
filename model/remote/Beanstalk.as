@@ -1,56 +1,38 @@
 package model.remote {
 
-	import events.AppEvent;
+	import model.proxies.remote.AccountProxy;
 	import model.proxies.remote.BeanstalkProxy;
 	import model.proxies.remote.KeyProxy;
-	import view.modals.login.BeanstalkLogin;
 	import view.modals.remote.AccountHome;
+	import view.modals.remote.AddBkmkToAccount;
 	import view.modals.remote.AddBkmkToBeanstalk;
 	import view.modals.remote.BeanstalkHome;
 	
-	public class Beanstalk {
+	public class Beanstalk extends HostingProvider {
 
-		private static var _key 		:KeyProxy = new KeyProxy();
-		private static var _user 		:BeanstalkProxy = new BeanstalkProxy();
-		private static var _home 		:BeanstalkHome	= new BeanstalkHome(_user);
-		private static var _login 		:BeanstalkLogin = new BeanstalkLogin();
-		private static var _addRepo		:AddBkmkToBeanstalk = new AddBkmkToBeanstalk(_user);
+		private static var _type		:String = Account.BEANSTALK;
+		private static var _proxy 		:BeanstalkProxy = new BeanstalkProxy();
+		private static var _home 		:BeanstalkHome	= new BeanstalkHome(_proxy);
+		private static var _addRepo		:AddBkmkToBeanstalk = new AddBkmkToBeanstalk(_proxy);
+		
+		private static var _loginObj	:Object = {	title	:	'Login To Beanstalk',
+													button	:	new BeanStalkButton(),
+													signup	:	'http://beanstalkapp.com/pricing' };		
 
 		public function Beanstalk()
 		{
-			_login.addEventListener(AppEvent.ATTEMPT_LOGIN, attemptLogin);			
-		}
-		
-		private function attemptLogin(e:AppEvent):void
-		{
-			e.data.type = Account.BEANSTALK;
-			_user.login(new Account(e.data));
-		}		
-		
-		public function get key():KeyProxy
-		{
-			return _key;
+			super(new KeyProxy());
 		}
 
-		public function get user():BeanstalkProxy
-		{
-			return _user;
-		}
+		override public function get type():String { return _type; }
 
-		public function get home():AccountHome
-		{
-			return _home;
-		}
+		override public function get proxy():AccountProxy { return _proxy; }
 
-		public function get login():BeanstalkLogin
-		{
-			return _login;
-		}
+		override public function get home():AccountHome { return _home; }
 
-		public function get addRepo():AddBkmkToBeanstalk
-		{
-			return _addRepo;
-		}
+		override public function get addRepo():AddBkmkToAccount { return _addRepo; }
+
+		override public function get loginObj():Object { return _loginObj; }
 		
 	}
 	

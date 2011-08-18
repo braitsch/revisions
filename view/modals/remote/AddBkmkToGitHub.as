@@ -23,7 +23,7 @@ package view.modals.remote {
 		{
 			if (super.validate()){
 				super.onOkButton();
-				_proxy.createRemoteRepository(_view.name_txt.text, _view.desc_txt.text, _check.selected==false);
+				_proxy.makeNewAccountRepo(_view.name_txt.text, _view.desc_txt.text, _check.selected==false);
 			}
 		}
 		

@@ -38,8 +38,8 @@ package view.modals.remote {
 			resetAccount();
 			attachAvatar();
 			attachRepositories();
-			_view.badgeUser.user_txt.text = _model.name ? _model.name : '';
-			if (_model.name && _model.location) _view.badgeUser.user_txt.appendText(' - '+_model.location);
+			_view.badgeUser.user_txt.text = _model.fullName ? _model.fullName : '';
+			if (_model.fullName && _model.location) _view.badgeUser.user_txt.appendText(' - '+_model.location);
 		}
 		
 		private function resetAccount():void

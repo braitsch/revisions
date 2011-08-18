@@ -115,9 +115,9 @@ package system {
 		private static function onGitHubClick():void
 		{
 			if (Hosts.github.loggedIn){
-        	 	_stage.dispatchEvent(new UIEvent(UIEvent.GITHUB_HOME));
+        	 	_stage.dispatchEvent(new UIEvent(UIEvent.ACCOUNT_HOME));
 			}	else{
-				_stage.dispatchEvent(new UIEvent(UIEvent.REMOTE_LOGIN, {type:Account.GITHUB, event:UIEvent.GITHUB_HOME}));
+				_stage.dispatchEvent(new UIEvent(UIEvent.REMOTE_LOGIN, {type:Account.GITHUB, event:UIEvent.ACCOUNT_HOME}));
 			}			
 		}
 		

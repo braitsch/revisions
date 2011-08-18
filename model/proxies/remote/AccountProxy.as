@@ -12,8 +12,8 @@ package model.proxies.remote {
 
 	public class AccountProxy extends RemoteProxy {
 
-		private static var _account		:Account;
-		private static var _timeout		:Timer = new Timer(5000, 1);
+		private var _account		:Account;
+		private var _timeout		:Timer = new Timer(5000, 1);
 
 		public function AccountProxy()
 		{
@@ -36,7 +36,7 @@ package model.proxies.remote {
 		
 	// add / remove repositories //			
 		
-		public function createRemoteRepository(name:String, desc:String, publik:Boolean):void
+		public function makeNewAccountRepo(name:String, desc:String, publik:Boolean):void
 		{
 			super.call(Vector.<String>([BashMethods.ADD_BKMK_TO_ACCOUNT, name, desc, publik]));
 		}
@@ -61,7 +61,7 @@ package model.proxies.remote {
 					onLoginResult(r);
 				break;
 				case BashMethods.LOGOUT :
-					dispatchEvent(new AppEvent(AppEvent.LOGOUT_SUCCESS));
+					onLogoutResult();
 				break;				
 				case BashMethods.GET_REPOSITORIES :
 					if (!message(m, r)) onRepositories(r);
@@ -81,23 +81,27 @@ package model.proxies.remote {
 				_account.loginData = getResultObject(s);
 				getRepositories();
 			}	else if (o.message == 'Bad credentials'){
-				dispatchEvent(new AppEvent(AppEvent.FAILURE, ErrorType.LOGIN_FAILURE));
+				dispatchLoginFailure(ErrorType.LOGIN_FAILURE);
 			}	else if (o.message == 'No connection') {
-				dispatchEvent(new AppEvent(AppEvent.FAILURE, ErrorType.NO_CONNECTION));
+				dispatchLoginFailure(ErrorType.NO_CONNECTION);
 			}	else if (o.message == 'Failed to connect to host') {
-				dispatchEvent(new AppEvent(AppEvent.FAILURE, ErrorType.SERVER_FAILURE));				
+				dispatchLoginFailure(ErrorType.SERVER_FAILURE);				
 			}	else if (o.message){
 			// handle any other mysterious errors //
 				o.method = BashMethods.LOGIN; dispatchDebug(o);
 			}
 		}
+		
+		private function onLogoutResult():void
+		{
+			dispatchEvent(new AppEvent(AppEvent.LOGOUT_SUCCESS));
+		}
 
 		private function onRepositories(s:String):void
 		{
 			if (_timeout.running != false) {
-				stopTimer();
 				_account.repositories = getResultObject(s) as Array;
-				dispatchLoginComplete();
+				dispatchLoginSuccess();
 			}
 		}
 		
@@ -117,16 +121,15 @@ package model.proxies.remote {
 			if (o.message == null) return false;
 			if (o.errors[0].message == 'name is already taken'){
 				f = true;
-				dispatchAlert('That repository name is already taken, please choose something else');
+				dispatchLoginFailure('That repository name is already taken, please choose something else');
 			} else if (o.errors[0].message == 'name can\'t be private. You are over your quota.'){
 				f = true;
-				dispatchAlert('Whoops! Looks like you\'re all out of private repositories, consider making this one public or upgrade your account.');
+				dispatchLoginFailure('Whoops! Looks like you\'re all out of private repositories, consider making this one public or upgrade your account.');
 			}
-			if (f) AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 			return f;			
 		}				
 	
-	// helpers //			
+	// timers & event dispatching //			
 		
 		private function startTimer():void
 		{
@@ -141,14 +144,21 @@ package model.proxies.remote {
 			_timeout.removeEventListener(TimerEvent.TIMER_COMPLETE, dispatchTimeOut);
 		}
 				
-		private function dispatchLoginComplete():void
-		{
-			dispatchEvent(new AppEvent(AppEvent.LOGIN_SUCCESS, _account));
-		}
-
 		private function dispatchTimeOut(e:TimerEvent):void
 		{
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.FAILURE, ErrorType.SERVER_FAILURE));
+			dispatchEvent(new AppEvent(AppEvent.LOGIN_FAILURE, ErrorType.SERVER_FAILURE));
+		}
+		
+		private function dispatchLoginSuccess():void
+		{
+			stopTimer();
+			dispatchEvent(new AppEvent(AppEvent.LOGIN_SUCCESS, _account));
+		}
+		
+		private function dispatchLoginFailure(m:String):void
+		{
+			stopTimer();
+			dispatchEvent(new AppEvent(AppEvent.LOGIN_FAILURE, m));
 		}
 		
 	}

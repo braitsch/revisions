@@ -28,7 +28,7 @@ package events {
 
 	// remote specific views //
 		public static const REMOTE_LOGIN			:String = "REMOTE_LOGIN";
-		public static const GITHUB_HOME				:String = "GITHUB_HOME";
+		public static const ACCOUNT_HOME				:String = "GITHUB_HOME";
 		public static const BEANSTALK_HOME			:String = "BEANSTALK_HOME";
 		public static const LOGGED_IN_CLONE			:String = "LOGGED_IN_CLONE";
 	

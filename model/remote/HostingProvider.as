@@ -2,28 +2,30 @@ package model.remote {
 
 	import events.AppEvent;
 	import model.AppModel;
-	import view.modals.login.BaseAccountLogin;
+	import model.proxies.remote.AccountProxy;
+	import model.proxies.remote.KeyProxy;
 	import view.modals.remote.AccountHome;
 	import view.modals.remote.AddBkmkToAccount;
 	import flash.events.EventDispatcher;
 	
 	public class HostingProvider extends EventDispatcher {
 
-		private var _model				:Object;
+		private var _keyProxy			:KeyProxy;
 		private var _loggedIn			:Boolean;
 		private var _accounts			:Vector.<Account> = new Vector.<Account>();
 
-		public function get home()		:AccountHome		{ return _model.home; 	}
-		public function get login()		:BaseAccountLogin	{ return _model.login; 	}
-		public function get addRepo()	:AddBkmkToAccount	{ return _model.addRepo;}
+		public function get type()		:String				{ return null; 	}
+		public function get home()		:AccountHome		{ return null; 	}
+		public function get addRepo()	:AddBkmkToAccount	{ return null;	}
+		public function get proxy()		:AccountProxy 		{ return null; 	}
+		public function get loginObj()	:Object				{ return null; 	}
 
-		public function HostingProvider(m:Object)
-		{
-			_model = m;
-			_model.user.addEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);
-			_model.user.addEventListener(AppEvent.LOGOUT_SUCCESS, onLogoutSuccess);			
-		}
 		
+		public function HostingProvider(kp:KeyProxy)
+		{
+			_keyProxy = kp;
+		}
+
 		public function addAccount(a:Account):void
 		{
 			_accounts.push(a);
@@ -56,7 +58,7 @@ package model.remote {
 			_loggedIn = true;
 			var x:Account;
 			for (var i:int = 0; i < _accounts.length; i++) if (_accounts[i].sshKeyId != 0) x = _accounts[i];
-			if (x == null || x === a) _model.key.validateKey(a);
+			if (x == null || x === a) _keyProxy.validateKey(a);
 		}
 		
 		private function swapAccounts(a:Account, b:Account):void
@@ -69,7 +71,6 @@ package model.remote {
 		protected function onLogoutSuccess(e:AppEvent):void
 		{
 			_loggedIn = false;
-			dispatchEvent(new AppEvent(AppEvent.LOGOUT_SUCCESS));
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, 'You Have Successfully Logged Out.'));			
 		}
 		

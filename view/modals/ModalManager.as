@@ -1,17 +1,9 @@
 package view.modals {
 
+	import model.remote.HostingProvider;
 	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.UIEvent;
-	import flash.desktop.DockIcon;
-	import flash.desktop.NativeApplication;
-	import flash.desktop.NotificationType;
-	import flash.display.Sprite;
-	import flash.display.Stage;
-	import flash.events.KeyboardEvent;
-	import flash.events.MouseEvent;
-	import flash.filesystem.File;
-	import flash.filters.BlurFilter;
 	import model.AppModel;
 	import model.remote.Account;
 	import model.remote.Hosts;
@@ -35,6 +27,7 @@ package view.modals {
 	import view.modals.local.RepairBookmark;
 	import view.modals.local.RevertToVersion;
 	import view.modals.local.WelcomeScreen;
+	import view.modals.login.AccountLogin;
 	import view.modals.login.RemotePassword;
 	import view.modals.remote.AddBkmkToAccount;
 	import view.modals.system.Alert;
@@ -42,6 +35,15 @@ package view.modals {
 	import view.modals.system.Debug;
 	import view.modals.system.NewRepoConfirm;
 	import view.ui.Preloader;
+	import flash.desktop.DockIcon;
+	import flash.desktop.NativeApplication;
+	import flash.desktop.NotificationType;
+	import flash.display.Sprite;
+	import flash.display.Stage;
+	import flash.events.KeyboardEvent;
+	import flash.events.MouseEvent;
+	import flash.filesystem.File;
+	import flash.filters.BlurFilter;
 
 	public class ModalManager extends Sprite {
 
@@ -59,6 +61,7 @@ package view.modals {
 		private static var _gitAbout		:GitAbout = new GitAbout();
 		private static var _gitInstall		:GitInstall = new GitInstall();
 		private static var _gitUpgrade		:GitUpgrade = new GitUpgrade();
+		private static var _acctLogin		:AccountLogin = new AccountLogin();
 		private static var _remotePswd		:RemotePassword = new RemotePassword();
 		private static var _newRepoConfirm	:NewRepoConfirm = new NewRepoConfirm();
 		private static var _alert			:Alert = new Alert();
@@ -111,8 +114,8 @@ package view.modals {
 			stage.addEventListener(UIEvent.SHOW_COMMIT, commitDetails);
 			stage.addEventListener(UIEvent.ABOUT_GIT, onAboutGit);
 			stage.addEventListener(UIEvent.GLOBAL_SETTINGS, globalSettings);	
-			stage.addEventListener(UIEvent.GITHUB_HOME, showGitHubHome);
-			stage.addEventListener(UIEvent.REMOTE_LOGIN, showRemoteLogin);
+			stage.addEventListener(UIEvent.ACCOUNT_HOME, showAccountHome);
+			stage.addEventListener(UIEvent.REMOTE_LOGIN, showAccountLogin);
 			stage.addEventListener(UIEvent.SHOW_NEW_REPO_CONFIRM, showNewRepoConfirm);			
 			stage.addEventListener(UIEvent.ADD_BKMK_TO_ACCOUNT, addBkmkToAccount);
 			stage.addEventListener(UIEvent.CLOSE_MODAL_WINDOW, onCloseButton);
@@ -170,17 +173,20 @@ package view.modals {
 			showModalWindow(_gitUpgrade);			
 		}
 		
-		private function showRemoteLogin(e:UIEvent):void
+		private function showAccountLogin(e:UIEvent):void
 		{
-			var w:*;
 			if (e.data.type == Account.GITHUB){
-				w = Hosts.github.login;
+				_acctLogin.host = Hosts.github;
 			}	else if (e.data.type == Account.BEANSTALK){
-				w = Hosts.beanstalk.login;
+				_acctLogin.host = Hosts.beanstalk;
 			}
-			w.onSuccessEvent = e.data.event;
-			showModalWindow(w);
-		}	
+			showModalWindow(_acctLogin);
+		}
+		
+		private function showAccountHome(e:UIEvent):void
+		{
+			showModalWindow(HostingProvider(e.data).home);
+		}		
 		
 		private function addBkmkToAccount(e:UIEvent):void
 		{
@@ -281,11 +287,6 @@ package view.modals {
 		private function onAboutGit(e:UIEvent):void
 		{
 			showModalWindow(_gitAbout);
-		}
-		
-		private function showGitHubHome(e:UIEvent):void
-		{
-			showModalWindow(Hosts.github.home);
 		}
 		
 		private function onAppExpired(e:AppEvent):void

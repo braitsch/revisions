@@ -31,7 +31,7 @@ package view.modals.system {
 
 		private function onViewMyGH(e:MouseEvent):void
 		{
-			dispatchEvent(new UIEvent(UIEvent.GITHUB_HOME));
+			dispatchEvent(new UIEvent(UIEvent.ACCOUNT_HOME));
 		}
 
 		public function set repository(o:Object):void

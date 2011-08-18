@@ -14,6 +14,7 @@ package events {
 		public static const LOADER_TEXT				:String = "LOADER_TEXT";
 		public static const LOADER_PERCENT			:String = "LOADER_PERCENT";
 			
+		public static const SSH_KEY_READY			:String = "SSH_KEY_READY";
 		public static const APP_SETTINGS			:String = "APP_SETTINGS";
 		public static const APP_EXPIRED				:String = "APP_EXPIRED";
 		public static const APP_UP_TO_DATE			:String = "APP_UP_TO_DATE";
@@ -23,7 +24,7 @@ package events {
 		public static const APP_UPDATE_COMPLETE		:String = "APP_UPDATE_COMPLETE";
 		public static const APP_UPDATE_FAILURE		:String = "APP_UPDATE_FAILURE";
 		
-		public static const GIT_NOT_INSTALLED		:String = "GIT_UNAVAILABLE";
+		public static const GIT_NOT_INSTALLED		:String = "GIT_NOT_INSTALLED";
 		public static const GIT_NEEDS_UPDATING		:String = "GIT_NEEDS_UPDATING";
 		public static const GIT_INSTALL_COMPLETE	:String = "GIT_INSTALL_COMPLETE";
 		public static const GIT_SETTINGS			:String = "GIT_SETTINGS";
@@ -31,9 +32,8 @@ package events {
 		public static const GIT_DIR_UPDATED			:String = "GIT_DIR_UPDATED";
 		
 		public static const LOGIN_SUCCESS			:String = "LOGIN_SUCCESS";
-		public static const REMOTE_READY			:String = "REMOTE_READY";
+		public static const LOGIN_FAILURE			:String = "LOGIN_FAILURE";
 		public static const LOGOUT_SUCCESS			:String = "LOGOUT_SUCCESS";
-		public static const SSH_KEY_READY			:String = "SSH_KEYS_READY";
 		
 	// remote calls //	
 		public static const REMOTE_SYNCED			:String = "REMOTE_SYNCED";
@@ -44,12 +44,10 @@ package events {
 		public static const FILES_DELETED			:String = "FILES_DELETED";
 		public static const HISTORY_REQUESTED		:String = "HISTORY_REQUESTED";
 		public static const MODIFIED_REQUESTED		:String = "MODIFIED_REQUESTED";
-		public static const HISTORY_RENDERED		:String = "HISTORY_READY";
-		public static const REMOTE_KEY_SET			:String = "REMOTE_KEY_VALIDATED";
+		public static const HISTORY_RENDERED		:String = "HISTORY_RENDERED";
 		public static const PROMPT_FOR_REMOTE_PSWD	:String = "PROMPT_FOR_REMOTE_PSWD";
 		
 		public static const FAILURE:String = "FAILURE";
-		public static const ATTEMPT_LOGIN:String = "ATTEMPT_LOGIN";
 		
 		public var data:Object;
 
@@ -58,5 +56,7 @@ package events {
 			data = $data;
 			super($type, false, false);
 		}
+		
 	}
+	
 }
