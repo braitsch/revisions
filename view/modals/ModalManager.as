@@ -3,13 +3,22 @@ package view.modals {
 	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.UIEvent;
+	import flash.desktop.DockIcon;
+	import flash.desktop.NativeApplication;
+	import flash.desktop.NotificationType;
+	import flash.display.Sprite;
+	import flash.display.Stage;
+	import flash.events.KeyboardEvent;
+	import flash.events.MouseEvent;
+	import flash.filesystem.File;
+	import flash.filters.BlurFilter;
 	import model.AppModel;
-	import model.db.AppSettings;
-	import model.remote.Accounts;
-	import model.remote.RemoteAccount;
+	import model.remote.Account;
+	import model.remote.Hosts;
 	import model.vo.Bookmark;
 	import model.vo.Commit;
 	import model.vo.Remote;
+	import system.AppSettings;
 	import view.modals.bkmk.BookmarkEditor;
 	import view.modals.git.GitAbout;
 	import view.modals.git.GitInstall;
@@ -33,15 +42,6 @@ package view.modals {
 	import view.modals.system.Debug;
 	import view.modals.system.NewRepoConfirm;
 	import view.ui.Preloader;
-	import flash.desktop.DockIcon;
-	import flash.desktop.NativeApplication;
-	import flash.desktop.NotificationType;
-	import flash.display.Sprite;
-	import flash.display.Stage;
-	import flash.events.KeyboardEvent;
-	import flash.events.MouseEvent;
-	import flash.filesystem.File;
-	import flash.filters.BlurFilter;
 
 	public class ModalManager extends Sprite {
 
@@ -173,10 +173,10 @@ package view.modals {
 		private function showRemoteLogin(e:UIEvent):void
 		{
 			var w:*;
-			if (e.data.type == RemoteAccount.GITHUB){
-				w = Accounts.github.login;
-			}	else if (e.data.type == RemoteAccount.BEANSTALK){
-				w = Accounts.beanstalk.login;
+			if (e.data.type == Account.GITHUB){
+				w = Hosts.github.login;
+			}	else if (e.data.type == Account.BEANSTALK){
+				w = Hosts.beanstalk.login;
 			}
 			w.onSuccessEvent = e.data.event;
 			showModalWindow(w);
@@ -185,10 +185,10 @@ package view.modals {
 		private function addBkmkToAccount(e:UIEvent):void
 		{
 			var w:AddBkmkToAccount;
-			if (e.data.type == RemoteAccount.GITHUB){
-				w = Accounts.github.addRepo;
-			}	else if (e.data.type == RemoteAccount.BEANSTALK){
-				w = Accounts.beanstalk.addRepo;
+			if (e.data.type == Account.GITHUB){
+				w = Hosts.github.addRepo;
+			}	else if (e.data.type == Account.BEANSTALK){
+				w = Hosts.beanstalk.addRepo;
 			}
 			showModalWindow(w);
 		}			
@@ -285,7 +285,7 @@ package view.modals {
 		
 		private function showGitHubHome(e:UIEvent):void
 		{
-			showModalWindow(Accounts.github.home);
+			showModalWindow(Hosts.github.home);
 		}
 		
 		private function onAppExpired(e:AppEvent):void

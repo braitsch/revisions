@@ -4,7 +4,7 @@ package view.modals.remote {
 	import events.UIEvent;
 	import fl.text.TLFTextField;
 	import model.AppModel;
-	import model.remote.RemoteAccount;
+	import model.remote.Account;
 	import model.vo.Bookmark;
 	import view.modals.ModalWindow;
 	import flash.events.Event;
@@ -59,7 +59,7 @@ package view.modals.remote {
 		protected function checkForDuplicate():Boolean
 		{
 			var n:String = _view.name_txt.text.replace(/\s/, '-').toLowerCase();
-			if (_bkmk.getRemoteByProp('name', RemoteAccount.GITHUB+'-'+n)){
+			if (_bkmk.getRemoteByProp('name', Account.GITHUB+'-'+n)){
 				return true;
 			}	else{
 				return false;

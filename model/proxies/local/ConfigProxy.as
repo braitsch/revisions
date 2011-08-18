@@ -3,7 +3,7 @@ package model.proxies.local {
 	import events.AppEvent;
 	import events.NativeProcessEvent;
 	import model.AppModel;
-	import model.air.NativeProcessQueue;
+	import model.proxies.air.NativeProcessQueue;
 	import system.BashMethods;
 	import system.SystemRules;
 

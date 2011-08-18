@@ -1,7 +1,6 @@
 package system {
 
 	import events.AppEvent;
-	import model.db.AppSettings;
 	import flash.desktop.NativeApplication;
 	import flash.desktop.NativeProcess;
 	import flash.desktop.NativeProcessStartupInfo;

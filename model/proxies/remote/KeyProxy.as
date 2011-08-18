@@ -3,12 +3,12 @@ package model.proxies.remote {
 	import events.NativeProcessEvent;
 	import model.AppModel;
 	import model.proxies.local.SSHKeyGenerator;
-	import model.remote.RemoteAccount;
+	import model.remote.Account;
 	import system.BashMethods;
 
 	public class KeyProxy extends RemoteProxy {
 
-		private static var _account		:RemoteAccount;
+		private static var _account		:Account;
 
 		public function KeyProxy()
 		{
@@ -16,13 +16,13 @@ package model.proxies.remote {
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 		}
 		
-		public function validateKey(n:RemoteAccount):void
+		public function validateKey(n:Account):void
 		{
 			_account = n;
 			getAllRemoteKeys();
 		}		
 		
-		public function setPrimaryAccount(n:RemoteAccount, o:RemoteAccount = null):void
+		public function setPrimaryAccount(n:Account, o:Account = null):void
 		{
 			_account = n;
 			if (o == null){
@@ -47,7 +47,7 @@ package model.proxies.remote {
 			super.call(Vector.<String>([BashMethods.ADD_KEY_TO_REMOTE, _account.user, _account.pass]));
 		}
 		
-		private function deleteKeyFromRemote(ra:RemoteAccount):void
+		private function deleteKeyFromRemote(ra:Account):void
 		{
 			super.call(Vector.<String>([BashMethods.DELETE_KEY_FROM_REMOTE, ra.user, ra.pass, ra.sshKeyId]));
 		}

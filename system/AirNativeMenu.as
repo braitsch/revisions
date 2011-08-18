@@ -4,10 +4,6 @@ package system {
 	import events.BookmarkEvent;
 	import events.ErrorType;
 	import events.UIEvent;
-	import model.AppModel;
-	import model.db.AppSettings;
-	import model.remote.Accounts;
-	import model.remote.RemoteAccount;
 	import flash.desktop.NativeApplication;
 	import flash.display.NativeMenu;
 	import flash.display.NativeMenuItem;
@@ -15,6 +11,9 @@ package system {
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.ui.Keyboard;
+	import model.AppModel;
+	import model.remote.Account;
+	import model.remote.Hosts;
  
  
     public class AirNativeMenu extends Sprite 
@@ -115,10 +114,10 @@ package system {
 		
 		private static function onGitHubClick():void
 		{
-			if (Accounts.github.loggedIn){
+			if (Hosts.github.loggedIn){
         	 	_stage.dispatchEvent(new UIEvent(UIEvent.GITHUB_HOME));
 			}	else{
-				_stage.dispatchEvent(new UIEvent(UIEvent.REMOTE_LOGIN, {type:RemoteAccount.GITHUB, event:UIEvent.GITHUB_HOME}));
+				_stage.dispatchEvent(new UIEvent(UIEvent.REMOTE_LOGIN, {type:Account.GITHUB, event:UIEvent.GITHUB_HOME}));
 			}			
 		}
 		

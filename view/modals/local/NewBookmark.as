@@ -3,8 +3,8 @@ package view.modals.local {
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
-	import model.remote.Accounts;
-	import model.remote.RemoteAccount;
+	import model.remote.Hosts;
+	import model.remote.Account;
 	import model.vo.Bookmark;
 	import system.StringUtils;
 	import view.modals.ModalWindow;
@@ -47,7 +47,7 @@ package view.modals.local {
 					dispatchEvent(new UIEvent(UIEvent.GITHUB_HOME));
 				break;	
 				case _view.loginGithub :
-					dispatchEvent(new UIEvent(UIEvent.REMOTE_LOGIN, {type:RemoteAccount.GITHUB, event:UIEvent.GITHUB_HOME}));
+					dispatchEvent(new UIEvent(UIEvent.REMOTE_LOGIN, {type:Account.GITHUB, event:UIEvent.GITHUB_HOME}));
 				break;	
 				case _view.viewBeanstalk :
 					dispatchAlert('Beanstalk support is coming very soon.');
@@ -62,7 +62,7 @@ package view.modals.local {
 		{
 			_cloneURL = null;
 			enableCloneButton(false);
-			_view.loginGithub.visible = Accounts.github.loggedIn == false;
+			_view.loginGithub.visible = Hosts.github.loggedIn == false;
 		}
 
 		private function onKeyUp(e:KeyboardEvent):void

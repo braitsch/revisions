@@ -5,9 +5,9 @@ package model.proxies.local {
 	import events.NativeProcessEvent;
 	import flash.filesystem.File;
 	import model.AppModel;
-	import model.db.AppSettings;
 	import model.proxies.remote.RemoteProxy;
 	import model.vo.Remote;
+	import system.AppSettings;
 	import system.BashMethods;
 	import system.StringUtils;
 	

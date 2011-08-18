@@ -4,7 +4,7 @@ package model.proxies.local {
 	import events.BookmarkEvent;
 	import events.NativeProcessEvent;
 	import model.AppModel;
-	import model.air.NativeProcessProxy;
+	import model.proxies.air.NativeProcessProxy;
 	import system.BashMethods;
 
 	public class CheckoutProxy extends NativeProcessProxy {

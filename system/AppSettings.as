@@ -1,4 +1,4 @@
-package model.db {
+package system {
 
 	import model.AppModel;
 	import events.AppEvent;

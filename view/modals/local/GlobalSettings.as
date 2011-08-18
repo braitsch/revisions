@@ -3,14 +3,14 @@ package view.modals.local {
 	import events.AppEvent;
 	import events.UIEvent;
 	import fl.text.TLFTextField;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
 	import model.AppModel;
-	import model.db.AppSettings;
+	import mx.utils.StringUtil;
+	import system.AppSettings;
 	import system.LicenseManager;
 	import view.modals.ModalWindow;
 	import view.ui.ModalCheckbox;
-	import mx.utils.StringUtil;
-	import flash.events.Event;
-	import flash.events.MouseEvent;
 
 	public class GlobalSettings extends ModalWindow {
 

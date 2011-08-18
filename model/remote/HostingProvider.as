@@ -7,24 +7,24 @@ package model.remote {
 	import view.modals.remote.AddBkmkToAccount;
 	import flash.events.EventDispatcher;
 	
-	public class AccountManager extends EventDispatcher {
+	public class HostingProvider extends EventDispatcher {
 
 		private var _model				:Object;
 		private var _loggedIn			:Boolean;
-		private var _accounts			:Vector.<RemoteAccount> = new Vector.<RemoteAccount>();
+		private var _accounts			:Vector.<Account> = new Vector.<Account>();
 
 		public function get home()		:AccountHome		{ return _model.home; 	}
 		public function get login()		:BaseAccountLogin	{ return _model.login; 	}
 		public function get addRepo()	:AddBkmkToAccount	{ return _model.addRepo;}
 
-		public function AccountManager(m:Object)
+		public function HostingProvider(m:Object)
 		{
 			_model = m;
 			_model.user.addEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);
 			_model.user.addEventListener(AppEvent.LOGOUT_SUCCESS, onLogoutSuccess);			
 		}
 		
-		public function addAccount(a:RemoteAccount):void
+		public function addAccount(a:Account):void
 		{
 			_accounts.push(a);
 		}
@@ -34,7 +34,7 @@ package model.remote {
 			return _loggedIn;
 		}
 		
-		public function getAccountByProp(p:String, v:String):RemoteAccount
+		public function getAccountByProp(p:String, v:String):Account
 		{
 			for (var i:int = 0; i < _accounts.length; i++) if (_accounts[i][p] == v) return _accounts[i];
 			return null;
@@ -44,8 +44,8 @@ package model.remote {
 	
 		protected function onLoginSuccess(e:AppEvent):void
 		{
-			var a:RemoteAccount = e.data as RemoteAccount; // new password
-			var b:RemoteAccount = getAccountByProp('user', a.user);
+			var a:Account = e.data as Account; // new password
+			var b:Account = getAccountByProp('user', a.user);
 			if (b == null){
 				addAccount(a);
 				AppModel.database.addAccount(a);
@@ -54,12 +54,12 @@ package model.remote {
 				AppModel.database.editAccount(a);
 			}
 			_loggedIn = true;
-			var x:RemoteAccount;
+			var x:Account;
 			for (var i:int = 0; i < _accounts.length; i++) if (_accounts[i].sshKeyId != 0) x = _accounts[i];
 			if (x == null || x === a) _model.key.validateKey(a);
 		}
 		
-		private function swapAccounts(a:RemoteAccount, b:RemoteAccount):void
+		private function swapAccounts(a:Account, b:Account):void
 		{
 			a.sshKeyId = b.sshKeyId;
 			for (var i:int = 0; i < _accounts.length; i++) if (_accounts[i] == b) break;

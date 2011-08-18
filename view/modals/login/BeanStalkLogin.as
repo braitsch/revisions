@@ -3,8 +3,8 @@ package view.modals.login {
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
-	import model.remote.Accounts;
-	import model.remote.RemoteAccount;
+	import model.remote.Hosts;
+	import model.remote.Account;
 	import flash.events.MouseEvent;
 	import flash.net.URLRequest;
 	import flash.net.navigateToURL;
@@ -42,8 +42,8 @@ package view.modals.login {
 		
 		private function onLoginSuccess(e:AppEvent):void
 		{
-			dispatchEvent(new UIEvent(_onSuccessEvent, {type:RemoteAccount.BEANSTALK}));
-			Accounts.beanstalk.home.model = e.data as RemoteAccount;
+			dispatchEvent(new UIEvent(_onSuccessEvent, {type:Account.BEANSTALK}));
+			Hosts.beanstalk.home.model = e.data as Account;
 			AppModel.engine.removeEventListener(AppEvent.REMOTE_READY, onLoginSuccess);			
 		}			
 		

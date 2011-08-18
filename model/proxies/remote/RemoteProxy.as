@@ -1,9 +1,9 @@
 package model.proxies.remote {
 
+	import com.adobe.serialization.json.JSONDecoder;
 	import events.AppEvent;
 	import model.AppModel;
-	import model.air.NativeProcessProxy;
-	import com.adobe.serialization.json.JSONDecoder;
+	import model.proxies.air.NativeProcessProxy;
 
 	public class RemoteProxy extends NativeProcessProxy {
 

@@ -1,4 +1,4 @@
-package model.air {
+package model.proxies.air {
 
 	import events.NativeProcessEvent;
 

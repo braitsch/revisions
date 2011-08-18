@@ -1,18 +1,18 @@
 package {
 
-	import model.db.AppSettings;
 	import events.AppEvent;
 	import events.DataBaseEvent;
-	import model.AppModel;
-	import model.remote.Accounts;
-	import system.AirContextMenu;
-	import system.AirNativeMenu;
-	import system.LicenseManager;
 	import flash.desktop.NativeApplication;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.InvokeEvent;
+	import model.AppModel;
+	import model.remote.Hosts;
+	import system.AirContextMenu;
+	import system.AirNativeMenu;
+	import system.AppSettings;
+	import system.LicenseManager;
 
 	[SWF(backgroundColor="#ffffff", frameRate="31")]
 
@@ -82,7 +82,7 @@ package {
 		
 		private function onDatabaseRead(e:DataBaseEvent):void
 		{
-			Accounts.initialize(e.data.accounts as Array);
+			Hosts.initialize(e.data.accounts as Array);
 			AppModel.engine.initialize(e.data.bookmarks as Array);
 			AppModel.database.removeEventListener(DataBaseEvent.DATABASE_READ, onDatabaseRead);
 		}

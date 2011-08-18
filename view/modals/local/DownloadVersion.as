@@ -4,9 +4,9 @@ package view.modals.local {
 	import events.UIEvent;
 	import flash.events.MouseEvent;
 	import model.AppModel;
-	import model.db.AppSettings;
 	import model.vo.Bookmark;
 	import model.vo.Commit;
+	import system.AppSettings;
 	import view.modals.ModalWindow;
 	import view.ui.ModalCheckbox;
 

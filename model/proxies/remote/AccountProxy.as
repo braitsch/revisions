@@ -4,7 +4,7 @@ package model.proxies.remote {
 	import events.ErrorType;
 	import events.NativeProcessEvent;
 	import model.AppModel;
-	import model.remote.RemoteAccount;
+	import model.remote.Account;
 	import model.vo.Remote;
 	import system.BashMethods;
 	import flash.events.TimerEvent;
@@ -12,7 +12,7 @@ package model.proxies.remote {
 
 	public class AccountProxy extends RemoteProxy {
 
-		private static var _account		:RemoteAccount;
+		private static var _account		:Account;
 		private static var _timeout		:Timer = new Timer(5000, 1);
 
 		public function AccountProxy()
@@ -22,7 +22,7 @@ package model.proxies.remote {
 
 	// login / logout //
 
-		public function login(ra:RemoteAccount):void
+		public function login(ra:Account):void
 		{
 			startTimer();
 			_account = ra;
@@ -105,7 +105,7 @@ package model.proxies.remote {
 		{
 			var o:Object = getResultObject(s);
 			if (hasJSONErrors(o) == false){
-				var r:Remote = new Remote(RemoteAccount.GITHUB+'-'+o.name, o.ssh_url);
+				var r:Remote = new Remote(Account.GITHUB+'-'+o.name, o.ssh_url);
 				AppModel.proxies.editor.addRemoteToLocalRepository(r);
 				dispatchEvent(new AppEvent(AppEvent.REPOSITORY_CREATED, o));
 			}

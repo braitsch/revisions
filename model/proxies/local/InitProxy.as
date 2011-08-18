@@ -1,14 +1,14 @@
 package model.proxies.local {
 
+	import com.adobe.crypto.MD5;
 	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.NativeProcessEvent;
+	import flash.filesystem.File;
 	import model.AppModel;
-	import model.air.NativeProcessProxy;
+	import model.proxies.air.NativeProcessProxy;
 	import model.vo.Bookmark;
 	import system.BashMethods;
-	import com.adobe.crypto.MD5;
-	import flash.filesystem.File;
 
 	public class InitProxy extends NativeProcessProxy {
 		

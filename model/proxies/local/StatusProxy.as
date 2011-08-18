@@ -4,7 +4,7 @@ package model.proxies.local {
 	import events.BookmarkEvent;
 	import events.NativeProcessEvent;
 	import model.AppModel;
-	import model.air.NativeProcessQueue;
+	import model.proxies.air.NativeProcessQueue;
 	import model.vo.Bookmark;
 	import model.vo.Commit;
 	import system.BashMethods;

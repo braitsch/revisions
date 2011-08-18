@@ -1,12 +1,12 @@
 package view.ui {
 
-	import model.db.AppSettings;
 	import com.greensock.TweenLite;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
 	import flash.geom.Point;
 	import flash.utils.Timer;
+	import system.AppSettings;
 
 	public class SmartButton extends Sprite {
 

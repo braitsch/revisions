@@ -1,7 +1,7 @@
 package model.vo {
 
-	import model.remote.Accounts;
-	import model.remote.RemoteAccount;
+	import model.remote.Hosts;
+	import model.remote.Account;
 
 	public class Remote {
 
@@ -27,7 +27,7 @@ package model.vo {
 		
 		public function get https():String
 		{
-			var a:RemoteAccount = Accounts.getAccountByName(_type, _acctName);
+			var a:Account = Hosts.getAccountByName(_type, _acctName);
 			if (a == null) {
 				return null;
 			}	else{
@@ -67,10 +67,10 @@ package model.vo {
 		{
 			_ssh = s;
 			if (s.indexOf('github.com') != -1){
-				_type = RemoteAccount.GITHUB;
+				_type = Account.GITHUB;
 				_acctName = _ssh.substring(15, _ssh.indexOf('/'));
 			}	else if (s.indexOf('beanstalkapp.com') != -1){
-				_type = RemoteAccount.BEANSTALK;
+				_type = Account.BEANSTALK;
 				_acctName = _ssh.substring(4, _ssh.indexOf('.'));
 			}			
 		}
@@ -78,7 +78,7 @@ package model.vo {
 		private function parseHTTPS(s:String):void
 		{
 			_https = s;
-			_type = RemoteAccount.GITHUB;
+			_type = Account.GITHUB;
 			_acctName = s.substring(8, s.indexOf('@'));			
 		}		
 

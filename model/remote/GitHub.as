@@ -23,8 +23,8 @@ package model.remote {
 
 		private function attemptLogin(e:AppEvent):void
 		{
-			e.data.type = RemoteAccount.GITHUB;
-			_user.login(new RemoteAccount(e.data));
+			e.data.type = Account.GITHUB;
+			_user.login(new Account(e.data));
 		}
 		
 		public function get key():KeyProxy

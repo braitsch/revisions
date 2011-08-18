@@ -3,7 +3,7 @@ package model.proxies.local {
 	import events.AppEvent;
 	import events.NativeProcessEvent;
 	import model.AppModel;
-	import model.air.NativeProcessProxy;
+	import model.proxies.air.NativeProcessProxy;
 	import system.BashMethods;
 
 	public class SSHKeyGenerator extends NativeProcessProxy {

@@ -5,7 +5,7 @@ package view.modals.local {
 	import flash.events.MouseEvent;
 	import flash.events.ProgressEvent;
 	import model.AppModel;
-	import model.db.AppSettings;
+	import system.AppSettings;
 	import view.modals.ModalWindow;
 	import view.ui.ModalCheckbox;
 

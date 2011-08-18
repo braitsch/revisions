@@ -3,8 +3,8 @@ package view.modals.bkmk {
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
-	import model.remote.Accounts;
-	import model.remote.RemoteAccount;
+	import model.remote.Hosts;
+	import model.remote.Account;
 	import model.vo.Bookmark;
 	import view.modals.ModalWindowBasic;
 	import flash.display.Sprite;
@@ -47,10 +47,10 @@ package view.modals.bkmk {
 		
 		private function onGitHubClick(e:MouseEvent):void
 		{
-			if (Accounts.github.loggedIn){
-				dispatchEvent(new UIEvent(UIEvent.ADD_BKMK_TO_ACCOUNT, RemoteAccount.GITHUB));
+			if (Hosts.github.loggedIn){
+				dispatchEvent(new UIEvent(UIEvent.ADD_BKMK_TO_ACCOUNT, Account.GITHUB));
 			}	else{
-				dispatchEvent(new UIEvent(UIEvent.REMOTE_LOGIN, {type:RemoteAccount.GITHUB, event:UIEvent.ADD_BKMK_TO_ACCOUNT}));
+				dispatchEvent(new UIEvent(UIEvent.REMOTE_LOGIN, {type:Account.GITHUB, event:UIEvent.ADD_BKMK_TO_ACCOUNT}));
 			}	
 		}
 		

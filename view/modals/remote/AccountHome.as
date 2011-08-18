@@ -3,7 +3,7 @@ package view.modals.remote {
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
-	import model.remote.RemoteAccount;
+	import model.remote.Account;
 	import model.vo.Bookmark;
 	import system.StringUtils;
 	import view.modals.ModalWindow;
@@ -20,7 +20,7 @@ package view.modals.remote {
 		private var _cloneURL	:String;
 		private var _savePath	:String;
 		private var _activePage	:Sprite;
-		private var _model		:RemoteAccount;
+		private var _model		:Account;
 
 		public function AccountHome(v:*)
 		{
@@ -32,7 +32,7 @@ package view.modals.remote {
 			AppModel.proxies.editor.addEventListener(AppEvent.REPOSITORY_CREATED, onNewRepo);
 		}
 
-		public function set model(r:RemoteAccount):void
+		public function set model(r:Account):void
 		{
 			_model = r;
 			resetAccount();
