@@ -4,7 +4,6 @@ package view.modals.local {
 	import events.UIEvent;
 	import model.AppModel;
 	import model.remote.Hosts;
-	import model.remote.Account;
 	import model.vo.Bookmark;
 	import system.StringUtils;
 	import view.modals.ModalWindow;
@@ -44,17 +43,17 @@ package view.modals.local {
 					super.browseForDirectory('Select a folder to track');
 				break;	
 				case _view.viewGithub :
-					dispatchEvent(new UIEvent(UIEvent.ACCOUNT_HOME));
-				break;	
+					dispatchEvent(new UIEvent(UIEvent.GITHUB_HOME));
+				break;
 				case _view.loginGithub :
-					dispatchEvent(new UIEvent(UIEvent.REMOTE_LOGIN, {type:Account.GITHUB, event:UIEvent.ACCOUNT_HOME}));
-				break;	
+					dispatchEvent(new UIEvent(UIEvent.GITHUB_LOGIN, UIEvent.GITHUB_HOME));
+				break;
 				case _view.viewBeanstalk :
-					dispatchAlert('Beanstalk support is coming very soon.');
-				break;	
+					dispatchEvent(new UIEvent(UIEvent.BEANSTALK_HOME));
+				break;
 				case _view.loginBeanstalk :
-					dispatchAlert('Beanstalk support is coming very soon.');
-				break;					
+					dispatchEvent(new UIEvent(UIEvent.BEANSTALK_LOGIN, UIEvent.BEANSTALK_HOME));
+				break;
 			}
 		}
 		
@@ -142,11 +141,6 @@ package view.modals.local {
 			};	
 			AppModel.engine.addBookmark(new Bookmark(o));
 		}
-		
-		private function dispatchAlert(m:String):void
-		{
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
-		}	
 		
 	}
 	

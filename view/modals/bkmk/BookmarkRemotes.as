@@ -1,10 +1,7 @@
 package view.modals.bkmk {
 
-	import events.AppEvent;
 	import events.UIEvent;
-	import model.AppModel;
 	import model.remote.Hosts;
-	import model.remote.Account;
 	import model.vo.Bookmark;
 	import view.modals.ModalWindowBasic;
 	import flash.display.Sprite;
@@ -48,15 +45,19 @@ package view.modals.bkmk {
 		private function onGitHubClick(e:MouseEvent):void
 		{
 			if (Hosts.github.loggedIn){
-				dispatchEvent(new UIEvent(UIEvent.ADD_BKMK_TO_ACCOUNT, Account.GITHUB));
+				dispatchEvent(new UIEvent(UIEvent.ADD_BKMK_TO_GITHUB));
 			}	else{
-				dispatchEvent(new UIEvent(UIEvent.REMOTE_LOGIN, {type:Account.GITHUB, event:UIEvent.ADD_BKMK_TO_ACCOUNT}));
+				dispatchEvent(new UIEvent(UIEvent.GITHUB_LOGIN, UIEvent.ADD_BKMK_TO_GITHUB));
 			}	
 		}
 		
 		private function onBeanstalkClick(e:MouseEvent):void
 		{
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, 'Beanstalk integration is coming in the next build.'));			
+			if (Hosts.beanstalk.loggedIn){
+				dispatchEvent(new UIEvent(UIEvent.ADD_BKMK_TO_BEANSTALK));
+			}	else{
+				dispatchEvent(new UIEvent(UIEvent.BEANSTALK_LOGIN, UIEvent.ADD_BKMK_TO_BEANSTALK));
+			}				
 		}					
 		
 	}

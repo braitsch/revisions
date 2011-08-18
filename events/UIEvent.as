@@ -8,7 +8,7 @@ package events {
 	// adding and editing local bookmarks //	
 		public static const ADD_BOOKMARK			:String = "ADD_BOOKMARK";
 		public static const DRAG_AND_DROP			:String = "DRAG_AND_DROP";		public static const EDIT_BOOKMARK			:String = "EDIT_BOOKMARK";
-		public static const DELETE_BOOKMARK			:String = "DELETE_BOOKMARK";		public static const ADD_BKMK_TO_ACCOUNT	:String = "ADD_REMOTE_TO_BOOKMARK";
+		public static const DELETE_BOOKMARK			:String = "DELETE_BOOKMARK";		public static const ADD_BKMK_TO_GITHUB	:String = "ADD_REMOTE_TO_BOOKMARK";
 			// adding and editing local branches //	
 		public static const DELETE_BRANCH			:String = "DELETE_BRANCH";
 		
@@ -27,9 +27,10 @@ package events {
 		public static const SHOW_HISTORY			:String = "SHOW_HISTORY";
 
 	// remote specific views //
-		public static const REMOTE_LOGIN			:String = "REMOTE_LOGIN";
-		public static const ACCOUNT_HOME				:String = "GITHUB_HOME";
+		public static const GITHUB_HOME				:String = "GITHUB_HOME";
+		public static const GITHUB_LOGIN			:String = "GITHUB_LOGIN";
 		public static const BEANSTALK_HOME			:String = "BEANSTALK_HOME";
+		public static const BEANSTALK_LOGIN			:String = "BEANSTALK_LOGIN";
 		public static const LOGGED_IN_CLONE			:String = "LOGGED_IN_CLONE";
 	
 	// miscellaneous //	
@@ -39,7 +40,8 @@ package events {
 	// file viewer actions //	
 		public static const FILE_SELECTED			:String = "FILE_SELECTED";
 		public static const TOGGLE_DIRECTORY		:String = "TOGGLE_DIRECTORY";
-		public static const SHOW_NEW_REPO_CONFIRM	:String = "SHOW_NEW_REPO_CONFIRM";
+		public static const SHOW_NEW_REPO_CONFIRM:String = "SHOW_NEW_REPO_CONFIRM";
+		public static const ADD_BKMK_TO_BEANSTALK:String = "ADD_BKMK_TO_BEANSTALK";
 		
 		public var data:Object;
 

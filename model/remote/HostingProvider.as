@@ -5,7 +5,6 @@ package model.remote {
 	import model.proxies.remote.AccountProxy;
 	import model.proxies.remote.KeyProxy;
 	import view.modals.remote.AccountHome;
-	import view.modals.remote.AddBkmkToAccount;
 	import flash.events.EventDispatcher;
 	
 	public class HostingProvider extends EventDispatcher {
@@ -16,11 +15,10 @@ package model.remote {
 
 		public function get type()		:String				{ return null; 	}
 		public function get home()		:AccountHome		{ return null; 	}
-		public function get addRepo()	:AddBkmkToAccount	{ return null;	}
 		public function get proxy()		:AccountProxy 		{ return null; 	}
 		public function get loginObj()	:Object				{ return null; 	}
+		public function get addRepoObj():Object				{ return null; 	}
 
-		
 		public function HostingProvider(kp:KeyProxy)
 		{
 			_keyProxy = kp;

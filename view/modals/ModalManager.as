@@ -1,11 +1,9 @@
 package view.modals {
 
-	import model.remote.HostingProvider;
 	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.UIEvent;
 	import model.AppModel;
-	import model.remote.Account;
 	import model.remote.Hosts;
 	import model.vo.Bookmark;
 	import model.vo.Commit;
@@ -62,6 +60,7 @@ package view.modals {
 		private static var _gitInstall		:GitInstall = new GitInstall();
 		private static var _gitUpgrade		:GitUpgrade = new GitUpgrade();
 		private static var _acctLogin		:AccountLogin = new AccountLogin();
+		private static var _addBkmkToAcct	:AddBkmkToAccount = new AddBkmkToAccount();	
 		private static var _remotePswd		:RemotePassword = new RemotePassword();
 		private static var _newRepoConfirm	:NewRepoConfirm = new NewRepoConfirm();
 		private static var _alert			:Alert = new Alert();
@@ -103,6 +102,7 @@ package view.modals {
 		public function init(stage:Stage):void
 		{
 			stage.stageFocusRect = false;
+			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUpEvent);
 			stage.addEventListener(UIEvent.DRAG_AND_DROP, onDragAndDrop);
 			stage.addEventListener(UIEvent.ADD_BOOKMARK, onNewButtonClick);
 			stage.addEventListener(UIEvent.EDIT_BOOKMARK, editBookmark);
@@ -114,12 +114,14 @@ package view.modals {
 			stage.addEventListener(UIEvent.SHOW_COMMIT, commitDetails);
 			stage.addEventListener(UIEvent.ABOUT_GIT, onAboutGit);
 			stage.addEventListener(UIEvent.GLOBAL_SETTINGS, globalSettings);	
-			stage.addEventListener(UIEvent.ACCOUNT_HOME, showAccountHome);
-			stage.addEventListener(UIEvent.REMOTE_LOGIN, showAccountLogin);
+			stage.addEventListener(UIEvent.GITHUB_HOME, showGitHubHome);
+			stage.addEventListener(UIEvent.GITHUB_LOGIN, showGitHubLogin);
+			stage.addEventListener(UIEvent.BEANSTALK_HOME, showBeanstalkHome);
+			stage.addEventListener(UIEvent.BEANSTALK_LOGIN, showBeanstalkLogin);			
 			stage.addEventListener(UIEvent.SHOW_NEW_REPO_CONFIRM, showNewRepoConfirm);			
-			stage.addEventListener(UIEvent.ADD_BKMK_TO_ACCOUNT, addBkmkToAccount);
+			stage.addEventListener(UIEvent.ADD_BKMK_TO_GITHUB, addBkmkToGitHub);
+			stage.addEventListener(UIEvent.ADD_BKMK_TO_BEANSTALK, addBkmkToBeanstalk);
 			stage.addEventListener(UIEvent.CLOSE_MODAL_WINDOW, onCloseButton);
-			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUpEvent);			
 		}
 
 		private function onKeyUpEvent(e:KeyboardEvent):void
@@ -173,31 +175,41 @@ package view.modals {
 			showModalWindow(_gitUpgrade);			
 		}
 		
-		private function showAccountLogin(e:UIEvent):void
+		private function showGitHubLogin(e:UIEvent):void
 		{
-			if (e.data.type == Account.GITHUB){
-				_acctLogin.host = Hosts.github;
-			}	else if (e.data.type == Account.BEANSTALK){
-				_acctLogin.host = Hosts.beanstalk;
-			}
+			_acctLogin.host = Hosts.github;
+			_acctLogin.onSuccessEvent = e.data as String;
 			showModalWindow(_acctLogin);
 		}
-		
-		private function showAccountHome(e:UIEvent):void
+
+		private function showBeanstalkLogin(e:UIEvent):void
 		{
-			showModalWindow(HostingProvider(e.data).home);
-		}		
+			_acctLogin.host = Hosts.beanstalk;
+			_acctLogin.onSuccessEvent = e.data as String;
+			showModalWindow(_acctLogin);			
+		}
 		
-		private function addBkmkToAccount(e:UIEvent):void
+		private function showGitHubHome(e:UIEvent):void
 		{
-			var w:AddBkmkToAccount;
-			if (e.data.type == Account.GITHUB){
-				w = Hosts.github.addRepo;
-			}	else if (e.data.type == Account.BEANSTALK){
-				w = Hosts.beanstalk.addRepo;
-			}
-			showModalWindow(w);
+			showModalWindow(Hosts.github.home);
+		}
+		
+		private function showBeanstalkHome(e:UIEvent):void
+		{
+			showModalWindow(Hosts.beanstalk.home);
 		}			
+		
+		private function addBkmkToGitHub(e:UIEvent):void
+		{
+			_addBkmkToAcct.host = Hosts.github;
+			showModalWindow(_addBkmkToAcct);
+		}
+		
+		private function addBkmkToBeanstalk(e:UIEvent):void
+		{
+			_addBkmkToAcct.host = Hosts.beanstalk;
+			showModalWindow(_addBkmkToAcct);
+		}					
 		
 		private function onDragAndDrop(e:UIEvent):void 
 		{

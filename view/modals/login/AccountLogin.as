@@ -12,8 +12,9 @@ package view.modals.login {
 
 	public class AccountLogin extends BaseNameAndPass {
 
-		private static var _host		:HostingProvider;
-		private static var _view		:AccountLoginMC = new AccountLoginMC();
+		private static var _host			:HostingProvider;
+		private static var _view			:AccountLoginMC = new AccountLoginMC();
+		private static var _onSuccessEvent	:String;
 
 		public function AccountLogin()
 		{
@@ -30,6 +31,11 @@ package view.modals.login {
 			setTextFields();
 			setAccountBtn();
 			setTitle(_view, o.loginObj.title);
+		}
+		
+		public function set onSuccessEvent(s:String):void
+		{
+			_onSuccessEvent = s;
 		}
 
 		private function setAccountBtn():void
@@ -49,7 +55,7 @@ package view.modals.login {
 		
 		private function gotoNewAccountPage(e:MouseEvent):void 
 		{ 
-			navigateToURL(new URLRequest(_host.loginObj.signup));	
+			navigateToURL(new URLRequest(_host.loginObj.signup));
 		}
 		
 		override public function onEnterKey():void { if (super.locked == false) onLoginButton(); }
@@ -59,7 +65,7 @@ package view.modals.login {
 				lockScreen();
 				_host.proxy.addEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);
 				_host.proxy.addEventListener(AppEvent.LOGIN_FAILURE, onLoginFailure);
-				_host.proxy.login(new Account({type:_host.loginObj.type, user:super.name, pass:super.pass}));
+				_host.proxy.login(new Account({type:_host.type, user:super.name, pass:super.pass}));
 			}
 		}
 		
@@ -85,7 +91,7 @@ package view.modals.login {
 			_host.home.model = e.data as Account;
 			_host.proxy.removeEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);
 			_host.proxy.removeEventListener(AppEvent.LOGIN_FAILURE, onLoginFailure);
-			dispatchEvent(new UIEvent(UIEvent.ACCOUNT_HOME, _host));
+			dispatchEvent(new UIEvent(_onSuccessEvent));
 		}
 
 		private function onLoginFailure(e:AppEvent):void 

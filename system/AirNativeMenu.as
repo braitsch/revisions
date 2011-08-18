@@ -4,6 +4,8 @@ package system {
 	import events.BookmarkEvent;
 	import events.ErrorType;
 	import events.UIEvent;
+	import model.AppModel;
+	import model.remote.Hosts;
 	import flash.desktop.NativeApplication;
 	import flash.display.NativeMenu;
 	import flash.display.NativeMenuItem;
@@ -11,9 +13,6 @@ package system {
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.ui.Keyboard;
-	import model.AppModel;
-	import model.remote.Account;
-	import model.remote.Hosts;
  
  
     public class AirNativeMenu extends Sprite 
@@ -115,16 +114,19 @@ package system {
 		private static function onGitHubClick():void
 		{
 			if (Hosts.github.loggedIn){
-        	 	_stage.dispatchEvent(new UIEvent(UIEvent.ACCOUNT_HOME));
+        	 	_stage.dispatchEvent(new UIEvent(UIEvent.GITHUB_HOME));
 			}	else{
-				_stage.dispatchEvent(new UIEvent(UIEvent.REMOTE_LOGIN, {type:Account.GITHUB, event:UIEvent.ACCOUNT_HOME}));
+				_stage.dispatchEvent(new UIEvent(UIEvent.GITHUB_LOGIN, UIEvent.GITHUB_HOME));
 			}			
 		}
 		
 		private static function onBeanstalkClick():void
 		{
-			var m:String = 'Beanstalk integration is coming in the next build.';
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));						
+			if (Hosts.beanstalk.loggedIn){
+        	 	_stage.dispatchEvent(new UIEvent(UIEvent.BEANSTALK_HOME));
+			}	else{
+				_stage.dispatchEvent(new UIEvent(UIEvent.BEANSTALK_LOGIN, UIEvent.BEANSTALK_HOME));
+			}							
 		}
 		
 		private static function onUpdateAppClick():void
