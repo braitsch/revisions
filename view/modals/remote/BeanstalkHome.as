@@ -3,6 +3,7 @@ package view.modals.remote {
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.proxies.remote.AccountProxy;
+	import model.remote.Account;
 	import flash.events.MouseEvent;
 
 	public class BeanstalkHome extends AccountHome {
@@ -16,15 +17,21 @@ package view.modals.remote {
 			_proxy = p;
 			_view.badgePage.label_txt.text = 'My Beanstalk';
 			_view.logOut.addEventListener(MouseEvent.CLICK, onLogOutClick);
-			_proxy.addEventListener(AppEvent.LOGOUT_SUCCESS, onLogout);			
+			_proxy.addEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);	
+			_proxy.addEventListener(AppEvent.LOGOUT_SUCCESS, onLogoutSuccess);	
 		}
+		
+		private function onLoginSuccess(e:AppEvent):void
+		{
+			super.model = e.data as Account;
+		}		
 		
 		private function onLogOutClick(e:MouseEvent):void
 		{
 			_proxy.logout();
 		}	
 		
-		private function onLogout(e:AppEvent):void
+		private function onLogoutSuccess(e:AppEvent):void
 		{
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 		}	

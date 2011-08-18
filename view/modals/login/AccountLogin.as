@@ -49,6 +49,7 @@ package view.modals.login {
 
 		private function setTextFields():void
 		{
+			_view.name_txt.text = 'braitsch'; _view.pass_txt.text = 'aelisch76';
 			_view.sign_up_txt.text = "Don't yet have a "+_host.type+" account?";
 			super.setHeading(_view, 'Have a '+_host.type+' account? Please login. (Required for private repositories)');
 		}
@@ -65,6 +66,7 @@ package view.modals.login {
 				lockScreen();
 				_host.proxy.addEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);
 				_host.proxy.addEventListener(AppEvent.LOGIN_FAILURE, onLoginFailure);
+				_host.proxy.login(new Account({type:_host.type, user:super.name, pass:super.pass}));
 				_host.proxy.login(new Account({type:_host.type, user:super.name, pass:super.pass}));
 			}
 		}

@@ -13,13 +13,12 @@ package view.modals.remote {
 
 		public function RepositoryItem(o:Object):void
 		{
-			_url = o.ssh_url;
+			_url = o.ssh_url || 'no ssh-url';
 			_view.name_txt.autoSize = TextFieldAutoSize.LEFT;
 			_view.desc_txt.autoSize = TextFieldAutoSize.LEFT;
 			_view.name_txt.text = o.name;
-			_view.desc_txt.text = o.description;
+			_view.desc_txt.text = o.description || 'no description';
 			addChild(_view);
-		// TODO need to check if this remote repo is already associated with a local bookmark //				
 			activateButton();
 		}
 		

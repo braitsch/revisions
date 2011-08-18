@@ -12,8 +12,8 @@ package model.proxies.remote {
 
 	public class AccountProxy extends RemoteProxy {
 
-		private var _account		:Account;
-		private var _timeout		:Timer = new Timer(5000, 1);
+		protected static var _account		:Account;
+		protected static var _timeout		:Timer = new Timer(5000, 1);
 
 		public function AccountProxy()
 		{
@@ -149,7 +149,7 @@ package model.proxies.remote {
 			dispatchEvent(new AppEvent(AppEvent.LOGIN_FAILURE, ErrorType.SERVER_FAILURE));
 		}
 		
-		private function dispatchLoginSuccess():void
+		protected function dispatchLoginSuccess():void
 		{
 			stopTimer();
 			dispatchEvent(new AppEvent(AppEvent.LOGIN_SUCCESS, _account));

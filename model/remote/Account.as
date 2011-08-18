@@ -34,7 +34,7 @@ package model.remote {
 		{
 			_fullName = o.name;
 			_location = o.location;
-			getAccountAvatar(o.avatar_url);
+			if (o.avatar_url) getAccountAvatar(o.avatar_url);
 		}
 		
 		public function set repositories(a:Array):void
