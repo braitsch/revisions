@@ -1,15 +1,16 @@
 package model.proxies.remote {
 
 	import events.AppEvent;
+	import events.BookmarkEvent;
 	import events.NativeProcessEvent;
 	import model.AppModel;
 	import model.db.AppSettings;
-	import model.remote.RemoteAccount;
 	import model.vo.Remote;
 	import system.BashMethods;
 	import system.StringUtils;
+	import flash.filesystem.File;
 	
-	public class RepoProxy extends RemoteProxy {
+	public class RepoEditor extends RemoteProxy {
 		
 		private static var _index		:uint;
 		private static var _remotes		:Vector.<Remote>;
@@ -18,27 +19,47 @@ package model.proxies.remote {
 		private static var _remoteURL	:String;
 		private static var _prompt		:Boolean;
 		
-		public function RepoProxy()
+		public function RepoEditor()
 		{
-			super.executable = 'GitHubRepo.sh';
+			super.executable = 'RepoEditor.sh';
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 		}
 		
-		public function cloneRemoteRepository(url:String, loc:String):void
+		public function clone(url:String, loc:String):void
 		{
 			super.call(Vector.<String>([BashMethods.CLONE_REPOSITORY, url, loc]));
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Cloning Remote Repository'}));
 		}
 		
-		public function createRemoteRepository(name:String, desc:String, publik:Boolean):void
+		public function commit($msg:String):void
 		{
-			super.call(Vector.<String>([BashMethods.ADD_REPOSITORY, name, desc, publik]));
-		}		
+			super.directory = AppModel.bookmark.gitdir;
+			super.call(Vector.<String>([BashMethods.COMMIT, $msg]));
+		}
+		
+		public function trackFile($file:File):void
+		{
+			super.directory = AppModel.bookmark.gitdir;			
+			super.call(Vector.<String>([BashMethods.TRACK_FILE, $file.nativePath]));
+		}
+		
+		public function unTrackFile($file:File):void
+		{
+			super.directory = AppModel.bookmark.gitdir;			
+			super.call(Vector.<String>([BashMethods.UNTRACK_FILE, $file.nativePath]));
+		}				
 		
 		public function syncRemotes(v:Vector.<Remote>):void
 		{
 			_index = 0; _remotes = v; syncNextRemote();
 		}
+		
+		public function addRemoteToLocalRepository(r:Remote):void
+		{
+			_remote = r; _remoteURL = _remote.defaultURL;
+			super.directory = AppModel.bookmark.gitdir;
+			super.call(Vector.<String>([BashMethods.ADD_REMOTE, _remote.name, _remoteURL]));
+		}			
 		
 	// callbacks //	
 		
@@ -82,12 +103,6 @@ package model.proxies.remote {
 			}			
 		}
 		
-		private function addRemoteToLocalRepository():void
-		{
-			super.directory = AppModel.bookmark.gitdir;
-			super.call(Vector.<String>([BashMethods.ADD_REMOTE, _remote.name, _remote.defaultURL]));
-		}		
-		
 		private function pullRemote():void
 		{
 			super.directory = AppModel.bookmark.gitdir;
@@ -108,9 +123,6 @@ package model.proxies.remote {
 			if (hasStringErrors(e.data.result)) return;
 			trace("RemoteProxy.onProcessComplete(e)", m, e.data.result);
 			switch(e.data.method){
-				case BashMethods.ADD_REPOSITORY : 
-					onRepositoryCreated(e.data.result);
-				break;					
 				case BashMethods.CLONE_REPOSITORY :
 					dispatchEvent(new AppEvent(AppEvent.CLONE_COMPLETE));
 					AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
@@ -123,40 +135,22 @@ package model.proxies.remote {
 				break;	
 				case BashMethods.PUSH_REMOTE : 
 					onSyncComplete();
-				break;	
+				break;
+				case BashMethods.COMMIT : 
+					AppModel.branch.modified = [[], []];
+					dispatchEvent(new BookmarkEvent(BookmarkEvent.COMMIT_COMPLETE));
+				break;
+				case BashMethods.TRACK_FILE : 
+				break;
+				case BashMethods.UNTRACK_FILE : 
+				break;						
 			}
 		}
 
-		private function onRepositoryCreated(s:String):void
-		{
-			var o:Object = getResultObject(s);
-			if (hasJSONErrors(o) == false){
-				_remote = new Remote(RemoteAccount.GITHUB+'-'+o.name, o.ssh_url);
-				_remoteURL = _remote.defaultURL;
-				addRemoteToLocalRepository();
-				dispatchEvent(new AppEvent(AppEvent.REPOSITORY_CREATED, o));
-			}
-		}
-		
 		private function onAddRemoteComplete():void
 		{	
 			pushRemote();
 			AppModel.bookmark.addRemote(_remote);			
-		}
-		
-		private function hasJSONErrors(o:Object):Boolean
-		{
-			var f:Boolean;
-			if (o.message == null) return false;
-			if (o.errors[0].message == 'name is already taken'){
-				f = true;
-				dispatchAlert('That repository name is already taken, please choose something else');
-			} else if (o.errors[0].message == 'name can\'t be private. You are over your quota.'){
-				f = true;
-				dispatchAlert('Whoops! Looks like you\'re all out of private repositories, consider making this one public or upgrade your account.');
-			}
-			if (f) AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
-			return f;			
 		}
 		
 		private function hasStringErrors(s:String):Boolean
@@ -219,11 +213,6 @@ package model.proxies.remote {
 		}
 		
 	// dispatch messages //	
-		
-		private function dispatchAlert(m:String):void
-		{
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
-		}	
 		
 		private function dispatchConfirmPushNewBranch():void
 		{

@@ -2,12 +2,11 @@ package view.modals.login {
 
 	import events.AppEvent;
 	import events.UIEvent;
+	import model.AppModel;
+	import model.remote.RemoteAccount;
 	import flash.events.MouseEvent;
 	import flash.net.URLRequest;
 	import flash.net.navigateToURL;
-	import model.AppModel;
-	import model.remote.Accounts;
-	import model.remote.RemoteAccount;
 	
 	public class GitHubLogin extends BaseAccountLogin {
 
@@ -20,7 +19,6 @@ package view.modals.login {
 			super.setTextFields('Github');
 			super.setTitle(_view, 'Login To Github');
 			super.accountBtn = new GitHubButton();
-			AppModel.engine.addEventListener(AppEvent.REMOTE_READY, onLoginSuccess);
 		}
 
 		public function set onSuccessEvent(e:String):void 
@@ -33,17 +31,20 @@ package view.modals.login {
 			navigateToURL(new URLRequest('https://github.com/signup'));			
 		}
 		
-		override protected function onLoginButton(e:MouseEvent = null):void
-		{
-			if (!validate()) return;
-			lockScreen();
-			Accounts.github.proxy.login(super.name, super.pass);
-		}
+		override protected function onLoginButton(e:MouseEvent = null):void 
+		{ 
+			if (validate()){
+				lockScreen();
+				AppModel.engine.addEventListener(AppEvent.REMOTE_READY, onLoginSuccess);
+				dispatchEvent(new AppEvent(AppEvent.ATTEMPT_LOGIN, {user:super.name, pass:super.pass}));
+			}
+		}		
 		
 		private function onLoginSuccess(e:AppEvent):void
 		{
 			dispatchEvent(new UIEvent(_onSuccessEvent, RemoteAccount.GITHUB));
-		}		
+			AppModel.engine.removeEventListener(AppEvent.REMOTE_READY, onLoginSuccess);
+		}					
 		
 	}
 	

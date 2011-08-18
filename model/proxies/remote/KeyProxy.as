@@ -1,7 +1,7 @@
 package model.proxies.remote {
 
-	import events.AppEvent;
 	import events.NativeProcessEvent;
+	import model.AppModel;
 	import model.proxies.local.SSHKeyGenerator;
 	import model.remote.RemoteAccount;
 	import system.BashMethods;
@@ -120,7 +120,7 @@ package model.proxies.remote {
 		
 		private function dispatchKeyValidated():void
 		{
-			dispatchEvent(new AppEvent(AppEvent.REMOTE_KEY_SET, _account));			
+			AppModel.database.setSSHKeyId(_account);
 		}		
 		
 	}

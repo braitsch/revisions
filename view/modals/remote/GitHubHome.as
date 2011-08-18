@@ -1,12 +1,12 @@
 package view.modals.remote {
 
-	import model.remote.Accounts;
-	import system.StringUtils;
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
+	import model.proxies.remote.AccountProxy;
 	import model.remote.RemoteAccount;
 	import model.vo.Bookmark;
+	import system.StringUtils;
 	import view.modals.ModalWindow;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -22,18 +22,20 @@ package view.modals.remote {
 		private static var _cloneURL	:String;
 		private static var _savePath	:String;
 		private static var _activePage	:Sprite;
+		private static var _acctProxy	:AccountProxy;
 
-		public function GitHubHome()
+		public function GitHubHome(p:AccountProxy)
 		{
+			_acctProxy = p;
 			addChild(_view);
 			super.addButtons([_view.logOut]);
 			_view.badgePage.label_txt.text = 'My Github';
 			_view.logOut.addEventListener(MouseEvent.CLICK, onLogOutClick);
 			addEventListener(UIEvent.LOGGED_IN_CLONE, onCloneClick);
 			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);
+			_acctProxy.addEventListener(AppEvent.LOGOUT_SUCCESS, onLogout);
 			AppModel.engine.addEventListener(AppEvent.REMOTE_READY, onAccountReady);
-			Accounts.github.addEventListener(AppEvent.LOGOUT_SUCCESS, onLogout);
-			Accounts.github.proxy.repo.addEventListener(AppEvent.REPOSITORY_CREATED, onNewRepo);
+			AppModel.proxies.editor.addEventListener(AppEvent.REPOSITORY_CREATED, onNewRepo);
 		}
 
 		private function onAccountReady(e:AppEvent):void
@@ -151,7 +153,7 @@ package view.modals.remote {
 		
 		private function onLogOutClick(e:MouseEvent):void
 		{
-			Accounts.github.proxy.logout();
+			_acctProxy.logout();
 		}
 
 		private function onLogout(e:AppEvent):void
@@ -162,15 +164,15 @@ package view.modals.remote {
 		private function onBrowserSelection(e:UIEvent):void
 		{
 			_savePath = File(e.data).nativePath;
-			Accounts.github.proxy.repo.cloneRemoteRepository(_cloneURL, _savePath);
-			Accounts.github.proxy.repo.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);			
+			AppModel.proxies.editor.clone(_cloneURL, _savePath);
+			AppModel.proxies.editor.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);			
 		}
 
 		private function onCloneComplete(e:AppEvent):void
 		{
 			dispatchNewBookmark();
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-			Accounts.github.proxy.repo.removeEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);			
+			AppModel.proxies.editor.removeEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);			
 		}
 
 		private function dispatchNewBookmark():void

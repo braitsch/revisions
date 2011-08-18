@@ -1,10 +1,11 @@
-package view.modals {
+package view.modals.system {
 
 	import events.UIEvent;
-	import model.AppModel;
 	import flash.events.MouseEvent;
 	import flash.net.URLRequest;
 	import flash.net.navigateToURL;
+	import model.AppModel;
+	import view.modals.ModalWindow;
 
 	public class NewRepoConfirm extends ModalWindow {
 

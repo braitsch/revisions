@@ -1,7 +1,7 @@
 package view.modals.login {
 
 	import events.UIEvent;
-	import model.remote.Accounts;
+	import model.AppModel;
 	import model.vo.Remote;
 	import system.StringUtils;
 	import flash.events.MouseEvent;
@@ -35,13 +35,13 @@ package view.modals.login {
 		{
 			if (super.validate()) {
 				dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));		
-				Accounts.github.proxy.repo.attemptManualHttpsSync(super.name, super.pass);
+				AppModel.proxies.editor.attemptManualHttpsSync(super.name, super.pass);
 			}
 		}
 		
 		private function onSkipButton(e:MouseEvent):void
 		{
-			Accounts.github.proxy.repo.skipRemoteSync();
+			AppModel.proxies.editor.skipRemoteSync();
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 		}
 		

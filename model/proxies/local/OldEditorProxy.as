@@ -7,9 +7,9 @@ package model.proxies.local {
 	import system.BashMethods;
 	import flash.filesystem.File;
 
-	public class EditorProxy extends NativeProcessProxy {
+	public class OldEditorProxy extends NativeProcessProxy {
 
-		public function EditorProxy()
+		public function OldEditorProxy()
 		{
 			super.executable = 'Editor.sh';
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);			

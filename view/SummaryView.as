@@ -1,13 +1,12 @@
 package view {
 
-	import model.remote.Accounts;
-	import system.StringUtils;
 	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.UIEvent;
 	import model.AppModel;
 	import model.vo.Bookmark;
 	import model.vo.Remote;
+	import system.StringUtils;
 	import view.fonts.Fonts;
 	import view.ui.SmartButton;
 	import view.ui.Tooltip;
@@ -199,15 +198,15 @@ package view {
 			}	else{
 				_locked = true;
 				var v:Vector.<Remote> = _bookmark.remotes.concat();
-				Accounts.github.proxy.repo.syncRemotes(v);
-				Accounts.github.proxy.repo.addEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);
+				AppModel.proxies.editor.syncRemotes(v);
+				AppModel.proxies.editor.addEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);
 			}
 		}
 
 		private function onRemoteSynced(e:AppEvent):void
 		{
 			_locked = false;
-			Accounts.github.proxy.repo.removeEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);			
+			AppModel.proxies.editor.removeEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);			
 		}
 		
 	}

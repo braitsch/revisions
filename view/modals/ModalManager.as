@@ -26,16 +26,13 @@ package view.modals {
 	import view.modals.local.RepairBookmark;
 	import view.modals.local.RevertToVersion;
 	import view.modals.local.WelcomeScreen;
-	import view.modals.login.BeanStalkLogin;
-	import view.modals.login.GitHubLogin;
+	import view.modals.login.BaseAccountLogin;
 	import view.modals.login.RemotePassword;
-	import view.modals.remote.AddBeanstalkRepo;
-	import view.modals.remote.AddGitHubRepo;
-	import view.modals.remote.AddRemoteRepo;
-	import view.modals.remote.GitHubHome;
+	import view.modals.remote.AddBkmkToRemote;
 	import view.modals.system.Alert;
 	import view.modals.system.Confirm;
 	import view.modals.system.Debug;
+	import view.modals.system.NewRepoConfirm;
 	import view.ui.Preloader;
 	import flash.desktop.DockIcon;
 	import flash.desktop.NativeApplication;
@@ -63,24 +60,19 @@ package view.modals {
 		private static var _gitAbout		:GitAbout = new GitAbout();
 		private static var _gitInstall		:GitInstall = new GitInstall();
 		private static var _gitUpgrade		:GitUpgrade = new GitUpgrade();
-		private static var _gitHub			:GitHubHome = new GitHubHome();
-		private static var _ghLogin			:GitHubLogin = new GitHubLogin();
-		private static var _bsLogin			:BeanStalkLogin = new BeanStalkLogin();
 		private static var _remotePswd		:RemotePassword = new RemotePassword();
-		private static var _addToGitHub		:AddGitHubRepo = new AddGitHubRepo();
-		private static var _addToBeanstalk	:AddBeanstalkRepo = new AddBeanstalkRepo();
 		private static var _newRepoConfirm	:NewRepoConfirm = new NewRepoConfirm();
 		private static var _alert			:Alert = new Alert();
 		private static var _debug			:Debug = new Debug();
 		private static var _confirm			:Confirm = new Confirm();
-		private static var _preloader		:Preloader = new Preloader();		
+		private static var _preloader		:Preloader = new Preloader();
 		
 	// windows that force user to make a decision - autoclose disabled //	
 		private static var _stickies		:Vector.<ModalWindow> = new <ModalWindow>
-				[ _repair, _appExpired, _appUpdate, _gitInstall, _gitUpgrade, _ghLogin ];
+				[ _repair, _appExpired, _appUpdate, _gitInstall, _gitUpgrade ];
 				
 		private static var _window			:ModalWindow;	// the active modal window //
-		private static var _curtain:ModalCurtain = new ModalCurtain();
+		private static var _curtain			:ModalCurtain = new ModalCurtain();
 
 		public function ModalManager()
 		{
@@ -103,7 +95,7 @@ package view.modals {
 			AppModel.updater.addEventListener(AppEvent.APP_UPDATE_AVAILABLE, promptToUpdate);
 			AppModel.proxies.config.addEventListener(AppEvent.GIT_NOT_INSTALLED, installGit);
 			AppModel.proxies.config.addEventListener(AppEvent.GIT_NEEDS_UPDATING, upgradeGit);
-			Accounts.github.proxy.repo.addEventListener(AppEvent.PROMPT_FOR_REMOTE_PSWD, showPasswordPrompt);
+			AppModel.proxies.editor.addEventListener(AppEvent.PROMPT_FOR_REMOTE_PSWD, showPasswordPrompt);
 		}
 
 		public function init(stage:Stage):void
@@ -181,14 +173,26 @@ package view.modals {
 		
 		private function showRemoteLogin(e:UIEvent):void
 		{
+			var w:BaseAccountLogin;
 			if (e.data.type == RemoteAccount.GITHUB){
-				showModalWindow(_ghLogin);
-				_ghLogin.onSuccessEvent = e.data.event;
+				w = Accounts.github.login;
 			}	else if (e.data.type == RemoteAccount.BEANSTALK){
-				showModalWindow(_bsLogin);
-				_bsLogin.onSuccessEvent = e.data.event;
+				w = Accounts.beanstalk.login;
 			}
-		}		
+			showModalWindow(w);
+		}	
+		
+		private function addBkmkToRemote(e:UIEvent):void
+		{
+			var w:AddBkmkToRemote;
+			if (e.data.type == RemoteAccount.GITHUB){
+				w = Accounts.github.addRepo;
+			}	else if (e.data.type == RemoteAccount.BEANSTALK){
+				w = Accounts.beanstalk.addRepo;
+			}
+			w.bookmark = AppModel.bookmark;
+			showModalWindow(w);
+		}			
 		
 		private function onDragAndDrop(e:UIEvent):void 
 		{
@@ -220,17 +224,6 @@ package view.modals {
 		{
 			_edit.bookmark = e.data as Bookmark;
 			showModalWindow(_edit);
-		}
-		
-		private function addBkmkToRemote(e:UIEvent):void
-		{
-			var w:AddRemoteRepo;
-			switch(e.data){
-				case RemoteAccount.GITHUB :	w = _addToGitHub; break;
-				case RemoteAccount.BEANSTALK : w = _addToBeanstalk; break;
-			}
-			w.bookmark = AppModel.bookmark;
-			showModalWindow(w);
 		}
 		
 		private function deleteBookmark(e:UIEvent):void
@@ -293,7 +286,7 @@ package view.modals {
 		
 		private function showGitHubHome(e:UIEvent):void
 		{
-			showModalWindow(_gitHub);
+			showModalWindow(Accounts.github.home);
 		}
 		
 		private function onAppExpired(e:AppEvent):void

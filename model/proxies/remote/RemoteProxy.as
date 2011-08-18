@@ -32,6 +32,11 @@ package model.proxies.remote {
 			}					
 		}
 		
+		protected function dispatchAlert(m:String):void
+		{
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
+		}			
+		
 		protected function dispatchDebug(o:Object):void
 		{
 			o.source = 'RemoteProxy.onProcessFailure(e)';

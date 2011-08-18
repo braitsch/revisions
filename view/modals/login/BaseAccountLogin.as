@@ -15,7 +15,7 @@ package view.modals.login {
 			super.addCloseButton();
 			super.drawBackground(550, 240);
 			super.defaultButton = _view.login_btn;
-			_view.login_btn.addEventListener(MouseEvent.CLICK, onLoginButton);	
+			_view.login_btn.addEventListener(MouseEvent.CLICK, onLoginButton);
 		}
 
 		protected function set accountBtn(btn:*):void
@@ -34,8 +34,14 @@ package view.modals.login {
 		
 		protected function gotoNewAccountPage(e:MouseEvent):void { }
 		
-		protected function onLoginButton(e:MouseEvent = null):void { }
 		override public function onEnterKey():void { if (super.locked == false) onLoginButton(); }
+		protected function onLoginButton(e:MouseEvent = null):void 
+		{ 
+			if (validate()){
+				lockScreen();
+				dispatchEvent(new AppEvent(AppEvent.ATTEMPT_LOGIN, {user:super.name, pass:super.pass}));
+			}
+		}
 		
 		protected function lockScreen():void
 		{

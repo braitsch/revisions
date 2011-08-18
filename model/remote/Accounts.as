@@ -2,8 +2,8 @@ package model.remote {
 
 	public class Accounts {
 		
-		private static var _github			:AccountManager = new AccountManager(RemoteAccount.GITHUB);
-		private static var _beanstalk		:AccountManager = new AccountManager(RemoteAccount.BEANSTALK);
+		private static var _github			:AccountManager = new AccountManager(new GitHub());
+		private static var _beanstalk		:AccountManager = new AccountManager(new Beanstalk());
 		
 		public static function initialize(a:Array):void
 		{

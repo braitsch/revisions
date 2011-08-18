@@ -49,6 +49,7 @@ package events {
 		public static const PROMPT_FOR_REMOTE_PSWD	:String = "PROMPT_FOR_REMOTE_PSWD";
 		
 		public static const FAILURE:String = "FAILURE";
+		public static const ATTEMPT_LOGIN:String = "ATTEMPT_LOGIN";
 		
 		public var data:Object;
 

@@ -1,14 +1,18 @@
 package view.modals.login {
 
+	import events.AppEvent;
+	import events.UIEvent;
+	import model.AppModel;
+	import model.remote.RemoteAccount;
 	import flash.events.MouseEvent;
 	import flash.net.URLRequest;
 	import flash.net.navigateToURL;
-	public class BeanStalkLogin extends BaseAccountLogin {
+	public class BeanstalkLogin extends BaseAccountLogin {
 
 		private static var _view				:AccountLoginMC = new AccountLoginMC();
 		private static var _onSuccessEvent		:String;
 
-		public function BeanStalkLogin()
+		public function BeanstalkLogin()
 		{
 			super(_view);
 			super.setTextFields('Beanstalk');
@@ -26,13 +30,20 @@ package view.modals.login {
 			navigateToURL(new URLRequest('http://beanstalkapp.com/pricing'));			
 		}
 		
-		override protected function onLoginButton(e:MouseEvent = null):void
+		override protected function onLoginButton(e:MouseEvent = null):void 
+		{ 
+			if (validate()){
+				lockScreen();
+				AppModel.engine.addEventListener(AppEvent.REMOTE_READY, onLoginSuccess);
+				dispatchEvent(new AppEvent(AppEvent.ATTEMPT_LOGIN, {user:super.name, pass:super.pass}));
+			}
+		}		
+		
+		private function onLoginSuccess(e:AppEvent):void
 		{
-			if (!validate()) return;
-			lockScreen();
-		//TODO need to obviously request this against the beanstalk api...	
-		//	AppModel.proxies.githubApi.login(_view.name_txt.text, _view.pass_txt.text);	
-		}				
+			dispatchEvent(new UIEvent(_onSuccessEvent, RemoteAccount.GITHUB));
+			AppModel.engine.removeEventListener(AppEvent.REMOTE_READY, onLoginSuccess);			
+		}			
 		
 	}
 	

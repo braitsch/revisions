@@ -1,38 +1,31 @@
 package view.modals.remote {
 
-	import model.remote.RemoteAccount;
 	import events.AppEvent;
 	import events.UIEvent;
 	import fl.text.TLFTextField;
 	import model.AppModel;
-	import model.proxies.remote.RepoProxy;
+	import model.remote.RemoteAccount;
 	import model.vo.Bookmark;
 	import view.modals.ModalWindow;
-	import view.ui.ModalCheckbox;
 	import flash.events.MouseEvent;
 
-	public class AddRemoteRepo extends ModalWindow {
+	public class AddBkmkToRemote extends ModalWindow {
 
 		private var _bkmk		:Bookmark;
-		private var _view		:NewRemoteMC = new NewRemoteMC();
-		private var _check		:ModalCheckbox = new ModalCheckbox(_view.check, false);	
-		private var _proxy		:RepoProxy;	
 		private var _newRepo	:Object;
+		private var _view		:NewRemoteMC;
 
-		public function AddRemoteRepo()
+		public function AddBkmkToRemote(v:NewRemoteMC)
 		{
+			_view = v;
 			addChild(_view);
 			super.addCloseButton();
 			super.defaultButton = _view.ok_btn;			
 			super.addInputs(Vector.<TLFTextField>([_view.name_txt, _view.desc_txt]));
 			_view.form.label1.text = 'Name';
 			_view.form.label2.text = 'Description';
-			_check.label = 'Make Repository Private';
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);
 		}
-		
-		protected function get view():NewRemoteMC { return _view; }
-		protected function set proxy(p:RepoProxy):void { _proxy = p; }
 		
 		public function set bookmark(b:Bookmark):void
 		{
@@ -43,14 +36,11 @@ package view.modals.remote {
 		override public function onEnterKey():void { onOkButton();}		
 		protected function onOkButton(e:MouseEvent = null):void 
 		{ 
-			if (validate()) {
-				_proxy.createRemoteRepository(_view.name_txt.text, _view.desc_txt.text, _check.selected==false);
-				_proxy.addEventListener(AppEvent.REPOSITORY_CREATED, onRepoCreated);
-				_proxy.addEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);
-			}
+			AppModel.proxies.editor.addEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);
+			AppModel.proxies.editor.addEventListener(AppEvent.REPOSITORY_CREATED, onRepoCreated);
 		}
 
-		private function validate():Boolean
+		protected function validate():Boolean
 		{
 			if (_view.name_txt.text == '' || _view.desc_txt.text == '') {
 				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, 'Neither field can be blank.'));
@@ -84,8 +74,8 @@ package view.modals.remote {
 			trace("AddRemoteRepo.onRemoteSynced(e) -- yay!!");
 			trace('bookmark added to github successfully - goto account / show on github');
 			dispatchEvent(new UIEvent(UIEvent.SHOW_NEW_REPO_CONFIRM, _newRepo));
-			_proxy.removeEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);	
-			_proxy.removeEventListener(AppEvent.REPOSITORY_CREATED, onRepoCreated);	
+			AppModel.proxies.editor.removeEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);	
+			AppModel.proxies.editor.removeEventListener(AppEvent.REPOSITORY_CREATED, onRepoCreated);	
 		}
 		
 	}
