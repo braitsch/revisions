@@ -26,9 +26,8 @@ package view.modals {
 	import view.modals.local.RepairBookmark;
 	import view.modals.local.RevertToVersion;
 	import view.modals.local.WelcomeScreen;
-	import view.modals.login.BaseAccountLogin;
 	import view.modals.login.RemotePassword;
-	import view.modals.remote.AddBkmkToRemote;
+	import view.modals.remote.AddBkmkToAccount;
 	import view.modals.system.Alert;
 	import view.modals.system.Confirm;
 	import view.modals.system.Debug;
@@ -115,7 +114,7 @@ package view.modals {
 			stage.addEventListener(UIEvent.GITHUB_HOME, showGitHubHome);
 			stage.addEventListener(UIEvent.REMOTE_LOGIN, showRemoteLogin);
 			stage.addEventListener(UIEvent.SHOW_NEW_REPO_CONFIRM, showNewRepoConfirm);			
-			stage.addEventListener(UIEvent.ADD_REMOTE_TO_BOOKMARK, addBkmkToRemote);
+			stage.addEventListener(UIEvent.ADD_BKMK_TO_ACCOUNT, addBkmkToAccount);
 			stage.addEventListener(UIEvent.CLOSE_MODAL_WINDOW, onCloseButton);
 			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUpEvent);			
 		}
@@ -173,24 +172,24 @@ package view.modals {
 		
 		private function showRemoteLogin(e:UIEvent):void
 		{
-			var w:BaseAccountLogin;
+			var w:*;
 			if (e.data.type == RemoteAccount.GITHUB){
 				w = Accounts.github.login;
 			}	else if (e.data.type == RemoteAccount.BEANSTALK){
 				w = Accounts.beanstalk.login;
 			}
+			w.onSuccessEvent = e.data.event;
 			showModalWindow(w);
 		}	
 		
-		private function addBkmkToRemote(e:UIEvent):void
+		private function addBkmkToAccount(e:UIEvent):void
 		{
-			var w:AddBkmkToRemote;
+			var w:AddBkmkToAccount;
 			if (e.data.type == RemoteAccount.GITHUB){
 				w = Accounts.github.addRepo;
 			}	else if (e.data.type == RemoteAccount.BEANSTALK){
 				w = Accounts.beanstalk.addRepo;
 			}
-			w.bookmark = AppModel.bookmark;
 			showModalWindow(w);
 		}			
 		

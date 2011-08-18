@@ -2,9 +2,9 @@ package model.remote {
 
 	import events.AppEvent;
 	import model.AppModel;
-	import view.modals.ModalWindow;
 	import view.modals.login.BaseAccountLogin;
-	import view.modals.remote.AddBkmkToRemote;
+	import view.modals.remote.AccountHome;
+	import view.modals.remote.AddBkmkToAccount;
 	import flash.events.EventDispatcher;
 	
 	public class AccountManager extends EventDispatcher {
@@ -13,9 +13,9 @@ package model.remote {
 		private var _loggedIn			:Boolean;
 		private var _accounts			:Vector.<RemoteAccount> = new Vector.<RemoteAccount>();
 
-		public function get home()		:ModalWindow		{ return _model.home; }
-		public function get login()		:BaseAccountLogin	{ return _model.login; }
-		public function get addRepo()	:AddBkmkToRemote		{ return _model.addRepo;}
+		public function get home()		:AccountHome		{ return _model.home; 	}
+		public function get login()		:BaseAccountLogin	{ return _model.login; 	}
+		public function get addRepo()	:AddBkmkToAccount	{ return _model.addRepo;}
 
 		public function AccountManager(m:Object)
 		{

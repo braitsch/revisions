@@ -1,13 +1,13 @@
 package model.proxies {
 
+	import flash.events.EventDispatcher;
 	import model.proxies.local.CheckoutProxy;
 	import model.proxies.local.ConfigProxy;
 	import model.proxies.local.InitProxy;
+	import model.proxies.local.RepoEditor;
 	import model.proxies.local.RepoReader;
 	import model.proxies.local.SSHKeyGenerator;
 	import model.proxies.local.UpdateProxy;
-	import model.proxies.remote.RepoEditor;
-	import flash.events.EventDispatcher;
 
 	public class AppProxies extends EventDispatcher {
 		

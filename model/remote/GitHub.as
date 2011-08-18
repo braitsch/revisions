@@ -1,9 +1,10 @@
 package model.remote {
 
 	import events.AppEvent;
-	import model.proxies.remote.KeyProxy;
 	import model.proxies.remote.GitHubProxy;
+	import model.proxies.remote.KeyProxy;
 	import view.modals.login.GitHubLogin;
+	import view.modals.remote.AccountHome;
 	import view.modals.remote.AddBkmkToGitHub;
 	import view.modals.remote.GitHubHome;
 	
@@ -36,15 +37,15 @@ package model.remote {
 			return _user;
 		}
 
-		public function get home():GitHubHome
+		public function get home():AccountHome
 		{
 			return _home;
 		}
 
-//		public function get login():GitHubLogin
-//		{
-//			return _login;
-//		}
+		public function get login():GitHubLogin
+		{
+			return _login;
+		}
 
 		public function get addRepo():AddBkmkToGitHub
 		{

@@ -1,14 +1,15 @@
-package model.proxies.remote {
+package model.proxies.local {
 
 	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.NativeProcessEvent;
+	import flash.filesystem.File;
 	import model.AppModel;
 	import model.db.AppSettings;
+	import model.proxies.remote.RemoteProxy;
 	import model.vo.Remote;
 	import system.BashMethods;
 	import system.StringUtils;
-	import flash.filesystem.File;
 	
 	public class RepoEditor extends RemoteProxy {
 		
@@ -27,7 +28,7 @@ package model.proxies.remote {
 		
 		public function clone(url:String, loc:String):void
 		{
-			super.call(Vector.<String>([BashMethods.CLONE_REPOSITORY, url, loc]));
+			super.call(Vector.<String>([BashMethods.CLONE, url, loc]));
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Cloning Remote Repository'}));
 		}
 		
@@ -123,7 +124,7 @@ package model.proxies.remote {
 			if (hasStringErrors(e.data.result)) return;
 			trace("RemoteProxy.onProcessComplete(e)", m, e.data.result);
 			switch(e.data.method){
-				case BashMethods.CLONE_REPOSITORY :
+				case BashMethods.CLONE :
 					dispatchEvent(new AppEvent(AppEvent.CLONE_COMPLETE));
 					AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 				break;

@@ -7,15 +7,16 @@ package view.modals.remote {
 	import model.remote.RemoteAccount;
 	import model.vo.Bookmark;
 	import view.modals.ModalWindow;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 
-	public class AddBkmkToRemote extends ModalWindow {
+	public class AddBkmkToAccount extends ModalWindow {
 
 		private var _bkmk		:Bookmark;
 		private var _newRepo	:Object;
 		private var _view		:NewRemoteMC;
 
-		public function AddBkmkToRemote(v:NewRemoteMC)
+		public function AddBkmkToAccount(v:NewRemoteMC)
 		{
 			_view = v;
 			addChild(_view);
@@ -25,11 +26,12 @@ package view.modals.remote {
 			_view.form.label1.text = 'Name';
 			_view.form.label2.text = 'Description';
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);
+			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
-		
-		public function set bookmark(b:Bookmark):void
+
+		private function onAddedToStage(e:Event):void
 		{
-			_bkmk = b;
+			_bkmk = AppModel.bookmark;
 			_view.name_txt.text = _bkmk.label.toLowerCase().replace(' ', '-');
 		}
 		

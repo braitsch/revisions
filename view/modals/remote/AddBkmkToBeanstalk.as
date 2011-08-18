@@ -2,7 +2,7 @@ package view.modals.remote {
 
 	import model.proxies.remote.BeanstalkProxy;
 
-	public class AddBkmkToBeanstalk extends AddBkmkToRemote {
+	public class AddBkmkToBeanstalk extends AddBkmkToAccount {
 
 		private static var _proxy	:BeanstalkProxy;
 		private static var _view	:NewRemoteMC = new NewRemoteMC();

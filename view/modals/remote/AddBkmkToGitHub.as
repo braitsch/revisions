@@ -4,7 +4,7 @@ package view.modals.remote {
 	import view.ui.ModalCheckbox;
 	import flash.events.MouseEvent;
 
-	public class AddBkmkToGitHub extends AddBkmkToRemote {
+	public class AddBkmkToGitHub extends AddBkmkToAccount {
 		
 		private static var _proxy	:GitHubProxy;
 		private static var _view	:NewRemoteMC = new NewRemoteMC();

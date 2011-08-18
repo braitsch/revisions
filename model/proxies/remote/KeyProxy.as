@@ -34,7 +34,7 @@ package model.proxies.remote {
 		
 		private function getAllRemoteKeys():void
 		{
-			super.call(Vector.<String>([BashMethods.GET_ALL_REMOTE_KEYS, _account.user, _account.pass]));	
+			super.call(Vector.<String>([BashMethods.GET_REMOTE_KEYS, _account.user, _account.pass]));	
 		}
 		
 		private function repairRemoteKey():void
@@ -62,7 +62,7 @@ package model.proxies.remote {
 			var m:String = e.data.method;
 			var r:String = e.data.result;
 			switch(e.data.method){
-				case BashMethods.GET_ALL_REMOTE_KEYS :
+				case BashMethods.GET_REMOTE_KEYS :
 					onAllRemoteKeysReceived(r);
 				break;
 				case BashMethods.ADD_KEY_TO_REMOTE :

@@ -38,7 +38,7 @@ package model.proxies.remote {
 		
 		public function createRemoteRepository(name:String, desc:String, publik:Boolean):void
 		{
-			super.call(Vector.<String>([BashMethods.ADD_REPOSITORY, name, desc, publik]));
+			super.call(Vector.<String>([BashMethods.ADD_BKMK_TO_ACCOUNT, name, desc, publik]));
 		}
 		
 	// add / remove collaborators //
@@ -66,7 +66,7 @@ package model.proxies.remote {
 				case BashMethods.GET_REPOSITORIES :
 					if (!message(m, r)) onRepositories(r);
 				break;
-				case BashMethods.ADD_REPOSITORY : 
+				case BashMethods.ADD_BKMK_TO_ACCOUNT : 
 					onRepositoryCreated(e.data.result);
 				break;									
 			}

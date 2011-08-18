@@ -6,7 +6,7 @@ package model.proxies.remote {
 
 		public function GitHubProxy()
 		{
-			super.executable = 'GitHubLogin.sh';
+			super.executable = 'GitHub.sh';
 		}
 		
 	}

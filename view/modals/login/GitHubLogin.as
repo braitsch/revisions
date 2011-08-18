@@ -3,6 +3,7 @@ package view.modals.login {
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
+	import model.remote.Accounts;
 	import model.remote.RemoteAccount;
 	import flash.events.MouseEvent;
 	import flash.net.URLRequest;
@@ -42,7 +43,8 @@ package view.modals.login {
 		
 		private function onLoginSuccess(e:AppEvent):void
 		{
-			dispatchEvent(new UIEvent(_onSuccessEvent, RemoteAccount.GITHUB));
+			dispatchEvent(new UIEvent(_onSuccessEvent, {type:RemoteAccount.GITHUB}));
+			Accounts.github.home.model = e.data as RemoteAccount;
 			AppModel.engine.removeEventListener(AppEvent.REMOTE_READY, onLoginSuccess);
 		}					
 		

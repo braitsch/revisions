@@ -8,7 +8,7 @@ package events {
 	// adding and editing local bookmarks //	
 		public static const ADD_BOOKMARK			:String = "ADD_BOOKMARK";
 		public static const DRAG_AND_DROP			:String = "DRAG_AND_DROP";		public static const EDIT_BOOKMARK			:String = "EDIT_BOOKMARK";
-		public static const DELETE_BOOKMARK			:String = "DELETE_BOOKMARK";		public static const ADD_REMOTE_TO_BOOKMARK	:String = "ADD_REMOTE_TO_BOOKMARK";
+		public static const DELETE_BOOKMARK			:String = "DELETE_BOOKMARK";		public static const ADD_BKMK_TO_ACCOUNT	:String = "ADD_REMOTE_TO_BOOKMARK";
 			// adding and editing local branches //	
 		public static const DELETE_BRANCH			:String = "DELETE_BRANCH";
 		

@@ -48,9 +48,9 @@ package view.modals.bkmk {
 		private function onGitHubClick(e:MouseEvent):void
 		{
 			if (Accounts.github.loggedIn){
-				dispatchEvent(new UIEvent(UIEvent.ADD_REMOTE_TO_BOOKMARK, RemoteAccount.GITHUB));
+				dispatchEvent(new UIEvent(UIEvent.ADD_BKMK_TO_ACCOUNT, RemoteAccount.GITHUB));
 			}	else{
-				dispatchEvent(new UIEvent(UIEvent.REMOTE_LOGIN, {type:RemoteAccount.GITHUB, event:UIEvent.ADD_REMOTE_TO_BOOKMARK}));
+				dispatchEvent(new UIEvent(UIEvent.REMOTE_LOGIN, {type:RemoteAccount.GITHUB, event:UIEvent.ADD_BKMK_TO_ACCOUNT}));
 			}	
 		}
 		

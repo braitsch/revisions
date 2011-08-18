@@ -6,7 +6,7 @@ package model.proxies.remote {
 
 		public function BeanstalkProxy()
 		{
-			super.executable = 'BeanstalkLogin.sh';
+			super.executable = 'Beanstalk.sh';
 		}
 		
 	}

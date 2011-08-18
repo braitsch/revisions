@@ -4,14 +4,15 @@ package model.remote {
 	import model.proxies.remote.BeanstalkProxy;
 	import model.proxies.remote.KeyProxy;
 	import view.modals.login.BeanstalkLogin;
+	import view.modals.remote.AccountHome;
 	import view.modals.remote.AddBkmkToBeanstalk;
-	import view.modals.remote.GitHubHome;
+	import view.modals.remote.BeanstalkHome;
 	
 	public class Beanstalk {
 
 		private static var _key 		:KeyProxy = new KeyProxy();
 		private static var _user 		:BeanstalkProxy = new BeanstalkProxy();
-		private static var _home 		:GitHubHome	= new GitHubHome(_user);
+		private static var _home 		:BeanstalkHome	= new BeanstalkHome(_user);
 		private static var _login 		:BeanstalkLogin = new BeanstalkLogin();
 		private static var _addRepo		:AddBkmkToBeanstalk = new AddBkmkToBeanstalk(_user);
 
@@ -36,7 +37,7 @@ package model.remote {
 			return _user;
 		}
 
-		public function get home():GitHubHome
+		public function get home():AccountHome
 		{
 			return _home;
 		}
