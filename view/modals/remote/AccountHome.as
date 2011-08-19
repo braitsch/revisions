@@ -1,5 +1,6 @@
 package view.modals.remote {
 
+	import com.greensock.TweenLite;
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
@@ -36,7 +37,6 @@ package view.modals.remote {
 		{
 			_model = r;
 			resetAccount();
-			attachAvatar();
 			attachRepositories();
 			_view.badgeUser.user_txt.text = _model.fullName ? _model.fullName : '';
 			if (_model.fullName && _model.location) _view.badgeUser.user_txt.appendText(' - '+_model.location);
@@ -46,13 +46,13 @@ package view.modals.remote {
 		{
 			_pageIndex = 0;
 			if (_activePage){ _view.removeChild(_activePage); _activePage = null; }
-		}		
-
-		private function attachAvatar():void
+		}
+		
+		protected function set avatar(s:Sprite):void
 		{
-			_model.avatar.y = 7;
-			_model.avatar.x = -190;
-			_view.badgeUser.addChild(_model.avatar);
+			s.y = 7; s.x = -190;
+			_view.badgeUser.addChild(s);
+			TweenLite.from(s, .5, {alpha:0});
 		}
 
 		private function onNewRepo(e:AppEvent):void
