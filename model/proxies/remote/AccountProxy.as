@@ -5,33 +5,39 @@ package model.proxies.remote {
 	import events.NativeProcessEvent;
 	import model.AppModel;
 	import model.remote.Account;
-	import model.vo.Remote;
 	import system.BashMethods;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 
 	public class AccountProxy extends RemoteProxy {
 
-		protected static var _account		:Account;
-		protected static var _timeout		:Timer = new Timer(5000, 1);
+		private static var _request		:String;
+		private static var _baseURL		:String;
+		private static var _account		:Account;
+		private static var _timeout		:Timer = new Timer(5000, 1);
 
 		public function AccountProxy()
 		{
-			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
+			super.executable = 'Account.sh';
+			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);			
 		}
+		
+		protected function get account()				:Account 	{ return _account; 		}
+		protected function set baseURL(baseURL:String)	:void 		{ _baseURL = baseURL; 	}	
 
 	// login / logout //
 
 		public function login(ra:Account):void
 		{
-			startTimer();
 			_account = ra;
-			super.call(Vector.<String>([BashMethods.LOGIN, _account.user, _account.pass]));
+			_request = BashMethods.LOGIN;
 		}
 		
 		public function logout():void
 		{
-			super.call(Vector.<String>([BashMethods.LOGOUT]));
+			_request = BashMethods.LOGOUT;
+		// erase cached shell login vars ??	
+			dispatchEvent(new AppEvent(AppEvent.LOGOUT_SUCCESS));
 		}
 		
 	// add / remove repositories //			
@@ -46,89 +52,70 @@ package model.proxies.remote {
 	
 	// private helper methods //			
 		
-		private function getRepositories():void
+		protected function getRepositories():void
 		{
-			super.call(Vector.<String>([BashMethods.GET_REPOSITORIES]));
+			_request = BashMethods.GET_REPOSITORIES;
 		}												
 		
-	// repsonse handlers //	
+		protected function makeRequest(url:String):void
+		{
+			startTimer();
+			super.call(Vector.<String>(['makeRequest', _baseURL + url]));
+		}	
 	
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
-			var m:String = e.data.method; var r:String = e.data.result;
-			switch(e.data.method){
+			if (_timeout.running == true){
+				stopTimer();
+				var s:String = e.data.result; 
+				var r:String = s.substr(s.indexOf(',') + 1);
+				var x:uint = uint(s.substr(0, s.indexOf(',')));
+				if (x == 0){
+					onProcessSuccess(r);
+				}	else{
+					onProcessFailure(x);		
+				}
+			}
+		}
+		
+		private function onProcessSuccess(result:String):void
+		{
+			switch(_request){
 				case BashMethods.LOGIN :
-					onLoginResult(r);
+					onLoginSuccess(result);
 				break;
-				case BashMethods.LOGOUT :
-					onLogoutResult();
-				break;				
 				case BashMethods.GET_REPOSITORIES :
-					if (!message(m, r)) onRepositories(r);
+					onRepositories(result);
 				break;
 				case BashMethods.ADD_BKMK_TO_ACCOUNT : 
-					onRepositoryCreated(e.data.result);
+					onRepositoryCreated(result);
 				break;									
+			}			
+		}
+		
+		private function onProcessFailure(x:uint):void
+		{
+			switch(x){
+				case 6 :
+					dispatchFailure(ErrorType.NO_CONNECTION);
+				break;
+				case 7 :
+					dispatchFailure(ErrorType.SERVER_FAILURE);
+				break;
+				default :
+			// handle any other mysterious errors we get back from curl //
+				dispatchDebug({method:_request, message:'Request failed with exit code : '+x});
 			}
 		}
 
 	// callbacks //	
 		
-		private function onLoginResult(s:String):void
-		{
-			var o:Object = getResultObject(s);
-			if (o.message == null){
-				_account.loginData = getResultObject(s);
-				getRepositories();
-			}	else if (o.message == 'Bad credentials'){
-				dispatchLoginFailure(ErrorType.LOGIN_FAILURE);
-			}	else if (o.message == 'No connection') {
-				dispatchLoginFailure(ErrorType.NO_CONNECTION);
-			}	else if (o.message == 'Failed to connect to host') {
-				dispatchLoginFailure(ErrorType.SERVER_FAILURE);				
-			}	else if (o.message){
-			// handle any other mysterious errors //
-				o.method = BashMethods.LOGIN; dispatchDebug(o);
-			}
-		}
+		protected function onLoginSuccess(s:String):void { }
 		
-		private function onLogoutResult():void
-		{
-			dispatchEvent(new AppEvent(AppEvent.LOGOUT_SUCCESS));
-		}
-
-		private function onRepositories(s:String):void
-		{
-			if (_timeout.running != false) {
-				_account.repositories = getResultObject(s) as Array;
-				dispatchLoginSuccess();
-			}
-		}
+		protected function onRepositories(s:String):void { }
 		
-		private function onRepositoryCreated(s:String):void
-		{
-			var o:Object = getResultObject(s);
-			if (hasJSONErrors(o) == false){
-				var r:Remote = new Remote(Account.GITHUB+'-'+o.name, o.ssh_url);
-				AppModel.proxies.editor.addRemoteToLocalRepository(r);
-				dispatchEvent(new AppEvent(AppEvent.REPOSITORY_CREATED, o));
-			}
-		}
+		protected function onRepositoryCreated(s:String):void { }
 		
-		private function hasJSONErrors(o:Object):Boolean
-		{
-			var f:Boolean;
-			if (o.message == null) return false;
-			if (o.errors[0].message == 'name is already taken'){
-				f = true;
-				dispatchLoginFailure('That repository name is already taken, please choose something else');
-			} else if (o.errors[0].message == 'name can\'t be private. You are over your quota.'){
-				f = true;
-				dispatchLoginFailure('Whoops! Looks like you\'re all out of private repositories, consider making this one public or upgrade your account.');
-			}
-			return f;			
-		}				
-	
 	// timers & event dispatching //			
 		
 		private function startTimer():void
@@ -146,21 +133,19 @@ package model.proxies.remote {
 				
 		private function dispatchTimeOut(e:TimerEvent):void
 		{
-			dispatchEvent(new AppEvent(AppEvent.LOGIN_FAILURE, ErrorType.SERVER_FAILURE));
+			dispatchFailure(ErrorType.SERVER_FAILURE);
 		}
 		
 		protected function dispatchLoginSuccess():void
 		{
-			stopTimer();
 			dispatchEvent(new AppEvent(AppEvent.LOGIN_SUCCESS, _account));
 		}
 		
-		private function dispatchLoginFailure(m:String):void
+		protected function dispatchFailure(m:String):void
 		{
-			stopTimer();
-			dispatchEvent(new AppEvent(AppEvent.LOGIN_FAILURE, m));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.FAILURE, m));
 		}
-		
+
 	}
 	
 }

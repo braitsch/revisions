@@ -23,6 +23,7 @@ package view.modals.login {
 			super.drawBackground(550, 240);
 			super.defaultButton = _view.login_btn;
 			_view.login_btn.addEventListener(MouseEvent.CLICK, onLoginButton);
+			AppModel.engine.addEventListener(AppEvent.FAILURE, onLoginFailure);
 		}
 		
 		public function set host(o:HostingProvider):void
@@ -65,8 +66,6 @@ package view.modals.login {
 			if (validate()){
 				lockScreen();
 				_host.proxy.addEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);
-				_host.proxy.addEventListener(AppEvent.LOGIN_FAILURE, onLoginFailure);
-				_host.proxy.login(new Account({type:_host.type, user:super.name, pass:super.pass}));
 				_host.proxy.login(new Account({type:_host.type, user:super.name, pass:super.pass}));
 			}
 		}
@@ -92,15 +91,10 @@ package view.modals.login {
 			unlockScreen(); 
 			_host.home.model = e.data as Account;
 			_host.proxy.removeEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);
-			_host.proxy.removeEventListener(AppEvent.LOGIN_FAILURE, onLoginFailure);
 			dispatchEvent(new UIEvent(_onSuccessEvent));
 		}
 
-		private function onLoginFailure(e:AppEvent):void 
-		{ 
-			unlockScreen(); 
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.FAILURE, e.data));
-		}
+		private function onLoginFailure(e:AppEvent):void { unlockScreen(); }
 		
 	}
 	
