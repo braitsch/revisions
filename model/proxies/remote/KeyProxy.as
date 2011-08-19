@@ -8,7 +8,7 @@ package model.proxies.remote {
 
 	public class KeyProxy extends RemoteProxy {
 
-		private static var _account		:Account;
+		protected static var _account		:Account;
 
 		public function KeyProxy()
 		{
@@ -118,7 +118,7 @@ package model.proxies.remote {
 			return SSHKeyGenerator.pbKey.substr(0, SSHKeyGenerator.pbKey.indexOf('==') + 2) == rk;	
 		}
 		
-		private function dispatchKeyValidated():void
+		protected function dispatchKeyValidated():void
 		{
 			AppModel.database.setSSHKeyId(_account);
 		}		

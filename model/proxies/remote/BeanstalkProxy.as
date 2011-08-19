@@ -53,6 +53,7 @@ package model.proxies.remote {
 				if (xl['login'] == _account.user) {
 					var o:Object = {};
 						o.id = xl['id'];
+						o.email = xl['email'];
 						o.name = xl['first-name']+' '+xl['last-name'];
 					_account.loginData = o;	
 				}

@@ -2,8 +2,8 @@ package model.remote {
 
 	import events.AppEvent;
 	import model.proxies.remote.AccountProxy;
+	import model.proxies.remote.BSKeyProxy;
 	import model.proxies.remote.BeanstalkProxy;
-	import model.proxies.remote.KeyProxy;
 	import view.modals.remote.AccountHome;
 	import view.modals.remote.BeanstalkHome;
 	
@@ -21,7 +21,7 @@ package model.remote {
 
 		public function Beanstalk()
 		{
-			super(new KeyProxy());
+			super(new BSKeyProxy());
 			_proxy.addEventListener(AppEvent.LOGIN_SUCCESS, super.onLoginSuccess);
 			_proxy.addEventListener(AppEvent.LOGOUT_SUCCESS, super.onLogoutSuccess);			
 		}

@@ -4,13 +4,7 @@ package view.modals.remote {
 	import events.UIEvent;
 	import model.proxies.remote.AccountProxy;
 	import model.remote.Account;
-	import flash.display.Bitmap;
-	import flash.display.Loader;
-	import flash.display.Sprite;
-	import flash.events.Event;
-	import flash.events.IOErrorEvent;
 	import flash.events.MouseEvent;
-	import flash.net.URLRequest;
 
 	public class GitHubHome extends AccountHome {
 
@@ -30,35 +24,7 @@ package view.modals.remote {
 		private function onLoginSuccess(e:AppEvent):void
 		{
 			super.model = e.data as Account;
-			if (e.data.avatarURL) loadAvatar(e.data.avatarURL);
 		}
-		
-		private function loadAvatar(url:String):void
-		{
-			var ldr:Loader = new Loader();
-			ldr.contentLoaderInfo.addEventListener(Event.COMPLETE, onAvatarLoaded);
-			ldr.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onAvatarFailure);
-			ldr.load(new URLRequest(url));
-		}	
-		
-		private function onAvatarLoaded(e:Event):void
-		{
-			var b:Bitmap = e.currentTarget.content as Bitmap;
-				b.smoothing = true;
-				b.x = b.y = 2;
-				b.width = b.height = 26;
-			var s:Sprite = new Sprite();
-				s.addChild(b);
-				s.graphics.beginFill(0x959595);
-				s.graphics.drawRect(0, 0, 30, 30);
-				s.graphics.endFill();
-			super.avatar = s; 
-		}
-		
-		private function onAvatarFailure(e:IOErrorEvent):void
-		{
-			trace("--------RemoteAccount.onAvatarFailure(e)--------");
-		}						
 		
 		private function onLogOutClick(e:MouseEvent):void
 		{
