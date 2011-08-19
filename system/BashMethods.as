@@ -62,9 +62,10 @@ package system{
 		public static const AUTHENTICATE			:String = 'authenticate';
 		
 	// local keys //	
+		public static const GET_HOST_NAME			:String = 'getHostName';
 		public static const DETECT_SSH_KEY			:String = 'detectSSHKeys';
 		public static const GENERATE_SSH_KEY		:String = 'generateSSHKeys';
-		public static const REGISTER_SSH_KEY		:String = 'registerSSHKeys';	
+		public static const REGISTER_SSH_KEY		:String = 'registerSSHKeys';
 		
 		
 	}

@@ -8,7 +8,8 @@ package model.proxies.local {
 
 	public class SSHKeyGenerator extends NativeProcessProxy {
 		
-		private static var _pbKey		:String;
+		private static var _pbKey				:String;
+		private static var _pbKeyName			:String;
 		
 		public function SSHKeyGenerator()
 		{
@@ -16,9 +17,15 @@ package model.proxies.local {
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 		}
 		
-		static public function get pbKey():String { return _pbKey; }		
+		static public function get pbKey()		:String 	{ return _pbKey;		}
+		static public function get pbKeyName()	:String 	{ return _pbKeyName;	}
 
-		public function detectApplicationKey():void
+		public function getUserKeyAndInfo():void
+		{
+			super.call(Vector.<String>([BashMethods.GET_HOST_NAME]));	
+		}
+
+		private function getApplicationKey():void
 		{
 			super.call(Vector.<String>([BashMethods.DETECT_SSH_KEY]));
 		}	
@@ -39,6 +46,10 @@ package model.proxies.local {
 		private function handleProcessSuccess(e:NativeProcessEvent):void 
 		{
 			switch(e.data.method){
+				case BashMethods.GET_HOST_NAME :
+					_pbKeyName = 'Revisions - '+e.data.result.replace(/-/g, ' ');
+					getApplicationKey();
+				break;
 				case BashMethods.DETECT_SSH_KEY :
 					if(e.data.result == '') {
 						generateKeys();
@@ -57,7 +68,7 @@ package model.proxies.local {
 		{
 			var m:String = e.data.method; var r:String = e.data.result;
 			if (m == BashMethods.REGISTER_SSH_KEY && r.indexOf('Identity added') !=-1){
-				detectApplicationKey();
+				getApplicationKey();
 			}	else{
 				dispatchDebug(e.data);
 			}

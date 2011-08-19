@@ -4,7 +4,6 @@ package model.proxies.remote {
 	import model.remote.Account;
 	import system.BashMethods;
 	import flash.events.Event;
-	import flash.events.HTTPStatusEvent;
 	import flash.events.IOErrorEvent;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
@@ -20,15 +19,7 @@ package model.proxies.remote {
 		{
 			_loader.addEventListener(Event.COMPLETE, onRequestComplete);
 			_loader.addEventListener(IOErrorEvent.IO_ERROR, onRequestFailure);
-			_loader.addEventListener(HTTPStatusEvent.HTTP_RESPONSE_STATUS, onHTTPStatus);
-		}
-
-		private function onHTTPStatus(e:HTTPStatusEvent):void
-		{
-			trace("BSKeyProxy.onHTTPStatus(e)");
-			trace(e.status);
-			trace(e.responseURL);
-			trace(e.responseHeaders);
+		//	_loader.addEventListener(HTTPStatusEvent.HTTP_RESPONSE_STATUS, onHTTPStatus);
 		}
 
 		override public function validateKey(ra:Account):void
@@ -50,6 +41,7 @@ package model.proxies.remote {
 			_request = BashMethods.ADD_KEY_TO_REMOTE;
 			var req:URLRequest = new URLRequest(_baseURL + 'public_keys.xml');
 				req.data = getKeyXML();
+				req.contentType = 'text/xml';
 				req.method = URLRequestMethod.POST;
 			_loader.load(req);
 		}
@@ -57,9 +49,10 @@ package model.proxies.remote {
 		private function getKeyXML():String
 		{
 			var xml:String = '<?xml version="1.0" encoding="UTF-8"?>';
-			xml+='<public_key><content>';
-			xml+=SSHKeyGenerator.pbKey;
-  			xml+='</content></public_key>';
+			xml+='<public_key>';
+			xml+='<name>'+SSHKeyGenerator.pbKeyName+'</name>';
+			xml+='<content>'+SSHKeyGenerator.pbKey+'</content>';
+  			xml+='</public_key>';
   			return xml;
 		}
 		
@@ -79,11 +72,12 @@ package model.proxies.remote {
 		private function onKeyAddedToRemote(xml:XML):void
 		{
 			trace("BSKeyProxy.onKeyAddedToRemote(xml) ----!!", xml);
+			_account.sshKeyId = xml['id'];
+			dispatchKeyValidated();
 		}
 
 		private function onAllRemoteKeysReceived(xml:XML):void
 		{
-	//		return;
 			if (xml=='') {
 				addKeyToRemote();
 			}	else{
