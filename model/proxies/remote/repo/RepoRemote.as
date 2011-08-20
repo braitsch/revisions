@@ -124,7 +124,6 @@ package model.proxies.remote.repo {
 		private function onCloneComplete():void
 		{
 			dispatchEvent(new AppEvent(AppEvent.CLONE_COMPLETE));
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));			
 		}
 		
 		private function onAddRemoteComplete():void
@@ -151,7 +150,6 @@ package model.proxies.remote.repo {
 		private function dispatchSyncComplete():void
 		{
 			dispatchEvent(new AppEvent(AppEvent.REMOTE_SYNCED));
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 		}
 		
 	// dispatch messages //	

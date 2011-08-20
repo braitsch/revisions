@@ -29,6 +29,7 @@ package model.proxies.remote {
 		private function dispatchTimeOut(e:TimerEvent):void
 		{
 			dispatchFailure(ErrorType.SERVER_FAILURE);
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 		}
 		
 		protected function dispatchFailure(m:String):void

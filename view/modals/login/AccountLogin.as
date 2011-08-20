@@ -83,7 +83,6 @@ package view.modals.login {
 			super.locked = false;
 			enableButton(_view.login_btn, true);
 			_view.login_btn.addEventListener(MouseEvent.CLICK, onLoginButton);
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 		}
 		
 		private function onLoginSuccess(e:AppEvent):void 

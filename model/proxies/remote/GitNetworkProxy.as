@@ -17,7 +17,8 @@ package model.proxies.remote {
 			if (super.timerIsRunning == true){
 				super.stopTimer();
 				if (requestFailed(e.data.result) == false) onProcessSuccess(e.data.method);
-			}				
+			}
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));			
 		}
 		
 		protected function onProcessSuccess(m:String):void { }
@@ -54,7 +55,6 @@ package model.proxies.remote {
 				f = true;
 				dispatchFailure('Eek, not sure what just happened, here are the details : '+s);
 			}
-			if (f) AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));			
 			return f;
 		}
 		

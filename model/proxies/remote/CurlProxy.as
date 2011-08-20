@@ -1,7 +1,9 @@
 package model.proxies.remote {
 
+	import events.AppEvent;
 	import events.ErrorType;
 	import events.NativeProcessEvent;
+	import model.AppModel;
 	import com.adobe.serialization.json.JSONDecoder;
 
 	public class CurlProxy extends RemoteProxy {
@@ -42,7 +44,8 @@ package model.proxies.remote {
 				}	else{
 					onProcessFailure(x);		
 				}
-			}			
+			}
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER, .5));					
 		}
 		
 		protected function onProcessSuccess(r:String):void { }
