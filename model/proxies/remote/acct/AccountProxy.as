@@ -1,11 +1,11 @@
 package model.proxies.remote.acct {
 
 	import events.AppEvent;
-	import model.proxies.remote.RemoteProxy;
+	import model.proxies.remote.CurlProxy;
 	import model.remote.Account;
 	import system.BashMethods;
 
-	public class AccountProxy extends RemoteProxy {
+	public class AccountProxy extends CurlProxy {
 
 		private static var _baseURL		:String;
 		private static var _account		:Account;

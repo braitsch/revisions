@@ -1,16 +1,14 @@
 package model.proxies.remote.repo {
 
 	import events.AppEvent;
-	import events.ErrorType;
-	import events.NativeProcessEvent;
 	import model.AppModel;
-	import model.proxies.remote.RemoteProxy;
+	import model.proxies.remote.GitNetworkProxy;
 	import model.vo.Remote;
 	import system.AppSettings;
 	import system.BashMethods;
 	import system.StringUtils;
 	
-	public class RepoRemote extends RemoteProxy {
+	public class RepoRemote extends GitNetworkProxy {
 		
 		private static var _index		:uint;
 		private static var _remotes		:Vector.<Remote>;
@@ -22,7 +20,6 @@ package model.proxies.remote.repo {
 		public function RepoRemote()
 		{
 			super.executable = 'RepoRemote.sh';
-			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 		}
 		
 		public function clone(url:String, loc:String):void
@@ -99,15 +96,11 @@ package model.proxies.remote.repo {
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Sending files to '+StringUtils.capitalize(_remote.type)}));
 		}
 		
-		private function onProcessComplete(e:NativeProcessEvent):void 
+		override protected function onProcessSuccess(m:String):void 
 		{
-			var m:String = e.data.method;
-			if (hasStringErrors(e.data.result)) return;
-			trace("RepoEditor.onProcessComplete(e)", m, e.data.result);
-			switch(e.data.method){
+			switch(m){
 				case BashMethods.CLONE :
-					dispatchEvent(new AppEvent(AppEvent.CLONE_COMPLETE));
-					AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
+					onCloneComplete();
 				break;
 				case BashMethods.ADD_REMOTE : 
 					onAddRemoteComplete();
@@ -120,50 +113,25 @@ package model.proxies.remote.repo {
 				break;
 			}
 		}
-
+		
+		override protected function onAuthenticationFailure():void
+		{
+		// here we should check the failed _remoteURL and either autogenerate https
+		// or prompt user to enter their credentials manually	
+			dispatchEvent(new AppEvent(AppEvent.PROMPT_FOR_REMOTE_PSWD, _remote));			
+		}
+		
+		private function onCloneComplete():void
+		{
+			dispatchEvent(new AppEvent(AppEvent.CLONE_COMPLETE));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));			
+		}
+		
 		private function onAddRemoteComplete():void
 		{	
 			pushRemote();
 			AppModel.bookmark.addRemote(_remote);			
 		}
-		
-		private function hasStringErrors(s:String):Boolean
-		{
-			var f:Boolean;
-		// TODO if it was an ssh url that failed, attempt to generate a user/pass https url before prompting user for credentials
-			if (hasString(s, 'The requested URL returned error: 403')){
-				f = true;
-				dispatchEvent(new AppEvent(AppEvent.PROMPT_FOR_REMOTE_PSWD, _remote));
-			}	else if (hasString(s, 'Permission denied (publickey)')){
-				f = true;
-				dispatchEvent(new AppEvent(AppEvent.PROMPT_FOR_REMOTE_PSWD, _remote));
-			}	else if (hasString(s, 'ERROR: Permission')){
-				f = true;
-				dispatchEvent(new AppEvent(AppEvent.PROMPT_FOR_REMOTE_PSWD, _remote));						
-			}	else if (hasString(s, 'Authentication failed')){
-				f = true;
-				dispatchEvent(new AppEvent(AppEvent.PROMPT_FOR_REMOTE_PSWD, _remote));				
-			}	else if (hasString(s, 'Couldn\'t resolve host')){
-				f = true;
-				dispatchFailure(ErrorType.UNRESOLVED_HOST);
-			}	else if (hasString(s, 'does not exist')){
-				f = true;
-				dispatchFailure(ErrorType.UNRESOLVED_HOST);
-			}	else if (hasString(s, 'doesn\'t exist. Did you enter it correctly?')){
-				f = true;
-				dispatchFailure(ErrorType.REPO_NOT_FOUND);
-			}	else if (hasString(s, 'fatal: The remote end hung up unexpectedly')){
-				f = true;
-				dispatchFailure(ErrorType.NO_CONNECTION);
-			}	else if (hasString(s, 'fatal:')){
-				f = true;
-				dispatchFailure('Eek, not sure what just happened, here are the details : '+s);
-			}
-			if (f) AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));			
-			return f;
-		}
-		
-		private function hasString(s1:String, s2:String):Boolean { return s1.indexOf(s2) != -1; }
 		
 		private function onSyncComplete():void
 		{

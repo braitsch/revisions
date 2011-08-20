@@ -1,11 +1,11 @@
 package model.proxies.remote.keys {
 
 	import model.AppModel;
-	import model.proxies.remote.RemoteProxy;
+	import model.proxies.remote.CurlProxy;
 	import model.remote.Account;
 	import system.BashMethods;
 
-	public class KeyProxy extends RemoteProxy {
+	public class KeyProxy extends CurlProxy {
 
 		private static var _baseURL		:String;
 		private static var _account		:Account;
