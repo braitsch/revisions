@@ -1,9 +1,9 @@
 package model.remote {
 
 	import events.AppEvent;
-	import model.proxies.remote.AccountProxy;
-	import model.proxies.remote.BSKeyProxy;
-	import model.proxies.remote.BeanstalkProxy;
+	import model.proxies.remote.acct.AccountProxy;
+	import model.proxies.remote.acct.BeanstalkProxy;
+	import model.proxies.remote.keys.BSKeyProxy;
 	import view.modals.remote.AccountHome;
 	import view.modals.remote.BeanstalkHome;
 	

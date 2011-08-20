@@ -1,22 +1,22 @@
 package model.proxies {
 
 	import flash.events.EventDispatcher;
-	import model.proxies.local.CheckoutProxy;
 	import model.proxies.local.ConfigProxy;
-	import model.proxies.local.InitProxy;
+	import model.proxies.local.RepoCreator;
 	import model.proxies.local.RepoEditor;
 	import model.proxies.local.RepoReader;
 	import model.proxies.local.SSHKeyGenerator;
 	import model.proxies.local.UpdateProxy;
+	import model.proxies.remote.repo.RepoRemote;
 
 	public class AppProxies extends EventDispatcher {
 		
 		private static var _config		:ConfigProxy 		= new ConfigProxy();
-		private static var _initP		:InitProxy 			= new InitProxy();
+		private static var _creator		:RepoCreator 		= new RepoCreator();
 		private static var _reader		:RepoReader 		= new RepoReader();
-		private static var _editor		:RepoEditor			= new RepoEditor();
+		private static var _editor		:RepoEditor 		= new RepoEditor();
+		private static var _remote		:RepoRemote			= new RepoRemote();
 		private static var _update		:UpdateProxy 		= new UpdateProxy();
-		private static var _checkout	:CheckoutProxy 		= new CheckoutProxy();
 		private static var _sshKeyGen	:SSHKeyGenerator 	= new SSHKeyGenerator();
 
 	// public getters //	
@@ -26,9 +26,9 @@ package model.proxies {
 			return _config;
 		}
 		
-		public function get init():InitProxy
+		public function get creator():RepoCreator
 		{
-			return _initP;
+			return _creator;
 		}
 		
 		public function get reader():RepoReader
@@ -39,6 +39,11 @@ package model.proxies {
 		public function get editor():RepoEditor
 		{
 			return _editor;
+		}
+		
+		public function get remote():RepoRemote
+		{
+			return _remote;
 		}				
 		
 		public function get update():UpdateProxy
@@ -46,11 +51,6 @@ package model.proxies {
 			return _update;
 		}
 		
-		public function get checkout():CheckoutProxy
-		{
-			return _checkout;
-		}
-
 		public function get sshKeyGen():SSHKeyGenerator
 		{
 			return _sshKeyGen;

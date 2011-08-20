@@ -10,13 +10,13 @@ package model.proxies.local {
 	import model.vo.Bookmark;
 	import system.BashMethods;
 
-	public class InitProxy extends NativeProcessProxy {
+	public class RepoCreator extends NativeProcessProxy {
 		
 		private static var _files		:Array;
 		private static var _index		:uint;
 		private static var _bookmark	:Bookmark;
 		
-		public function InitProxy()
+		public function RepoCreator()
 		{
 			super.executable = 'RepoCreator.sh';
 			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);

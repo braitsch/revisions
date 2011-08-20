@@ -22,18 +22,6 @@ package model.proxies.remote {
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);			
 		}
 
-		protected function message(m:String, r:String):Boolean
-		{
-			var o:Object = getResultObject(r);
-			if (o.message == null){
-				return false;
-			}	else{
-				o.method = m;
-				dispatchDebug(o);		
-				return true;
-			}
-		}
-		
 		protected function getResultObject(s:String):Object
 		{
 		// strip off any post headers we receive before parsing github json //	

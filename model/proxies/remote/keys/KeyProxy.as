@@ -1,6 +1,7 @@
-package model.proxies.remote {
+package model.proxies.remote.keys {
 
 	import model.AppModel;
+	import model.proxies.remote.RemoteProxy;
 	import model.remote.Account;
 	import system.BashMethods;
 
@@ -27,7 +28,7 @@ package model.proxies.remote {
 		{
 			startTimer();
 			super.request = BashMethods.GET_REMOTE_KEYS;
-			super.call(Vector.<String>([BashMethods.MAKE_REQUEST, _baseURL + url]));
+			super.call(Vector.<String>([BashMethods.GET_REQUEST, _baseURL + url]));
 		}
 		
 		protected function addKeyToRemote(key:String, url:String):void
@@ -37,11 +38,12 @@ package model.proxies.remote {
 			super.call(Vector.<String>([BashMethods.POST_REQUEST, key, _baseURL + url]));
 		}
 		
-		protected function repairRemoteKey(key:String, url:String):void
+		protected function repairRemoteKey(vrb:String, key:String, url:String):void
 		{
 			startTimer();
+			trace("KeyProxy.repairRemoteKey(vrb, key, url)", key, _baseURL + url);
 			super.request = BashMethods.REPAIR_REMOTE_KEY;
-			super.call(Vector.<String>([BashMethods.PATCH_REQUEST, key, _baseURL + url]));			
+			super.call(Vector.<String>([vrb=='PUT' ? BashMethods.PUT_REQUEST : BashMethods.PATCH_REQUEST, key, _baseURL + url]));			
 		}	
 		
 		protected function deleteKeyFromRemote(url:String):void

@@ -1,4 +1,4 @@
-package model.proxies.remote {
+package model.proxies.remote.acct {
 
 	import events.ErrorType;
 	import model.remote.Account;
@@ -36,7 +36,10 @@ package model.proxies.remote {
 			var xml:XML = new XML(s);
 			var xl:XMLList = xml['repository'];			
 			for (var i:int = 0; i < xl.length(); i++) {
-				if (xl[i]['vcs'] == 'git') a.push(xl[i]);
+				if (xl[i]['vcs'] == 'git') {
+					xl[i]['https_url'] = 'git@'+super.account.user+'.beanstalkapp.com:/'+xl[i]['name']+'.git';
+					a.push(xl[i]);
+				}
 			}
 			super.account.repositories = a;
 			dispatchLoginSuccess();
@@ -49,6 +52,9 @@ package model.proxies.remote {
 				return true;
 			}	else if (s.indexOf('Could\'t authenticate you') != -1){
 				dispatchFailure(ErrorType.LOGIN_FAILURE);
+				return true;
+			}	else if (s.indexOf('API is disabled for this account') != -1){
+				dispatchFailure(ErrorType.API_DISABLED);
 				return true;
 			}	else{
 				return false;

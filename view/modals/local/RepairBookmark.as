@@ -69,8 +69,8 @@ package view.modals.local {
 				updateDatabase();		
 			}	else{
 		// the file path has changed //		
-				AppModel.proxies.init.editAppStorageGitDirName(_bookmark.path, _view.path_txt.text);
-				AppModel.proxies.init.addEventListener(AppEvent.GIT_DIR_UPDATED, onGitDirUpdated);
+				AppModel.proxies.creator.editAppStorageGitDirName(_bookmark.path, _view.path_txt.text);
+				AppModel.proxies.creator.addEventListener(AppEvent.GIT_DIR_UPDATED, onGitDirUpdated);
 			}
 		}
 		
@@ -78,7 +78,7 @@ package view.modals.local {
 		{
 			updateDatabase();
 			_bookmark.path = _view.path_txt.text;
-			AppModel.proxies.init.removeEventListener(AppEvent.GIT_DIR_UPDATED, onGitDirUpdated);			
+			AppModel.proxies.creator.removeEventListener(AppEvent.GIT_DIR_UPDATED, onGitDirUpdated);			
 		}
 		
 		private function updateDatabase():void

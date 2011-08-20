@@ -1,4 +1,4 @@
-package model.proxies.remote {
+package model.proxies.remote.keys {
 
 	import model.proxies.local.SSHKeyGenerator;
 	import model.remote.Account;
@@ -33,7 +33,7 @@ package model.proxies.remote {
 						super.account.sshKeyId = a[i].id;
 						super.dispatchKeyValidated();
 					}	else if (super.account.sshKeyId == a[i].id){
-						super.repairRemoteKey(getKeyObject(), '/user/keys/'+a[i].id);
+						super.repairRemoteKey('PATCH', getKeyObject(), '/user/keys/'+a[i].id);
 					}
 				}
 			}

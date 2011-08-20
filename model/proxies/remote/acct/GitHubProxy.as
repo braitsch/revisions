@@ -1,4 +1,4 @@
-package model.proxies.remote {
+package model.proxies.remote.acct {
 
 	import events.AppEvent;
 	import events.ErrorType;
@@ -42,7 +42,7 @@ package model.proxies.remote {
 			var o:Object = getResultObject(s);
 			if (o.errors == null){
 				var r:Remote = new Remote(Account.GITHUB+'-'+o.name, o.ssh_url);
-				AppModel.proxies.editor.addRemoteToLocalRepository(r);
+				AppModel.proxies.remote.addRemoteToLocalRepository(r);
 				dispatchEvent(new AppEvent(AppEvent.REPOSITORY_CREATED, o));
 			}	else{
 				handleJSONError(o.errors[0].message);		

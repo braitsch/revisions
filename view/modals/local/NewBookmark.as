@@ -117,8 +117,8 @@ package view.modals.local {
 				dispatchEvent(new UIEvent(UIEvent.DRAG_AND_DROP, e.data as File));
 			}	else{
 				_savePath = File(e.data).nativePath;
-				AppModel.proxies.editor.clone(_cloneURL, _savePath);
-				AppModel.proxies.editor.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);
+				AppModel.proxies.remote.clone(_cloneURL, _savePath);
+				AppModel.proxies.remote.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);
 			}
 		}
 
@@ -126,7 +126,7 @@ package view.modals.local {
 		{
 			dispatchNewBookmark();
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-			AppModel.proxies.editor.removeEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);			
+			AppModel.proxies.remote.removeEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);			
 		}
 
 		private function dispatchNewBookmark():void

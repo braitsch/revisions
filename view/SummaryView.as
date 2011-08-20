@@ -198,15 +198,15 @@ package view {
 			}	else{
 				_locked = true;
 				var v:Vector.<Remote> = _bookmark.remotes.concat();
-				AppModel.proxies.editor.syncRemotes(v);
-				AppModel.proxies.editor.addEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);
+				AppModel.proxies.remote.syncRemotes(v);
+				AppModel.proxies.remote.addEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);
 			}
 		}
 
 		private function onRemoteSynced(e:AppEvent):void
 		{
 			_locked = false;
-			AppModel.proxies.editor.removeEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);			
+			AppModel.proxies.remote.removeEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);			
 		}
 		
 	}

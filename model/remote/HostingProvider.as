@@ -1,11 +1,11 @@
 package model.remote {
 
 	import events.AppEvent;
-	import model.AppModel;
-	import model.proxies.remote.AccountProxy;
-	import model.proxies.remote.KeyProxy;
-	import view.modals.remote.AccountHome;
 	import flash.events.EventDispatcher;
+	import model.AppModel;
+	import model.proxies.remote.acct.AccountProxy;
+	import model.proxies.remote.keys.KeyProxy;
+	import view.modals.remote.AccountHome;
 	
 	public class HostingProvider extends EventDispatcher {
 

@@ -77,7 +77,7 @@ package view.modals.local {
 				file = bkmk.path;
 				saveAs += bkmk.path.substr(bkmk.path.lastIndexOf('.'));
 			}			
-			AppModel.proxies.checkout.download(_commit.sha1, saveAs, file);
+			AppModel.proxies.editor.download(_commit.sha1, saveAs, file);
 		}		
 
 	}

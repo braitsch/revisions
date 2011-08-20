@@ -22,7 +22,7 @@ package view.modals.bkmk {
 			addChild(_branches);
 			super.drawBackground(550, 273);
 			super.setHeading(_view, "These are your branches, aren't they schnazzy?");
-			AppModel.proxies.checkout.addEventListener(BookmarkEvent.BRANCH_CHANGED, onBranchChanged);
+			AppModel.proxies.editor.addEventListener(BookmarkEvent.BRANCH_CHANGED, onBranchChanged);
 		}
 		
 		public function set bookmark(b:Bookmark):void
@@ -59,7 +59,7 @@ package view.modals.bkmk {
 		{
 			if (validate()) {
 				AppModel.bookmark.branch = b;
-				AppModel.proxies.checkout.changeBranch(b.name);
+				AppModel.proxies.editor.changeBranch(b.name);
 			}
 		}
 

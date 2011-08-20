@@ -1,4 +1,4 @@
-package model.proxies.remote {
+package model.proxies.remote.keys {
 
 	import model.proxies.local.SSHKeyGenerator;
 	import model.remote.Account;
@@ -34,8 +34,7 @@ package model.proxies.remote {
 						super.account.sshKeyId = keys[i].id;
 						super.dispatchKeyValidated();
 					}	else if (super.account.sshKeyId == keys[i].id){
-					// this needs to be a PUT request //	
-						super.repairRemoteKey(getKeyObject(), '/public_keys.xml/'+keys[i].id);
+						super.repairRemoteKey('PUT', getKeyObject(), '/public_keys/'+keys[i].id+'.xml');
 					}
 				}
 			}			
@@ -44,9 +43,8 @@ package model.proxies.remote {
 		override protected function onKeyAddedToAccount(s:String):void
 		{
 			var xml:XML = new XML(s);			
-			trace("BSKeyProxy.onKeyAddedToAccount(s)", xml);
 			super.account.sshKeyId = xml['id'];
-			super.authenticate('git@github.com');
+			super.authenticate('git@beanstalkapp.com');
 		}
 		
 		override protected function onKeyRemovedFromAccount(s:String):void

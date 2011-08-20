@@ -2,9 +2,9 @@ package view.modals.remote {
 
 	import events.AppEvent;
 	import events.UIEvent;
-	import model.proxies.remote.AccountProxy;
-	import model.remote.Account;
 	import flash.events.MouseEvent;
+	import model.proxies.remote.acct.AccountProxy;
+	import model.remote.Account;
 
 	public class GitHubHome extends AccountHome {
 

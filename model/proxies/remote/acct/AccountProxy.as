@@ -1,6 +1,7 @@
-package model.proxies.remote {
+package model.proxies.remote.acct {
 
 	import events.AppEvent;
+	import model.proxies.remote.RemoteProxy;
 	import model.remote.Account;
 	import system.BashMethods;
 
@@ -34,14 +35,14 @@ package model.proxies.remote {
 		{
 			startTimer();
 			super.request = BashMethods.LOGIN;
-			super.call(Vector.<String>([BashMethods.MAKE_REQUEST, _baseURL + url]));
+			super.call(Vector.<String>([BashMethods.GET_REQUEST, _baseURL + url]));
 		}		
 		
 		protected function getRepositories(url:String):void
 		{
 			startTimer();
 			super.request = BashMethods.GET_REPOSITORIES;
-			super.call(Vector.<String>([BashMethods.MAKE_REQUEST, _baseURL + url]));
+			super.call(Vector.<String>([BashMethods.GET_REQUEST, _baseURL + url]));
 		}												
 		
 		override protected function onProcessSuccess(r:String):void

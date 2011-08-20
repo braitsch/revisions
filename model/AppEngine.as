@@ -25,13 +25,13 @@ package model {
 		{
 			_bookmark = b;
 			AppModel.proxies.update.lock = true;
-			AppModel.proxies.init.initBookmark(_bookmark);
-			AppModel.proxies.init.addEventListener(BookmarkEvent.INITIALIZED, readRepository);		
+			AppModel.proxies.creator.initBookmark(_bookmark);
+			AppModel.proxies.creator.addEventListener(BookmarkEvent.INITIALIZED, readRepository);		
 		}
 		
 		private function readRepository(e:BookmarkEvent):void
 		{
-			AppModel.proxies.init.removeEventListener(BookmarkEvent.INITIALIZED, readRepository);
+			AppModel.proxies.creator.removeEventListener(BookmarkEvent.INITIALIZED, readRepository);
 			AppModel.proxies.reader.getRepositoryInfo(_bookmark);
 			AppModel.proxies.reader.addEventListener(AppEvent.REPOSITORY_READY, addBkmkToDatabase);
 		}
@@ -62,15 +62,15 @@ package model {
 				removeFromBkmkView();
 			}	else{
 				AppModel.proxies.update.lock = true;
-				AppModel.proxies.init.addEventListener(AppEvent.FILES_DELETED, removeFromBkmkView);
-				AppModel.proxies.init.killBookmark(_bookmark, killGit, killFiles);		
+				AppModel.proxies.creator.addEventListener(AppEvent.FILES_DELETED, removeFromBkmkView);
+				AppModel.proxies.creator.killBookmark(_bookmark, killGit, killFiles);		
 			}
 		}
 		
 		private function removeFromBkmkView(e:AppEvent = null):void
 		{
 			AppModel.proxies.update.lock = false;
-			AppModel.proxies.init.removeEventListener(AppEvent.FILES_DELETED, removeFromBkmkView);
+			AppModel.proxies.creator.removeEventListener(AppEvent.FILES_DELETED, removeFromBkmkView);
 			AppModel.database.deleteRepository(_bookmark.label);
 			AppModel.database.addEventListener(DataBaseEvent.RECORD_DELETED, onRemovedFromDatabase);
 		}

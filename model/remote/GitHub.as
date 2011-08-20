@@ -1,9 +1,9 @@
 package model.remote {
 
 	import events.AppEvent;
-	import model.proxies.remote.AccountProxy;
-	import model.proxies.remote.GHKeyProxy;
-	import model.proxies.remote.GitHubProxy;
+	import model.proxies.remote.acct.AccountProxy;
+	import model.proxies.remote.acct.GitHubProxy;
+	import model.proxies.remote.keys.GHKeyProxy;
 	import view.modals.remote.AccountHome;
 	import view.modals.remote.GitHubHome;
 	

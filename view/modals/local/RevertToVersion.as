@@ -36,7 +36,7 @@ package view.modals.local {
 
 		private function onRevert(e:MouseEvent):void
 		{
-			AppModel.proxies.checkout.revert(_commit.sha1);			
+			AppModel.proxies.editor.revert(_commit.sha1);			
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));			
 		}
 		

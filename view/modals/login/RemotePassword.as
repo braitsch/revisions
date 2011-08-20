@@ -35,13 +35,13 @@ package view.modals.login {
 		{
 			if (super.validate()) {
 				dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));		
-				AppModel.proxies.editor.attemptManualHttpsSync(super.name, super.pass);
+				AppModel.proxies.remote.attemptManualHttpsSync(super.name, super.pass);
 			}
 		}
 		
 		private function onSkipButton(e:MouseEvent):void
 		{
-			AppModel.proxies.editor.skipRemoteSync();
+			AppModel.proxies.remote.skipRemoteSync();
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 		}
 		

@@ -13,11 +13,11 @@ package view.modals.remote {
 
 		public function RepositoryItem(o:Object):void
 		{
-			_url = o.ssh_url || 'no ssh-url';
+			_url = o.ssh_url || o.https_url;
 			_view.name_txt.autoSize = TextFieldAutoSize.LEFT;
 			_view.desc_txt.autoSize = TextFieldAutoSize.LEFT;
 			_view.name_txt.text = o.name;
-			_view.desc_txt.text = o.description || 'no description';
+			_view.desc_txt.text = o.description || 'No description available';
 			addChild(_view);
 			activateButton();
 		}
@@ -33,7 +33,8 @@ package view.modals.remote {
 		
 		private function onButtonClick(e:MouseEvent):void
 		{
-			dispatchEvent(new UIEvent(UIEvent.LOGGED_IN_CLONE, _url));
+			trace("RepositoryItem.onButtonClick(e)", _url);
+		//	dispatchEvent(new UIEvent(UIEvent.LOGGED_IN_CLONE, _url));
 		}
 		
 		private function onButtonRollOut(e:MouseEvent):void {TweenLite.to(e.target.over, .3, {alpha:0});}
