@@ -1,5 +1,6 @@
 package model.proxies.local {
 
+	import events.ErrorType;
 	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.NativeProcessEvent;
@@ -122,7 +123,7 @@ package model.proxies.local {
 		{
 			var m:String = e.data.method;
 			if (hasStringErrors(e.data.result)) return;
-			trace("RemoteProxy.onProcessComplete(e)", m, e.data.result);
+			trace("RepoEditor.onProcessComplete(e)", m, e.data.result);
 			switch(e.data.method){
 				case BashMethods.CLONE :
 					dispatchEvent(new AppEvent(AppEvent.CLONE_COMPLETE));
@@ -172,19 +173,19 @@ package model.proxies.local {
 				dispatchEvent(new AppEvent(AppEvent.PROMPT_FOR_REMOTE_PSWD, _remote));				
 			}	else if (hasString(s, 'Couldn\'t resolve host')){
 				f = true;
-				dispatchAlert('Could not connect to server, did you enter the URL correctly?');
+				dispatchFailure(ErrorType.UNRESOLVED_HOST);
 			}	else if (hasString(s, 'does not exist')){
 				f = true;
-				dispatchAlert('Could not connect to server, did you enter the URL correctly?');
+				dispatchFailure(ErrorType.UNRESOLVED_HOST);
 			}	else if (hasString(s, 'doesn\'t exist. Did you enter it correctly?')){
 				f = true;
-				dispatchAlert('Could not find that repository, did you enter the URL correctly?');
+				dispatchFailure(ErrorType.REPO_NOT_FOUND);
 			}	else if (hasString(s, 'fatal: The remote end hung up unexpectedly')){
 				f = true;
-				dispatchAlert('Whoops! Connection attempt failed, please check your internetz.');
+				dispatchFailure(ErrorType.NO_CONNECTION);
 			}	else if (hasString(s, 'fatal:')){
 				f = true;
-				dispatchAlert('Eek, not sure what just happened, here are the details : '+s);
+				dispatchFailure('Eek, not sure what just happened, here are the details : '+s);
 			}
 			if (f) AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));			
 			return f;

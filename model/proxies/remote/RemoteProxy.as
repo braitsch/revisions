@@ -36,7 +36,7 @@ package model.proxies.remote {
 		
 		protected function getResultObject(s:String):Object
 		{
-		// strip off any post headers we receive before parsing json //	
+		// strip off any post headers we receive before parsing github json //	
 			var k:String = s.charAt(s.length - 1);
 			if (k == '}'){
 				return new JSONDecoder(s.substr(s.indexOf('{')), false).getValue();
@@ -97,11 +97,6 @@ package model.proxies.remote {
 		{
 			dispatchFailure(ErrorType.SERVER_FAILURE);
 		}		
-		
-		protected function dispatchAlert(m:String):void
-		{
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
-		}			
 		
 		protected function dispatchFailure(m:String):void
 		{
