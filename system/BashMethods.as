@@ -67,6 +67,10 @@ package system{
 		public static const GENERATE_SSH_KEY		:String = 'generateSSHKeys';
 		public static const REGISTER_SSH_KEY		:String = 'registerSSHKeys';
 		
+		public static const MAKE_REQUEST			:String = 'makeRequest';
+		public static const POST_REQUEST			:String = 'postRequest';
+		public static const PATCH_REQUEST			:String = 'patchRequest';
+		public static const DELETE_REQUEST			:String = 'deleteRequest';
 		
 	}
 	

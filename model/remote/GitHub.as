@@ -2,8 +2,8 @@ package model.remote {
 
 	import events.AppEvent;
 	import model.proxies.remote.AccountProxy;
+	import model.proxies.remote.GHKeyProxy;
 	import model.proxies.remote.GitHubProxy;
-	import model.proxies.remote.KeyProxy;
 	import view.modals.remote.AccountHome;
 	import view.modals.remote.GitHubHome;
 	
@@ -22,7 +22,7 @@ package model.remote {
 
 		public function GitHub()
 		{
-			super(new KeyProxy());
+			super(new GHKeyProxy());
 			_proxy.addEventListener(AppEvent.LOGIN_SUCCESS, super.onLoginSuccess);
 			_proxy.addEventListener(AppEvent.LOGOUT_SUCCESS, super.onLogoutSuccess);
 		}

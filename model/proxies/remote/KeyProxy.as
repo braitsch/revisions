@@ -1,127 +1,93 @@
 package model.proxies.remote {
 
-	import events.NativeProcessEvent;
 	import model.AppModel;
-	import model.proxies.local.SSHKeyGenerator;
 	import model.remote.Account;
 	import system.BashMethods;
 
 	public class KeyProxy extends RemoteProxy {
 
-		protected static var _account		:Account;
+		private static var _baseURL		:String;
+		private static var _account		:Account;
 
+		protected function get account()				:Account 	{ return _account; 		}
+		protected function set baseURL(baseURL:String)	:void 		{ _baseURL = baseURL; 	}
+		
 		public function KeyProxy()
 		{
-			super.executable = 'SSHKeyValidator.sh';
-			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
+			super.executable = 'Account.sh';
 		}
 		
-		public function validateKey(n:Account):void
-		{
-			_account = n;
-			getAllRemoteKeys();
-		}		
+		public function validateKey(n:Account):void { _account = n; }
 		
-		public function setPrimaryAccount(n:Account, o:Account = null):void
+		public function setPrimaryAccount(n:Account, o:Account = null):void { }
+		
+	// called from subclasses //	
+		
+		protected function getAllRemoteKeys(url:String):void
 		{
-			_account = n;
-			if (o == null){
-				getAllRemoteKeys();		
-			}	else{
-				deleteKeyFromRemote(o);
-			}
+			startTimer();
+			super.request = BashMethods.GET_REMOTE_KEYS;
+			super.call(Vector.<String>([BashMethods.MAKE_REQUEST, _baseURL + url]));
 		}
 		
-		private function getAllRemoteKeys():void
+		protected function addKeyToRemote(key:String, url:String):void
 		{
-			super.call(Vector.<String>([BashMethods.GET_REMOTE_KEYS, _account.user, _account.pass]));	
+			startTimer();
+			super.request = BashMethods.ADD_KEY_TO_REMOTE;
+			super.call(Vector.<String>([BashMethods.POST_REQUEST, key, _baseURL + url]));
 		}
 		
-		private function repairRemoteKey():void
+		protected function repairRemoteKey(key:String, url:String):void
 		{
-			super.call(Vector.<String>([BashMethods.REPAIR_REMOTE_KEY, _account.user, _account.pass, _account.sshKeyId]));	
+			startTimer();
+			super.request = BashMethods.REPAIR_REMOTE_KEY;
+			super.call(Vector.<String>([BashMethods.PATCH_REQUEST, key, _baseURL + url]));			
 		}	
 		
-		private function addKeyToRemote():void
+		protected function deleteKeyFromRemote(url:String):void
 		{
-			super.call(Vector.<String>([BashMethods.ADD_KEY_TO_REMOTE, _account.user, _account.pass]));
+			startTimer();
+			super.request = BashMethods.DELETE_KEY_FROM_REMOTE;
+			super.call(Vector.<String>([BashMethods.DELETE_REQUEST, _baseURL + url]));
 		}
 		
-		private function deleteKeyFromRemote(ra:Account):void
+		protected function authenticate(url:String):void
 		{
-			super.call(Vector.<String>([BashMethods.DELETE_KEY_FROM_REMOTE, ra.user, ra.pass, ra.sshKeyId]));
-		}
-		
-		private function authenticate():void
-		{
-			super.call(Vector.<String>([BashMethods.AUTHENTICATE]));
+			startTimer();
+			super.request = BashMethods.AUTHENTICATE;
+			super.call(Vector.<String>([BashMethods.AUTHENTICATE, url]));
 		}					
 
-		private function onProcessComplete(e:NativeProcessEvent):void
+		override protected function onProcessSuccess(r:String):void
 		{
-			var m:String = e.data.method;
-			var r:String = e.data.result;
-			switch(e.data.method){
+			switch(super.request){
 				case BashMethods.GET_REMOTE_KEYS :
-					onAllRemoteKeysReceived(r);
+					onRemoteKeysReceived(r);
 				break;
 				case BashMethods.ADD_KEY_TO_REMOTE :
-					onKeyAddedToRemote(r);
+					onKeyAddedToAccount(r);
 				break;
-				case BashMethods.REPAIR_REMOTE_KEY :
-					if (!message(m, r)) dispatchKeyValidated();
-				break;				
+				case BashMethods.REPAIR_REMOTE_KEY : 
+					dispatchKeyValidated();
+				break;	
 				case BashMethods.DELETE_KEY_FROM_REMOTE :
-					addKeyToRemote();
+					onKeyRemovedFromAccount(r);
 				break;
 				case BashMethods.AUTHENTICATE :
 					dispatchKeyValidated();
 				break;
-			}
+			}			
 		}
-		
+
 	// callbacks //
-
-		private function onAllRemoteKeysReceived(s:String):void
-		{
-			var a:Array = getResultObject(s) as Array;
-			if (a.length == 0){
-				addKeyToRemote();	
-			}	else{
-				for (var i:int = 0; i < a.length; i++) {
-					if (checkKeysMatch(a[i].key) == true){
-						_account.sshKeyId = a[i].id;
-						dispatchKeyValidated();
-					}	else if (_account.sshKeyId == a[i].id){
-						repairRemoteKey();
-					}
-				}
-			}
-		}
-
-		private function onKeyAddedToRemote(s:String):void
-		{
-			var o:Object = getResultObject(s);
-			if (o.message == null){
-				_account.sshKeyId = o.id;
-				authenticate();
-			}	else {
-				_account.sshKeyId = 0;
-				dispatchKeyValidated();
-				trace("SSHKeyProxy.onKeyAddedToRemote(s) - problem adding key to remote server, key probably already exists");
-			}
-		}
 		
-		private function checkKeysMatch(rk:String):Boolean
-		{
-		// truncate end so we can compare against github //
-			return SSHKeyGenerator.pbKey.substr(0, SSHKeyGenerator.pbKey.indexOf('==') + 2) == rk;	
-		}
+		protected function onRemoteKeysReceived(r:String):void { }
 		
-		protected function dispatchKeyValidated():void
-		{
-			AppModel.database.setSSHKeyId(_account);
-		}		
+		protected function onKeyAddedToAccount(r:String):void { }
+
+		protected function onKeyRemovedFromAccount(r:String):void { }
+
+		protected function dispatchKeyValidated():void { AppModel.database.setSSHKeyId(_account); }
 		
 	}
 	

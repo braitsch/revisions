@@ -12,21 +12,15 @@ package model.proxies.remote {
 		{
 			super.login(ra);
 			super.baseURL = 'https://'+ra.user+':'+ra.pass+'@api.github.com/';
-			super.makeRequest('users/'+ra.user);			
+			super.attemptLogin('users/'+ra.user);
 		}
-		
-		override protected function getRepositories():void
-		{
-			super.getRepositories();
-			super.makeRequest('user/repos');			
-		}			
 		
 		override protected function onLoginSuccess(s:String):void
 		{
 			var o:Object = getResultObject(s);
 			if (o.message == null){
 				super.account.loginData = getResultObject(s);
-				getRepositories();
+				super.getRepositories('user/repos');
 			}	else{
 				dispatchFailure(ErrorType.LOGIN_FAILURE);
 			}

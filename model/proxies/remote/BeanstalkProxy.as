@@ -9,14 +9,8 @@ package model.proxies.remote {
 		{
 			super.login(ra);
 			super.baseURL = 'https://'+ra.user+':'+ra.pass+'@'+ra.user+'.beanstalkapp.com/api/';
-			super.makeRequest('users.xml');
+			super.attemptLogin('users.xml');
 		}
-		
-		override protected function getRepositories():void
-		{
-			super.getRepositories();
-			super.makeRequest('repositories.xml');
-		}			
 		
 		override protected function onLoginSuccess(s:String):void
 		{
@@ -32,7 +26,7 @@ package model.proxies.remote {
 					super.account.loginData = o;	
 				}
 			}
-			getRepositories();
+			super.getRepositories('repositories.xml');
 		}
 		
 		override protected function onRepositories(s:String):void

@@ -2,51 +2,65 @@ package model.proxies.remote {
 
 	import model.proxies.local.SSHKeyGenerator;
 	import model.remote.Account;
-	import system.BashMethods;
-	import flash.events.Event;
-	import flash.events.IOErrorEvent;
-	import flash.net.URLLoader;
-	import flash.net.URLRequest;
-	import flash.net.URLRequestMethod;
 
 	public class BSKeyProxy extends KeyProxy {
 
-		private static var _loader		:URLLoader = new URLLoader();
-		private static var _baseURL		:String;
-		private static var _request		:String;
-		
-		public function BSKeyProxy() 
-		{
-			_loader.addEventListener(Event.COMPLETE, onRequestComplete);
-			_loader.addEventListener(IOErrorEvent.IO_ERROR, onRequestFailure);
-		//	_loader.addEventListener(HTTPStatusEvent.HTTP_RESPONSE_STATUS, onHTTPStatus);
-		}
-
 		override public function validateKey(ra:Account):void
 		{
-			_account = ra;
-			_account.sshKeyId = 666;
-			_baseURL = 'https://'+ra.user+':'+ra.pass+'@'+ra.user+'.beanstalkapp.com/api/';
-			getAllRemoteKeys();
+			super.validateKey(ra);
+			super.baseURL = 'https://'+ra.user+':'+ra.pass+'@'+ra.user+'.beanstalkapp.com/api';
+			super.getAllRemoteKeys('/public_keys.xml');
 		}
 		
-		private function getAllRemoteKeys():void
+		override public function setPrimaryAccount(n:Account, o:Account = null):void
 		{
-			_request = BashMethods.GET_REMOTE_KEYS;
-			_loader.load(new URLRequest(_baseURL + 'public_keys.xml'));
-		}
+			super.validateKey(n);
+			if (o == null){
+				super.getAllRemoteKeys('/public_keys.xml');
+			}	else{
+				super.deleteKeyFromRemote('/public_keys.xml/'+n.sshKeyId);
+			}
+		}		
 		
-		private function addKeyToRemote():void
+		override protected function onRemoteKeysReceived(s:String):void
 		{
-			_request = BashMethods.ADD_KEY_TO_REMOTE;
-			var req:URLRequest = new URLRequest(_baseURL + 'public_keys.xml');
-				req.data = getKeyXML();
-				req.contentType = 'text/xml';
-				req.method = URLRequestMethod.POST;
-			_loader.load(req);
+			var xml:XML = new XML(s);
+			var keys:XMLList = xml['public-key'];
+			if (keys.length() == 0){
+				super.addKeyToRemote(getKeyObject(), '/public_keys.xml');
+			}	else{
+				for (var i:int = 0; i < keys.length(); i++) {
+					if (checkKeysMatch(keys[i].content) == true){
+						super.account.sshKeyId = keys[i].id;
+						super.dispatchKeyValidated();
+					}	else if (super.account.sshKeyId == keys[i].id){
+					// this needs to be a PUT request //	
+						super.repairRemoteKey(getKeyObject(), '/public_keys.xml/'+keys[i].id);
+					}
+				}
+			}			
 		}
 		
-		private function getKeyXML():String
+		override protected function onKeyAddedToAccount(s:String):void
+		{
+			var xml:XML = new XML(s);			
+			trace("BSKeyProxy.onKeyAddedToAccount(s)", xml);
+			super.account.sshKeyId = xml['id'];
+			super.authenticate('git@github.com');
+		}
+		
+		override protected function onKeyRemovedFromAccount(s:String):void
+		{
+			trace("BSKeyProxy.onKeyRemovedFromAccount(s)", s);
+		}
+		
+		private function checkKeysMatch(rk:String):Boolean
+		{
+		// truncate end so we can compare against github //
+			return SSHKeyGenerator.pbKey.substr(0, SSHKeyGenerator.pbKey.indexOf('==') + 2) == rk;	
+		}			
+		
+		private function getKeyObject():String
 		{
 			var xml:String = '<?xml version="1.0" encoding="UTF-8"?>';
 			xml+='<public_key>';
@@ -54,41 +68,7 @@ package model.proxies.remote {
 			xml+='<content>'+SSHKeyGenerator.pbKey+'</content>';
   			xml+='</public_key>';
   			return xml;
-		}
-		
-		private function onRequestComplete(e:Event):void
-		{
-			var xml:XML = new XML(_loader.data);
-			switch(_request){
-				case BashMethods.GET_REMOTE_KEYS :
-					onAllRemoteKeysReceived(xml);
-				break;
-				case BashMethods.ADD_KEY_TO_REMOTE :
-					onKeyAddedToRemote(xml);
-				break;				
-			}
-		}
-
-		private function onKeyAddedToRemote(xml:XML):void
-		{
-			trace("BSKeyProxy.onKeyAddedToRemote(xml) ----!!", xml);
-			_account.sshKeyId = xml['id'];
-			dispatchKeyValidated();
-		}
-
-		private function onAllRemoteKeysReceived(xml:XML):void
-		{
-			if (xml=='') {
-				addKeyToRemote();
-			}	else{
-				dispatchKeyValidated();
-			}
-		}
-		
-		private function onRequestFailure(e:IOErrorEvent):void
-		{
-			trace("BSKeyProxy.onRequestFailure(e)", e);
-		}			
+		}		
 		
 	}
 	
