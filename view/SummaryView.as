@@ -5,7 +5,6 @@ package view {
 	import events.UIEvent;
 	import model.AppModel;
 	import model.vo.Bookmark;
-	import model.vo.Remote;
 	import system.StringUtils;
 	import view.fonts.Fonts;
 	import view.ui.SmartButton;
@@ -46,6 +45,7 @@ package view {
 			initButtons();
 			initTextFields();
 			this.filters = [new DropShadowFilter(5, 45, 0, .5, 10, 10)];
+			AppModel.engine.addEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);
 			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onSelected);
 			AppModel.engine.addEventListener(BookmarkEvent.SUMMARY_RECEIVED, drawView);
 			AppModel.engine.addEventListener(BookmarkEvent.HISTORY_RECEIVED, drawView);
@@ -197,17 +197,11 @@ package view {
 				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
 			}	else{
 				_locked = true;
-				var v:Vector.<Remote> = _bookmark.remotes.concat();
-				AppModel.proxies.remote.syncRemotes(v);
-				AppModel.proxies.remote.addEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);
+				AppModel.proxies.remote.syncRemotes(_bookmark.remotes);
 			}
 		}
 
-		private function onRemoteSynced(e:AppEvent):void
-		{
-			_locked = false;
-			AppModel.proxies.remote.removeEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);			
-		}
+		private function onRemoteSynced(e:AppEvent):void { _locked = false; }
 		
 	}
 	

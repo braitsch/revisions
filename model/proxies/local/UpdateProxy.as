@@ -25,7 +25,7 @@ package model.proxies.local {
 			AppModel.engine.addEventListener(AppEvent.MODIFIED_REQUESTED, onModifiedRequested);
 			AppModel.engine.addEventListener(BookmarkEvent.SUMMARY_RECEIVED, onSummaryReceived);				
 			AppModel.proxies.editor.addEventListener(BookmarkEvent.REVERTED, onBookmarkReverted);
-			AppModel.proxies.remote.addEventListener(BookmarkEvent.COMMIT_COMPLETE, onCommitComplete);
+		//	AppModel.proxies.remote.addEventListener(BookmarkEvent.COMMIT_COMPLETE, onCommitComplete);
 			AppModel.proxies.editor.addEventListener(BookmarkEvent.BRANCH_CHANGED, onBranchChanged);
 		}
 

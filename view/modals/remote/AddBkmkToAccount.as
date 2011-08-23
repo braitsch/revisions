@@ -15,7 +15,6 @@ package view.modals.remote {
 		private static var _bkmk		:Bookmark;
 		private static var _host		:HostingProvider;
 		private static var _view		:NewRemoteMC = new NewRemoteMC();
-		private static var _newRepo		:Object;
 		private static var _check		:ModalCheckbox = new ModalCheckbox(_view.check, false);
 
 		public function AddBkmkToAccount()
@@ -58,8 +57,11 @@ package view.modals.remote {
 		private function onOkButton(e:MouseEvent = null):void 
 		{
 			if (validate()){
-				_host.proxy.makeNewAccountRepo(_view.name_txt.text, _view.desc_txt.text, _check.selected==false); 
-				_host.proxy.addEventListener(AppEvent.REPOSITORY_CREATED, onRepoCreated);
+				var o:Object = {	bkmk:_bkmk, acct:_host.proxy,
+									name:_view.name_txt.text,
+									desc:_view.desc_txt.text, 
+									publik:_check.selected == false	};
+				AppModel.proxies.remote.addBkmkToAccount(o);
 			}
 		}
 
@@ -76,7 +78,6 @@ package view.modals.remote {
 			}
 		}
 		
-		// github-revisions-source
 		private function checkForDuplicate():Boolean
 		{
 			var n:String = _view.name_txt.text.replace(/\s/, '-').toLowerCase();
@@ -86,28 +87,6 @@ package view.modals.remote {
 				return false;
 			}
 		}
-		
-//			var m:String = 'This bookmark is already associated with a GitHub account.\n';
-//				m+='Name : '+g.name+'\n';
-//				m+='Url : '+g.fetch+'\n';
-//			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));			
-		
-		private function onRepoCreated(e:AppEvent):void
-		{
-			_newRepo = e.data as Object;
-			_host.proxy.removeEventListener(AppEvent.REPOSITORY_CREATED, onRepoCreated);
-		// 	AppModel.proxies.editor add bookmark to the newly created repo
-		//	AppModel.proxies.editor.syncRemotes(v);
-		//	AppModel.proxies.editor.addEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);			
-		}		
-		
-//		private function onRemoteSynced(e:AppEvent):void
-//		{
-//			trace("AddRemoteRepo.onRemoteSynced(e) -- yay!!");
-//			trace('bookmark added to github successfully - goto account / show on github');
-//			dispatchEvent(new UIEvent(UIEvent.SHOW_NEW_REPO_CONFIRM, _newRepo));
-//			AppModel.proxies.editor.removeEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);	
-//		}
 		
 	}
 	

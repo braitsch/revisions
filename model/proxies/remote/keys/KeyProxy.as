@@ -1,16 +1,16 @@
 package model.proxies.remote.keys {
 
 	import model.AppModel;
-	import model.proxies.remote.CurlProxy;
-	import model.remote.Account;
+	import model.proxies.remote.base.CurlProxy;
+	import model.remote.HostingAccount;
 	import system.BashMethods;
 
 	public class KeyProxy extends CurlProxy {
 
 		private static var _baseURL		:String;
-		private static var _account		:Account;
+		private static var _account		:HostingAccount;
 
-		protected function get account()				:Account 	{ return _account; 		}
+		protected function get account()				:HostingAccount 	{ return _account; 		}
 		protected function set baseURL(baseURL:String)	:void 		{ _baseURL = baseURL; 	}
 		
 		public function KeyProxy()
@@ -18,9 +18,9 @@ package model.proxies.remote.keys {
 			super.executable = 'Account.sh';
 		}
 		
-		public function validateKey(n:Account):void { _account = n; }
+		public function validateKey(n:HostingAccount):void { _account = n; }
 		
-		public function setPrimaryAccount(n:Account, o:Account = null):void { }
+		public function setPrimaryAccount(n:HostingAccount, o:HostingAccount = null):void { }
 		
 	// called from subclasses //	
 		
@@ -31,11 +31,11 @@ package model.proxies.remote.keys {
 			super.call(Vector.<String>([BashMethods.GET_REQUEST, _baseURL + url]));
 		}
 		
-		protected function addKeyToRemote(key:String, url:String):void
+		protected function addKeyToRemote(header:String, data:String, url:String):void
 		{
 			startTimer();
 			super.request = BashMethods.ADD_KEY_TO_REMOTE;
-			super.call(Vector.<String>([BashMethods.POST_REQUEST, key, _baseURL + url]));
+			super.call(Vector.<String>([BashMethods.POST_REQUEST, header, data, _baseURL + url]));
 		}
 		
 		protected function repairRemoteKey(vrb:String, key:String, url:String):void

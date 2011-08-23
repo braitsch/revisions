@@ -1,4 +1,4 @@
-package model.proxies.remote {
+package model.proxies.remote.base {
 
 	import events.AppEvent;
 	import events.ErrorType;
@@ -7,7 +7,7 @@ package model.proxies.remote {
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 
-	public class RemoteProxy extends NativeProcessProxy {
+	public class NetworkProxy extends NativeProcessProxy {
 
 		private static var _timeout		:Timer = new Timer(5000, 1);
 		

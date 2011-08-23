@@ -1,13 +1,13 @@
-package model.proxies.remote {
+package model.proxies.remote.base {
 
 	import events.AppEvent;
 	import events.ErrorType;
 	import events.NativeProcessEvent;
 	import model.AppModel;
 
-	public class GitNetworkProxy extends RemoteProxy {
+	public class GitProxy extends NetworkProxy {
 		
-		public function GitNetworkProxy()
+		public function GitProxy()
 		{
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 		}
@@ -56,6 +56,12 @@ package model.proxies.remote {
 				dispatchFailure('Eek, not sure what just happened, here are the details : '+s);
 			}
 			return f;
+		}
+		
+		public function onNewUserCredentials(user:String, pass:String):void { }
+		protected function getNewUserCredentials(t:GitProxy, a:String, m:String):void
+		{
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.PROMPT_FOR_REMOTE_PSWD, {target:t, account:a, message:m}));
 		}
 		
 		private function hasString(s1:String, s2:String):Boolean { return s1.indexOf(s2) != -1; }				

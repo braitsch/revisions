@@ -4,8 +4,6 @@ package view.modals.local {
 	import events.UIEvent;
 	import model.AppModel;
 	import model.remote.Hosts;
-	import model.vo.Bookmark;
-	import system.StringUtils;
 	import view.modals.ModalWindow;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
@@ -30,7 +28,7 @@ package view.modals.local {
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);
 			_view.addEventListener(MouseEvent.CLICK, onButtonClick);
-			_view.custom.url_txt.getChildAt(1).addEventListener(KeyboardEvent.KEY_UP, onKeyUp);			
+			_view.custom.url_txt.getChildAt(1).addEventListener(KeyboardEvent.KEY_UP, onKeyUp);	
 		}
 
 		private function onButtonClick(e:MouseEvent):void
@@ -118,30 +116,16 @@ package view.modals.local {
 			}	else{
 				_savePath = File(e.data).nativePath;
 				AppModel.proxies.remote.clone(_cloneURL, _savePath);
-				AppModel.proxies.remote.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);
+				AppModel.engine.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);				
 			}
 		}
 
 		private function onCloneComplete(e:AppEvent):void
 		{
-			dispatchNewBookmark();
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-			AppModel.proxies.remote.removeEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);			
+			AppModel.engine.removeEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);
 		}
 
-		private function dispatchNewBookmark():void
-		{
-			var n:String = _savePath.substr(_savePath.lastIndexOf('/') + 1);
-			var o:Object = {
-				label		:	StringUtils.capitalize(n),
-				type		: 	Bookmark.FOLDER,
-				path		:	_savePath,
-				active 		:	1,
-				autosave	:	60 
-			};	
-			AppModel.engine.addBookmark(new Bookmark(o));
-		}
-		
 	}
 	
 }

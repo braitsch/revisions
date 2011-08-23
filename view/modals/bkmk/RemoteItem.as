@@ -2,15 +2,15 @@ package view.modals.bkmk {
 
 	import system.StringUtils;
 	import flash.text.TextFieldAutoSize;
-	import model.vo.Remote;
+	import model.vo.BookmarkRemote;
 	import flash.display.Sprite;
 
 	public class RemoteItem extends Sprite {
 
-		private var _remote	:Remote;
+		private var _remote	:BookmarkRemote;
 		private var _view	:RemoteItemMC = new RemoteItemMC();
 
-		public function RemoteItem(rmt:Remote)
+		public function RemoteItem(rmt:BookmarkRemote)
 		{
 			addChild(_view);
 			_remote = rmt;

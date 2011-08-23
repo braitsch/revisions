@@ -1,18 +1,18 @@
 package model.proxies.remote.keys {
 
 	import model.proxies.local.SSHKeyGenerator;
-	import model.remote.Account;
+	import model.remote.HostingAccount;
 
 	public class BSKeyProxy extends KeyProxy {
 
-		override public function validateKey(ra:Account):void
+		override public function validateKey(ra:HostingAccount):void
 		{
 			super.validateKey(ra);
 			super.baseURL = 'https://'+ra.user+':'+ra.pass+'@'+ra.user+'.beanstalkapp.com/api';
 			super.getAllRemoteKeys('/public_keys.xml');
 		}
 		
-		override public function setPrimaryAccount(n:Account, o:Account = null):void
+		override public function setPrimaryAccount(n:HostingAccount, o:HostingAccount = null):void
 		{
 			super.validateKey(n);
 			if (o == null){
@@ -27,7 +27,7 @@ package model.proxies.remote.keys {
 			var xml:XML = new XML(s);
 			var keys:XMLList = xml['public-key'];
 			if (keys.length() == 0){
-				super.addKeyToRemote(getKeyObject(), '/public_keys.xml');
+				super.addKeyToRemote(HEADER_XML, getKeyObject(), '/public_keys.xml');
 			}	else{
 				for (var i:int = 0; i < keys.length(); i++) {
 					if (checkKeysMatch(keys[i].content) == true){

@@ -8,10 +8,10 @@ package model.remote {
 		public static function initialize(a:Array):void
 		{
 			for (var i:int = 0; i < a.length; i++) {
-				if (a[i].type == Account.GITHUB){
-					_github.addAccount(new Account(a[i]));
-				}	else if (a[i].type == Account.BEANSTALK){
-					_beanstalk.addAccount(new Account(a[i]));
+				if (a[i].type == HostingAccount.GITHUB){
+					_github.addAccount(new HostingAccount(a[i]));
+				}	else if (a[i].type == HostingAccount.BEANSTALK){
+					_beanstalk.addAccount(new HostingAccount(a[i]));
 				}		
 			}
 		}
@@ -26,12 +26,12 @@ package model.remote {
 			return _beanstalk;
 		}
 		
-		public static function getAccountByName(type:String, name:String):Account	
+		public static function getAccountByName(type:String, name:String):HostingAccount	
 		{
 			var am:HostingProvider;
-			if (type == Account.GITHUB){
+			if (type == HostingAccount.GITHUB){
 				am = _github;
-			}	else if (type == Account.BEANSTALK){
+			}	else if (type == HostingAccount.BEANSTALK){
 				am = _beanstalk;
 			}
 			return am.getAccountByProp('user', name);

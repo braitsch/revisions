@@ -47,6 +47,7 @@ package events {
 		public static const PROMPT_FOR_REMOTE_PSWD	:String = "PROMPT_FOR_REMOTE_PSWD";
 		
 		public static const FAILURE:String = "FAILURE";
+		public static const BKMK_ADDED_TO_ACCOUNT:String = "BKMK_ADDED_TO_ACCOUNT";
 		
 		public var data:Object;
 

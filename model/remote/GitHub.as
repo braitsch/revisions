@@ -9,7 +9,7 @@ package model.remote {
 	
 	public class GitHub extends HostingProvider {
 		
-		private static var _type		:String = Account.GITHUB;
+		private static var _type		:String = HostingAccount.GITHUB;
 		private static var _proxy 		:GitHubProxy = new GitHubProxy();
 		private static var _home 		:GitHubHome	= new GitHubHome(_proxy);
 		

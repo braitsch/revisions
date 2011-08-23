@@ -3,9 +3,7 @@ package view.modals.remote {
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
-	import model.remote.Account;
-	import model.vo.Bookmark;
-	import system.StringUtils;
+	import model.remote.HostingAccount;
 	import view.modals.ModalWindow;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -13,14 +11,14 @@ package view.modals.remote {
 
 	public class AccountHome extends ModalWindow {
 
-		private var _view		:*;
-		private var _pages		:Vector.<Sprite>;
-		private var _maxPerPage	:uint = 5;
-		private var _pageIndex	:uint = 0;
-		private var _cloneURL	:String;
-		private var _savePath	:String;
-		private var _activePage	:Sprite;
-		private var _model		:Account;
+		private var _view			:*;
+		private var _pages			:Vector.<Sprite>;
+		private var _maxPerPage		:uint = 5;
+		private var _pageIndex		:uint = 0;
+		private var _cloneURL		:String;
+		private var _savePath		:String;
+		private var _activePage		:Sprite;
+		private var _model			:HostingAccount;
 
 		public function AccountHome(v:*)
 		{
@@ -29,10 +27,10 @@ package view.modals.remote {
 			super.addButtons([_view.logOut]);
 			addEventListener(UIEvent.LOGGED_IN_CLONE, onCloneClick);
 			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);
-			AppModel.proxies.remote.addEventListener(AppEvent.REPOSITORY_CREATED, onNewRepo);
+			AppModel.engine.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);
 		}
 
-		public function set model(r:Account):void
+		public function set model(r:HostingAccount):void
 		{
 			_model = r;
 			resetAccount();
@@ -41,6 +39,13 @@ package view.modals.remote {
 			_view.badgeUser.user_txt.text = _model.fullName ? _model.fullName : '';
 			if (_model.fullName && _model.location) _view.badgeUser.user_txt.appendText(' - '+_model.location);
 		}
+		
+		public function addRepository(o:Object):void
+		{
+			_model.repositories.push(o);
+			resetAccount();
+			attachRepositories();
+		}		
 		
 		private function resetAccount():void
 		{
@@ -53,13 +58,6 @@ package view.modals.remote {
 			_model.avatar.y = 7; 
 			_model.avatar.x = -190;
 			_view.badgeUser.addChild(_model.avatar);
-		}
-
-		private function onNewRepo(e:AppEvent):void
-		{
-			_model.repositories.push(e.data);
-			resetAccount();
-			attachRepositories();
 		}
 
 		private function attachRepositories():void
@@ -149,29 +147,15 @@ package view.modals.remote {
 		{
 			_savePath = File(e.data).nativePath;
 			AppModel.proxies.remote.clone(_cloneURL, _savePath);
-			AppModel.proxies.remote.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);			
+			AppModel.engine.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);
 		}
 
 		private function onCloneComplete(e:AppEvent):void
 		{
-			dispatchNewBookmark();
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-			AppModel.proxies.remote.removeEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);			
+			AppModel.engine.removeEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);			
 		}
 
-		private function dispatchNewBookmark():void
-		{
-			var n:String = _savePath.substr(_savePath.lastIndexOf('/') + 1);
-			var o:Object = {
-				label		:	StringUtils.capitalize(n),
-				type		: 	Bookmark.FOLDER,
-				path		:	_savePath,
-				active 		:	1,
-				autosave	:	60 
-			};	
-			AppModel.engine.addBookmark(new Bookmark(o));
-		}
-		
 	}
 	
 }

@@ -7,7 +7,6 @@ package view.modals {
 	import model.remote.Hosts;
 	import model.vo.Bookmark;
 	import model.vo.Commit;
-	import model.vo.Remote;
 	import system.AppSettings;
 	import view.modals.bkmk.BookmarkEditor;
 	import view.modals.git.GitAbout;
@@ -93,10 +92,10 @@ package view.modals {
 			AppModel.engine.addEventListener(BookmarkEvent.PATH_ERROR, repairBookmark);
 			AppModel.engine.addEventListener(BookmarkEvent.NO_BOOKMARKS, showWelcomeScreen);
 			AppModel.engine.addEventListener(AppEvent.APP_EXPIRED, onAppExpired);
+			AppModel.engine.addEventListener(AppEvent.PROMPT_FOR_REMOTE_PSWD, showPasswordPrompt);
 			AppModel.updater.addEventListener(AppEvent.APP_UPDATE_AVAILABLE, promptToUpdate);
 			AppModel.proxies.config.addEventListener(AppEvent.GIT_NOT_INSTALLED, installGit);
 			AppModel.proxies.config.addEventListener(AppEvent.GIT_NEEDS_UPDATING, upgradeGit);
-			AppModel.proxies.remote.addEventListener(AppEvent.PROMPT_FOR_REMOTE_PSWD, showPasswordPrompt);
 		}
 
 		public function init(stage:Stage):void
@@ -314,8 +313,10 @@ package view.modals {
 		
 		private function showPasswordPrompt(e:AppEvent):void
 		{
-			_remotePswd.remote = e.data as Remote;
-			showModalWindow(_remotePswd);	
+			_remotePswd.target = e.data.target;
+			_remotePswd.account = e.data.account;
+			_remotePswd.message = e.data.message;
+			showModalWindow(_remotePswd);
 		}
 		
 		private function showNewRepoConfirm(e:UIEvent):void

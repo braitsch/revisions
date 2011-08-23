@@ -3,7 +3,7 @@ package view.modals.login {
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
-	import model.remote.Account;
+	import model.remote.HostingAccount;
 	import model.remote.HostingProvider;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -66,7 +66,7 @@ package view.modals.login {
 			if (validate()){
 				lockScreen();
 				_host.proxy.addEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);
-				_host.proxy.login(new Account({type:_host.type, user:super.name, pass:super.pass}));
+				_host.proxy.login(new HostingAccount({type:_host.type, user:super.name, pass:super.pass}));
 			}
 		}
 		
@@ -88,7 +88,7 @@ package view.modals.login {
 		private function onLoginSuccess(e:AppEvent):void 
 		{ 
 			unlockScreen(); 
-			_host.home.model = e.data as Account;
+			_host.home.model = e.data as HostingAccount;
 			_host.proxy.removeEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);
 			dispatchEvent(new UIEvent(_onSuccessEvent));
 		}

@@ -1,18 +1,18 @@
 package model.proxies.remote.keys {
 
 	import model.proxies.local.SSHKeyGenerator;
-	import model.remote.Account;
+	import model.remote.HostingAccount;
 	
 	public class GHKeyProxy extends KeyProxy {
 		
-		override public function validateKey(ra:Account):void
+		override public function validateKey(ra:HostingAccount):void
 		{
 			super.validateKey(ra);
 			super.baseURL = 'https://'+ra.user+':'+ra.pass+'@api.github.com';
 			super.getAllRemoteKeys('/user/keys');
 		}
 		
-		override public function setPrimaryAccount(n:Account, o:Account = null):void
+		override public function setPrimaryAccount(n:HostingAccount, o:HostingAccount = null):void
 		{
 			super.validateKey(n);
 			if (o == null){
@@ -26,7 +26,7 @@ package model.proxies.remote.keys {
 		{
 			var a:Array = getResultObject(s) as Array;
 			if (a.length == 0){
-				super.addKeyToRemote(getKeyObject(), '/user/keys');
+				super.addKeyToRemote(HEADER_TXT, getKeyObject(), '/user/keys');
 			}	else{
 				for (var i:int = 0; i < a.length; i++) {
 					if (checkKeysMatch(a[i].key) == true){

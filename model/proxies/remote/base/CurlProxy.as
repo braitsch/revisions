@@ -1,4 +1,4 @@
-package model.proxies.remote {
+package model.proxies.remote.base {
 
 	import events.AppEvent;
 	import events.ErrorType;
@@ -6,9 +6,12 @@ package model.proxies.remote {
 	import model.AppModel;
 	import com.adobe.serialization.json.JSONDecoder;
 
-	public class CurlProxy extends RemoteProxy {
+	public class CurlProxy extends NetworkProxy {
 		
 		private static var _request		:String;
+		
+		public static const HEADER_XML	:String = 'Content-Type:application/xml';
+		public static const HEADER_TXT	:String = 'Content-Type:application/x-www-form-urlencoded';
 
 		protected function get request()				:String 	{ return _request; 		}
 		protected function set request(request:String)	:void 		{ _request = request; 	}
@@ -45,7 +48,7 @@ package model.proxies.remote {
 					onProcessFailure(x);		
 				}
 			}
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER, .5));					
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER, 1));					
 		}
 		
 		protected function onProcessSuccess(r:String):void { }

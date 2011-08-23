@@ -9,7 +9,7 @@ package model.remote {
 	import flash.events.IOErrorEvent;
 	import flash.net.URLRequest;
 	
-	public class Account extends EventDispatcher {
+	public class HostingAccount extends EventDispatcher {
 		
 		public static const GITHUB		:String = 'GitHub';
 		public static const BEANSTALK	:String = 'Beanstalk';
@@ -24,7 +24,7 @@ package model.remote {
 		private var _location			:String;
 		private var _repositories		:Array;
 
-		public function Account(o:Object)
+		public function HostingAccount(o:Object)
 		{
 			_type = o.type;
 			_user = o.user;

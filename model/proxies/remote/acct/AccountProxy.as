@@ -1,42 +1,44 @@
 package model.proxies.remote.acct {
 
 	import events.AppEvent;
-	import model.proxies.remote.CurlProxy;
-	import model.remote.Account;
+	import model.proxies.remote.base.CurlProxy;
+	import model.remote.HostingAccount;
 	import system.BashMethods;
 
 	public class AccountProxy extends CurlProxy {
 
 		private static var _baseURL		:String;
-		private static var _account		:Account;
+		private static var _account		:HostingAccount;
 
 		public function AccountProxy()
 		{
 			super.executable = 'Account.sh';
 		}
 		
-		protected function get account()				:Account 	{ return _account; 		}
+		protected function get account()				:HostingAccount 	{ return _account; 		}
 		protected function set baseURL(baseURL:String)	:void 		{ _baseURL = baseURL; 	}	
 
-		public function login(ra:Account):void { _account = ra; }
-		
-		public function logout():void
-		{
-			super.request = BashMethods.LOGOUT;
-			dispatchEvent(new AppEvent(AppEvent.LOGOUT_SUCCESS));
-		}
-		
-		public function makeNewAccountRepo(name:String, desc:String, publik:Boolean):void
-		{
-			super.call(Vector.<String>([BashMethods.ADD_BKMK_TO_ACCOUNT, name, desc, publik]));
-		}
-		
+		public function login(ra:HostingAccount):void { _account = ra; }
 		protected function attemptLogin(url:String):void
 		{
 			startTimer();
 			super.request = BashMethods.LOGIN;
 			super.call(Vector.<String>([BashMethods.GET_REQUEST, _baseURL + url]));
+		}
+		
+		public function logout():void
+		{
+			super.request = BashMethods.LOGOUT;
+			dispatchEvent(new AppEvent(AppEvent.LOGOUT_SUCCESS));
 		}		
+		
+		public function makeNewRemoteRepository(o:Object):void { }
+		protected function makeNewRepoOnAccount(header:String, data:String, url:String):void
+		{
+			startTimer();
+			super.request = BashMethods.ADD_BKMK_TO_ACCOUNT;
+			super.call(Vector.<String>([BashMethods.POST_REQUEST, header, data, _baseURL + url]));
+		}				
 		
 		protected function getRepositories(url:String):void
 		{

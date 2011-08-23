@@ -1,9 +1,9 @@
 package model.vo {
 
 	import model.remote.Hosts;
-	import model.remote.Account;
+	import model.remote.HostingAccount;
 
-	public class Remote {
+	public class BookmarkRemote {
 
 		private var _name		:String; // ex. github-revisions-source //
 		private var _ssh		:String;
@@ -13,9 +13,9 @@ package model.vo {
 		private var _repoName	:String;
 		private var _branches	:Array = [];
 
-		public function Remote(name:String, url:String)
+		public function BookmarkRemote(name:String, url:String)
 		{
-			_name = name; 
+			_name = name.toLowerCase();
 			inspectURL(url);
 		}		
 		
@@ -27,7 +27,7 @@ package model.vo {
 		
 		public function get https():String
 		{
-			var a:Account = Hosts.getAccountByName(_type, _acctName);
+			var a:HostingAccount = Hosts.getAccountByName(_type, _acctName);
 			if (a == null) {
 				return null;
 			}	else{
@@ -67,10 +67,10 @@ package model.vo {
 		{
 			_ssh = s;
 			if (s.indexOf('github.com') != -1){
-				_type = Account.GITHUB;
+				_type = HostingAccount.GITHUB;
 				_acctName = _ssh.substring(15, _ssh.indexOf('/'));
 			}	else if (s.indexOf('beanstalkapp.com') != -1){
-				_type = Account.BEANSTALK;
+				_type = HostingAccount.BEANSTALK;
 				_acctName = _ssh.substring(4, _ssh.indexOf('.'));
 			}			
 		}
@@ -78,7 +78,7 @@ package model.vo {
 		private function parseHTTPS(s:String):void
 		{
 			_https = s;
-			_type = Account.GITHUB;
+			_type = HostingAccount.GITHUB;
 			_acctName = s.substring(8, s.indexOf('@'));			
 		}		
 

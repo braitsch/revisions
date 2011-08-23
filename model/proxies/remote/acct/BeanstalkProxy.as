@@ -1,16 +1,25 @@
 package model.proxies.remote.acct {
 
 	import events.ErrorType;
-	import model.remote.Account;
+	import model.remote.HostingAccount;
 
 	public class BeanstalkProxy extends AccountProxy {
 
-		override public function login(ra:Account):void
+	// public methods //
+
+		override public function login(ra:HostingAccount):void
 		{
 			super.login(ra);
-			super.baseURL = 'https://'+ra.user+':'+ra.pass+'@'+ra.user+'.beanstalkapp.com/api/';
-			super.attemptLogin('users.xml');
+			super.baseURL = 'https://'+ra.user+':'+ra.pass+'@'+ra.user+'.beanstalkapp.com/api';
+			super.attemptLogin('/users.xml');
 		}
+		
+		override public function makeNewRemoteRepository(o:Object):void
+		{
+			super.makeNewRepoOnAccount(HEADER_XML, getRepoObj(o.name), '/repositories.xml');
+		}		
+		
+	// handlers //			
 		
 		override protected function onLoginSuccess(s:String):void
 		{
@@ -26,7 +35,7 @@ package model.proxies.remote.acct {
 					super.account.loginData = o;	
 				}
 			}
-			super.getRepositories('repositories.xml');
+			super.getRepositories('/repositories.xml');
 		}
 		
 		override protected function onRepositories(s:String):void
@@ -45,6 +54,14 @@ package model.proxies.remote.acct {
 			dispatchLoginSuccess();
 		}
 		
+		override protected function onRepositoryCreated(s:String):void
+		{
+			trace("BeanstalkProxy.onRepositoryCreated(s)", s);
+		//	dispatchEvent(new AppEvent(AppEvent.REPOSITORY_CREATED, new Remote(Account.GITHUB+'-'+o.name, o.ssh_url)));
+		}
+		
+	// handle beanstalk specific errors //
+		
 		private function checkForErrors(s:String):Boolean
 		{
 			if (s.indexOf('<html>') != -1){
@@ -61,10 +78,17 @@ package model.proxies.remote.acct {
 			}
 		}
 		
-		override protected function onRepositoryCreated(s:String):void
+		private function getRepoObj(n:String):String
 		{
-			trace("BeanstalkProxy.onRepositoryCreated(s)", s);
-		}		
+			var s:String = '';
+				s+='<?xml version="1.0" encoding="UTF-8"?>';
+				s+='<repository>';
+  				s+='<name>'+n+'</name>';
+  				s+='<title>'+n+'</title>';
+  				s+='<color_label>label-blue</color_label>';
+				s+='</repository>';
+			return s;
+		}
 		
 	}
 	

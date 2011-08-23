@@ -1,6 +1,6 @@
 package model.db {
 
-	import model.remote.Account;
+	import model.remote.HostingAccount;
 	import events.DataBaseEvent;
 	import model.vo.Bookmark;
 	import flash.data.SQLStatement;
@@ -71,28 +71,28 @@ package model.db {
 		
 	// accounts //	
 		
-		public function addAccount(a:Account):void
+		public function addAccount(a:HostingAccount):void
 		{
 			_addAccount = new Vector.<SQLStatement>();
 			_addAccount.push(AppSQLQuery.ADD_ACCOUNT(a));
 			super.execute(_addAccount, true);
 		}
 		
-		public function editAccount(a:Account):void
+		public function editAccount(a:HostingAccount):void
 		{
 			_editAccount = new Vector.<SQLStatement>();
 			_editAccount.push(AppSQLQuery.EDIT_ACCOUNT(a));
 			super.execute(_editAccount, true);						
 		}
 		
-		public function deleteAccount(a:Account):void
+		public function deleteAccount(a:HostingAccount):void
 		{
 			_delAccount = new Vector.<SQLStatement>();
 			_delAccount.push(AppSQLQuery.DEL_ACCOUNT(a));
 			super.execute(_delAccount, true);
 		}	
 		
-		public function setSSHKeyId(a:Account):void
+		public function setSSHKeyId(a:HostingAccount):void
 		{
 			_setSSHKeyId = new Vector.<SQLStatement>();
 			_setSSHKeyId.push(AppSQLQuery.CLEAR_SSH_KEY_ID);

@@ -9,7 +9,7 @@ package model.remote {
 	
 	public class Beanstalk extends HostingProvider {
 
-		private static var _type		:String = Account.BEANSTALK;
+		private static var _type		:String = HostingAccount.BEANSTALK;
 		private static var _proxy 		:BeanstalkProxy = new BeanstalkProxy();
 		private static var _home 		:BeanstalkHome	= new BeanstalkHome(_proxy);
 		

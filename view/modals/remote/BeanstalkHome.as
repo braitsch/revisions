@@ -4,7 +4,7 @@ package view.modals.remote {
 	import events.UIEvent;
 	import flash.events.MouseEvent;
 	import model.proxies.remote.acct.AccountProxy;
-	import model.remote.Account;
+	import model.remote.HostingAccount;
 
 	public class BeanstalkHome extends AccountHome {
 
@@ -23,7 +23,7 @@ package view.modals.remote {
 		
 		private function onLoginSuccess(e:AppEvent):void
 		{
-			super.model = e.data as Account;
+			super.model = e.data as HostingAccount;
 		}		
 		
 		private function onLogOutClick(e:MouseEvent):void

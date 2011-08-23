@@ -1,15 +1,13 @@
 package view.modals.login {
 
 	import events.UIEvent;
-	import model.AppModel;
-	import model.vo.Remote;
-	import system.StringUtils;
+	import model.proxies.remote.base.GitProxy;
 	import flash.events.MouseEvent;
 
 	public class RemotePassword extends BaseNameAndPass {
 
 		private static var _view	:RemotePasswordMC = new RemotePasswordMC();
-		private static var _remote	:Remote;
+		private static var _target	:GitProxy;
 
 		public function RemotePassword()
 		{
@@ -21,27 +19,33 @@ package view.modals.login {
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);
 			_view.skip_btn.addEventListener(MouseEvent.CLICK, onSkipButton);
 		}
-
-		public function set remote(r:Remote):void
+		
+		public function set target(gp:GitProxy):void
 		{
-			_remote = r;
-			_view.name_txt.text = _remote.acctName;
-			var t:String = StringUtils.capitalize(r.type);
-			super.setHeading(_view, 'Attempt to sync failed, please enter the password for the '+t+' account "'+r.acctName+'"');
+			_target = gp;
+		}
+		
+		public function set account(s:String):void
+		{
+			_view.name_txt.text = s;
+		}
+
+		public function set message(s:String):void
+		{
+			super.setHeading(_view, s);
 		}
 		
 		override public function onEnterKey():void { onOkButton(); }
 		private function onOkButton(e:MouseEvent = null):void
 		{
 			if (super.validate()) {
-				dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));		
-				AppModel.proxies.remote.attemptManualHttpsSync(super.name, super.pass);
+				_target.onNewUserCredentials(super.name, super.pass);
+				dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 			}
 		}
 		
 		private function onSkipButton(e:MouseEvent):void
 		{
-			AppModel.proxies.remote.skipRemoteSync();
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 		}
 		

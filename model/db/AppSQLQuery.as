@@ -1,6 +1,6 @@
 package model.db {
 
-	import model.remote.Account;
+	import model.remote.HostingAccount;
 	import model.vo.Bookmark;
 	import flash.data.SQLStatement;
 
@@ -61,7 +61,7 @@ package model.db {
 		
 	// account actions //	
 
-		public static function ADD_ACCOUNT(a:Account):SQLStatement
+		public static function ADD_ACCOUNT(a:HostingAccount):SQLStatement
 		{
 			var s:SQLStatement = new SQLStatement();
 			s.text = "INSERT INTO accounts (type, user, pass, sshKeyId) ";
@@ -69,14 +69,14 @@ package model.db {
 			return s;			
 		}
 
-		public static function EDIT_ACCOUNT(a:Account):SQLStatement
+		public static function EDIT_ACCOUNT(a:HostingAccount):SQLStatement
 		{
 			var s:SQLStatement = new SQLStatement();
 			s.text = "UPDATE accounts SET pass='"+a.pass+"', sshKeyId='"+a.sshKeyId+"' WHERE type='"+a.type+"' AND user='"+a.user+"'";
 			return s;
 		}
 
-		public static function DEL_ACCOUNT(a:Account):SQLStatement
+		public static function DEL_ACCOUNT(a:HostingAccount):SQLStatement
 		{
 			var s:SQLStatement = new SQLStatement();
 			s.text = "DELETE FROM accounts WHERE type='"+a.type+"' AND user='"+a.user+"'";
@@ -86,7 +86,7 @@ package model.db {
 		public static const CLEAR_SSH_KEY_ID:SQLStatement = new SQLStatement();
 		CLEAR_SSH_KEY_ID.text = "UPDATE accounts SET sshKeyId=0 WHERE sshKeyId=1";		
 		
-		public static function SET_SSH_KEY_ID(a:Account):SQLStatement
+		public static function SET_SSH_KEY_ID(a:HostingAccount):SQLStatement
 		{
 			var s:SQLStatement = new SQLStatement();
 			s.text = "UPDATE accounts SET sshKeyId='"+a.sshKeyId+"' WHERE type='"+a.type+"' AND user='"+a.user+"'";
