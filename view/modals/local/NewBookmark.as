@@ -99,16 +99,6 @@ package view.modals.local {
 			super.browseForDirectory('Select a location to clone to');
 		}		
 		
-		private function validate():Boolean
-		{
-			var url:String = _view.custom.url_txt.text;
-			if (url.indexOf('git') == -1 && url.indexOf('https://') == -1){
-				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, "Invalid URL : URL's should start with 'git' or 'https://'"));
-				return false;				
-			}
-			return true;
-		}		
-		
 		private function onBrowserSelection(e:UIEvent):void
 		{
 			if (_cloneURL == null) {
@@ -124,6 +114,32 @@ package view.modals.local {
 		{
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 			AppModel.engine.removeEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);
+		}
+		
+		private function validate():Boolean
+		{
+			var url:String = _view.custom.url_txt.text;
+			if (!hasString(url, 'git@') && !hasString(url, 'git://') && !hasString(url, 'https://')){
+				dispatchFailure("Invalid URL : URL's should start with 'git@', 'git://', or 'https://'");
+				return false;
+			}	else if (url.indexOf('.git') != url.length - 4){
+				dispatchFailure("Invalid URL : URL's must end with '.git'");
+				return false;
+			}	else if (!hasString(url, '.com') && !hasString(url, '.org')){
+				dispatchFailure("Invalid URL : Please make sure your hostname ends with a valid extension");
+				return false;
+			}	else if (hasString(url, 'user-name')){
+				dispatchFailure("Invalid URL : Please enter a valid target account name");
+				return false;				
+			}
+			return true;
+		}
+		
+		private function hasString(s1:String, s2:String):Boolean { return s1.indexOf(s2) != -1; }		
+		
+		private function dispatchFailure(m:String):void
+		{
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
 		}
 
 	}

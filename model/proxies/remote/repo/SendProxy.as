@@ -32,7 +32,7 @@ package model.proxies.remote.repo {
 			_remote = e.data as BookmarkRemote;
 			super.startTimer();
 			super.directory = _bkmk.gitdir;
-			super.call(Vector.<String>([BashMethods.ADD_REMOTE, _remote.name, _remote.defaultURL]));
+			super.call(Vector.<String>([BashMethods.ADD_REMOTE, _remote.name, _remote.ssh]));
 		}
 		
 		override protected function onProcessSuccess(m:String):void 
@@ -52,18 +52,7 @@ package model.proxies.remote.repo {
 		{
 			_bkmk.addRemote(_remote);
 			super.startTimer();
-			super.call(Vector.<String>([BashMethods.PUSH_REMOTE, _remote.defaultURL, _bkmk.branch.name]));
-		}
-		
-		override public function onNewUserCredentials(user:String, pass:String):void
-		{
-			super.startTimer();
-			super.call(Vector.<String>([BashMethods.PUSH_REMOTE, _remote.buildHttpsURL(user, pass), _bkmk.branch.name]));
-		}
-		
-		override protected function onAuthenticationFailure():void
-		{
-			super.getNewUserCredentials(this, _remote.acctName, 'Attempt to push bookmark '+_bkmk.label+' failed.');
+			super.call(Vector.<String>([BashMethods.PUSH_REMOTE, _remote.ssh, _bkmk.branch.name]));
 		}
 		
 		private function onBookmarkPushedToAccount():void

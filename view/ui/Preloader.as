@@ -36,10 +36,7 @@ package view.ui {
 			_view.addChildAt(_bkgd, 0);
 			_view.filters = [_glow];
 			_label.filters = [_glow];
-			AppModel.engine.addEventListener(AppEvent.SHOW_LOADER, showLoader);
-			AppModel.engine.addEventListener(AppEvent.HIDE_LOADER, hideLoader);
-			AppModel.engine.addEventListener(AppEvent.LOADER_TEXT, setLoaderText);
-			AppModel.engine.addEventListener(AppEvent.LOADER_PERCENT, setLoaderPercent);
+			registerListeners();
 		}
 
 		public function resize(w:uint, h:uint, offX:int = 0, offY:int = 0):void
@@ -147,6 +144,15 @@ package view.ui {
 		private function checkChildren(a:Sprite, b:Sprite):void
 		{
 			if (_view.getChildIndex(a) > _view.getChildIndex(b)) _view.swapChildren(a, b);
+		}
+		
+		private function registerListeners():void
+		{
+			AppModel.engine.addEventListener(AppEvent.SHOW_LOADER, showLoader);
+			AppModel.engine.addEventListener(AppEvent.HIDE_LOADER, hideLoader);
+			AppModel.engine.addEventListener(AppEvent.LOADER_TEXT, setLoaderText);
+			AppModel.engine.addEventListener(AppEvent.LOADER_PERCENT, setLoaderPercent);
+			AppModel.engine.addEventListener(AppEvent.FAILURE, hideLoader);
 		}
 
 	}

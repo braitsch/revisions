@@ -1,13 +1,11 @@
 package model.vo {
 
-	import model.remote.Hosts;
 	import model.remote.HostingAccount;
 
 	public class BookmarkRemote {
 
 		private var _name		:String; // ex. github-revisions-source //
 		private var _ssh		:String;
-		private var _https		:String;
 		private var _type		:String;
 		private var _acctName	:String;
 		private var _repoName	:String;
@@ -19,26 +17,11 @@ package model.vo {
 			inspectURL(url);
 		}		
 		
+		public function get ssh()			:String { return _ssh; }
 		public function get name()			:String { return _name; }
 		public function get type()			:String { return _type; }	
 		public function get acctName()		:String { return _acctName; }	
 		public function get repoName()		:String { return _repoName; }
-		public function get defaultURL()	:String { return _ssh || this.https; }
-		
-		public function get https():String
-		{
-			var a:HostingAccount = Hosts.getAccountByName(_type, _acctName);
-			if (a == null) {
-				return null;
-			}	else{
-				return buildHttpsURL(a.user, a.pass);
-			}
-		}
-
-		public function buildHttpsURL(u:String, p:String):String
-		{
-			return 'https://' + u + ':' + p + '@github.com/' + u +'/'+ _repoName;
-		}
 		
 		public function addBranch(s:String):void
 		{
@@ -51,36 +34,34 @@ package model.vo {
 			return false;
 		}
 	
-	// private //	
+	// git@braitsch.beanstalkapp.com:/hello1234.git
+	// git@github.com:braitsch/Revisions-Source.git
+	// https://braitsch@github.com/braitsch/Revisions-Source.git
 		
-		private function inspectURL(s:String):void
+		public static function inspectURL(u:String):Object
 		{
-			if (s.indexOf('git') == 0){
-				parseSSH(s);
-			}	else if (s.indexOf('https') == 0){
-				parseHTTPS(s);
+			var o:Object = {};
+			if (u.indexOf('@github.com') != -1){	
+				o.acctType = HostingAccount.GITHUB;
+				o.acctName = getAccountName(u);
+			}	else if (u.indexOf('.beanstalkapp.com:/') != -1){
+				o.acctType = HostingAccount.BEANSTALK;
+				o.acctName = u.substring(u.indexOf('@') + 1, u.indexOf('.'));
 			}
-			_repoName = s.substr(s.lastIndexOf('/') + 1);			
+			o.repoName = u.substr(u.lastIndexOf('/') + 1);
+			return o;	
 		}
 		
-		private function parseSSH(s:String):void
+		private static function getAccountName(u:String):String
 		{
-			_ssh = s;
-			if (s.indexOf('github.com') != -1){
-				_type = HostingAccount.GITHUB;
-				_acctName = _ssh.substring(15, _ssh.indexOf('/'));
-			}	else if (s.indexOf('beanstalkapp.com') != -1){
-				_type = HostingAccount.BEANSTALK;
-				_acctName = _ssh.substring(4, _ssh.indexOf('.'));
-			}			
-		}
-		
-		private function parseHTTPS(s:String):void
-		{
-			_https = s;
-			_type = HostingAccount.GITHUB;
-			_acctName = s.substring(8, s.indexOf('@'));			
-		}		
+			if (u.indexOf('git@github.com') != -1 ){
+				return u.substring(u.indexOf(':') + 1, u.indexOf('/'));
+			}	else if (u.indexOf('https://') != -1 && u.indexOf('@github.com') != -1 ){
+				return u.substring(u.indexOf('/') + 2, u.indexOf('@'));
+			}	else{
+				return 'unable to detect account name';		
+			}
+		}	
 
 	}
 	

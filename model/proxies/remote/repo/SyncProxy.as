@@ -29,7 +29,7 @@ package model.proxies.remote.repo {
 		private function syncNextRemote():void
 		{
 			_remote = _remotes[_index];
-			_remoteURL = _remote.defaultURL;
+			_remoteURL = _remote.ssh;
 			checkToPushOrPull();
 		}
 		
@@ -74,7 +74,7 @@ package model.proxies.remote.repo {
 		
 		public function attemptManualHttpsSync(u:String, p:String):void
 		{
-			_remoteURL = _remote.buildHttpsURL(u, p);
+		//	_remoteURL = _remote.buildHttpsURL(u, p);
 			checkToPushOrPull();
 		}			
 		

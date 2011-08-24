@@ -1,9 +1,7 @@
 package model.proxies.remote.base {
 
-	import events.AppEvent;
 	import events.ErrorType;
 	import events.NativeProcessEvent;
-	import model.AppModel;
 	import com.adobe.serialization.json.JSONDecoder;
 
 	public class CurlProxy extends NetworkProxy {
@@ -48,7 +46,6 @@ package model.proxies.remote.base {
 					onProcessFailure(x);		
 				}
 			}
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER, 1));					
 		}
 		
 		protected function onProcessSuccess(r:String):void { }
@@ -66,7 +63,7 @@ package model.proxies.remote.base {
 			// handle any other mysterious errors we get back from curl //
 				dispatchDebug({method:_request, message:'Request failed with exit code : '+x});
 			}
-		}				
+		}
 		
 	}
 	

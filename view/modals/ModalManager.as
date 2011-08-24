@@ -25,7 +25,7 @@ package view.modals {
 	import view.modals.local.RevertToVersion;
 	import view.modals.local.WelcomeScreen;
 	import view.modals.login.AccountLogin;
-	import view.modals.login.RemotePassword;
+	import view.modals.login.PermissionsFailure;
 	import view.modals.remote.AddBkmkToAccount;
 	import view.modals.system.Alert;
 	import view.modals.system.Confirm;
@@ -60,7 +60,7 @@ package view.modals {
 		private static var _gitUpgrade		:GitUpgrade = new GitUpgrade();
 		private static var _acctLogin		:AccountLogin = new AccountLogin();
 		private static var _addBkmkToAcct	:AddBkmkToAccount = new AddBkmkToAccount();	
-		private static var _remotePswd		:RemotePassword = new RemotePassword();
+		private static var _permissions		:PermissionsFailure = new PermissionsFailure();
 		private static var _newRepoConfirm	:NewRepoConfirm = new NewRepoConfirm();
 		private static var _alert			:Alert = new Alert();
 		private static var _debug			:Debug = new Debug();
@@ -92,7 +92,7 @@ package view.modals {
 			AppModel.engine.addEventListener(BookmarkEvent.PATH_ERROR, repairBookmark);
 			AppModel.engine.addEventListener(BookmarkEvent.NO_BOOKMARKS, showWelcomeScreen);
 			AppModel.engine.addEventListener(AppEvent.APP_EXPIRED, onAppExpired);
-			AppModel.engine.addEventListener(AppEvent.PROMPT_FOR_REMOTE_PSWD, showPasswordPrompt);
+			AppModel.engine.addEventListener(AppEvent.PERMISSIONS_FAILURE, onPermissionsFailure);
 			AppModel.updater.addEventListener(AppEvent.APP_UPDATE_AVAILABLE, promptToUpdate);
 			AppModel.proxies.config.addEventListener(AppEvent.GIT_NOT_INSTALLED, installGit);
 			AppModel.proxies.config.addEventListener(AppEvent.GIT_NEEDS_UPDATING, upgradeGit);
@@ -311,12 +311,10 @@ package view.modals {
 			showModalWindow(_appUpdate);
 		}
 		
-		private function showPasswordPrompt(e:AppEvent):void
+		private function onPermissionsFailure(e:AppEvent):void
 		{
-			_remotePswd.target = e.data.target;
-			_remotePswd.account = e.data.account;
-			_remotePswd.message = e.data.message;
-			showModalWindow(_remotePswd);
+			_permissions.request = e.data as String;
+			showModalWindow(_permissions);
 		}
 		
 		private function showNewRepoConfirm(e:UIEvent):void

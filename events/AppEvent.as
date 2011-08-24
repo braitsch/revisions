@@ -44,10 +44,12 @@ package events {
 		public static const HISTORY_REQUESTED		:String = "HISTORY_REQUESTED";
 		public static const MODIFIED_REQUESTED		:String = "MODIFIED_REQUESTED";
 		public static const HISTORY_RENDERED		:String = "HISTORY_RENDERED";
-		public static const PROMPT_FOR_REMOTE_PSWD	:String = "PROMPT_FOR_REMOTE_PSWD";
 		
-		public static const FAILURE:String = "FAILURE";
-		public static const BKMK_ADDED_TO_ACCOUNT:String = "BKMK_ADDED_TO_ACCOUNT";
+		public static const FAILURE					:String = "FAILURE";
+		public static const BKMK_ADDED_TO_ACCOUNT	:String = "BKMK_ADDED_TO_ACCOUNT";
+		
+		public static const PERMISSIONS_FAILURE		:String = "PERMISSIONS_FAILURE";
+		public static const RETRY_REMOTE_REQUEST	:String = "RETRY_REMOTE_REQUEST";
 		
 		public var data:Object;
 

@@ -72,11 +72,6 @@ package model.remote {
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, 'You Have Successfully Logged Out.'));			
 		}
 		
-//git@braitsch.beanstalkapp.com:/testing.git
-//git@github.com:braitsch/Revisions-Source.git
-//https://braitsch@github.com/braitsch/Revisions-Source.git
-		
-
 	}
 	
 }

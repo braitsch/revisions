@@ -20,9 +20,12 @@ package model.proxies.remote.repo {
 		public function clone(url:String, loc:String):void
 		{
 			_cloneURL = url; _savePath = loc;
+			trace("CloneProxy.clone(url, loc)", _cloneURL, _savePath);
 			super.call(Vector.<String>([BashMethods.CLONE, _cloneURL, _savePath]));
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Cloning Remote Repository'}));
 		}
+		
+	// success / failure handlers //	
 
 		override protected function onProcessSuccess(m:String):void
 		{
@@ -35,11 +38,21 @@ package model.proxies.remote.repo {
 
 		override protected function onAuthenticationFailure():void
 		{
-	//		dispatchEvent(new AppEvent(AppEvent.PROMPT_FOR_REMOTE_PSWD));
+			super.inspectURL(_cloneURL);
+			AppModel.engine.addEventListener(AppEvent.RETRY_REMOTE_REQUEST, onRetryRequest);
 		}
+
+		private function onRetryRequest(e:AppEvent):void
+		{
+			if (e.data != null) this.clone(e.data as String, _savePath);
+			AppModel.engine.removeEventListener(AppEvent.RETRY_REMOTE_REQUEST, onRetryRequest);			
+		}
+		
+	// success request callbacks //	
 
 		private function dispatchNewBookmark():void
 		{
+			trace("CloneProxy.dispatchNewBookmark()", _cloneURL);
 			var n:String = _savePath.substr(_savePath.lastIndexOf('/') + 1);
 			var o:Object = {
 				label		:	StringUtils.capitalize(n),
@@ -49,7 +62,7 @@ package model.proxies.remote.repo {
 				autosave	:	60 
 			};	
 			AppModel.engine.addBookmark(new Bookmark(o));
-			dispatchEvent(new AppEvent(AppEvent.CLONE_COMPLETE));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.CLONE_COMPLETE));
 		}
 
 	}

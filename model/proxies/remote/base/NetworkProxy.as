@@ -29,7 +29,6 @@ package model.proxies.remote.base {
 		private function dispatchTimeOut(e:TimerEvent):void
 		{
 			dispatchFailure(ErrorType.SERVER_FAILURE);
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 		}
 		
 		protected function dispatchFailure(m:String):void
@@ -39,7 +38,6 @@ package model.proxies.remote.base {
 		
 		protected function dispatchDebug(o:Object):void
 		{
-			o.source = 'RemoteProxy.onProcessFailure(e)';
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_DEBUG, o));
 		}		
 				
