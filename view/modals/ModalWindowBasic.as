@@ -1,5 +1,6 @@
 package view.modals {
 
+	import flash.text.TextFieldAutoSize;
 	import events.UIEvent;
 	import fl.text.TLFTextField;
 	import com.greensock.TweenLite;
@@ -35,6 +36,7 @@ package view.modals {
 		
 		protected function setHeading(view:*, s:String):void
 		{
+			view.heading.label_txt.autoSize = TextFieldAutoSize.LEFT;
 			view.heading.label_txt.htmlText = s;
 		}
 		

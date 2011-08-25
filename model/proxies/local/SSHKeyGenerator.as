@@ -55,11 +55,11 @@ package model.proxies.local {
 						generateKeys();
 					}	else{ 
 						_pbKey = e.data.result;
-						dispatchEvent(new AppEvent(AppEvent.SSH_KEY_READY));
+						registerKeys();
 					}
 				break;		
 				case BashMethods.GENERATE_SSH_KEY :
-					registerKeys();
+					getApplicationKey();
 				break;	
 			}
 		}
@@ -68,7 +68,7 @@ package model.proxies.local {
 		{
 			var m:String = e.data.method; var r:String = e.data.result;
 			if (m == BashMethods.REGISTER_SSH_KEY && r.indexOf('Identity added') !=-1){
-				getApplicationKey();
+				dispatchEvent(new AppEvent(AppEvent.SSH_KEY_READY));
 			}	else{
 				dispatchDebug(e.data);
 			}
