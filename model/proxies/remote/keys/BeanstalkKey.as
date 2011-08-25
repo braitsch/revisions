@@ -3,7 +3,7 @@ package model.proxies.remote.keys {
 	import model.proxies.local.SSHKeyGenerator;
 	import model.remote.HostingAccount;
 
-	public class BSKeyProxy extends KeyProxy {
+	public class BeanstalkKey extends KeyProxy {
 
 		override public function validateKey(ra:HostingAccount):void
 		{
@@ -12,15 +12,11 @@ package model.proxies.remote.keys {
 			super.getAllRemoteKeys('/public_keys.xml');
 		}
 		
-		override public function setPrimaryAccount(n:HostingAccount, o:HostingAccount = null):void
+		override public function addKeyToAccount(u:String, p:String, a:String):void
 		{
-			super.validateKey(n);
-			if (o == null){
-				super.getAllRemoteKeys('/public_keys.xml');
-			}	else{
-				super.deleteKeyFromRemote('/public_keys.xml/'+n.sshKeyId);
-			}
-		}		
+			super.baseURL = 'https://'+u+':'+p+'@'+a+'.beanstalkapp.com/api';
+			super.addKeyToRemote(HEADER_XML, getKeyObject(), '/public_keys.xml');
+		}	
 		
 		override protected function onRemoteKeysReceived(s:String):void
 		{

@@ -5,12 +5,12 @@ package model.proxies.remote.acct {
 	import model.remote.HostingAccount;
 	import system.BashMethods;
 
-	public class AccountProxy extends CurlProxy {
+	public class ApiProxy extends CurlProxy {
 
 		private static var _baseURL		:String;
 		private static var _account		:HostingAccount;
 
-		public function AccountProxy()
+		public function ApiProxy()
 		{
 			super.executable = 'Account.sh';
 		}

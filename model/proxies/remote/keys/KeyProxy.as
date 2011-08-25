@@ -11,7 +11,7 @@ package model.proxies.remote.keys {
 		private static var _account		:HostingAccount;
 
 		protected function get account()				:HostingAccount 	{ return _account; 		}
-		protected function set baseURL(baseURL:String)	:void 		{ _baseURL = baseURL; 	}
+		protected function set baseURL(baseURL:String)	:void 				{ _baseURL = baseURL; 	}
 		
 		public function KeyProxy()
 		{
@@ -19,8 +19,7 @@ package model.proxies.remote.keys {
 		}
 		
 		public function validateKey(n:HostingAccount):void { _account = n; }
-		
-		public function setPrimaryAccount(n:HostingAccount, o:HostingAccount = null):void { }
+		public function addKeyToAccount(u:String, p:String, a:String):void { }
 		
 	// called from subclasses //	
 		

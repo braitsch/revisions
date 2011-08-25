@@ -1,6 +1,9 @@
 package view.modals.login {
 
+	import model.remote.Hosts;
+	import events.AppEvent;
 	import events.UIEvent;
+	import model.AppModel;
 	import model.remote.HostingAccount;
 	import model.vo.BookmarkRemote;
 	import flash.events.MouseEvent;
@@ -8,6 +11,7 @@ package view.modals.login {
 	public class PermissionsFailure extends BaseNameAndPass {
 
 		private static var _view		:PermissionsFailureMC = new PermissionsFailureMC();
+		private static var _request		:String;
 		private static var _acctType	:String;
 		private static var _acctName	:String;
 		private static var _repoName	:String;
@@ -25,14 +29,14 @@ package view.modals.login {
 		
 		public function set request(u:String):void
 		{
-			var o:Object = BookmarkRemote.inspectURL(u);
+			_request = u;
+			var o:Object = BookmarkRemote.inspectURL(_request);
 			_acctType = o.acctType;
 			_acctName = o.acctName;
 			_repoName = o.repoName;
 			var m:String = 'I\'m sorry, '+_acctType+' denied us access to the account named "'+_acctName+'".\n';
 				m+='Please enter your username & password to try again :';
 			super.setHeading(_view, m);
-		// 	then dispatch RETRY_REMOTE_REQUEST with new url which will allow last used proxy to retry request.	
 		}
 		
 		override public function onEnterKey():void { onOkButton(); }
@@ -40,17 +44,29 @@ package view.modals.login {
 		{
 			if (super.validate()) {
 				if (_acctType == HostingAccount.GITHUB){
-				var s:String = 'https://' + super.name + ':' + super.pass + '@github.com/' + _acctName +'/'+ _repoName;
-				trace('attempting request over https :: '+s);
+					retryRequestOverHttps();
 				}	else if (_acctType == HostingAccount.BEANSTALK){
-					// attempt to add revisions-rsa key to the target beanstalk account //
-				var	u:String = 'http://'+super.name + ':' + super.pass+'accountname.beanstalkapp.com/api/public_keys.xml';
-				trace('attempting to add ssh-key to :: '+u);
-				// if ssh-key add is successful, retry the remote request //
+					addKeyToBeanstalkAcct();
 				}
-			// dispatch event or call proxy's callback //
 				dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 			}
+		}
+
+		private function addKeyToBeanstalkAcct():void
+		{
+			Hosts.beanstalk.key.addKeyToAccount(super.name, super.pass, _acctName);
+			Hosts.beanstalk.key.addEventListener(AppEvent.SSH_KEY_READY, onKeyAddedToBeanstalk);
+		}
+
+		private function onKeyAddedToBeanstalk(e:AppEvent):void
+		{
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.RETRY_REMOTE_REQUEST, _request));
+		}
+
+		private function retryRequestOverHttps():void
+		{
+			var s:String = 'https://' + super.name + ':' + super.pass + '@github.com/' + _acctName +'/'+ _repoName;
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.RETRY_REMOTE_REQUEST, s));			
 		}
 		
 		private function onCancelButton(e:MouseEvent):void

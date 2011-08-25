@@ -65,8 +65,8 @@ package view.modals.login {
 		{ 
 			if (validate()){
 				lockScreen();
-				_host.proxy.addEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);
-				_host.proxy.login(new HostingAccount({type:_host.type, user:super.name, pass:super.pass}));
+				_host.api.addEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);
+				_host.api.login(new HostingAccount({type:_host.type, user:super.name, pass:super.pass}));
 			}
 		}
 		
@@ -89,7 +89,7 @@ package view.modals.login {
 		{ 
 			unlockScreen(); 
 			_host.home.model = e.data as HostingAccount;
-			_host.proxy.removeEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);
+			_host.api.removeEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);
 			dispatchEvent(new UIEvent(_onSuccessEvent));
 		}
 

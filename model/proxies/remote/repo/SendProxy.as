@@ -2,7 +2,7 @@ package model.proxies.remote.repo {
 
 	import model.AppModel;
 	import events.AppEvent;
-	import model.proxies.remote.acct.AccountProxy;
+	import model.proxies.remote.acct.ApiProxy;
 	import model.proxies.remote.base.GitProxy;
 	import model.vo.Bookmark;
 	import model.vo.BookmarkRemote;
@@ -11,7 +11,7 @@ package model.proxies.remote.repo {
 	public class SendProxy extends GitProxy {
 
 		private static var _bkmk	:Bookmark;
-		private static var _acct	:AccountProxy;
+		private static var _acct	:ApiProxy;
 		private static var _remote	:BookmarkRemote;
 
 		public function SendProxy()

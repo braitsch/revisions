@@ -3,23 +3,13 @@ package model.proxies.remote.keys {
 	import model.proxies.local.SSHKeyGenerator;
 	import model.remote.HostingAccount;
 	
-	public class GHKeyProxy extends KeyProxy {
+	public class GitHubKey extends KeyProxy {
 		
 		override public function validateKey(ra:HostingAccount):void
 		{
 			super.validateKey(ra);
 			super.baseURL = 'https://'+ra.user+':'+ra.pass+'@api.github.com';
 			super.getAllRemoteKeys('/user/keys');
-		}
-		
-		override public function setPrimaryAccount(n:HostingAccount, o:HostingAccount = null):void
-		{
-			super.validateKey(n);
-			if (o == null){
-				super.getAllRemoteKeys('/user/keys');
-			}	else{
-				super.deleteKeyFromRemote('/user/keys/'+n.sshKeyId);
-			}
 		}
 		
 		override protected function onRemoteKeysReceived(s:String):void

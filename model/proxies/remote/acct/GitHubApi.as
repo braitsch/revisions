@@ -6,7 +6,7 @@ package model.proxies.remote.acct {
 	import model.remote.HostingAccount;
 	import model.vo.BookmarkRemote;
 
-	public class GitHubProxy extends AccountProxy {
+	public class GitHubApi extends ApiProxy {
 
 	// public methods //
 

@@ -57,7 +57,7 @@ package view.modals.remote {
 		private function onOkButton(e:MouseEvent = null):void 
 		{
 			if (validate()){
-				var o:Object = {	bkmk:_bkmk, acct:_host.proxy,
+				var o:Object = {	bkmk:_bkmk, acct:_host.api,
 									name:_view.name_txt.text,
 									desc:_view.desc_txt.text, 
 									publik:_check.selected == false	};

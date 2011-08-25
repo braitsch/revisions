@@ -3,7 +3,7 @@ package model.proxies.remote.acct {
 	import events.ErrorType;
 	import model.remote.HostingAccount;
 
-	public class BeanstalkProxy extends AccountProxy {
+	public class BeanstalkApi extends ApiProxy {
 
 	// public methods //
 

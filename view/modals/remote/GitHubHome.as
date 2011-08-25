@@ -3,15 +3,15 @@ package view.modals.remote {
 	import events.AppEvent;
 	import events.UIEvent;
 	import flash.events.MouseEvent;
-	import model.proxies.remote.acct.AccountProxy;
+	import model.proxies.remote.acct.ApiProxy;
 	import model.remote.HostingAccount;
 
 	public class GitHubHome extends AccountHome {
 
 		private static var _view		:GitHubMC = new GitHubMC();
-		private static var _proxy		:AccountProxy;
+		private static var _proxy		:ApiProxy;
 
-		public function GitHubHome(p:AccountProxy)
+		public function GitHubHome(p:ApiProxy)
 		{
 			super(_view);
 			_proxy = p;

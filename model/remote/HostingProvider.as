@@ -3,7 +3,7 @@ package model.remote {
 	import events.AppEvent;
 	import flash.events.EventDispatcher;
 	import model.AppModel;
-	import model.proxies.remote.acct.AccountProxy;
+	import model.proxies.remote.acct.ApiProxy;
 	import model.proxies.remote.keys.KeyProxy;
 	import view.modals.remote.AccountHome;
 	
@@ -15,7 +15,8 @@ package model.remote {
 
 		public function get type()			:String				{ return null; 	}
 		public function get home()			:AccountHome		{ return null; 	}
-		public function get proxy()			:AccountProxy 		{ return null; 	}
+		public function get api()			:ApiProxy 			{ return null; 	}
+		public function get key()			:KeyProxy 			{ return null; 	}
 		public function get loginObj()		:Object				{ return null; 	}
 		public function get addRepoObj()	:Object				{ return null; 	}
 
