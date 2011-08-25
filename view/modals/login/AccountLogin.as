@@ -20,7 +20,9 @@ package view.modals.login {
 			super.defaultButton = _view.login_btn;
 			_view.login_btn.addEventListener(MouseEvent.CLICK, onLoginButton);
 			_check = new ModalCheckbox(_view.check, true);
-			_check.label = 'Remember this account';
+			_check.label = 'Remember my login for this account';
+			_view.sign_up.buttonMode = true;
+			_view.sign_up.addEventListener(MouseEvent.CLICK, gotoNewAccountPage);
 			AppModel.engine.addEventListener(AppEvent.FAILURE, onLoginFailure);
 		}
 		

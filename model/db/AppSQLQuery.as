@@ -9,7 +9,7 @@ package model.db {
 		public static const INIT_TABLE_ACCOUNTS:SQLStatement = new SQLStatement();
 		INIT_TABLE_ACCOUNTS.text = "CREATE TABLE IF NOT EXISTS accounts ";
 		INIT_TABLE_ACCOUNTS.text+= "(id INTEGER PRIMARY KEY AUTOINCREMENT, ";
-		INIT_TABLE_ACCOUNTS.text+= "type VARCHAR, user VARCHAR, pass VARCHAR, ";
+		INIT_TABLE_ACCOUNTS.text+= "acct VARCHAR, type VARCHAR, user VARCHAR, pass VARCHAR, ";
 		INIT_TABLE_ACCOUNTS.text+= "sshKeyId TINYINT UNSIGNED NOT NULL DEFAULT 0)";
 
 		public static const INIT_TABLE_BOOKMARKS:SQLStatement = new SQLStatement();
@@ -64,8 +64,8 @@ package model.db {
 		public static function ADD_ACCOUNT(a:HostingAccount):SQLStatement
 		{
 			var s:SQLStatement = new SQLStatement();
-			s.text = "INSERT INTO accounts (type, user, pass, sshKeyId) ";
-			s.text+= "VALUES ('"+a.type+"', '"+a.user+"', '"+a.pass+"', '"+a.sshKeyId+"')";
+			s.text = "INSERT INTO accounts (type, acct, user, pass, sshKeyId) ";
+			s.text+= "VALUES ('"+a.type+"', '"+a.acct+"', '"+a.user+"', '"+a.pass+"', '"+a.sshKeyId+"')";
 			return s;			
 		}
 

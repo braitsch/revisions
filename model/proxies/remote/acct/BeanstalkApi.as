@@ -10,7 +10,7 @@ package model.proxies.remote.acct {
 		override public function login(ra:HostingAccount):void
 		{
 			super.login(ra);
-			super.baseURL = 'https://'+ra.user+':'+ra.pass+'@'+ra.user+'.beanstalkapp.com/api';
+			super.baseURL = 'https://'+ra.user+':'+ra.pass+'@'+ra.acct+'.beanstalkapp.com/api';
 			super.attemptLogin('/users.xml');
 		}
 		

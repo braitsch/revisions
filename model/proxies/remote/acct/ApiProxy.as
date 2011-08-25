@@ -16,7 +16,7 @@ package model.proxies.remote.acct {
 		}
 		
 		protected function get account()				:HostingAccount 	{ return _account; 		}
-		protected function set baseURL(baseURL:String)	:void 		{ _baseURL = baseURL; 	}	
+		protected function set baseURL(baseURL:String)	:void 				{ _baseURL = baseURL; 	}	
 
 		public function login(ra:HostingAccount):void { _account = ra; }
 		protected function attemptLogin(url:String):void

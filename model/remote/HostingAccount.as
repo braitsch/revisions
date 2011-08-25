@@ -14,6 +14,7 @@ package model.remote {
 		public static const GITHUB		:String = 'GitHub';
 		public static const BEANSTALK	:String = 'Beanstalk';
 		
+		private var _acct				:String;
 		private var _type				:String;
 		private var _user				:String;
 		private var _pass				:String;
@@ -26,6 +27,7 @@ package model.remote {
 
 		public function HostingAccount(o:Object)
 		{
+			_acct = o.acct;
 			_type = o.type;
 			_user = o.user;
 			_pass = o.pass;
@@ -39,6 +41,7 @@ package model.remote {
 			loadAvatar(o.avatar_url || 'http://www.gravatar.com/avatar/'+MD5.hash(o.email)+'?s=26');
 		}
 
+		public function get acct()			:String 	{ return _acct; 		}
 		public function get type()			:String 	{ return _type; 		}
 		public function get user()			:String 	{ return _user; 		}
 		public function get pass()			:String 	{ return _pass; 		}

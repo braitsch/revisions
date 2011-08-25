@@ -23,9 +23,7 @@ package view.modals.login {
 		
 		protected function set labels(a:Array):void
 		{
-			for (var i:int = 0; i < a.length; i++) {
-				_view.form['label'+(i+1)].text = a[i];
-			}
+			for (var i:int = 0; i < a.length; i++) _view.form['label'+(i+1)].text = a[i];
 		}
 		
 		protected function set fields(a:Array):void 
@@ -66,6 +64,7 @@ package view.modals.login {
 		{
 			for (var i:int = 0; i < _fields.length; i++){
 				_fields[i].text = '';
+			//TODO add onFocus listener to each field that setSelection(0, _fields[0].length);
 				if (_fields[i] is TextField){
 					_fields[i].tabIndex = i;
 					_fields[i].displayAsPassword = true;
@@ -83,7 +82,7 @@ package view.modals.login {
 			if (e.keyCode == 13){
 				onEnterKey();
 			}	else if (e.keyCode == 9){
-				if (stage.focus == _fields[_fields.length-1]) _fields[0].setSelection(0, _fields[0]);
+				if (stage.focus == _fields[_fields.length-1]) _fields[0].setSelection(0, _fields[0].length);
 			}
 		}			
 		
