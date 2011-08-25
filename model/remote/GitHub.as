@@ -5,6 +5,8 @@ package model.remote {
 	import model.proxies.remote.acct.GitHubApi;
 	import model.proxies.remote.keys.GitHubKey;
 	import model.proxies.remote.keys.KeyProxy;
+	import view.modals.login.AccountLogin;
+	import view.modals.login.GitHubLogin;
 	import view.modals.remote.AccountHome;
 	import view.modals.remote.GitHubHome;
 	
@@ -14,11 +16,8 @@ package model.remote {
 		private static var _api 		:GitHubApi = new GitHubApi();
 		private static var _key 		:GitHubKey = new GitHubKey();		
 		private static var _home 		:GitHubHome	= new GitHubHome(_api);
+		private static var _login		:GitHubLogin = new GitHubLogin();
 		
-		private static var _loginObj	:Object = {	title	:	'Login To Github',
-													button	:	new GitHubButton(), 
-													signup	:	'https://github.com/signup' };
-													
 		private static var _addRepoObj	:Object = {	title	:	'Add To Github', 
 													option	:	'Make Repository Private'	};				
 
@@ -33,12 +32,12 @@ package model.remote {
 
 		override public function get home():AccountHome { return _home; }
 		
+		override public function get login():AccountLogin { return _login; }
+		
 		override public function get api():ApiProxy { return _api; }
 		
 		override public function get key():KeyProxy { return _key; }
 
-		override public function get loginObj():Object { return _loginObj; }
-		
 		override public function get addRepoObj():Object { return _addRepoObj; }
 		
 	}

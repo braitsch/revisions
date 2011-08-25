@@ -24,7 +24,6 @@ package view.modals {
 	import view.modals.local.RepairBookmark;
 	import view.modals.local.RevertToVersion;
 	import view.modals.local.WelcomeScreen;
-	import view.modals.login.AccountLogin;
 	import view.modals.login.PermissionsFailure;
 	import view.modals.remote.AddBkmkToAccount;
 	import view.modals.system.Alert;
@@ -58,7 +57,6 @@ package view.modals {
 		private static var _gitAbout		:GitAbout = new GitAbout();
 		private static var _gitInstall		:GitInstall = new GitInstall();
 		private static var _gitUpgrade		:GitUpgrade = new GitUpgrade();
-		private static var _acctLogin		:AccountLogin = new AccountLogin();
 		private static var _addBkmkToAcct	:AddBkmkToAccount = new AddBkmkToAccount();	
 		private static var _permissions		:PermissionsFailure = new PermissionsFailure();
 		private static var _newRepoConfirm	:NewRepoConfirm = new NewRepoConfirm();
@@ -176,16 +174,14 @@ package view.modals {
 		
 		private function showGitHubLogin(e:UIEvent):void
 		{
-			_acctLogin.host = Hosts.github;
-			_acctLogin.onSuccessEvent = e.data as String;
-			showModalWindow(_acctLogin);
+			Hosts.github.login.onSuccessEvent = e.data as String;
+			showModalWindow(Hosts.github.login);
 		}
 
 		private function showBeanstalkLogin(e:UIEvent):void
 		{
-			_acctLogin.host = Hosts.beanstalk;
-			_acctLogin.onSuccessEvent = e.data as String;
-			showModalWindow(_acctLogin);			
+			Hosts.beanstalk.login.onSuccessEvent = e.data as String;
+			showModalWindow(Hosts.beanstalk.login);			
 		}
 		
 		private function showGitHubHome(e:UIEvent):void

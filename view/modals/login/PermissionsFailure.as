@@ -54,7 +54,7 @@ package view.modals.login {
 
 		private function addKeyToBeanstalkAcct():void
 		{
-			Hosts.beanstalk.key.addKeyToAccount(super.name, super.pass, _acctName);
+			Hosts.beanstalk.key.addKeyToAccount(super.fields[0], super.fields[1], _acctName);
 			Hosts.beanstalk.key.addEventListener(AppEvent.SSH_KEY_READY, onKeyAddedToBeanstalk);
 		}
 
@@ -65,7 +65,7 @@ package view.modals.login {
 
 		private function retryRequestOverHttps():void
 		{
-			var s:String = 'https://' + super.name + ':' + super.pass + '@github.com/' + _acctName +'/'+ _repoName;
+			var s:String = 'https://' + super.fields[0] + ':' + super.fields[1] + '@github.com/' + _acctName +'/'+ _repoName;
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.RETRY_REMOTE_REQUEST, s));			
 		}
 		
