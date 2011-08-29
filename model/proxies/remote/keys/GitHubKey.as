@@ -34,7 +34,7 @@ package model.proxies.remote.keys {
 			var o:Object = getResultObject(s);
 			if (o.message == null){
 				super.account.sshKeyId = o.id;
-				super.authenticate('git@github.com');
+		//		super.authenticate('git@github.com');
 			}	else {
 				super.account.sshKeyId = 0;
 				super.dispatchKeyValidated();

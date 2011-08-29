@@ -1,5 +1,6 @@
 package view.modals {
 
+	import system.FileUtils;
 	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.UIEvent;
@@ -208,7 +209,7 @@ package view.modals {
 		
 		private function onDragAndDrop(e:UIEvent):void 
 		{
-			if (dirIsEmpty(e.data as File) == false){
+			if (FileUtils.dirIsEmpty(e.data as File) == false){
 				_dragAndDrop.file = e.data as File;
 				showModalWindow(_dragAndDrop);
 			} 	else{
@@ -216,16 +217,6 @@ package view.modals {
 				onShowAlert(new AppEvent(AppEvent.SHOW_ALERT, m));				
 			}
 		}
-
-		private function dirIsEmpty(f:File):Boolean
-		{
-			if (f.isDirectory) {
-				var a:Array = f.getDirectoryListing();
-				for (var i:int = 0; i < a.length; i++) if (a[i].isHidden == false) return false;
-				return true;
-			}
-			return false;
-		}			
 
 		private function onNewButtonClick(e:UIEvent):void 
 		{

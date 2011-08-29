@@ -59,13 +59,13 @@ package system{
 		public static const ADD_KEY_TO_REMOTE		:String = 'addKeyToRemote';
 		public static const REPAIR_REMOTE_KEY		:String = 'repairRemoteKey';
 		public static const DELETE_KEY_FROM_REMOTE	:String = 'deleteKeyFromRemote';
-		public static const AUTHENTICATE			:String = 'authenticate';
+		public static const ADD_NEW_KNOWN_HOST		:String = 'addNewKnownHost';
 		
 	// local keys //	
 		public static const GET_HOST_NAME			:String = 'getHostName';
-		public static const DETECT_SSH_KEY			:String = 'detectSSHKeys';
-		public static const GENERATE_SSH_KEY		:String = 'generateSSHKeys';
-		public static const REGISTER_SSH_KEY		:String = 'registerSSHKeys';
+		public static const DETECT_SSH_KEY			:String = 'detectSSHKey';
+		public static const CREATE_SSH_KEY			:String = 'createSSHKey';
+		public static const ADD_KEY_TO_AUTH_AGENT	:String = 'addKeyToAuthAgent';
 		
 		public static const GET_REQUEST				:String = 'getRequest';
 		public static const POST_REQUEST			:String = 'postRequest';

@@ -68,7 +68,7 @@ package {
 		{
 			AirNativeMenu.initialize(stage);
 			AirContextMenu.initialize(stage);
-			AppModel.proxies.sshKeyGen.getUserKeyAndInfo();
+			AppModel.proxies.sshKeyGen.initialize();
 			AppModel.proxies.sshKeyGen.addEventListener(AppEvent.SSH_KEY_READY, onSSHKeyReady);
 			AppModel.proxies.config.removeEventListener(AppEvent.GIT_SETTINGS, onGitReady);
 		}

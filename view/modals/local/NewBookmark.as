@@ -4,6 +4,7 @@ package view.modals.local {
 	import events.UIEvent;
 	import model.AppModel;
 	import model.remote.Hosts;
+	import system.FileUtils;
 	import view.modals.ModalWindow;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
@@ -65,7 +66,7 @@ package view.modals.local {
 		private function onKeyUp(e:KeyboardEvent):void
 		{
 			if (!_allowClone) enableCloneButton(true);
-			if (this.stage && e.keyCode == 13 && e.keyCode != 15 && _allowClone) onEnterKey();				
+			if (this.stage && e.keyCode == 13 && e.keyCode != 15 && _allowClone) onCloneClick();				
 		}
 		
 		private function onURLTextFieldClick(e:MouseEvent):void
@@ -91,7 +92,6 @@ package view.modals.local {
 			}
 		}
 		
-		override public function onEnterKey():void { onCloneClick(); }
 		private function onCloneClick(e:MouseEvent = null):void
 		{
 			if (!validate()) return;
@@ -101,12 +101,16 @@ package view.modals.local {
 		
 		private function onBrowserSelection(e:UIEvent):void
 		{
-			if (_cloneURL == null) {
-				dispatchEvent(new UIEvent(UIEvent.DRAG_AND_DROP, e.data as File));
+			if (FileUtils.dirIsEmpty(e.data as File) == false){
+				dispatchFailure('The target directory you are attempting to clone to must be empty.');
 			}	else{
-				_savePath = File(e.data).nativePath;
-				AppModel.proxies.remote.clone(_cloneURL, _savePath);
-				AppModel.engine.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);				
+				if (_cloneURL == null) {
+					dispatchEvent(new UIEvent(UIEvent.DRAG_AND_DROP, e.data as File));
+				}	else{
+					_savePath = File(e.data).nativePath;
+					AppModel.proxies.remote.clone(_cloneURL, _savePath);
+					AppModel.engine.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);				
+				}				
 			}
 		}
 

@@ -20,27 +20,28 @@ package model.proxies.local {
 		static public function get pbKey()		:String 	{ return _pbKey;		}
 		static public function get pbKeyName()	:String 	{ return _pbKeyName;	}
 
-		public function getUserKeyAndInfo():void
+		public function initialize():void { getHostName(); }
+		
+		private function getHostName():void
 		{
 			super.call(Vector.<String>([BashMethods.GET_HOST_NAME]));	
 		}
-
-		private function getApplicationKey():void
+		
+		private function detectKey():void
 		{
 			super.call(Vector.<String>([BashMethods.DETECT_SSH_KEY]));
 		}	
 		
-		private function generateKeys():void
+		private function createKey():void
 		{
-			super.call(Vector.<String>([BashMethods.GENERATE_SSH_KEY]));
+			super.call(Vector.<String>([BashMethods.CREATE_SSH_KEY]));
 		}
 		
-		private function registerKeys():void
+		private function addKeyToSSHAuthAgent():void
 		{
-			super.call(Vector.<String>([BashMethods.REGISTER_SSH_KEY]));
+			super.call(Vector.<String>([BashMethods.ADD_KEY_TO_AUTH_AGENT]));
 		}
 		
-	
 	// response handlers //			
 		
 		private function handleProcessSuccess(e:NativeProcessEvent):void 
@@ -48,18 +49,18 @@ package model.proxies.local {
 			switch(e.data.method){
 				case BashMethods.GET_HOST_NAME :
 					_pbKeyName = 'Revisions - '+e.data.result.replace(/-/g, ' ');
-					getApplicationKey();
-				break;
+					detectKey();
+				break; 
 				case BashMethods.DETECT_SSH_KEY :
 					if(e.data.result == '') {
-						generateKeys();
+						createKey();
 					}	else{ 
 						_pbKey = e.data.result;
-						registerKeys();
+						addKeyToSSHAuthAgent();
 					}
 				break;		
-				case BashMethods.GENERATE_SSH_KEY :
-					getApplicationKey();
+				case BashMethods.CREATE_SSH_KEY :
+					detectKey();
 				break;	
 			}
 		}
@@ -67,7 +68,7 @@ package model.proxies.local {
 		private function handleProcessFailure(e:NativeProcessEvent):void 
 		{
 			var m:String = e.data.method; var r:String = e.data.result;
-			if (m == BashMethods.REGISTER_SSH_KEY && r.indexOf('Identity added') !=-1){
+			if (m == BashMethods.ADD_KEY_TO_AUTH_AGENT && r.indexOf('Identity added') !=-1){
 				dispatchEvent(new AppEvent(AppEvent.SSH_KEY_READY));
 			}	else{
 				dispatchDebug(e.data);

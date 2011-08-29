@@ -40,7 +40,7 @@ package model.proxies.remote.keys {
 		{
 			var xml:XML = new XML(s);			
 			super.account.sshKeyId = xml['id'];
-			super.authenticate('git@beanstalkapp.com');
+			super.addToKnownHosts('git@beanstalkapp.com');
 		}
 		
 		override protected function onKeyRemovedFromAccount(s:String):void

@@ -48,6 +48,7 @@ package events {
 		public static const FAILURE					:String = "FAILURE";
 		public static const BKMK_ADDED_TO_ACCOUNT	:String = "BKMK_ADDED_TO_ACCOUNT";
 		
+		public static const REMOTE_KEY_READY		:String = "REMOTE_KEY_READY";
 		public static const PERMISSIONS_FAILURE		:String = "PERMISSIONS_FAILURE";
 		public static const RETRY_REMOTE_REQUEST	:String = "RETRY_REMOTE_REQUEST";
 		

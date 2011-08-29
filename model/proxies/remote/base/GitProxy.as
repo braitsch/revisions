@@ -16,6 +16,11 @@ package model.proxies.remote.base {
 																		'Could not find Repository',
 																		'Failed connect to',
 																		'Couldn\'t resolve host'	];
+																		
+		private static var _keyErrors:Vector.<String> = new <String>[	
+			'Permission denied (publickey)',
+			'Authentication failed',
+			'Your key is not attached to the repository and account you are trying to access.'];
 		
 		public function GitProxy()
 		{
@@ -44,21 +49,12 @@ package model.proxies.remote.base {
 		private function requestFailed(m:String, s:String):Boolean
 		{
 			var f:Boolean;
-			if (detectURLErrors(s)){
+			if (detectKeyErrors(s)){
+				f = true;
+				onAuthenticationFailure();
+			}	else if (detectURLErrors(s)){
 				f = true;
 				dispatchFailure(ErrorType.UNRESOLVED_HOST);
-			}	else if (hasString(s, 'The requested URL returned error: 403')){
-				f = true;
-				onAuthenticationFailure();
-			}	else if (hasString(s, 'Permission denied (publickey)')){
-				f = true;
-				onAuthenticationFailure();
-			}	else if (hasString(s, 'ERROR: Permission')){
-				f = true;
-				onAuthenticationFailure();
-			}	else if (hasString(s, 'Authentication failed')){
-				f = true;
-				onAuthenticationFailure();
 			}	else if (hasString(s, 'doesn\'t exist. Did you enter it correctly?')){
 				f = true;
 				dispatchFailure(ErrorType.REPO_NOT_FOUND);
@@ -75,13 +71,21 @@ package model.proxies.remote.base {
 			return f;
 		}
 		
+		private function detectKeyErrors(s:String):Boolean
+		{
+			for (var i:int = 0; i < _keyErrors.length; i++) {
+				if (hasString(s, _keyErrors[i])) return true;
+			}
+			return false;
+		}
+		
 		private function detectURLErrors(s:String):Boolean
 		{
 			for (var i:int = 0; i < _urlErrors.length; i++) {
 				if (hasString(s, _urlErrors[i])) return true;
 			}
 			return false;
-		}
+		}		
 		
 		protected function inspectURL(u:String):void
 		{ 

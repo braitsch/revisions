@@ -23,6 +23,8 @@ package view.modals.login {
 			super.drawBackground(550, 260);
 			super.addButtons([_view.cancel_btn]);
 			super.defaultButton = _view.ok_btn;
+			super.labels = ['Username', 'Password'];
+			super.fields = [_view.name_txt, _view.pass_txt];			
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);
 			_view.cancel_btn.addEventListener(MouseEvent.CLICK, onCancelButton);
 		}
@@ -72,6 +74,7 @@ package view.modals.login {
 		private function onCancelButton(e:MouseEvent):void
 		{
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.RETRY_REMOTE_REQUEST, null));
 		}
 		
 	}

@@ -1,5 +1,6 @@
 package model.proxies.remote.keys {
 
+	import events.AppEvent;
 	import model.AppModel;
 	import model.proxies.remote.base.CurlProxy;
 	import model.remote.HostingAccount;
@@ -52,13 +53,13 @@ package model.proxies.remote.keys {
 			super.call(Vector.<String>([BashMethods.DELETE_REQUEST, _baseURL + url]));
 		}
 		
-		protected function authenticate(url:String):void
+		protected function addToKnownHosts(h:String):void
 		{
 			startTimer();
-			super.request = BashMethods.AUTHENTICATE;
-			super.call(Vector.<String>([BashMethods.AUTHENTICATE, url]));
-		}					
-
+			super.request = BashMethods.ADD_NEW_KNOWN_HOST;
+			super.call(Vector.<String>([BashMethods.ADD_NEW_KNOWN_HOST, h]));			
+		}
+		
 		override protected function onProcessSuccess(r:String):void
 		{
 			switch(super.request){
@@ -74,7 +75,7 @@ package model.proxies.remote.keys {
 				case BashMethods.DELETE_KEY_FROM_REMOTE :
 					onKeyRemovedFromAccount(r);
 				break;
-				case BashMethods.AUTHENTICATE :
+				case BashMethods.ADD_NEW_KNOWN_HOST :
 					dispatchKeyValidated();
 				break;
 			}			
@@ -88,7 +89,11 @@ package model.proxies.remote.keys {
 
 		protected function onKeyRemovedFromAccount(r:String):void { }
 
-		protected function dispatchKeyValidated():void { AppModel.database.setSSHKeyId(_account); }
+		protected function dispatchKeyValidated():void 
+		{ 
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.REMOTE_KEY_READY));
+	//		AppModel.database.setSSHKeyId(_account); 
+		}
 		
 	}
 	
