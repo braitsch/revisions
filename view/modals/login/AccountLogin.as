@@ -50,16 +50,17 @@ package view.modals.login {
 			_view.login_btn.addEventListener(MouseEvent.CLICK, onLoginButton);
 		}
 		
+		public function dispatchLoginSuccessEvent():void 
+		{ 
+			unlockScreen(); 
+			dispatchEvent(new UIEvent(_onSuccessEvent));		
+		}		
+		
 		private function onLoginFailure(e:AppEvent):void
 		{
 			unlockScreen();
 		}
 
-		protected function dispatchLoginSuccessEvent():void
-		{
-			dispatchEvent(new UIEvent(_onSuccessEvent));			
-		}
-			
 	}
 	
 }

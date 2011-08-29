@@ -1,6 +1,5 @@
 package view.modals.remote {
 
-	import events.UIEvent;
 	import com.greensock.TweenLite;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;

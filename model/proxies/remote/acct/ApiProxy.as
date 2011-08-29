@@ -1,6 +1,7 @@
 package model.proxies.remote.acct {
 
 	import events.AppEvent;
+	import model.AppModel;
 	import model.proxies.remote.base.CurlProxy;
 	import model.remote.HostingAccount;
 	import system.BashMethods;
@@ -21,16 +22,12 @@ package model.proxies.remote.acct {
 		public function login(ra:HostingAccount):void { _account = ra; }
 		protected function attemptLogin(url:String):void
 		{
+			trace("ApiProxy.attemptLogin(url)", _baseURL + url);
 			startTimer();
 			super.request = BashMethods.LOGIN;
 			super.call(Vector.<String>([BashMethods.GET_REQUEST, _baseURL + url]));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Attemping Login'}));
 		}
-		
-		public function logout():void
-		{
-			super.request = BashMethods.LOGOUT;
-			dispatchEvent(new AppEvent(AppEvent.LOGOUT_SUCCESS));
-		}		
 		
 		public function makeNewRemoteRepository(o:Object):void { }
 		protected function makeNewRepoOnAccount(header:String, data:String, url:String):void
@@ -70,7 +67,11 @@ package model.proxies.remote.acct {
 		
 		protected function onRepositoryCreated(s:String):void { }
 		
-		protected function dispatchLoginSuccess():void { dispatchEvent(new AppEvent(AppEvent.LOGIN_SUCCESS, _account)); }
+		protected function dispatchLoginSuccess():void 
+		{ 
+			dispatchEvent(new AppEvent(AppEvent.LOGIN_SUCCESS, _account)); 
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
+		}
 		
 	}
 	
