@@ -1,7 +1,6 @@
 package view.modals.remote {
 
 	import events.AppEvent;
-	import events.UIEvent;
 	import flash.events.MouseEvent;
 
 	public class GitHubHome extends AccountHome {
@@ -19,11 +18,6 @@ package view.modals.remote {
 		{
 			dispatchEvent(new AppEvent(AppEvent.LOGOUT));
 		}	
-		
-		public function closeWindow():void
-		{
-			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-		}			
 		
 	}
 	

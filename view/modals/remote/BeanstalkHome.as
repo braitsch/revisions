@@ -1,7 +1,6 @@
 package view.modals.remote {
 
 	import events.AppEvent;
-	import events.UIEvent;
 	import flash.events.MouseEvent;
 
 	public class BeanstalkHome extends AccountHome {
@@ -18,11 +17,6 @@ package view.modals.remote {
 		private function onLogOutClick(e:MouseEvent):void
 		{
 			dispatchEvent(new AppEvent(AppEvent.LOGOUT));
-		}	
-		
-		public function closeWindow():void
-		{
-			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 		}	
 		
 	}

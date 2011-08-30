@@ -45,7 +45,12 @@ package view.modals.remote {
 			_model.repositories.push(o);
 			resetAccount();
 			attachRepositories();
-		}		
+		}
+		
+		public function closeWindow():void
+		{
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
+		}					
 		
 		private function resetAccount():void
 		{
