@@ -10,7 +10,7 @@ package model.remote {
 	
 	public class HostingProvider extends EventDispatcher {
 
-		private var _model					:Object;
+		private var _model					:IHostingProvider;
 		private var _loggedIn				:HostingAccount;
 		private var _accounts				:Vector.<HostingAccount> = new Vector.<HostingAccount>();
 
@@ -21,7 +21,7 @@ package model.remote {
 		public function get login()			:AccountLogin 		{ return _model.login; 			}
 		public function get addRepoObj()	:Object				{ return _model.addRepoObj; 	}
 
-		public function HostingProvider(o:Object):void{
+		public function HostingProvider(o:IHostingProvider):void{
 			_model = o;
 			_model.login.addEventListener(AppEvent.LOGIN, onLoginClick);
 			_model.home.addEventListener(AppEvent.LOGOUT, onLogoutClick);
@@ -56,7 +56,8 @@ package model.remote {
 			_loggedIn = e.data as HostingAccount;
 			_model.home.model = _loggedIn;
 			_model.login.dispatchLoginSuccessEvent();
-			saveAccount(); validateKey();
+			saveAccount(); 
+			if (_model.type == HostingAccount.BEANSTALK) _model.key.checkKey(_loggedIn);
 		}
 		
 		private function onLogoutClick(e:AppEvent):void
@@ -78,10 +79,6 @@ package model.remote {
 			}
 		}
 		
-		private function validateKey():void
-		{
-			if (_model.type == HostingAccount.BEANSTALK) _model.key.validateKey(_loggedIn);
-		}
 		
 //		private function swapAccounts(a:HostingAccount, b:HostingAccount):void
 //		{

@@ -5,9 +5,9 @@ package model.proxies.remote.keys {
 	
 	public class GitHubKey extends KeyProxy {
 		
-		override public function validateKey(ra:HostingAccount):void
+		override public function checkKey(ra:HostingAccount):void
 		{
-			super.validateKey(ra);
+			super.account = ra;
 			super.baseURL = 'https://'+ra.user+':'+ra.pass+'@api.github.com';
 			super.getAllRemoteKeys('/user/keys');
 		}

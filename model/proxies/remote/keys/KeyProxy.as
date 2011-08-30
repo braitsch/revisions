@@ -13,15 +13,15 @@ package model.proxies.remote.keys {
 
 		protected function get account()				:HostingAccount 	{ return _account; 		}
 		protected function set baseURL(baseURL:String)	:void 				{ _baseURL = baseURL; 	}
+		protected function set account(a:HostingAccount):void 				{ _account = a; 		}
 		
 		public function KeyProxy()
 		{
 			super.executable = 'Account.sh';
 		}
 		
-		public function validateKey(n:HostingAccount):void { _account = n; }
 		public function addKeyToAccount(u:String, p:String, a:String):void { }
-		
+		public function checkKey(ra:HostingAccount):void { }
 	// called from subclasses //	
 		
 		protected function getAllRemoteKeys(url:String):void
