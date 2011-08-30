@@ -51,14 +51,14 @@ package model.proxies.remote.repo {
 		{
 			super.directory = AppModel.bookmark.gitdir;
 			super.call(Vector.<String>([BashMethods.PULL_REMOTE, _remoteURL, AppModel.branch.name]));
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Fetching files from '+StringUtils.capitalize(_remote.type)}));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Fetching files from '+StringUtils.capitalize(_remote.acctType)}));
 		}
 		
 		private function pushRemote():void
 		{
 			super.directory = AppModel.bookmark.gitdir;
 			super.call(Vector.<String>([BashMethods.PUSH_REMOTE, _remoteURL, AppModel.branch.name]));
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Sending files to '+StringUtils.capitalize(_remote.type)}));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Sending files to '+StringUtils.capitalize(_remote.acctType)}));
 		}
 		
 		public function onConfirm(b:Boolean):void
@@ -108,7 +108,7 @@ package model.proxies.remote.repo {
 		
 		private function dispatchConfirmPushNewBranch():void
 		{
-			var m:String = 'The current branch "'+AppModel.branch.name+'" is not currently being tracked by your '+_remote.type+' repository: "'+_remote.repoName.substr(0, -4)+'".';
+			var m:String = 'The current branch "'+AppModel.branch.name+'" is not currently being tracked by your '+_remote.acctType+' repository: "'+_remote.repoName.substr(0, -4)+'".';
 				m+= '\nAre you sure you want to continue?';
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_CONFIRM, {target:this, message:m}));			
 		}							

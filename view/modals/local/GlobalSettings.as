@@ -3,16 +3,16 @@ package view.modals.local {
 	import events.AppEvent;
 	import events.UIEvent;
 	import fl.text.TLFTextField;
-	import flash.events.Event;
-	import flash.events.MouseEvent;
 	import model.AppModel;
-	import mx.utils.StringUtil;
 	import system.AppSettings;
 	import system.LicenseManager;
-	import view.modals.ModalWindow;
+	import view.modals.base.ModalWindowForm;
 	import view.ui.ModalCheckbox;
+	import mx.utils.StringUtil;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
 
-	public class GlobalSettings extends ModalWindow {
+	public class GlobalSettings extends ModalWindowForm {
 
 		private static var _view		:GlobalSettingsMC = new GlobalSettingsMC();
 		private static var _check1		:ModalCheckbox = new ModalCheckbox(_view.check1, true);
@@ -22,15 +22,13 @@ package view.modals.local {
 
 		public function GlobalSettings()
 		{
-			addChild(_view);
+			super(_view);
 			super.addCloseButton();	
 			super.drawBackground(550, 285);
 			super.setTitle(_view, 'Global Settings');
 			super.defaultButton = _view.ok_btn;
-			super.addInputs(Vector.<TLFTextField>([_view.name_txt, _view.email_txt]));
-			_view.form.label1.text = 'Name';
-			_view.form.label2.text = 'Email';
-			_view.form.label3.text = 'License Key';
+			super.labels = ['Name', 'Email', 'License Key'];
+			super.inputs = Vector.<TLFTextField>([_view.name_txt, _view.email_txt]);
 			_check1.label = 'Automatically check for updates';
 			_check2.label = 'Show tooltips';
 			_check3.label = 'Prompt before downloading a previous version';
@@ -40,16 +38,16 @@ package view.modals.local {
 			_check3.addEventListener(MouseEvent.CLICK, onCheck3);
 			_check4.addEventListener(MouseEvent.CLICK, onCheck4);
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);
-			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			AppModel.settings.addEventListener(AppEvent.APP_SETTINGS, onUserSettings);
 		}
 
-		private function onAddedToStage(e:Event):void
+		override protected function onAddedToStage(e:Event):void
 		{
 			_view.license_txt.text = LicenseManager.key;
 			_view.name_txt.text = AppModel.proxies.config.userName;
 			_view.email_txt.text = AppModel.proxies.config.userEmail;
 			AppModel.proxies.config.addEventListener(AppEvent.GIT_SETTINGS, onGitSettings);
+			super.onAddedToStage(e);
 		}
 
 		private function onUserSettings(e:AppEvent):void
@@ -91,7 +89,7 @@ package view.modals.local {
 		{
 			var n:String = StringUtil.trim(_view.name_txt.text);
 			var e:String = StringUtil.trim(_view.email_txt.text);
-			var m:String = validate(n, e);
+			var m:String = validateFields(n, e);
 			if (m == ''){
 				AppModel.proxies.config.setUserNameAndEmail(n, e);
 			}	else{
@@ -99,7 +97,7 @@ package view.modals.local {
 			}	
 		}
 		
-		private function validate(n:String, e:String):String
+		private function validateFields(n:String, e:String):String
 		{
 			if (n == '') return 'Please enter your name.';
 			if (e == '') return 'Please enter your email.';

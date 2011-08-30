@@ -1,14 +1,15 @@
 package view.modals.login {
 
-	import model.remote.Hosts;
 	import events.AppEvent;
 	import events.UIEvent;
+	import flash.events.MouseEvent;
 	import model.AppModel;
 	import model.remote.HostingAccount;
+	import model.remote.Hosts;
 	import model.vo.BookmarkRemote;
-	import flash.events.MouseEvent;
+	import view.modals.base.ModalWindowForm;
 
-	public class PermissionsFailure extends BaseNameAndPass {
+	public class PermissionsFailure extends ModalWindowForm {
 
 		private static var _view		:PermissionsFailureMC = new PermissionsFailureMC();
 		private static var _request		:String;
@@ -24,7 +25,7 @@ package view.modals.login {
 			super.addButtons([_view.cancel_btn]);
 			super.defaultButton = _view.ok_btn;
 			super.labels = ['Username', 'Password'];
-			super.fields = [_view.name_txt, _view.pass_txt];			
+			super.inputs = [_view.name_txt, _view.pass_txt];			
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);
 			_view.cancel_btn.addEventListener(MouseEvent.CLICK, onCancelButton);
 		}

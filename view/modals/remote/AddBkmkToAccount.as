@@ -5,12 +5,12 @@ package view.modals.remote {
 	import model.AppModel;
 	import model.remote.HostingProvider;
 	import model.vo.Bookmark;
-	import view.modals.ModalWindow;
+	import view.modals.base.ModalWindowForm;
 	import view.ui.ModalCheckbox;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 
-	public class AddBkmkToAccount extends ModalWindow {
+	public class AddBkmkToAccount extends ModalWindowForm {
 
 		private static var _bkmk		:Bookmark;
 		private static var _host		:HostingProvider;
@@ -19,15 +19,13 @@ package view.modals.remote {
 
 		public function AddBkmkToAccount()
 		{
-			addChild(_view);
+			super(_view);
 			super.addCloseButton();
 			super.drawBackground(550, 210);
-			super.defaultButton = _view.ok_btn;			
-			super.addInputs(Vector.<TLFTextField>([_view.name_txt, _view.desc_txt]));
-			_view.form.label1.text = 'Name';
-			_view.form.label2.text = 'Description';
+			super.defaultButton = _view.ok_btn;
+			super.labels = ['Name', 'Description'];
+			super.inputs = Vector.<TLFTextField>([_view.name_txt, _view.desc_txt]);
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);
-			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		
 		public function set host(o:HostingProvider):void
@@ -47,7 +45,7 @@ package view.modals.remote {
 			}
 		}
 
-		private function onAddedToStage(e:Event):void
+		override protected function onAddedToStage(e:Event):void
 		{
 			_bkmk = AppModel.bookmark;
 			_view.name_txt.text = _bkmk.label.toLowerCase().replace(' ', '-');
@@ -65,10 +63,9 @@ package view.modals.remote {
 			}
 		}
 
-		private function validate():Boolean
+		override protected function validate():Boolean
 		{
-			if (_view.name_txt.text == '' || _view.desc_txt.text == '') {
-				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, 'Neither field can be blank.'));
+			if (super.validate() == false){
 				return false;
 			}	else if (checkForDuplicate() == true){
 				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, 'Remote repository already exists.'));

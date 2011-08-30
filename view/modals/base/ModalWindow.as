@@ -1,8 +1,6 @@
-package view.modals {
+package view.modals.base {
 
 	import events.UIEvent;
-	import fl.text.TLFTextField;
-	import flash.display.InteractiveObject;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 
@@ -11,11 +9,6 @@ package view.modals {
 		private var _heightOffset	:uint = 50;
 		private var _closeButton	:ModalCloseButton;
 	
-		public function ModalWindow()
-		{		
-			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-		}
-		
 		public function resize(w:Number, h:Number):void
 		{
 			this.x = uint(w / 2 - this.width / 2);
@@ -38,18 +31,12 @@ package view.modals {
 		protected function onCloseClick(e:MouseEvent):void 
 		{
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-		}	
+		}
 		
-		private function onAddedToStage(e:Event):void 
+		override protected function onAddedToStage(e:Event):void 
 		{
 			resize(stage.stageWidth, stage.stageHeight);
-			if (super.inputs) {
-				var txt:TLFTextField = super.inputs[0];
-				txt.setSelection(0, txt.length);
-				txt.textFlow.interactionManager.setFocus();
-				for (var i:int = 0; i < super.inputs.length; i++) InteractiveObject(super.inputs[i].getChildAt(1)).tabIndex = i;
-			}
-		}
+		}	
 		
 	}
 	

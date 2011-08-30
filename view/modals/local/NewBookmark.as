@@ -2,14 +2,14 @@ package view.modals.local {
 
 	import events.AppEvent;
 	import events.UIEvent;
-	import model.AppModel;
-	import model.remote.Hosts;
-	import system.FileUtils;
-	import view.modals.ModalWindow;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
+	import model.AppModel;
+	import model.remote.Hosts;
+	import system.FileUtils;
+	import view.modals.base.ModalWindow;
 
 	public class NewBookmark extends ModalWindow {
 
@@ -26,7 +26,6 @@ package view.modals.local {
 			super.setTitle(_view, 'New Bookmark');
 			super.addButtons([_view.trackFile, _view.trackFolder, _view.loginGithub]);			
 			super.addButtons([_view.loginBeanstalk, _view.viewGithub, _view.viewBeanstalk, _view.custom.clone_btn]);			
-			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);
 			_view.addEventListener(MouseEvent.CLICK, onButtonClick);
 			_view.custom.url_txt.getChildAt(1).addEventListener(KeyboardEvent.KEY_UP, onKeyUp);	
@@ -56,14 +55,15 @@ package view.modals.local {
 			}
 		}
 		
-		private function onAddedToStage(e:Event):void
+		override protected function onAddedToStage(e:Event):void
 		{
+			super.onAddedToStage(e);
 			_cloneURL = null;
 			enableCloneButton(false);
 			_view.loginGithub.visible = Hosts.github.loggedIn == false;
 		}
 
-		private function onKeyUp(e:KeyboardEvent):void
+		override protected function onKeyUp(e:KeyboardEvent):void
 		{
 			if (!_allowClone) enableCloneButton(true);
 			if (this.stage && e.keyCode == 13 && e.keyCode != 15 && _allowClone) onCloneClick();				

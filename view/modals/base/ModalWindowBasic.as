@@ -1,8 +1,6 @@
-package view.modals {
+package view.modals.base {
 
-	import flash.text.TextFieldAutoSize;
 	import events.UIEvent;
-	import fl.text.TLFTextField;
 	import com.greensock.TweenLite;
 	import flash.display.Shape;
 	import flash.display.Sprite;
@@ -11,11 +9,11 @@ package view.modals {
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
 	import flash.filters.GlowFilter;
+	import flash.text.TextFieldAutoSize;
 
 	public class ModalWindowBasic extends Sprite {
 
 		public var locked			:Boolean;
-		protected var inputs		:Vector.<TLFTextField>;
 		private var _bkgd			:Shape = new Shape();
 		private static var _file	:File = File.desktopDirectory;
 		private static var _glow	:GlowFilter = new GlowFilter(0x000000, .5, 20, 20, 2, 2);
@@ -23,7 +21,8 @@ package view.modals {
 		public function ModalWindowBasic()
 		{
 			addChild(_bkgd);
-			_bkgd.filters = [_glow];	
+			_bkgd.filters = [_glow];
+			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 	
 	// override this in any windows that should listen for the enter key //	
@@ -82,16 +81,9 @@ package view.modals {
 			}
 		}
 		
-		protected function addInputs(v:Vector.<TLFTextField>):void
-		{
-			inputs = v;
-			for (var i:int=0; i < v.length; i++) {
-				v[i].tabIndex = i;
-				v[i].getChildAt(1).addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
-			}
-		}
-
-		private function onKeyUp(e:KeyboardEvent):void
+		protected function onAddedToStage(e:Event):void { }
+	
+		protected function onKeyUp(e:KeyboardEvent):void
 		{
 			if (this.stage && e.keyCode == 13) onEnterKey();			
 		}

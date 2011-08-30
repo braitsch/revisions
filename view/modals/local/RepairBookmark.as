@@ -8,7 +8,7 @@ package view.modals.local {
 	import flash.filesystem.File;
 	import model.AppModel;
 	import model.vo.Bookmark;
-	import view.modals.ModalWindow;
+	import view.modals.base.ModalWindow;
 
 	public class RepairBookmark extends ModalWindow {
 

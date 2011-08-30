@@ -3,7 +3,7 @@ package view.modals.local {
 	import events.UIEvent;
 	import flash.events.MouseEvent;
 	import model.vo.Commit;
-	import view.modals.ModalWindow;
+	import view.modals.base.ModalWindow;
 
 	public class CommitDetails extends ModalWindow {
 

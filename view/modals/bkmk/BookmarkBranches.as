@@ -1,14 +1,14 @@
 package view.modals.bkmk {
 
-	import events.BookmarkEvent;
 	import events.AppEvent;
+	import events.BookmarkEvent;
 	import events.UIEvent;
+	import flash.display.Sprite;
+	import flash.events.MouseEvent;
 	import model.AppModel;
 	import model.vo.Bookmark;
 	import model.vo.Branch;
-	import view.modals.ModalWindowBasic;
-	import flash.display.Sprite;
-	import flash.events.MouseEvent;
+	import view.modals.base.ModalWindowBasic;
 
 	public class BookmarkBranches extends ModalWindowBasic {
 

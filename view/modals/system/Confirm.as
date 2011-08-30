@@ -3,7 +3,7 @@ package view.modals.system {
 	import events.AppEvent;
 	import flash.events.MouseEvent;
 	import model.AppModel;
-	import view.modals.ModalWindow;
+	import view.modals.base.ModalWindow;
 
 	public class Confirm extends ModalWindow {
 

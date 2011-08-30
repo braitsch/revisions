@@ -4,7 +4,7 @@ package view.modals.local {
 	import flash.events.MouseEvent;
 	import model.AppModel;
 	import model.vo.Bookmark;
-	import view.modals.ModalWindow;
+	import view.modals.base.ModalWindow;
 	import view.ui.ModalCheckbox;
 
 	public class DeleteBookmark extends ModalWindow {

@@ -9,7 +9,7 @@ package view.modals.git {
 	import flash.events.MouseEvent;
 	import model.AppModel;
 	import system.SystemRules;
-	import view.modals.ModalWindow;
+	import view.modals.base.ModalWindow;
 
 	public class GitWindow extends ModalWindow {
 

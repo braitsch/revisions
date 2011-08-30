@@ -5,7 +5,7 @@ package view.modals.git {
 	import flash.events.MouseEvent;
 	import model.AppModel;
 	import model.proxies.local.ConfigProxy;
-	import view.modals.ModalWindow;
+	import view.modals.base.ModalWindow;
 
 	public class GitAbout extends ModalWindow {
 		
@@ -22,7 +22,7 @@ package view.modals.git {
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 
-		private function onAddedToStage(e:Event):void
+		override protected function onAddedToStage(e:Event):void
 		{
 			var c:ConfigProxy = AppModel.proxies.config;
 			_view.textArea.message_txt.text = '';	

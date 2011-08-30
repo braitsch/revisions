@@ -7,7 +7,7 @@ package view.modals.local {
 	import model.vo.Bookmark;
 	import model.vo.Commit;
 	import system.AppSettings;
-	import view.modals.ModalWindow;
+	import view.modals.base.ModalWindow;
 	import view.ui.ModalCheckbox;
 
 	public class DownloadVersion extends ModalWindow {

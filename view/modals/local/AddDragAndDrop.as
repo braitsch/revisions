@@ -3,29 +3,28 @@ package view.modals.local {
 	import events.AppEvent;
 	import events.UIEvent;
 	import fl.text.TLFTextField;
-	import flash.events.MouseEvent;
-	import flash.filesystem.File;
 	import model.AppModel;
 	import model.vo.Bookmark;
-	import view.modals.ModalWindow;
+	import view.modals.base.ModalWindowForm;
 	import view.ui.ModalCheckbox;
+	import flash.events.MouseEvent;
+	import flash.filesystem.File;
 
-	public class AddDragAndDrop extends ModalWindow {
+	public class AddDragAndDrop extends ModalWindowForm {
 
 		private static var _view		:DragAndDropMC = new DragAndDropMC();
 		private static var _check		:ModalCheckbox = new ModalCheckbox(_view.check, true);			
 
 		public function AddDragAndDrop()
 		{
-			addChild(_view);
+			super(_view);
 			super.addCloseButton();
 			super.drawBackground(550, 210);
 			super.setTitle(_view, 'New Bookmark');
 			super.defaultButton = _view.ok_btn;
-			super.addInputs(Vector.<TLFTextField>([_view.name_txt]));
+			super.labels = ['Name', 'Location'];
+			super.inputs = Vector.<TLFTextField>([_view.name_txt]);
 			_check.label = 'Autosave Every 60 Minutes';
-			_view.form.label1.text = 'Name';
-			_view.form.label2.text = 'Location';
 			_view.name_txt.text = _view.local_txt.text = ''; 
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);
 		}

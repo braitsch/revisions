@@ -6,7 +6,7 @@ package view.modals.local {
 	import flash.events.ProgressEvent;
 	import model.AppModel;
 	import system.AppSettings;
-	import view.modals.ModalWindow;
+	import view.modals.base.ModalWindow;
 	import view.ui.ModalCheckbox;
 
 	public class AppUpdate extends ModalWindow {

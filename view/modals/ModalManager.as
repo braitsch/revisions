@@ -1,14 +1,24 @@
 package view.modals {
 
-	import system.FileUtils;
 	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.UIEvent;
+	import flash.desktop.DockIcon;
+	import flash.desktop.NativeApplication;
+	import flash.desktop.NotificationType;
+	import flash.display.Sprite;
+	import flash.display.Stage;
+	import flash.events.KeyboardEvent;
+	import flash.events.MouseEvent;
+	import flash.filesystem.File;
+	import flash.filters.BlurFilter;
 	import model.AppModel;
 	import model.remote.Hosts;
 	import model.vo.Bookmark;
 	import model.vo.Commit;
 	import system.AppSettings;
+	import system.FileUtils;
+	import view.modals.base.ModalWindow;
 	import view.modals.bkmk.BookmarkEditor;
 	import view.modals.git.GitAbout;
 	import view.modals.git.GitInstall;
@@ -32,15 +42,6 @@ package view.modals {
 	import view.modals.system.Debug;
 	import view.modals.system.NewRepoConfirm;
 	import view.ui.Preloader;
-	import flash.desktop.DockIcon;
-	import flash.desktop.NativeApplication;
-	import flash.desktop.NotificationType;
-	import flash.display.Sprite;
-	import flash.display.Stage;
-	import flash.events.KeyboardEvent;
-	import flash.events.MouseEvent;
-	import flash.filesystem.File;
-	import flash.filters.BlurFilter;
 
 	public class ModalManager extends Sprite {
 

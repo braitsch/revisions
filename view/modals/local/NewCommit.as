@@ -1,13 +1,12 @@
 package view.modals.local {
 
-	import flash.text.TextFieldType;
 	import events.AppEvent;
 	import events.UIEvent;
-	import fl.text.TLFTextField;
+	import model.AppModel;
+	import view.modals.base.ModalWindow;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import model.AppModel;
-	import view.modals.ModalWindow;
+	import flash.text.TextFieldType;
 
 	public class NewCommit extends ModalWindow {
 
@@ -21,15 +20,15 @@ package view.modals.local {
 			super.setTitle(_view, 'Save Version');
 			super.setHeading(_view, 'Write a short message so we can easily find this version again later.');
 			super.addButtons([_view.ok_btn]);
-			super.addInputs(Vector.<TLFTextField>([_view.textArea.message_txt]));
-			_view.ok_btn.addEventListener(MouseEvent.CLICK, onCommit);
 			_view.textArea.message_txt.type = TextFieldType.INPUT;
-			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			_view.ok_btn.addEventListener(MouseEvent.CLICK, onCommit);
 		}
 
-		private function onAddedToStage(e:Event):void
+		override protected function onAddedToStage(e:Event):void
 		{
+			super.onAddedToStage(e);
 			_view.textArea.message_txt.text = '';
+			_view.textArea.message_txt.textFlow.interactionManager.setFocus();				
 		}
 
 		override public function onEnterKey():void { onCommit(); }

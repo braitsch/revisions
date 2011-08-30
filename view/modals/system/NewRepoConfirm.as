@@ -5,7 +5,7 @@ package view.modals.system {
 	import flash.net.URLRequest;
 	import flash.net.navigateToURL;
 	import model.AppModel;
-	import view.modals.ModalWindow;
+	import view.modals.base.ModalWindow;
 
 	public class NewRepoConfirm extends ModalWindow {
 

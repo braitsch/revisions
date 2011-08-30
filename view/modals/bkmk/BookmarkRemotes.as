@@ -1,11 +1,11 @@
 package view.modals.bkmk {
 
 	import events.UIEvent;
-	import model.remote.Hosts;
-	import model.vo.Bookmark;
-	import view.modals.ModalWindowBasic;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
+	import model.remote.Hosts;
+	import model.vo.Bookmark;
+	import view.modals.base.ModalWindowBasic;
 
 	public class BookmarkRemotes extends ModalWindowBasic {
 

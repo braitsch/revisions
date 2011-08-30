@@ -4,7 +4,7 @@ package view.modals.local {
 	import flash.events.MouseEvent;
 	import model.AppModel;
 	import model.vo.Commit;
-	import view.modals.ModalWindow;
+	import view.modals.base.ModalWindow;
 
 	public class RevertToVersion extends ModalWindow {
 

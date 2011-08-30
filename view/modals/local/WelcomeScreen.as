@@ -4,7 +4,7 @@ package view.modals.local {
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
-	import view.modals.ModalWindow;
+	import view.modals.base.ModalWindow;
 
 	public class WelcomeScreen extends ModalWindow {
 

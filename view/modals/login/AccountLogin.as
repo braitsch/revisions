@@ -2,11 +2,12 @@ package view.modals.login {
 
 	import events.AppEvent;
 	import events.UIEvent;
-	import model.AppModel;
-	import view.ui.ModalCheckbox;
 	import flash.events.MouseEvent;
+	import model.AppModel;
+	import view.modals.base.ModalWindowForm;
+	import view.ui.ModalCheckbox;
 
-	public class AccountLogin extends BaseNameAndPass {
+	public class AccountLogin extends ModalWindowForm {
 
 		private var _view			:*;
 		private var _check			:ModalCheckbox;

@@ -2,12 +2,12 @@ package view.modals.remote {
 
 	import events.AppEvent;
 	import events.UIEvent;
-	import model.AppModel;
-	import model.remote.HostingAccount;
-	import view.modals.ModalWindow;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
+	import model.AppModel;
+	import model.remote.HostingAccount;
+	import view.modals.base.ModalWindow;
 
 	public class AccountHome extends ModalWindow {
 

@@ -6,7 +6,7 @@ package model.vo {
 
 		private var _name		:String; // ex. github-revisions-source //
 		private var _ssh		:String;
-		private var _type		:String;
+		private var _acctType	:String;
 		private var _acctName	:String;
 		private var _repoName	:String;
 		private var _branches	:Array = [];
@@ -14,12 +14,15 @@ package model.vo {
 		public function BookmarkRemote(name:String, url:String)
 		{
 			_name = name.toLowerCase();
-			inspectURL(url);
+			var o:Object = inspectURL(url);
+			_acctType = o.acctType;
+			_acctName = o.acctName;
+			_repoName = o.repoName;
 		}		
 		
 		public function get ssh()			:String { return _ssh; }
 		public function get name()			:String { return _name; }
-		public function get type()			:String { return _type; }	
+		public function get acctType()		:String { return _acctType; }	
 		public function get acctName()		:String { return _acctName; }	
 		public function get repoName()		:String { return _repoName; }
 		

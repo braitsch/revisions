@@ -1,10 +1,10 @@
 package view.modals.bkmk {
 
-	import model.vo.Bookmark;
-	import view.modals.ModalWindow;
 	import com.greensock.TweenLite;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
+	import model.vo.Bookmark;
+	import view.modals.base.ModalWindow;
 
 	public class BookmarkEditor extends ModalWindow {
 

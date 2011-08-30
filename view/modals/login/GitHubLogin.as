@@ -17,7 +17,7 @@ package view.modals.login {
 			super.setTitle(_view, 'Login To Github');
 			super.setHeading(_view, 'Have a GitHub account? Please login. (Required for private repositories)');
 			super.labels = ['Username', 'Password'];
-			super.fields = [_view.name_txt, _view.pass_txt];
+			super.inputs = [_view.name_txt, _view.pass_txt];
 			_view.name_txt.text = 'braitsch'; _view.pass_txt.text = 'aelisch76';
 		}
 		

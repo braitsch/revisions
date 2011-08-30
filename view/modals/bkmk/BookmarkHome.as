@@ -3,11 +3,11 @@ package view.modals.bkmk {
 	import events.AppEvent;
 	import events.DataBaseEvent;
 	import events.UIEvent;
-	import fl.text.TLFTextField;
 	import model.AppModel;
 	import model.vo.Bookmark;
-	import view.modals.ModalWindowBasic;
+	import view.modals.base.ModalWindowBasic;
 	import view.ui.ModalCheckbox;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 
 	public class BookmarkHome extends ModalWindowBasic {
@@ -22,14 +22,17 @@ package view.modals.bkmk {
 			super.drawBackground(550, 210);
 			super.addButtons([_view.delete_btn]);
 			super.defaultButton = _view.ok_btn;
-			super.addInputs(Vector.<TLFTextField>([_view.name_txt]));
-		
-			_check.label = 'Autosave Every 60 Minutes';
 			_view.form.label1.text = 'Name';
 			_view.form.label2.text = 'Location';
+			_check.label = 'Autosave Every 60 Minutes';
 			_view.local_txt.selectable = false;
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onUpdateBookmark);
 			_view.delete_btn.addEventListener(MouseEvent.CLICK, onDeleteButton);
+		}
+		
+		override protected function onAddedToStage(e:Event):void 
+		{
+			_view.name_txt.textFlow.interactionManager.setFocus();
 		}
 		
 		public function set bookmark(b:Bookmark):void
@@ -38,6 +41,7 @@ package view.modals.bkmk {
 			_view.name_txt.text = _bookmark.label;
 			_view.local_txt.text = _bookmark.path;
 			_check.selected = _bookmark.autosave != 0;			
+			_view.name_txt.setSelection(0, _view.name_txt.length);
 		}
 		
 		private function onDeleteButton(e:MouseEvent):void

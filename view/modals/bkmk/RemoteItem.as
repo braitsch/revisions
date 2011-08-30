@@ -18,7 +18,7 @@ package view.modals.bkmk {
 			_view.url_txt.autoSize = TextFieldAutoSize.LEFT;
 			_view.name_txt.autoSize = TextFieldAutoSize.LEFT;
 			_view.url_txt.text = rmt.repoName.substr(0, -4);
-			_view.name_txt.text = StringUtils.capitalize(rmt.type);
+			_view.name_txt.text = StringUtils.capitalize(rmt.acctType);
 			if (_view.name_txt.width <= 190){
 				_view.url_txt.x = 200;
 			}	else{
