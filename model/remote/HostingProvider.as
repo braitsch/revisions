@@ -11,14 +11,14 @@ package model.remote {
 	public class HostingProvider extends EventDispatcher {
 
 		private var _model					:Object;
-		private var _loggedIn				:Boolean;
+		private var _loggedIn				:HostingAccount;
 		private var _accounts				:Vector.<HostingAccount> = new Vector.<HostingAccount>();
 
 		public function get type()			:String				{ return _model.type; 			}
-		public function get home()			:AccountHome		{ return _model.home; 			}
-		public function get login()			:AccountLogin 		{ return _model.login; 			}
 		public function get api()			:ApiProxy 			{ return _model.api; 			}
 		public function get key()			:KeyProxy 			{ return _model.key;			}
+		public function get home()			:AccountHome		{ return _model.home; 			}
+		public function get login()			:AccountLogin 		{ return _model.login; 			}
 		public function get addRepoObj()	:Object				{ return _model.addRepoObj; 	}
 
 		public function HostingProvider(o:Object):void{
@@ -28,7 +28,7 @@ package model.remote {
 			_model.api.addEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);			
 		}
 		
-		public function get loggedIn():Boolean
+		public function get loggedIn():HostingAccount
 		{
 			return _loggedIn;
 		}		
@@ -48,54 +48,47 @@ package model.remote {
 		
 		private function onLoginClick(e:AppEvent):void
 		{
-			api.login(e.data as HostingAccount);
-		}
-
-		private function onLogoutClick(e:AppEvent):void
-		{
-			_loggedIn = false;
-			home.closeWindow();
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, 'You Have Successfully Logged Out.'));
+			_model.api.login(e.data as HostingAccount);
 		}
 
 		private function onLoginSuccess(e:AppEvent):void
 		{
-			_loggedIn = true;
-		// if user checked "remember this account"	
-			cacheAccount(e.data as HostingAccount);
-			validateKey();
-			login.dispatchLoginSuccessEvent();
-			home.model = e.data as HostingAccount;
-		}		
+			_loggedIn = e.data as HostingAccount;
+			_model.home.model = _loggedIn;
+			_model.login.dispatchLoginSuccessEvent();
+			saveAccount(); validateKey();
+		}
+		
+		private function onLogoutClick(e:AppEvent):void
+		{
+			_loggedIn = null;
+		}			
 		
 	// private methods //
 	
-		private function cacheAccount(a:HostingAccount):void
+		private function saveAccount():void
 		{
-			var b:HostingAccount = getAccountByProp('user', a.user);
+		// if user checked "remember this account" in the login window //	
+			var b:HostingAccount = getAccountByProp('user', _loggedIn.user);
 			if (b == null){
-				addAccount(a);
-				AppModel.database.addAccount(a);
+				addAccount(_loggedIn);
+				AppModel.database.addAccount(_loggedIn);
 			}	else{
-				swapAccounts(a, b);
-				AppModel.database.editAccount(a);
+				AppModel.database.editAccount(_loggedIn);
 			}
-//			var x:HostingAccount;
-//			for (var i:int = 0; i < _accounts.length; i++) if (_accounts[i].sshKeyId != 0) x = _accounts[i];
-//			if (x == null || x === a) _keyProxy.validateKey(a);
 		}
 		
 		private function validateKey():void
 		{
-			
+			if (_model.type == HostingAccount.BEANSTALK) _model.key.validateKey(_loggedIn);
 		}
 		
-		private function swapAccounts(a:HostingAccount, b:HostingAccount):void
-		{
-			a.sshKeyId = b.sshKeyId;
-			for (var i:int = 0; i < _accounts.length; i++) if (_accounts[i] == b) break;
-			_accounts.splice(i, 1); _accounts.push(a);
-		}
+//		private function swapAccounts(a:HostingAccount, b:HostingAccount):void
+//		{
+//			a.sshKeyId = b.sshKeyId;
+//			for (var i:int = 0; i < _accounts.length; i++) if (_accounts[i] == b) break;
+//			_accounts.splice(i, 1); _accounts.push(a);
+//		}
 		
 	}
 	

@@ -25,6 +25,7 @@ package view.modals.remote {
 			_view = v;
 			addChild(_view);
 			super.addButtons([_view.logOut]);
+			_view.logOut.addEventListener(MouseEvent.CLICK, onLogOutClick);
 			addEventListener(UIEvent.LOGGED_IN_CLONE, onCloneClick);
 			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);
 			AppModel.engine.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);
@@ -46,11 +47,6 @@ package view.modals.remote {
 			resetAccount();
 			attachRepositories();
 		}
-		
-		public function closeWindow():void
-		{
-			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-		}					
 		
 		private function resetAccount():void
 		{
@@ -160,6 +156,13 @@ package view.modals.remote {
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 			AppModel.engine.removeEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);			
 		}
+		
+		private function onLogOutClick(e:MouseEvent):void
+		{
+			dispatchEvent(new AppEvent(AppEvent.LOGOUT));
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, 'You Have Successfully Logged Out.'));
+		}			
 
 	}
 	

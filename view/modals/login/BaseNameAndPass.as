@@ -1,13 +1,15 @@
 package view.modals.login {
 
-	import fl.text.TLFTextField;
-	import flash.text.TextField;
 	import events.AppEvent;
+	import fl.text.TLFTextField;
 	import model.AppModel;
 	import view.modals.ModalWindow;
 	import flash.display.InteractiveObject;
+	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.FocusEvent;
 	import flash.events.KeyboardEvent;
+	import flash.text.TextField;
 
 	public class BaseNameAndPass extends ModalWindow {
 		
@@ -64,26 +66,30 @@ package view.modals.login {
 		{
 			for (var i:int = 0; i < _fields.length; i++){
 				_fields[i].text = '';
-			//TODO add onFocus listener to each field that setSelection(0, _fields[0].length);
 				if (_fields[i] is TextField){
 					_fields[i].tabIndex = i;
 					_fields[i].displayAsPassword = true;
 					_fields[i].addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 				}	else if (_fields[i] is TLFTextField){
-					_fields[i].getChildAt(1).addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 					InteractiveObject(_fields[i].getChildAt(1)).tabIndex = i;
+					_fields[i].getChildAt(1).addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 				}
+				_fields[i].addEventListener(FocusEvent.FOCUS_IN, onFocusIn);
 			}
-		}		
+		}
+
+		private function onFocusIn(e:FocusEvent):void
+		{
+			if (e.target is TextField){
+				e.target.setSelection(0, e.target.length);
+			}	else if (e.target is Sprite){
+				e.target.parent.setSelection(0, e.target.parent.length);
+			}
+		}
 		
 		private function onKeyUp(e:KeyboardEvent):void
 		{
-			if (!this.stage) return;
-			if (e.keyCode == 13){
-				onEnterKey();
-			}	else if (e.keyCode == 9){
-				if (stage.focus == _fields[_fields.length-1]) _fields[0].setSelection(0, _fields[0].length);
-			}
+			if (this.stage && e.keyCode == 13) onEnterKey();
 		}			
 		
 	}
