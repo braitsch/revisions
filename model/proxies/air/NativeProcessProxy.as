@@ -45,14 +45,13 @@ package model.proxies.air {
 		
 		protected function call(v:Vector.<String>):void
 		{
-			v.push(_dir);
-			_method = v[0];
-			_result = '';
-			_failed = false;
-			_npi.arguments = v;
-			log('Attempting to Call Method :: '+_method);
-			if(!_np.running){				log('Calling Method :: '+_method);
+			if(_np.running == false){
+				v.push(_dir);				_method = v[0];
+				_result = '';
+				_failed = false;
+				_npi.arguments = v;
 				_np.start(_npi);
+				log('Calling Method :: '+_method);
 			}	else{
 				log('NativeProcess Is Still Running - Check Bash File For Errors');
 			}

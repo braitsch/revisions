@@ -16,7 +16,10 @@ package model.vo {
 			_author = a[2];
 			_note 	= a[3];
 			_index  = n;
-			if (_date == null) trace('date string missing on ', _note);
+			if (_date == null) {
+				trace('***NO COMMIT DATA!!', a.length, a);
+				return;
+			}
 			if (_date == '0 seconds ago') {
 				_date = 'Just now';
 			}	else if (_date.indexOf('1 year') != -1){
