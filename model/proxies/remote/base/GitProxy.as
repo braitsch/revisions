@@ -1,13 +1,14 @@
 package model.proxies.remote.base {
 
-	import model.vo.BookmarkRemote;
 	import events.AppEvent;
 	import events.ErrorType;
 	import events.NativeProcessEvent;
 	import model.AppModel;
 	import model.remote.HostingAccount;
 	import model.remote.Hosts;
+	import model.vo.BookmarkRemote;
 	import system.BashMethods;
+	import system.StringUtils;
 
 	public class GitProxy extends NetworkProxy {
 		
@@ -26,15 +27,41 @@ package model.proxies.remote.base {
 			attemptRequest();
 		}
 		
+		protected function addPassToHttpsURL(req:GitRequest):void
+		{
+			_request = req;
+			attemptAccountLookup(req.url);
+		}
+		
 		private function attemptRequest():void
 		{
+			showLoader();
 			super.startTimer();
 			trace("GitProxy.attemptRequest()", _request.method, _request.url, _request.args.join(', '));
 			super.call(Vector.<String>([_request.method, _request.url, _request.args.join(', ')]));
 		}
+
+		private function showLoader():void
+		{
+			var m:String;
+			var a:String = BookmarkRemote.getAccountType(_request.url);
+			switch(_request.method){
+				case BashMethods.CLONE :
+					m ='Cloning Remote Repository';
+				break;
+				case BashMethods.PULL_REMOTE :
+					m ='Fetching files from '+StringUtils.capitalize(a);
+				break;
+				case BashMethods.PUSH_REMOTE :
+					m ='Sending files to '+StringUtils.capitalize(a);
+				break;								
+			}
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:m}));					
+		}
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
+			trace("GitProxy.onProcessComplete(e)", e.data.method, e.data.result);
 			if (super.timerIsRunning == true){
 				super.stopTimer();
 				handleResponse(e.data.method, e.data.result);
@@ -71,23 +98,14 @@ package model.proxies.remote.base {
 		}
 		
 		protected function onProcessSuccess(m:String):void { }
-		protected function onAuthenticationFailure():void 
+		
+		private function onAuthenticationFailure():void 
 		{ 
 			inspectURL(_request.url);
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
-			AppModel.engine.addEventListener(AppEvent.RETRY_REMOTE_REQUEST, onRetryRequest);
 		}
 
-		private function onRetryRequest(e:AppEvent):void
-		{
-			if (e.data.u != null) {
-				_request.url = e.data.u; _account = e.data.a;
-				attemptRequest();
-			}
-			AppModel.engine.removeEventListener(AppEvent.RETRY_REMOTE_REQUEST, onRetryRequest);				
-		}
-		
-		protected function inspectURL(u:String):void
+		private function inspectURL(u:String):void
 		{ 
 			if (hasString(u, 'git://github.com') || hasString(u, 'https://github.com')){
 		// a read-only request has failed //	
@@ -114,9 +132,18 @@ package model.proxies.remote.base {
 
 		private function onPermissionsFailure(u:String):void
 		{
-	// 	https://acctName@github.com requests & all git@acctName.beanstalk requests
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.PERMISSIONS_FAILURE, u));
+			AppModel.engine.addEventListener(AppEvent.RETRY_REMOTE_REQUEST, onRetryRequest);
 		}
+		
+		private function onRetryRequest(e:AppEvent):void
+		{
+			if (e.data.u != null) {
+				_request.url = e.data.u; _account = e.data.a;
+				attemptRequest();
+			}
+			AppModel.engine.removeEventListener(AppEvent.RETRY_REMOTE_REQUEST, onRetryRequest);				
+		}		
 		
 		private static function hasString(s1:String, s2:String):Boolean { return s1.indexOf(s2) != -1; }		
 		

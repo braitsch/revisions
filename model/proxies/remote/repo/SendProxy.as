@@ -1,9 +1,10 @@
 package model.proxies.remote.repo {
 
-	import model.AppModel;
 	import events.AppEvent;
+	import model.AppModel;
 	import model.proxies.remote.acct.ApiProxy;
 	import model.proxies.remote.base.GitProxy;
+	import model.proxies.remote.base.GitRequest;
 	import model.vo.Bookmark;
 	import model.vo.BookmarkRemote;
 	import system.BashMethods;
@@ -14,10 +15,6 @@ package model.proxies.remote.repo {
 		private static var _acct	:ApiProxy;
 		private static var _remote	:BookmarkRemote;
 
-		public function SendProxy()
-		{
-		}
-		
 		public function addBkmkToAccount(o:Object):void
 		{
 			_bkmk = o.bkmk;
@@ -36,7 +33,6 @@ package model.proxies.remote.repo {
 		
 		override protected function onProcessSuccess(m:String):void 
 		{
-			trace("SendProxy.onProcessSuccess(m)", m);
 			switch(m){
 				case BashMethods.ADD_REMOTE :
 					onRemoteAddedToBookmark();
@@ -50,8 +46,7 @@ package model.proxies.remote.repo {
 		private function onRemoteAddedToBookmark():void
 		{
 			_bkmk.addRemote(_remote);
-			super.startTimer();
-			super.call(Vector.<String>([BashMethods.PUSH_REMOTE, _remote.url, _bkmk.branch.name]));
+			super.request = new GitRequest(BashMethods.PUSH_REMOTE, _remote.url, [_bkmk.branch.name]);			
 		}
 		
 		private function onBookmarkPushedToAccount():void

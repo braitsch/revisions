@@ -35,11 +35,10 @@ package view.modals.login {
 		
 		public function set request(u:String):void
 		{
-			var o:Object = BookmarkRemote.inspectURL(u);
 			_url = u;
-			_acctType = o.acctType;
-			_acctName = o.acctName;
-			_repoName = o.repoName;
+			_acctType = BookmarkRemote.getAccountType(u);
+			_acctName = BookmarkRemote.getAccountName(u);
+			_repoName = BookmarkRemote.getRepositoryName(u);
 			var m:String = 'I\'m sorry, '+_acctType+' denied us access to the account named "'+_acctName+'".\n';
 				m+='Please enter your username & password to try again :';
 			super.setHeading(_view, m);

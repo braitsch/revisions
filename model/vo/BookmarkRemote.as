@@ -6,21 +6,25 @@ package model.vo {
 
 		private var _name		:String; // ex. github-revisions-source //
 		private var _url		:String;
-		private var _data		:Object;
 		private var _branches	:Array = [];
+		private var _acctType	:String;
+		private var _acctName	:String;
+		private var _repoName	:String;
 
 		public function BookmarkRemote(name:String, url:String)
 		{
 			_name = name.toLowerCase(); 
 			_url = url;
-			_data = inspectURL(_url);
+			_acctType = getAccountType(url);
+			_acctName = getAccountName(url);
+			_repoName = getRepositoryName(url);
 		}
 		
-		public function get url()			:String { return _url; 			 }
-		public function get name()			:String { return _name; 		 }
-		public function get acctType()		:String { return _data.acctType; }	
-		public function get acctName()		:String { return _data.acctName; }	
-		public function get repoName()		:String { return _data.repoName; }
+		public function get url()			:String { return _url; 		}
+		public function get name()			:String { return _name; 	}
+		public function get acctType()		:String { return _acctType; }	
+		public function get acctName()		:String { return _acctName; }	
+		public function get repoName()		:String { return _repoName; }
 		
 		public function addBranch(s:String):void
 		{
@@ -37,18 +41,15 @@ package model.vo {
 	// git@github.com:braitsch/Revisions-Source.git
 	// https://braitsch@github.com/braitsch/Revisions-Source.git
 		
-		public static function inspectURL(u:String):Object
+		public static function getAccountType(u:String):String
 		{
-			var o:Object = {};
-			if (u.indexOf('@github.com') != -1){	
-				o.acctType = HostingAccount.GITHUB;
-				o.acctName = getAccountName(u);
+			if (u.indexOf('@github.com') != -1){
+				return HostingAccount.GITHUB;
 			}	else if (u.indexOf('.beanstalkapp.com:/') != -1){
-				o.acctType = HostingAccount.BEANSTALK;
-				o.acctName = u.substring(u.indexOf('@') + 1, u.indexOf('.'));
+				return HostingAccount.BEANSTALK;		
+			}	else{
+				return 'unable to detect account type';		
 			}
-			o.repoName = u.substr(u.lastIndexOf('/') + 1);
-			return o;	
 		}
 		
 		public static function getAccountName(u:String):String
@@ -57,9 +58,16 @@ package model.vo {
 				return u.substring(u.indexOf(':') + 1, u.indexOf('/'));
 			}	else if (u.indexOf('https://') != -1 && u.indexOf('@github.com') != -1 ){
 				return u.substring(u.indexOf('/') + 2, u.indexOf('@'));
+			}	else if (u.indexOf('.beanstalkapp.com:/') != -1){
+				return u.substring(u.indexOf('@') + 1, u.indexOf('.'));				
 			}	else{
 				return 'unable to detect account name';		
 			}
+		}
+		
+		public static function getRepositoryName(u:String):String
+		{
+			return u.substr(u.lastIndexOf('/') + 1);
 		}
 		
 		public static function buildHttpsURL(u:String, p:String, a:String, r:String):String

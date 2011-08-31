@@ -101,6 +101,7 @@ package model.vo {
 		
 		public function addRemotes(a:Array):void
 		{
+			if (a[0] == '') return;
 			for (var i:int = 0; i < a.length; i++) {
 				var n:String = a[i]; i++;
 				var u:String = a[i].substr(0, a[i].search(/\s/));

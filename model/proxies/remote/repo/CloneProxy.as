@@ -16,8 +16,17 @@ package model.proxies.remote.repo {
 		public function clone(url:String, loc:String):void
 		{
 			_cloneURL = url; _savePath = loc;
-			super.request = new GitRequest(BashMethods.CLONE, _cloneURL, [_savePath]);
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Cloning Remote Repository'}));
+			detectPrivateHttpsUrls();
+		}
+
+		private function detectPrivateHttpsUrls():void
+		{
+			var req:GitRequest = new GitRequest(BashMethods.CLONE, _cloneURL, [_savePath]);
+			if (_cloneURL.search(/(https:\/\/)(\w*)(@github.com)/) != -1){
+				super.addPassToHttpsURL(req);
+			}	else{
+				super.request = req;
+			}
 		}
 		
 	// success / failure handlers //	

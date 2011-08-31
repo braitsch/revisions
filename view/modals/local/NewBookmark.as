@@ -84,8 +84,7 @@ package view.modals.local {
 			}	else{
 				_allowClone = false;
 				super.enableButton(_view.custom.clone_btn, false);
-				_view.custom.url_txt.text = 'git@braitsch.beanstalkapp.com:/stephen.git';
-			//	_view.custom.url_txt.text = 'git@github.com:user-name/repository-name.git';
+				_view.custom.url_txt.text = 'git@github.com:user-name/repository-name.git';
 				_view.custom.url_txt.setSelection(0, _view.custom.url_txt.length);
 				_view.custom.url_txt.textFlow.interactionManager.setFocus();			
 				_view.custom.url_txt.addEventListener(MouseEvent.CLICK, onURLTextFieldClick);
@@ -102,16 +101,21 @@ package view.modals.local {
 		
 		private function onBrowserSelection(e:UIEvent):void
 		{
-			if (FileUtils.dirIsEmpty(e.data as File) == false){
-				dispatchFailure('The target directory you are attempting to clone to must be empty.');
+			if (_cloneURL != null) {
+				onCloneAttempt(e.data as File);
 			}	else{
-				if (_cloneURL == null) {
-					dispatchEvent(new UIEvent(UIEvent.DRAG_AND_DROP, e.data as File));
-				}	else{
-					_savePath = File(e.data).nativePath;
-					AppModel.proxies.remote.clone(_cloneURL, _savePath);
-					AppModel.engine.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);				
-				}				
+				dispatchEvent(new UIEvent(UIEvent.DRAG_AND_DROP, e.data as File));
+			}
+		}
+		
+		private function onCloneAttempt(f:File):void
+		{
+			if (FileUtils.dirIsEmpty(f) == false){
+				dispatchFailure('The target directory you are attempting to clone to must be empty.');
+			}	else {
+				_savePath = f.nativePath;
+				AppModel.proxies.remote.clone(_cloneURL, _savePath);
+				AppModel.engine.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);				
 			}
 		}
 

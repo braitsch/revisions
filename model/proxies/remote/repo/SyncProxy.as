@@ -1,13 +1,12 @@
 package model.proxies.remote.repo {
 
-	import model.proxies.remote.base.GitRequest;
 	import events.AppEvent;
 	import model.AppModel;
 	import model.proxies.remote.base.GitProxy;
+	import model.proxies.remote.base.GitRequest;
 	import model.vo.BookmarkRemote;
 	import system.AppSettings;
 	import system.BashMethods;
-	import system.StringUtils;
 
 	public class SyncProxy extends GitProxy {
 
@@ -47,14 +46,12 @@ package model.proxies.remote.repo {
 		{
 			super.directory = AppModel.bookmark.gitdir;
 			super.request = new GitRequest(BashMethods.PULL_REMOTE, _remote.url, [AppModel.branch.name]);
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Fetching files from '+StringUtils.capitalize(_remote.acctType)}));
 		}
 		
 		private function pushRemote():void
 		{
 			super.directory = AppModel.bookmark.gitdir;
 			super.request = new GitRequest(BashMethods.PUSH_REMOTE, _remote.url, [AppModel.branch.name]);
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Sending files to '+StringUtils.capitalize(_remote.acctType)}));
 		}
 		
 		public function onConfirm(b:Boolean):void
@@ -70,7 +67,6 @@ package model.proxies.remote.repo {
 		
 		override protected function onProcessSuccess(m:String):void 
 		{
-			trace("SyncProxy.onProcessSuccess(m)", m);
 			switch(m){
 				case BashMethods.PULL_REMOTE :
 					pushRemote();
