@@ -22,7 +22,6 @@ package model.proxies.remote.acct {
 		public function login(ra:HostingAccount):void { _account = ra; }
 		protected function attemptLogin(url:String):void
 		{
-			trace("ApiProxy.attemptLogin(url)", _baseURL + url);
 			startTimer();
 			super.request = BashMethods.LOGIN;
 			super.call(Vector.<String>([BashMethods.GET_REQUEST, _baseURL + url]));

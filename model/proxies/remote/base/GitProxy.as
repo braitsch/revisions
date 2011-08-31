@@ -18,8 +18,9 @@ package model.proxies.remote.base {
 																		'Couldn\'t resolve host'	];
 																		
 		private static var _keyErrors:Vector.<String> = new <String>[	
-			'Permission denied (publickey)',
+			'Permission denied',
 			'Authentication failed',
+			'Host key verification failed',
 			'Your key is not attached to the repository and account you are trying to access.'];
 		
 		public function GitProxy()

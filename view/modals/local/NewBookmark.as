@@ -84,7 +84,8 @@ package view.modals.local {
 			}	else{
 				_allowClone = false;
 				super.enableButton(_view.custom.clone_btn, false);
-				_view.custom.url_txt.text = 'git@github.com:user-name/repository-name.git';
+				_view.custom.url_txt.text = 'git@braitsch.beanstalkapp.com:/stephen.git';
+			//	_view.custom.url_txt.text = 'git@github.com:user-name/repository-name.git';
 				_view.custom.url_txt.setSelection(0, _view.custom.url_txt.length);
 				_view.custom.url_txt.textFlow.interactionManager.setFocus();			
 				_view.custom.url_txt.addEventListener(MouseEvent.CLICK, onURLTextFieldClick);

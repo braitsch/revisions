@@ -32,6 +32,8 @@ package view.modals.login {
 		
 		public function set request(u:String):void
 		{
+			_view.name_txt.text = 'braitsch'; 
+			_view.pass_txt.text = 'aelisch76';
 			_request = u;
 			var o:Object = BookmarkRemote.inspectURL(_request);
 			_acctType = o.acctType;
@@ -57,13 +59,16 @@ package view.modals.login {
 
 		private function addKeyToBeanstalkAcct():void
 		{
-			Hosts.beanstalk.key.addKeyToAccount(super.fields[0], super.fields[1], _acctName);
-			Hosts.beanstalk.key.addEventListener(AppEvent.SSH_KEY_READY, onKeyAddedToBeanstalk);
+			var ha:HostingAccount = new HostingAccount({type:HostingAccount.BEANSTALK, 
+						acct:_acctName, user:super.fields[0], pass:super.fields[1]});
+			Hosts.beanstalk.addKeyToAccount(ha, true);
+			Hosts.beanstalk.key.addEventListener(AppEvent.REMOTE_KEY_READY, onKeyAddedToBeanstalk);
 		}
 
 		private function onKeyAddedToBeanstalk(e:AppEvent):void
 		{
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.RETRY_REMOTE_REQUEST, _request));
+			Hosts.beanstalk.key.removeEventListener(AppEvent.REMOTE_KEY_READY, onKeyAddedToBeanstalk);
 		}
 
 		private function retryRequestOverHttps():void

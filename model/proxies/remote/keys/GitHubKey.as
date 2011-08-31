@@ -12,6 +12,8 @@ package model.proxies.remote.keys {
 			super.getAllRemoteKeys('/user/keys');
 		}
 		
+	// private methods //		
+		
 		override protected function onRemoteKeysReceived(s:String):void
 		{
 			var a:Array = getResultObject(s) as Array;

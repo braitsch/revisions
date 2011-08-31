@@ -2,6 +2,7 @@ package view.modals.login {
 
 	import events.AppEvent;
 	import model.remote.HostingAccount;
+	import model.remote.Hosts;
 	import flash.events.MouseEvent;
 	import flash.net.URLRequest;
 	import flash.net.navigateToURL;
@@ -21,16 +22,23 @@ package view.modals.login {
 			_view.acct_txt.text = 'braitsch';
 			_view.name_txt.text = 'braitsch'; _view.pass_txt.text = 'aelisch76';
 		}
-		
+
 		override protected function onLoginButton(e:MouseEvent = null):void
 		{
 			if (super.validate()){
 				super.lockScreen();
-				var ha:HostingAccount = new HostingAccount({type:HostingAccount.BEANSTALK, 
+				var a:HostingAccount = new HostingAccount({type:HostingAccount.BEANSTALK, 
 						acct:super.fields[0], user:super.fields[1], pass:super.fields[2]});
-				dispatchEvent(new AppEvent(AppEvent.LOGIN, ha));
+				Hosts.beanstalk.attemptLogin(a, true);
+				Hosts.beanstalk.api.addEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);
 			}			
 		}
+		
+		private function onLoginSuccess(e:AppEvent):void
+		{
+			super.dispatchLoginSuccessEvent();
+			Hosts.beanstalk.api.removeEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);
+		}		
 		
 		override protected function gotoNewAccountPage(e:MouseEvent):void 
 		{ 

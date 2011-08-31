@@ -8,15 +8,18 @@ package model.proxies.remote.keys {
 		override public function checkKey(ra:HostingAccount):void
 		{
 			super.account = ra;
-			super.baseURL = 'https://'+ra.user+':'+ra.pass+'@'+ra.user+'.beanstalkapp.com/api';
+			super.baseURL = 'https://'+ra.user+':'+ra.pass+'@'+ra.acct+'.beanstalkapp.com/api';
 			super.getAllRemoteKeys('/public_keys.xml');
 		}
 		
-		override public function addKeyToAccount(u:String, p:String, a:String):void
-		{
-			super.baseURL = 'https://'+u+':'+p+'@'+a+'.beanstalkapp.com/api';
-			super.addKeyToRemote(HEADER_XML, getKeyObject(), '/public_keys.xml');
-		}	
+//		override public function addKey(ra:HostingAccount):void
+//		{
+//			super.account = ra;
+//			super.baseURL = 'https://'+ra.user+':'+ra.pass+'@'+ra.acct+'.beanstalkapp.com/api';
+//			super.addKeyToRemote(HEADER_XML, getKeyObject(), '/public_keys.xml');
+//		}
+		
+	// private methods //		
 		
 		override protected function onRemoteKeysReceived(s:String):void
 		{
@@ -38,9 +41,9 @@ package model.proxies.remote.keys {
 		
 		override protected function onKeyAddedToAccount(s:String):void
 		{
-			var xml:XML = new XML(s);			
+			var xml:XML = new XML(s);
 			super.account.sshKeyId = xml['id'];
-			super.addToKnownHosts('git@beanstalkapp.com');
+			super.addToKnownHosts(super.account.acct+'.beanstalkapp.com');
 		}
 		
 		override protected function onKeyRemovedFromAccount(s:String):void

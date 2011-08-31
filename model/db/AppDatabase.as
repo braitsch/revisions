@@ -92,7 +92,7 @@ package model.db {
 			super.execute(_delAccount, true);
 		}	
 		
-		public function setS2SHKeyId(a:HostingAccount):void
+		public function setSSHKeyId(a:HostingAccount):void
 		{
 			_setSSHKeyId = new Vector.<SQLStatement>();
 			_setSSHKeyId.push(AppSQLQuery.CLEAR_SSH_KEY_ID);

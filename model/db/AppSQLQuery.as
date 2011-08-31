@@ -71,6 +71,7 @@ package model.db {
 
 		public static function EDIT_ACCOUNT(a:HostingAccount):SQLStatement
 		{
+			trace("AppSQLQuery.EDIT_ACCOUNT(a)", 'sshKeyId = '+a.sshKeyId);
 			var s:SQLStatement = new SQLStatement();
 			s.text = "UPDATE accounts SET pass='"+a.pass+"', sshKeyId='"+a.sshKeyId+"' WHERE type='"+a.type+"' AND user='"+a.user+"'";
 			return s;

@@ -2,6 +2,7 @@ package view.modals.login {
 
 	import events.AppEvent;
 	import model.remote.HostingAccount;
+	import model.remote.Hosts;
 	import flash.events.MouseEvent;
 	import flash.net.URLRequest;
 	import flash.net.navigateToURL;
@@ -27,10 +28,17 @@ package view.modals.login {
 				super.lockScreen();
 				var ha:HostingAccount = new HostingAccount({type:HostingAccount.GITHUB, 
 						acct:super.fields[0], user:super.fields[0], pass:super.fields[1]});						
-				dispatchEvent(new AppEvent(AppEvent.LOGIN, ha));		
+				dispatchEvent(new AppEvent(AppEvent.LOGIN, ha));
+				Hosts.github.api.addEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);
 			}			
 		}
 		
+		private function onLoginSuccess(e:AppEvent):void
+		{
+			super.dispatchLoginSuccessEvent();
+			Hosts.github.api.removeEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);
+		}		
+				
 		override protected function gotoNewAccountPage(e:MouseEvent):void 
 		{ 
 			navigateToURL(new URLRequest('https://github.com/signup'));

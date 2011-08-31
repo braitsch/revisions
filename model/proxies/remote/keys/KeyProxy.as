@@ -1,7 +1,6 @@
 package model.proxies.remote.keys {
 
 	import events.AppEvent;
-	import model.AppModel;
 	import model.proxies.remote.base.CurlProxy;
 	import model.remote.HostingAccount;
 	import system.BashMethods;
@@ -20,8 +19,9 @@ package model.proxies.remote.keys {
 			super.executable = 'Account.sh';
 		}
 		
-		public function addKeyToAccount(u:String, p:String, a:String):void { }
+		public function addKey(ra:HostingAccount):void { }
 		public function checkKey(ra:HostingAccount):void { }
+		
 	// called from subclasses //	
 		
 		protected function getAllRemoteKeys(url:String):void
@@ -41,7 +41,6 @@ package model.proxies.remote.keys {
 		protected function repairRemoteKey(vrb:String, key:String, url:String):void
 		{
 			startTimer();
-			trace("KeyProxy.repairRemoteKey(vrb, key, url)", key, _baseURL + url);
 			super.request = BashMethods.REPAIR_REMOTE_KEY;
 			super.call(Vector.<String>([vrb=='PUT' ? BashMethods.PUT_REQUEST : BashMethods.PATCH_REQUEST, key, _baseURL + url]));			
 		}	
@@ -91,8 +90,7 @@ package model.proxies.remote.keys {
 
 		protected function dispatchKeyValidated():void 
 		{ 
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.REMOTE_KEY_READY));
-	//		AppModel.database.setSSHKeyId(_account); 
+			dispatchEvent(new AppEvent(AppEvent.REMOTE_KEY_READY, _account));
 		}
 		
 	}
