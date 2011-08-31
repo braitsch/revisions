@@ -37,7 +37,6 @@ package model.proxies.remote.base {
 		{
 			showLoader();
 			super.startTimer();
-			trace("GitProxy.attemptRequest()", _request.method, _request.url, _request.args.join(', '));
 			super.call(Vector.<String>([_request.method, _request.url, _request.args.join(', ')]));
 		}
 
@@ -61,7 +60,7 @@ package model.proxies.remote.base {
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
-			trace("GitProxy.onProcessComplete(e)", e.data.method, e.data.result);
+		//	trace("GitProxy.onProcessComplete(e)", e.data.method, e.data.result);
 			if (super.timerIsRunning == true){
 				super.stopTimer();
 				handleResponse(e.data.method, e.data.result);
