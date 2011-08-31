@@ -102,7 +102,6 @@ package model.proxies.remote.base {
 		private function onAuthenticationFailure():void 
 		{ 
 			inspectURL(_request.url);
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 		}
 
 		private function inspectURL(u:String):void
@@ -132,6 +131,7 @@ package model.proxies.remote.base {
 
 		private function onPermissionsFailure(u:String):void
 		{
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.PERMISSIONS_FAILURE, u));
 			AppModel.engine.addEventListener(AppEvent.RETRY_REMOTE_REQUEST, onRetryRequest);
 		}

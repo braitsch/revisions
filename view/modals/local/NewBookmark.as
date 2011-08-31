@@ -2,14 +2,14 @@ package view.modals.local {
 
 	import events.AppEvent;
 	import events.UIEvent;
-	import flash.events.Event;
-	import flash.events.KeyboardEvent;
-	import flash.events.MouseEvent;
-	import flash.filesystem.File;
 	import model.AppModel;
 	import model.remote.Hosts;
 	import system.FileUtils;
 	import view.modals.base.ModalWindow;
+	import flash.events.Event;
+	import flash.events.KeyboardEvent;
+	import flash.events.MouseEvent;
+	import flash.filesystem.File;
 
 	public class NewBookmark extends ModalWindow {
 
@@ -60,7 +60,8 @@ package view.modals.local {
 			super.onAddedToStage(e);
 			_cloneURL = null;
 			enableCloneButton(false);
-			_view.loginGithub.visible = Hosts.github.loggedIn == false;
+			_view.loginGithub.visible = !Hosts.github.loggedIn;
+			_view.loginBeanstalk.visible = !Hosts.beanstalk.loggedIn;
 		}
 
 		override protected function onKeyUp(e:KeyboardEvent):void

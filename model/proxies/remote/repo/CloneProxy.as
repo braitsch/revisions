@@ -54,6 +54,7 @@ package model.proxies.remote.repo {
 				autosave	:	60 
 			};	
 			AppModel.engine.addBookmark(new Bookmark(o));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.CLONE_COMPLETE));
 		}
 

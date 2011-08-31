@@ -25,21 +25,7 @@ package model.proxies.remote.repo {
 		{
 			_remote = _remotes[0];
 			trace("SyncProxy.syncNextRemote()", _remote.url);
-			checkToPushOrPull();
-		}
-		
-		private function checkToPushOrPull():void
-		{
-			if (_remote.hasBranch(AppModel.branch.name)){
-				pullRemote();				
-			}	else{
-				var w:Boolean = AppSettings.getSetting(AppSettings.PROMPT_NEW_REMOTE_BRANCHES);
-				if (w == false || _prompt == false){
-					pushRemote();
-				}	else{
-					dispatchConfirmPushNewBranch();
-				}
-			}			
+			pullRemote();
 		}
 		
 		private function pullRemote():void
@@ -69,12 +55,22 @@ package model.proxies.remote.repo {
 		{
 			switch(m){
 				case BashMethods.PULL_REMOTE :
-					pushRemote();
+					checkRemoteBranchExists();
 				break;
 				case BashMethods.PUSH_REMOTE :
 					onSyncComplete();
 				break;
 			}
+		}
+
+		private function checkRemoteBranchExists():void
+		{
+			var w:Boolean = AppSettings.getSetting(AppSettings.PROMPT_NEW_REMOTE_BRANCHES);
+			if (w == false || _prompt == false){
+				pushRemote();
+			}	else{
+				dispatchConfirmPushNewBranch();
+			}			
 		}
 		
 		private function onSyncComplete():void

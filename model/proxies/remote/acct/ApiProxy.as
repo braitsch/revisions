@@ -1,5 +1,6 @@
 package model.proxies.remote.acct {
 
+	import system.StringUtils;
 	import events.AppEvent;
 	import model.AppModel;
 	import model.proxies.remote.base.CurlProxy;
@@ -33,6 +34,7 @@ package model.proxies.remote.acct {
 		{
 			startTimer();
 			super.request = BashMethods.ADD_BKMK_TO_ACCOUNT;
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Connecting to '+StringUtils.capitalize(_account.type)}));
 			super.call(Vector.<String>([BashMethods.POST_REQUEST, header, data, _baseURL + url]));
 		}				
 		

@@ -89,7 +89,7 @@ package view.modals.remote {
 		
 		private function onRepositoriesReady():void
 		{
-			showPage(0);
+			if (_pages.length) showPage(0);
 			positionURLAndNav();
 			super.addCloseButton(590);
 			super.drawBackground(590, _view.height + 15);
@@ -112,7 +112,7 @@ package view.modals.remote {
 		private function positionURLAndNav():void
 		{
 			_view.nav.visible = _pages.length > 1;
-			_view.logOut.y = _activePage.y + _activePage.height + 30;
+			_view.logOut.y = (_activePage) ? _activePage.y + _activePage.height + 30 : 90;
 		}		
 		
 		private function enableNavButton(btn:Sprite, b:Boolean):void

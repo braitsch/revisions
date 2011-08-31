@@ -50,6 +50,7 @@ package view {
 			AppModel.engine.addEventListener(BookmarkEvent.SUMMARY_RECEIVED, drawView);
 			AppModel.engine.addEventListener(BookmarkEvent.HISTORY_RECEIVED, drawView);
 			AppModel.engine.addEventListener(BookmarkEvent.MODIFIED_RECEIVED, enableSaveButton);
+			AppModel.engine.addEventListener(AppEvent.BKMK_ADDED_TO_ACCOUNT, onBkmkAddedToAcct);
 		}
 
 		public function resize(h:uint):void
@@ -107,6 +108,11 @@ package view {
 			_details.history_btn.x = b ? 40 : 20;
 			_details.settings_btn.x = b ? -40 : -20;
 		}
+		
+		private function onBkmkAddedToAcct(e:AppEvent):void
+		{
+			positionButtons(_bookmark.remotes.length > 0);
+		}		
 
 		private function addBookmarkListeners():void
 		{
@@ -188,11 +194,11 @@ package view {
 		private function syncRemote():void
 		{
 			var m:String;
-//			if (_bookmark.branch.modified){
-//				m = 'Please saves your lastest changes before syncing with the server.';
-//			}	else if (_bookmark.remotes.length != 1){
-//				m = 'This bookmark has multiple remotes. A remote chooser is coming very soon.';
-//			}
+			if (_bookmark.branch.isModified){
+				m = 'Please saves your lastest changes before syncing with the server.';
+			}	else if (_bookmark.remotes.length != 1){
+				m = 'This bookmark has multiple remotes. A remote chooser is coming very soon.';
+			}
 			if (m){
 				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
 			}	else{

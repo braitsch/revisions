@@ -1,5 +1,6 @@
 package view.modals {
 
+	import model.vo.BookmarkRemote;
 	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.UIEvent;
@@ -37,42 +38,42 @@ package view.modals {
 	import view.modals.local.WelcomeScreen;
 	import view.modals.login.PermissionsFailure;
 	import view.modals.remote.AddBkmkToAccount;
+	import view.modals.remote.OnBkmkAddedToAcct;
 	import view.modals.system.Alert;
 	import view.modals.system.Confirm;
 	import view.modals.system.Debug;
-	import view.modals.system.NewRepoConfirm;
 	import view.ui.Preloader;
 
 	public class ModalManager extends Sprite {
 
-		private static var _welcome			:WelcomeScreen = new WelcomeScreen();
-		private static var _new				:NewBookmark = new NewBookmark();
-		private static var _edit			:BookmarkEditor = new BookmarkEditor();
-		private static var _repair			:RepairBookmark = new RepairBookmark();
-		private static var _delete			:DeleteBookmark = new DeleteBookmark();		private static var _dragAndDrop		:AddDragAndDrop = new AddDragAndDrop();
-		private static var _commit			:NewCommit = new NewCommit();
-		private static var _details			:CommitDetails = new CommitDetails();
-		private static var _revert			:RevertToVersion = new RevertToVersion();		private static var _download		:DownloadVersion = new DownloadVersion();
-		private static var _settings		:GlobalSettings = new GlobalSettings();
-		private static var _appUpdate		:AppUpdate = new AppUpdate();
-		private static var _appExpired		:AppExpired = new AppExpired();
-		private static var _gitAbout		:GitAbout = new GitAbout();
-		private static var _gitInstall		:GitInstall = new GitInstall();
-		private static var _gitUpgrade		:GitUpgrade = new GitUpgrade();
-		private static var _addBkmkToAcct	:AddBkmkToAccount = new AddBkmkToAccount();	
-		private static var _permissions		:PermissionsFailure = new PermissionsFailure();
-		private static var _newRepoConfirm	:NewRepoConfirm = new NewRepoConfirm();
-		private static var _alert			:Alert = new Alert();
-		private static var _debug			:Debug = new Debug();
-		private static var _confirm			:Confirm = new Confirm();
-		private static var _preloader		:Preloader = new Preloader();
+		private static var _welcome				:WelcomeScreen = new WelcomeScreen();
+		private static var _new					:NewBookmark = new NewBookmark();
+		private static var _edit				:BookmarkEditor = new BookmarkEditor();
+		private static var _repair				:RepairBookmark = new RepairBookmark();
+		private static var _delete				:DeleteBookmark = new DeleteBookmark();		private static var _dragAndDrop			:AddDragAndDrop = new AddDragAndDrop();
+		private static var _commit				:NewCommit = new NewCommit();
+		private static var _details				:CommitDetails = new CommitDetails();
+		private static var _revert				:RevertToVersion = new RevertToVersion();		private static var _download			:DownloadVersion = new DownloadVersion();
+		private static var _settings			:GlobalSettings = new GlobalSettings();
+		private static var _appUpdate			:AppUpdate = new AppUpdate();
+		private static var _appExpired			:AppExpired = new AppExpired();
+		private static var _gitAbout			:GitAbout = new GitAbout();
+		private static var _gitInstall			:GitInstall = new GitInstall();
+		private static var _gitUpgrade			:GitUpgrade = new GitUpgrade();
+		private static var _addBkmkToAcct		:AddBkmkToAccount = new AddBkmkToAccount();	
+		private static var _permissions			:PermissionsFailure = new PermissionsFailure();
+		private static var _onBkmkAddedToAcct	:OnBkmkAddedToAcct = new OnBkmkAddedToAcct();
+		private static var _alert				:Alert = new Alert();
+		private static var _debug				:Debug = new Debug();
+		private static var _confirm				:Confirm = new Confirm();
+		private static var _preloader			:Preloader = new Preloader();
 		
 	// windows that force user to make a decision - autoclose disabled //	
-		private static var _stickies		:Vector.<ModalWindow> = new <ModalWindow>
+		private static var _stickies			:Vector.<ModalWindow> = new <ModalWindow>
 				[ _repair, _appExpired, _appUpdate, _gitInstall, _gitUpgrade ];
 				
-		private static var _window			:ModalWindow;	// the active modal window //
-		private static var _curtain			:ModalCurtain = new ModalCurtain();
+		private static var _window				:ModalWindow;	// the active modal window //
+		private static var _curtain				:ModalCurtain = new ModalCurtain();
 
 		public function ModalManager()
 		{
@@ -93,6 +94,7 @@ package view.modals {
 			AppModel.engine.addEventListener(BookmarkEvent.NO_BOOKMARKS, showWelcomeScreen);
 			AppModel.engine.addEventListener(AppEvent.APP_EXPIRED, onAppExpired);
 			AppModel.engine.addEventListener(AppEvent.PERMISSIONS_FAILURE, onPermissionsFailure);
+			AppModel.engine.addEventListener(AppEvent.BKMK_ADDED_TO_ACCOUNT, onBkmkAddedToAccount);
 			AppModel.updater.addEventListener(AppEvent.APP_UPDATE_AVAILABLE, promptToUpdate);
 			AppModel.proxies.config.addEventListener(AppEvent.GIT_NOT_INSTALLED, installGit);
 			AppModel.proxies.config.addEventListener(AppEvent.GIT_NEEDS_UPDATING, upgradeGit);
@@ -117,7 +119,6 @@ package view.modals {
 			stage.addEventListener(UIEvent.GITHUB_LOGIN, showGitHubLogin);
 			stage.addEventListener(UIEvent.BEANSTALK_HOME, showBeanstalkHome);
 			stage.addEventListener(UIEvent.BEANSTALK_LOGIN, showBeanstalkLogin);			
-			stage.addEventListener(UIEvent.SHOW_NEW_REPO_CONFIRM, showNewRepoConfirm);			
 			stage.addEventListener(UIEvent.ADD_BKMK_TO_GITHUB, addBkmkToGitHub);
 			stage.addEventListener(UIEvent.ADD_BKMK_TO_BEANSTALK, addBkmkToBeanstalk);
 			stage.addEventListener(UIEvent.CLOSE_MODAL_WINDOW, onCloseButton);
@@ -206,7 +207,13 @@ package view.modals {
 		{
 			_addBkmkToAcct.host = Hosts.beanstalk;
 			showModalWindow(_addBkmkToAcct);
-		}					
+		}
+		
+		private function onBkmkAddedToAccount(e:AppEvent):void
+		{
+			_onBkmkAddedToAcct.remote = e.data as BookmarkRemote;
+			showModalWindow(_onBkmkAddedToAcct);			
+		}
 		
 		private function onDragAndDrop(e:UIEvent):void 
 		{
@@ -305,12 +312,6 @@ package view.modals {
 			showModalWindow(_permissions);
 		}
 		
-		private function showNewRepoConfirm(e:UIEvent):void
-		{
-			_newRepoConfirm.repository = e.data as Object;
-			showModalWindow(_newRepoConfirm);
-		}				
-		
 		private function showLoader(e:AppEvent):void
 		{
 			setChildIndex(_preloader, numChildren-1);
@@ -336,6 +337,7 @@ package view.modals {
 			_window = mw;
 			_window.filters = [];
 			_curtain.show();
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 		}
 		
 		private function hideModalWindow():void
@@ -392,6 +394,7 @@ package view.modals {
 				_window.locked = true;
 				_window.filters = [new BlurFilter(5, 5, 3)];			
 			}
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 		}
 		
 		private function hideSpecial(w:ModalWindow):void

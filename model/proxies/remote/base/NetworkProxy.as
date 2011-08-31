@@ -9,7 +9,7 @@ package model.proxies.remote.base {
 
 	public class NetworkProxy extends NativeProcessProxy {
 
-		private static var _timeout		:Timer = new Timer(5000, 1);
+		private static var _timeout		:Timer = new Timer(20000, 1);
 		
 		protected function get timerIsRunning():Boolean { return _timeout.running; }
 		

@@ -3,6 +3,7 @@ package model.proxies.remote.acct {
 	import events.AppEvent;
 	import events.ErrorType;
 	import model.remote.HostingAccount;
+	import model.remote.Hosts;
 	import model.vo.BookmarkRemote;
 
 	public class BeanstalkApi extends ApiProxy {
@@ -59,9 +60,9 @@ package model.proxies.remote.acct {
 		override protected function onRepositoryCreated(s:String):void
 		{
 			var xml:XML = new XML(s);
-			trace("BeanstalkProxy.onRepositoryCreated(s)", xml);
 			var url:String = 'git@'+super.account.acct+'.beanstalkapp.com:/'+xml.name+'.git';
-			dispatchEvent(new AppEvent(AppEvent.REPOSITORY_CREATED,  new BookmarkRemote(HostingAccount.BEANSTALK+'-'+xml.name, url)));
+			Hosts.beanstalk.home.addRepository(xml);
+			dispatchEvent(new AppEvent(AppEvent.REPOSITORY_CREATED, new BookmarkRemote(HostingAccount.BEANSTALK+'-'+xml.name, url)));
 		}
 		
 	// handle beanstalk specific errors //
