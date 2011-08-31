@@ -26,9 +26,9 @@ package view.modals.login {
 		{
 			if (super.validate()){
 				super.lockScreen();
-				var ha:HostingAccount = new HostingAccount({type:HostingAccount.GITHUB, 
+				var a:HostingAccount = new HostingAccount({type:HostingAccount.GITHUB, 
 						acct:super.fields[0], user:super.fields[0], pass:super.fields[1]});						
-				dispatchEvent(new AppEvent(AppEvent.LOGIN, ha));
+				Hosts.github.attemptLogin(a, true);
 				Hosts.github.api.addEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);
 			}			
 		}

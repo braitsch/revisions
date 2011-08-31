@@ -1,5 +1,6 @@
 package model.proxies.remote.base {
 
+	import model.vo.BookmarkRemote;
 	import events.AppEvent;
 	import events.ErrorType;
 	import events.NativeProcessEvent;
@@ -104,10 +105,10 @@ package model.proxies.remote.base {
 		private function attemptAccountLookup(u:String):void
 		{
 	//	git@github.com:acctName/repo-name.git
-			var an:String = u.substr(u.indexOf(':'), u.indexOf('/'));
-			var ha:HostingAccount = Hosts.github.getAccountByProp('user', an);
+			var an:String = BookmarkRemote.getAccountName(u);
+			var ha:HostingAccount = Hosts.github.getAccountByProp('acct', an);
 			if (ha){
-				u = 'https://' + an + ':' + ha.pass + '@github.com/' + an +'/'+ u.lastIndexOf('/') + 1;
+				u = 'https://' + ha.user + ':' + ha.pass + '@github.com/' + an +'/'+ u.substr(u.lastIndexOf('/') + 1);
 				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.RETRY_REMOTE_REQUEST, u));
 			}	else{
 				onPermissionsFailure(u);		

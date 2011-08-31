@@ -1,5 +1,6 @@
 package view.modals.remote {
 
+	import events.UIEvent;
 	import com.greensock.TweenLite;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -12,8 +13,8 @@ package view.modals.remote {
 
 		public function RepositoryItem(o:Object):void
 		{
-			_url = o.ssh_url || o.https_url;
-			_view.name_txt.autoSize = TextFieldAutoSize.LEFT;
+			_url = o.ssh_url || o.https_url; // https_url is beanstalk even though it is @git ! //
+ 			_view.name_txt.autoSize = TextFieldAutoSize.LEFT;
 			_view.desc_txt.autoSize = TextFieldAutoSize.LEFT;
 			_view.name_txt.text = o.name;
 			_view.desc_txt.text = o.description || 'No description available';
@@ -32,8 +33,7 @@ package view.modals.remote {
 		
 		private function onButtonClick(e:MouseEvent):void
 		{
-			trace("RepositoryItem.onButtonClick(e)", _url);
-		//	dispatchEvent(new UIEvent(UIEvent.LOGGED_IN_CLONE, _url));
+			dispatchEvent(new UIEvent(UIEvent.LOGGED_IN_CLONE, _url));
 		}
 		
 		private function onButtonRollOut(e:MouseEvent):void {TweenLite.to(e.target.over, .3, {alpha:0});}

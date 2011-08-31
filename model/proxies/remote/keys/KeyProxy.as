@@ -19,7 +19,6 @@ package model.proxies.remote.keys {
 			super.executable = 'Account.sh';
 		}
 		
-		public function addKey(ra:HostingAccount):void { }
 		public function checkKey(ra:HostingAccount):void { }
 		
 	// called from subclasses //	

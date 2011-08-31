@@ -38,14 +38,15 @@ package model.proxies.remote.repo {
 
 		override protected function onAuthenticationFailure():void
 		{
-			super.inspectURL(_cloneURL);
 			AppModel.engine.addEventListener(AppEvent.RETRY_REMOTE_REQUEST, onRetryRequest);
+			super.inspectURL(_cloneURL);
 		}
 
 		private function onRetryRequest(e:AppEvent):void
 		{
-			trace("CloneProxy.onRetryRequest(e) -- hello!", this, _cloneURL, _savePath);
-			if (e.data != null) this.clone(e.data as String, _savePath);
+			_cloneURL = e.data as String;
+			trace("CloneProxy.onRetryRequest(e) -- hello!", _cloneURL, _savePath);
+			if (e.data != null) this.clone(_cloneURL, _savePath);
 			AppModel.engine.removeEventListener(AppEvent.RETRY_REMOTE_REQUEST, onRetryRequest);			
 		}
 		

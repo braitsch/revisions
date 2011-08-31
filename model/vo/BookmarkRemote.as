@@ -55,7 +55,7 @@ package model.vo {
 			return o;	
 		}
 		
-		private static function getAccountName(u:String):String
+		public static function getAccountName(u:String):String
 		{
 			if (u.indexOf('git@github.com') != -1 ){
 				return u.substring(u.indexOf(':') + 1, u.indexOf('/'));

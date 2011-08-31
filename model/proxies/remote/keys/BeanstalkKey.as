@@ -12,13 +12,6 @@ package model.proxies.remote.keys {
 			super.getAllRemoteKeys('/public_keys.xml');
 		}
 		
-//		override public function addKey(ra:HostingAccount):void
-//		{
-//			super.account = ra;
-//			super.baseURL = 'https://'+ra.user+':'+ra.pass+'@'+ra.acct+'.beanstalkapp.com/api';
-//			super.addKeyToRemote(HEADER_XML, getKeyObject(), '/public_keys.xml');
-//		}
-		
 	// private methods //		
 		
 		override protected function onRemoteKeysReceived(s:String):void

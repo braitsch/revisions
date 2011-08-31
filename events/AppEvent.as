@@ -31,8 +31,6 @@ package events {
 		public static const GIT_NAME_AND_EMAIL		:String = "GIT_NAME_AND_EMAIL";		
 		public static const GIT_DIR_UPDATED			:String = "GIT_DIR_UPDATED";
 		
-		public static const LOGIN					:String = "LOGIN";
-		public static const LOGOUT					:String = "LOGOUT";		
 		public static const LOGIN_SUCCESS			:String = "LOGIN_SUCCESS";
 		
 	// remote calls //	
