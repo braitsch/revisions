@@ -108,7 +108,7 @@ package model.proxies.remote.base {
 			var an:String = BookmarkRemote.getAccountName(u);
 			var ha:HostingAccount = Hosts.github.getAccountByProp('acct', an);
 			if (ha){
-				u = 'https://' + ha.user + ':' + ha.pass + '@github.com/' + an +'/'+ u.substr(u.lastIndexOf('/') + 1);
+				u = BookmarkRemote.buildHttpsURL(ha.user, ha.pass, an, u.substr(u.lastIndexOf('/') + 1));
 				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.RETRY_REMOTE_REQUEST, u));
 			}	else{
 				onPermissionsFailure(u);		

@@ -26,11 +26,10 @@ package view.modals.login {
 			_view.sign_up.addEventListener(MouseEvent.CLICK, gotoNewAccountPage);
 			AppModel.engine.addEventListener(AppEvent.FAILURE, onLoginFailure);
 		}
+
+		public function get saveAccount():Boolean { return _check.selected; }
 		
-		public function set onSuccessEvent(s:String):void
-		{
-			_onSuccessEvent = s;
-		}
+		public function set onSuccessEvent(s:String):void { _onSuccessEvent = s; }
 		
 		protected function gotoNewAccountPage(e:MouseEvent):void { }
 		

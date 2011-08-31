@@ -9,7 +9,7 @@ package view.modals.login {
 
 	public class BeanstalkLogin extends AccountLogin {
 
-		private static var _view :BeanstalkLoginMC = new BeanstalkLoginMC();
+		private static var _view 	:BeanstalkLoginMC = new BeanstalkLoginMC();
 
 		public function BeanstalkLogin()
 		{
@@ -29,7 +29,7 @@ package view.modals.login {
 				super.lockScreen();
 				var a:HostingAccount = new HostingAccount({type:HostingAccount.BEANSTALK, 
 						acct:super.fields[0], user:super.fields[1], pass:super.fields[2]});
-				Hosts.beanstalk.attemptLogin(a, true);
+				Hosts.beanstalk.attemptLogin(a, super.saveAccount);
 				Hosts.beanstalk.api.addEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);
 			}			
 		}

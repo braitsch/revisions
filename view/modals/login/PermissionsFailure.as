@@ -1,5 +1,6 @@
 package view.modals.login {
 
+	import view.ui.ModalCheckbox;
 	import events.AppEvent;
 	import events.UIEvent;
 	import flash.events.MouseEvent;
@@ -16,6 +17,7 @@ package view.modals.login {
 		private static var _acctType	:String;
 		private static var _acctName	:String;
 		private static var _repoName	:String;
+		private static var _check		:ModalCheckbox = new ModalCheckbox(_view.check, true);
 
 		public function PermissionsFailure()
 		{
@@ -25,15 +27,14 @@ package view.modals.login {
 			super.addButtons([_view.cancel_btn]);
 			super.defaultButton = _view.ok_btn;
 			super.labels = ['Username', 'Password'];
-			super.inputs = [_view.name_txt, _view.pass_txt];			
+			super.inputs = [_view.name_txt, _view.pass_txt];
+			_check.label = 'Remember my username & password for this account';			
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);
 			_view.cancel_btn.addEventListener(MouseEvent.CLICK, onCancelButton);
 		}
 		
 		public function set request(u:String):void
 		{
-			_view.name_txt.text = 'braitsch'; 
-			_view.pass_txt.text = 'aelisch76';
 			_request = u;
 			var o:Object = BookmarkRemote.inspectURL(_request);
 			_acctType = o.acctType;
@@ -61,7 +62,7 @@ package view.modals.login {
 		{
 			var ha:HostingAccount = new HostingAccount({type:HostingAccount.BEANSTALK, 
 						acct:_acctName, user:super.fields[0], pass:super.fields[1]});
-			Hosts.beanstalk.addKeyToAccount(ha, true);
+			Hosts.beanstalk.addKeyToAccount(ha, _check.selected);
 			Hosts.beanstalk.key.addEventListener(AppEvent.REMOTE_KEY_READY, onKeyAddedToBeanstalk);
 		}
 
@@ -73,8 +74,13 @@ package view.modals.login {
 
 		private function retryRequestOverHttps():void
 		{
-			var s:String = 'https://' + super.fields[0] + ':' + super.fields[1] + '@github.com/' + _acctName +'/'+ _repoName;
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.RETRY_REMOTE_REQUEST, s));			
+			var s:String = BookmarkRemote.buildHttpsURL(super.fields[0], super.fields[1] , _acctName , _repoName);
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.RETRY_REMOTE_REQUEST, s));
+			if (_check.selected){
+				var ha:HostingAccount = new HostingAccount({type:HostingAccount.GITHUB, 
+					acct:_acctName, user:super.fields[0], pass:super.fields[1]});
+				Hosts.github.writeAcctToDatabase(ha);	
+			}
 		}
 		
 		private function onCancelButton(e:MouseEvent):void

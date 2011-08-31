@@ -5,26 +5,22 @@ package model.vo {
 	public class BookmarkRemote {
 
 		private var _name		:String; // ex. github-revisions-source //
-		private var _ssh		:String;
-		private var _acctType	:String;
-		private var _acctName	:String;
-		private var _repoName	:String;
+		private var _url		:String;
+		private var _data		:Object;
 		private var _branches	:Array = [];
 
 		public function BookmarkRemote(name:String, url:String)
 		{
-			_name = name.toLowerCase();
-			var o:Object = inspectURL(url);
-			_acctType = o.acctType;
-			_acctName = o.acctName;
-			_repoName = o.repoName;
-		}		
+			_name = name.toLowerCase(); 
+			_url = url;
+			_data = inspectURL(_url);
+		}
 		
-		public function get ssh()			:String { return _ssh; }
-		public function get name()			:String { return _name; }
-		public function get acctType()		:String { return _acctType; }	
-		public function get acctName()		:String { return _acctName; }	
-		public function get repoName()		:String { return _repoName; }
+		public function get url()			:String { return _url; 			 }
+		public function get name()			:String { return _name; 		 }
+		public function get acctType()		:String { return _data.acctType; }	
+		public function get acctName()		:String { return _data.acctName; }	
+		public function get repoName()		:String { return _data.repoName; }
 		
 		public function addBranch(s:String):void
 		{
@@ -64,7 +60,12 @@ package model.vo {
 			}	else{
 				return 'unable to detect account name';		
 			}
-		}	
+		}
+		
+		public static function buildHttpsURL(u:String, p:String, a:String, r:String):String
+		{
+			return 'https://' + u + ':' + p + '@github.com/' + a +'/'+ r;
+		}
 
 	}
 	

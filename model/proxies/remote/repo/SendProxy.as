@@ -32,7 +32,7 @@ package model.proxies.remote.repo {
 			_remote = e.data as BookmarkRemote;
 			super.startTimer();
 			super.directory = _bkmk.gitdir;
-			super.call(Vector.<String>([BashMethods.ADD_REMOTE, _remote.name, _remote.ssh]));
+			super.call(Vector.<String>([BashMethods.ADD_REMOTE, _remote.name, _remote.url]));
 		}
 		
 		override protected function onProcessSuccess(m:String):void 
@@ -52,7 +52,7 @@ package model.proxies.remote.repo {
 		{
 			_bkmk.addRemote(_remote);
 			super.startTimer();
-			super.call(Vector.<String>([BashMethods.PUSH_REMOTE, _remote.ssh, _bkmk.branch.name]));
+			super.call(Vector.<String>([BashMethods.PUSH_REMOTE, _remote.url, _bkmk.branch.name]));
 		}
 		
 		private function onBookmarkPushedToAccount():void

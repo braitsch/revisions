@@ -34,7 +34,7 @@ package model.proxies.remote.base {
 		
 		private function onProcessComplete(e:NativeProcessEvent):void
 		{
-			trace("RemoteProxy.onProcessComplete(e)", _request, 'response='+e.data.result);
+			trace("CurlProxy.onProcessComplete(e)", _request);
 			if (super.timerIsRunning == true){
 				super.stopTimer();
 				var s:String = e.data.result; 

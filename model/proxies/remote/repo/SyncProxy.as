@@ -14,7 +14,6 @@ package model.proxies.remote.repo {
 		private static var _remote		:BookmarkRemote;
 		private static var _prompt		:Boolean;
 		private static var _remotes		:Vector.<BookmarkRemote>;
-		private static var _remoteURL	:String;
 
 		public function SyncProxy()
 		{
@@ -23,13 +22,13 @@ package model.proxies.remote.repo {
 		
 		public function syncRemotes(v:Vector.<BookmarkRemote>):void
 		{
-			_index = 0; _remotes = v.concat(); syncNextRemote();			
+			_index = 0; _remotes = v.concat();
+			syncNextRemote();			
 		}
 		
 		private function syncNextRemote():void
 		{
 			_remote = _remotes[_index];
-			_remoteURL = _remote.ssh;
 			checkToPushOrPull();
 		}
 		
@@ -47,17 +46,19 @@ package model.proxies.remote.repo {
 			}			
 		}
 		
-		private function pullRemote():void
+		private function pullRemote(u:String = null):void
 		{
+			super.startTimer();
 			super.directory = AppModel.bookmark.gitdir;
-			super.call(Vector.<String>([BashMethods.PULL_REMOTE, _remoteURL, AppModel.branch.name]));
+			super.call(Vector.<String>([BashMethods.PULL_REMOTE, u || _remote.url, AppModel.branch.name]));
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Fetching files from '+StringUtils.capitalize(_remote.acctType)}));
 		}
 		
-		private function pushRemote():void
+		private function pushRemote(u:String = null):void
 		{
+			super.startTimer();
 			super.directory = AppModel.bookmark.gitdir;
-			super.call(Vector.<String>([BashMethods.PUSH_REMOTE, _remoteURL, AppModel.branch.name]));
+			super.call(Vector.<String>([BashMethods.PUSH_REMOTE, u || _remote.url, AppModel.branch.name]));
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Sending files to '+StringUtils.capitalize(_remote.acctType)}));
 		}
 		
@@ -72,19 +73,29 @@ package model.proxies.remote.repo {
 			onSyncComplete(); 
 		}
 		
-		public function attemptManualHttpsSync(u:String, p:String):void
-		{
-		//	_remoteURL = _remote.buildHttpsURL(u, p);
-			checkToPushOrPull();
-		}			
-		
 		override protected function onProcessSuccess(m:String):void 
 		{
 			switch(m){
-				case BashMethods.CLONE :
+				case BashMethods.PULL_REMOTE :
+					pushRemote();
+				break;
+				case BashMethods.PUSH_REMOTE :
+					onSyncComplete();
 				break;
 			}
-		}			
+		}
+		
+		override protected function onAuthenticationFailure():void
+		{
+			AppModel.engine.addEventListener(AppEvent.RETRY_REMOTE_REQUEST, onRetryRequest);
+			super.inspectURL(_remote.url);
+		}
+
+		private function onRetryRequest(e:AppEvent):void
+		{
+			if (e.data != null) this.pullRemote(e.data as String);
+			AppModel.engine.removeEventListener(AppEvent.RETRY_REMOTE_REQUEST, onRetryRequest);			
+		}		
 		
 		private function onSyncComplete():void
 		{
@@ -103,7 +114,8 @@ package model.proxies.remote.repo {
 
 		private function dispatchSyncComplete():void
 		{
-			dispatchEvent(new AppEvent(AppEvent.REMOTE_SYNCED));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.REMOTE_SYNCED));
 		}
 		
 		private function dispatchConfirmPushNewBranch():void

@@ -73,6 +73,7 @@ package model.db {
 		
 		public function addAccount(a:HostingAccount):void
 		{
+			trace("AppDatabase.addAccount(a)", a.type, a.user);
 			_addAccount = new Vector.<SQLStatement>();
 			_addAccount.push(AppSQLQuery.ADD_ACCOUNT(a));
 			super.execute(_addAccount, true);
@@ -80,6 +81,7 @@ package model.db {
 		
 		public function editAccount(a:HostingAccount):void
 		{
+			trace("AppDatabase.editAccount(a)", a.type, a.user);
 			_editAccount = new Vector.<SQLStatement>();
 			_editAccount.push(AppSQLQuery.EDIT_ACCOUNT(a));
 			super.execute(_editAccount, true);						
@@ -92,14 +94,7 @@ package model.db {
 			super.execute(_delAccount, true);
 		}	
 		
-		public function setSSHKeyId(a:HostingAccount):void
-		{
-			_setSSHKeyId = new Vector.<SQLStatement>();
-			_setSSHKeyId.push(AppSQLQuery.CLEAR_SSH_KEY_ID);
-			_setSSHKeyId.push(AppSQLQuery.SET_SSH_KEY_ID(a));
-			super.execute(_setSSHKeyId, true);
-		}									
-			//	private methods //	
+	//	private methods //	
 		
 		private function getNextActiveRepository($old:String):String 
 		{

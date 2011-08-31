@@ -83,16 +83,6 @@ package model.db {
 			return s;				
 		}
 		
-		public static const CLEAR_SSH_KEY_ID:SQLStatement = new SQLStatement();
-		CLEAR_SSH_KEY_ID.text = "UPDATE accounts SET sshKeyId=0 WHERE sshKeyId=1";		
-		
-		public static function SET_SSH_KEY_ID(a:HostingAccount):SQLStatement
-		{
-			var s:SQLStatement = new SQLStatement();
-			s.text = "UPDATE accounts SET sshKeyId='"+a.sshKeyId+"' WHERE type='"+a.type+"' AND user='"+a.user+"'";
-			return s;				
-		}
-		
 //		public static function ADD_NEW_FIELD($field:String):SQLStatement
 //		{
 //			var s:SQLStatement = new SQLStatement();

@@ -24,7 +24,6 @@ package model {
 		public function addBookmark(b:Bookmark):void
 		{
 			_bookmark = b;
-			trace("AppEngine.addBookmark(b)", _bookmark.label);
 			AppModel.proxies.update.lock = true;
 			AppModel.proxies.creator.initBookmark(_bookmark);
 			AppModel.proxies.creator.addEventListener(BookmarkEvent.INITIALIZED, readRepository);		

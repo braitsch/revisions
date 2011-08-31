@@ -45,7 +45,6 @@ package model.proxies.remote.repo {
 		private function onRetryRequest(e:AppEvent):void
 		{
 			_cloneURL = e.data as String;
-			trace("CloneProxy.onRetryRequest(e) -- hello!", _cloneURL, _savePath);
 			if (e.data != null) this.clone(_cloneURL, _savePath);
 			AppModel.engine.removeEventListener(AppEvent.RETRY_REMOTE_REQUEST, onRetryRequest);			
 		}

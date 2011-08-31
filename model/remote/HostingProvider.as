@@ -43,7 +43,7 @@ package model.remote {
 		
 		public function addKeyToAccount(a:HostingAccount, b:Boolean):void
 		{
-			_model.key.checkKey(a); _saveAccount = b;			
+			_model.key.checkKey(a); _saveAccount = b;
 		}
 		
 		public function getAccountByProp(p:String, v:String):HostingAccount
@@ -64,7 +64,7 @@ package model.remote {
 		
 	// private methods //
 	
-		private function writeAcctToDatabase(n:HostingAccount):void
+		public function writeAcctToDatabase(n:HostingAccount):void
 		{
 			var o:HostingAccount = getAccountByProp('user', n.user);
 			if (o == null){
