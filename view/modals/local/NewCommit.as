@@ -38,8 +38,8 @@ package view.modals.local {
 				var m:String = 'Commit Message Cannot Be Empty.';
 				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));				
 			}	else{
-				AppModel.proxies.editor.commit(_view.textArea.message_txt.text);
 				dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
+				AppModel.proxies.editor.commit(_view.textArea.message_txt.text);
 			}
 		}
 		
