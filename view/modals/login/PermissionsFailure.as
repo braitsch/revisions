@@ -28,7 +28,7 @@ package view.modals.login {
 			super.defaultButton = _view.ok_btn;
 			super.labels = ['Username', 'Password'];
 			super.inputs = [_view.name_txt, _view.pass_txt];
-			_check.label = 'Remember my username & password for this account';			
+			_check.label = 'Remember my login for this account';			
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);
 			_view.cancel_btn.addEventListener(MouseEvent.CLICK, onCancelButton);
 		}

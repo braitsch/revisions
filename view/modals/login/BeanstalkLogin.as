@@ -19,8 +19,6 @@ package view.modals.login {
 			super.setHeading(_view, 'Have a Beanstalk account? Please login.');
 			super.labels = ['Account', 'Username', 'Password'];
 			super.inputs = [_view.acct_txt, _view.name_txt, _view.pass_txt];
-			_view.acct_txt.text = 'braitsch';
-			_view.name_txt.text = 'braitsch'; _view.pass_txt.text = 'aelisch76';
 		}
 
 		override protected function onLoginButton(e:MouseEvent = null):void

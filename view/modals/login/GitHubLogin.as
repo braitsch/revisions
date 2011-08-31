@@ -19,7 +19,6 @@ package view.modals.login {
 			super.setHeading(_view, 'Have a GitHub account? Please login. (Required for private repositories)');
 			super.labels = ['Username', 'Password'];
 			super.inputs = [_view.name_txt, _view.pass_txt];
-			_view.name_txt.text = 'braitsch'; _view.pass_txt.text = 'aelisch76';
 		}
 		
 		override protected function onLoginButton(e:MouseEvent = null):void

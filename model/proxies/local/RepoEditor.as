@@ -21,6 +21,7 @@ package model.proxies.local {
 		{
 			super.directory = AppModel.bookmark.gitdir;
 			super.call(Vector.<String>([BashMethods.COMMIT, $msg]));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Saving Changes'}));
 		}
 		
 		public function trackFile($file:File):void
