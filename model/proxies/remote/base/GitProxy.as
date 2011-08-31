@@ -11,106 +11,102 @@ package model.proxies.remote.base {
 
 	public class GitProxy extends NetworkProxy {
 		
-		private static var _urlErrors:Vector.<String> = new <String>[	'Unable to find remote helper',
-																		'does not exist',
-																		'doesn\'t exist. Did you enter it correctly?',
-																		'Could not find Repository',
-																		'Failed connect to',
-																		'Couldn\'t resolve host'	];
-																		
-		private static var _keyErrors:Vector.<String> = new <String>[	
-			'Permission denied',
-			'Authentication failed',
-			'403 while accessing',
-			'Host key verification failed',
-			'Your key is not attached to the repository and account you are trying to access.'];
-		
+		private static var _request		:GitRequest;
+		private static var _account		:HostingAccount;
+	
 		public function GitProxy()
 		{
+			super.executable = 'RepoRemote.sh';
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
+		}
+		
+		protected function set request(req:GitRequest):void 
+		{ 
+			_request = req;
+			attemptRequest();
+		}
+		
+		private function attemptRequest():void
+		{
+			super.startTimer();
+			trace("GitProxy.attemptRequest()", _request.method, _request.url, _request.args.join(', '));
+			super.call(Vector.<String>([_request.method, _request.url, _request.args.join(', ')]));
 		}
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
-			trace("GitProxy.onProcessComplete(e)", e.data.method, e.data.result);
 			if (super.timerIsRunning == true){
 				super.stopTimer();
 				handleResponse(e.data.method, e.data.result);
-			} else if (e.data.method == BashMethods.CLONE){
+			} 	else if (e.data.method == BashMethods.CLONE) {
 				handleResponse(e.data.method, e.data.result);
 			}
 		}
 		
 		private function handleResponse(m:String, r:String):void
 		{
-			if (requestFailed(m, r) == false) onProcessSuccess(m);	
+			var f:String = GitFailure.detectFailure(r);
+			if (f){
+				onProcessFailure(f);
+			}	else{
+				onProcessSuccess(m);
+				if (_account) Hosts.github.writeAcctToDatabase(_account);
+			}
+			_account = null;
+		}
+		
+		private function onProcessFailure(f:String):void 
+		{
+			switch(f){
+				case GitFailure.AUTHENTICATION	:
+					onAuthenticationFailure();
+				break;
+				case GitFailure.MALFORMED_URL	:
+					dispatchFailure(ErrorType.UNRESOLVED_HOST);
+				break;
+				case GitFailure.REPO_NOT_FOUND	:
+					dispatchFailure(ErrorType.REPO_NOT_FOUND);
+				break;
+			}
 		}
 		
 		protected function onProcessSuccess(m:String):void { }
-		protected function onAuthenticationFailure():void { }
-		
-		private function requestFailed(m:String, s:String):Boolean
-		{
-			var f:Boolean;
-			if (detectKeyErrors(s)){
-				f = true;
-				onAuthenticationFailure();
-			}	else if (detectURLErrors(s)){
-				f = true;
-				dispatchFailure(ErrorType.UNRESOLVED_HOST);
-			}	else if (hasString(s, 'doesn\'t exist. Did you enter it correctly?')){
-				f = true;
-				dispatchFailure(ErrorType.REPO_NOT_FOUND);
-			}	else if (hasString(s, 'git/info/refs not found')){
-				f = true;
-				dispatchFailure(ErrorType.REPO_NOT_FOUND);								
-			}	else if (hasString(s, 'fatal: The remote end hung up unexpectedly')){
-				f = true;
-				dispatchFailure(ErrorType.NO_CONNECTION);
-			}	else if (hasString(s, 'fatal:')){
-				f = true;
-				dispatchDebug({source:'GitProxy.requestFailed()', method:m, message:s});
-			}
-			return f;
+		protected function onAuthenticationFailure():void 
+		{ 
+			inspectURL(_request.url);
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
+			AppModel.engine.addEventListener(AppEvent.RETRY_REMOTE_REQUEST, onRetryRequest);
 		}
-		
-		private function detectKeyErrors(s:String):Boolean
+
+		private function onRetryRequest(e:AppEvent):void
 		{
-			for (var i:int = 0; i < _keyErrors.length; i++) {
-				if (hasString(s, _keyErrors[i])) return true;
+			if (e.data.u != null) {
+				_request.url = e.data.u; _account = e.data.a;
+				attemptRequest();
 			}
-			return false;
+			AppModel.engine.removeEventListener(AppEvent.RETRY_REMOTE_REQUEST, onRetryRequest);				
 		}
-		
-		private function detectURLErrors(s:String):Boolean
-		{
-			for (var i:int = 0; i < _urlErrors.length; i++) {
-				if (hasString(s, _urlErrors[i])) return true;
-			}
-			return false;
-		}		
 		
 		protected function inspectURL(u:String):void
 		{ 
 			if (hasString(u, 'git://github.com') || hasString(u, 'https://github.com')){
-			// a read-only request has failed //	
+		// a read-only request has failed //	
 				dispatchFailure('Sorry could not connect to that url. Are you sure you entered it correctly?');
 			}	else if (hasString(u, 'git@github.com')){
 				attemptAccountLookup(u);
 			}	else{
 				onPermissionsFailure(u);
 			}
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 		}
 
 		private function attemptAccountLookup(u:String):void
 		{
-	//	git@github.com:acctName/repo-name.git
+		// only github supports requests over https //	
 			var an:String = BookmarkRemote.getAccountName(u);
 			var ha:HostingAccount = Hosts.github.getAccountByProp('acct', an);
 			if (ha){
-				u = BookmarkRemote.buildHttpsURL(ha.user, ha.pass, an, u.substr(u.lastIndexOf('/') + 1));
-				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.RETRY_REMOTE_REQUEST, u));
+				_request.url = BookmarkRemote.buildHttpsURL(ha.user, ha.pass, an, u.substr(u.lastIndexOf('/') + 1));
+				attemptRequest();
 			}	else{
 				onPermissionsFailure(u);		
 			}
@@ -122,7 +118,7 @@ package model.proxies.remote.base {
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.PERMISSIONS_FAILURE, u));
 		}
 		
-		private function hasString(s1:String, s2:String):Boolean { return s1.indexOf(s2) != -1; }				
+		private static function hasString(s1:String, s2:String):Boolean { return s1.indexOf(s2) != -1; }		
 		
 	}
 	

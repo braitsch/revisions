@@ -16,7 +16,6 @@ package model.proxies.remote.repo {
 
 		public function SendProxy()
 		{
-			super.executable = 'RepoRemote.sh';
 		}
 		
 		public function addBkmkToAccount(o:Object):void

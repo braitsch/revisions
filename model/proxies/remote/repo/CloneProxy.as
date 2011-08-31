@@ -3,6 +3,7 @@ package model.proxies.remote.repo {
 	import events.AppEvent;
 	import model.AppModel;
 	import model.proxies.remote.base.GitProxy;
+	import model.proxies.remote.base.GitRequest;
 	import model.vo.Bookmark;
 	import system.BashMethods;
 	import system.StringUtils;
@@ -12,16 +13,10 @@ package model.proxies.remote.repo {
 		private static var _cloneURL	:String;
 		private static var _savePath	:String;
 
-		public function CloneProxy()
-		{
-			super.executable = 'RepoRemote.sh';
-		}
-
 		public function clone(url:String, loc:String):void
 		{
 			_cloneURL = url; _savePath = loc;
-			trace("CloneProxy.clone(url, loc)", _cloneURL, _savePath);
-			super.call(Vector.<String>([BashMethods.CLONE, _cloneURL, _savePath]));
+			super.request = new GitRequest(BashMethods.CLONE, _cloneURL, [_savePath]);
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Cloning Remote Repository'}));
 		}
 		
@@ -36,19 +31,6 @@ package model.proxies.remote.repo {
 			}
 		}
 
-		override protected function onAuthenticationFailure():void
-		{
-			AppModel.engine.addEventListener(AppEvent.RETRY_REMOTE_REQUEST, onRetryRequest);
-			super.inspectURL(_cloneURL);
-		}
-
-		private function onRetryRequest(e:AppEvent):void
-		{
-			_cloneURL = e.data as String;
-			if (e.data != null) this.clone(_cloneURL, _savePath);
-			AppModel.engine.removeEventListener(AppEvent.RETRY_REMOTE_REQUEST, onRetryRequest);			
-		}
-		
 	// success request callbacks //	
 
 		private function dispatchNewBookmark():void

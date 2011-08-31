@@ -1,5 +1,6 @@
 package model.proxies.remote.repo {
 
+	import model.proxies.remote.base.GitRequest;
 	import events.AppEvent;
 	import model.AppModel;
 	import model.proxies.remote.base.GitProxy;
@@ -13,13 +14,7 @@ package model.proxies.remote.repo {
 		private static var _remote		:BookmarkRemote;
 		private static var _prompt		:Boolean;
 		private static var _remotes		:Vector.<BookmarkRemote>;
-		private static var _lastFunc	:Function;
 
-		public function SyncProxy()
-		{
-			super.executable = 'RepoRemote.sh';
-		}
-		
 		public function syncRemotes(v:Vector.<BookmarkRemote>):void
 		{
 			_remotes = v.concat();
@@ -48,21 +43,17 @@ package model.proxies.remote.repo {
 			}			
 		}
 		
-		private function pullRemote(u:String = null):void
+		private function pullRemote():void
 		{
-			_lastFunc = pullRemote;
-			super.startTimer();
 			super.directory = AppModel.bookmark.gitdir;
-			super.call(Vector.<String>([BashMethods.PULL_REMOTE, u || _remote.url, AppModel.branch.name]));
+			super.request = new GitRequest(BashMethods.PULL_REMOTE, _remote.url, [AppModel.branch.name]);
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Fetching files from '+StringUtils.capitalize(_remote.acctType)}));
 		}
 		
-		private function pushRemote(u:String = null):void
+		private function pushRemote():void
 		{
-			_lastFunc = pushRemote;
-			super.startTimer();
 			super.directory = AppModel.bookmark.gitdir;
-			super.call(Vector.<String>([BashMethods.PUSH_REMOTE, u || _remote.url, AppModel.branch.name]));
+			super.request = new GitRequest(BashMethods.PUSH_REMOTE, _remote.url, [AppModel.branch.name]);
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Sending files to '+StringUtils.capitalize(_remote.acctType)}));
 		}
 		
@@ -89,18 +80,6 @@ package model.proxies.remote.repo {
 				break;
 			}
 		}
-		
-		override protected function onAuthenticationFailure():void
-		{
-			AppModel.engine.addEventListener(AppEvent.RETRY_REMOTE_REQUEST, onRetryRequest);
-			super.inspectURL(_remote.url);
-		}
-
-		private function onRetryRequest(e:AppEvent):void
-		{
-			if (e.data != null) _lastFunc(e.data as String);
-			AppModel.engine.removeEventListener(AppEvent.RETRY_REMOTE_REQUEST, onRetryRequest);			
-		}		
 		
 		private function onSyncComplete():void
 		{

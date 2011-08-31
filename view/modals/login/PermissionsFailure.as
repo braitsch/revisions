@@ -13,7 +13,7 @@ package view.modals.login {
 	public class PermissionsFailure extends ModalWindowForm {
 
 		private static var _view		:PermissionsFailureMC = new PermissionsFailureMC();
-		private static var _request		:String;
+		private static var _url			:String;
 		private static var _acctType	:String;
 		private static var _acctName	:String;
 		private static var _repoName	:String;
@@ -35,8 +35,8 @@ package view.modals.login {
 		
 		public function set request(u:String):void
 		{
-			_request = u;
-			var o:Object = BookmarkRemote.inspectURL(_request);
+			var o:Object = BookmarkRemote.inspectURL(u);
+			_url = u;
 			_acctType = o.acctType;
 			_acctName = o.acctName;
 			_repoName = o.repoName;
@@ -60,33 +60,33 @@ package view.modals.login {
 
 		private function addKeyToBeanstalkAcct():void
 		{
-			var ha:HostingAccount = new HostingAccount({type:HostingAccount.BEANSTALK, 
-						acct:_acctName, user:super.fields[0], pass:super.fields[1]});
+			var ha:HostingAccount = makeAcctObj(HostingAccount.BEANSTALK);
 			Hosts.beanstalk.addKeyToAccount(ha, _check.selected);
 			Hosts.beanstalk.key.addEventListener(AppEvent.REMOTE_KEY_READY, onKeyAddedToBeanstalk);
 		}
 
 		private function onKeyAddedToBeanstalk(e:AppEvent):void
 		{
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.RETRY_REMOTE_REQUEST, _request));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.RETRY_REMOTE_REQUEST, {u:_url}));
 			Hosts.beanstalk.key.removeEventListener(AppEvent.REMOTE_KEY_READY, onKeyAddedToBeanstalk);
 		}
 
 		private function retryRequestOverHttps():void
 		{
-			var s:String = BookmarkRemote.buildHttpsURL(super.fields[0], super.fields[1] , _acctName , _repoName);
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.RETRY_REMOTE_REQUEST, s));
-			if (_check.selected){
-				var ha:HostingAccount = new HostingAccount({type:HostingAccount.GITHUB, 
-					acct:_acctName, user:super.fields[0], pass:super.fields[1]});
-				Hosts.github.writeAcctToDatabase(ha);
-			}
+			var ha:HostingAccount = _check.selected ? makeAcctObj(HostingAccount.GITHUB) : null;
+			_url = BookmarkRemote.buildHttpsURL(super.fields[0], super.fields[1] , _acctName , _repoName);
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.RETRY_REMOTE_REQUEST, {u:_url, a:ha}));
+		}
+		
+		private function makeAcctObj(t:String):HostingAccount
+		{
+			return new HostingAccount({type:t, acct:_acctName, user:super.fields[0], pass:super.fields[1]});			
 		}
 		
 		private function onCancelButton(e:MouseEvent):void
 		{
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.RETRY_REMOTE_REQUEST, null));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.RETRY_REMOTE_REQUEST, {u:null}));
 		}
 		
 	}
