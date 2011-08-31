@@ -1,6 +1,7 @@
 package view.modals.remote {
 
 	import events.AppEvent;
+	import events.UIEvent;
 	import fl.text.TLFTextField;
 	import model.AppModel;
 	import model.remote.HostingProvider;
@@ -49,6 +50,7 @@ package view.modals.remote {
 		{
 			_bkmk = AppModel.bookmark;
 			_view.name_txt.text = _bkmk.label.toLowerCase().replace(' ', '-');
+			super.onAddedToStage(e);
 		}
 		
 		override public function onEnterKey():void { onOkButton();}		
@@ -60,7 +62,14 @@ package view.modals.remote {
 									desc:_view.desc_txt.text, 
 									publik:_check.selected == false	};
 				AppModel.proxies.remote.addBkmkToAccount(o);
+				_host.api.addEventListener(AppEvent.REPOSITORY_CREATED, onRepositoryCreated);
 			}
+		}
+
+		private function onRepositoryCreated(e:AppEvent):void
+		{
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
+			_host.api.removeEventListener(AppEvent.REPOSITORY_CREATED, onRepositoryCreated);
 		}
 
 		override protected function validate():Boolean

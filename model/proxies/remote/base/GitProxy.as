@@ -21,6 +21,7 @@ package model.proxies.remote.base {
 		private static var _keyErrors:Vector.<String> = new <String>[	
 			'Permission denied',
 			'Authentication failed',
+			'403 while accessing',
 			'Host key verification failed',
 			'Your key is not attached to the repository and account you are trying to access.'];
 		

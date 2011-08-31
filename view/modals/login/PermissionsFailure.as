@@ -79,7 +79,7 @@ package view.modals.login {
 			if (_check.selected){
 				var ha:HostingAccount = new HostingAccount({type:HostingAccount.GITHUB, 
 					acct:_acctName, user:super.fields[0], pass:super.fields[1]});
-				Hosts.github.writeAcctToDatabase(ha);	
+				Hosts.github.writeAcctToDatabase(ha);
 			}
 		}
 		

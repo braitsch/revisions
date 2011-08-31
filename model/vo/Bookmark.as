@@ -43,31 +43,31 @@ package model.vo {
 		//	trace('New Bookmark Created :: '+_label); 
 		}
 
-		public function get branch():Branch { return _branch; }		
-		public function set branch(b:Branch):void { _branch = b; }
-		public function get active():Boolean { return _active; }
-		public function set active(b:Boolean):void { _active = b; }
-		public function set autosave(n:uint):void { _autosave = n; }
-		public function get autosave():uint { return _autosave; }
+		public function get branch():Branch 					{ return _branch; 	}		
+		public function set branch(b:Branch):void 				{ _branch = b; 		}
+		public function get active():Boolean 					{ return _active; 	}
+		public function set active(b:Boolean):void 				{ _active = b; 		}
+		public function set autosave(n:uint):void 				{ _autosave = n; 	}
+		public function get autosave():uint 					{ return _autosave; }
 
-		public function get icon32():Bitmap { return _icon32; }
-		public function get icon128():Bitmap { return _icon128; }
-		public function get type():String { return _type; }
-		public function get exists():Boolean { return _file.exists; }
-		public function get gitdir():String { return _gitdir;}
-		public function get worktree():String { return _file.parent.nativePath; }
-		public function get stash():Array { return _stash; }		
-		public function get remotes():Vector.<BookmarkRemote> { return _remotes; }
-		public function get branches():Vector.<Branch>{ return _branches; }
+		public function get icon32():Bitmap 					{ return _icon32; 	}
+		public function get icon128():Bitmap 					{ return _icon128; 	}
+		public function get type():String 						{ return _type; 	}
+		public function get exists():Boolean 					{ return _file.exists;}
+		public function get gitdir():String 					{ return _gitdir;	}
+		public function get worktree():String 					{ return _file.parent.nativePath;}
+		public function get stash():Array 						{ return _stash; 	}		
+		public function get remotes():Vector.<BookmarkRemote> 	{ return _remotes; 	}
+		public function get branches():Vector.<Branch>			{ return _branches; }
 		
-		public function get label():String { return _label; }		
+		public function get label():String 						{ return _label;	}		
 		public function set label(s:String):void
 		{
 			_label = s;
 			dispatchEvent(new BookmarkEvent(BookmarkEvent.EDITED));
 		}
 		
-		public function get path():String { return _path; }
+		public function get path():String 						{ return _path; 	}
 		public function set path(p:String):void
 		{
 			_path = p;
@@ -101,10 +101,12 @@ package model.vo {
 		
 		public function addRemotes(a:Array):void
 		{
-			if (a[0] == '') return;
-			var n:String = a[0];
-			var u:String = a[1].substr(0, a[1].search(/\s/));
-			_remotes.push(new BookmarkRemote(n, u));
+			for (var i:int = 0; i < a.length; i++) {
+				var n:String = a[i]; i++;
+				var u:String = a[i].substr(0, a[i].search(/\s/));
+				_remotes.push(new BookmarkRemote(n, u));				
+				if (i % 1 == 0) i+=2;
+			}
 		}
 		
 		public function addRemote(r:BookmarkRemote):void { _remotes.push(r); }

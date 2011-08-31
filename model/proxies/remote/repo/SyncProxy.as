@@ -10,10 +10,10 @@ package model.proxies.remote.repo {
 
 	public class SyncProxy extends GitProxy {
 
-		private static var _index		:uint;
 		private static var _remote		:BookmarkRemote;
 		private static var _prompt		:Boolean;
 		private static var _remotes		:Vector.<BookmarkRemote>;
+		private static var _lastFunc	:Function;
 
 		public function SyncProxy()
 		{
@@ -22,13 +22,15 @@ package model.proxies.remote.repo {
 		
 		public function syncRemotes(v:Vector.<BookmarkRemote>):void
 		{
-			_index = 0; _remotes = v.concat();
+			_remotes = v.concat();
+			trace('_remotes: ' + (_remotes.length));
 			syncNextRemote();			
 		}
 		
 		private function syncNextRemote():void
 		{
-			_remote = _remotes[_index];
+			_remote = _remotes[0];
+			trace("SyncProxy.syncNextRemote()", _remote.url);
 			checkToPushOrPull();
 		}
 		
@@ -48,6 +50,7 @@ package model.proxies.remote.repo {
 		
 		private function pullRemote(u:String = null):void
 		{
+			_lastFunc = pullRemote;
 			super.startTimer();
 			super.directory = AppModel.bookmark.gitdir;
 			super.call(Vector.<String>([BashMethods.PULL_REMOTE, u || _remote.url, AppModel.branch.name]));
@@ -56,6 +59,7 @@ package model.proxies.remote.repo {
 		
 		private function pushRemote(u:String = null):void
 		{
+			_lastFunc = pushRemote;
 			super.startTimer();
 			super.directory = AppModel.bookmark.gitdir;
 			super.call(Vector.<String>([BashMethods.PUSH_REMOTE, u || _remote.url, AppModel.branch.name]));
@@ -75,6 +79,7 @@ package model.proxies.remote.repo {
 		
 		override protected function onProcessSuccess(m:String):void 
 		{
+			trace("SyncProxy.onProcessSuccess(m)", m);
 			switch(m){
 				case BashMethods.PULL_REMOTE :
 					pushRemote();
@@ -93,7 +98,7 @@ package model.proxies.remote.repo {
 
 		private function onRetryRequest(e:AppEvent):void
 		{
-			if (e.data != null) this.pullRemote(e.data as String);
+			if (e.data != null) _lastFunc(e.data as String);
 			AppModel.engine.removeEventListener(AppEvent.RETRY_REMOTE_REQUEST, onRetryRequest);			
 		}		
 		
@@ -101,7 +106,7 @@ package model.proxies.remote.repo {
 		{
 			_prompt = true;
 			if (_remotes) {
-				_remotes.splice(_index, 1);
+				_remotes.splice(0, 1);
 				if (_remotes.length){
 					syncNextRemote();
 				}	else{
@@ -114,6 +119,7 @@ package model.proxies.remote.repo {
 
 		private function dispatchSyncComplete():void
 		{
+			trace("SyncProxy.dispatchSyncComplete()");
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.REMOTE_SYNCED));
 		}

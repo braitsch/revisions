@@ -47,7 +47,7 @@ package model.proxies.remote.repo {
 				break;
 			}
 		}
-
+		
 		private function onRemoteAddedToBookmark():void
 		{
 			_bkmk.addRemote(_remote);
