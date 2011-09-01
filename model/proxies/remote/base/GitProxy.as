@@ -27,6 +27,8 @@ package model.proxies.remote.base {
 			attemptRequest();
 		}
 		
+		protected function get request():GitRequest { return _request; }
+		
 		protected function addPassToHttpsURL(req:GitRequest):void
 		{
 			_request = req;

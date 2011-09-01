@@ -10,6 +10,7 @@ package model.vo {
 		private var _acctType	:String;
 		private var _acctName	:String;
 		private var _repoName	:String;
+		private var _homePage	:String;
 
 		public function BookmarkRemote(name:String, url:String)
 		{
@@ -18,6 +19,7 @@ package model.vo {
 			_acctType = getAccountType(url);
 			_acctName = getAccountName(url);
 			_repoName = getRepositoryName(url);
+			_homePage = getRepositoryHomePage(url);
 		}
 		
 		public function get url()			:String { return _url; 		}
@@ -25,6 +27,7 @@ package model.vo {
 		public function get acctType()		:String { return _acctType; }	
 		public function get acctName()		:String { return _acctName; }	
 		public function get repoName()		:String { return _repoName; }
+		public function get homePage()		:String { return _homePage; }
 		
 		public function addBranch(s:String):void
 		{
@@ -68,6 +71,17 @@ package model.vo {
 		public static function getRepositoryName(u:String):String
 		{
 			return u.substr(u.lastIndexOf('/') + 1);
+		}
+		
+		private static function getRepositoryHomePage(u:String):String
+		{
+			if (getAccountType(u) == HostingAccount.GITHUB){
+				return 'https://github.com/'+getAccountName(u)+'/'+getRepositoryName(u).substr(0, -4);
+			}	else if (getAccountType(u) == HostingAccount.BEANSTALK){
+				return 'https://'+getAccountName(u)+'.beanstalkapp.com/'+getRepositoryName(u).substr(0, -4);
+			}	else{
+				return 'unable to detect account homepage';		
+			}
 		}
 		
 		public static function buildHttpsURL(u:String, p:String, a:String, r:String):String

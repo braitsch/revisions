@@ -1,9 +1,13 @@
 package view.modals.bkmk {
 
-	import system.StringUtils;
-	import flash.text.TextFieldAutoSize;
+	import model.remote.HostingAccount;
 	import model.vo.BookmarkRemote;
+	import flash.display.Bitmap;
 	import flash.display.Sprite;
+	import flash.events.MouseEvent;
+	import flash.net.URLRequest;
+	import flash.net.navigateToURL;
+	import flash.text.TextFieldAutoSize;
 
 	public class RemoteItem extends Sprite {
 
@@ -14,16 +18,30 @@ package view.modals.bkmk {
 		{
 			addChild(_view);
 			_remote = rmt;
-		// TODO - should show type, acctname & reponame	
-			_view.url_txt.autoSize = TextFieldAutoSize.LEFT;
 			_view.name_txt.autoSize = TextFieldAutoSize.LEFT;
-			_view.url_txt.text = rmt.repoName.substr(0, -4);
-			_view.name_txt.text = StringUtils.capitalize(rmt.acctType);
-			if (_view.name_txt.width <= 190){
-				_view.url_txt.x = 200;
-			}	else{
-				_view.url_txt.x = _view.name_txt.width + 10; 
+			_view.desc_txt.autoSize = TextFieldAutoSize.LEFT;
+			_view.name_txt.text = rmt.acctName+' : '+rmt.repoName.substr(0, -4);
+			_view.desc_txt.text = 'last updated : info not available';
+			attachLogo();
+			buttonMode = true; mouseChildren = false;
+			addEventListener(MouseEvent.CLICK, onMouseClick);
+		}
+		
+		private function attachLogo():void
+		{
+			var b:Bitmap;
+			if (_remote.acctType == HostingAccount.GITHUB){
+				b = new Bitmap(new GitHub30());
+			}	else if (_remote.acctType == HostingAccount.BEANSTALK){
+				b = new Bitmap(new Beanstalk30());
 			}
+			b.x = 11; b.y = 6;
+			addChild(b);
+		}
+
+		private function onMouseClick(e:MouseEvent):void
+		{
+			navigateToURL(new URLRequest(_remote.homePage));
 		}
 		
 	}

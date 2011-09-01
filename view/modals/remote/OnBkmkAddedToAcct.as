@@ -50,15 +50,14 @@ package view.modals.remote {
 		{
 			if (_remote.acctType == HostingAccount.GITHUB){
 				_home = UIEvent.GITHUB_HOME;
-				_site = 'https://github.com/'+_remote.acctName+'/'+_remote.repoName.substr(0, -4);
 				_view.viewMyGH.visible = _view.viewOnGH.visible = true;
 				super.defaultButton = _view.viewMyGH;
 			}	else if (_remote.acctType == HostingAccount.BEANSTALK){
 				_home = UIEvent.BEANSTALK_HOME;
-				_site = 'https://'+_remote.acctName+'.beanstalkapp.com/'+_remote.repoName.substr(0, -4);
 				_view.viewMyGH.visible = _view.viewOnGH.visible = false;
 				super.defaultButton = _view.viewMyBS;
 			}
+			_site = _remote.homePage;
 		}
 		
 		override public function onEnterKey():void { viewMyAcct(); }

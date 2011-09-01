@@ -29,14 +29,37 @@ package model.proxies.remote.repo {
 			}
 		}
 		
+		private function stripPassFromRemoteURL():void
+		{
+			if (super.request.url.search(/(https:\/\/)(\w*)(:)/) != -1){
+				var u:String = super.request.url;
+				u = u.substr(8); // strip off https://
+				var a:String = u.substr(0, u.indexOf(':'));
+				u = 'https://'+a+u.substr(u.indexOf('@'));
+				rewriteRemoteURL(u);
+			}	else{
+				dispatchNewBookmark();
+			}
+		}
+
+		private function rewriteRemoteURL(u:String):void
+		{
+			super.startTimer();
+			super.directory = _savePath;
+			super.call(Vector.<String>([BashMethods.EDIT_REMOTE, 'origin', u]));
+		}
+		
 	// success / failure handlers //	
 
 		override protected function onProcessSuccess(m:String):void
 		{
 			switch(m) {
 				case BashMethods.CLONE :
-					dispatchNewBookmark();
+					stripPassFromRemoteURL();
 				break;
+				case BashMethods.EDIT_REMOTE :
+					dispatchNewBookmark();
+				break;				
 			}
 		}
 

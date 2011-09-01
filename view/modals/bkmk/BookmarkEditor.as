@@ -11,11 +11,11 @@ package view.modals.bkmk {
 		private static var _view		:BookmarkEditorMC = new BookmarkEditorMC();
 		private static var _home		:BookmarkHome = new BookmarkHome();
 		private static var _branches	:BookmarkBranches = new BookmarkBranches();
-		private static var _remotes		:BookmarkRemotes = new BookmarkRemotes();
+		private static var _accounts	:BookmarkAccounts = new BookmarkAccounts();
 		private static var _activeTab	:Sprite;
 		private static var _tabMap		:Array = [	{tab:_home, btn:_view.tabs.tab1, lbl:'General'},
 													{tab:_branches, btn:_view.tabs.tab2, lbl:'Branches'},
-													{tab:_remotes, btn:_view.tabs.tab3, lbl:'Remotes'}];
+													{tab:_accounts, btn:_view.tabs.tab3, lbl:'Accounts'}];
 
 		public function BookmarkEditor()
 		{
@@ -28,7 +28,7 @@ package view.modals.bkmk {
 		
 		public function set bookmark(b:Bookmark):void
 		{
-			_home.bookmark = _remotes.bookmark = _branches.bookmark = b;
+			_home.bookmark = _accounts.bookmark = _branches.bookmark = b;
 		}			
 		
 		private function initializeTabs():void
