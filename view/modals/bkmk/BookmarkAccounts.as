@@ -1,11 +1,8 @@
 package view.modals.bkmk {
 
-	import events.UIEvent;
-	import model.remote.Hosts;
 	import model.vo.Bookmark;
 	import view.modals.base.ModalWindowBasic;
 	import flash.display.Sprite;
-	import flash.events.MouseEvent;
 
 	public class BookmarkAccounts extends ModalWindowBasic {
 
@@ -19,8 +16,8 @@ package view.modals.bkmk {
 			addChild(_remotes);
 			super.addButtons([_view.addNew.github, _view.addNew.beanstalk]);
 			super.setHeading(_view, 'This bookmark is linked to the following accounts:');
-			_view.addNew.github.addEventListener(MouseEvent.CLICK, onGitHubClick);
-			_view.addNew.beanstalk.addEventListener(MouseEvent.CLICK, onBeanstalkClick);			
+		//	_view.addNew.github.addEventListener(MouseEvent.CLICK, onGitHubClick);
+		//	_view.addNew.beanstalk.addEventListener(MouseEvent.CLICK, onBeanstalkClick);			
 		}
 		
 		public function set bookmark(b:Bookmark):void
@@ -43,23 +40,23 @@ package view.modals.bkmk {
 			super.drawBackground(550, _remotes.y + _remotes.height + 50);	
 		}
 		
-		private function onGitHubClick(e:MouseEvent):void
-		{
-			if (Hosts.github.loggedIn){
-				dispatchEvent(new UIEvent(UIEvent.ADD_BKMK_TO_GITHUB));
-			}	else{
-				dispatchEvent(new UIEvent(UIEvent.GITHUB_LOGIN, UIEvent.ADD_BKMK_TO_GITHUB));
-			}	
-		}
-		
-		private function onBeanstalkClick(e:MouseEvent):void
-		{
-			if (Hosts.beanstalk.loggedIn){
-				dispatchEvent(new UIEvent(UIEvent.ADD_BKMK_TO_BEANSTALK));
-			}	else{
-				dispatchEvent(new UIEvent(UIEvent.BEANSTALK_LOGIN, UIEvent.ADD_BKMK_TO_BEANSTALK));
-			}				
-		}					
+//		private function onGitHubClick(e:MouseEvent):void
+//		{
+//			if (Hosts.github.loggedIn){
+//				dispatchEvent(new UIEvent(UIEvent.ADD_BKMK_TO_ACCOUNT));
+//			}	else{
+//				dispatchEvent(new UIEvent(UIEvent.GITHUB_LOGIN, UIEvent.ADD_BKMK_TO_ACCOUNT));
+//			}	
+//		}
+//		
+//		private function onBeanstalkClick(e:MouseEvent):void
+//		{
+//			if (Hosts.beanstalk.loggedIn){
+//				dispatchEvent(new UIEvent(UIEvent.ADD_BKMK_TO_BEANSTALK));
+//			}	else{
+//				dispatchEvent(new UIEvent(UIEvent.BEANSTALK_LOGIN, UIEvent.ADD_BKMK_TO_BEANSTALK));
+//			}				
+//		}					
 		
 	}
 	

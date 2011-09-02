@@ -1,4 +1,4 @@
-package view.modals.remote {
+package view.modals.upload {
 
 	import events.AppEvent;
 	import fl.text.TLFTextField;

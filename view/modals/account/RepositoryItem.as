@@ -1,4 +1,4 @@
-package view.modals.remote {
+package view.modals.account {
 
 	import events.UIEvent;
 	import com.greensock.TweenLite;

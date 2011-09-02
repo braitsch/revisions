@@ -1,18 +1,8 @@
 package view.modals {
 
-	import model.vo.BookmarkRemote;
 	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.UIEvent;
-	import flash.desktop.DockIcon;
-	import flash.desktop.NativeApplication;
-	import flash.desktop.NotificationType;
-	import flash.display.Sprite;
-	import flash.display.Stage;
-	import flash.events.KeyboardEvent;
-	import flash.events.MouseEvent;
-	import flash.filesystem.File;
-	import flash.filters.BlurFilter;
 	import model.AppModel;
 	import model.remote.Hosts;
 	import model.vo.Bookmark;
@@ -37,12 +27,20 @@ package view.modals {
 	import view.modals.local.RevertToVersion;
 	import view.modals.local.WelcomeScreen;
 	import view.modals.login.PermissionsFailure;
-	import view.modals.remote.AddBkmkToAccount;
-	import view.modals.remote.OnBkmkAddedToAcct;
 	import view.modals.system.Alert;
 	import view.modals.system.Confirm;
 	import view.modals.system.Debug;
+	import view.modals.upload.UploadWizard;
 	import view.ui.Preloader;
+	import flash.desktop.DockIcon;
+	import flash.desktop.NativeApplication;
+	import flash.desktop.NotificationType;
+	import flash.display.Sprite;
+	import flash.display.Stage;
+	import flash.events.KeyboardEvent;
+	import flash.events.MouseEvent;
+	import flash.filesystem.File;
+	import flash.filters.BlurFilter;
 
 	public class ModalManager extends Sprite {
 
@@ -60,9 +58,8 @@ package view.modals {
 		private static var _gitAbout			:GitAbout = new GitAbout();
 		private static var _gitInstall			:GitInstall = new GitInstall();
 		private static var _gitUpgrade			:GitUpgrade = new GitUpgrade();
-		private static var _addBkmkToAcct		:AddBkmkToAccount = new AddBkmkToAccount();	
+		private static var _uploadWizard		:UploadWizard = new UploadWizard();
 		private static var _permissions			:PermissionsFailure = new PermissionsFailure();
-		private static var _onBkmkAddedToAcct	:OnBkmkAddedToAcct = new OnBkmkAddedToAcct();
 		private static var _alert				:Alert = new Alert();
 		private static var _debug				:Debug = new Debug();
 		private static var _confirm				:Confirm = new Confirm();
@@ -94,7 +91,6 @@ package view.modals {
 			AppModel.engine.addEventListener(BookmarkEvent.NO_BOOKMARKS, showWelcomeScreen);
 			AppModel.engine.addEventListener(AppEvent.APP_EXPIRED, onAppExpired);
 			AppModel.engine.addEventListener(AppEvent.PERMISSIONS_FAILURE, onPermissionsFailure);
-			AppModel.engine.addEventListener(AppEvent.BKMK_ADDED_TO_ACCOUNT, onBkmkAddedToAccount);
 			AppModel.updater.addEventListener(AppEvent.APP_UPDATE_AVAILABLE, promptToUpdate);
 			AppModel.proxies.config.addEventListener(AppEvent.GIT_NOT_INSTALLED, installGit);
 			AppModel.proxies.config.addEventListener(AppEvent.GIT_NEEDS_UPDATING, upgradeGit);
@@ -119,8 +115,7 @@ package view.modals {
 			stage.addEventListener(UIEvent.GITHUB_LOGIN, showGitHubLogin);
 			stage.addEventListener(UIEvent.BEANSTALK_HOME, showBeanstalkHome);
 			stage.addEventListener(UIEvent.BEANSTALK_LOGIN, showBeanstalkLogin);			
-			stage.addEventListener(UIEvent.ADD_BKMK_TO_GITHUB, addBkmkToGitHub);
-			stage.addEventListener(UIEvent.ADD_BKMK_TO_BEANSTALK, addBkmkToBeanstalk);
+			stage.addEventListener(UIEvent.ADD_BKMK_TO_ACCOUNT, addBkmkToAccount);
 			stage.addEventListener(UIEvent.CLOSE_MODAL_WINDOW, onCloseButton);
 		}
 
@@ -197,22 +192,9 @@ package view.modals {
 			showModalWindow(Hosts.beanstalk.home);
 		}			
 		
-		private function addBkmkToGitHub(e:UIEvent):void
+		private function addBkmkToAccount(e:UIEvent):void
 		{
-			_addBkmkToAcct.host = Hosts.github;
-			showModalWindow(_addBkmkToAcct);
-		}
-		
-		private function addBkmkToBeanstalk(e:UIEvent):void
-		{
-			_addBkmkToAcct.host = Hosts.beanstalk;
-			showModalWindow(_addBkmkToAcct);
-		}
-		
-		private function onBkmkAddedToAccount(e:AppEvent):void
-		{
-			_onBkmkAddedToAcct.remote = e.data as BookmarkRemote;
-			showModalWindow(_onBkmkAddedToAcct);			
+			showModalWindow(_uploadWizard);
 		}
 		
 		private function onDragAndDrop(e:UIEvent):void 

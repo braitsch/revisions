@@ -4,10 +4,10 @@ package model.remote {
 	import model.proxies.remote.acct.GitHubApi;
 	import model.proxies.remote.keys.GitHubKey;
 	import model.proxies.remote.keys.KeyProxy;
+	import view.modals.account.AccountHome;
+	import view.modals.account.GitHubHome;
 	import view.modals.login.AccountLogin;
 	import view.modals.login.GitHubLogin;
-	import view.modals.remote.AccountHome;
-	import view.modals.remote.GitHubHome;
 	
 	public class GitHub implements IHostingProvider {
 		

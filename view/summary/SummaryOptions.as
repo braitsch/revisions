@@ -50,7 +50,7 @@ package view.summary {
 		
 		private function onUploadButton(e:MouseEvent):void
 		{
-			trace("SummaryOptions.onUploadButton(e)");
+			dispatchEvent(new UIEvent(UIEvent.ADD_BKMK_TO_ACCOUNT));
 		}
 		
 		private function onSyncButton(e:MouseEvent):void 

@@ -4,10 +4,10 @@ package model.remote {
 	import model.proxies.remote.acct.BeanstalkApi;
 	import model.proxies.remote.keys.BeanstalkKey;
 	import model.proxies.remote.keys.KeyProxy;
+	import view.modals.account.AccountHome;
+	import view.modals.account.BeanstalkHome;
 	import view.modals.login.AccountLogin;
 	import view.modals.login.BeanstalkLogin;
-	import view.modals.remote.AccountHome;
-	import view.modals.remote.BeanstalkHome;
 	
 	public class Beanstalk implements IHostingProvider {
 
