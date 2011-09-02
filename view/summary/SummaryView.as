@@ -1,4 +1,4 @@
-package view {
+package view.summary {
 
 	import events.AppEvent;
 	import events.BookmarkEvent;
@@ -7,8 +7,6 @@ package view {
 	import model.vo.Bookmark;
 	import system.StringUtils;
 	import view.fonts.Fonts;
-	import view.ui.SmartButton;
-	import view.ui.Tooltip;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.MovieClip;
@@ -27,10 +25,10 @@ package view {
 		private static var _offset		:int;
 		private static var _details		:MovieClip;
 		private static var _view		:SummaryViewMC = new SummaryViewMC();
+		private static var _options		:SummaryOptions = new SummaryOptions(_view.details.options);
 		private static var _fringe		:Bitmap = new Bitmap(new SummaryBkgdBottom());
 		private static var _pattern		:BitmapData = new SummaryBkgdPattern();
 		private static var _bookmark	:Bookmark;
-		private static var _locked		:Boolean;
 		private static var _tformat		:TextFormat = new TextFormat();
 		private static var _glowSmall	:GlowFilter = new GlowFilter(0xffffff, 1, 2, 2, 3, 3);
 		private static var _glowLarge	:GlowFilter = new GlowFilter(0xffffff, 1, 6, 6, 3, 3);
@@ -42,10 +40,10 @@ package view {
 			addChild(_bkgd);
 			addChild(_view);
 			addChild(_fringe);
-			initButtons();
+			addChild(_options);
 			initTextFields();
+			_details.save_btn.over.alpha = 0;
 			this.filters = [new DropShadowFilter(5, 45, 0, .5, 10, 10)];
-			AppModel.engine.addEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);
 			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onSelected);
 			AppModel.engine.addEventListener(BookmarkEvent.SUMMARY_RECEIVED, drawView);
 			AppModel.engine.addEventListener(BookmarkEvent.HISTORY_RECEIVED, drawView);
@@ -63,17 +61,6 @@ package view {
 			_bkgd.graphics.endFill();
 		}		
 		
-		private function initButtons():void
-		{
-			var l:Array = ['Settings', 'Sync Remote', 'History'];
-			var a:Array = [_details.settings_btn, _details.sync_btn, _details.history_btn];
-			for (var i:int = 0; i < 3; i++) new SmartButton(a[i], new Tooltip(l[i]));
-			_details.save_btn.over.alpha = 0;
-			_details.sync_btn.addEventListener(MouseEvent.CLICK, onSyncButton);
-			_details.history_btn.addEventListener(MouseEvent.CLICK, onHistoryButton);
-			_details.settings_btn.addEventListener(MouseEvent.CLICK, onSettingsButton);
-		}
-
 		private function initTextFields():void
 		{
 			_tformat.letterSpacing = 2;
@@ -98,20 +85,14 @@ package view {
 		{
 			if (_bookmark) removeBookmarkListeners();
 			_bookmark = e.data as Bookmark;
+			_options.bookmark = _bookmark;
 			onBookmarkEdited(e);
 			addBookmarkListeners();
 		}
 
-		private function positionButtons(b:Boolean):void
-		{
-			_details.sync_btn.visible = b;
-			_details.history_btn.x = b ? 40 : 20;
-			_details.settings_btn.x = b ? -40 : -20;
-		}
-		
 		private function onBkmkAddedToAcct(e:AppEvent):void
 		{
-			positionButtons(_bookmark.remotes.length > 0);
+			_options.positionButtons(_bookmark.remotes.length > 0);
 		}		
 
 		private function addBookmarkListeners():void
@@ -132,7 +113,7 @@ package view {
 			_view.name_txt.y = -_offset - 13;
 			_view.name_txt.x = -_view.name_txt.width/2;
 			getBookmarkIcon();
-			positionButtons(_bookmark.remotes.length > 0);
+			_options.positionButtons(_bookmark.remotes.length > 0);
 		}
 		
 		private function getBookmarkIcon():void
@@ -169,45 +150,10 @@ package view {
 			}				
 		}
 		
-	// button events //
-		
-		private function onSyncButton(e:MouseEvent):void 
-		{
-			if (!_locked) syncRemote(); 
-		}
-				
 		private function onSaveButton(e:MouseEvent):void
 		{
 			dispatchEvent(new UIEvent(UIEvent.COMMIT));
 		}		
-		
-		private function onHistoryButton(e:MouseEvent):void
-		{
-			dispatchEvent(new UIEvent(UIEvent.SHOW_HISTORY));
-		}
-		
-		private function onSettingsButton(e:MouseEvent):void
-		{
-			dispatchEvent(new UIEvent(UIEvent.EDIT_BOOKMARK, _bookmark));			
-		}
-		
-		private function syncRemote():void
-		{
-			var m:String;
-			if (_bookmark.branch.isModified){
-				m = 'Please saves your lastest changes before syncing with the server.';
-			}	else if (_bookmark.remotes.length != 1){
-				m = 'This bookmark has multiple remotes. A remote chooser is coming very soon.';
-			}
-			if (m){
-				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
-			}	else{
-				_locked = true;
-				AppModel.proxies.remote.syncRemotes(_bookmark.remotes);
-			}
-		}
-
-		private function onRemoteSynced(e:AppEvent):void { _locked = false; }
 		
 	}
 	

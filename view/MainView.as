@@ -1,15 +1,16 @@
 package view{
 
+	import com.greensock.TweenLite;
 	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.UIEvent;
-	import model.AppModel;
-	import view.history.HistoryView;
-	import com.greensock.TweenLite;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.filters.BlurFilter;
+	import model.AppModel;
+	import view.history.HistoryView;
+	import view.summary.SummaryView;
 
 	public class MainView extends Sprite {
 
