@@ -3,11 +3,11 @@ package view.ui {
 	import events.AppEvent;
 	import fl.text.TLFTextField;
 	import model.AppModel;
-	import com.greensock.TweenLite;
 	import flash.display.InteractiveObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.FocusEvent;
+	import flash.geom.ColorTransform;
 	import flash.text.TextField;
 
 	// import flash.events.KeyboardEvent;
@@ -16,20 +16,20 @@ package view.ui {
 		
 		private var _view			:Sprite;
 		private var _inputs			:*;
+		private static var _tint	:ColorTransform = new ColorTransform();
+		private static var _grey	:uint = 0xCCCCCC;
 
 		public function Form(v:Sprite)
 		{
 			_view = v;
+			_tint.color = _grey;
 			addChild(_view);
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 		
 		public function set labels(a:Array):void
 		{
-			for (var i:int = 0; i < a.length; i++) {
-				_view['label'+(i+1)].text = a[i];
-				trace(_view['label'+(i+1)].text);
-			}
+			for (var i:int = 0; i < a.length; i++) _view['label'+(i+1)].text = a[i];
 		}
 
 		public function get fields():Array
@@ -41,7 +41,7 @@ package view.ui {
 		
 		public function deactivateFields(a:Array):void
 		{
-			for (var i:int = 0; i < a.length; i++) TweenLite.to(_view[a[i]], 0, {tint:0xC9C9C9});
+			for (var i:int = 0; i < a.length; i++) _view[a[i]].transform.colorTransform = _tint;
 		}
 		
 		public function validate():Boolean
@@ -73,8 +73,10 @@ package view.ui {
 		
 		private function onAddedToStage(e:Event):void 
 		{
-			_inputs[0].setSelection(0, _inputs[0].length);
-			_inputs[0].textFlow.interactionManager.setFocus();			
+			if (_inputs){
+				_inputs[0].setSelection(0, _inputs[0].length);
+				_inputs[0].textFlow.interactionManager.setFocus();			
+			}
 		}
 
 		private function onFocusIn(e:FocusEvent):void

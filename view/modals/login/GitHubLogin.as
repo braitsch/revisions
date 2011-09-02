@@ -10,8 +10,8 @@ package view.modals.login {
 
 	public class GitHubLogin extends AccountLogin {
 
-		private static var _view 	:GitHubLoginMC = new GitHubLoginMC();
 		private static var _form	:Form = new Form(new Form2());
+		private static var _view 	:GitHubLoginMC = new GitHubLoginMC();
 
 		public function GitHubLogin()
 		{
@@ -19,9 +19,9 @@ package view.modals.login {
 			super.drawBackground(550, 250);
 			super.setTitle(_view, 'Login To Github');
 			super.setHeading(_view, 'Have a GitHub account? Please login. (Required for private repositories)');
+			_form.y = 90; _view.addChildAt(_form, 0);
 			_form.labels = ['Username', 'Password'];
 			_form.inputs = [_view.name_txt, _view.pass_txt];
-			_form.y = 90; addChild(_form);
 		}
 		
 		override protected function onLoginButton(e:MouseEvent = null):void

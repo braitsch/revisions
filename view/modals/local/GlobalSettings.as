@@ -29,7 +29,7 @@ package view.modals.local {
 			super.drawBackground(550, 285);
 			super.setTitle(_view, 'Global Settings');
 			super.defaultButton = _view.ok_btn;
-			_form.y = 70; addChildAt(_form, 0);
+			_form.y = 70; _view.addChildAt(_form, 0);
 			_form.labels = ['Name', 'Email', 'License Key'];
 			_form.inputs = Vector.<TLFTextField>([_view.name_txt, _view.email_txt]);
 			_form.deactivateFields(['field3']);

@@ -1,33 +1,36 @@
 package view.modals.login {
 
-	import view.ui.ModalCheckbox;
 	import events.AppEvent;
 	import events.UIEvent;
-	import flash.events.MouseEvent;
 	import model.AppModel;
 	import model.remote.HostingAccount;
 	import model.remote.Hosts;
 	import model.vo.BookmarkRemote;
-	import view.modals.base.ModalWindowForm;
+	import view.modals.base.ModalWindow;
+	import view.ui.Form;
+	import view.ui.ModalCheckbox;
+	import flash.events.MouseEvent;
 
-	public class PermissionsFailure extends ModalWindowForm {
+	public class PermissionsFailure extends ModalWindow {
 
 		private static var _view		:PermissionsFailureMC = new PermissionsFailureMC();
 		private static var _url			:String;
 		private static var _acctType	:String;
 		private static var _acctName	:String;
 		private static var _repoName	:String;
+		private static var _form		:Form = new Form(new Form2());
 		private static var _check		:ModalCheckbox = new ModalCheckbox(_view.check, true);
 
 		public function PermissionsFailure()
 		{
-			super(_view);
+			addChild(_view);
 			super.setTitle(_view, 'Credentials');
 			super.drawBackground(550, 260);
 			super.addButtons([_view.cancel_btn]);
 			super.defaultButton = _view.ok_btn;
-			super.labels = ['Username', 'Password'];
-			super.inputs = [_view.name_txt, _view.pass_txt];
+			_form.y = 70; _view.addChildAt(_form, 0);			
+			_form.labels = ['Username', 'Password'];
+			_form.inputs = [_view.name_txt, _view.pass_txt];
 			_check.label = 'Remember my login for this account';			
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);
 			_view.cancel_btn.addEventListener(MouseEvent.CLICK, onCancelButton);
@@ -47,7 +50,7 @@ package view.modals.login {
 		override public function onEnterKey():void { onOkButton(); }
 		private function onOkButton(e:MouseEvent = null):void
 		{
-			if (super.validate()) {
+			if (_form.validate()) {
 				if (_acctType == HostingAccount.GITHUB){
 					retryRequestOverHttps();
 				}	else if (_acctType == HostingAccount.BEANSTALK){
@@ -73,13 +76,13 @@ package view.modals.login {
 		private function retryRequestOverHttps():void
 		{
 			var ha:HostingAccount = _check.selected ? makeAcctObj(HostingAccount.GITHUB) : null;
-			_url = BookmarkRemote.buildHttpsURL(super.fields[0], super.fields[1] , _acctName , _repoName);
+			_url = BookmarkRemote.buildHttpsURL(_form.fields[0], _form.fields[1] , _acctName , _repoName);
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.RETRY_REMOTE_REQUEST, {u:_url, a:ha}));
 		}
 		
 		private function makeAcctObj(t:String):HostingAccount
 		{
-			return new HostingAccount({type:t, acct:_acctName, user:super.fields[0], pass:super.fields[1]});			
+			return new HostingAccount({type:t, acct:_acctName, user:_form.fields[0], pass:_form.fields[1]});			
 		}
 		
 		private function onCancelButton(e:MouseEvent):void

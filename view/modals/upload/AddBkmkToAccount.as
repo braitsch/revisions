@@ -5,26 +5,29 @@ package view.modals.upload {
 	import model.AppModel;
 	import model.remote.HostingProvider;
 	import model.vo.Bookmark;
-	import view.modals.base.ModalWindowForm;
+	import view.modals.base.ModalWindow;
+	import view.ui.Form;
 	import view.ui.ModalCheckbox;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 
-	public class AddBkmkToAccount extends ModalWindowForm {
+	public class AddBkmkToAccount extends ModalWindow {
 
 		private static var _bkmk		:Bookmark;
 		private static var _host		:HostingProvider;
+		private static var _form		:Form = new Form(new Form2());
 		private static var _view		:NewRemoteMC = new NewRemoteMC();
 		private static var _check		:ModalCheckbox = new ModalCheckbox(_view.check, false);
 
 		public function AddBkmkToAccount()
 		{
-			super(_view);
+			addChild(_view);
 			super.addCloseButton();
 			super.drawBackground(550, 210);
 			super.defaultButton = _view.ok_btn;
-			super.labels = ['Name', 'Description'];
-			super.inputs = Vector.<TLFTextField>([_view.name_txt, _view.desc_txt]);
+			_form.y = 70; _view.addChildAt(_form, 0);
+			_form.labels = ['Name', 'Description'];
+			_form.inputs = Vector.<TLFTextField>([_view.name_txt, _view.desc_txt]);
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);
 		}
 		
@@ -64,9 +67,9 @@ package view.modals.upload {
 			}
 		}
 
-		override protected function validate():Boolean
+		private function validate():Boolean
 		{
-			if (super.validate() == false){
+			if (_form.validate() == false){
 				return false;
 			}	else if (checkForDuplicate() == true){
 				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, 'Remote repository already exists.'));

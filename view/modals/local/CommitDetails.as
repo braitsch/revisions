@@ -1,13 +1,15 @@
 package view.modals.local {
 
 	import events.UIEvent;
-	import flash.events.MouseEvent;
 	import model.vo.Commit;
 	import view.modals.base.ModalWindow;
+	import view.ui.Form;
+	import flash.events.MouseEvent;
 
 	public class CommitDetails extends ModalWindow {
 
-		private static var _view:CommitDetailsMC = new CommitDetailsMC();
+		private static var _form		:Form = new Form(new Form4());
+		private static var _view		:CommitDetailsMC = new CommitDetailsMC();
 
 		public function CommitDetails()
 		{
@@ -16,10 +18,9 @@ package view.modals.local {
 			super.drawBackground(550, 260);
 			super.defaultButton = _view.ok_btn;
 			super.setTitle(_view, 'Version Details');
-			_view.form.label1.text = 'Date';
-			_view.form.label2.text = 'Author';
-			_view.form.label3.text = 'Commit';
-			_view.form.label4.text = 'Details';
+			_form.y = 70; _view.addChildAt(_form, 0);
+			_form.labels = ['Date', 'Author', 'Commit', 'Details'];
+			_form.deactivateFields(['field1', 'field2', 'field3', 'field4']);
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onClose);
 		}
 
