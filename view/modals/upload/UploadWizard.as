@@ -1,14 +1,20 @@
 package view.modals.upload {
 
-	import events.AppEvent;
+	import events.UIEvent;
 	import view.modals.base.ModalWindow;
+	import view.modals.base.ModalWindowBasic;
+	import com.greensock.TweenLite;
+	import flash.display.Shape;
 	import flash.events.Event;
 	
 	public class UploadWizard extends ModalWindow {
 
 		private static var _status			:StatusBadge = new StatusBadge();
 		private static var _view			:UploadWizardMC = new UploadWizardMC();
-		private static var _chooseService	:ChooseService = new ChooseService();
+		private static var _service1		:Service1 = new Service1();
+		private static var _account2		:Account2 = new Account2();
+		private static var _mask			:Shape = new Shape();
+		private static var _page			:ModalWindowBasic;
 		private static var _service			:String;
 		
 //		private static var _addBkmkToAcct		:AddBkmkToAccount = new AddBkmkToAccount();	
@@ -18,32 +24,80 @@ package view.modals.upload {
 		public function UploadWizard()
 		{
 			addChild(_view);
-			_view.addChildAt(_status, 0);
+			addChild(_mask);
+			drawMask(550, 300);
+			_view.addChild(_status);
 			super.addCloseButton();
 			super.drawBackground(550, 300);
-			super.addButtons([_view.cancel_btn, _view.next_btn]);
 			super.setTitle(_view, 'Link To Account');
-			_chooseService.addEventListener(AppEvent.SERVICE_SELECTED, onServiceSelected);
+			addEventListener(UIEvent.WIZARD_PREV, onWizardPrev);
+			addEventListener(UIEvent.WIZARD_NEXT, onWizardNext);
+			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
 		}
 
-		private function onServiceSelected(e:AppEvent):void
+	// page navigation //
+
+		private function onWizardNext(e:UIEvent):void
 		{
-			_status.page = 2;
-			_service = _status.service = e.data as String;
+			switch(e.target){
+				case _service1 : 
+					_status.page = 2;
+					_service = e.data as String;
+					_account2.service = _status.service = _service;
+					nextPage(_account2);
+				break;	
+			}
 		}
 
+		private function onWizardPrev(e:UIEvent):void
+		{
+			switch(e.target){
+				case _account2 : 
+					_status.page = 1;
+					prevPage(_service1);
+				break;	
+			}			
+		}
+		
+		private function nextPage(p:ModalWindowBasic):void
+		{
+			TweenLite.to(_page, .5, {x:-550, onCompleteParams:[_page], 
+				onComplete:function(k:ModalWindowBasic):void{_view.removeChild(k);}});	
+			_view.addChild(p); p.x = 550; TweenLite.to(p, .5, {x:0, onComplete:function():void{_page = p;}});
+		}
+
+		private function prevPage(p:ModalWindowBasic):void
+		{
+			TweenLite.to(_page, .5, {x:550, onCompleteParams:[_page], 
+				onComplete:function(k:ModalWindowBasic):void{_view.removeChild(k);}});	
+			_view.addChild(p); p.x = -550; TweenLite.to(p, .5, {x:0, onComplete:function():void{_page = p;}});
+		}
+		
+	// added / removed from stage //	
+		
 		override protected function onAddedToStage(e:Event):void
 		{
-			reset();
-			_status.reset();
+			_page = _service1;
+			_page.x = 0;
+			_status.page = 1;
+			_view.addChildAt(_page, 0);
 			super.onAddedToStage(e);
 		}
 
-		private function reset():void
+		private function onRemovedFromStage(e:Event):void
 		{
 			_status.page = 1;
-			addChild(_chooseService);
-		}
+			_view.removeChild(_page);
+		}		
+		
+		private function drawMask(w:uint, h:uint):void
+		{
+			_mask.x = 0;
+			_mask.graphics.beginFill(0xff0000, .3);
+			_mask.graphics.drawRect(4, 0, w-8, h-4);
+			_mask.graphics.endFill();
+			_view.mask = _mask;
+		}		
 		
 	}
 	

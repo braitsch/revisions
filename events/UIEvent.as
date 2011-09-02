@@ -43,6 +43,9 @@ package events {
 		public static const SHOW_NEW_REPO_CONFIRM:String = "SHOW_NEW_REPO_CONFIRM";
 		public static const ADD_BKMK_TO_BEANSTALK:String = "ADD_BKMK_TO_BEANSTALK";
 		
+		public static const WIZARD_PREV:String = "WIZARD_PREV";
+		public static const WIZARD_NEXT:String = "WIZARD_NEXT";
+		
 		public var data:Object;
 
 		public function UIEvent($type:String, $data:Object = null)

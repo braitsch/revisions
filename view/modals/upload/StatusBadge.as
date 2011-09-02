@@ -23,13 +23,14 @@ package view.modals.upload {
 			_view.beanstalk.visible = _view.github.visible = false;
 		}
 		
-		public function reset():void
+		private function reset():void
 		{
 			TweenLite.to(_view, .5, {x:133, onComplete:function():void{_view.beanstalk.visible = _view.github.visible = false;}});
 		}
 		
 		public function set page(n:uint):void
 		{
+			if (n == 1) this.reset();
 			if (_page) _view.removeChild(_page);
 			switch(n){
 				case 1 : _page = new Bitmap(new Status1()); break;

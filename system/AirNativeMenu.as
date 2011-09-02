@@ -20,9 +20,10 @@ package system {
     	
        	private static var _stage		:Stage;
        	private static var _appMenu		:NativeMenu;
-       	private static var _remote		:NativeMenuItem;
+       	private static var _accounts	:NativeMenuItem;
        	private static var _github		:NativeMenuItem = new NativeMenuItem('My Github');
        	private static var _beanstalk	:NativeMenuItem = new NativeMenuItem('My Beanstalk');
+       	private static var _linkAcct	:NativeMenuItem = new NativeMenuItem('Link To Account');
        	private static var _newBkmk		:NativeMenuItem = new NativeMenuItem('New Bookmark');
        	private static var _commit		:NativeMenuItem = new NativeMenuItem('New Commit');
        	private static var _aboutGit	:NativeMenuItem = new NativeMenuItem('About Git');
@@ -33,7 +34,7 @@ package system {
         	_stage = s;
             _appMenu = NativeApplication.nativeApplication.menu;
             addLocalOptions();
-            addRemoteOptions();
+            addAccountOptions();
             setKeyEquivalents();
             AppModel.engine.addEventListener(BookmarkEvent.MODIFIED_RECEIVED, enableSaveCommit);
 		}
@@ -48,6 +49,8 @@ package system {
        		_github.keyEquivalentModifiers = [Keyboard.COMMAND];
        		_beanstalk.keyEquivalent = 'b';
        		_beanstalk.keyEquivalentModifiers = [Keyboard.COMMAND];
+       		_linkAcct.keyEquivalent = 'u';
+       		_linkAcct.keyEquivalentModifiers = [Keyboard.COMMAND];
 		}
 
 		private static function addLocalOptions():void
@@ -66,13 +69,15 @@ package system {
             _updateApp.addEventListener(Event.SELECT, onOptionSelected);
 		}
 		
-		private static function addRemoteOptions():void
+		private static function addAccountOptions():void
 		{
-			_remote = _appMenu.addSubmenu(new NativeMenu(), "Remote");
-			_remote.submenu.addItem(_github);
-			_remote.submenu.addItem(_beanstalk);
+			_accounts = _appMenu.addSubmenu(new NativeMenu(), "Accounts");
+			_accounts.submenu.addItem(_github);
+			_accounts.submenu.addItem(_beanstalk);
+			_accounts.submenu.addItem(_linkAcct);
 			_github.addEventListener(Event.SELECT, onOptionSelected);
 			_beanstalk.addEventListener(Event.SELECT, onOptionSelected);
+			_linkAcct.addEventListener(Event.SELECT, onOptionSelected);
 			
 		}
 		
@@ -104,7 +109,10 @@ package system {
         	 	break;   
         	 	case _beanstalk : 
         	 		onBeanstalkClick();
-        	 	break;           	 	       	 	      	 	
+        	 	break;
+        	 	case _linkAcct : 
+        	 		_stage.dispatchEvent(new UIEvent(UIEvent.ADD_BKMK_TO_ACCOUNT));
+        	 	break;        	 	           	 	       	 	      	 	
         	 	case _updateApp	: 
 					onUpdateAppClick();
         	 	break;

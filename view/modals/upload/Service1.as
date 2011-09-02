@@ -1,15 +1,15 @@
 package view.modals.upload {
 
-	import events.AppEvent;
+	import events.UIEvent;
 	import model.remote.HostingAccount;
 	import view.modals.base.ModalWindowBasic;
 	import flash.events.MouseEvent;
 
-	public class ChooseService extends ModalWindowBasic {
+	public class Service1 extends ModalWindowBasic {
 
 		private static var _view			:ChooseServiceMC = new ChooseServiceMC();
 
-		public function ChooseService()
+		public function Service1()
 		{
 			addChild(_view);
 			super.addButtons([_view.github, _view.beanstalk]);
@@ -17,7 +17,7 @@ package view.modals.upload {
 			_view.github.addEventListener(MouseEvent.CLICK, onButtonClick);
 			_view.beanstalk.addEventListener(MouseEvent.CLICK, onButtonClick);
 		}
-
+		
 		private function onButtonClick(e:MouseEvent):void
 		{
 			var s:String;
@@ -26,7 +26,7 @@ package view.modals.upload {
 			}	else if (e.target.name == 'beanstalk'){
 				s = HostingAccount.BEANSTALK;	
 			}
-			dispatchEvent(new AppEvent(AppEvent.SERVICE_SELECTED, s));
+			dispatchEvent(new UIEvent(UIEvent.WIZARD_NEXT, s));
 		}
 		
 	}

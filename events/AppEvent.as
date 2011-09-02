@@ -50,9 +50,6 @@ package events {
 		public static const REMOTE_KEY_READY		:String = "REMOTE_KEY_READY";
 		public static const PERMISSIONS_FAILURE		:String = "PERMISSIONS_FAILURE";
 		public static const RETRY_REMOTE_REQUEST:String = "RETRY_REMOTE_REQUEST";
-		
-	// upload manager //	
-		public static const SERVICE_SELECTED:String = "SERVICE_SELECTED";
 
 		
 		public var data:Object;
