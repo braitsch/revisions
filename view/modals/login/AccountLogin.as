@@ -2,12 +2,12 @@ package view.modals.login {
 
 	import events.AppEvent;
 	import events.UIEvent;
-	import flash.events.MouseEvent;
 	import model.AppModel;
-	import view.modals.base.ModalWindowForm;
+	import view.modals.base.ModalWindow;
 	import view.ui.ModalCheckbox;
+	import flash.events.MouseEvent;
 
-	public class AccountLogin extends ModalWindowForm {
+	public class AccountLogin extends ModalWindow {
 
 		private var _view			:*;
 		private var _check			:ModalCheckbox;
@@ -16,7 +16,7 @@ package view.modals.login {
 		public function AccountLogin(v:*)
 		{
 			_view = v;
-			super(_view);
+			addChild(_view);
 			super.addCloseButton();
 			super.defaultButton = _view.login_btn;
 			_view.login_btn.addEventListener(MouseEvent.CLICK, onLoginButton);
@@ -43,22 +43,22 @@ package view.modals.login {
 			_view.login_btn.removeEventListener(MouseEvent.CLICK, onLoginButton);			
 		}
 		
-		override protected function unlockScreen():void
-		{
-			super.locked = false;
-			enableButton(_view.login_btn, true);
-			_view.login_btn.addEventListener(MouseEvent.CLICK, onLoginButton);
-		}
+//		override protected function unlockScreen():void
+//		{
+//			super.locked = false;
+//			enableButton(_view.login_btn, true);
+//			_view.login_btn.addEventListener(MouseEvent.CLICK, onLoginButton);
+//		}
 		
 		protected function dispatchLoginSuccessEvent():void 
 		{ 
-			unlockScreen(); 
+	//		unlockScreen(); 
 			dispatchEvent(new UIEvent(_onSuccessEvent));		
 		}		
 		
 		private function onLoginFailure(e:AppEvent):void
 		{
-			unlockScreen();
+	//		unlockScreen();
 		}
 
 	}

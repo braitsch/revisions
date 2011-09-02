@@ -13,6 +13,7 @@ package view.modals.upload {
 		private static var _view			:UploadWizardMC = new UploadWizardMC();
 		private static var _service1		:Service1 = new Service1();
 		private static var _account2		:Account2 = new Account2();
+		private static var _repository3		:Repository3 = new Repository3();
 		private static var _mask			:Shape = new Shape();
 		private static var _page			:ModalWindowBasic;
 		private static var _service			:String;
@@ -42,11 +43,20 @@ package view.modals.upload {
 			switch(e.target){
 				case _service1 : 
 					_status.page = 2;
-					_service = e.data as String;
-					_account2.service = _status.service = _service;
 					nextPage(_account2);
+					setService(e.data as String);
 				break;	
+				case _account2 : 
+					_status.page = 3;
+					nextPage(_repository3);
+				break;
 			}
+		}
+
+		private function setService(s:String):void
+		{
+			_service = _status.service = s;
+			_account2.service = _repository3.service = s;
 		}
 
 		private function onWizardPrev(e:UIEvent):void

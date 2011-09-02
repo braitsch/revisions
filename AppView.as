@@ -5,6 +5,8 @@ package {
 	import view.MainView;
 	import view.bookmarks.BookmarkView;
 	import view.modals.ModalManager;
+	import com.greensock.plugins.TintPlugin;
+	import com.greensock.plugins.TweenPlugin;
 	import flash.display.Sprite;
 	import flash.events.Event;
 
@@ -24,6 +26,7 @@ package {
 			addChild(_modal);
 			_main.x = 204;
 			_bkmks.y = _main.y = 66;
+			TweenPlugin.activate([TintPlugin]);
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
 

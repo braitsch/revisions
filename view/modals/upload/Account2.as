@@ -19,8 +19,8 @@ package view.modals.upload {
 			addChild(_backBtn);
 			super.addButtons([_backBtn]);
 			_backBtn.x = 475; _backBtn.y = 260; 
-			_choose.addEventListener(MouseEvent.CLICK, onChooseClick);
 			_backBtn.addEventListener(MouseEvent.CLICK, onBackButton);
+			_choose.addEventListener(MouseEvent.CLICK, onChooseClick);
 		}
 
 		public function set service(s:String):void

@@ -6,15 +6,17 @@ package view.modals.local {
 	import model.AppModel;
 	import system.AppSettings;
 	import system.LicenseManager;
-	import view.modals.base.ModalWindowForm;
+	import view.modals.base.ModalWindow;
+	import view.ui.Form;
 	import view.ui.ModalCheckbox;
 	import mx.utils.StringUtil;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 
-	public class GlobalSettings extends ModalWindowForm {
+	public class GlobalSettings extends ModalWindow {
 
 		private static var _view		:GlobalSettingsMC = new GlobalSettingsMC();
+		private static var _form		:Form = new Form(new Form3());
 		private static var _check1		:ModalCheckbox = new ModalCheckbox(_view.check1, true);
 		private static var _check2		:ModalCheckbox = new ModalCheckbox(_view.check2, true);
 		private static var _check3		:ModalCheckbox = new ModalCheckbox(_view.check3, true);
@@ -22,13 +24,15 @@ package view.modals.local {
 
 		public function GlobalSettings()
 		{
-			super(_view);
+			addChild(_view);
 			super.addCloseButton();	
 			super.drawBackground(550, 285);
 			super.setTitle(_view, 'Global Settings');
 			super.defaultButton = _view.ok_btn;
-			super.labels = ['Name', 'Email', 'License Key'];
-			super.inputs = Vector.<TLFTextField>([_view.name_txt, _view.email_txt]);
+			_form.y = 70; addChildAt(_form, 0);
+			_form.labels = ['Name', 'Email', 'License Key'];
+			_form.inputs = Vector.<TLFTextField>([_view.name_txt, _view.email_txt]);
+			_form.deactivateFields(['field3']);
 			_check1.label = 'Automatically check for updates';
 			_check2.label = 'Show tooltips';
 			_check3.label = 'Prompt before downloading a previous version';
