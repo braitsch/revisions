@@ -9,6 +9,7 @@ package view.modals.login {
 	import view.ui.Form;
 	import view.ui.ModalCheckbox;
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.net.URLRequest;
 	import flash.net.navigateToURL;
@@ -16,7 +17,6 @@ package view.modals.login {
 
 	public class AccountLogin extends Sprite {
 
-		private var _onSuccessEvent	:String;
 		private var _form			:Form;
 		private var _type			:String;
 		private var _check			:ModalCheckbox = new ModalCheckbox(true);
@@ -31,7 +31,7 @@ package view.modals.login {
 			
 			_login.enabled = true;
 			_login.addEventListener(MouseEvent.CLICK, onLoginButton);
-			_login.x = 480;
+			_login.x = 484;
 			
 			_signUp.buttonMode = true;
 			_signUp.x = 10;
@@ -44,22 +44,29 @@ package view.modals.login {
 			if (s == HostingAccount.GITHUB){
 				_form = new Form(new Form2());
 				_form.labels = ['Username', 'Password'];
-				_check.y = 130; _login.y = 140; _signUp.y = 100;
+				_signUp.y = 100;
 				_form.inputs = [new FINorm().getChildAt(0), new FIPass().getChildAt(0)];
 			}	else if (s == HostingAccount.BEANSTALK){
 				_form = new Form(new Form3());
 				_form.labels = ['Account', 'Username', 'Password'];
-				_check.y = 160; _login.y = 170; _signUp.y = 130;
 				_form.inputs = [new FINorm().getChildAt(0), new FINorm().getChildAt(0), new FIPass().getChildAt(0)];
-			}			
+				_signUp.y = 130;
+			}
 			
 			_form.y = 20; _heading.x = 10;
+			_form.addEventListener(UIEvent.ENTER_KEY, onLoginButton);
 			
 			addChild(_form); addChild(_check);
 			addChild(_login); addChild(_signUp); addChild(_heading);
 			AppModel.engine.addEventListener(AppEvent.FAILURE, onLoginFailure);
 		}
 		
+		public function set baseline(y:uint):void
+		{
+			y = y - this.y - 35;
+			_login.y = y; _check.y = y - 10; 
+		}
+	
 		public function set heading(s:String):void
 		{
 			_heading.label_txt.autoSize = TextFieldAutoSize.LEFT;
@@ -67,7 +74,6 @@ package view.modals.login {
 		}
 		
 		public function set inputs(v:*):void { _form.inputs = v; }
-		public function set onSuccessEvent(s:String):void { _onSuccessEvent = s; }
 		
 		private function gotoNewAccountPage(e:MouseEvent):void 
 		{ 
@@ -78,7 +84,7 @@ package view.modals.login {
 			}		
 		}
 		
-		public function onLoginButton(e:MouseEvent = null):void 
+		private function onLoginButton(e:Event):void 
 		{ 
 			if (_login.enabled == false) return;
 			if (_form.validate()){
@@ -93,7 +99,7 @@ package view.modals.login {
 
 		private function attemptGHLogin():void
 		{
-			var a:HostingAccount = new HostingAccount({type:_type, 
+			var a:HostingAccount = new HostingAccount({type:HostingAccount.GITHUB, 
 					acct:_form.fields[0], user:_form.fields[0], pass:_form.fields[1]});						
 			Hosts.github.attemptLogin(a, _check.selected);
 			Hosts.github.api.addEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);
@@ -110,7 +116,7 @@ package view.modals.login {
 		private function onLoginSuccess(e:AppEvent):void
 		{
 			_login.enabled = true;
-			if (_onSuccessEvent) dispatchEvent(new UIEvent(_onSuccessEvent));		
+			dispatchEvent(new AppEvent(AppEvent.LOGIN_SUCCESS));
 		}			
 		
 		private function onLoginFailure(e:AppEvent):void

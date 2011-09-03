@@ -1,5 +1,7 @@
 package view.modals.login {
 
+	import events.AppEvent;
+	import events.UIEvent;
 	import model.remote.HostingAccount;
 	import view.modals.base.ModalWindow;
 
@@ -15,12 +17,15 @@ package view.modals.login {
 			super.drawBackground(550, 250);
 			super.setTitle(_view, 'Login To Github');
 			_login.y = 70; _view.addChildAt(_login, 0);
-		//	_login.inputs = [_view.name_txt, _view.pass_txt];
+			_login.baseline = 250;
 			_login.heading = 'Have a GitHub account? Please login. (Required for private repositories)';
+			_login.addEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);
 		}
 		
-		override public function onEnterKey():void { _login.onLoginButton(); }
-		public function set onSuccessEvent(s:String):void { _login.onSuccessEvent = s; }
+		private function onLoginSuccess(e:AppEvent):void
+		{
+			dispatchEvent(new UIEvent(UIEvent.GITHUB_HOME));
+		}		
 		
 	}
 	

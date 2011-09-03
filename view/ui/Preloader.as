@@ -37,6 +37,7 @@ package view.ui {
 			_view.filters = [_glow];
 			_label.filters = [_glow];
 			registerListeners();
+			mouseEnabled = mouseChildren = false;
 		}
 
 		public function resize(w:uint, h:uint, offX:int = 0, offY:int = 0):void

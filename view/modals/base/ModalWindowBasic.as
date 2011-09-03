@@ -23,10 +23,26 @@ package view.modals.base {
 			addChild(_bkgd);
 			_bkgd.filters = [_glow];
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
 		}
-	
+
 	// override this in any windows that should listen for the enter key //	
 		public function onEnterKey():void { }
+
+		protected function onAddedToStage(e:Event):void 
+		{ 
+			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+		}
+		
+		private function onRemovedFromStage(e:Event):void
+		{
+			stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+		}	
+		
+		private function onKeyUp(e:KeyboardEvent):void
+		{
+			if (e.keyCode == 13) onEnterKey();
+		}		
 
 		protected function setTitle(view:*, s:String):void
 		{
@@ -79,13 +95,6 @@ package view.modals.base {
 				b.removeEventListener(MouseEvent.ROLL_OUT, onButtonRollOut);
 				b.removeEventListener(MouseEvent.ROLL_OVER, onButtonRollOver);				
 			}
-		}
-		
-		protected function onAddedToStage(e:Event):void { }
-	
-		protected function onKeyUp(e:KeyboardEvent):void
-		{
-			if (this.stage && e.keyCode == 13) onEnterKey();			
 		}
 		
 		protected function browseForFile($msg:String):void

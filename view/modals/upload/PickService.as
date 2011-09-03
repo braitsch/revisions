@@ -5,11 +5,11 @@ package view.modals.upload {
 	import view.modals.base.ModalWindowBasic;
 	import flash.events.MouseEvent;
 
-	public class Service1 extends ModalWindowBasic {
+	public class PickService extends ModalWindowBasic {
 
 		private static var _view			:ChooseServiceMC = new ChooseServiceMC();
 
-		public function Service1()
+		public function PickService()
 		{
 			addChild(_view);
 			super.addButtons([_view.github, _view.beanstalk]);

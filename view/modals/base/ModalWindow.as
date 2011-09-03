@@ -15,6 +15,11 @@ package view.modals.base {
 			this.y = uint((h - _heightOffset) / 2 - this.height / 2 + _heightOffset);
 		}
 		
+		override protected function onAddedToStage(e:Event):void 
+		{
+			resize(stage.stageWidth, stage.stageHeight);
+		}	
+		
 		protected function addCloseButton(x:uint = 550):void
 		{
 			_closeButton = new ModalCloseButton();
@@ -32,11 +37,6 @@ package view.modals.base {
 		{
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 		}
-		
-		override protected function onAddedToStage(e:Event):void 
-		{
-			resize(stage.stageWidth, stage.stageHeight);
-		}	
 		
 	}
 	

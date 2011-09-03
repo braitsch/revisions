@@ -45,6 +45,7 @@ package events {
 		
 		public static const WIZARD_PREV:String = "WIZARD_PREV";
 		public static const WIZARD_NEXT:String = "WIZARD_NEXT";
+		public static const ENTER_KEY:String = "ENTER_KEY";
 		
 		public var data:Object;
 

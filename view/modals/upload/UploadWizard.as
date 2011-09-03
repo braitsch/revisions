@@ -9,14 +9,16 @@ package view.modals.upload {
 	
 	public class UploadWizard extends ModalWindow {
 
-		private static var _status			:StatusBadge = new StatusBadge();
-		private static var _view			:UploadWizardMC = new UploadWizardMC();
-		private static var _service1		:Service1 = new Service1();
-		private static var _account2		:Account2 = new Account2();
-		private static var _repository3		:Repository3 = new Repository3();
 		private static var _mask			:Shape = new Shape();
 		private static var _page			:ModalWindowBasic;
-		private static var _service			:String;
+		private static var _status			:StatusBadge = new StatusBadge();
+		private static var _view			:UploadWizardMC = new UploadWizardMC();
+		
+	// sub-pages //	
+		private static var _pickService		:PickService = new PickService();
+		private static var _pickAccount		:PickAccount = new PickAccount();
+		private static var _nameRmtRepo		:NameRmtRepo = new NameRmtRepo();
+		private static var _confirmDetails	:ConfirmDetails = new ConfirmDetails();
 		
 //		private static var _addBkmkToAcct		:AddBkmkToAccount = new AddBkmkToAccount();	
 //		private static var _onBkmkAddedToAcct	:OnBkmkAddedToAcct = new OnBkmkAddedToAcct();		
@@ -26,10 +28,10 @@ package view.modals.upload {
 		{
 			addChild(_view);
 			addChild(_mask);
-			drawMask(550, 300);
+			drawMask(550, 280);
 			_view.addChild(_status);
 			super.addCloseButton();
-			super.drawBackground(550, 300);
+			super.drawBackground(550, 280);
 			super.setTitle(_view, 'Link To Account');
 			addEventListener(UIEvent.WIZARD_PREV, onWizardPrev);
 			addEventListener(UIEvent.WIZARD_NEXT, onWizardNext);
@@ -40,36 +42,45 @@ package view.modals.upload {
 
 		private function onWizardNext(e:UIEvent):void
 		{
+			if (e.target == _pickService) this.service = e.data as String;
 			switch(e.target){
-				case _service1 : 
+				case _pickService : 
 					_status.page = 2;
-					nextPage(_account2);
-					setService(e.data as String);
+					nextPage(_pickAccount);
 				break;	
-				case _account2 : 
+				case _pickAccount : 
 					_status.page = 3;
-					nextPage(_repository3);
+					nextPage(_nameRmtRepo);
 				break;
+				case _nameRmtRepo : 
+					_status.page = 4;
+					_confirmDetails.formData = e.data as Object;
+					nextPage(_confirmDetails);
+				break;				
 			}
 		}
 
-		private function setService(s:String):void
+		private function set service(s:String):void
 		{
-			_service = _status.service = s;
-			_account2.service = _repository3.service = s;
+			_status.service = _pickAccount.service = s;
+			_nameRmtRepo.service = _confirmDetails.service = s;
 		}
 
 		private function onWizardPrev(e:UIEvent):void
 		{
 			switch(e.target){
-				case _account2 : 
+				case _pickAccount : 
 					_status.page = 1;
-					prevPage(_service1);
+					prevPage(_pickService);
 				break;	
-				case _repository3 : 
+				case _nameRmtRepo : 
 					_status.page = 2;
-					prevPage(_account2);
-				break;					
+					prevPage(_pickAccount);
+				break;	
+				case _confirmDetails :
+					_status.page = 3;
+					prevPage(_nameRmtRepo);
+				break;									
 			}			
 		}
 		
@@ -91,7 +102,7 @@ package view.modals.upload {
 		
 		override protected function onAddedToStage(e:Event):void
 		{
-			_page = _service1;
+			_page = _pickService;
 			_page.x = 0;
 			_status.page = 1;
 			_view.addChildAt(_page, 0);

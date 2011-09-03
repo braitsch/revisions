@@ -26,8 +26,6 @@ package view.modals {
 	import view.modals.local.RepairBookmark;
 	import view.modals.local.RevertToVersion;
 	import view.modals.local.WelcomeScreen;
-	import view.modals.login.BeanstalkLogin;
-	import view.modals.login.GitHubLogin;
 	import view.modals.login.PermissionsFailure;
 	import view.modals.system.Alert;
 	import view.modals.system.Confirm;
@@ -174,13 +172,11 @@ package view.modals {
 		
 		private function showGitHubLogin(e:UIEvent):void
 		{
-			GitHubLogin(Hosts.github.login).onSuccessEvent = e.data as String;
 			showModalWindow(Hosts.github.login);
 		}
 
 		private function showBeanstalkLogin(e:UIEvent):void
 		{
-			BeanstalkLogin(Hosts.beanstalk.login).onSuccessEvent = e.data as String;
 			showModalWindow(Hosts.beanstalk.login);			
 		}
 		

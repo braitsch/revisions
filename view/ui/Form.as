@@ -1,5 +1,6 @@
 package view.ui {
 
+	import events.UIEvent;
 	import events.AppEvent;
 	import fl.text.TLFTextField;
 	import model.AppModel;
@@ -7,6 +8,7 @@ package view.ui {
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.FocusEvent;
+	import flash.events.KeyboardEvent;
 	import flash.geom.ColorTransform;
 	import flash.text.TextField;
 
@@ -14,6 +16,7 @@ package view.ui {
 
 	public class Form extends Sprite {
 		
+		public static const	LEADING	:uint = 28;
 		private var _view			:Sprite;
 		private var _inputs			:*;
 		private static var _tint	:ColorTransform = new ColorTransform();
@@ -62,16 +65,21 @@ package view.ui {
 				if (v[i] is TextField){
 					v[i].tabIndex = i;
 					v[i].displayAsPassword = true;
-				//	v[i].addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+					v[i].addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 				}	else if (v[i] is TLFTextField){
 					InteractiveObject(v[i].getChildAt(1)).tabIndex = i;
-				//	v[i].getChildAt(1).addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+					v[i].getChildAt(1).addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 				}
 				addChild(v[i]);
 				v[i].x = 120;
-				v[i].y = 15 + (28 * i);
+				v[i].y = 15 + (LEADING * i);
 				v[i].addEventListener(FocusEvent.FOCUS_IN, onFocusIn);
 			}
+		}
+
+		private function onKeyUp(e:KeyboardEvent):void
+		{
+			if (this.stage && e.keyCode == 13) dispatchEvent(new UIEvent(UIEvent.ENTER_KEY));
 		}
 		
 		private function onAddedToStage(e:Event):void 

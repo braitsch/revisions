@@ -64,7 +64,7 @@ package view.modals.local {
 			_view.loginBeanstalk.visible = !Hosts.beanstalk.loggedIn;
 		}
 
-		override protected function onKeyUp(e:KeyboardEvent):void
+		private function onKeyUp(e:KeyboardEvent):void
 		{
 			if (!_allowClone) enableCloneButton(true);
 			if (this.stage && e.keyCode == 13 && e.keyCode != 15 && _allowClone) onCloneClick();				

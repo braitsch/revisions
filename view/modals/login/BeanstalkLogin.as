@@ -1,5 +1,7 @@
 package view.modals.login {
 
+	import events.UIEvent;
+	import events.AppEvent;
 	import model.remote.HostingAccount;
 	import view.modals.base.ModalWindow;
 
@@ -15,13 +17,16 @@ package view.modals.login {
 			super.drawBackground(550, 280);
 			super.setTitle(_view, 'Login To Beanstalk');
 			_login.y = 70; _view.addChildAt(_login, 0);
-		//	_login.inputs = [_view.acct_txt, _view.name_txt, _view.pass_txt];
+			_login.baseline = 280;
 			_login.heading = 'Have a Beanstalk account? Please login.';
+			_login.addEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);
+		}
+
+		private function onLoginSuccess(e:AppEvent):void
+		{
+			dispatchEvent(new UIEvent(UIEvent.BEANSTALK_HOME));
 		}
 		
-		override public function onEnterKey():void { _login.onLoginButton(); }
-		public function set onSuccessEvent(s:String):void { _login.onSuccessEvent = s; }		
-
 	}
 	
 }
