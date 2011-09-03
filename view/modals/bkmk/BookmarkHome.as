@@ -13,17 +13,19 @@ package view.modals.bkmk {
 	public class BookmarkHome extends ModalWindowBasic {
 
 		private static var _view		:BookmarkHomeMC = new BookmarkHomeMC();
-		private static var _check		:ModalCheckbox = new ModalCheckbox(_view.check, true);
+		private static var _check		:ModalCheckbox = new ModalCheckbox(true);
 		private static var _bookmark	:Bookmark;
 
 		public function BookmarkHome()
 		{
 			addChild(_view);
+			addChild(_check);
 			super.drawBackground(550, 210);
 			super.addButtons([_view.delete_btn]);
 			super.defaultButton = _view.ok_btn;
 			_view.form.label1.text = 'Name';
 			_view.form.label2.text = 'Location';
+			_check.x = 8; _check.y = 170; 
 			_check.label = 'Autosave Every 60 Minutes';
 			_view.local_txt.selectable = false;
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onUpdateBookmark);

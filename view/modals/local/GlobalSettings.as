@@ -17,10 +17,10 @@ package view.modals.local {
 
 		private static var _view		:GlobalSettingsMC = new GlobalSettingsMC();
 		private static var _form		:Form = new Form(new Form3());
-		private static var _check1		:ModalCheckbox = new ModalCheckbox(_view.check1, true);
-		private static var _check2		:ModalCheckbox = new ModalCheckbox(_view.check2, true);
-		private static var _check3		:ModalCheckbox = new ModalCheckbox(_view.check3, true);
-		private static var _check4		:ModalCheckbox = new ModalCheckbox(_view.check4, true);
+		private static var _check1		:ModalCheckbox = new ModalCheckbox(true);
+		private static var _check2		:ModalCheckbox = new ModalCheckbox(true);
+		private static var _check3		:ModalCheckbox = new ModalCheckbox(true);
+		private static var _check4		:ModalCheckbox = new ModalCheckbox(true);
 
 		public function GlobalSettings()
 		{
@@ -33,6 +33,13 @@ package view.modals.local {
 			_form.labels = ['Name', 'Email', 'License Key'];
 			_form.inputs = Vector.<TLFTextField>([_view.name_txt, _view.email_txt]);
 			_form.deactivateFields(['field3']);
+			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);
+			attachOptions();
+			AppModel.settings.addEventListener(AppEvent.APP_SETTINGS, onUserSettings);
+		}
+
+		private function attachOptions():void
+		{
 			_check1.label = 'Automatically check for updates';
 			_check2.label = 'Show tooltips';
 			_check3.label = 'Prompt before downloading a previous version';
@@ -41,8 +48,10 @@ package view.modals.local {
 			_check2.addEventListener(MouseEvent.CLICK, onCheck2);
 			_check3.addEventListener(MouseEvent.CLICK, onCheck3);
 			_check4.addEventListener(MouseEvent.CLICK, onCheck4);
-			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);
-			AppModel.settings.addEventListener(AppEvent.APP_SETTINGS, onUserSettings);
+			_check1.y = 185; _check2.y = 205;			
+			_check3.y = 225; _check4.y = 245;			
+			addChild(_check1); addChild(_check2);
+			addChild(_check3); addChild(_check4);
 		}
 
 		override protected function onAddedToStage(e:Event):void

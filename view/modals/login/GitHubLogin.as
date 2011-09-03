@@ -1,50 +1,26 @@
 package view.modals.login {
 
-	import events.AppEvent;
 	import model.remote.HostingAccount;
-	import model.remote.Hosts;
-	import view.ui.Form;
-	import flash.events.MouseEvent;
-	import flash.net.URLRequest;
-	import flash.net.navigateToURL;
+	import view.modals.base.ModalWindow;
 
-	public class GitHubLogin extends AccountLogin {
+	public class GitHubLogin extends ModalWindow {
 
-		private static var _form	:Form = new Form(new Form2());
 		private static var _view 	:GitHubLoginMC = new GitHubLoginMC();
+		private static var _login	:AccountLogin = new AccountLogin(HostingAccount.GITHUB);
 
 		public function GitHubLogin()
 		{
-			super(_view);
+			addChild(_view);
+			super.addCloseButton();
 			super.drawBackground(550, 250);
 			super.setTitle(_view, 'Login To Github');
-			super.setHeading(_view, 'Have a GitHub account? Please login. (Required for private repositories)');
-			_form.y = 90; _view.addChildAt(_form, 0);
-			_form.labels = ['Username', 'Password'];
-			_form.inputs = [_view.name_txt, _view.pass_txt];
+			_login.y = 70; _view.addChildAt(_login, 0);
+		//	_login.inputs = [_view.name_txt, _view.pass_txt];
+			_login.heading = 'Have a GitHub account? Please login. (Required for private repositories)';
 		}
 		
-		override protected function onLoginButton(e:MouseEvent = null):void
-		{
-			if (_form.validate()){
-				super.lockScreen();
-				var a:HostingAccount = new HostingAccount({type:HostingAccount.GITHUB, 
-						acct:_form.fields[0], user:_form.fields[0], pass:_form.fields[1]});						
-				Hosts.github.attemptLogin(a, super.saveAccount);
-				Hosts.github.api.addEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);
-			}			
-		}
-		
-		private function onLoginSuccess(e:AppEvent):void
-		{
-			super.dispatchLoginSuccessEvent();
-			Hosts.github.api.removeEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);
-		}		
-				
-		override protected function gotoNewAccountPage(e:MouseEvent):void 
-		{ 
-			navigateToURL(new URLRequest('https://github.com/signup'));
-		}
+		override public function onEnterKey():void { _login.onLoginButton(); }
+		public function set onSuccessEvent(s:String):void { _login.onSuccessEvent = s; }
 		
 	}
 	

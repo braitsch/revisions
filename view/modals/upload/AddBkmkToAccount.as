@@ -17,14 +17,17 @@ package view.modals.upload {
 		private static var _host		:HostingProvider;
 		private static var _form		:Form = new Form(new Form2());
 		private static var _view		:NewRemoteMC = new NewRemoteMC();
-		private static var _check		:ModalCheckbox = new ModalCheckbox(_view.check, false);
+		private static var _check		:ModalCheckbox = new ModalCheckbox(false);
 
 		public function AddBkmkToAccount()
 		{
 			addChild(_view);
+			addChild(_check);
 			super.addCloseButton();
 			super.drawBackground(550, 210);
 			super.defaultButton = _view.ok_btn;
+			_check.y = 160;
+			_check.label = 'what the fuck';
 			_form.y = 70; _view.addChildAt(_form, 0);
 			_form.labels = ['Name', 'Description'];
 			_form.inputs = Vector.<TLFTextField>([_view.name_txt, _view.desc_txt]);

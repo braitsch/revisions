@@ -66,6 +66,10 @@ package view.modals.upload {
 					_status.page = 1;
 					prevPage(_service1);
 				break;	
+				case _repository3 : 
+					_status.page = 2;
+					prevPage(_account2);
+				break;					
 			}			
 		}
 		

@@ -15,11 +15,12 @@ package view.modals.local {
 
 		private static var _view		:DragAndDropMC = new DragAndDropMC();
 		private static var _form		:Form = new Form(new Form2());
-		private static var _check		:ModalCheckbox = new ModalCheckbox(_view.check, true);			
+		private static var _check		:ModalCheckbox = new ModalCheckbox(true);			
 
 		public function AddDragAndDrop()
 		{
 			addChild(_view);
+			addChild(_check);
 			super.addCloseButton();
 			super.drawBackground(550, 210);
 			super.setTitle(_view, 'New Bookmark');
@@ -28,6 +29,7 @@ package view.modals.local {
 			_form.labels = ['Name', 'Location'];
 			_form.inputs = Vector.<TLFTextField>([_view.name_txt]);
 			_form.deactivateFields(['field2']);
+			_check.y = 170; 
 			_check.label = 'Autosave Every 60 Minutes';
 			_view.name_txt.text = _view.local_txt.text = ''; 
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);

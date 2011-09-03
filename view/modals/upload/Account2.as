@@ -18,7 +18,6 @@ package view.modals.upload {
 		{
 			addChild(_backBtn);
 			super.addButtons([_backBtn]);
-			_backBtn.x = 475; _backBtn.y = 260; 
 			_backBtn.addEventListener(MouseEvent.CLICK, onBackButton);
 			_choose.addEventListener(MouseEvent.CLICK, onChooseClick);
 		}
@@ -69,6 +68,12 @@ package view.modals.upload {
 		{
 			if (_page) removeChild(_page);
 			_page = m; addChild(_page);
+			if (_page == _choose){
+				_backBtn.x = 480; _backBtn.y = 260;
+			}	else if (_page == _login){
+				_backBtn.x = 380;
+				_backBtn.y = 50 + _page.height;
+			}
 		}
 		
 		private function onBackButton(e:MouseEvent):void

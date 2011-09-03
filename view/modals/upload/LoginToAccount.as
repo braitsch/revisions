@@ -1,30 +1,19 @@
 package view.modals.upload {
 
-	import model.remote.HostingAccount;
 	import view.modals.base.ModalWindowBasic;
-	import flash.display.Sprite;
+	import view.modals.login.AccountLogin;
 
 	public class LoginToAccount extends ModalWindowBasic {
 
-		private static var _form		:Sprite;
-		private static var _view		:LoginToAccountMC = new LoginToAccountMC();
-
-		public function LoginToAccount()
-		{
-			addChild(_view);
-		}
+		private static var _login		:AccountLogin;
 
 		public function set service(s:String):void
 		{
-			if (_form) removeChild(_form);
-			if (s == HostingAccount.GITHUB){
-				_form = new Form2();
-			}	else if (s == HostingAccount.BEANSTALK){
-				_form = new Form3(); 
-			}
-			_form.y = 90;
-			addChild(_form);
-			super.setHeading(_view, 'Please login to your '+s+' account');	
+			if (_login) removeChild(_login);
+			_login = new AccountLogin(s);
+			_login.y = 70;
+			_login.heading = 'Please login to your '+s+' account';	
+			addChild(_login);
 		}
 		
 	}

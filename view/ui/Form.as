@@ -67,6 +67,9 @@ package view.ui {
 					InteractiveObject(v[i].getChildAt(1)).tabIndex = i;
 				//	v[i].getChildAt(1).addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 				}
+				addChild(v[i]);
+				v[i].x = 120;
+				v[i].y = 15 + (28 * i);
 				v[i].addEventListener(FocusEvent.FOCUS_IN, onFocusIn);
 			}
 		}

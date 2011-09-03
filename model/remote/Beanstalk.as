@@ -6,7 +6,7 @@ package model.remote {
 	import model.proxies.remote.keys.KeyProxy;
 	import view.modals.account.AccountHome;
 	import view.modals.account.BeanstalkHome;
-	import view.modals.login.AccountLogin;
+	import view.modals.base.ModalWindow;
 	import view.modals.login.BeanstalkLogin;
 	
 	public class Beanstalk implements IHostingProvider {
@@ -23,7 +23,7 @@ package model.remote {
 		public function get api()			:ApiProxy 			{ return _api; 			}
 		public function get key()			:KeyProxy 			{ return _key;			}
 		public function get home()			:AccountHome		{ return _home; 		}
-		public function get login()			:AccountLogin 		{ return _login; 		}
+		public function get login()			:ModalWindow 		{ return _login; 		}
 		public function get addRepoObj()	:Object				{ return _addRepoObj; 	}															
 
 	}

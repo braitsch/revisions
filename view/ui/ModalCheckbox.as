@@ -7,12 +7,13 @@ package view.ui {
 
 	public class ModalCheckbox extends Sprite {
 
-		private var _view	:ModalCheckboxMC;
 		private var _format	:TextFormat = new TextFormat();
+		private var _view	:ModalCheckboxMC = new ModalCheckboxMC();
 
-		public function ModalCheckbox(v:ModalCheckboxMC, on:Boolean)
+		public function ModalCheckbox(on:Boolean)
 		{
-			_view = v;
+			addChild(_view);
+			_view.x = 8;
 			_view.buttonMode = true;
 			_view.cross.visible = on;
 			_format.letterSpacing = .6;

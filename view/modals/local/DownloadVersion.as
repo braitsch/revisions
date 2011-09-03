@@ -14,18 +14,20 @@ package view.modals.local {
 
 		private static var _commit	:Commit;
 		private static var _view	:DownloadMC = new DownloadMC();
-		private static var _check	:ModalCheckbox = new ModalCheckbox(_view.check, false);
+		private static var _check	:ModalCheckbox = new ModalCheckbox(false);
 
 		public function DownloadVersion()
 		{
 			addChild(_view);
+			addChild(_check);
 			super.addCloseButton();
 			super.drawBackground(550, 210);
 			super.setTitle(_view, 'Download Version');
 			super.addButtons([_view.cancel_btn]);
 			super.defaultButton = _view.download_btn;
+			_check.y = 165;
 			_check.label = "Next time just do it and don't ask me";
-			_view.check.addEventListener(MouseEvent.CLICK, onCheckbox);
+			_check.addEventListener(MouseEvent.CLICK, onCheckbox);
 			_view.cancel_btn.addEventListener(MouseEvent.CLICK, onCancel);
 			_view.download_btn.addEventListener(MouseEvent.CLICK, onDownload);
 			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);			

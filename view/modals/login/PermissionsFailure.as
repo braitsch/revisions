@@ -19,11 +19,12 @@ package view.modals.login {
 		private static var _acctName	:String;
 		private static var _repoName	:String;
 		private static var _form		:Form = new Form(new Form2());
-		private static var _check		:ModalCheckbox = new ModalCheckbox(_view.check, true);
+		private static var _check		:ModalCheckbox = new ModalCheckbox(true);
 
 		public function PermissionsFailure()
 		{
 			addChild(_view);
+			addChild(_check);
 			super.setTitle(_view, 'Credentials');
 			super.drawBackground(550, 260);
 			super.addButtons([_view.cancel_btn]);
@@ -31,6 +32,7 @@ package view.modals.login {
 			_form.y = 70; _view.addChildAt(_form, 0);			
 			_form.labels = ['Username', 'Password'];
 			_form.inputs = [_view.name_txt, _view.pass_txt];
+			_check.y = 210;
 			_check.label = 'Remember my login for this account';			
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);
 			_view.cancel_btn.addEventListener(MouseEvent.CLICK, onCancelButton);

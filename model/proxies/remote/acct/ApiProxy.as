@@ -70,8 +70,8 @@ package model.proxies.remote.acct {
 		
 		protected function dispatchLoginSuccess():void 
 		{ 
-			dispatchEvent(new AppEvent(AppEvent.LOGIN_SUCCESS, _account)); 
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
+			dispatchEvent(new AppEvent(AppEvent.LOGIN_SUCCESS, _account)); 
 		}
 		
 	}

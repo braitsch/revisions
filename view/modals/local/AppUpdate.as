@@ -12,17 +12,19 @@ package view.modals.local {
 	public class AppUpdate extends ModalWindow {
 
 		private static var _view	:AppUpdateMC = new AppUpdateMC();
-		private static var _check	:ModalCheckbox = new ModalCheckbox(_view.check, false);
+		private static var _check	:ModalCheckbox = new ModalCheckbox(false);
 
 		public function AppUpdate()
 		{
 			addChild(_view);
-			super.drawBackground(550, 210);
+			addChild(_check);
+			super.drawBackground(550, 220);
 			super.setTitle(_view, 'Update Available');
 			super.addButtons([_view.skip_btn]);
 			super.defaultButton = _view.download_btn;
+			_check.y = 170; 
 			_check.label = "Don't prompt me to update again.";
-			_view.check.addEventListener(MouseEvent.CLICK, onCheckbox);
+			_check.addEventListener(MouseEvent.CLICK, onCheckbox);
 			_view.skip_btn.addEventListener(MouseEvent.CLICK, onSkipUpdate);
 			_view.download_btn.addEventListener(MouseEvent.CLICK, onDownload);
 		}

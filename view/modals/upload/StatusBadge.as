@@ -19,7 +19,7 @@ package view.modals.upload {
 			addChild(_view);
 			addChild(_mask);
 			_view.addChild(_total);
-			_view.x = 42; _total.x = 84; _total.y = 12;
+			_total.x = 84; _total.y = 12;
 			_view.beanstalk.visible = _view.github.visible = false;
 		}
 		

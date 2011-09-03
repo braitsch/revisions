@@ -11,8 +11,8 @@ package view.modals.local {
 
 		private static var _bookmark	:Bookmark;
 		private static var _view		:DeleteBookmarkMC = new DeleteBookmarkMC();
-		private static var _trashGit	:ModalCheckbox = new ModalCheckbox(_view.check2, false);
-		private static var _trashFiles	:ModalCheckbox = new ModalCheckbox(_view.check1, false);
+		private static var _trashGit	:ModalCheckbox = new ModalCheckbox(false);
+		private static var _trashFiles	:ModalCheckbox = new ModalCheckbox(false);
 
 		public function DeleteBookmark()
 		{
@@ -21,8 +21,7 @@ package view.modals.local {
 			super.drawBackground(550, 230);
 			super.setTitle(_view, 'Delete Bookmark');
 			super.addButtons([_view.delete_btn]);
-			_trashFiles.label = 'Also Move Files to Trash';
-			_trashGit.label = 'Destroy History (warning this cannot be undone)';
+			attachOptions();
 			_view.delete_btn.addEventListener(MouseEvent.CLICK, onDeleteButton);
 		}				
 		public function set bookmark($b:Bookmark):void
@@ -32,6 +31,15 @@ package view.modals.local {
 			_view.textArea.message_txt.text = 'Are you sure you want to delete the bookmark "'+_bookmark.label+'"?';
 		// disable options if the filepath to the bookmark is broken //	
 			_trashGit.visible = _trashFiles.visible = _bookmark.exists;
+		}
+		
+		private function attachOptions():void
+		{
+			addChild(_trashGit);			
+			addChild(_trashFiles);
+			_trashFiles.y = 165; _trashGit.y = 190;
+			_trashFiles.label = 'Also Move Files to Trash';
+			_trashGit.label = 'Destroy History (warning this cannot be undone)';					
 		}
 		
 		private function onDeleteButton(e:MouseEvent):void 
