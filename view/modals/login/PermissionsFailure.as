@@ -29,9 +29,11 @@ package view.modals.login {
 			super.drawBackground(550, 260);
 			super.addButtons([_view.cancel_btn]);
 			super.defaultButton = _view.ok_btn;
-			_form.y = 70; _view.addChildAt(_form, 0);			
+			
+			_form.y = 110; _view.addChildAt(_form, 0);			
 			_form.labels = ['Username', 'Password'];
 			_form.inputs = [_view.name_txt, _view.pass_txt];
+			
 			_check.y = 210;
 			_check.label = 'Remember my login for this account';			
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);

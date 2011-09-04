@@ -3,7 +3,9 @@ package view.modals.upload {
 	import events.UIEvent;
 	import fl.text.TLFTextField;
 	import model.AppModel;
+	import model.proxies.remote.acct.ApiProxy;
 	import model.remote.HostingAccount;
+	import model.remote.Hosts;
 	import view.modals.base.ModalWindowBasic;
 	import view.ui.Form;
 	import flash.events.Event;
@@ -12,6 +14,7 @@ package view.modals.upload {
 	public class ConfirmDetails extends ModalWindowBasic {
 
 		private static var _form		:Form;
+		private static var _data		:Object;
 		private static var _heading		:TextHeading = new TextHeading();
 		private static var _service		:String;
 		private static var _bkmk		:TLFTextField = new FINorm().getChildAt(0) as TLFTextField;	
@@ -45,8 +48,9 @@ package view.modals.upload {
 			_service = s; setupForm();
 		}
 		
-		public function set formData(o:Object):void
+		public function set data(o:Object):void
 		{
+			_data = o;
 			_bkmk.text = AppModel.bookmark.label;
 			_repo.text = o.repo; _url.text = o.url;
 			_desc.text = o.desc == '(optional)' ? '' : o.desc;
@@ -80,13 +84,19 @@ package view.modals.upload {
 		override public function onEnterKey():void { onNextButton(); }		
 		private function onNextButton(e:MouseEvent = null):void
 		{
-			trace("ConfirmDetails.onNextButton(e) -- creating repository!!");
+			var api:ApiProxy = _service == HostingAccount.GITHUB ? Hosts.github.api : Hosts.beanstalk.api; 
+			var o:Object = {	bkmk	:	AppModel.bookmark, 
+								acct	:	api,
+								name	:	_repo.text,
+								desc	:	_desc.text, 
+								publik	:	_data.selected == false	};
+			AppModel.proxies.remote.addBkmkToAccount(o);		
 		}			
 		
 		private function onBackButton(e:MouseEvent):void
 		{
 			dispatchEvent(new UIEvent(UIEvent.WIZARD_PREV));
-		}				
+		}	
 		
 	}
 	

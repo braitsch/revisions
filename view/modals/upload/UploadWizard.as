@@ -1,6 +1,8 @@
 package view.modals.upload {
 
+	import events.AppEvent;
 	import events.UIEvent;
+	import model.AppModel;
 	import view.modals.base.ModalWindow;
 	import view.modals.base.ModalWindowBasic;
 	import com.greensock.TweenLite;
@@ -19,11 +21,8 @@ package view.modals.upload {
 		private static var _pickAccount		:PickAccount = new PickAccount();
 		private static var _nameRmtRepo		:NameRmtRepo = new NameRmtRepo();
 		private static var _confirmDetails	:ConfirmDetails = new ConfirmDetails();
+		private static var _onBkmkAdded		:OnBkmkAdded = new OnBkmkAdded();
 		
-//		private static var _addBkmkToAcct		:AddBkmkToAccount = new AddBkmkToAccount();	
-//		private static var _onBkmkAddedToAcct	:OnBkmkAddedToAcct = new OnBkmkAddedToAcct();		
-//		AppModel.engine.addEventListener(AppEvent.BKMK_ADDED_TO_ACCOUNT, onBkmkAddedToAccount);
-
 		public function UploadWizard()
 		{
 			addChild(_view);
@@ -36,16 +35,24 @@ package view.modals.upload {
 			addEventListener(UIEvent.WIZARD_PREV, onWizardPrev);
 			addEventListener(UIEvent.WIZARD_NEXT, onWizardNext);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
+			AppModel.engine.addEventListener(AppEvent.BKMK_ADDED_TO_ACCOUNT, onBkmkAddedToAcct);
+		}
+
+		private function onBkmkAddedToAcct(e:AppEvent):void
+		{
+			_status.page = 5;
+			nextPage(_onBkmkAdded);
+			super.setTitle(_view, 'Success!');
 		}
 
 	// page navigation //
 
 		private function onWizardNext(e:UIEvent):void
 		{
-			if (e.target == _pickService) this.service = e.data as String;
 			switch(e.target){
 				case _pickService : 
 					_status.page = 2;
+					setService(e.data as String);
 					nextPage(_pickAccount);
 				break;	
 				case _pickAccount : 
@@ -54,18 +61,21 @@ package view.modals.upload {
 				break;
 				case _nameRmtRepo : 
 					_status.page = 4;
-					_confirmDetails.formData = e.data as Object;
+					_confirmDetails.data = e.data as Object;
 					nextPage(_confirmDetails);
 				break;				
 			}
 		}
 
-		private function set service(s:String):void
+		private function setService(s:String):void
 		{
-			_status.service = _pickAccount.service = s;
-			_nameRmtRepo.service = _confirmDetails.service = s;
+			_status.service = s;
+			_pickAccount.service = s;
+			_nameRmtRepo.service = s; 
+			_confirmDetails.service = s;
+			_onBkmkAdded.service = s;
 		}
-
+		
 		private function onWizardPrev(e:UIEvent):void
 		{
 			switch(e.target){

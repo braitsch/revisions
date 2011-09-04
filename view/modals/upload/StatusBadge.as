@@ -11,7 +11,7 @@ package view.modals.upload {
 		private static var _mask	:Shape = new Shape();
 		private static var _view	:StatusBadgeMC = new StatusBadgeMC();
 		private static var _page	:Bitmap;
-		private static var _total	:Bitmap = new Bitmap(new Status6());
+		private static var _total	:Bitmap = new Bitmap(new Status5());
 
 		public function StatusBadge()
 		{

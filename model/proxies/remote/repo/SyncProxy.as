@@ -17,14 +17,12 @@ package model.proxies.remote.repo {
 		public function syncRemotes(v:Vector.<BookmarkRemote>):void
 		{
 			_remotes = v.concat();
-			trace('_remotes: ' + (_remotes.length));
 			syncNextRemote();			
 		}
 		
 		private function syncNextRemote():void
 		{
 			_remote = _remotes[0];
-			trace("SyncProxy.syncNextRemote()", _remote.url);
 			pullRemote();
 		}
 		

@@ -1,5 +1,6 @@
 package view.modals.upload {
 
+	import view.ui.ModalCheckbox;
 	import events.AppEvent;
 	import events.UIEvent;
 	import fl.text.TLFTextField;
@@ -22,17 +23,22 @@ package view.modals.upload {
 		private static var _preview		:Form = new Form(new Form1());
 		private static var _nextBtn		:NextButton = new NextButton();
 		private static var _backBtn		:BackButton = new BackButton();
+		private static var _private		:ModalCheckbox = new ModalCheckbox(false);
 
 		public function NameRmtRepo()
 		{
 			addChild(_heading);
 			_heading.x = 10; _heading.y = 70;
 			addChild(_preview);
+			_url.x = 120; _url.y = 16; 
 			_preview.addChild(_url);
 			_preview.labels = ['URL Preview'];
 			_preview.deactivateFields(['field1']);
-			_url.x = 120; _url.y = 16; 
 			_name.addEventListener(Event.CHANGE, onNameChange);
+			
+			_private.y = 235;
+			_private.label = 'Make repository private';
+			addChild(_private);
 			
 			super.addButtons([_backBtn]);
 			super.defaultButton = _nextBtn;
@@ -55,10 +61,12 @@ package view.modals.upload {
 				_form = new Form(new Form2());
 				_form.inputs = [_name, _desc];
 				_form.labels = ['Name', 'Description'];
+				_private.visible = true;
 			}	else if (_service == HostingAccount.BEANSTALK){
 				_form = new Form(new Form1());
 				_form.inputs = [_name];
 				_form.labels = ['Name'];
+				_private.visible = false;
 			}
 			_form.y = 90; addChild(_form);
 			_preview.y = 90 + _form.height + 10;
@@ -93,7 +101,8 @@ package view.modals.upload {
 		private function onNextButton(e:Event = null):void
 		{
 			if (validate()){
-				dispatchEvent(new UIEvent(UIEvent.WIZARD_NEXT, {repo:_name.text, desc:_desc.text, url:_url.text}));
+				var o:Object = {repo:_name.text, desc:_desc.text, url:_url.text, selected:_private.selected};
+				dispatchEvent(new UIEvent(UIEvent.WIZARD_NEXT, o));
 			}
 		}		
 		
@@ -104,14 +113,31 @@ package view.modals.upload {
 		
 		private function validate():Boolean
 		{	
-			if (_name.text.search(/^\d/g) == -1){
-				return true;			
-			}	else{
-				var m:String = 'The name of your bookmark online must begin with a letter.';
+			var m:String;
+			if (_name.text.search(/^\d/g) != -1){
+				m= 'The name of your bookmark online must begin with a letter.';
 				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
 				return false;
+			}	else if (checkForDuplicate() == true){
+				m = 'Remote repository already exists.';
+				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
+				return false;
+			} 	else if (_form.validate() == false){
+				return false;
+			}	else{
+				return true;
 			}
 		}
+		
+		private function checkForDuplicate():Boolean
+		{
+			var n:String = _name.text.replace(/\s/, '-').toLowerCase();
+			if (AppModel.bookmark.getRemoteByProp('name', _service.toLowerCase()+'-'+n)){
+				return true;
+			}	else{
+				return false;
+			}
+		}		
 		
 	}
 	

@@ -51,6 +51,7 @@ package model.proxies.remote.repo {
 		
 		private function onBookmarkPushedToAccount():void
 		{
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.BKMK_ADDED_TO_ACCOUNT, _remote));
 		}		
 

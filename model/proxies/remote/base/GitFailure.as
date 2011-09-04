@@ -26,6 +26,7 @@ package model.proxies.remote.base {
 		
 		public static function detectFailure(s:String):String
 		{
+		//	trace("GitFailure.detectFailure(s)", s);
 			if (detectErrors(_keyErrors, s)){
 				return AUTHENTICATION;
 			}	else if (detectErrors(_urlErrors, s)){
