@@ -20,8 +20,7 @@ package view.modals.bkmk {
 		{
 			addChild(_view);
 			addChild(_branches);
-			super.drawBackground(550, 273);
-			super.setHeading(_view, "These are your branches, aren't they schnazzy?");
+			super.setHeading(_view, "These are your branches, aren't they schnazzy? (features coming soon)");
 			AppModel.proxies.editor.addEventListener(BookmarkEvent.BRANCH_CHANGED, onBranchChanged);
 		}
 		
@@ -43,7 +42,6 @@ package view.modals.bkmk {
 				_branches.addEventListener(MouseEvent.CLICK, onBranchClick);
 			}
 			_branches.x = 10; _branches.y = 90;
-			super.drawBackground(550, _branches.y + _branches.height + 20);		
 		}
 		
 		private function onBranchClick(e:MouseEvent):void

@@ -1,5 +1,6 @@
 package view.modals.bkmk {
 
+	import view.modals.base.ModalWindowBasic;
 	import com.greensock.TweenLite;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -13,7 +14,8 @@ package view.modals.bkmk {
 		private static var _branches	:BookmarkBranches = new BookmarkBranches();
 		private static var _accounts	:BookmarkAccounts = new BookmarkAccounts();
 		private static var _activeTab	:Sprite;
-		private static var _tabMap		:Array = [	{tab:_home, btn:_view.tabs.tab1, lbl:'General'},
+		private static var _activePage	:ModalWindowBasic;
+		private static var _tabMap		:Array = [	{tab:_home, 	btn:_view.tabs.tab1, lbl:'General'},
 													{tab:_branches, btn:_view.tabs.tab2, lbl:'Branches'},
 													{tab:_accounts, btn:_view.tabs.tab3, lbl:'Accounts'}];
 
@@ -22,6 +24,7 @@ package view.modals.bkmk {
 			addChild(_view);
 			initializeTabs();
 			super.addCloseButton(550);
+			super.drawBackground(550, 260);
 			super.setTitle(_view, 'Bookmark Editor');
 			_view.tabs.addEventListener(MouseEvent.CLICK, onTabSelection);
 		}
@@ -78,10 +81,10 @@ package view.modals.bkmk {
 			TweenLite.to(s['grey'], .3, {alpha:.5});
 		}
 		
-		private function setTab(btn:Sprite, tab:Sprite):void
+		private function setTab(btn:Sprite, tab:ModalWindowBasic):void
 		{
-			if (numChildren > 1) removeChildAt(0);			
-			_activeTab = btn; addChildAt(tab, 0);	
+			if (_activePage) removeChild(_activePage);
+			_activeTab = btn; _activePage = tab; addChild(_activePage);	
 			TweenLite.to(_activeTab['blue'], .3, {alpha:1});		
 		}
 		

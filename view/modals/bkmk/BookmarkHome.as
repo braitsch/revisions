@@ -6,6 +6,7 @@ package view.modals.bkmk {
 	import model.AppModel;
 	import model.vo.Bookmark;
 	import view.modals.base.ModalWindowBasic;
+	import view.ui.Form;
 	import view.ui.ModalCheckbox;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -13,6 +14,7 @@ package view.modals.bkmk {
 	public class BookmarkHome extends ModalWindowBasic {
 
 		private static var _view		:BookmarkHomeMC = new BookmarkHomeMC();
+		private static var _form		:Form = new Form(new Form2());
 		private static var _check		:ModalCheckbox = new ModalCheckbox(true);
 		private static var _bookmark	:Bookmark;
 
@@ -20,21 +22,21 @@ package view.modals.bkmk {
 		{
 			addChild(_view);
 			addChild(_check);
-			super.drawBackground(550, 210);
+			addChildAt(_form, 0);
 			super.addButtons([_view.delete_btn]);
 			super.defaultButton = _view.ok_btn;
-			_view.form.label1.text = 'Name';
-			_view.form.label2.text = 'Location';
-			_check.x = 8; _check.y = 170; 
+			super.setHeading(_view, 'General information about this bookmark');
+			
+			_check.y = 220; 
 			_check.label = 'Autosave Every 60 Minutes';
+			_form.y = 90;
+			_form.labels = ['Name', 'Location'];
+			_form.inputs = [_view.name_txt];
+			_form.deactivateFields(['field2']);
+			_form.addEventListener(UIEvent.ENTER_KEY, onUpdateBookmark);
 			_view.local_txt.selectable = false;
 			_view.ok_btn.addEventListener(MouseEvent.CLICK, onUpdateBookmark);
 			_view.delete_btn.addEventListener(MouseEvent.CLICK, onDeleteButton);
-		}
-		
-		override protected function onAddedToStage(e:Event):void 
-		{
-			_view.name_txt.textFlow.interactionManager.setFocus();
 		}
 		
 		public function set bookmark(b:Bookmark):void
@@ -52,7 +54,7 @@ package view.modals.bkmk {
 		}
 
 		override public function onEnterKey():void { onUpdateBookmark(); }
-		private function onUpdateBookmark(e:MouseEvent = null):void
+		private function onUpdateBookmark(e:Event = null):void
 		{
 			var m:String = Bookmark.validate(_view.name_txt.text, _view.local_txt.text, _bookmark);
 			if (m != '') {

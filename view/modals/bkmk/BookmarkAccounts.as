@@ -14,14 +14,13 @@ package view.modals.bkmk {
 		{
 			addChild(_view); 
 			addChild(_remotes);
-			super.setHeading(_view, 'This bookmark is linked to the following accounts:');
+			super.setHeading(_view, 'This bookmark is linked to the following accounts: (features coming soon)');
 		}
 		
 		public function set bookmark(b:Bookmark):void
 		{
 			_bookmark = b;
 			attachRemotes();
-			super.drawBackground(550, _remotes.y + _remotes.height + 20);
 		}
 
 		private function attachRemotes():void
@@ -33,7 +32,6 @@ package view.modals.bkmk {
 				_remotes.addChild(ri);
 			}
 			_remotes.x = 10; _remotes.y = 100;
-			super.drawBackground(550, _remotes.y + _remotes.height + 50);	
 		}
 		
 	}

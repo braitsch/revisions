@@ -21,7 +21,7 @@ package view.modals.bkmk {
 			_view.name_txt.autoSize = TextFieldAutoSize.LEFT;
 			_view.desc_txt.autoSize = TextFieldAutoSize.LEFT;
 			_view.name_txt.text = rmt.acctName+' : '+rmt.repoName.substr(0, -4);
-			_view.desc_txt.text = 'last updated : info not available';
+			_view.desc_txt.text = rmt.homePage;
 			attachLogo();
 			buttonMode = true; mouseChildren = false;
 			addEventListener(MouseEvent.CLICK, onMouseClick);
