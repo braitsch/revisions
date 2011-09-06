@@ -14,12 +14,12 @@ package model.proxies.remote.acct {
 		{
 			super.login(ra);
 			super.baseURL = 'https://'+ra.user+':'+ra.pass+'@'+ra.acct+'.beanstalkapp.com/api';
-			super.attemptLogin('/users.xml');
+			super.loginToAccount('/users.xml');
 		}
 		
-		override public function makeNewRemoteRepository(o:Object):void
+		override public function addRepository(o:Object):void
 		{
-			super.makeNewRepoOnAccount(HEADER_XML, getRepoObj(o.name), '/repositories.xml');
+			super.addRepositoryToAccount(HEADER_XML, getRepoObj(o.name), '/repositories.xml');
 		}		
 		
 	// handlers //			

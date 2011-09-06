@@ -19,7 +19,7 @@ package model.proxies.remote.repo {
 		{
 			_bkmk = o.bkmk;
 			_acct = o.acct;
-			_acct.makeNewRemoteRepository(o);
+			_acct.addRepository(o);
 			_acct.addEventListener(AppEvent.REPOSITORY_CREATED, onRepositoryCreated);
 		}
 		

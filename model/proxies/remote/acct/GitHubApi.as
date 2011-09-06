@@ -1,9 +1,9 @@
 package model.proxies.remote.acct {
 
-	import model.remote.Hosts;
 	import events.AppEvent;
 	import events.ErrorType;
 	import model.remote.HostingAccount;
+	import model.remote.Hosts;
 	import model.vo.BookmarkRemote;
 
 	public class GitHubApi extends ApiProxy {
@@ -14,13 +14,18 @@ package model.proxies.remote.acct {
 		{
 			super.login(ra);
 			super.baseURL = 'https://'+ra.user+':'+ra.pass+'@api.github.com';
-			super.attemptLogin('/users/'+ra.user);
+			super.loginToAccount('/users/'+ra.user);
 		}
 		
-		override public function makeNewRemoteRepository(o:Object):void
+		override public function addRepository(o:Object):void
 		{
-			super.makeNewRepoOnAccount(HEADER_TXT, getRepoObj(o.name, o.desc, o.publik), '/user/repos');
-		}		
+			super.addRepositoryToAccount(HEADER_TXT, getRepoObj(o.name, o.desc, o.publik), '/user/repos');
+		}
+		
+		override public function addCollaborator(r:String, u:String):void
+		{
+			super.addCollaboratorToAccount('Content-Length: 0', '/repos/'+super.account.user+'/'+r+'/collaborators/'+u);
+		}
 		
 	// handlers //	
 		
@@ -57,6 +62,16 @@ package model.proxies.remote.acct {
 			}
 		}
 		
+		override protected function onCollaboratorAdded(s:String):void
+		{	
+			var o:Object = getResultObject(s);
+			if (o.message == null){
+				dispatchCollaboratorSuccess();
+			}	else{
+				handleJSONError(o.message);		
+			}
+		}
+		
 	// handle github specific errors //		
 		
 		private function handleJSONError(m:String):void
@@ -71,6 +86,9 @@ package model.proxies.remote.acct {
 				case 'name is already taken' :
 					dispatchFailure(ErrorType.REPOSITORY_TAKEN);
 				break;	
+				case 'Not Found' :
+					dispatchFailure(ErrorType.COLLAB_NOT_FOUND);
+				break;					
 			}
 		}
 		

@@ -90,7 +90,7 @@ package view.modals.upload {
 								name	:	_repo.text,
 								desc	:	_desc.text, 
 								publik	:	_data.selected == false	};
-			AppModel.proxies.remote.addBkmkToAccount(o);		
+			AppModel.proxies.remote.addBkmkToAccount(o);
 		}			
 		
 		private function onBackButton(e:MouseEvent):void

@@ -22,6 +22,7 @@ package view.modals.upload {
 		private static var _nameRmtRepo		:NameRmtRepo = new NameRmtRepo();
 		private static var _confirmDetails	:ConfirmDetails = new ConfirmDetails();
 		private static var _onBkmkAdded		:OnBkmkAdded = new OnBkmkAdded();
+		private static var _addCollaborator	:AddCollaborator = new AddCollaborator();
 		
 		public function UploadWizard()
 		{
@@ -53,7 +54,8 @@ package view.modals.upload {
 				case _pickService : 
 					_status.page = 2;
 					setService(e.data as String);
-					nextPage(_pickAccount);
+					nextPage(_addCollaborator);
+				//	nextPage(_pickAccount);
 				break;	
 				case _pickAccount : 
 					_status.page = 3;
@@ -74,6 +76,7 @@ package view.modals.upload {
 			_nameRmtRepo.service = s; 
 			_confirmDetails.service = s;
 			_onBkmkAdded.service = s;
+			_addCollaborator.service = s;
 		}
 		
 		private function onWizardPrev(e:UIEvent):void
@@ -82,15 +85,19 @@ package view.modals.upload {
 				case _pickAccount : 
 					_status.page = 1;
 					prevPage(_pickService);
-				break;	
+				break;
 				case _nameRmtRepo : 
 					_status.page = 2;
 					prevPage(_pickAccount);
-				break;	
+				break;
 				case _confirmDetails :
 					_status.page = 3;
 					prevPage(_nameRmtRepo);
-				break;									
+				break;
+				case _addCollaborator :
+					_status.page = 1;
+					prevPage(_pickService);
+				break;
 			}			
 		}
 		

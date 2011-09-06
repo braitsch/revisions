@@ -1,11 +1,11 @@
 package model.proxies.remote.acct {
 
-	import system.StringUtils;
 	import events.AppEvent;
 	import model.AppModel;
 	import model.proxies.remote.base.CurlProxy;
 	import model.remote.HostingAccount;
 	import system.BashMethods;
+	import system.StringUtils;
 
 	public class ApiProxy extends CurlProxy {
 
@@ -21,7 +21,7 @@ package model.proxies.remote.acct {
 		protected function set baseURL(baseURL:String)	:void 				{ _baseURL = baseURL; 	}	
 
 		public function login(ra:HostingAccount):void { _account = ra; }
-		protected function attemptLogin(url:String):void
+		protected function loginToAccount(url:String):void
 		{
 			startTimer();
 			super.request = BashMethods.LOGIN;
@@ -29,14 +29,23 @@ package model.proxies.remote.acct {
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Attemping Login'}));
 		}
 		
-		public function makeNewRemoteRepository(o:Object):void { }
-		protected function makeNewRepoOnAccount(header:String, data:String, url:String):void
+		public function addRepository(o:Object):void { }
+		protected function addRepositoryToAccount(header:String, data:String, url:String):void
 		{
 			startTimer();
 			super.request = BashMethods.ADD_BKMK_TO_ACCOUNT;
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Connecting to '+StringUtils.capitalize(_account.type)}));
 			super.call(Vector.<String>([BashMethods.POST_REQUEST, header, data, _baseURL + url]));
-		}				
+		}
+		
+		public function addCollaborator(r:String, u:String):void { }
+		protected function addCollaboratorToAccount(header:String, url:String):void
+		{
+			startTimer();
+			super.request = BashMethods.ADD_COLLABORATOR;
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Adding Collaborator'}));
+			super.call(Vector.<String>([BashMethods.PUT_REQUEST, header, _baseURL + url]));
+		}		
 		
 		protected function getRepositories(url:String):void
 		{
@@ -56,10 +65,13 @@ package model.proxies.remote.acct {
 				break;
 				case BashMethods.ADD_BKMK_TO_ACCOUNT : 
 					onRepositoryCreated(r);
-				break;									
+				break;	
+				case BashMethods.ADD_COLLABORATOR : 
+					onCollaboratorAdded(r);
+				break;													
 			}			
 		}
-		
+
 	// callbacks //	
 		
 		protected function onLoginSuccess(s:String):void { }
@@ -68,10 +80,18 @@ package model.proxies.remote.acct {
 		
 		protected function onRepositoryCreated(s:String):void { }
 		
+		protected function onCollaboratorAdded(s:String):void { }
+		
 		protected function dispatchLoginSuccess():void 
 		{ 
 			dispatchEvent(new AppEvent(AppEvent.LOGIN_SUCCESS, _account));
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
+		}
+		
+		protected function dispatchCollaboratorSuccess():void
+		{
+			dispatchEvent(new AppEvent(AppEvent.COLLABORATOR_ADDED));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));			
 		}
 		
 	}
