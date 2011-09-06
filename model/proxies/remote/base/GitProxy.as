@@ -24,16 +24,15 @@ package model.proxies.remote.base {
 		protected function set request(req:GitRequest):void 
 		{ 
 			_request = req;
-			attemptRequest();
+			trace('_request: ' + (_request.url));
+			if (_request.url.search(/(https:\/\/)(\w*)(@github.com)/) == -1){
+				attemptRequest();
+			}	else{
+				attemptAccountLookup(_request.url);
+			}
 		}
 		
 		protected function get request():GitRequest { return _request; }
-		
-		protected function addPassToHttpsURL(req:GitRequest):void
-		{
-			_request = req;
-			attemptAccountLookup(req.url);
-		}
 		
 		private function attemptRequest():void
 		{

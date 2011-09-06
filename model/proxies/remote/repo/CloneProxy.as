@@ -15,20 +15,11 @@ package model.proxies.remote.repo {
 
 		public function clone(url:String, loc:String):void
 		{
-			_cloneURL = url; _savePath = loc;
-			detectPrivateHttpsUrls();
+			_cloneURL = url;
+			_savePath = loc;
+			super.request = new GitRequest(BashMethods.CLONE, _cloneURL, [_savePath]);
 		}
 
-		private function detectPrivateHttpsUrls():void
-		{
-			var req:GitRequest = new GitRequest(BashMethods.CLONE, _cloneURL, [_savePath]);
-			if (_cloneURL.search(/(https:\/\/)(\w*)(@github.com)/) != -1){
-				super.addPassToHttpsURL(req);
-			}	else{
-				super.request = req;
-			}
-		}
-		
 		private function stripPassFromRemoteURL():void
 		{
 			if (super.request.url.search(/(https:\/\/)(\w*)(:)/) != -1){
