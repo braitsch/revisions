@@ -101,7 +101,7 @@ package view.modals.upload {
 		override protected function onNextButton(e:Event = null):void
 		{
 			if (validate()){
-				super.dispatchNext(e, {repo:_name.text, desc:_desc.text, url:_url.text, selected:_private.selected});
+				super.dispatchNext(e, {repo:_name.text.replace(/\s/g, '-'), desc:_desc.text, url:_url.text, selected:_private.selected});
 			}
 		}
 		
