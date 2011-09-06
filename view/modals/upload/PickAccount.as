@@ -1,31 +1,26 @@
 package view.modals.upload {
 
 	import events.AppEvent;
-	import events.UIEvent;
 	import model.remote.HostingAccount;
 	import model.remote.Hosts;
-	import view.modals.base.ModalWindowBasic;
 	import view.modals.login.AccountLogin;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 
-	public class PickAccount extends ModalWindowBasic {
+	public class PickAccount extends WizardWindow {
 
+		private static var _page		:Sprite;
 		private static var _choose		:ChooseAccountMC = new ChooseAccountMC();
 		private static var _login		:AccountLogin;
 		private static var _service		:String;
-		private static var _page		:Sprite;
-		private static var _backBtn		:BackButton = new BackButton();
 
 		public function PickAccount()
 		{
-			addChild(_backBtn);
-			super.addButtons([_backBtn, _choose.linkThis, _choose.linkDiff]);
-			_backBtn.y = 280 - 35; // 280 window height //
-			_backBtn.addEventListener(MouseEvent.CLICK, onBackButton);
-			_choose.linkThis.addEventListener(MouseEvent.CLICK, dispatchNext);
+			super.addBackButton();
+			super.addButtons([_choose.linkThis, _choose.linkDiff]);
 			_choose.linkDiff.addEventListener(MouseEvent.CLICK, showLoginWindow);
+			_choose.linkThis.addEventListener(MouseEvent.CLICK, super.dispatchNext);
 		}
 
 		public function set service(s:String):void { _service = s; }
@@ -33,9 +28,9 @@ package view.modals.upload {
 		override protected function onAddedToStage(e:Event):void
 		{
 			if (_service == HostingAccount.GITHUB){
-				Hosts.github.loggedIn ? showChooser() : showLoginWindow();
+				Hosts.github.loggedIn ? showChooser() : showLoginWindow(e);
 			}	else if (_service == HostingAccount.BEANSTALK){
-				Hosts.beanstalk.loggedIn ? showChooser() : showLoginWindow();
+				Hosts.beanstalk.loggedIn ? showChooser() : showLoginWindow(e);
 			}
 		}
 		
@@ -44,9 +39,9 @@ package view.modals.upload {
 			if (_page) removeChild(_page);
 			_page = w; addChild(_page);
 			if (_page == _choose){
-				_backBtn.x = 484;
+				super.backBtnX = 484;
 			}	else if (_page is AccountLogin){
-				_backBtn.x = 380;
+				super.backBtnX = 380;
 			}
 		}
 		
@@ -59,28 +54,18 @@ package view.modals.upload {
 				m = 'You are currently logged into the Beanstalk account "'+Hosts.beanstalk.loggedIn.acct+'".';
 			}
 			m+='\nWhat would you like to do?';
-			this.page = _choose;
 			super.setHeading(_choose, m);
+			this.page = _choose;
 		}
 		
-		private function showLoginWindow(e:MouseEvent = null):void
+		private function showLoginWindow(e:Event):void
 		{
 			_login = new AccountLogin(_service);
 			_login.y = 70;
 			_login.baseline = 280;
 			_login.heading = 'Please login to your '+_service+' account';	
-			_login.addEventListener(AppEvent.LOGIN_SUCCESS, dispatchNext);
+			_login.addEventListener(AppEvent.LOGIN_SUCCESS, super.dispatchNext);
 			this.page = _login;
-		}
-		
-		private function dispatchNext(e:Event):void
-		{
-			dispatchEvent(new UIEvent(UIEvent.WIZARD_NEXT));
-		}
-		
-		private function onBackButton(e:MouseEvent):void
-		{
-			dispatchEvent(new UIEvent(UIEvent.WIZARD_PREV));
 		}
 		
 	}

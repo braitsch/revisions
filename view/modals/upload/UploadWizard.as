@@ -54,8 +54,7 @@ package view.modals.upload {
 				case _pickService : 
 					_status.page = 2;
 					setService(e.data as String);
-					nextPage(_addCollaborator);
-				//	nextPage(_pickAccount);
+					nextPage(_pickAccount);
 				break;	
 				case _pickAccount : 
 					_status.page = 3;
@@ -63,20 +62,32 @@ package view.modals.upload {
 				break;
 				case _nameRmtRepo : 
 					_status.page = 4;
-					_confirmDetails.data = e.data as Object;
+					setData(e.data as Object);
 					nextPage(_confirmDetails);
-				break;				
+				break;	
+				case _onBkmkAdded : 
+					_status.page = 5;
+					nextPage(_addCollaborator);
+					super.setTitle(_view, 'Add Collaborator');
+				break;								
 			}
 		}
 
+	// TODO - these need to be dispatched as events when they are set //
 		private function setService(s:String):void
 		{
 			_status.service = s;
 			_pickAccount.service = s;
-			_nameRmtRepo.service = s; 
+			_nameRmtRepo.service = s;
 			_confirmDetails.service = s;
 			_onBkmkAdded.service = s;
 			_addCollaborator.service = s;
+		}
+		
+		private function setData(o:Object):void
+		{
+			_confirmDetails.data = o;
+			_addCollaborator.data = o;
 		}
 		
 		private function onWizardPrev(e:UIEvent):void

@@ -4,13 +4,13 @@ package view.modals.upload {
 	import events.UIEvent;
 	import model.AppModel;
 	import model.remote.HostingAccount;
-	import system.StringUtils;
 	import view.modals.base.ModalWindowBasic;
 	import flash.events.MouseEvent;
 
 	public class OnBkmkAdded extends ModalWindowBasic {
 
 		private static var _view	:OnBkmkAddedMC = new OnBkmkAddedMC();
+		private static var _service	:String;
 
 		public function OnBkmkAdded()
 		{
@@ -21,11 +21,11 @@ package view.modals.upload {
 		
 		public function set service(s:String):void
 		{
-			var a:String = StringUtils.capitalize(s);
-			var m:String = 'You just pushed "'+AppModel.bookmark.label+'" up to a shiny new repository on '+a+'! ';
-			m+='\nWhat would you like to do now?';
+			_service = s;
+			_view.github.visible = _service == HostingAccount.GITHUB;
+			var m:String = 'You just pushed "'+AppModel.bookmark.label+'" up to a shiny new repository on '+_service+'! ';
+				m+='\nWhat would you like to do now?';
 			super.setHeading(_view, m);
-			_view.github.visible = s == HostingAccount.GITHUB;
 		}
 		
 		private function onButtonSelection(e:MouseEvent):void
@@ -38,7 +38,11 @@ package view.modals.upload {
 					dispatchEvent(new UIEvent(UIEvent.BEANSTALK_HOME));
 				break;
 				case _view.addCollab :
-					AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, 'This feature is coming soon.'));
+					if (_service == HostingAccount.GITHUB){
+						dispatchEvent(new UIEvent(UIEvent.WIZARD_NEXT));
+					}	else{
+						AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, 'This feature for Beanstalk accounts is coming soon.'));
+					}
 				break;
 				case _view.share :
 					AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, 'This feature is coming soon.'));
