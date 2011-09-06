@@ -12,6 +12,7 @@ package view.history {
 
 	public class HistoryList extends Sprite {
 
+		private var _length				:uint;
 		private var _modified			:Boolean;
 		private var _branch				:Branch;
 		private var _bookmark			:Bookmark;
@@ -31,9 +32,12 @@ package view.history {
 	// on summary & history updates //
 		public function checkIfChanged():void
 		{
-			var m:Boolean = _bookmark.branch.isModified;			
-			if (_modified != m || numChildren == 0 || _bookmark.branch != _branch){
-				_modified = m; _branch = _bookmark.branch; drawList();
+			var m:Boolean = _bookmark.branch.isModified;
+			var n:uint = _bookmark.branch.history.length;
+			if (_length != n || _modified != m || numChildren == 0 || _bookmark.branch != _branch){
+				_length = n; _modified = m; 
+				_branch = _bookmark.branch; 
+				drawList();
 			}	else{
 				dispatchRenderComplete();		
 			}
