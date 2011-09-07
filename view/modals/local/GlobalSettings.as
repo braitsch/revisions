@@ -7,6 +7,7 @@ package view.modals.local {
 	import system.AppSettings;
 	import system.LicenseManager;
 	import view.modals.base.ModalWindow;
+	import view.modals.system.Message;
 	import view.ui.Form;
 	import view.ui.ModalCheckbox;
 	import mx.utils.StringUtil;
@@ -106,7 +107,7 @@ package view.modals.local {
 			if (m == ''){
 				AppModel.proxies.config.setUserNameAndEmail(n, e);
 			}	else{
-				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
+				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));
 			}	
 		}
 		

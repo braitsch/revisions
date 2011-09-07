@@ -6,6 +6,7 @@ package model.proxies.local {
 	import model.proxies.air.NativeProcessQueue;
 	import model.vo.Bookmark;
 	import system.BashMethods;
+	import view.modals.system.Debug;
 
 	public class RepoReader extends NativeProcessQueue {
 
@@ -43,7 +44,7 @@ package model.proxies.local {
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
 			e.data.source = 'BranchProxy.onProcessFailure(e)';
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_DEBUG, e.data));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Debug(e.data)));
 		}
 		
 	}

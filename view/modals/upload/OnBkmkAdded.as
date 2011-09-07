@@ -5,6 +5,7 @@ package view.modals.upload {
 	import model.AppModel;
 	import model.remote.HostingAccount;
 	import view.modals.base.ModalWindowBasic;
+	import view.modals.system.Message;
 	import flash.events.MouseEvent;
 
 	public class OnBkmkAdded extends ModalWindowBasic {
@@ -41,11 +42,12 @@ package view.modals.upload {
 					if (_service == HostingAccount.GITHUB){
 						dispatchEvent(new UIEvent(UIEvent.WIZARD_NEXT));
 					}	else{
-						AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, 'This feature for Beanstalk accounts is coming soon.'));
+						var m:Message = new Message('This feature for Beanstalk accounts is coming soon.');
+						AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
 					}
 				break;
 				case _view.share :
-					AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, 'This feature is coming soon.'));
+					AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message('This feature is coming soon.')));
 				break;
 				case _view.close :
 					dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));

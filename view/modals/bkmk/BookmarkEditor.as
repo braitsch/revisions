@@ -1,11 +1,11 @@
 package view.modals.bkmk {
 
+	import model.vo.Bookmark;
+	import view.modals.base.ModalWindow;
 	import view.modals.base.ModalWindowBasic;
 	import com.greensock.TweenLite;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
-	import model.vo.Bookmark;
-	import view.modals.base.ModalWindow;
 
 	public class BookmarkEditor extends ModalWindow {
 
@@ -28,7 +28,7 @@ package view.modals.bkmk {
 			super.setTitle(_view, 'Bookmark Editor');
 			_view.tabs.addEventListener(MouseEvent.CLICK, onTabSelection);
 		}
-		
+
 		public function set bookmark(b:Bookmark):void
 		{
 			_home.bookmark = _accounts.bookmark = _branches.bookmark = b;

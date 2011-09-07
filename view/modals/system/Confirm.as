@@ -1,40 +1,20 @@
 package view.modals.system {
 
-	import events.AppEvent;
-	import flash.events.MouseEvent;
-	import model.AppModel;
-	import view.modals.base.ModalWindow;
 
-	public class Confirm extends ModalWindow {
+	public class Confirm extends Alert {
 
-		private static var _view	:ConfirmMC = new ConfirmMC();
+		private var _view	:ConfirmMC = new ConfirmMC();
 
-		public function Confirm()
+		public function Confirm(m:String)
 		{
 			addChild(_view);
 			super.drawBackground(550, 210);
-			super.setTitle(_view, 'Confirm');			
-			super.addButtons([_view.cancel_btn]);
-			super.defaultButton = _view.ok_btn;
-			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);
-			_view.cancel_btn.addEventListener(MouseEvent.CLICK, onCancelButton);
+			super.setTitle(_view, 'Confirm');
+			_view.textArea.message_txt.htmlText = m;
+		//	super.addButtons([_view.cancel_btn]);
+		//	super.defaultButton = _view.ok_btn;
 		}
 
-		public function set message(m:String):void
-		{
-			_view.textArea.message_txt.htmlText = m;	
-		}
-		
-		private function onOkButton(e:MouseEvent):void
-		{
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_CONFIRM, true));
-		}
-		
-		private function onCancelButton(e:MouseEvent):void
-		{
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_CONFIRM, false));			
-		}		
-		
 	}
 	
 }

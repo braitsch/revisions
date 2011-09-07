@@ -5,6 +5,7 @@ package model.proxies.local {
 	import model.AppModel;
 	import model.proxies.air.NativeProcessProxy;
 	import system.BashMethods;
+	import view.modals.system.Debug;
 
 	public class SSHKeyGenerator extends NativeProcessProxy {
 		
@@ -83,7 +84,7 @@ package model.proxies.local {
 		private function dispatchDebug(o:Object):void
 		{
 			o.source = 'SSHProxy.onProcessFailure(e)';
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_DEBUG, o));			
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Debug(o)));			
 		}
 
 	}

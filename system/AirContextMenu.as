@@ -1,11 +1,13 @@
 package system {
 
+	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.UIEvent;
 	import model.AppModel;
 	import model.vo.Bookmark;
 	import view.bookmarks.BookmarkListItem;
 	import view.layout.ListItem;
+	import view.modals.system.Delete;
 	import flash.display.DisplayObject;
 	import flash.display.InteractiveObject;
 	import flash.display.Stage;
@@ -74,8 +76,8 @@ package system {
 				break;
 				case 'Edit Bookmark Settings' : 					_stage.dispatchEvent(new UIEvent(UIEvent.EDIT_BOOKMARK, bkmk));	
 				break;
-				case 'Delete Bookmark' : 					_stage.dispatchEvent(new UIEvent(UIEvent.DELETE_BOOKMARK, bkmk));	
-				break;
+				case 'Delete Bookmark' : 
+					AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Delete(bkmk)));				break;
 				case 'Show Bookmark Summary' : 
 					AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.SELECTED, bkmk));	
 				break;				

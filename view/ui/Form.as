@@ -1,9 +1,10 @@
 package view.ui {
 
-	import events.UIEvent;
 	import events.AppEvent;
+	import events.UIEvent;
 	import fl.text.TLFTextField;
 	import model.AppModel;
+	import view.modals.system.Message;
 	import flash.display.InteractiveObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -51,7 +52,7 @@ package view.ui {
 		{
 			for (var i:int = 0; i < _inputs.length; i++){
 				if (_inputs[i].text == '') {
-					AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, 'Neither field can be blank.'));
+					AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message('Neither field can be blank.')));
 					return false;
 				}
 			}

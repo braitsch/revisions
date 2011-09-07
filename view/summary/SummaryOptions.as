@@ -4,6 +4,7 @@ package view.summary {
 	import events.UIEvent;
 	import model.AppModel;
 	import model.vo.Bookmark;
+	import view.modals.system.Message;
 	import view.ui.SmartButton;
 	import view.ui.Tooltip;
 	import flash.display.Sprite;
@@ -65,9 +66,8 @@ package view.summary {
 		
 		private function syncRemote():void
 		{
-			var m:String;
 			if (_bookmark.branch.isModified){
-				m = 'Please saves your lastest changes before syncing with the server.';
+				var m:Message = new Message('Please saves your lastest changes before syncing with the server.');
 				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
 			}	else{
 				_locked = true;

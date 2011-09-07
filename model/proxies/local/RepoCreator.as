@@ -1,5 +1,6 @@
 package model.proxies.local {
 
+	import view.modals.system.Debug;
 	import com.adobe.crypto.MD5;
 	import events.AppEvent;
 	import events.BookmarkEvent;
@@ -176,7 +177,7 @@ package model.proxies.local {
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
 			e.data.source = 'InitProxy.onProcessFailure(e)';
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_DEBUG, e.data));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Debug(e.data)));
 		}
 
 	}

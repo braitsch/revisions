@@ -6,6 +6,7 @@ package model.proxies.local {
 	import model.AppModel;
 	import model.proxies.air.NativeProcessProxy;
 	import system.BashMethods;
+	import view.modals.system.Debug;
 	import flash.filesystem.File;
 
 	public class RepoEditor extends NativeProcessProxy {
@@ -78,7 +79,7 @@ package model.proxies.local {
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
 			e.data.source = 'CheckoutProxy.onProcessFailure(e)';
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_DEBUG, e.data));			
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Debug(e.data)));
 		}
 		
 	}

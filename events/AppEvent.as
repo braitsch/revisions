@@ -3,12 +3,10 @@ package events {
 
 	public class AppEvent extends Event {
 				
+		public static const FAILURE					:String = "FAILURE";
 		public static const SHOW_ALERT				:String = "SHOW_ALERT";
-		public static const HIDE_ALERT				:String = "HIDE_ALERT";		
-		public static const SHOW_DEBUG				:String = "SHOW_DEBUG";
-		public static const HIDE_DEBUG				:String = "HIDE_DEBUG";	
-		public static const SHOW_CONFIRM			:String = "SHOW_CONFIRM";
-		public static const HIDE_CONFIRM			:String = "HIDE_CONFIRM";
+		public static const HIDE_ALERT				:String = "HIDE_ALERT";	
+		
 		public static const SHOW_LOADER				:String = 'SHOW_LOADER';
 		public static const HIDE_LOADER				:String = 'HIDE_LOADER';
 		public static const LOADER_TEXT				:String = "LOADER_TEXT";
@@ -37,6 +35,7 @@ package events {
 		public static const REMOTE_SYNCED			:String = "REMOTE_SYNCED";
 		public static const CLONE_COMPLETE			:String = "CLONE_COMPLETE";
 		public static const REPOSITORY_CREATED		:String = "REPOSITORY_CREATED";
+		public static const BKMK_ADDED_TO_ACCOUNT	:String = "BKMK_ADDED_TO_ACCOUNT";
 		
 		public static const REPOSITORY_READY		:String = "REPOSITORY_READY";
 		public static const FILES_DELETED			:String = "FILES_DELETED";
@@ -44,14 +43,10 @@ package events {
 		public static const MODIFIED_REQUESTED		:String = "MODIFIED_REQUESTED";
 		public static const HISTORY_RENDERED		:String = "HISTORY_RENDERED";
 		
-		public static const FAILURE					:String = "FAILURE";
-		public static const BKMK_ADDED_TO_ACCOUNT	:String = "BKMK_ADDED_TO_ACCOUNT";
-		
 		public static const REMOTE_KEY_READY		:String = "REMOTE_KEY_READY";
 		public static const PERMISSIONS_FAILURE		:String = "PERMISSIONS_FAILURE";
-		public static const RETRY_REMOTE_REQUEST:String = "RETRY_REMOTE_REQUEST";
-		public static const COLLABORATOR_ADDED:String = "COLLABORATOR_ADDED";
-
+		public static const RETRY_REMOTE_REQUEST	:String = "RETRY_REMOTE_REQUEST";
+		public static const COLLABORATOR_ADDED		:String = "COLLABORATOR_ADDED";
 		
 		public var data:Object;
 

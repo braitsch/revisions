@@ -7,6 +7,7 @@ package view.modals.upload {
 	import model.proxies.remote.acct.ApiProxy;
 	import model.remote.HostingAccount;
 	import model.remote.Hosts;
+	import view.modals.system.Message;
 	import view.ui.Form;
 	import flash.events.Event;
 
@@ -60,7 +61,7 @@ package view.modals.upload {
 			var m:String = 'Awesome! I just added "'+_collaborator+'" to your '+_service+' repository "'+_repository+'" ';
 				m+='and just sent them an email so they\'re in the know. \nRock on now & get back to work!';
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));
 			_serviceApi.removeEventListener(AppEvent.COLLABORATOR_ADDED, onCollaboratorAdded);	
 		}
 		

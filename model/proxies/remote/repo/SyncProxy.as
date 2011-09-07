@@ -1,5 +1,6 @@
 package model.proxies.remote.repo {
 
+	import view.modals.system.Confirm;
 	import events.AppEvent;
 	import model.AppModel;
 	import model.proxies.remote.base.GitProxy;
@@ -10,6 +11,7 @@ package model.proxies.remote.repo {
 
 	public class SyncProxy extends GitProxy {
 
+		private static var _confirm		:Confirm;
 		private static var _remote		:BookmarkRemote;
 		private static var _prompt		:Boolean;
 		private static var _remotes		:Vector.<BookmarkRemote>;
@@ -97,7 +99,8 @@ package model.proxies.remote.repo {
 		{
 			var m:String = 'The current branch "'+AppModel.branch.name+'" is not currently being tracked by your '+_remote.acctType+' repository: "'+_remote.repoName.substr(0, -4)+'".';
 				m+= '\nAre you sure you want to continue?';
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_CONFIRM, {target:this, message:m}));			
+			_confirm = new Confirm(m);
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, _confirm));			
 		}							
 		
 	}

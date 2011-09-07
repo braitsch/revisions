@@ -6,6 +6,7 @@ package view.modals.upload {
 	import model.AppModel;
 	import model.remote.HostingAccount;
 	import model.remote.Hosts;
+	import view.modals.system.Message;
 	import view.ui.Form;
 	import view.ui.ModalCheckbox;
 	import flash.events.Event;
@@ -107,13 +108,13 @@ package view.modals.upload {
 		
 		private function validate():Boolean
 		{	
-			var m:String;
+			var m:Message;
 			if (_name.text.search(/^\d/g) != -1){
-				m= 'The name of your bookmark online must begin with a letter.';
+				m = new Message('The name of your bookmark online must begin with a letter.');
 				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
 				return false;
 			}	else if (checkForDuplicate() == true){
-				m = 'Remote repository already exists.';
+				m = new Message('Remote repository already exists.');
 				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
 				return false;
 			} 	else if (_form.validate() == false){

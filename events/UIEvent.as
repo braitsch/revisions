@@ -8,7 +8,7 @@ package events {
 	// adding and editing local bookmarks //	
 		public static const ADD_BOOKMARK			:String = "ADD_BOOKMARK";
 		public static const DRAG_AND_DROP			:String = "DRAG_AND_DROP";		public static const EDIT_BOOKMARK			:String = "EDIT_BOOKMARK";
-		public static const DELETE_BOOKMARK			:String = "DELETE_BOOKMARK";		public static const ADD_BKMK_TO_ACCOUNT	:String = "ADD_REMOTE_TO_BOOKMARK";
+		public static const ADD_BKMK_TO_ACCOUNT		:String = "ADD_REMOTE_TO_BOOKMARK";
 			// adding and editing local branches //	
 		public static const DELETE_BRANCH			:String = "DELETE_BRANCH";
 		
@@ -40,12 +40,12 @@ package events {
 	// file viewer actions //	
 		public static const FILE_SELECTED			:String = "FILE_SELECTED";
 		public static const TOGGLE_DIRECTORY		:String = "TOGGLE_DIRECTORY";
-		public static const SHOW_NEW_REPO_CONFIRM:String = "SHOW_NEW_REPO_CONFIRM";
-		public static const ADD_BKMK_TO_BEANSTALK:String = "ADD_BKMK_TO_BEANSTALK";
+		public static const SHOW_NEW_REPO_CONFIRM	:String = "SHOW_NEW_REPO_CONFIRM";
+		public static const ADD_BKMK_TO_BEANSTALK	:String = "ADD_BKMK_TO_BEANSTALK";
 		
-		public static const WIZARD_PREV:String = "WIZARD_PREV";
-		public static const WIZARD_NEXT:String = "WIZARD_NEXT";
-		public static const ENTER_KEY:String = "ENTER_KEY";
+		public static const WIZARD_PREV				:String = "WIZARD_PREV";
+		public static const WIZARD_NEXT				:String = "WIZARD_NEXT";
+		public static const ENTER_KEY				:String = "ENTER_KEY";
 		
 		public var data:Object;
 

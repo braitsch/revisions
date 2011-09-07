@@ -6,6 +6,7 @@ package system {
 	import events.UIEvent;
 	import model.AppModel;
 	import model.remote.Hosts;
+	import view.modals.system.Message;
 	import flash.desktop.NativeApplication;
 	import flash.display.NativeMenu;
 	import flash.display.NativeMenuItem;
@@ -149,14 +150,14 @@ package system {
 		{
 			AppModel.updater.removeEventListener(AppEvent.APP_UP_TO_DATE, onAppUpToDate);			
 			AppModel.updater.removeEventListener(AppEvent.APP_UPDATE_FAILURE, onUpdateUnavailable);			
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, ErrorType.NO_CONNECTION));			
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(ErrorType.NO_CONNECTION)));			
 		}
 
 		private static function onAppUpToDate(e:AppEvent):void
 		{
 			AppModel.updater.removeEventListener(AppEvent.APP_UP_TO_DATE, onAppUpToDate);			
 			AppModel.updater.removeEventListener(AppEvent.APP_UPDATE_FAILURE, onUpdateUnavailable);
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, 'Revisions '+e.data+' is up to date'));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message('Revisions '+e.data+' is up to date')));
 		}
       
     } 

@@ -1,19 +1,20 @@
 package view.modals.local {
 
+	import view.modals.system.Message;
+	import view.modals.system.Delete;
 	import events.AppEvent;
-	import events.BookmarkEvent;
 	import events.DataBaseEvent;
 	import events.UIEvent;
-	import flash.events.MouseEvent;
-	import flash.filesystem.File;
 	import model.AppModel;
 	import model.vo.Bookmark;
 	import view.modals.base.ModalWindow;
+	import flash.events.MouseEvent;
+	import flash.filesystem.File;
 
 	public class RepairBookmark extends ModalWindow {
 
 		private static var _view		:RepairBookmarkMC = new RepairBookmarkMC();
-		private static var _bookmark	:Bookmark; // current bkmk being repaired //
+		private static var _broken		:Vector.<Bookmark>;
 
 		public function RepairBookmark()
 		{
@@ -31,19 +32,24 @@ package view.modals.local {
 			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);
 		}
 		
-		public function set bookmark(b:Bookmark):void
+		public function set broken(v:Vector.<Bookmark>):void
 		{
-			_bookmark = b;
-			_view.name_txt.text = b.label;
-			_view.path_txt.text = b.path;
+			_broken = v;
+			showBrokenBookmark();
+		}
+		
+		private function showBrokenBookmark():void
+		{
+			_view.name_txt.text = _broken[0].label;
+			_view.path_txt.text = _broken[0].path;
 		}
 
 		private function onBrowseButton(e:MouseEvent):void 
 		{
-			if (_bookmark.type == Bookmark.FILE){
-				super.browseForFile('Select a file to be tracked by : '+_bookmark.label);
+			if (_broken[0].type == Bookmark.FILE){
+				super.browseForFile('Select a file to be tracked by : '+_broken[0].label);
 			}	else{
-				super.browseForDirectory('Select a folder to be tracked by : '+_bookmark.label);
+				super.browseForDirectory('Select a folder to be tracked by : '+_broken[0].label);
 			}		
 		}
 		
@@ -55,21 +61,21 @@ package view.modals.local {
 		override public function onEnterKey():void { onUpdateBookmark(); }
 		private function onUpdateBookmark(e:MouseEvent = null):void 
 		{
-			var m:String = Bookmark.validate(_view.name_txt.text, _view.path_txt.text, _bookmark);
+			var m:String = Bookmark.validate(_view.name_txt.text, _view.path_txt.text, _broken[0]);
 			if (m != '') {
-				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
+				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));
 			}	else {
-				_bookmark.type == Bookmark.FILE ? updateGitDir() : updateDatabase();
+				_broken[0].type == Bookmark.FILE ? updateGitDir() : updateDatabase();
 			}		
 		}
 		
 		private function updateGitDir():void
 		{
-			if (_view.path_txt.text == _bookmark.path){
+			if (_view.path_txt.text == _broken[0].path){
 				updateDatabase();		
 			}	else{
 		// the file path has changed //		
-				AppModel.proxies.creator.editAppStorageGitDirName(_bookmark.path, _view.path_txt.text);
+				AppModel.proxies.creator.editAppStorageGitDirName(_broken[0].path, _view.path_txt.text);
 				AppModel.proxies.creator.addEventListener(AppEvent.GIT_DIR_UPDATED, onGitDirUpdated);
 			}
 		}
@@ -77,41 +83,37 @@ package view.modals.local {
 		private function onGitDirUpdated(e:AppEvent):void
 		{
 			updateDatabase();
-			_bookmark.path = _view.path_txt.text;
+			_broken[0].path = _view.path_txt.text;
 			AppModel.proxies.creator.removeEventListener(AppEvent.GIT_DIR_UPDATED, onGitDirUpdated);			
 		}
 		
 		private function updateDatabase():void
 		{
 			AppModel.database.addEventListener(DataBaseEvent.RECORD_EDITED, onEditSuccessful);
-			AppModel.database.editRepository(_bookmark.label, _view.name_txt.text, _view.path_txt.text, _bookmark.autosave);				
-		}		
-		
-		private function onEditSuccessful(e:DataBaseEvent = null):void
-		{
-			_bookmark.path = _view.path_txt.text;
-			_bookmark.label = _view.name_txt.text;
-		// always check if there are more broken bkmks in the engine queue //	
-			var bkmk:Bookmark = AppModel.engine.getNextBrokenBookmark();
-			if (bkmk) {
-				this.bookmark = bkmk;
-			}	else{
-				dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-			}
-			AppModel.database.removeEventListener(DataBaseEvent.RECORD_EDITED, onEditSuccessful);
+			AppModel.database.editRepository(_broken[0].label, _view.name_txt.text, _view.path_txt.text, _broken[0].autosave);				
 		}
 		
 		private function onDeleteBookmark(e:MouseEvent):void 
 		{
-			dispatchEvent(new UIEvent(UIEvent.DELETE_BOOKMARK, _bookmark));	
-			AppModel.engine.addEventListener(BookmarkEvent.DELETED, onDeleteComplete);
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Delete(_broken[0])));
+			AppModel.database.addEventListener(DataBaseEvent.RECORD_DELETED, onEditSuccessful);
+		}				
+		
+		private function onEditSuccessful(e:DataBaseEvent = null):void
+		{
+			_broken[0].path = _view.path_txt.text;
+			_broken[0].label = _view.name_txt.text;
+		// always check if there are more broken bkmks in the engine queue //
+			_broken.splice(0, 1);
+			if (_broken.length) {
+				showBrokenBookmark();
+			}	else{
+				dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
+			}
+			AppModel.database.removeEventListener(DataBaseEvent.RECORD_EDITED, onEditSuccessful);
+			AppModel.database.removeEventListener(DataBaseEvent.RECORD_DELETED, onEditSuccessful);
 		}
 
-		private function onDeleteComplete(e:BookmarkEvent):void 
-		{
-			onEditSuccessful();
-		}
-		
 	}
 	
 }

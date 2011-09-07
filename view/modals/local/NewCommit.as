@@ -4,6 +4,7 @@ package view.modals.local {
 	import events.UIEvent;
 	import model.AppModel;
 	import view.modals.base.ModalWindow;
+	import view.modals.system.Message;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.text.TextFieldType;
@@ -35,8 +36,7 @@ package view.modals.local {
 		private function onCommit(e:MouseEvent = null):void 
 		{
 			if (_view.textArea.message_txt.text == ''){
-				var m:String = 'Commit Message Cannot Be Empty.';
-				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));				
+				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message('Commit Message Cannot Be Empty.')));
 			}	else{
 				dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 				AppModel.proxies.editor.commit(_view.textArea.message_txt.text);

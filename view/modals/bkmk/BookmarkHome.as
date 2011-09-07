@@ -6,6 +6,8 @@ package view.modals.bkmk {
 	import model.AppModel;
 	import model.vo.Bookmark;
 	import view.modals.base.ModalWindowBasic;
+	import view.modals.system.Delete;
+	import view.modals.system.Message;
 	import view.ui.Form;
 	import view.ui.ModalCheckbox;
 	import flash.events.Event;
@@ -50,7 +52,7 @@ package view.modals.bkmk {
 		
 		private function onDeleteButton(e:MouseEvent):void
 		{
-			dispatchEvent(new UIEvent(UIEvent.DELETE_BOOKMARK, _bookmark));		
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Delete(_bookmark)));
 		}
 
 		override public function onEnterKey():void { onUpdateBookmark(); }
@@ -58,7 +60,7 @@ package view.modals.bkmk {
 		{
 			var m:String = Bookmark.validate(_view.name_txt.text, _view.local_txt.text, _bookmark);
 			if (m != '') {
-				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
+				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));
 			}	else {
 				_bookmark.type == Bookmark.FILE ? updateGitDir() : updateDatabase();
 			}			

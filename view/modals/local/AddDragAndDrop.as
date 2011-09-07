@@ -6,6 +6,7 @@ package view.modals.local {
 	import model.AppModel;
 	import model.vo.Bookmark;
 	import view.modals.base.ModalWindow;
+	import view.modals.system.Message;
 	import view.ui.Form;
 	import view.ui.ModalCheckbox;
 	import flash.events.MouseEvent;
@@ -58,7 +59,7 @@ package view.modals.local {
 			if (m == '') {
 				initNewBookmark();
 			}	else{
-				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
+				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));
 			}
 		}	
 		

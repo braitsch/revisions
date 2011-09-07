@@ -12,8 +12,8 @@ package model {
 		
 		private static var _index			:uint = 0;
 		private static var _bookmark		:Bookmark;
-		private static var _broken			:Vector.<Bookmark>;
-		private static var _bookmarks		:Vector.<Bookmark>;
+		private static var _broken			:Vector.<Bookmark> = new Vector.<Bookmark>();
+		private static var _bookmarks		:Vector.<Bookmark> = new Vector.<Bookmark>();
 
 	// expose bookmarks to check against duplicates being added //
 			
@@ -47,7 +47,6 @@ package model {
 		{
 			_bookmarks.push(_bookmark);
 			dispatchEvent(new BookmarkEvent(BookmarkEvent.ADDED, _bookmark));
-			AppModel.proxies.update.lock = false;
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER, .25));
 			AppModel.database.removeEventListener(DataBaseEvent.RECORD_ADDED, onAddedToDatabase);
 			dispatchActiveBookmark();
@@ -58,10 +57,10 @@ package model {
 		public function deleteBookmark(bkmk:Bookmark, killGit:Boolean, killFiles:Boolean):void
 		{
 			_bookmark = bkmk;
+			AppModel.proxies.update.lock = true;
 			if (!killGit && !killFiles){
 				removeFromBkmkView();
 			}	else{
-				AppModel.proxies.update.lock = true;
 				AppModel.proxies.creator.addEventListener(AppEvent.FILES_DELETED, removeFromBkmkView);
 				AppModel.proxies.creator.killBookmark(_bookmark, killGit, killFiles);		
 			}
@@ -69,7 +68,6 @@ package model {
 		
 		private function removeFromBkmkView(e:AppEvent = null):void
 		{
-			AppModel.proxies.update.lock = false;
 			AppModel.proxies.creator.removeEventListener(AppEvent.FILES_DELETED, removeFromBkmkView);
 			AppModel.database.deleteRepository(_bookmark.label);
 			AppModel.database.addEventListener(DataBaseEvent.RECORD_DELETED, onRemovedFromDatabase);
@@ -107,14 +105,22 @@ package model {
 				if (_broken.length == 0) {
 					initializeBookmarks();
 				}	else{
-					dispatchEvent(new BookmarkEvent(BookmarkEvent.PATH_ERROR, _broken[0]));
+					dispatchEvent(new BookmarkEvent(BookmarkEvent.PATH_ERROR, _broken));
+					AppModel.database.addEventListener(DataBaseEvent.RECORD_EDITED, onBkmkRepaired);
 				}
+			}
+		}
+
+		private function onBkmkRepaired(e:DataBaseEvent):void
+		{
+			if (_broken.length == 0) {
+				initializeBookmarks();
+				AppModel.database.removeEventListener(DataBaseEvent.RECORD_EDITED, onBkmkRepaired);
 			}
 		}
 		
 		private function buildBkmksFromDatabase(a:Array):void
 		{
-			_bookmarks = new Vector.<Bookmark>();
 			for (var i:int = 0; i < a.length; i++) {
 				var o:Object = {
 					label		:	a[i].label,
@@ -130,24 +136,7 @@ package model {
 		
 		private function checkForBrokenPaths():void
 		{
-			_broken = new Vector.<Bookmark>();
 			for (var i:int = 0; i < _bookmarks.length; i++) if (!_bookmarks[i].exists) _broken.push(_bookmarks[i]);			
-		}
-		
-	// called from everytime a bkmk is repaired //			
-		public function getNextBrokenBookmark():Bookmark
-		{
-			if (_broken.length == 0) {
-				return null;
-			}	else{
-				_broken.splice(0, 1);
-				if (_broken.length == 0){
-					initializeBookmarks();
-					return null;
-				}	else{
-					return _broken[0];
-				}				
-			}
 		}
 		
 		private function initializeBookmarks():void
@@ -179,6 +168,7 @@ package model {
 		// on database error, default to the first bookmark //	
 			if (_bookmark == null) _bookmark = _bookmarks[0];
 			AppModel.bookmark = _bookmark;
+			AppModel.proxies.update.lock = false;
 		}
 
 	}

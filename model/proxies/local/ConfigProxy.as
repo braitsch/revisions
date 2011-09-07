@@ -6,6 +6,7 @@ package model.proxies.local {
 	import model.proxies.air.NativeProcessQueue;
 	import system.BashMethods;
 	import system.SystemRules;
+	import view.modals.system.Debug;
 
 	public class ConfigProxy extends NativeProcessQueue {
 
@@ -141,7 +142,7 @@ package model.proxies.local {
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
 			e.data.source = 'ConfigProxy.onProcessFailure(e)';
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_DEBUG, e.data));			
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Debug(e.data)));
 		}
 
 	}

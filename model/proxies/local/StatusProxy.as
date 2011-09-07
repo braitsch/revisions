@@ -1,5 +1,6 @@
 package model.proxies.local {
 
+	import view.modals.system.Debug;
 	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.NativeProcessEvent;
@@ -33,9 +34,9 @@ package model.proxies.local {
 		
 		public function getModified(b:Bookmark):void
 		{
+			trace("StatusProxy.getModified(b)");
 			_bookmark = b;
-			if (bookmarkExists() == false) return;
-			super.directory = _bookmark.gitdir;			
+			super.directory = _bookmark.gitdir;
 			super.queue = [	Vector.<String>([BashMethods.GET_IGNORED_FILES]),
 							Vector.<String>([BashMethods.GET_MODIFIED_FILES]),
 							Vector.<String>([BashMethods.GET_UNTRACKED_FILES]) ];
@@ -47,16 +48,6 @@ package model.proxies.local {
 			super.queue = [	Vector.<String>([BashMethods.GET_HISTORY]), 
 							Vector.<String>([BashMethods.GET_TOTAL_COMMITS]) ];
 		}
-		
-		private function bookmarkExists():Boolean
-		{
-			if (_bookmark.exists){
-				return true;
-			}	else{
-				AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.PATH_ERROR, _bookmark));
-				return false;
-			}	
-		}		
 		
 	// private handlers //
 		
@@ -137,7 +128,7 @@ package model.proxies.local {
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
 			e.data.source = 'StatusProxy.onProcessFailure(e) -- request on '+_bookmark.label, _bookmark.branch.name;
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_DEBUG, e.data));			
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Debug(e.data)));
 		}
 		
 	}

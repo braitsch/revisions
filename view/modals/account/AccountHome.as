@@ -2,12 +2,13 @@ package view.modals.account {
 
 	import events.AppEvent;
 	import events.UIEvent;
-	import flash.display.Sprite;
-	import flash.events.MouseEvent;
-	import flash.filesystem.File;
 	import model.AppModel;
 	import model.remote.HostingAccount;
 	import view.modals.base.ModalWindow;
+	import view.modals.system.Message;
+	import flash.display.Sprite;
+	import flash.events.MouseEvent;
+	import flash.filesystem.File;
 
 	public class AccountHome extends ModalWindow {
 
@@ -159,7 +160,7 @@ package view.modals.account {
 		protected function onLogOutClick(e:MouseEvent):void
 		{
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, 'You Have Successfully Logged Out.'));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message('You Have Successfully Logged Out.')));
 		}			
 
 	}

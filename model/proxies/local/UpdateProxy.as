@@ -56,7 +56,7 @@ package model.proxies.local {
 		private function getModified(b:Bookmark = null):void
 		{
 			resetTimer();
-			_status.getModified(b || AppModel.bookmark);
+			if (exists(b || AppModel.bookmark)) _status.getModified(b || AppModel.bookmark);
 		}
 		
 		private function getHistory():void
@@ -74,9 +74,18 @@ package model.proxies.local {
 		}
 		
 		public function set lock(b:Boolean):void
-		{		
+		{	
 			b ? _timer.stop() : resetTimer();
 		}
+		
+		private function exists(b:Bookmark):Boolean
+		{
+			if (b.exists == false){
+				_timer.stop();
+				AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.PATH_ERROR, new <Bookmark>[b]));
+			}	
+			return b.exists;
+		}			
 		
 		private function resetTimer(e:BookmarkEvent = null):void
 		{

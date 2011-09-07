@@ -3,12 +3,13 @@ package view.modals.bkmk {
 	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.UIEvent;
-	import flash.display.Sprite;
-	import flash.events.MouseEvent;
 	import model.AppModel;
 	import model.vo.Bookmark;
 	import model.vo.Branch;
 	import view.modals.base.ModalWindowBasic;
+	import view.modals.system.Message;
+	import flash.display.Sprite;
+	import flash.events.MouseEvent;
 
 	public class BookmarkBranches extends ModalWindowBasic {
 
@@ -73,8 +74,7 @@ package view.modals.bkmk {
 		private function validate():Boolean
 		{
 			if (_bookmark.branch.isModified){
-				var m:String = 'Please save your changes before moving to a new branch.';
-				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
+				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message('Please save your changes before moving to a new branch.')));
 				return false;
 			}	else{
 				return true;
