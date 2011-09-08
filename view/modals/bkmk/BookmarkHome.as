@@ -34,19 +34,16 @@ package view.modals.bkmk {
 			_check.label = 'Autosave Every 60 Minutes';
 			_form.y = 90;
 			_form.labels = ['Name', 'Location'];
-			_form.inputs = [_view.name_txt];
-			_form.deactivateFields(['field2']);
-			_view.local_txt.selectable = false;
+			_form.enabled = [1];
 			_view.delete_btn.addEventListener(MouseEvent.CLICK, onDeleteButton);
 		}
 		
 		public function set bookmark(b:Bookmark):void
 		{
 			_bookmark = b;
-			_view.name_txt.text = _bookmark.label;
-			_view.local_txt.text = _bookmark.path;
+			_form.setField(0, _bookmark.label);
+			_form.setField(1, _bookmark.path);
 			_check.selected = _bookmark.autosave != 0;			
-			_view.name_txt.setSelection(0, _view.name_txt.length);
 		}
 		
 		private function onDeleteButton(e:MouseEvent):void
@@ -56,7 +53,7 @@ package view.modals.bkmk {
 
 		private function onUpdateBookmark(e:Event):void
 		{
-			var m:String = Bookmark.validate(_view.name_txt.text, _view.local_txt.text, _bookmark);
+			var m:String = Bookmark.validate(_form.getField(0), _form.getField(1), _bookmark);
 			if (m != '') {
 				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));
 			}	else {
@@ -66,11 +63,11 @@ package view.modals.bkmk {
 		
 		private function updateGitDir():void
 		{
-			if (_view.local_txt.text == _bookmark.path){
+			if (_form.getField(1) == _bookmark.path){
 				updateDatabase();		
 			}	else{
 		// the file path has changed //		
-				AppModel.proxies.creator.editAppStorageGitDirName(_bookmark.path, _view.local_txt.text);	
+				AppModel.proxies.creator.editAppStorageGitDirName(_bookmark.path, _form.getField(1));	
 				AppModel.proxies.creator.addEventListener(AppEvent.GIT_DIR_UPDATED, onGitDirUpdated);
 			}
 		}
@@ -85,13 +82,13 @@ package view.modals.bkmk {
 		{
 			_bookmark.autosave = _check.selected ? 60 : 0;
 			AppModel.database.addEventListener(DataBaseEvent.RECORD_EDITED, onEditSuccessful);
-			AppModel.database.editRepository(_bookmark.label, _view.name_txt.text, _view.local_txt.text, _bookmark.autosave);				
+			AppModel.database.editRepository(_bookmark.label, _form.getField(0), _form.getField(1), _bookmark.autosave);				
 		}
 		
 		private function onEditSuccessful(e:DataBaseEvent):void 
 		{
-			_bookmark.path = _view.local_txt.text;
-			_bookmark.label = _view.name_txt.text;
+			_bookmark.path = _form.getField(1);
+			_bookmark.label = _form.getField(0);
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 			AppModel.database.removeEventListener(DataBaseEvent.RECORD_EDITED, onEditSuccessful);		
 		}				

@@ -59,7 +59,7 @@ package view.modals.login {
 		{
 			_form = new Form(new Form2());
 			_form.labels = ['Username', 'Password'];
-			_form.inputs = [new FINorm().getChildAt(0), new FIPass().getChildAt(0)];			
+			_form.enabled = [1, 2];
 			_signUp.y = 100;
 		}
 		
@@ -67,7 +67,7 @@ package view.modals.login {
 		{
 			_form = new Form(new Form3());
 			_form.labels = ['Account', 'Username', 'Password'];
-			_form.inputs = [new FINorm().getChildAt(0), new FINorm().getChildAt(0), new FIPass().getChildAt(0)];
+			_form.enabled = [1, 2, 3];
 			_signUp.y = 130;		
 		}
 		
@@ -83,8 +83,6 @@ package view.modals.login {
 			_heading.label_txt.autoSize = TextFieldAutoSize.LEFT;
 			_heading.label_txt.htmlText = s;
 		}
-		
-		public function set inputs(v:*):void { _form.inputs = v; }
 		
 		private function gotoNewAccountPage(e:MouseEvent):void 
 		{ 
@@ -112,7 +110,7 @@ package view.modals.login {
 		private function attemptGHLogin():void
 		{
 			var a:HostingAccount = new HostingAccount({type:HostingAccount.GITHUB, 
-					acct:_form.fields[0], user:_form.fields[0], pass:_form.fields[1]});						
+					acct:_form.getField(0), user:_form.getField(0), pass:_form.getField(1)});						
 			Hosts.github.attemptLogin(a, _check.selected);
 			Hosts.github.api.addEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);
 		}
@@ -120,7 +118,7 @@ package view.modals.login {
 		private function attemptBSLogin():void
 		{
 			var a:HostingAccount = new HostingAccount({type:HostingAccount.BEANSTALK, 
-					acct:_form.fields[0], user:_form.fields[1], pass:_form.fields[2]});
+					acct:_form.getField(0), user:_form.getField(1), pass:_form.getField(2)});
 			Hosts.beanstalk.attemptLogin(a, _check.selected);
 			Hosts.beanstalk.api.addEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);
 		}	

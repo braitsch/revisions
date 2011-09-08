@@ -1,7 +1,6 @@
 package view.modals.upload {
 
 	import events.AppEvent;
-	import fl.text.TLFTextField;
 	import model.AppModel;
 	import model.proxies.remote.acct.ApiProxy;
 	import model.remote.HostingAccount;
@@ -14,20 +13,12 @@ package view.modals.upload {
 		private static var _form		:Form;
 		private static var _data		:Object;
 		private static var _service		:String;
-		private static var _bkmk		:TLFTextField = new FINorm().getChildAt(0) as TLFTextField;	
-		private static var _repo		:TLFTextField = new FINorm().getChildAt(0) as TLFTextField; 
-		private static var _desc		:TLFTextField = new FINorm().getChildAt(0) as TLFTextField; 
-		private static var _url			:TLFTextField = new FINorm().getChildAt(0) as TLFTextField; 
 
 		public function ConfirmDetails()
 		{
 			super.addBackButton();
 			super.nextButton = new OkButton();
 			super.addHeading('Please confirm before we upload your bookmark:');
-			
-			_bkmk.x = _repo.x = _desc.x = _url.x = 120;
-			_bkmk.y = 106; _repo.y = 106 + Form.LEADING;
-			addChild(_bkmk); addChild(_repo); addChild(_desc); addChild(_url);
 			AppModel.engine.addEventListener(AppEvent.BKMK_ADDED_TO_ACCOUNT, onBkmkAddedToAcct);
 		}
 		
@@ -39,9 +30,14 @@ package view.modals.upload {
 		public function set data(o:Object):void
 		{
 			_data = o;
-			_bkmk.text = AppModel.bookmark.label;
-			_repo.text = o.repo; _url.text = o.url;
-			_desc.text = o.desc == '(optional)' ? '' : o.desc;
+			_form.setField(0, AppModel.bookmark.label);
+			_form.setField(1, o.repo);
+			if (_service == HostingAccount.GITHUB){
+				_form.setField(2, o.desc == '(optional)' ? '' : o.desc);
+				_form.setField(3, o.url);
+			}	else if (_service == HostingAccount.BEANSTALK){
+				_form.setField(2, o.url);
+			}					
 		}
 		
 		private function attachForm():void
@@ -59,18 +55,14 @@ package view.modals.upload {
 		{
 			_form = new Form(new Form4());
 			_form.labels = ['Bookmark', 'Repository', 'Description', 'Account URL'];
-			_form.deactivateFields(['field1', 'field2', 'field3', 'field4']);
-			_desc.visible = true;
-			_desc.y = 106 + Form.LEADING * 2; _url.y = 106 + Form.LEADING * 3;			
+			_form.enabled = [];
 		}
 		
 		private function attachBSForm():void
 		{
 			_form = new Form(new Form3());
 			_form.labels = ['Bookmark', 'Repository', 'Account URL'];
-			_form.deactivateFields(['field1', 'field2', 'field3']);
-			_desc.visible = false;
-			_url.y = 106 + Form.LEADING * 2;			
+			_form.enabled = [];
 		}
 		
 		private function onBkmkAddedToAcct(e:AppEvent):void
@@ -83,8 +75,8 @@ package view.modals.upload {
 			var api:ApiProxy = _service == HostingAccount.GITHUB ? Hosts.github.api : Hosts.beanstalk.api; 
 			var o:Object = {	bkmk	:	AppModel.bookmark, 
 								acct	:	api,
-								name	:	_repo.text,
-								desc	:	_desc.text, 
+								name	:	_form.getField(0),
+								desc	:	_service == HostingAccount.GITHUB ? _form.getField(2) : '',
 								publik	:	_data.selected == false	};
 			AppModel.proxies.remote.addBkmkToAccount(o);
 		}			

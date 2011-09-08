@@ -9,7 +9,7 @@ package view.modals.local {
 	public class VersionDetails extends ModalWindow {
 
 		private static var _form		:Form = new Form(new Form4());
-		private static var _view		:CommitDetailsMC = new CommitDetailsMC();
+		private static var _view		:VersionDetailsMC = new VersionDetailsMC();
 
 		public function VersionDetails()
 		{
@@ -20,16 +20,16 @@ package view.modals.local {
 			super.setTitle(_view, 'Version Details');
 			_form.y = 70; _view.addChildAt(_form, 0);
 			_form.labels = ['Date', 'Author', 'Commit', 'Details'];
-			_form.deactivateFields(['field1', 'field2', 'field3', 'field4']);
+			_form.enabled = [];
 			addEventListener(UIEvent.ENTER_KEY, onClose);
 		}
 
 		public function set commit(cmt:Commit):void
 		{
-			_view.date_txt.text = cmt.date;
-			_view.author_txt.text = cmt.author;
-			_view.commit_txt.text = cmt.sha1;
-			_view.details_txt.text = cmt.note;
+			_form.setField(0, cmt.date);
+			_form.setField(1, cmt.author);
+			_form.setField(2, cmt.sha1);
+			_form.setField(3, cmt.note);
 		}
 		
 		private function onClose(e:Event):void 

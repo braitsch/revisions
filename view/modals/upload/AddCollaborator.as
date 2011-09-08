@@ -2,19 +2,19 @@ package view.modals.upload {
 
 	import events.AppEvent;
 	import events.UIEvent;
-	import fl.text.TLFTextField;
 	import model.AppModel;
 	import model.proxies.remote.acct.ApiProxy;
 	import model.remote.HostingAccount;
 	import model.remote.Hosts;
+	import view.modals.collab.BeanstalkCollab;
+	import view.modals.collab.Collaborator;
+	import view.modals.collab.GitHubCollab;
 	import view.modals.system.Message;
-	import view.ui.Form;
 	import flash.events.Event;
 
 	public class AddCollaborator extends WizardWindow {
 
-		private static var _form			:Form;
-		private static var _user			:TLFTextField = new FINorm().getChildAt(0) as TLFTextField;	
+		private static var _collab			:Collaborator;
 		private static var _service			:String;
 		private static var _serviceApi		:ApiProxy;
 		private static var _repository		:String;
@@ -22,33 +22,34 @@ package view.modals.upload {
 
 		public function AddCollaborator()
 		{
-			_form = new Form(new Form1());
-			_form.y = 90;
-			_form.labels = ['UserName'];
-			_form.inputs = [_user];
-			_form.addEventListener(UIEvent.ENTER_KEY, onNextButton);
-			addChild(_form);
-			
 			super.addHeading();
 			super.nextButton = new OkButton();
 			super.addBackButton();
+			addEventListener(UIEvent.ENTER_KEY, onNextButton);
 		}
 		
 		public function set service(s:String):void
 		{
 			_service = s;
 			super.heading = 'Please enter the '+_service+' user you\'d like to collaborate with on "'+AppModel.bookmark.label+'"';
+			if (_service == HostingAccount.GITHUB){
+				_collab = new GitHubCollab();
+			}	else if (_service == HostingAccount.BEANSTALK) {
+				_collab = new BeanstalkCollab();
+			}
+			_collab.y = 90;
+			addChild(_collab);
 		}
 		
 		public function set data(o:Object):void
 		{
 			_repository = o.repo; 
-		}		
+		}
 		
 		override protected function onNextButton(e:Event):void
 		{
-			if (_form.validate()) {
-				_collaborator = _form.fields[0];
+			if (_collab.validate()) {
+				_collaborator = _collab.form.getField(0);
 				_serviceApi = _service == HostingAccount.GITHUB ? Hosts.github.api : Hosts.beanstalk.api;
 				_serviceApi.addCollaborator(_repository, _collaborator);
 				_serviceApi.addEventListener(AppEvent.COLLABORATOR_ADDED, onCollaboratorAdded);	

@@ -2,7 +2,6 @@ package view.modals.local {
 
 	import events.AppEvent;
 	import events.UIEvent;
-	import fl.text.TLFTextField;
 	import model.AppModel;
 	import system.AppSettings;
 	import system.LicenseManager;
@@ -30,10 +29,11 @@ package view.modals.local {
 			super.drawBackground(550, 285);
 			super.setTitle(_view, 'Global Settings');
 			super.defaultButton = _view.ok_btn;
-			_form.y = 70; _view.addChildAt(_form, 0);
+			
 			_form.labels = ['Name', 'Email', 'License Key'];
-			_form.inputs = Vector.<TLFTextField>([_view.name_txt, _view.email_txt]);
-			_form.deactivateFields(['field3']);
+			_form.enabled = [1, 2];
+			_form.y = 70; _view.addChildAt(_form, 0);
+			
 			attachOptions();
 			addEventListener(UIEvent.ENTER_KEY, onOkButton);
 			AppModel.settings.addEventListener(AppEvent.APP_SETTINGS, onUserSettings);
@@ -57,9 +57,9 @@ package view.modals.local {
 
 		override protected function onAddedToStage(e:Event):void
 		{
-			_view.license_txt.text = LicenseManager.key;
-			_view.name_txt.text = AppModel.proxies.config.userName;
-			_view.email_txt.text = AppModel.proxies.config.userEmail;
+			_form.setField(0, AppModel.proxies.config.userName);
+			_form.setField(1, AppModel.proxies.config.userEmail);
+			_form.setField(2, LicenseManager.key);
 			AppModel.proxies.config.addEventListener(AppEvent.GIT_SETTINGS, onGitSettings);
 			super.onAddedToStage(e);
 		}
@@ -100,8 +100,8 @@ package view.modals.local {
 		
 		private function onOkButton(evt:Event):void
 		{
-			var n:String = StringUtil.trim(_view.name_txt.text);
-			var e:String = StringUtil.trim(_view.email_txt.text);
+			var n:String = StringUtil.trim(_form.getField(0));
+			var e:String = StringUtil.trim(_form.getField(1));
 			var m:String = validateFields(n, e);
 			if (m == ''){
 				AppModel.proxies.config.setUserNameAndEmail(n, e);

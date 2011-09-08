@@ -2,7 +2,6 @@ package view.modals.local {
 
 	import events.AppEvent;
 	import events.UIEvent;
-	import fl.text.TLFTextField;
 	import model.AppModel;
 	import model.vo.Bookmark;
 	import view.modals.base.ModalWindow;
@@ -26,13 +25,14 @@ package view.modals.local {
 			super.drawBackground(550, 210);
 			super.setTitle(_view, 'New Bookmark');
 			super.defaultButton = _view.ok_btn;
-			_form.y = 70; _view.addChildAt(_form, 0);
+			
 			_form.labels = ['Name', 'Location'];
-			_form.inputs = Vector.<TLFTextField>([_view.name_txt]);
-			_form.deactivateFields(['field2']);
+			_form.enabled = [1];
+			_form.y = 70; _view.addChildAt(_form, 0);
+			
 			_check.y = 170; 
 			_check.label = 'Autosave Every 60 Minutes';
-			_view.name_txt.text = _view.local_txt.text = ''; 
+		//	_view.name_txt.text = _view.local_txt.text = ''; 
 			addEventListener(UIEvent.ENTER_KEY, onOkButton);
 		}
 

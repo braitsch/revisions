@@ -32,9 +32,8 @@ package view.modals.login {
 			super.addButtons([_view.cancel_btn]);
 			super.defaultButton = _view.ok_btn;
 			
-			_form.y = 110; _view.addChildAt(_form, 0);			
 			_form.labels = ['Username', 'Password'];
-			_form.inputs = [_view.name_txt, _view.pass_txt];
+			_form.y = 110; _view.addChildAt(_form, 0);			
 			
 			_check.y = 210;
 			_check.label = 'Remember my login for this account';			
@@ -81,13 +80,13 @@ package view.modals.login {
 		private function retryRequestOverHttps():void
 		{
 			var ha:HostingAccount = _check.selected ? makeAcctObj(HostingAccount.GITHUB) : null;
-			_url = BookmarkRemote.buildHttpsURL(_form.fields[0], _form.fields[1] , _acctName , _repoName);
+			_url = BookmarkRemote.buildHttpsURL(_form.getField(0), _form.getField(1) , _acctName , _repoName);
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.RETRY_REMOTE_REQUEST, {u:_url, a:ha}));
 		}
 		
 		private function makeAcctObj(t:String):HostingAccount
 		{
-			return new HostingAccount({type:t, acct:_acctName, user:_form.fields[0], pass:_form.fields[1]});			
+			return new HostingAccount({type:t, acct:_acctName, user:_form.getField(0), pass:_form.getField(1)});			
 		}
 		
 		private function onCancelButton(e:MouseEvent):void
