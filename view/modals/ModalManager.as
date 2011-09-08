@@ -17,13 +17,13 @@ package view.modals {
 	import view.modals.local.AddDragAndDrop;
 	import view.modals.local.AppExpired;
 	import view.modals.local.AppUpdate;
-	import view.modals.local.VersionDetails;
 	import view.modals.local.DownloadVersion;
 	import view.modals.local.GlobalSettings;
 	import view.modals.local.NewBookmark;
 	import view.modals.local.NewCommit;
 	import view.modals.local.RepairBookmark;
 	import view.modals.local.RevertToVersion;
+	import view.modals.local.VersionDetails;
 	import view.modals.local.WelcomeScreen;
 	import view.modals.login.PermissionsFailure;
 	import view.modals.system.Alert;
@@ -110,6 +110,7 @@ package view.modals {
 		{
 			_curtain.resize(w, h);
 			if (_window) {
+				_window.resize(w, h);
 			// align with modal window //	
 				_preloader.resize(w, h - 30);
 			}	else{

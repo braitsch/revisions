@@ -27,6 +27,7 @@ package view.modals.login {
 			addChild(_view);
 			addChild(_check);
 			super.setTitle(_view, 'Credentials');
+			super.addCloseButton();
 			super.drawBackground(550, 260);
 			super.addButtons([_view.cancel_btn]);
 			super.defaultButton = _view.ok_btn;

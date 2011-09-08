@@ -23,7 +23,7 @@ package view.modals.bkmk {
 		{
 			addChild(_view);
 			initializeTabs();
-			super.addCloseButton(550);
+			super.addCloseButton();
 			super.drawBackground(550, 260);
 			super.setTitle(_view, 'Bookmark Editor');
 			_view.tabs.addEventListener(MouseEvent.CLICK, onTabSelection);

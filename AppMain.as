@@ -2,17 +2,17 @@ package {
 
 	import events.AppEvent;
 	import events.DataBaseEvent;
-	import flash.desktop.NativeApplication;
-	import flash.display.Sprite;
-	import flash.display.StageAlign;
-	import flash.display.StageScaleMode;
-	import flash.events.InvokeEvent;
 	import model.AppModel;
 	import model.remote.Hosts;
 	import system.AirContextMenu;
 	import system.AirNativeMenu;
 	import system.AppSettings;
 	import system.LicenseManager;
+	import flash.desktop.NativeApplication;
+	import flash.display.Sprite;
+	import flash.display.StageAlign;
+	import flash.display.StageScaleMode;
+	import flash.events.InvokeEvent;
 
 	[SWF(backgroundColor="#ffffff", frameRate="31")]
 

@@ -13,7 +13,7 @@ package view.modals.system {
 			super.okButton = _view.ok_btn;
 			_view.textArea.message_txt.htmlText = m;
 		}
-
+		
 	}
 	
 }

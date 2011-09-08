@@ -28,6 +28,7 @@ package view.modals.bkmk {
 			super.addButtons([_view.delete_btn]);
 			super.defaultButton = _view.ok_btn;
 			super.setHeading(_view, 'General information about this bookmark');
+			addEventListener(UIEvent.ENTER_KEY, onUpdateBookmark);
 			
 			_check.y = 220; 
 			_check.label = 'Autosave Every 60 Minutes';
@@ -35,7 +36,6 @@ package view.modals.bkmk {
 			_form.labels = ['Name', 'Location'];
 			_form.inputs = [_view.name_txt];
 			_form.deactivateFields(['field2']);
-			_form.addEventListener(UIEvent.ENTER_KEY, onUpdateBookmark);
 			_view.local_txt.selectable = false;
 			_view.delete_btn.addEventListener(MouseEvent.CLICK, onDeleteButton);
 		}

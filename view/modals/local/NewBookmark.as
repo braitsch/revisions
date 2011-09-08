@@ -22,7 +22,7 @@ package view.modals.local {
 		public function NewBookmark()
 		{
 			addChild(_view);
-			super.addCloseButton(600);
+			super.addCloseButton();
 			super.drawBackground(600, 330);
 			super.setTitle(_view, 'New Bookmark');
 			super.addButtons([_view.trackFile, _view.trackFolder, _view.loginGithub]);			

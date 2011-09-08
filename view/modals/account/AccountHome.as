@@ -25,6 +25,7 @@ package view.modals.account {
 		{
 			_view = v;
 			addChild(_view);
+			super.addCloseButton();
 			super.addButtons([_view.logOut]);
 			addEventListener(UIEvent.LOGGED_IN_CLONE, onCloneClick);
 			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);
@@ -92,7 +93,6 @@ package view.modals.account {
 		{
 			if (_pages.length) showPage(0);
 			positionURLAndNav();
-			super.addCloseButton(590);
 			super.drawBackground(590, _view.height + 15);
 			if (stage) super.resize(stage.stageWidth, stage.stageHeight);
 		}

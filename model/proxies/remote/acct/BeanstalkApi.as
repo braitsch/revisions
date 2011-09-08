@@ -1,7 +1,7 @@
 package model.proxies.remote.acct {
 
 	import events.AppEvent;
-	import events.ErrorType;
+	import events.ErrEvent;
 	import model.remote.HostingAccount;
 	import model.remote.Hosts;
 	import model.vo.BookmarkRemote;
@@ -70,13 +70,13 @@ package model.proxies.remote.acct {
 		private function checkForErrors(s:String):Boolean
 		{
 			if (s.indexOf('<html>') != -1){
-				dispatchFailure(ErrorType.LOGIN_FAILURE);
+				dispatchFailure(ErrEvent.LOGIN_FAILURE);
 				return true;
 			}	else if (s.indexOf('Could\'t authenticate you') != -1){
-				dispatchFailure(ErrorType.LOGIN_FAILURE);
+				dispatchFailure(ErrEvent.LOGIN_FAILURE);
 				return true;
 			}	else if (s.indexOf('API is disabled for this account') != -1){
-				dispatchFailure(ErrorType.API_DISABLED);
+				dispatchFailure(ErrEvent.API_DISABLED);
 				return true;
 			}	else{
 				return false;

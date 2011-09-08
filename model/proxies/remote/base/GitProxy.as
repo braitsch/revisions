@@ -1,7 +1,7 @@
 package model.proxies.remote.base {
 
 	import events.AppEvent;
-	import events.ErrorType;
+	import events.ErrEvent;
 	import events.NativeProcessEvent;
 	import model.AppModel;
 	import model.remote.HostingAccount;
@@ -89,10 +89,10 @@ package model.proxies.remote.base {
 					onAuthenticationFailure();
 				break;
 				case GitFailure.MALFORMED_URL	:
-					dispatchFailure(ErrorType.UNRESOLVED_HOST);
+					dispatchFailure(ErrEvent.UNRESOLVED_HOST);
 				break;
 				case GitFailure.REPO_NOT_FOUND	:
-					dispatchFailure(ErrorType.REPO_NOT_FOUND);
+					dispatchFailure(ErrEvent.REPO_NOT_FOUND);
 				break;
 			}
 		}

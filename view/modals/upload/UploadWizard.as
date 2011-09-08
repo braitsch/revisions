@@ -13,6 +13,7 @@ package view.modals.upload {
 		private static var _page			:ModalWindowBasic;
 		private static var _status			:StatusBadge = new StatusBadge();
 		private static var _view			:UploadWizardMC = new UploadWizardMC();
+		private static var _tweening		:Boolean = false;
 		
 	// sub-pages //	
 		private static var _pickService		:PickService = new PickService();
@@ -40,6 +41,7 @@ package view.modals.upload {
 
 		private function onWizardNext(e:UIEvent):void
 		{
+			if (_tweening) return;
 			switch(e.target){
 				case _pickService :
 					_status.page = 2;
@@ -65,6 +67,7 @@ package view.modals.upload {
 		
 		private function onWizardPrev(e:UIEvent):void
 		{
+			if (_tweening) return;
 			switch(e.target){
 				case _confirmDetails :
 					_status.page = 3;
@@ -106,15 +109,17 @@ package view.modals.upload {
 		
 		private function nextPage(p:ModalWindowBasic):void
 		{
+			_tweening = true;
 			TweenLite.to(_page, .5, {x:-550, onCompleteParams:[_page], 
-				onComplete:function(k:ModalWindowBasic):void{_view.removeChild(k);}});	
+				onComplete:function(k:ModalWindowBasic):void{_view.removeChild(k); _tweening = false; }});	
 			_view.addChild(p); p.x = 550; TweenLite.to(p, .5, {x:0, onComplete:function():void{_page = p;}});
 		}
 
 		private function prevPage(p:ModalWindowBasic):void
 		{
+			_tweening = true;
 			TweenLite.to(_page, .5, {x:550, onCompleteParams:[_page], 
-				onComplete:function(k:ModalWindowBasic):void{_view.removeChild(k);}});	
+				onComplete:function(k:ModalWindowBasic):void{_view.removeChild(k); _tweening = false; }});	
 			_view.addChild(p); p.x = -550; TweenLite.to(p, .5, {x:0, onComplete:function():void{_page = p;}});
 		}
 		

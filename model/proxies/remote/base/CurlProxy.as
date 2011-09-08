@@ -1,6 +1,6 @@
 package model.proxies.remote.base {
 
-	import events.ErrorType;
+	import events.ErrEvent;
 	import events.NativeProcessEvent;
 	import com.adobe.serialization.json.JSONDecoder;
 
@@ -53,10 +53,10 @@ package model.proxies.remote.base {
 		{
 			switch(x){
 				case 6 :
-					dispatchFailure(ErrorType.NO_CONNECTION);
+					dispatchFailure(ErrEvent.NO_CONNECTION);
 				break;
 				case 7 :
-					dispatchFailure(ErrorType.SERVER_FAILURE);
+					dispatchFailure(ErrEvent.SERVER_FAILURE);
 				break;
 				default :
 			// handle any other mysterious errors we get back from curl //

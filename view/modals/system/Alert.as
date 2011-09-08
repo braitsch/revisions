@@ -1,7 +1,7 @@
 package view.modals.system {
 
-	import events.UIEvent;
 	import events.AppEvent;
+	import events.UIEvent;
 	import model.AppModel;
 	import view.modals.base.ModalWindow;
 	import flash.display.Sprite;

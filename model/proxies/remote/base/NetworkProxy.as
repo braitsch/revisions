@@ -3,7 +3,7 @@ package model.proxies.remote.base {
 	import view.modals.system.Message;
 	import view.modals.system.Debug;
 	import events.AppEvent;
-	import events.ErrorType;
+	import events.ErrEvent;
 	import model.AppModel;
 	import model.proxies.air.NativeProcessProxy;
 	import flash.events.TimerEvent;
@@ -30,12 +30,13 @@ package model.proxies.remote.base {
 		
 		private function dispatchTimeOut(e:TimerEvent):void
 		{
-			dispatchFailure(ErrorType.SERVER_FAILURE);
+			dispatchFailure(ErrEvent.SERVER_FAILURE);
 		}
 		
 		protected function dispatchFailure(m:String):void
 		{
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));
+			if (m == ErrEvent.LOGIN_FAILURE) AppModel.engine.dispatchEvent(new ErrEvent(ErrEvent.LOGIN_FAILURE));
 		}			
 		
 		protected function dispatchDebug(o:Object):void

@@ -2,7 +2,7 @@ package system {
 
 	import events.AppEvent;
 	import events.BookmarkEvent;
-	import events.ErrorType;
+	import events.ErrEvent;
 	import events.UIEvent;
 	import model.AppModel;
 	import model.remote.Hosts;
@@ -150,7 +150,7 @@ package system {
 		{
 			AppModel.updater.removeEventListener(AppEvent.APP_UP_TO_DATE, onAppUpToDate);			
 			AppModel.updater.removeEventListener(AppEvent.APP_UPDATE_FAILURE, onUpdateUnavailable);			
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(ErrorType.NO_CONNECTION)));			
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(ErrEvent.NO_CONNECTION)));			
 		}
 
 		private static function onAppUpToDate(e:AppEvent):void

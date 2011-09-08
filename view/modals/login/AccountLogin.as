@@ -1,7 +1,7 @@
 package view.modals.login {
 
 	import events.AppEvent;
-	import events.ErrorType;
+	import events.ErrEvent;
 	import events.UIEvent;
 	import model.AppModel;
 	import model.remote.HostingAccount;
@@ -43,23 +43,32 @@ package view.modals.login {
 			_signUp.addEventListener(MouseEvent.CLICK, gotoNewAccountPage);
 			
 			if (s == HostingAccount.GITHUB){
-				_form = new Form(new Form2());
-				_form.labels = ['Username', 'Password'];
-				_signUp.y = 100;
-				_form.inputs = [new FINorm().getChildAt(0), new FIPass().getChildAt(0)];
+				attachGHForm();
 			}	else if (s == HostingAccount.BEANSTALK){
-				_form = new Form(new Form3());
-				_form.labels = ['Account', 'Username', 'Password'];
-				_form.inputs = [new FINorm().getChildAt(0), new FINorm().getChildAt(0), new FIPass().getChildAt(0)];
-				_signUp.y = 130;
+				attachBSForm();
 			}
 			
-			_form.y = 20; _heading.x = 10;
+			_form.y = 20;
 			_form.addEventListener(UIEvent.ENTER_KEY, onLoginButton);
 			
 			addChild(_form); addChild(_check);
 			addChild(_login); addChild(_signUp); addChild(_heading);
-			AppModel.engine.addEventListener(AppEvent.SHOW_ALERT, onLoginFailure);
+		}
+		
+		private function attachGHForm():void
+		{
+			_form = new Form(new Form2());
+			_form.labels = ['Username', 'Password'];
+			_form.inputs = [new FINorm().getChildAt(0), new FIPass().getChildAt(0)];			
+			_signUp.y = 100;
+		}
+		
+		private function attachBSForm():void
+		{
+			_form = new Form(new Form3());
+			_form.labels = ['Account', 'Username', 'Password'];
+			_form.inputs = [new FINorm().getChildAt(0), new FINorm().getChildAt(0), new FIPass().getChildAt(0)];
+			_signUp.y = 130;		
 		}
 		
 		public function set baseline(y:uint):void
@@ -70,6 +79,7 @@ package view.modals.login {
 	
 		public function set heading(s:String):void
 		{
+			_heading.x = 10;
 			_heading.label_txt.autoSize = TextFieldAutoSize.LEFT;
 			_heading.label_txt.htmlText = s;
 		}
@@ -95,6 +105,7 @@ package view.modals.login {
 				}	else if (_type == HostingAccount.BEANSTALK){
 					attemptBSLogin();
 				}
+				AppModel.engine.addEventListener(ErrEvent.LOGIN_FAILURE, onLoginFailure);
 			}			
 		}
 
@@ -118,11 +129,13 @@ package view.modals.login {
 		{
 			_login.enabled = true;
 			dispatchEvent(new AppEvent(AppEvent.LOGIN_SUCCESS));
+			AppModel.engine.removeEventListener(ErrEvent.LOGIN_FAILURE, onLoginFailure);
 		}			
 		
-		private function onLoginFailure(e:AppEvent):void
+		private function onLoginFailure(e:ErrEvent):void
 		{
-			if (e.data == ErrorType.LOGIN_FAILURE) _login.enabled = true;
+			_login.enabled = true;
+			AppModel.engine.removeEventListener(ErrEvent.LOGIN_FAILURE, onLoginFailure);
 		}
 		
 	}

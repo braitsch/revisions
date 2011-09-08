@@ -1,7 +1,7 @@
 package model.proxies.remote.acct {
 
 	import events.AppEvent;
-	import events.ErrorType;
+	import events.ErrEvent;
 	import model.remote.HostingAccount;
 	import model.remote.Hosts;
 	import model.vo.BookmarkRemote;
@@ -36,7 +36,7 @@ package model.proxies.remote.acct {
 				super.account.loginData = getResultObject(s);
 				super.getRepositories('/user/repos');
 			}	else{
-				dispatchFailure(ErrorType.LOGIN_FAILURE);
+				dispatchFailure(ErrEvent.LOGIN_FAILURE);
 			}
 		}
 		
@@ -78,16 +78,16 @@ package model.proxies.remote.acct {
 		{
 			switch(m){
 				case 'Bad Credentials' :
-					dispatchFailure(ErrorType.LOGIN_FAILURE);
+					dispatchFailure(ErrEvent.LOGIN_FAILURE);
 				break;
 				case 'name can\'t be private. You are over your quota.' :
-					dispatchFailure(ErrorType.OVER_QUOTA);
+					dispatchFailure(ErrEvent.OVER_QUOTA);
 				break;
 				case 'name is already taken' :
-					dispatchFailure(ErrorType.REPOSITORY_TAKEN);
+					dispatchFailure(ErrEvent.REPOSITORY_TAKEN);
 				break;	
 				case 'Not Found' :
-					dispatchFailure(ErrorType.COLLAB_NOT_FOUND);
+					dispatchFailure(ErrEvent.COLLAB_NOT_FOUND);
 				break;					
 			}
 		}

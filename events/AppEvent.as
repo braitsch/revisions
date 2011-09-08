@@ -49,10 +49,10 @@ package events {
 		
 		public var data:Object;
 
-		public function AppEvent($type:String, $data:Object = null)
+		public function AppEvent(type:String, obj:Object = null)
 		{
-			data = $data;
-			super($type, false, false);
+			data = obj;
+			super(type, false, false);
 		}
 		
 	}
