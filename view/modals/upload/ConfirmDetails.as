@@ -1,5 +1,6 @@
 package view.modals.upload {
 
+	import events.AppEvent;
 	import fl.text.TLFTextField;
 	import model.AppModel;
 	import model.proxies.remote.acct.ApiProxy;
@@ -27,6 +28,7 @@ package view.modals.upload {
 			_bkmk.x = _repo.x = _desc.x = _url.x = 120;
 			_bkmk.y = 106; _repo.y = 106 + Form.LEADING;
 			addChild(_bkmk); addChild(_repo); addChild(_desc); addChild(_url);
+			AppModel.engine.addEventListener(AppEvent.BKMK_ADDED_TO_ACCOUNT, onBkmkAddedToAcct);
 		}
 		
 		public function set service(s:String):void
@@ -71,15 +73,12 @@ package view.modals.upload {
 			_url.y = 106 + Form.LEADING * 2;			
 		}
 		
-		override protected function onAddedToStage(e:Event):void
+		private function onBkmkAddedToAcct(e:AppEvent):void
 		{
-		// required for pages that don't have input fields with auto-focus //	
-			stage.focus = this;
-			super.onAddedToStage(e);
-		}
+			super.onNextButton(e);
+		}		
 		
-		override public function onEnterKey():void { onNextButton(); }		
-		override protected function onNextButton(e:Event = null):void
+		override protected function onNextButton(e:Event):void
 		{
 			var api:ApiProxy = _service == HostingAccount.GITHUB ? Hosts.github.api : Hosts.beanstalk.api; 
 			var o:Object = {	bkmk	:	AppModel.bookmark, 

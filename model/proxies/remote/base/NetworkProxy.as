@@ -1,5 +1,6 @@
 package model.proxies.remote.base {
 
+	import view.modals.system.Message;
 	import view.modals.system.Debug;
 	import events.AppEvent;
 	import events.ErrorType;
@@ -34,7 +35,7 @@ package model.proxies.remote.base {
 		
 		protected function dispatchFailure(m:String):void
 		{
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.FAILURE, m));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));
 		}			
 		
 		protected function dispatchDebug(o:Object):void

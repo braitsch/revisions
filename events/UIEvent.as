@@ -34,18 +34,17 @@ package events {
 		public static const LOGGED_IN_CLONE			:String = "LOGGED_IN_CLONE";
 	
 	// miscellaneous //	
+		public static const ENTER_KEY				:String = "ENTER_KEY";
 		public static const CLOSE_MODAL_WINDOW		:String = "CLOSE_MODAL_WINDOW";
 		public static const FILE_BROWSER_SELECTION	:String = "FILE_BROWSER_SELECTION";
 		
 	// file viewer actions //	
 		public static const FILE_SELECTED			:String = "FILE_SELECTED";
 		public static const TOGGLE_DIRECTORY		:String = "TOGGLE_DIRECTORY";
-		public static const SHOW_NEW_REPO_CONFIRM	:String = "SHOW_NEW_REPO_CONFIRM";
-		public static const ADD_BKMK_TO_BEANSTALK	:String = "ADD_BKMK_TO_BEANSTALK";
 		
 		public static const WIZARD_PREV				:String = "WIZARD_PREV";
 		public static const WIZARD_NEXT				:String = "WIZARD_NEXT";
-		public static const ENTER_KEY				:String = "ENTER_KEY";
+		public static const ADD_COLLABORATOR 		:String = "ADD_COLLABORATOR";
 		
 		public var data:Object;
 

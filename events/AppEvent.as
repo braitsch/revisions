@@ -3,7 +3,6 @@ package events {
 
 	public class AppEvent extends Event {
 				
-		public static const FAILURE					:String = "FAILURE";
 		public static const SHOW_ALERT				:String = "SHOW_ALERT";
 		public static const HIDE_ALERT				:String = "HIDE_ALERT";	
 		

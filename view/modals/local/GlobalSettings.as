@@ -34,8 +34,8 @@ package view.modals.local {
 			_form.labels = ['Name', 'Email', 'License Key'];
 			_form.inputs = Vector.<TLFTextField>([_view.name_txt, _view.email_txt]);
 			_form.deactivateFields(['field3']);
-			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);
 			attachOptions();
+			addEventListener(UIEvent.ENTER_KEY, onOkButton);
 			AppModel.settings.addEventListener(AppEvent.APP_SETTINGS, onUserSettings);
 		}
 
@@ -98,8 +98,7 @@ package view.modals.local {
 			AppSettings.setSetting(AppSettings.START_AT_LOGIN, _check4.selected);			
 		}		
 		
-		override public function onEnterKey():void { onOkButton(); }		
-		private function onOkButton(evt:MouseEvent = null):void
+		private function onOkButton(evt:Event):void
 		{
 			var n:String = StringUtil.trim(_view.name_txt.text);
 			var e:String = StringUtil.trim(_view.email_txt.text);

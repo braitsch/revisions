@@ -3,7 +3,7 @@ package view.modals.system {
 	import model.AppModel;
 	import model.vo.Bookmark;
 	import view.ui.ModalCheckbox;
-	import flash.events.MouseEvent;
+	import flash.events.Event;
 
 	public class Delete extends Alert {
 
@@ -39,7 +39,7 @@ package view.modals.system {
 			_trashGit.label = 'Destroy History (warning this cannot be undone)';					
 		}
 		
-		override protected function onOkButton(e:MouseEvent):void
+		override protected function onOkButton(e:Event):void
 		{
 			super.onOkButton(e);
 			AppModel.engine.deleteBookmark(_bookmark, _trashGit.selected, _trashFiles.selected);

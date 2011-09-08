@@ -45,8 +45,7 @@ package view.modals.upload {
 			_repository = o.repo; 
 		}		
 		
-		override public function onEnterKey():void { onNextButton(); }		
-		override protected function onNextButton(e:Event = null):void
+		override protected function onNextButton(e:Event):void
 		{
 			if (_form.validate()) {
 				_collaborator = _form.fields[0];

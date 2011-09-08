@@ -149,11 +149,11 @@ package view.ui {
 		
 		private function registerListeners():void
 		{
+			AppModel.engine.addEventListener(AppEvent.SHOW_ALERT, hideLoader);
 			AppModel.engine.addEventListener(AppEvent.SHOW_LOADER, showLoader);
 			AppModel.engine.addEventListener(AppEvent.HIDE_LOADER, hideLoader);
 			AppModel.engine.addEventListener(AppEvent.LOADER_TEXT, setLoaderText);
 			AppModel.engine.addEventListener(AppEvent.LOADER_PERCENT, setLoaderPercent);
-			AppModel.engine.addEventListener(AppEvent.FAILURE, hideLoader);
 		}
 
 	}

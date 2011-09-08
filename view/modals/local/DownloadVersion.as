@@ -2,13 +2,14 @@ package view.modals.local {
 
 	import events.AppEvent;
 	import events.UIEvent;
-	import flash.events.MouseEvent;
 	import model.AppModel;
 	import model.vo.Bookmark;
 	import model.vo.Commit;
 	import system.AppSettings;
 	import view.modals.base.ModalWindow;
 	import view.ui.ModalCheckbox;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
 
 	public class DownloadVersion extends ModalWindow {
 
@@ -29,7 +30,7 @@ package view.modals.local {
 			_check.label = "Next time just do it and don't ask me";
 			_check.addEventListener(MouseEvent.CLICK, onCheckbox);
 			_view.cancel_btn.addEventListener(MouseEvent.CLICK, onCancel);
-			_view.download_btn.addEventListener(MouseEvent.CLICK, onDownload);
+			addEventListener(UIEvent.ENTER_KEY, onDownload);
 			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);			
 			AppModel.settings.addEventListener(AppEvent.APP_SETTINGS, onUserSettings);			
 		}
@@ -63,8 +64,7 @@ package view.modals.local {
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 		}
 
-		override public function onEnterKey():void { onDownload(); }
-		private function onDownload(e:MouseEvent = null):void
+		private function onDownload(e:Event):void
 		{
 			selectDownloadLocation();
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));

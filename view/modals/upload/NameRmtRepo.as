@@ -1,7 +1,6 @@
 package view.modals.upload {
 
 	import events.AppEvent;
-	import events.UIEvent;
 	import fl.text.TLFTextField;
 	import model.AppModel;
 	import model.remote.HostingAccount;
@@ -55,7 +54,6 @@ package view.modals.upload {
 			}
 			_preview.y = 90 + _form.height + 10;
 			_form.y = 90; addChild(_form);
-			_form.addEventListener(UIEvent.ENTER_KEY, onNextButton);
 			super.heading = 'What would you like to call your bookmark inside your '+_service+' account?';			
 		}
 		
@@ -98,8 +96,7 @@ package view.modals.upload {
 			_url.text += _form.fields[0].replace(/\s/g, '-');
 		}
 		
-		override public function onEnterKey():void { onNextButton(); }
-		override protected function onNextButton(e:Event = null):void
+		override protected function onNextButton(e:Event):void
 		{
 			if (validate()){
 				super.dispatchNext(e, {repo:_name.text.replace(/\s/g, '-'), desc:_desc.text, url:_url.text, selected:_private.selected});

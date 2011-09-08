@@ -1,8 +1,6 @@
 package view.modals.upload {
 
-	import events.AppEvent;
 	import events.UIEvent;
-	import model.AppModel;
 	import view.modals.base.ModalWindow;
 	import view.modals.base.ModalWindowBasic;
 	import com.greensock.TweenLite;
@@ -32,18 +30,10 @@ package view.modals.upload {
 			_view.addChild(_status);
 			super.addCloseButton();
 			super.drawBackground(550, 280);
-			super.setTitle(_view, 'Link To Account');
 			addEventListener(UIEvent.WIZARD_PREV, onWizardPrev);
 			addEventListener(UIEvent.WIZARD_NEXT, onWizardNext);
+			addEventListener(UIEvent.ADD_COLLABORATOR, onAddCollaborator);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
-			AppModel.engine.addEventListener(AppEvent.BKMK_ADDED_TO_ACCOUNT, onBkmkAddedToAcct);
-		}
-
-		private function onBkmkAddedToAcct(e:AppEvent):void
-		{
-			_status.page = 5;
-			nextPage(_onBkmkAdded);
-			super.setTitle(_view, 'Success!');
 		}
 
 	// page navigation //
@@ -51,27 +41,51 @@ package view.modals.upload {
 		private function onWizardNext(e:UIEvent):void
 		{
 			switch(e.target){
-				case _pickService : 
+				case _pickService :
 					_status.page = 2;
-					setService(e.data as String);
+					setService(e.data as String);	
 					nextPage(_pickAccount);
-				break;	
-				case _pickAccount : 
+				break;
+				case _pickAccount :
 					_status.page = 3;
 					nextPage(_nameRmtRepo);
 				break;
-				case _nameRmtRepo : 
+				case _nameRmtRepo :
 					_status.page = 4;
-					setData(e.data as Object);
+					setData(e.data as Object);	
 					nextPage(_confirmDetails);
-				break;	
-				case _onBkmkAdded : 
+				break;
+				case _confirmDetails :
 					_status.page = 5;
-					nextPage(_addCollaborator);
-					super.setTitle(_view, 'Add Collaborator');
-				break;								
+					nextPage(_onBkmkAdded);
+					super.setTitle(_view, 'Success!');
+				break;				
 			}
 		}
+		
+		private function onWizardPrev(e:UIEvent):void
+		{
+			switch(e.target){
+				case _confirmDetails :
+					_status.page = 3;
+					prevPage(_nameRmtRepo);
+				break;					
+				case _nameRmtRepo :
+					_status.page = 2;
+					prevPage(_pickAccount);
+				break;
+				case _pickAccount :
+					_status.page = 1;
+					prevPage(_pickService);
+				break;
+			}			
+		}
+		
+		private function onAddCollaborator(e:UIEvent):void
+		{
+			nextPage(_addCollaborator);
+			super.setTitle(_view, 'Add Collaborator');			
+		}			
 
 	// TODO - these need to be dispatched as events when they are set //
 		private function setService(s:String):void
@@ -88,28 +102,6 @@ package view.modals.upload {
 		{
 			_confirmDetails.data = o;
 			_addCollaborator.data = o;
-		}
-		
-		private function onWizardPrev(e:UIEvent):void
-		{
-			switch(e.target){
-				case _pickAccount : 
-					_status.page = 1;
-					prevPage(_pickService);
-				break;
-				case _nameRmtRepo : 
-					_status.page = 2;
-					prevPage(_pickAccount);
-				break;
-				case _confirmDetails :
-					_status.page = 3;
-					prevPage(_nameRmtRepo);
-				break;
-				case _addCollaborator :
-					_status.page = 1;
-					prevPage(_pickService);
-				break;
-			}			
 		}
 		
 		private function nextPage(p:ModalWindowBasic):void
@@ -135,6 +127,7 @@ package view.modals.upload {
 			_status.page = 1;
 			_view.addChildAt(_page, 0);
 			super.onAddedToStage(e);
+			super.setTitle(_view, 'Link To Account');
 		}
 
 		private function onRemovedFromStage(e:Event):void

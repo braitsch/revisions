@@ -4,11 +4,10 @@ package view.modals.upload {
 	import events.UIEvent;
 	import model.AppModel;
 	import model.remote.HostingAccount;
-	import view.modals.base.ModalWindowBasic;
 	import view.modals.system.Message;
 	import flash.events.MouseEvent;
 
-	public class OnBkmkAdded extends ModalWindowBasic {
+	public class OnBkmkAdded extends WizardWindow {
 
 		private static var _view	:OnBkmkAddedMC = new OnBkmkAddedMC();
 		private static var _service	:String;
@@ -19,7 +18,7 @@ package view.modals.upload {
 			super.addButtons([_view.github, _view.beanstalk, _view.addCollab, _view.share, _view.close]);
 			addEventListener(MouseEvent.CLICK, onButtonSelection);
 		}
-		
+
 		public function set service(s:String):void
 		{
 			_service = s;
@@ -40,7 +39,7 @@ package view.modals.upload {
 				break;
 				case _view.addCollab :
 					if (_service == HostingAccount.GITHUB){
-						dispatchEvent(new UIEvent(UIEvent.WIZARD_NEXT));
+						dispatchEvent(new UIEvent(UIEvent.ADD_COLLABORATOR));
 					}	else{
 						var m:Message = new Message('This feature for Beanstalk accounts is coming soon.');
 						AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));

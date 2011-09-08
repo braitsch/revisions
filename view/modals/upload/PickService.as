@@ -2,10 +2,9 @@ package view.modals.upload {
 
 	import events.UIEvent;
 	import model.remote.HostingAccount;
-	import view.modals.base.ModalWindowBasic;
 	import flash.events.MouseEvent;
 
-	public class PickService extends ModalWindowBasic {
+	public class PickService extends WizardWindow {
 
 		private static var _view			:ChooseServiceMC = new ChooseServiceMC();
 

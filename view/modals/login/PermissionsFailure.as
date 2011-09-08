@@ -9,6 +9,7 @@ package view.modals.login {
 	import view.modals.base.ModalWindow;
 	import view.ui.Form;
 	import view.ui.ModalCheckbox;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 
 	public class PermissionsFailure extends ModalWindow {
@@ -36,8 +37,8 @@ package view.modals.login {
 			
 			_check.y = 210;
 			_check.label = 'Remember my login for this account';			
-			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);
 			_view.cancel_btn.addEventListener(MouseEvent.CLICK, onCancelButton);
+			addEventListener(UIEvent.ENTER_KEY, onOkButton);
 		}
 		
 		public function set request(u:String):void
@@ -51,8 +52,7 @@ package view.modals.login {
 			super.setHeading(_view, m);
 		}
 		
-		override public function onEnterKey():void { onOkButton(); }
-		private function onOkButton(e:MouseEvent = null):void
+		private function onOkButton(e:Event):void
 		{
 			if (_form.validate()) {
 				if (_acctType == HostingAccount.GITHUB){

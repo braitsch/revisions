@@ -1,9 +1,11 @@
 package view.modals.system {
 
+	import events.UIEvent;
 	import events.AppEvent;
 	import model.AppModel;
 	import view.modals.base.ModalWindow;
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 
 	public class Alert extends ModalWindow {
@@ -14,12 +16,12 @@ package view.modals.system {
 		public function Alert()
 		{
 			super.addCloseButton();
+			addEventListener(UIEvent.ENTER_KEY, onOkButton);
 		}
-
+		
 		public function set okButton(btn:Sprite):void
 		{
 			_okButton = btn;
-			_okButton.addEventListener(MouseEvent.CLICK, onOkButton);
 			super.defaultButton = _okButton;
 		}
 
@@ -30,7 +32,7 @@ package view.modals.system {
 			super.addButtons([_noButton]);
 		}
 		
-		protected function onOkButton(e:MouseEvent):void
+		protected function onOkButton(e:Event):void
 		{
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_ALERT));
 		}		

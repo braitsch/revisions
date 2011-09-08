@@ -34,7 +34,6 @@ package model.proxies.local {
 		
 		public function getModified(b:Bookmark):void
 		{
-			trace("StatusProxy.getModified(b)");
 			_bookmark = b;
 			super.directory = _bookmark.gitdir;
 			super.queue = [	Vector.<String>([BashMethods.GET_IGNORED_FILES]),

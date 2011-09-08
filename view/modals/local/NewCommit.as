@@ -32,8 +32,7 @@ package view.modals.local {
 			_view.textArea.message_txt.textFlow.interactionManager.setFocus();				
 		}
 
-		override public function onEnterKey():void { onCommit(); }
-		private function onCommit(e:MouseEvent = null):void 
+		private function onCommit(e:MouseEvent):void 
 		{
 			if (_view.textArea.message_txt.text == ''){
 				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message('Commit Message Cannot Be Empty.')));

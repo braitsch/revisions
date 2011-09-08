@@ -13,7 +13,6 @@ package view.modals.base {
 
 	public class ModalWindowBasic extends Sprite {
 
-		public var locked			:Boolean;
 		private var _bkgd			:Shape = new Shape();
 		private static var _file	:File = File.desktopDirectory;
 		private static var _glow	:GlowFilter = new GlowFilter(0x000000, .5, 20, 20, 2, 2);
@@ -25,12 +24,10 @@ package view.modals.base {
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
 		}
-
-	// override this in any windows that should listen for the enter key //	
-		public function onEnterKey():void { }
-
+		
 		protected function onAddedToStage(e:Event):void 
 		{ 
+			stage.focus = this;
 			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 		}
 		
@@ -41,7 +38,7 @@ package view.modals.base {
 		
 		private function onKeyUp(e:KeyboardEvent):void
 		{
-			if (e.keyCode == 13) onEnterKey();
+			if (e.keyCode == 13 && stage.focus == this) dispatchEvent(new UIEvent(UIEvent.ENTER_KEY));
 		}		
 
 		protected function setTitle(view:*, s:String):void
@@ -71,6 +68,7 @@ package view.modals.base {
 			b['over'].alpha = 1;
 			b.buttonMode = true;
 			b.mouseChildren = false;
+			b.addEventListener(MouseEvent.CLICK, function(e:MouseEvent):void{ dispatchEvent(new UIEvent(UIEvent.ENTER_KEY)); } );
 		}
 		
 		protected function addButtons(a:Array):void

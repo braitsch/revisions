@@ -9,7 +9,7 @@ package view.modals.local {
 	import view.modals.system.Message;
 	import view.ui.Form;
 	import view.ui.ModalCheckbox;
-	import flash.events.MouseEvent;
+	import flash.events.Event;
 	import flash.filesystem.File;
 
 	public class AddDragAndDrop extends ModalWindow {
@@ -33,7 +33,7 @@ package view.modals.local {
 			_check.y = 170; 
 			_check.label = 'Autosave Every 60 Minutes';
 			_view.name_txt.text = _view.local_txt.text = ''; 
-			_view.ok_btn.addEventListener(MouseEvent.CLICK, onOkButton);
+			addEventListener(UIEvent.ENTER_KEY, onOkButton);
 		}
 
 		public function set file(f:File):void
@@ -52,8 +52,7 @@ package view.modals.local {
 			_view.name_txt.text = n.substr(0,1).toUpperCase() + n.substr(1);
 		}			
 		
-		override public function onEnterKey():void { onOkButton(); }		
-		private function onOkButton(e:MouseEvent = null):void 
+		private function onOkButton(e:Event):void 
 		{	
 			var m:String = Bookmark.validate(_view.name_txt.text, _view.local_txt.text);
 			if (m == '') {

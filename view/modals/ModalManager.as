@@ -17,7 +17,7 @@ package view.modals {
 	import view.modals.local.AddDragAndDrop;
 	import view.modals.local.AppExpired;
 	import view.modals.local.AppUpdate;
-	import view.modals.local.CommitDetails;
+	import view.modals.local.VersionDetails;
 	import view.modals.local.DownloadVersion;
 	import view.modals.local.GlobalSettings;
 	import view.modals.local.NewBookmark;
@@ -48,7 +48,7 @@ package view.modals {
 		private static var _repair				:RepairBookmark = new RepairBookmark();
 		private static var _dragAndDrop			:AddDragAndDrop = new AddDragAndDrop();
 		private static var _commit				:NewCommit = new NewCommit();
-		private static var _details				:CommitDetails = new CommitDetails();
+		private static var _details				:VersionDetails = new VersionDetails();
 		private static var _revert				:RevertToVersion = new RevertToVersion();		private static var _download			:DownloadVersion = new DownloadVersion();
 		private static var _settings			:GlobalSettings = new GlobalSettings();
 		private static var _appUpdate			:AppUpdate = new AppUpdate();
@@ -73,7 +73,6 @@ package view.modals {
 			addChild(_preloader);			
 			mouseEnabled = false;
 			_curtain.addEventListener(MouseEvent.CLICK, onCurtainClick);
-			AppModel.engine.addEventListener(AppEvent.FAILURE, onShowAlert);
 			AppModel.engine.addEventListener(AppEvent.SHOW_LOADER, showLoader);
 			AppModel.engine.addEventListener(AppEvent.SHOW_ALERT, onShowAlert);
 			AppModel.engine.addEventListener(AppEvent.HIDE_ALERT, onHideAlert);	
@@ -291,9 +290,7 @@ package view.modals {
 			_alert = e.data as Alert;
 			addChild(_alert);
 			_curtain.show();
-			stage.focus = _alert;
 			if (_window) {
-				_window.locked = true;
 				_window.filters = [new BlurFilter(5, 5, 3)];			
 			}
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
@@ -305,7 +302,6 @@ package view.modals {
 			if (_window) {
 				stage.focus = _window;
 				_window.filters = [];
-				_window.locked = false;
 			}	else{
 				 _curtain.hide();
 			}

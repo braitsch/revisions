@@ -18,6 +18,7 @@ package view.modals.upload {
 			_heading.label_txt.text = s;
 			_heading.x = 10; _heading.y = 70;
 			addChild(_heading);
+			addEventListener(UIEvent.ENTER_KEY, onNextButton);
 		}
 		
 		protected function set heading(s:String):void
@@ -45,12 +46,11 @@ package view.modals.upload {
 			_nextBtn = s;
 			_nextBtn.x = 484;
 			_nextBtn.y = 280 - 35;
-			_nextBtn.addEventListener(MouseEvent.CLICK, onNextButton);
 			addChild(_nextBtn);			
 			super.defaultButton = _nextBtn;
 		}
 
-		protected function onNextButton(e:Event = null):void
+		protected function onNextButton(e:Event):void
 		{
 			dispatchNext(e);	
 		}

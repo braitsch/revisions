@@ -2,12 +2,13 @@ package view.modals.local {
 
 	import events.AppEvent;
 	import events.UIEvent;
-	import flash.events.MouseEvent;
-	import flash.events.ProgressEvent;
 	import model.AppModel;
 	import system.AppSettings;
 	import view.modals.base.ModalWindow;
 	import view.ui.ModalCheckbox;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.events.ProgressEvent;
 
 	public class AppUpdate extends ModalWindow {
 
@@ -26,7 +27,7 @@ package view.modals.local {
 			_check.label = "Don't prompt me to update again.";
 			_check.addEventListener(MouseEvent.CLICK, onCheckbox);
 			_view.skip_btn.addEventListener(MouseEvent.CLICK, onSkipUpdate);
-			_view.download_btn.addEventListener(MouseEvent.CLICK, onDownload);
+			addEventListener(UIEvent.ENTER_KEY, onDownload);
 		}
 
 		public function set newVersion(n:String):void
@@ -46,12 +47,13 @@ package view.modals.local {
 			AppModel.updater.dispatchEvent(new AppEvent(AppEvent.APP_UPDATE_IGNORED));
 		}
 
-		override public function onEnterKey():void { onDownload(); }
-		private function onDownload(e:MouseEvent = null):void
+		private function onDownload(e:Event):void
 		{
 			_view.textArea.message_txt.text = "Downloading Update..";
 			super.enableButton(_view.skip_btn, false);
-			super.enableButton(_view.download_btn, false);			
+			super.enableButton(_view.download_btn, false);
+			removeEventListener(UIEvent.ENTER_KEY, onDownload);
+			
 			AppModel.updater.updateApplication();
 			AppModel.updater.addEventListener(AppEvent.APP_UPDATE_FAILURE, onUpdateError);
 			AppModel.updater.addEventListener(AppEvent.APP_UPDATE_PROGRESS, onUpdateProgress);
@@ -60,7 +62,7 @@ package view.modals.local {
 
 		private function onUpdateError(e:AppEvent):void
 		{
-			_view.textArea.message_txt.text = "Whoops! Something Went Wrong.";			
+			_view.textArea.message_txt.text = "Whoops! Something Went Wrong.\nMaybe quit and restart?";			
 			_view.textArea.message_txt.text+= e.data;
 		}
 		

@@ -1,10 +1,12 @@
 package view.modals.local {
 
-	import flash.desktop.NativeApplication;
-	import flash.events.MouseEvent;
+	import events.UIEvent;
 	import model.AppModel;
 	import system.AppSettings;
 	import view.modals.base.ModalWindow;
+	import flash.desktop.NativeApplication;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
 
 	public class AppExpired extends ModalWindow {
 
@@ -20,7 +22,7 @@ package view.modals.local {
 			_view.textArea.message_txt.text = 'This beta version of Revisions has expired.\n';
 			_view.textArea.message_txt.text+= 'Please update to the most current version.';
 			_view.cancel_btn.addEventListener(MouseEvent.CLICK, onCancel);
-			_view.ok_btn.addEventListener(MouseEvent.CLICK, onCheckForUpdates);
+			addEventListener(UIEvent.ENTER_KEY, onCheckForUpdates);
 		}
 
 		private function onCancel(e:MouseEvent):void
@@ -28,8 +30,7 @@ package view.modals.local {
 			NativeApplication.nativeApplication.exit();			
 		}
 		
-		override public function onEnterKey():void { onCheckForUpdates(); }			
-		private function onCheckForUpdates(e:MouseEvent = null):void
+		private function onCheckForUpdates(e:Event):void
 		{
 			AppSettings.setSetting(AppSettings.CHECK_FOR_UPDATES, true);			
 			AppModel.updater.checkForUpdate();	

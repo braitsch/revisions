@@ -2,14 +2,15 @@ package view.modals.git {
 
 	import events.AppEvent;
 	import events.UIEvent;
+	import model.AppModel;
+	import system.SystemRules;
+	import view.modals.base.ModalWindow;
 	import flash.desktop.NativeApplication;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import model.AppModel;
-	import system.SystemRules;
-	import view.modals.base.ModalWindow;
 
 	public class GitWindow extends ModalWindow {
 
@@ -21,7 +22,7 @@ package view.modals.git {
 			addChild(_view);
 			super.defaultButton = _view.ok_btn;
 			super.addButtons([_view.cancel_btn]);
-			_view.ok_btn.addEventListener(MouseEvent.CLICK, installAndUpdate);
+			addEventListener(UIEvent.ENTER_KEY, installAndUpdate);
 			_view.cancel_btn.addEventListener(MouseEvent.CLICK, quitApplication);
 		}
 		
@@ -29,7 +30,7 @@ package view.modals.git {
 		{
 			var b:Bitmap = new Bitmap(bmd);
 				b.x = 3; b.y = -1;	
-			_view.addChild(b);						
+			_view.addChild(b);					
 		}
 		
 		protected function checkForPackageInstaller():String
@@ -48,12 +49,11 @@ package view.modals.git {
 		{
 			super.enableButton(_view.ok_btn, false);
 			super.enableButton(_view.cancel_btn, false);
-			_view.ok_btn.removeEventListener(MouseEvent.CLICK, installAndUpdate);
+			removeEventListener(UIEvent.ENTER_KEY, installAndUpdate);
 			_view.cancel_btn.removeEventListener(MouseEvent.CLICK, quitApplication);
 		}
 		
-		override public function onEnterKey():void { installAndUpdate(); }
-		private function installAndUpdate(e:MouseEvent = null):void
+		private function installAndUpdate(e:Event):void
 		{
 			disableButtons();
 			_view.textArea.message_txt.text = getInstallMessage();
@@ -81,7 +81,7 @@ package view.modals.git {
 		private function onInstallComplete(e:AppEvent):void 
 		{
 			super.enableButton(_view.ok_btn, true);
-			_view.ok_btn.addEventListener(MouseEvent.CLICK, closeWindow);
+			addEventListener(UIEvent.ENTER_KEY, closeWindow);
 			_view.textArea.message_txt.text = "You're All Set - ";
 			_view.textArea.message_txt.text+= AppModel.proxies.config.gitVersion ? 'Update' : 'Install';
 			_view.textArea.message_txt.text+= ' Complete!!';
@@ -95,7 +95,7 @@ package view.modals.git {
 			NativeApplication.nativeApplication.exit();
 		}			
 		
-		private function closeWindow(e:MouseEvent):void
+		private function closeWindow(e:Event):void
 		{
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 		}		

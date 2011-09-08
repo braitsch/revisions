@@ -37,7 +37,6 @@ package view.modals.bkmk {
 			_form.deactivateFields(['field2']);
 			_form.addEventListener(UIEvent.ENTER_KEY, onUpdateBookmark);
 			_view.local_txt.selectable = false;
-			_view.ok_btn.addEventListener(MouseEvent.CLICK, onUpdateBookmark);
 			_view.delete_btn.addEventListener(MouseEvent.CLICK, onDeleteButton);
 		}
 		
@@ -55,8 +54,7 @@ package view.modals.bkmk {
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Delete(_bookmark)));
 		}
 
-		override public function onEnterKey():void { onUpdateBookmark(); }
-		private function onUpdateBookmark(e:Event = null):void
+		private function onUpdateBookmark(e:Event):void
 		{
 			var m:String = Bookmark.validate(_view.name_txt.text, _view.local_txt.text, _bookmark);
 			if (m != '') {

@@ -1,13 +1,14 @@
 package view.modals.local {
 
-	import view.modals.system.Message;
-	import view.modals.system.Delete;
 	import events.AppEvent;
 	import events.DataBaseEvent;
 	import events.UIEvent;
 	import model.AppModel;
 	import model.vo.Bookmark;
 	import view.modals.base.ModalWindow;
+	import view.modals.system.Delete;
+	import view.modals.system.Message;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
 
@@ -26,9 +27,9 @@ package view.modals.local {
 			super.addButtons([_view.browse_btn, _view.delete_btn]);
 			_view.form.label1.text = 'Name';
 			_view.form.label2.text = 'Location';
-			_view.ok_btn.addEventListener(MouseEvent.CLICK, onUpdateBookmark);
 			_view.browse_btn.addEventListener(MouseEvent.CLICK, onBrowseButton);
 			_view.delete_btn.addEventListener(MouseEvent.CLICK, onDeleteBookmark);
+			addEventListener(UIEvent.ENTER_KEY, onUpdateBookmark);
 			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);
 		}
 		
@@ -58,8 +59,7 @@ package view.modals.local {
 			_view.path_txt.text = File(e.data).nativePath;	
 		}
 		
-		override public function onEnterKey():void { onUpdateBookmark(); }
-		private function onUpdateBookmark(e:MouseEvent = null):void 
+		private function onUpdateBookmark(e:Event):void 
 		{
 			var m:String = Bookmark.validate(_view.name_txt.text, _view.path_txt.text, _broken[0]);
 			if (m != '') {

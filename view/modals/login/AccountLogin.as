@@ -1,6 +1,7 @@
 package view.modals.login {
 
 	import events.AppEvent;
+	import events.ErrorType;
 	import events.UIEvent;
 	import model.AppModel;
 	import model.remote.HostingAccount;
@@ -58,7 +59,7 @@ package view.modals.login {
 			
 			addChild(_form); addChild(_check);
 			addChild(_login); addChild(_signUp); addChild(_heading);
-			AppModel.engine.addEventListener(AppEvent.FAILURE, onLoginFailure);
+			AppModel.engine.addEventListener(AppEvent.SHOW_ALERT, onLoginFailure);
 		}
 		
 		public function set baseline(y:uint):void
@@ -121,7 +122,7 @@ package view.modals.login {
 		
 		private function onLoginFailure(e:AppEvent):void
 		{
-			_login.enabled = true;
+			if (e.data == ErrorType.LOGIN_FAILURE) _login.enabled = true;
 		}
 		
 	}

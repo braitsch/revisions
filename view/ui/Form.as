@@ -13,8 +13,6 @@ package view.ui {
 	import flash.geom.ColorTransform;
 	import flash.text.TextField;
 
-	// import flash.events.KeyboardEvent;
-
 	public class Form extends Sprite {
 		
 		public static const	LEADING	:uint = 28;
