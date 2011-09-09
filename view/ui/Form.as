@@ -66,7 +66,7 @@ package view.ui {
 		{
 			for (var i:int = 0; i < _inputs.length; i++){
 				if (_inputs[i].text == '') {
-					AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message('Neither field can be blank.')));
+					AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message('Please fill in the required fields.')));
 					return false;
 				}
 			}

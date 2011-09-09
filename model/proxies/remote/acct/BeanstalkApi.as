@@ -4,7 +4,7 @@ package model.proxies.remote.acct {
 	import events.ErrEvent;
 	import model.remote.HostingAccount;
 	import model.remote.Hosts;
-	import model.vo.BookmarkRemote;
+	import model.vo.BeanstalkRepo;
 	import view.modals.collab.Collab;
 
 	public class BeanstalkApi extends ApiProxy {
@@ -39,11 +39,11 @@ package model.proxies.remote.acct {
 			var xml:XML = new XML(s);
 			var usr:XMLList = xml['user'];
 			for (var i:int = 0; i < usr.length(); i++) {
-				if (usr['login'] == super.account.user) {
+				if (usr[i]['login'] == super.account.user) {
 					var o:Object = {};
-						o.id = usr['id'];
-						o.email = usr['email'];
-						o.name = usr['first-name']+' '+usr['last-name'];
+						o.id = usr[i]['id'];
+						o.email = usr[i]['email'];
+						o.name = usr[i]['first-name']+' '+usr[i]['last-name'];
 					super.account.loginData = o;	
 				}
 			}
@@ -53,16 +53,14 @@ package model.proxies.remote.acct {
 		override protected function onRepositories(s:String):void
 		{
 			if (checkForErrors(s) == true) return;
-			var a:Array = [];
 			var xml:XML = new XML(s);
 			var xl:XMLList = xml['repository'];			
 			for (var i:int = 0; i < xl.length(); i++) {
 				if (xl[i]['vcs'] == 'git') {
-					xl[i]['https_url'] = 'git@'+super.account.user+'.beanstalkapp.com:/'+xl[i]['name']+'.git';
-					a.push(xl[i]);
+					var url:String = 'git@'+super.account.user+'.beanstalkapp.com:/'+xl[i]['name']+'.git';
+					super.account.addRepository(new BeanstalkRepo(xl[i], url));
 				}
 			}
-			super.account.repositories = a;
 			dispatchLoginSuccess();
 		}
 		
@@ -70,8 +68,9 @@ package model.proxies.remote.acct {
 		{
 			var xml:XML = new XML(s);
 			var url:String = 'git@'+super.account.acct+'.beanstalkapp.com:/'+xml.name+'.git';
-			Hosts.beanstalk.home.addRepository(xml);
-			dispatchEvent(new AppEvent(AppEvent.REPOSITORY_CREATED, new BookmarkRemote(HostingAccount.BEANSTALK+'-'+xml.name, url)));
+			var rpo:BeanstalkRepo = new BeanstalkRepo(xml, url);
+			Hosts.beanstalk.home.addRepository(rpo);
+			dispatchEvent(new AppEvent(AppEvent.REPOSITORY_CREATED, rpo));
 		}
 		
 		override protected function onCollaboratorAdded(s:String):void

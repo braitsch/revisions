@@ -82,6 +82,11 @@ package view.modals.upload {
 					_status.page = 1;
 					prevPage(_pickService);
 				break;
+			// testing - kill this	
+				case _addCollaborator :
+					_status.page = 1;
+					prevPage(_pickService);
+				break;				
 			}			
 		}
 		

@@ -5,18 +5,18 @@ package model.proxies.remote.repo {
 	import model.AppModel;
 	import model.proxies.remote.base.GitProxy;
 	import model.proxies.remote.base.GitRequest;
-	import model.vo.BookmarkRemote;
+	import model.vo.Repository;
 	import system.AppSettings;
 	import system.BashMethods;
 
 	public class SyncProxy extends GitProxy {
 
 		private static var _confirm		:Confirm;
-		private static var _remote		:BookmarkRemote;
+		private static var _remote		:Repository;
 		private static var _prompt		:Boolean;
-		private static var _remotes		:Vector.<BookmarkRemote>;
+		private static var _remotes		:Vector.<Repository>;
 
-		public function syncRemotes(v:Vector.<BookmarkRemote>):void
+		public function syncRemotes(v:Vector.<Repository>):void
 		{
 			_remotes = v.concat();
 			syncNextRemote();			

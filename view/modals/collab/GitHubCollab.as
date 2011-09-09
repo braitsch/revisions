@@ -1,15 +1,22 @@
 package view.modals.collab {
 
 	import view.ui.Form;
+	import view.ui.ModalCheckbox;
 	import flash.display.Sprite;
 	
 	public class GitHubCollab extends Sprite {
 
 		private var _form 		:Form = new Form(new Form1());
-
+		private var _check				:ModalCheckbox = new ModalCheckbox(true);
+		
 		public function GitHubCollab()
 		{
-			_form.labels = ['UserName'];
+			_form.labels = ['Username'];
+			_form.enabled = [1];
+			addChild(_form);
+			_check.label = 'whatever';
+			_check.y = 145;
+			addChild(_check);			
 		}
 		
 		public function addCollaborator():void

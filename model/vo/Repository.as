@@ -2,7 +2,7 @@ package model.vo {
 
 	import model.remote.HostingAccount;
 
-	public class BookmarkRemote {
+	public class Repository {
 
 		private var _name		:String; // ex. github-revisions-source //
 		private var _url		:String;
@@ -12,10 +12,9 @@ package model.vo {
 		private var _repoName	:String;
 		private var _homePage	:String;
 
-		public function BookmarkRemote(name:String, url:String)
+		public function Repository(name:String, url:String)
 		{
-			_name = name.toLowerCase(); 
-			_url = url;
+			_name = name.toLowerCase(); _url = url;
 			_acctType = getAccountType(url);
 			_acctName = getAccountName(url);
 			_repoName = getRepositoryName(url);

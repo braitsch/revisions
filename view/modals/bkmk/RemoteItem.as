@@ -1,7 +1,7 @@
 package view.modals.bkmk {
 
 	import model.remote.HostingAccount;
-	import model.vo.BookmarkRemote;
+	import model.vo.Repository;
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -11,10 +11,10 @@ package view.modals.bkmk {
 
 	public class RemoteItem extends Sprite {
 
-		private var _remote	:BookmarkRemote;
+		private var _remote	:Repository;
 		private var _view	:RemoteItemMC = new RemoteItemMC();
 
-		public function RemoteItem(rmt:BookmarkRemote)
+		public function RemoteItem(rmt:Repository)
 		{
 			addChild(_view);
 			_remote = rmt;

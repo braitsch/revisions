@@ -1,5 +1,6 @@
 package model.remote {
 
+	import model.vo.Repository;
 	import com.adobe.crypto.MD5;
 	import flash.display.Bitmap;
 	import flash.display.Loader;
@@ -23,7 +24,7 @@ package model.remote {
 		private var _avatar				:Sprite = new Sprite();
 		private var _fullName			:String;
 		private var _location			:String;
-		private var _repositories		:Array;
+		private var _repositories		:Vector.<Repository> = new Vector.<Repository>();
 
 		public function HostingAccount(o:Object)
 		{
@@ -50,11 +51,18 @@ package model.remote {
 		public function get fullName()		:String 	{ return _fullName; 	}
 		public function get location()		:String 	{ return _location; 	}
 		
-		public function set repositories(a:Array):void 	{ _repositories = a;	}
-		public function get repositories()	:Array  	{ return _repositories;	}
-		
 		public function set sshKeyId(n:uint):void 		{ _sshKeyId = n; 		}
 		public function get sshKeyId()		:uint 		{ return _sshKeyId;		}
+		
+		public function addRepository(rpo:Repository):void
+		{
+			_repositories.push(rpo);	
+		}
+		
+		public function get repositories():Vector.<Repository> 
+		{ 
+			return _repositories;	
+		}		
 		
 		private function loadAvatar(url:String):void
 		{

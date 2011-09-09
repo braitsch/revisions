@@ -5,7 +5,7 @@ package view.modals.login {
 	import model.AppModel;
 	import model.remote.HostingAccount;
 	import model.remote.Hosts;
-	import model.vo.BookmarkRemote;
+	import model.vo.Repository;
 	import view.modals.base.ModalWindow;
 	import view.ui.Form;
 	import view.ui.ModalCheckbox;
@@ -44,9 +44,9 @@ package view.modals.login {
 		public function set request(u:String):void
 		{
 			_url = u;
-			_acctType = BookmarkRemote.getAccountType(u);
-			_acctName = BookmarkRemote.getAccountName(u);
-			_repoName = BookmarkRemote.getRepositoryName(u);
+			_acctType = Repository.getAccountType(u);
+			_acctName = Repository.getAccountName(u);
+			_repoName = Repository.getRepositoryName(u);
 			var m:String = 'I\'m sorry, '+_acctType+' denied us access to the account named "'+_acctName+'".\n';
 				m+='Please enter your username & password to try again :';
 			super.setHeading(_view, m);
@@ -80,7 +80,7 @@ package view.modals.login {
 		private function retryRequestOverHttps():void
 		{
 			var ha:HostingAccount = _check.selected ? makeAcctObj(HostingAccount.GITHUB) : null;
-			_url = BookmarkRemote.buildHttpsURL(_form.getField(0), _form.getField(1) , _acctName , _repoName);
+			_url = Repository.buildHttpsURL(_form.getField(0), _form.getField(1) , _acctName , _repoName);
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.RETRY_REMOTE_REQUEST, {u:_url, a:ha}));
 		}
 		

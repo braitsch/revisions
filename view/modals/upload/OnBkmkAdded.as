@@ -1,10 +1,8 @@
 package view.modals.upload {
 
-	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
 	import model.remote.HostingAccount;
-	import view.modals.system.Message;
 	import flash.events.MouseEvent;
 
 	public class OnBkmkAdded extends WizardWindow {
@@ -15,7 +13,7 @@ package view.modals.upload {
 		public function OnBkmkAdded()
 		{
 			addChild(_view);
-			super.addButtons([_view.github, _view.beanstalk, _view.addCollab, _view.share, _view.close]);
+			super.addButtons([_view.github, _view.beanstalk, _view.addCollab]);
 			addEventListener(MouseEvent.CLICK, onButtonSelection);
 		}
 
@@ -38,19 +36,8 @@ package view.modals.upload {
 					dispatchEvent(new UIEvent(UIEvent.BEANSTALK_HOME));
 				break;
 				case _view.addCollab :
-					if (_service == HostingAccount.GITHUB){
-						dispatchEvent(new UIEvent(UIEvent.ADD_COLLABORATOR));
-					}	else{
-						var m:Message = new Message('This feature for Beanstalk accounts is coming soon.');
-						AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
-					}
+					dispatchEvent(new UIEvent(UIEvent.ADD_COLLABORATOR));
 				break;
-				case _view.share :
-					AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message('This feature is coming soon.')));
-				break;
-				case _view.close :
-					dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-				break;								
 			}
 		}		
 				

@@ -23,11 +23,13 @@ package view.modals.upload {
 		public function set service(s:String):void
 		{
 			_service = s;
-			super.heading = 'Please enter the '+_service+' user you\'d like to collaborate with on "'+AppModel.bookmark.label+'"';
+			if (_collab) removeChild(_collab);
 			if (_service == HostingAccount.GITHUB){
 				_collab = new GitHubCollab();
+				super.heading = 'Please enter the GitHub user you\'d like to collaborate with on "'+AppModel.bookmark.label+'"';
 			}	else if (_service == HostingAccount.BEANSTALK) {
 				_collab = new BeanstalkCollab();
+				super.heading = 'Fill in below to create a new user to collaborate with on "'+AppModel.bookmark.label+'"';
 			}
 			_collab.y = 90;
 			addChild(_collab);

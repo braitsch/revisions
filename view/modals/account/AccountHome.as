@@ -1,5 +1,6 @@
 package view.modals.account {
 
+	import model.vo.Repository;
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
@@ -42,7 +43,7 @@ package view.modals.account {
 			if (_model.fullName && _model.location) _view.badgeUser.user_txt.appendText(' - '+_model.location);
 		}
 		
-		public function addRepository(o:Object):void
+		public function addRepository(o:Repository):void
 		{
 			_model.repositories.push(o);
 			resetAccount();
@@ -61,12 +62,19 @@ package view.modals.account {
 			_model.avatar.x = -190;
 			_view.badgeUser.addChild(_model.avatar);
 		}
+		
+		private function sortOn(v:*):Array
+		{
+			var a:Array = [];
+			for (var i:int = 0; i < v.length; i++) a[i] = v[i];
+				a.sortOn('repoName', Array.CASEINSENSITIVE);
+			return a;
+		}
 
 		private function attachRepositories():void
 		{
 			var k:Array = [];
-			var a:Array = _model.repositories;
-			a.sortOn('name', Array.CASEINSENSITIVE);
+			var a:Vector.<Repository> = Vector.<Repository>(sortOn(_model.repositories));
 			_pages = new <Sprite>[];
 			for (var i:int = 0; i < a.length; i++) {
 				k.push(a[i]);

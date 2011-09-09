@@ -1,5 +1,9 @@
 package view.modals.account {
 
+	import model.vo.BeanstalkRepo;
+	import model.vo.GitHubRepo;
+	import model.remote.HostingAccount;
+	import model.vo.Repository;
 	import events.UIEvent;
 	import com.greensock.TweenLite;
 	import flash.display.Sprite;
@@ -8,18 +12,32 @@ package view.modals.account {
 
 	public class RepositoryItem extends Sprite {
 
-		private var _url	:String;
+		private var _repo	:Repository;
 		private var _view	:RepositoryItemMC = new RepositoryItemMC();
 
-		public function RepositoryItem(o:Object):void
+		public function RepositoryItem(o:Repository):void
 		{
-			_url = o.ssh_url || o.https_url; // https_url is beanstalk even though it is @git ! //
+			_repo = o;
+			if (o.acctType == HostingAccount.GITHUB){
+				drawGHRepo(o as GitHubRepo);
+			}	else if (o.acctType == HostingAccount.BEANSTALK){
+				drawBSRepo(o as BeanstalkRepo);
+			}
  			_view.name_txt.autoSize = TextFieldAutoSize.LEFT;
 			_view.desc_txt.autoSize = TextFieldAutoSize.LEFT;
-			_view.name_txt.text = o.name;
-			_view.desc_txt.text = o.description || 'No description available';
+			_view.name_txt.text = o.repoName.substr(0, -4);
 			addChild(_view);
 			activateButton();
+		}
+
+		private function drawGHRepo(o:GitHubRepo):void
+		{
+			_view.desc_txt.text = o.description;
+		}
+		
+		private function drawBSRepo(o:BeanstalkRepo):void
+		{
+			_view.desc_txt.text = 'last commit :: '+o.lastCommittedAt;
 		}
 		
 		private function activateButton():void
@@ -33,7 +51,7 @@ package view.modals.account {
 		
 		private function onButtonClick(e:MouseEvent):void
 		{
-			dispatchEvent(new UIEvent(UIEvent.LOGGED_IN_CLONE, _url));
+			dispatchEvent(new UIEvent(UIEvent.LOGGED_IN_CLONE, _repo.url));
 		}
 		
 		private function onButtonRollOut(e:MouseEvent):void {TweenLite.to(e.target.over, .3, {alpha:0});}

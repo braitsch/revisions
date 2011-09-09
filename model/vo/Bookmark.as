@@ -29,7 +29,7 @@ package model.vo {
 		private var _icon128			:Bitmap;
 		private var _stash				:Array = [];
 		private var _branch				:Branch;	// the currently active branch //
-		private var _remotes			:Vector.<BookmarkRemote> = new Vector.<BookmarkRemote>();
+		private var _remotes			:Vector.<Repository> = new Vector.<Repository>();
 		private var _branches			:Vector.<Branch> = new Vector.<Branch>();
 
 		public function Bookmark(o:Object)
@@ -57,7 +57,7 @@ package model.vo {
 		public function get gitdir():String 					{ return _gitdir;	}
 		public function get worktree():String 					{ return _file.parent.nativePath;}
 		public function get stash():Array 						{ return _stash; 	}		
-		public function get remotes():Vector.<BookmarkRemote> 	{ return _remotes; 	}
+		public function get remotes():Vector.<Repository> 	{ return _remotes; 	}
 		public function get branches():Vector.<Branch>			{ return _branches; }
 		
 		public function get label():String 						{ return _label;	}		
@@ -105,14 +105,14 @@ package model.vo {
 			for (var i:int = 0; i < a.length; i++) {
 				var n:String = a[i]; i++;
 				var u:String = a[i].substr(0, a[i].search(/\s/));
-				_remotes.push(new BookmarkRemote(n, u));				
+				_remotes.push(new Repository(n, u));				
 				if (i % 1 == 0) i+=2;
 			}
 		}
 		
-		public function addRemote(r:BookmarkRemote):void { _remotes.push(r); }
+		public function addRemote(r:Repository):void { _remotes.push(r); }
 		
-		public function getRemoteByProp($prop:String, $value:String):BookmarkRemote
+		public function getRemoteByProp($prop:String, $value:String):Repository
 		{
 			for (var i:int = 0; i < _remotes.length; i++) if (_remotes[i][$prop] == $value) return _remotes[i];
 			return null;

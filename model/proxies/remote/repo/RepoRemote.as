@@ -1,6 +1,6 @@
 package model.proxies.remote.repo {
 
-	import model.vo.BookmarkRemote;
+	import model.vo.Repository;
 	
 	public class RepoRemote {
 		
@@ -18,7 +18,7 @@ package model.proxies.remote.repo {
 			_send.addBkmkToAccount(o);
 		}
 		
-		public function syncRemotes(v:Vector.<BookmarkRemote>):void
+		public function syncRemotes(v:Vector.<Repository>):void
 		{
 			_sync.syncRemotes(v);
 		}

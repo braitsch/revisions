@@ -6,14 +6,14 @@ package model.proxies.remote.repo {
 	import model.proxies.remote.base.GitProxy;
 	import model.proxies.remote.base.GitRequest;
 	import model.vo.Bookmark;
-	import model.vo.BookmarkRemote;
+	import model.vo.Repository;
 	import system.BashMethods;
 
 	public class SendProxy extends GitProxy {
 
 		private static var _bkmk	:Bookmark;
 		private static var _acct	:ApiProxy;
-		private static var _remote	:BookmarkRemote;
+		private static var _remote	:Repository;
 
 		public function addBkmkToAccount(o:Object):void
 		{
@@ -25,7 +25,7 @@ package model.proxies.remote.repo {
 		
 		private function onRepositoryCreated(e:AppEvent):void 
 		{
-			_remote = e.data as BookmarkRemote;
+			_remote = e.data as Repository;
 			super.startTimer();
 			super.directory = _bkmk.gitdir;
 			super.call(Vector.<String>([BashMethods.ADD_REMOTE, _remote.name, _remote.url]));

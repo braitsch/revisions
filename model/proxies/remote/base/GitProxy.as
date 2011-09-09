@@ -6,7 +6,7 @@ package model.proxies.remote.base {
 	import model.AppModel;
 	import model.remote.HostingAccount;
 	import model.remote.Hosts;
-	import model.vo.BookmarkRemote;
+	import model.vo.Repository;
 	import system.BashMethods;
 	import system.StringUtils;
 
@@ -44,7 +44,7 @@ package model.proxies.remote.base {
 		private function showLoader():void
 		{
 			var m:String;
-			var a:String = BookmarkRemote.getAccountType(_request.url);
+			var a:String = Repository.getAccountType(_request.url);
 			switch(_request.method){
 				case BashMethods.CLONE :
 					m ='Cloning Remote Repository';
@@ -119,10 +119,10 @@ package model.proxies.remote.base {
 		private function attemptAccountLookup(u:String):void
 		{
 		// only github supports requests over https //	
-			var an:String = BookmarkRemote.getAccountName(u);
+			var an:String = Repository.getAccountName(u);
 			var ha:HostingAccount = Hosts.github.getAccountByProp('acct', an);
 			if (ha){
-				_request.url = BookmarkRemote.buildHttpsURL(ha.user, ha.pass, an, u.substr(u.lastIndexOf('/') + 1));
+				_request.url = Repository.buildHttpsURL(ha.user, ha.pass, an, u.substr(u.lastIndexOf('/') + 1));
 				attemptRequest();
 			}	else{
 				onPermissionsFailure(u);		

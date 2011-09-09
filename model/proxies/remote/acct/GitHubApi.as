@@ -1,11 +1,11 @@
 package model.proxies.remote.acct {
 
-	import view.modals.collab.Collab;
 	import events.AppEvent;
 	import events.ErrEvent;
 	import model.remote.HostingAccount;
 	import model.remote.Hosts;
-	import model.vo.BookmarkRemote;
+	import model.vo.GitHubRepo;
+	import view.modals.collab.Collab;
 
 	public class GitHubApi extends ApiProxy {
 
@@ -34,7 +34,7 @@ package model.proxies.remote.acct {
 		{
 			var o:Object = getResultObject(s);
 			if (o.message == null){
-				super.account.loginData = getResultObject(s);
+				super.account.loginData = o;
 				super.getRepositories('/user/repos');
 			}	else{
 				dispatchFailure(ErrEvent.LOGIN_FAILURE);
@@ -45,7 +45,7 @@ package model.proxies.remote.acct {
 		{
 			var o:Object = getResultObject(s);
 			if (o.message == null){
-				super.account.repositories = o as Array;
+				for (var i:int = 0; i < o.length; i++) super.account.addRepository(new GitHubRepo(o[i]));
 				dispatchLoginSuccess();
 			}	else{
 				handleJSONError(o.message);
@@ -56,8 +56,9 @@ package model.proxies.remote.acct {
 		{
 			var o:Object = getResultObject(s);
 			if (o.errors == null){
-				Hosts.github.home.addRepository(o);
-				dispatchEvent(new AppEvent(AppEvent.REPOSITORY_CREATED, new BookmarkRemote(HostingAccount.GITHUB+'-'+o.name, o.ssh_url)));
+				var rpo:GitHubRepo = new GitHubRepo(o);
+				Hosts.github.home.addRepository(rpo);
+				dispatchEvent(new AppEvent(AppEvent.REPOSITORY_CREATED, rpo));
 			}	else{
 				handleJSONError(o.errors[0].message);		
 			}
