@@ -6,6 +6,7 @@ package model.proxies.remote.acct {
 	import model.remote.HostingAccount;
 	import system.BashMethods;
 	import system.StringUtils;
+	import view.modals.collab.Collab;
 
 	public class ApiProxy extends CurlProxy {
 
@@ -29,6 +30,15 @@ package model.proxies.remote.acct {
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Attemping Login'}));
 		}
 		
+	// repositories //	
+	
+		protected function getRepositories(url:String):void
+		{
+			startTimer();
+			super.request = BashMethods.GET_REPOSITORIES;
+			super.call(Vector.<String>([BashMethods.GET_REQUEST, _baseURL + url]));
+		}	
+		
 		public function addRepository(o:Object):void { }
 		protected function addRepositoryToAccount(header:String, data:String, url:String):void
 		{
@@ -38,8 +48,10 @@ package model.proxies.remote.acct {
 			super.call(Vector.<String>([BashMethods.POST_REQUEST, header, data, _baseURL + url]));
 		}
 		
-		public function addCollaborator(r:String, u:String):void { }
-		protected function addCollaboratorToAccount(header:String, url:String):void
+	// collaborators //	
+		
+		public function addCollaborator(o:Collab):void { }
+		protected function addCollaboratorToGitHub(header:String, url:String):void
 		{
 			startTimer();
 			super.request = BashMethods.ADD_COLLABORATOR;
@@ -47,12 +59,20 @@ package model.proxies.remote.acct {
 			super.call(Vector.<String>([BashMethods.PUT_REQUEST, header, _baseURL + url]));
 		}		
 		
-		protected function getRepositories(url:String):void
+		protected function addCollaboratorToBeanstalk(header:String, data:Object, url:String):void
 		{
 			startTimer();
-			super.request = BashMethods.GET_REPOSITORIES;
-			super.call(Vector.<String>([BashMethods.GET_REQUEST, _baseURL + url]));
-		}												
+			super.request = BashMethods.ADD_COLLABORATOR;
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Adding Collaborator'}));
+			super.call(Vector.<String>([BashMethods.POST_REQUEST, header, data, _baseURL + url]));	
+		}
+		
+		protected function setCollaboratorPermissions(header:String, data:Object, url:String):void
+		{
+			startTimer();
+			super.request = BashMethods.SET_PERMISSIONS;
+			super.call(Vector.<String>([BashMethods.POST_REQUEST, header, data, _baseURL + url]));	
+		}		
 		
 		override protected function onProcessSuccess(r:String):void
 		{
@@ -68,7 +88,10 @@ package model.proxies.remote.acct {
 				break;	
 				case BashMethods.ADD_COLLABORATOR : 
 					onCollaboratorAdded(r);
-				break;													
+				break;	
+				case BashMethods.SET_PERMISSIONS : 
+					onPermissionsSet(r);
+				break;																	
 			}			
 		}
 
@@ -81,6 +104,8 @@ package model.proxies.remote.acct {
 		protected function onRepositoryCreated(s:String):void { }
 		
 		protected function onCollaboratorAdded(s:String):void { }
+		
+		protected function onPermissionsSet(s:String):void { }		
 		
 		protected function dispatchLoginSuccess():void 
 		{ 

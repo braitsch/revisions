@@ -1,5 +1,6 @@
 package view.modals.local {
 
+	import system.StringUtils;
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
@@ -114,9 +115,7 @@ package view.modals.local {
 		{
 			if (n == '') return 'Please enter your name.';
 			if (e == '') return 'Please enter your email.';
-			if (e.indexOf('@') == -1) return 'The email you entered is invalid.';
-			if (e.indexOf('.') == -1) return 'The email you entered is invalid.';
-			if (e.search(/\s/g) != -1) return 'Your email cannot contain spaces.';
+			if (StringUtils.validateEmail(e) == false) return 'The email you entered is invalid.';
 			return '';			
 		}		
 		

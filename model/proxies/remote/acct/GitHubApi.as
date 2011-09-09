@@ -1,5 +1,6 @@
 package model.proxies.remote.acct {
 
+	import view.modals.collab.Collab;
 	import events.AppEvent;
 	import events.ErrEvent;
 	import model.remote.HostingAccount;
@@ -22,9 +23,9 @@ package model.proxies.remote.acct {
 			super.addRepositoryToAccount(HEADER_TXT, getRepoObj(o.name, o.desc, o.publik), '/user/repos');
 		}
 		
-		override public function addCollaborator(r:String, u:String):void
+		override public function addCollaborator(o:Collab):void
 		{
-			super.addCollaboratorToAccount('Content-Length: 0', '/repos/'+super.account.user+'/'+r+'/collaborators/'+u);
+			super.addCollaboratorToGitHub('Content-Length: 0', '/repos/'+super.account.user+'/'+o.repoName+'/collaborators/'+o.userName);
 		}
 		
 	// handlers //	

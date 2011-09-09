@@ -5,8 +5,11 @@ package model.proxies.remote.acct {
 	import model.remote.HostingAccount;
 	import model.remote.Hosts;
 	import model.vo.BookmarkRemote;
+	import view.modals.collab.Collab;
 
 	public class BeanstalkApi extends ApiProxy {
+		
+		private static var _collab:Collab;
 
 	// public methods //
 
@@ -20,7 +23,13 @@ package model.proxies.remote.acct {
 		override public function addRepository(o:Object):void
 		{
 			super.addRepositoryToAccount(HEADER_XML, getRepoObj(o.name), '/repositories.xml');
-		}		
+		}
+		
+		override public function addCollaborator(o:Collab):void
+		{
+			_collab = o;
+			super.addCollaboratorToBeanstalk(HEADER_XML, getCollabObj(_collab), '/users.xml');
+		}				
 		
 	// handlers //			
 		
@@ -65,6 +74,21 @@ package model.proxies.remote.acct {
 			dispatchEvent(new AppEvent(AppEvent.REPOSITORY_CREATED, new BookmarkRemote(HostingAccount.BEANSTALK+'-'+xml.name, url)));
 		}
 		
+		override protected function onCollaboratorAdded(s:String):void
+		{	
+			var xml:XML = new XML(s);
+			_collab.userId = xml.id;
+			trace("BeanstalkApi.onCollaboratorAdded(s)", xml);
+			super.setCollaboratorPermissions(HEADER_XML, getPermissionsObj(_collab), '/permissions.xml');
+		}	
+		
+		override protected function onPermissionsSet(s:String):void
+		{	
+			var xml:XML = new XML(s);
+			trace("BeanstalkApi.onPermissionsSet(s)", xml);
+			super.dispatchCollaboratorSuccess();
+		}		
+		
 	// handle beanstalk specific errors //
 		
 		private function checkForErrors(s:String):Boolean
@@ -94,6 +118,32 @@ package model.proxies.remote.acct {
   				s+='<color_label>label-blue</color_label>';
 				s+='</repository>';
 			return s;
+		}
+		
+		private function getCollabObj(o:Collab):String
+		{
+			var s:String = '';
+				s+='<?xml version="1.0" encoding="UTF-8"?>';
+				s+='<user>';
+  				s+='<first_name>'+o.firstName+'</first_name>';
+  				s+='<last_name>'+o.lastName+'</last_name>';
+  				s+='<email>'+o.userEmail+'</email>';
+  				s+='<login>'+o.userName+'</login>';
+  				s+='<password>'+o.passWord+'</password>';
+				s+='</user>';
+			return s;			
+		}
+		
+		private function getPermissionsObj(o:Collab):String
+		{
+			var s:String = '';
+				s+='<?xml version="1.0" encoding="UTF-8"?>';
+				s+='<permission>';
+  				s+='<user-id>'+o.userId+'</user-id>';
+  				s+='<repository-id>'+o.repoId+'</repository-id>';
+  				s+='<write>'+o.readWrite+'</write>';
+				s+='</permission>';
+			return s;			
 		}
 		
 	}

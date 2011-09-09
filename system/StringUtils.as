@@ -17,6 +17,11 @@ package system {
 			return s.substr(0, 1).toUpperCase()+s.substr(1);
 		}
 		
+		public static function validateEmail(s:String):Boolean
+		{
+			return s.search(/^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/) != -1;
+		}
+		
 	}
 	
 }

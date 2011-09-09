@@ -46,7 +46,8 @@ package view.modals.upload {
 				case _pickService :
 					_status.page = 2;
 					setService(e.data as String);	
-					nextPage(_pickAccount);
+					nextPage(_addCollaborator);
+				//	nextPage(_pickAccount);
 				break;
 				case _pickAccount :
 					_status.page = 3;

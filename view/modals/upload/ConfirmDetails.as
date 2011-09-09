@@ -67,6 +67,7 @@ package view.modals.upload {
 		
 		private function onBkmkAddedToAcct(e:AppEvent):void
 		{
+		// capture here the newly created repo id from beanstalk	
 			super.onNextButton(e);
 		}		
 		
