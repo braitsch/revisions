@@ -1,5 +1,6 @@
 package view.modals.upload {
 
+	import events.UIEvent;
 	import events.AppEvent;
 	import model.AppModel;
 	import model.remote.HostingAccount;
@@ -11,8 +12,7 @@ package view.modals.upload {
 
 	public class NameRmtRepo extends WizardWindow {
 
-		private var _form				:Form;
-		private static var _service		:String;
+		private static var _form		:Form;
 		private static var _preview		:Form = new Form(new Form1());
 		private static var _private		:ModalCheckbox = new ModalCheckbox(false);
 
@@ -29,25 +29,22 @@ package view.modals.upload {
 			_private.y = 235;
 			_private.label = 'Make repository private';
 			addChild(_private);
-		}
-
-		public function set service(s:String):void
-		{
-			_service = s; attachForm();
+			
+			addEventListener(UIEvent.ENTER_KEY, onNextButton);
 		}
 		
 		private function attachForm():void
 		{
 			if (_form) removeChild(_form);
-			if (_service == HostingAccount.GITHUB){
+			if (super.obj.service == HostingAccount.GITHUB){
 				attachGHForm();
-			}	else if (_service == HostingAccount.BEANSTALK){
+			}	else if (super.obj.service == HostingAccount.BEANSTALK){
 				attachBSForm();
 			}
 			_preview.y = 90 + _form.height + 10;
 			_form.y = 90; addChild(_form);
 			_form.getInput(0).addEventListener(Event.CHANGE, onNameChange);
-			super.heading = 'What would you like to call your bookmark inside your '+_service+' account?';			
+			super.heading = 'What would you like to call your bookmark inside your '+super.obj.service+' account?';			
 		}
 		
 		private function attachGHForm():void
@@ -68,8 +65,9 @@ package view.modals.upload {
 		
 		override protected function onAddedToStage(e:Event):void
 		{
+			attachForm();
 			_form.setField(0, AppModel.bookmark.label.toLowerCase());
-			if (_service == HostingAccount.GITHUB) _form.setField(1, '(optional)');
+			if (super.obj.service == HostingAccount.GITHUB) _form.setField(1, '(optional)');
 			generatePreviewURL();
 			super.onAddedToStage(e);
 		}
@@ -81,21 +79,22 @@ package view.modals.upload {
 		
 		private function generatePreviewURL():void
 		{
-			if (_service == HostingAccount.GITHUB){
+			if (super.obj.service == HostingAccount.GITHUB){
 				_preview.setField(0, 'https://github.com/'+Hosts.github.loggedIn.acct+'/');
-			} 	else if (_service == HostingAccount.BEANSTALK){
+			} 	else if (super.obj.service == HostingAccount.BEANSTALK){
 				_preview.setField(0, 'https://'+Hosts.beanstalk.loggedIn.acct+'.beanstalkapp.com/');
 			}
-			_preview.getInput(0).text += _form.getField(0).replace(/\s/g, '-');
+			_preview.getInput(0).text += _form.getField(0).replace(/\s/g, '-') + '.git';
 		}
 		
 		override protected function onNextButton(e:Event):void
 		{
 			if (validate()){
-				var n:String = _form.getField(0);
-				var d:String = _service == HostingAccount.GITHUB ? _form.getField(0) : '';
-				var u:String = _preview.getField(0);
-				super.dispatchNext(e, {repo:n.replace(/\s/g, '-'), desc:d, url:u, selected:_private.selected});
+				super.obj.repoName = _form.getField(0).replace(/\s/g, '-');
+				super.obj.repoDesc = super.obj.service == HostingAccount.GITHUB ? _form.getField(0) : '';
+				super.obj.repoURL = _preview.getField(0);
+				super.obj.repoPrivate = _private.selected;
+				super.dispatchNext();
 			}
 		}
 		
@@ -120,7 +119,7 @@ package view.modals.upload {
 		private function checkForDuplicate():Boolean
 		{
 			var n:String = _form.getField(0).replace(/\s/, '-').toLowerCase();
-			if (AppModel.bookmark.getRemoteByProp('name', _service.toLowerCase()+'-'+n)){
+			if (AppModel.bookmark.getRemoteByProp('name', super.obj.service.toLowerCase()+'-'+n)){
 				return true;
 			}	else{
 				return false;

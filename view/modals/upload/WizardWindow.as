@@ -1,7 +1,9 @@
 package view.modals.upload {
 
 	import events.UIEvent;
+	import model.vo.UploadObj;
 	import view.modals.base.ModalWindowBasic;
+	import view.ui.TextHeading;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -12,18 +14,19 @@ package view.modals.upload {
 		private var _backBtn			:BackButton;
 		private var _heading			:TextHeading;
 		
+		private static var _uploadObj	:UploadObj = new UploadObj();
+		protected function get obj():UploadObj { return _uploadObj; }
+		
 		protected function addHeading(s:String = ''):void
 		{
 			_heading = new TextHeading();
-			_heading.label_txt.text = s;
-			_heading.x = 10; _heading.y = 70;
+			_heading.text = s;
 			addChild(_heading);
-			addEventListener(UIEvent.ENTER_KEY, onNextButton);
 		}
 		
 		protected function set heading(s:String):void
 		{
-			_heading.label_txt.text = s;
+			_heading.text = s;
 		}
 		
 		protected function addBackButton():void
@@ -52,12 +55,12 @@ package view.modals.upload {
 
 		protected function onNextButton(e:Event):void
 		{
-			dispatchNext(e);	
+			dispatchNext();
 		}
 		
-		protected function dispatchNext(e:Event = null, o:Object = null):void
+		protected function dispatchNext(e:Event = null):void
 		{
-			dispatchEvent(new UIEvent(UIEvent.WIZARD_NEXT, o));
+			dispatchEvent(new UIEvent(UIEvent.WIZARD_NEXT));
 		}
 		
 		private function dispatchPrev(e:MouseEvent):void

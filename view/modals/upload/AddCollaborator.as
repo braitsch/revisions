@@ -1,16 +1,18 @@
 package view.modals.upload {
 
+	import model.vo.Collab;
+	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
 	import model.remote.HostingAccount;
 	import view.modals.collab.BeanstalkCollab;
+	import view.modals.collab.CollabView;
 	import view.modals.collab.GitHubCollab;
 	import flash.events.Event;
 
 	public class AddCollaborator extends WizardWindow {
 
-		private static var _collab			:*;
-		private static var _service			:String;
+		private static var _collab			:CollabView;
 
 		public function AddCollaborator()
 		{
@@ -20,24 +22,26 @@ package view.modals.upload {
 			addEventListener(UIEvent.ENTER_KEY, onNextButton);
 		}
 		
-		public function set service(s:String):void
+		override protected function onAddedToStage(e:Event):void
 		{
-			_service = s;
 			if (_collab) removeChild(_collab);
-			if (_service == HostingAccount.GITHUB){
+			if (super.obj.service == HostingAccount.GITHUB){
 				_collab = new GitHubCollab();
 				super.heading = 'Please enter the GitHub user you\'d like to collaborate with on "'+AppModel.bookmark.label+'"';
-			}	else if (_service == HostingAccount.BEANSTALK) {
+			}	else if (super.obj.service == HostingAccount.BEANSTALK) {
 				_collab = new BeanstalkCollab();
 				super.heading = 'Fill in below to create a new user to collaborate with on "'+AppModel.bookmark.label+'"';
 			}
 			_collab.y = 90;
+			_collab.collab.repository = super.obj.repository;
+			_collab.addEventListener(AppEvent.COLLABORATOR_ADDED, onCollabAdded);
 			addChild(_collab);
 		}
-		
-		public function set data(o:Object):void
+
+		private function onCollabAdded(e:AppEvent):void
 		{
-			_collab.data = o.url; 
+			super.obj.collaborator = e.data as Collab;
+			super.onNextButton(e);
 		}
 		
 		override protected function onNextButton(e:Event):void

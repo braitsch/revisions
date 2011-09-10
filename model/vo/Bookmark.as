@@ -76,7 +76,8 @@ package model.vo {
 			}	else{
 				 _gitdir = File.applicationStorageDirectory.nativePath+'/'+MD5.hash(_path);			
 			}
-			_file = new File('file://'+_path);			
+			_file = new File('file://'+_path);
+			trace("Bookmark.path(p) -- worktree", this.worktree);	
 			getFileSystemIcons();
 		}
 		

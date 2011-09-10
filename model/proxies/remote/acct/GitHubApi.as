@@ -4,8 +4,8 @@ package model.proxies.remote.acct {
 	import events.ErrEvent;
 	import model.remote.HostingAccount;
 	import model.remote.Hosts;
+	import model.vo.Collab;
 	import model.vo.GitHubRepo;
-	import view.modals.collab.Collab;
 
 	public class GitHubApi extends ApiProxy {
 
@@ -25,7 +25,7 @@ package model.proxies.remote.acct {
 		
 		override public function addCollaborator(o:Collab):void
 		{
-			super.addCollaboratorToGitHub('Content-Length: 0', '/repos/'+super.account.user+'/'+o.repoName+'/collaborators/'+o.userName);
+			super.addCollaboratorToGitHub('Content-Length: 0', '/repos/'+super.account.user+'/'+o.repository.repoName+'/collaborators/'+o.userName);
 		}
 		
 	// handlers //	

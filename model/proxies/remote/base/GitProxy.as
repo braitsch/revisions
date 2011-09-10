@@ -24,7 +24,6 @@ package model.proxies.remote.base {
 		protected function set request(req:GitRequest):void 
 		{ 
 			_request = req;
-			trace('_request: ' + (_request.url));
 			if (_request.url.search(/(https:\/\/)(\w*)(@github.com)/) == -1){
 				attemptRequest();
 			}	else{
@@ -36,6 +35,7 @@ package model.proxies.remote.base {
 		
 		private function attemptRequest():void
 		{
+			trace("GitProxy.attemptRequest()", _request.method, _request.url);
 			showLoader();
 			super.startTimer();
 			super.call(Vector.<String>([_request.method, _request.url, _request.args.join(', ')]));
@@ -61,7 +61,7 @@ package model.proxies.remote.base {
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
-		//	trace("GitProxy.onProcessComplete(e)", e.data.method, e.data.result);
+			trace("GitProxy.onProcessComplete(e)", e.data.method, e.data.result);
 			if (super.timerIsRunning == true){
 				super.stopTimer();
 				handleResponse(e.data.method, e.data.result);

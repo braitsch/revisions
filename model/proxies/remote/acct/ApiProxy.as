@@ -4,9 +4,9 @@ package model.proxies.remote.acct {
 	import model.AppModel;
 	import model.proxies.remote.base.CurlProxy;
 	import model.remote.HostingAccount;
+	import model.vo.Collab;
 	import system.BashMethods;
 	import system.StringUtils;
-	import view.modals.collab.Collab;
 
 	public class ApiProxy extends CurlProxy {
 
@@ -53,6 +53,7 @@ package model.proxies.remote.acct {
 		public function addCollaborator(o:Collab):void { }
 		protected function addCollaboratorToGitHub(header:String, url:String):void
 		{
+			trace("ApiProxy.addCollaboratorToGitHub(header, url)", url);
 			startTimer();
 			super.request = BashMethods.ADD_COLLABORATOR;
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Adding Collaborator'}));
@@ -90,7 +91,7 @@ package model.proxies.remote.acct {
 					onCollaboratorAdded(r);
 				break;	
 				case BashMethods.SET_PERMISSIONS : 
-					onPermissionsSet(r);
+					dispatchCollaboratorSuccess();
 				break;																	
 			}			
 		}
@@ -104,8 +105,6 @@ package model.proxies.remote.acct {
 		protected function onRepositoryCreated(s:String):void { }
 		
 		protected function onCollaboratorAdded(s:String):void { }
-		
-		protected function onPermissionsSet(s:String):void { }		
 		
 		protected function dispatchLoginSuccess():void 
 		{ 

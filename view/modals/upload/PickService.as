@@ -6,13 +6,13 @@ package view.modals.upload {
 
 	public class PickService extends WizardWindow {
 
-		private static var _view			:ChooseServiceMC = new ChooseServiceMC();
+		private static var _view			:PickServiceMC = new PickServiceMC();
 
 		public function PickService()
 		{
 			addChild(_view);
 			super.addButtons([_view.github, _view.beanstalk]);
-			super.setHeading(_view, 'Which kind of account would you like to link this bookmark to?');
+			super.addHeading('Which kind of account would you like to link this bookmark to?');
 			_view.github.addEventListener(MouseEvent.CLICK, onButtonClick);
 			_view.beanstalk.addEventListener(MouseEvent.CLICK, onButtonClick);
 		}
@@ -25,6 +25,7 @@ package view.modals.upload {
 			}	else if (e.target.name == 'beanstalk'){
 				s = HostingAccount.BEANSTALK;	
 			}
+			super.obj.service = s;
 			dispatchEvent(new UIEvent(UIEvent.WIZARD_NEXT, s));
 		}
 		

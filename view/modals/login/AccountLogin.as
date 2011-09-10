@@ -23,7 +23,6 @@ package view.modals.login {
 		private var _check			:ModalCheckbox = new ModalCheckbox(true);
 		private var _login			:BasicButton = new BasicButton(new LoginButton());
 		private var _signUp			:AccountSignUp = new AccountSignUp();
-		private var _heading		:TextHeading = new TextHeading();
 
 		public function AccountLogin(s:String)
 		{
@@ -49,16 +48,18 @@ package view.modals.login {
 			}
 			
 			_form.y = 20;
-			_form.addEventListener(UIEvent.ENTER_KEY, onLoginButton);
+			addEventListener(UIEvent.ENTER_KEY, onLoginButton);
 			
 			addChild(_form); addChild(_check);
-			addChild(_login); addChild(_signUp); addChild(_heading);
+			addChild(_login); addChild(_signUp);
 		}
 		
 		private function attachGHForm():void
 		{
 			_form = new Form(new Form2());
 			_form.labels = ['Username', 'Password'];
+			_form.setField(0, 'braitsch');
+			_form.setField(1, 'aelisch76');
 			_form.enabled = [1, 2];
 			_signUp.y = 100;
 		}
@@ -67,6 +68,9 @@ package view.modals.login {
 		{
 			_form = new Form(new Form3());
 			_form.labels = ['Account', 'Username', 'Password'];
+			_form.setField(0, 'braitsch');
+			_form.setField(1, 'braitsch');
+			_form.setField(2, 'aelisch76');
 			_form.enabled = [1, 2, 3];
 			_signUp.y = 130;		
 		}
@@ -75,13 +79,6 @@ package view.modals.login {
 		{
 			y = y - this.y - 35;
 			_login.y = y; _check.y = y - 10; 
-		}
-	
-		public function set heading(s:String):void
-		{
-			_heading.x = 10;
-			_heading.label_txt.autoSize = TextFieldAutoSize.LEFT;
-			_heading.label_txt.htmlText = s;
 		}
 		
 		private function gotoNewAccountPage(e:MouseEvent):void 

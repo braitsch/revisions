@@ -1,51 +1,51 @@
 package view.modals.upload {
 
 	import events.AppEvent;
+	import events.UIEvent;
 	import model.AppModel;
 	import model.proxies.remote.acct.ApiProxy;
 	import model.remote.HostingAccount;
 	import model.remote.Hosts;
+	import model.vo.Repository;
 	import view.ui.Form;
 	import flash.events.Event;
 	
 	public class ConfirmDetails extends WizardWindow {
 
 		private static var _form		:Form;
-		private static var _data		:Object;
-		private static var _service		:String;
 
 		public function ConfirmDetails()
 		{
 			super.addBackButton();
 			super.nextButton = new OkButton();
 			super.addHeading('Please confirm before we upload your bookmark:');
+			addEventListener(UIEvent.ENTER_KEY, onNextButton);
 			AppModel.engine.addEventListener(AppEvent.BKMK_ADDED_TO_ACCOUNT, onBkmkAddedToAcct);
 		}
 		
-		public function set service(s:String):void
+		override protected function onAddedToStage(e:Event):void
 		{
-			_service = s; attachForm();
-		}
+			attachForm(); setFields();
+		}		
 		
-		public function set data(o:Object):void
+		private function setFields():void
 		{
-			_data = o;
 			_form.setField(0, AppModel.bookmark.label);
-			_form.setField(1, o.repo);
-			if (_service == HostingAccount.GITHUB){
-				_form.setField(2, o.desc == '(optional)' ? '' : o.desc);
-				_form.setField(3, o.url);
-			}	else if (_service == HostingAccount.BEANSTALK){
-				_form.setField(2, o.url);
+			_form.setField(1, super.obj.repoName);
+			if (super.obj.service == HostingAccount.GITHUB){
+				_form.setField(2, super.obj.repoDesc == '(optional)' ? '' : super.obj.repoDesc);
+				_form.setField(3, super.obj.repoURL);
+			}	else if (super.obj.service == HostingAccount.BEANSTALK){
+				_form.setField(2, super.obj.repoURL);
 			}					
 		}
 		
 		private function attachForm():void
 		{
 			if (_form) removeChild(_form);
-			if (_service == HostingAccount.GITHUB){
+			if (super.obj.service == HostingAccount.GITHUB){
 				attachGHForm();
-			}	else if (_service == HostingAccount.BEANSTALK){
+			}	else if (super.obj.service == HostingAccount.BEANSTALK){
 				attachBSForm();
 			}			
 			_form.y = 90; addChildAt(_form, 0); 
@@ -67,18 +67,18 @@ package view.modals.upload {
 		
 		private function onBkmkAddedToAcct(e:AppEvent):void
 		{
-		// capture here the newly created repo id from beanstalk	
+			super.obj.repository = e.data as Repository;
 			super.onNextButton(e);
 		}		
 		
 		override protected function onNextButton(e:Event):void
 		{
-			var api:ApiProxy = _service == HostingAccount.GITHUB ? Hosts.github.api : Hosts.beanstalk.api; 
+			var api:ApiProxy = super.obj.service == HostingAccount.GITHUB ? Hosts.github.api : Hosts.beanstalk.api; 
 			var o:Object = {	bkmk	:	AppModel.bookmark, 
 								acct	:	api,
-								name	:	_form.getField(0),
-								desc	:	_service == HostingAccount.GITHUB ? _form.getField(2) : '',
-								publik	:	_data.selected == false	};
+								name	:	_form.getField(1),
+								desc	:	super.obj.service == HostingAccount.GITHUB ? _form.getField(2) : '',
+								publik	:	super.obj.repoPrivate == false	};
 			AppModel.proxies.remote.addBkmkToAccount(o);
 		}			
 		

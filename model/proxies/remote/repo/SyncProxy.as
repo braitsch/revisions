@@ -97,7 +97,7 @@ package model.proxies.remote.repo {
 		
 		private function dispatchConfirmPushNewBranch():void
 		{
-			var m:String = 'The current branch "'+AppModel.branch.name+'" is not currently being tracked by your '+_remote.acctType+' repository: "'+_remote.repoName.substr(0, -4)+'".';
+			var m:String = 'The current branch "'+AppModel.branch.name+'" is not currently being tracked by your '+_remote.acctType+' repository: "'+_remote.repoName+'".';
 				m+= '\nAre you sure you want to continue?';
 			_confirm = new Confirm(m);
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, _confirm));			

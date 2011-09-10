@@ -22,6 +22,7 @@ package view.modals.upload {
 		private static var _confirmDetails	:ConfirmDetails = new ConfirmDetails();
 		private static var _onBkmkAdded		:OnBkmkAdded = new OnBkmkAdded();
 		private static var _addCollaborator	:AddCollaborator = new AddCollaborator();
+		private static var _collabAdded		:OnCollabAdded = new OnCollabAdded();
 		
 		public function UploadWizard()
 		{
@@ -45,9 +46,8 @@ package view.modals.upload {
 			switch(e.target){
 				case _pickService :
 					_status.page = 2;
-					setService(e.data as String);	
-					nextPage(_addCollaborator);
-				//	nextPage(_pickAccount);
+					_status.service = e.data as String;
+					nextPage(_pickAccount);
 				break;
 				case _pickAccount :
 					_status.page = 3;
@@ -55,14 +55,17 @@ package view.modals.upload {
 				break;
 				case _nameRmtRepo :
 					_status.page = 4;
-					setData(e.data as Object);	
 					nextPage(_confirmDetails);
 				break;
 				case _confirmDetails :
 					_status.page = 5;
 					nextPage(_onBkmkAdded);
 					super.setTitle(_view, 'Success!');
-				break;				
+				break;	
+				case _addCollaborator :
+					nextPage(_collabAdded);
+					super.setTitle(_view, 'Success!');
+				break;								
 			}
 		}
 		
@@ -70,6 +73,10 @@ package view.modals.upload {
 		{
 			if (_tweening) return;
 			switch(e.target){
+				case _addCollaborator :
+					_status.page = 5;
+					prevPage(_onBkmkAdded);
+				break;
 				case _confirmDetails :
 					_status.page = 3;
 					prevPage(_nameRmtRepo);
@@ -82,11 +89,6 @@ package view.modals.upload {
 					_status.page = 1;
 					prevPage(_pickService);
 				break;
-			// testing - kill this	
-				case _addCollaborator :
-					_status.page = 1;
-					prevPage(_pickService);
-				break;				
 			}			
 		}
 		
@@ -96,23 +98,6 @@ package view.modals.upload {
 			super.setTitle(_view, 'Add Collaborator');			
 		}			
 
-	// TODO - these need to be dispatched as events when they are set //
-		private function setService(s:String):void
-		{
-			_status.service = s;
-			_pickAccount.service = s;
-			_nameRmtRepo.service = s;
-			_confirmDetails.service = s;
-			_onBkmkAdded.service = s;
-			_addCollaborator.service = s;
-		}
-		
-		private function setData(o:Object):void
-		{
-			_confirmDetails.data = o;
-			_addCollaborator.data = o;
-		}
-		
 		private function nextPage(p:ModalWindowBasic):void
 		{
 			_tweening = true;

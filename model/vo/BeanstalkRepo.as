@@ -9,9 +9,9 @@ package model.vo {
 		public function BeanstalkRepo(xml:XML, url:String)
 		{
 			_xml = xml;	
-			super(HostingAccount.BEANSTALK + xml.name, url);
+			super(HostingAccount.BEANSTALK +'-'+ xml.name, url);
 		}
-		
+
 		public function get id():uint
 		{
 			return _xml.id;

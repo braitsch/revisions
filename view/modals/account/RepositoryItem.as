@@ -25,7 +25,7 @@ package view.modals.account {
 			}
  			_view.name_txt.autoSize = TextFieldAutoSize.LEFT;
 			_view.desc_txt.autoSize = TextFieldAutoSize.LEFT;
-			_view.name_txt.text = o.repoName.substr(0, -4);
+			_view.name_txt.text = o.repoName;
 			addChild(_view);
 			activateButton();
 		}

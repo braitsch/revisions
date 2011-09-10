@@ -1,14 +1,16 @@
 package view.modals.login {
 
-	import events.UIEvent;
 	import events.AppEvent;
+	import events.UIEvent;
 	import model.remote.HostingAccount;
 	import view.modals.base.ModalWindow;
+	import view.ui.TextHeading;
 
 	public class BeanstalkLogin extends ModalWindow {
 
 		private static var _view 	:BeanstalkLoginMC = new BeanstalkLoginMC();
 		private static var _login	:AccountLogin = new AccountLogin(HostingAccount.BEANSTALK);
+		private static var _heading	:TextHeading = new TextHeading();
 
 		public function BeanstalkLogin()
 		{
@@ -18,8 +20,9 @@ package view.modals.login {
 			super.setTitle(_view, 'Login To Beanstalk');
 			_login.y = 70; _view.addChildAt(_login, 0);
 			_login.baseline = 280;
-			_login.heading = 'Have a Beanstalk account? Please login.';
 			_login.addEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);
+			_heading.text = 'Have a Beanstalk account? Please login.';
+			addChild(_heading);
 		}
 
 		private function onLoginSuccess(e:AppEvent):void

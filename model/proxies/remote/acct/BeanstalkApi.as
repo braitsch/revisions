@@ -5,7 +5,7 @@ package model.proxies.remote.acct {
 	import model.remote.HostingAccount;
 	import model.remote.Hosts;
 	import model.vo.BeanstalkRepo;
-	import view.modals.collab.Collab;
+	import model.vo.Collab;
 
 	public class BeanstalkApi extends ApiProxy {
 		
@@ -76,17 +76,13 @@ package model.proxies.remote.acct {
 		override protected function onCollaboratorAdded(s:String):void
 		{	
 			var xml:XML = new XML(s);
-			_collab.userId = xml.id;
-			trace("BeanstalkApi.onCollaboratorAdded(s)", xml);
-			super.setCollaboratorPermissions(HEADER_XML, getPermissionsObj(_collab), '/permissions.xml');
+			if (xml.hasOwnProperty('error')){
+				dispatchFailure(xml.error);
+			}	else{
+				_collab.userId = xml.id;
+				super.setCollaboratorPermissions(HEADER_XML, getPermissionsObj(_collab), '/permissions.xml');
+			}
 		}	
-		
-		override protected function onPermissionsSet(s:String):void
-		{	
-			var xml:XML = new XML(s);
-			trace("BeanstalkApi.onPermissionsSet(s)", xml);
-			super.dispatchCollaboratorSuccess();
-		}		
 		
 	// handle beanstalk specific errors //
 		
@@ -135,13 +131,15 @@ package model.proxies.remote.acct {
 		
 		private function getPermissionsObj(o:Collab):String
 		{
+			var r:BeanstalkRepo = o.repository as BeanstalkRepo;
 			var s:String = '';
 				s+='<?xml version="1.0" encoding="UTF-8"?>';
 				s+='<permission>';
   				s+='<user-id>'+o.userId+'</user-id>';
-  				s+='<repository-id>'+o.repoId+'</repository-id>';
+  				s+='<repository-id>'+r.id+'</repository-id>';
   				s+='<write>'+o.readWrite+'</write>';
 				s+='</permission>';
+		//	trace("BeanstalkApi.getPermissionsObj(o) >>", s);	
 			return s;			
 		}
 		

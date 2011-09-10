@@ -69,15 +69,15 @@ package model.vo {
 		
 		public static function getRepositoryName(u:String):String
 		{
-			return u.substr(u.lastIndexOf('/') + 1);
+			return u.substr(u.lastIndexOf('/') + 1).substr(0, -4);
 		}
 		
 		private static function getRepositoryHomePage(u:String):String
 		{
 			if (getAccountType(u) == HostingAccount.GITHUB){
-				return 'https://github.com/'+getAccountName(u)+'/'+getRepositoryName(u).substr(0, -4);
+				return 'https://github.com/'+getAccountName(u)+'/'+getRepositoryName(u);
 			}	else if (getAccountType(u) == HostingAccount.BEANSTALK){
-				return 'https://'+getAccountName(u)+'.beanstalkapp.com/'+getRepositoryName(u).substr(0, -4);
+				return 'https://'+getAccountName(u)+'.beanstalkapp.com/'+getRepositoryName(u);
 			}	else{
 				return 'unable to detect account homepage';		
 			}

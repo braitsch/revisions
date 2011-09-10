@@ -9,7 +9,7 @@ package model.vo {
 		public function GitHubRepo(o:Object)
 		{
 			_obj = o;
-			super(HostingAccount.GITHUB+'-'+o.name, o.ssh_url);
+			super(HostingAccount.GITHUB +'-'+ o.name, o.ssh_url);
 		}
 		
 		public function get description():String
