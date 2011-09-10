@@ -57,7 +57,7 @@ package model.vo {
 		public function get gitdir():String 					{ return _gitdir;	}
 		public function get worktree():String 					{ return _file.parent.nativePath;}
 		public function get stash():Array 						{ return _stash; 	}		
-		public function get remotes():Vector.<Repository> 	{ return _remotes; 	}
+		public function get remotes():Vector.<Repository> 		{ return _remotes; 	}
 		public function get branches():Vector.<Branch>			{ return _branches; }
 		
 		public function get label():String 						{ return _label;	}		
@@ -77,7 +77,6 @@ package model.vo {
 				 _gitdir = File.applicationStorageDirectory.nativePath+'/'+MD5.hash(_path);			
 			}
 			_file = new File('file://'+_path);
-			trace("Bookmark.path(p) -- worktree", this.worktree);	
 			getFileSystemIcons();
 		}
 		

@@ -91,7 +91,7 @@ package view.modals.upload {
 		{
 			if (validate()){
 				super.obj.repoName = _form.getField(0).replace(/\s/g, '-');
-				super.obj.repoDesc = super.obj.service == HostingAccount.GITHUB ? _form.getField(0) : '';
+				super.obj.repoDesc = super.obj.service == HostingAccount.GITHUB ? _form.getField(1) : '';
 				super.obj.repoURL = _preview.getField(0);
 				super.obj.repoPrivate = _private.selected;
 				super.dispatchNext();

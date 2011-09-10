@@ -25,6 +25,7 @@ package view.modals.upload {
 		
 		override protected function onAddedToStage(e:Event):void
 		{
+			super.onAddedToStage(e);
 			attachForm(); setFields();
 		}		
 		

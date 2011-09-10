@@ -20,6 +20,7 @@ package view.modals.upload {
 			var m:String = 'Awesome, I just added '+c.fullName+' to "'+o.repoName+'" on your '+o.service+' ';
 				m+=	'account and sent them an email to let them know!';	
 			super.heading = m;
+			super.onAddedToStage(e);
 		}	
 		
 		override protected function dispatchNext(e:Event = null):void
