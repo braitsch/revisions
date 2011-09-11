@@ -1,10 +1,12 @@
 package view.modals.account {
 
+	import view.ui.Tooltip;
+	import events.UIEvent;
+	import model.remote.HostingAccount;
 	import model.vo.BeanstalkRepo;
 	import model.vo.GitHubRepo;
-	import model.remote.HostingAccount;
 	import model.vo.Repository;
-	import events.UIEvent;
+	import view.ui.SmartButton;
 	import com.greensock.TweenLite;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -42,17 +44,29 @@ package view.modals.account {
 		
 		private function activateButton():void
 		{
-			_view.clone_btn.over.alpha = 0;
-			_view.clone_btn.buttonMode = true;
-			_view.clone_btn.addEventListener(MouseEvent.CLICK, onButtonClick);
-			_view.clone_btn.addEventListener(MouseEvent.ROLL_OUT, onButtonRollOut);
-			_view.clone_btn.addEventListener(MouseEvent.ROLL_OVER, onButtonRollOver);			
+			_view.clone.over.alpha = 0;
+			_view.clone.buttonMode = true;
+			_view.clone.addEventListener(MouseEvent.CLICK, onCloneClick);
+			_view.clone.addEventListener(MouseEvent.ROLL_OUT, onButtonRollOut);
+			_view.clone.addEventListener(MouseEvent.ROLL_OVER, onButtonRollOver);
+			_view.collab.over.alpha = 0;
+			_view.collab.buttonMode = true;
+			_view.collab.addEventListener(MouseEvent.CLICK, onCollabClick);
+			_view.collab.addEventListener(MouseEvent.ROLL_OUT, onButtonRollOut);
+			_view.collab.addEventListener(MouseEvent.ROLL_OVER, onButtonRollOver);
+			new SmartButton(_view.collab, new Tooltip('Collaborators'));
+			new SmartButton(_view.clone, new Tooltip('Clone Repository'));
 		}
 		
-		private function onButtonClick(e:MouseEvent):void
+		private function onCloneClick(e:MouseEvent):void
 		{
 			dispatchEvent(new UIEvent(UIEvent.LOGGED_IN_CLONE, _repo.url));
 		}
+		
+		private function onCollabClick(e:MouseEvent):void
+		{
+			dispatchEvent(new UIEvent(UIEvent.MANAGE_COLLABORATORS, _repo));
+		}		
 		
 		private function onButtonRollOut(e:MouseEvent):void {TweenLite.to(e.target.over, .3, {alpha:0});}
 		private function onButtonRollOver(e:MouseEvent):void {TweenLite.to(e.target.over, .5, {alpha:1});}			
