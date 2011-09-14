@@ -7,11 +7,12 @@ package view.ui {
 
 		private var _txt		:TextHeadingMC = new TextHeadingMC();
 
-		public function TextHeading()
+		public function TextHeading(s:String = '')
 		{
 			_txt.x = 10; _txt.y = 70;
 			_txt.label_txt.autoSize = TextFieldAutoSize.LEFT;
 			addChild(_txt);
+			if (s) this.text = s;
 		}
 		
 		public function set text(s:String):void

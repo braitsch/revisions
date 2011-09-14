@@ -10,6 +10,7 @@ package model.vo {
 		{
 			_obj = o;
 			super(HostingAccount.GITHUB +'-'+ o.name, o.ssh_url);
+			super.lastUpdated = o.updated_at;
 		}
 		
 		public function get description():String

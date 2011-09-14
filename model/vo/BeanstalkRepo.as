@@ -10,6 +10,7 @@ package model.vo {
 		{
 			_xml = xml;	
 			super(HostingAccount.BEANSTALK +'-'+ xml.name, url);
+			super.lastUpdated = _xml['last-commit-at'];
 		}
 
 		public function get id():uint
@@ -17,12 +18,8 @@ package model.vo {
 			return _xml.id;
 		}
 		
-		public function get lastCommittedAt():String
-		{
-			return _xml['last-commit-at'];
-		}
-		
 	}
+	
 }
 
 //</repository>

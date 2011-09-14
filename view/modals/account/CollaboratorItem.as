@@ -29,7 +29,7 @@ package view.modals.account {
 		private function attachAvatar():void
 		{
 			var a:Avatar = new Avatar(_data.avatarURL);
-				a.x = a.y = 7;
+				a.x = a.y = 6;
 			_view.addChild(a);
 		}
 		

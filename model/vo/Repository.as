@@ -11,6 +11,7 @@ package model.vo {
 		private var _acctName		:String;
 		private var _repoName		:String;
 		private var _homePage		:String;
+		private var _lastUpdated	:String;
 		private var _collaborators	:Array = [];
 
 		public function Repository(name:String, url:String)
@@ -22,12 +23,13 @@ package model.vo {
 			_homePage = getRepositoryHomePage(url);
 		}
 		
-		public function get url()			:String { return _url; 		}
-		public function get name()			:String { return _name; 	}
-		public function get acctType()		:String { return _acctType; }	
-		public function get acctName()		:String { return _acctName; }	
-		public function get repoName()		:String { return _repoName; }
-		public function get homePage()		:String { return _homePage; }
+		public function get url()			:String { return _url; 		   }
+		public function get name()			:String { return _name; 	   }
+		public function get acctType()		:String { return _acctType;	   }	
+		public function get acctName()		:String { return _acctName;	   }	
+		public function get repoName()		:String { return _repoName;	   }
+		public function get homePage()		:String { return _homePage;	   }
+		public function get lastUpdated()	:String { return _lastUpdated; }
 		
 	// branches //	
 		
@@ -40,6 +42,11 @@ package model.vo {
 		{
 			for (var i:int = 0; i < _branches.length; i++) if (_branches[i] == s) return true;
 			return false;
+		}
+		
+		public function set lastUpdated(s:String):void
+		{
+			_lastUpdated = s;
 		}
 		
 	// collaborators //
