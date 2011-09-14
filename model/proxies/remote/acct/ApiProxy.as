@@ -1,10 +1,11 @@
 package model.proxies.remote.acct {
 
+	import model.vo.Repository;
 	import events.AppEvent;
 	import model.AppModel;
 	import model.proxies.remote.base.CurlProxy;
 	import model.remote.HostingAccount;
-	import model.vo.Collab;
+	import model.vo.Collaborator;
 	import system.BashMethods;
 	import system.StringUtils;
 
@@ -49,11 +50,35 @@ package model.proxies.remote.acct {
 		}
 		
 	// collaborators //	
+	
+		public function getCollaborators(r:Repository):void { }	
+		protected function getCollaboratorsOfRepo(url:String):void
+		{
+			startTimer();
+			super.request = BashMethods.GET_COLLABORATORS;
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Fetching Collaborators'}));
+			super.call(Vector.<String>([BashMethods.GET_REQUEST, _baseURL + url]));			
+		}
 		
-		public function addCollaborator(o:Collab):void { }
+		public function killCollaborator(r:Repository, c:Collaborator):void { }	
+		protected function killCollaboratorFromRepo(url:String):void
+		{
+			startTimer();
+			super.request = BashMethods.KILL_COLLABORATOR;
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Removing Collaborator'}));
+			super.call(Vector.<String>([BashMethods.DELETE_REQUEST, _baseURL + url]));
+		}		
+		
+//		protected function getCollaboratorsPermissions(url:String):void
+//		{
+//			startTimer();
+//			super.request = BashMethods.GET_COLLABORATOR_PERMISSIONS;
+//			super.call(Vector.<String>([BashMethods.GET_REQUEST, _baseURL + url]));			
+//		}		
+		
+		public function addCollaborator(o:Collaborator):void { }
 		protected function addCollaboratorToGitHub(header:String, url:String):void
 		{
-			trace("ApiProxy.addCollaboratorToGitHub(header, url)", url);
 			startTimer();
 			super.request = BashMethods.ADD_COLLABORATOR;
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Adding Collaborator'}));
@@ -77,6 +102,7 @@ package model.proxies.remote.acct {
 		
 		override protected function onProcessSuccess(r:String):void
 		{
+			trace("ApiProxy.onProcessSuccess(r)", super.request, r);
 			switch(super.request){
 				case BashMethods.LOGIN :
 					onLoginSuccess(r);
@@ -87,12 +113,18 @@ package model.proxies.remote.acct {
 				case BashMethods.ADD_BKMK_TO_ACCOUNT : 
 					onRepositoryCreated(r);
 				break;	
+				case BashMethods.GET_COLLABORATORS : 
+					onCollaborators(r);
+				break;					
 				case BashMethods.ADD_COLLABORATOR : 
 					onCollaboratorAdded(r);
 				break;	
+				case BashMethods.KILL_COLLABORATOR : 
+					onCollaboratorRemoved();
+				break;					
 				case BashMethods.SET_PERMISSIONS : 
-					dispatchCollaboratorSuccess();
-				break;																	
+					dispatchCollaboratorAdded();
+				break;
 			}			
 		}
 
@@ -103,6 +135,8 @@ package model.proxies.remote.acct {
 		protected function onRepositories(s:String):void { }
 		
 		protected function onRepositoryCreated(s:String):void { }
+
+		protected function onCollaborators(s:String):void { }
 		
 		protected function onCollaboratorAdded(s:String):void { }
 		
@@ -112,11 +146,23 @@ package model.proxies.remote.acct {
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 		}
 		
-		protected function dispatchCollaboratorSuccess():void
+		protected function dispatchOnCollaborators():void 
+		{ 
+			dispatchEvent(new AppEvent(AppEvent.COLLABORATORS_RECEIEVED));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
+		}		
+		
+		protected function dispatchCollaboratorAdded():void
 		{
 			dispatchEvent(new AppEvent(AppEvent.COLLABORATOR_ADDED));
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));			
 		}
+		
+		protected function onCollaboratorRemoved():void 
+		{ 
+			dispatchEvent(new AppEvent(AppEvent.COLLABORATOR_REMOVED));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));				
+		}		
 		
 	}
 	

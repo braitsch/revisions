@@ -11,7 +11,7 @@ package model.vo {
 		
 	// the newly created repo & collab on success //	
 		public var repository	:Repository;
-		public var collaborator	:Collab;
+		public var collaborator	:Collaborator;
 		
 	}
 	

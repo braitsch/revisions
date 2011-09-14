@@ -5,16 +5,15 @@ package model.remote {
 	import model.proxies.remote.keys.GitHubKey;
 	import model.proxies.remote.keys.KeyProxy;
 	import view.modals.account.AccountHome;
-	import view.modals.account.GitHubHome;
 	import view.modals.base.ModalWindow;
 	import view.modals.login.GitHubLogin;
 	
 	public class GitHub implements IHostingProvider {
 		
 		private var _type			:String = HostingAccount.GITHUB;
+		private var _home	 		:AccountHome = new AccountHome();
 		private var _api 			:GitHubApi = new GitHubApi();
 		private var _key 			:GitHubKey = new GitHubKey();		
-		private var _home 			:GitHubHome	= new GitHubHome();
 		private var _login			:GitHubLogin = new GitHubLogin();
 		
 		private var _addRepoObj		:Object = {	title	:	'Add To Github', 

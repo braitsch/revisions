@@ -1,18 +1,27 @@
 package view.ui {
 
 	import com.greensock.TweenLite;
+	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
+	import flash.events.EventDispatcher;
 	import flash.events.MouseEvent;
 	
-	public class BasicButton extends Sprite {
+	public class BasicButton extends EventDispatcher {
 		
-		private var _btn:Sprite;
+		private var _btn		:Sprite;
+		private var _tooltip	:Tooltip;
 
-		public function BasicButton(b:Sprite)
+		public function BasicButton(b:Sprite, s:String = '')
 		{
 			_btn = b;
-			addChild(_btn);
+			_btn['over'].alpha = 0; 
+			enabled = true;
+			if (s) addTooltip(s);
 		}
+		
+		public function set x(x:int):void {_btn.x = x; }
+		public function set y(y:int):void {_btn.y = y; }
+		public function addTo(o:DisplayObjectContainer):void { o.addChild(_btn); }
 
 		public function set enabled(b:Boolean):void
 		{
@@ -27,6 +36,7 @@ package view.ui {
 				_btn.removeEventListener(MouseEvent.ROLL_OUT, onButtonRollOut);
 				_btn.removeEventListener(MouseEvent.ROLL_OVER, onButtonRollOver);
 			}
+			_btn.addEventListener(MouseEvent.CLICK, onButtonClick);
 		}
 		
 		public function get enabled():Boolean
@@ -34,8 +44,28 @@ package view.ui {
 			return _btn.alpha == 1;
 		}
 		
-		protected function onButtonRollOut(e:MouseEvent):void {TweenLite.to(e.target.over, .3, {alpha:0});}
-		protected function onButtonRollOver(e:MouseEvent):void {TweenLite.to(e.target.over, .5, {alpha:1});}		
+		private function addTooltip(s:String):void
+		{
+			_tooltip = new Tooltip(s);
+			_tooltip.button = _btn;
+		}
+		
+		private function onButtonClick(e:MouseEvent):void
+		{
+			dispatchEvent(new MouseEvent(MouseEvent.CLICK));
+		}		
+		
+		private function onButtonRollOver(e:MouseEvent):void 
+		{
+			if (_tooltip) _tooltip.show();
+			TweenLite.to(e.target.over, .5, {alpha:1});
+		}		
+		
+		private function onButtonRollOut(e:MouseEvent):void 
+		{
+			if (_tooltip) _tooltip.hide();
+			TweenLite.to(e.target.over, .3, {alpha:0});
+		}
 		
 	}
 	

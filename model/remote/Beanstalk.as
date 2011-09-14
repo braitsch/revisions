@@ -5,16 +5,15 @@ package model.remote {
 	import model.proxies.remote.keys.BeanstalkKey;
 	import model.proxies.remote.keys.KeyProxy;
 	import view.modals.account.AccountHome;
-	import view.modals.account.BeanstalkHome;
 	import view.modals.base.ModalWindow;
 	import view.modals.login.BeanstalkLogin;
 	
 	public class Beanstalk implements IHostingProvider {
 
 		private var _type			:String = HostingAccount.BEANSTALK;
+		private var _home	 		:AccountHome = new AccountHome();
 		private var _api 			:BeanstalkApi = new BeanstalkApi();
 		private var _key 			:BeanstalkKey = new BeanstalkKey();
-		private var _home	 		:BeanstalkHome = new BeanstalkHome();
 		private var _login			:BeanstalkLogin = new BeanstalkLogin();
 		
 		private var _addRepoObj	:Object = {	title	:	'Add To Beanstalk'	};

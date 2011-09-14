@@ -2,8 +2,7 @@ package view.history {
 
 	import events.UIEvent;
 	import model.vo.Commit;
-	import view.ui.SmartButton;
-	import view.ui.Tooltip;
+	import view.ui.BasicButton;
 	import flash.display.Shape;
 	import flash.events.MouseEvent;
 
@@ -46,8 +45,8 @@ package view.history {
 			_buttons = [_view.buttons.revert, _view.buttons.download, _view.buttons.info];
 			var l:Array = ['Revert', 'Download', 'Info'];
 			for (var i:int = 0; i < 3; i++) {
-				var b:SmartButton = new SmartButton(_buttons[i], new Tooltip(l[i]));
-				b.view.addEventListener(MouseEvent.CLICK, onButtonClick);
+				var b:BasicButton = new BasicButton(_buttons[i], l[i]);
+					b.addEventListener(MouseEvent.CLICK, onButtonClick);
 			}
 		}
 

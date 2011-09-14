@@ -1,14 +1,16 @@
 package model.proxies.remote.acct {
 
+	import model.vo.Repository;
 	import events.AppEvent;
 	import events.ErrEvent;
 	import model.remote.HostingAccount;
 	import model.remote.Hosts;
-	import model.vo.Collab;
+	import model.vo.Collaborator;
 	import model.vo.GitHubRepo;
 
 	public class GitHubApi extends ApiProxy {
 
+		private static var _repository		:Repository;
 	// public methods //
 
 		override public function login(ra:HostingAccount):void
@@ -23,10 +25,22 @@ package model.proxies.remote.acct {
 			super.addRepositoryToAccount(HEADER_TXT, getRepoObj(o.name, o.desc, o.publik), '/user/repos');
 		}
 		
-		override public function addCollaborator(o:Collab):void
+		override public function getCollaborators(r:Repository):void
+		{
+			_repository = r;
+			super.getCollaboratorsOfRepo('/repos/'+super.account.user+'/'+r.repoName+'/collaborators');
+		}
+		
+		override public function killCollaborator(r:Repository, c:Collaborator):void
+		{
+			trace('/repos/'+super.account.user+'/'+r.repoName+'/collaborators/'+c.userName);
+			super.killCollaboratorFromRepo('/repos/'+super.account.user+'/'+r.repoName+'/collaborators/'+c.userName);
+		}		
+		
+		override public function addCollaborator(o:Collaborator):void
 		{
 			super.addCollaboratorToGitHub('Content-Length: 0', '/repos/'+super.account.user+'/'+o.repository.repoName+'/collaborators/'+o.userName);
-		}
+		}		
 		
 	// handlers //	
 		
@@ -46,7 +60,7 @@ package model.proxies.remote.acct {
 			var o:Object = getResultObject(s);
 			if (o.message == null){
 				for (var i:int = 0; i < o.length; i++) super.account.addRepository(new GitHubRepo(o[i]));
-				dispatchLoginSuccess();
+				super.dispatchLoginSuccess();
 			}	else{
 				handleJSONError(o.message);
 			}
@@ -63,12 +77,29 @@ package model.proxies.remote.acct {
 				handleJSONError(o.errors[0].message);		
 			}
 		}
+
+		override protected function onCollaborators(s:String):void
+		{
+			var o:Object = getResultObject(s);
+			if (o.message == null){
+				for (var i:int = 0; i < o.length; i++) {
+					var c:Collaborator = new Collaborator();
+						c.userId = o[i]['id'];
+						c.userName = o[i]['login'];
+						c.avatarURL = o[i]['avatar_url'];
+					_repository.addCollaborator(c);
+				}
+				super.dispatchOnCollaborators();
+			}	else{
+				handleJSONError(o.message);
+			}		
+		}
 		
 		override protected function onCollaboratorAdded(s:String):void
 		{	
 			var o:Object = getResultObject(s);
 			if (o.message == null){
-				dispatchCollaboratorSuccess();
+				super.dispatchCollaboratorAdded();
 			}	else{
 				handleJSONError(o.message);		
 			}

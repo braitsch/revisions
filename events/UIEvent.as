@@ -44,8 +44,9 @@ package events {
 		
 		public static const WIZARD_PREV				:String = "WIZARD_PREV";
 		public static const WIZARD_NEXT				:String = "WIZARD_NEXT";
-		public static const ADD_COLLABORATOR:String = "ADD_COLLABORATOR";
-		public static const MANAGE_COLLABORATORS:String = "MANAGE_COLLABORATORS";
+		public static const GET_COLLABORATORS:String = "GET_COLLABORATORS";
+		public static const ADD_COLLABORATOR		:String = "ADD_COLLABORATOR";
+		public static const KILL_COLLABORATOR:String = "KILL_COLLABORATOR";
 		
 		public var data:Object;
 

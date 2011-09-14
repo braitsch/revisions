@@ -4,34 +4,48 @@ package view.modals.account {
 	import events.UIEvent;
 	import model.AppModel;
 	import model.vo.Repository;
-	import view.modals.base.ModalWindowBasic;
+	import view.modals.system.Message;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
 	
-	public class RepositoryView extends ModalWindowBasic {
+	public class RepositoryView extends AccountView {
 	
 		private var _view			:RepositoryViewMC = new RepositoryViewMC();
 		private var _pages			:Vector.<Sprite>; 
 		private var _maxPerPage		:uint = 5;
 		private var _pageIndex		:uint = 0;
+		private var _activePage		:Sprite;
 		private var _cloneURL		:String;
 		private var _savePath		:String;
-		private var _activePage		:Sprite;		
+		private var _logOut			:LogOutBtn = new LogOutBtn();			
 
 		public function RepositoryView() 
 		{
 			addChild(_view);
+			addLogOut();
 			addEventListener(UIEvent.LOGGED_IN_CLONE, onCloneClick);
+			addEventListener(UIEvent.GET_COLLABORATORS, onCollabClick);
 			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);
-			AppModel.engine.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);	
 		}
 		
-		public function attachRepositories(m:Vector.<Repository>):void
+		public function reset():void
 		{
 			resetAccount();
+			attachRepositories();
+			onRepositoriesReady();
+		}
+		
+		private function resetAccount():void
+		{
+			_pageIndex = 0;
+			if (_activePage){ removeChild(_activePage); _activePage = null; }
+		}			
+		
+		private function attachRepositories():void
+		{
 			var k:Array = [];
-			var a:Vector.<Repository> = Vector.<Repository>(sortOn(m));
+			var a:Vector.<Repository> = Vector.<Repository>(sortOn(super.account.repositories));
 			_pages = new Vector.<Sprite>();
 			for (var i:int = 0; i < a.length; i++) {
 				k.push(a[i]);
@@ -40,14 +54,13 @@ package view.modals.account {
 				}
 			}
 			if (k.length > 0) _pages.push(buildPage(k));
-			onRepositoriesReady();
 		}
 		
-		private function resetAccount():void
+		private function onRepositoriesReady():void
 		{
-			_pageIndex = 0;
-			if (_activePage){ removeChild(_activePage); _activePage = null; }
-		}		
+			if (_pages.length) showPage(0);
+			_view.nav.visible = _pages.length > 1;
+		}			
 		
 		private function sortOn(v:*):Array
 		{
@@ -67,6 +80,8 @@ package view.modals.account {
 			}
 			return p;	
 		}
+		
+	// repository page navigation //	
 		
 		private function showPage(n:uint):void
 		{
@@ -102,6 +117,31 @@ package view.modals.account {
 			}
 		}
 		
+	// collaborators //
+	
+		private function onCollabClick(e:UIEvent):void
+		{
+			if (super.repository.collaborators.length == 0){
+				requestCollaborators();
+			}	else{
+				dispatchEvent(new UIEvent(UIEvent.WIZARD_NEXT, super.repository));
+			}
+		}
+
+		private function requestCollaborators():void
+		{
+			super.proxy.getCollaborators(super.repository);
+			super.proxy.addEventListener(AppEvent.COLLABORATORS_RECEIEVED, onCollaboratorsReceived);
+		}
+	
+		private function onCollaboratorsReceived(e:AppEvent):void
+		{
+			dispatchEvent(new UIEvent(UIEvent.WIZARD_NEXT, super.repository));
+			super.proxy.removeEventListener(AppEvent.COLLABORATORS_RECEIEVED, onCollaboratorsReceived);
+		}		
+		
+	// cloning // 	
+		
 		private function onCloneClick(e:UIEvent):void
 		{
 			_cloneURL = e.data as String;
@@ -119,13 +159,23 @@ package view.modals.account {
 		{
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 			AppModel.engine.removeEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);			
-		}		
+		}
 		
-		private function onRepositoriesReady():void
+	// logout //	
+		
+		private function addLogOut():void
 		{
-			if (_pages.length) showPage(0);
-			_view.nav.visible = _pages.length > 1;
-		}				
+			_logOut.x = 516; _logOut.y = 312; addChild(_logOut);
+			_logOut.addEventListener(MouseEvent.CLICK, onLogOutClick);					
+			super.addButtons([_logOut]);
+		}
+		
+		private function onLogOutClick(e:MouseEvent):void
+		{
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
+			super.service.logOut();
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message('You Have Successfully Logged Out.')));
+		}					
 		
 	}
 	

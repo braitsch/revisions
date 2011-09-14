@@ -22,7 +22,7 @@ package view.modals.login {
 		private var _type			:String;
 		private var _check			:ModalCheckbox = new ModalCheckbox(true);
 		private var _login			:BasicButton = new BasicButton(new LoginButton());
-		private var _signUp			:AccountSignUp = new AccountSignUp();
+		private var _signUp			:TextLinkMC = new TextLinkMC();
 
 		public function AccountLogin(s:String)
 		{
@@ -51,7 +51,8 @@ package view.modals.login {
 			addEventListener(UIEvent.ENTER_KEY, onLoginButton);
 			
 			addChild(_form); addChild(_check);
-			addChild(_login); addChild(_signUp);
+			addChild(_signUp);
+			_login.addTo(this);
 		}
 		
 		private function attachGHForm():void

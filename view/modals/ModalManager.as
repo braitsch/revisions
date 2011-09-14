@@ -117,6 +117,7 @@ package view.modals {
 			// align with summary view //	
 				_preloader.resize(w, h, 204/2, -50);
 			}
+			if (_alert) _alert.resize(w, h);
 		}
 
 		private function onBookmarkSelected(e:BookmarkEvent):void

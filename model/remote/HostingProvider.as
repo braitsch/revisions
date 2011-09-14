@@ -57,7 +57,7 @@ package model.remote {
 		private function onLoginSuccess(e:AppEvent):void
 		{
 			_loggedIn = e.data as HostingAccount;
-			_model.home.model = _loggedIn;
+			_model.home.account = _loggedIn;
 			if (_saveAccount) writeAcctToDatabase(_loggedIn);
 			if (_model.type == HostingAccount.BEANSTALK) _model.key.checkKey(_loggedIn);
 		}

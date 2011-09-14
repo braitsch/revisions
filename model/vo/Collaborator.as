@@ -1,6 +1,6 @@
 package model.vo {
 
-	public class Collab {
+	public class Collaborator {
 	
 		public var firstName			:String;
 		public var lastName				:String;
@@ -10,6 +10,7 @@ package model.vo {
 		public var passWord				:String;
 		public var userEmail			:String;
 		public var readWrite 			:Boolean;
+		public var avatarURL			:String;
 		public var repository			:Repository;
 		
 	}

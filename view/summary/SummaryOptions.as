@@ -5,8 +5,7 @@ package view.summary {
 	import model.AppModel;
 	import model.vo.Bookmark;
 	import view.modals.system.Message;
-	import view.ui.SmartButton;
-	import view.ui.Tooltip;
+	import view.ui.BasicButton;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	
@@ -37,7 +36,7 @@ package view.summary {
 		{
 			var l:Array = ['Settings', 'Link To Account', 'Sync Remote', 'History'];
 			var a:Array = [_view.settings_btn, _view.upload_btn, _view.sync_btn, _view.history_btn];
-			for (var i:int = 0; i < 4; i++) new SmartButton(a[i], new Tooltip(l[i]));
+			for (var i:int = 0; i < 4; i++) new BasicButton(a[i], l[i]);
 			_view.sync_btn.addEventListener(MouseEvent.CLICK, onSyncButton);
 			_view.upload_btn.addEventListener(MouseEvent.CLICK, onUploadButton);
 			_view.history_btn.addEventListener(MouseEvent.CLICK, onHistoryButton);

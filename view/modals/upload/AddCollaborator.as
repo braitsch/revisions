@@ -1,6 +1,6 @@
 package view.modals.upload {
 
-	import model.vo.Collab;
+	import model.vo.Collaborator;
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
@@ -40,7 +40,7 @@ package view.modals.upload {
 
 		private function onCollabAdded(e:AppEvent):void
 		{
-			super.obj.collaborator = e.data as Collab;
+			super.obj.collaborator = e.data as Collaborator;
 			super.onNextButton(e);
 		}
 		

@@ -4,13 +4,14 @@ package model.vo {
 
 	public class Repository {
 
-		private var _name		:String; // ex. github-revisions-source //
-		private var _url		:String;
-		private var _branches	:Array = [];
-		private var _acctType	:String;
-		private var _acctName	:String;
-		private var _repoName	:String;
-		private var _homePage	:String;
+		private var _name			:String; // ex. github-revisions-source //
+		private var _url			:String;
+		private var _branches		:Array = [];
+		private var _acctType		:String;
+		private var _acctName		:String;
+		private var _repoName		:String;
+		private var _homePage		:String;
+		private var _collaborators	:Array = [];
 
 		public function Repository(name:String, url:String)
 		{
@@ -28,6 +29,8 @@ package model.vo {
 		public function get repoName()		:String { return _repoName; }
 		public function get homePage()		:String { return _homePage; }
 		
+	// branches //	
+		
 		public function addBranch(s:String):void
 		{
 			_branches.push(s);
@@ -38,6 +41,25 @@ package model.vo {
 			for (var i:int = 0; i < _branches.length; i++) if (_branches[i] == s) return true;
 			return false;
 		}
+		
+	// collaborators //
+	
+		public function get collaborators():Array
+		{
+			return _collaborators;	
+		}
+		
+		public function addCollaborator(o:Collaborator):void
+		{
+			_collaborators.push(o);	
+		}
+		
+		public function killCollaborator(o:Collaborator):void
+		{
+			for (var i:int = 0; i < _collaborators.length; i++) {
+				if (_collaborators[i] == o) _collaborators.splice(i, 0);
+			}
+		}		
 	
 	// git@braitsch.beanstalkapp.com:/hello1234.git
 	// git@github.com:braitsch/Revisions-Source.git
