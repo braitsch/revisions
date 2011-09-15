@@ -53,7 +53,7 @@ package system{
 		public static const LOGIN					:String = 'login';
 		public static const LOGOUT					:String = 'logout';
 		public static const GET_REPOSITORIES		:String = 'getRepositories';
-		public static const ADD_BKMK_TO_ACCOUNT		:String = 'addBkmkToAccount';
+		public static const ADD_REPOSITORY		:String = 'addBkmkToAccount';
 		
 	// remote keys //	
 		public static const GET_REMOTE_KEYS			:String = 'getAllKeys';

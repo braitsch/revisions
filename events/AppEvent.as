@@ -46,8 +46,6 @@ package events {
 		public static const PERMISSIONS_FAILURE		:String = "PERMISSIONS_FAILURE";
 		public static const RETRY_REMOTE_REQUEST	:String = "RETRY_REMOTE_REQUEST";
 		public static const COLLABORATORS_RECEIEVED	:String = "COLLABORATORS_RECEIEVED";
-		public static const COLLABORATOR_ADDED		:String = "COLLABORATOR_ADDED";
-		public static const COLLABORATOR_REMOVED	:String = "COLLABORATOR_REMOVED";
 		
 		public var data:Object;
 

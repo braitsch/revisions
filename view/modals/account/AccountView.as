@@ -14,12 +14,6 @@ package view.modals.account {
 		private static var _service			:HostingProvider;
 		private static var _proxy			:ApiProxy;
 
-		public function AccountView()
-		{
-			
-		}
-		
-
 		public static function set account(a:HostingAccount):void	
 		{
 			_account = a; 

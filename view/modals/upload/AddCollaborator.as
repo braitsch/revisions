@@ -4,14 +4,14 @@ package view.modals.upload {
 	import events.UIEvent;
 	import model.AppModel;
 	import model.remote.HostingAccount;
-	import model.vo.Collaborator;
-	import view.modals.collab.BeanstalkCollab;
-	import view.modals.collab.GitHubCollab;
+	import view.modals.collab.AddBeanstalkCollab;
+	import view.modals.collab.AddGitHubCollab;
+	import view.modals.system.Message;
 	import flash.events.Event;
 
 	public class AddCollaborator extends WizardWindow {
 
-		private static var _collab			:*;
+		private static var _view			:*;
 
 		public function AddCollaborator()
 		{
@@ -23,28 +23,47 @@ package view.modals.upload {
 		
 		override protected function onAddedToStage(e:Event):void
 		{
-			if (_collab) removeChild(_collab);
-			if (super.obj.service == HostingAccount.GITHUB){
-				_collab = new GitHubCollab(new Form1());
-				super.heading = 'Please enter the GitHub user you\'d like to collaborate with on "'+AppModel.bookmark.label+'"';
-			}	else if (super.obj.service == HostingAccount.BEANSTALK) {
-				_collab = new BeanstalkCollab();
-				super.heading = 'Fill in below to create a new user to collaborate with on "'+AppModel.bookmark.label+'"';
+			if (_view) removeChild(_view);
+			if (super.service == HostingAccount.GITHUB){
+				addGHCollab();
+			}	else if (super.service == HostingAccount.BEANSTALK) {
+				addBSCollab();
 			}
-			_collab.y = 90;
-			_collab.addEventListener(AppEvent.COLLABORATOR_ADDED, onCollabAdded);
-			addChild(_collab);
+			_view.y = 90;
+			addChild(_view);
 		}
-
-		private function onCollabAdded(e:AppEvent):void
+		
+		private function addGHCollab():void
 		{
-			super.obj.collaborator = e.data as Collaborator;
-			super.onNextButton(e);
+			_view = new AddGitHubCollab(new Form1());
+			super.heading = 'Please enter the GitHub user you\'d like to collaborate with on "'+AppModel.bookmark.label+'"';			
+		}
+		
+		private function addBSCollab():void
+		{
+			_view = new AddBeanstalkCollab();
+			super.heading = 'Fill in below to create a new user to collaborate with on "'+AppModel.bookmark.label+'"';			
 		}
 		
 		override protected function onNextButton(e:Event):void
 		{
-			_collab.addCollaborator(super.obj.repository);
+			_view.addCollaborator(super.repository);
+			AppModel.engine.addEventListener(AppEvent.COLLABORATORS_RECEIEVED, onCollabAdded);
+		}		
+
+		private function onCollabAdded(e:AppEvent):void
+		{
+			dispatchComplete();
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
+			if (_view is AddBeanstalkCollab) _view.dispatchEmail();
+			AppModel.engine.removeEventListener(AppEvent.COLLABORATORS_RECEIEVED, onCollabAdded);			
+		}
+		
+		private function dispatchComplete():void
+		{
+			var m:String = 'Awesome, I just added '+super.collaborator.fullName+' to "'+super.repoName+'" on your '+super.service+' ';
+				m+=	'account and sent them an email to let them know!';
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));
 		}
 		
 	}

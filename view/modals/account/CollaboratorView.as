@@ -2,6 +2,7 @@ package view.modals.account {
 
 	import events.AppEvent;
 	import events.UIEvent;
+	import model.AppModel;
 	import view.ui.TextHeading;
 	import com.greensock.TweenLite;
 	import flash.display.Sprite;
@@ -56,13 +57,13 @@ package view.modals.account {
 		{
 			_item = e.target as CollaboratorItem;
 			super.proxy.killCollaborator(super.repository, _item.collaborator);
-			super.proxy.addEventListener(AppEvent.COLLABORATOR_REMOVED, onCollaboratorRemoved);
+			AppModel.engine.addEventListener(AppEvent.COLLABORATORS_RECEIEVED, onCollaboratorRemoved);
 		}
 
-		private function onCollaboratorRemoved(e:AppEvent = null):void
+		private function onCollaboratorRemoved(e:AppEvent):void
 		{
 			TweenLite.to(_item, .5, {alpha:0, onComplete:collapseLayout});
-			super.proxy.removeEventListener(AppEvent.COLLABORATOR_REMOVED, onCollaboratorRemoved);
+			AppModel.engine.removeEventListener(AppEvent.COLLABORATORS_RECEIEVED, onCollaboratorRemoved);
 		}
 		
 		private function collapseLayout():void
@@ -76,7 +77,7 @@ package view.modals.account {
 					TweenLite.to(k, .3, {x:-199.5, onComplete:moveUpOnLevel, onCompleteParams:[k]});
 				}
 			}			
-			super.repository.killCollaborator(_item.collaborator); drawText();
+			drawText();
 		}
 		
 		private function moveUpOnLevel(k:CollaboratorItem):void

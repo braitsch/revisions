@@ -25,9 +25,9 @@ package view.modals.upload {
 
 		override protected function onAddedToStage(e:Event):void
 		{
-			if (super.obj.service == HostingAccount.GITHUB){
+			if (super.service == HostingAccount.GITHUB){
 				Hosts.github.loggedIn ? showChooser() : showLoginWindow(e);
-			}	else if (super.obj.service == HostingAccount.BEANSTALK){
+			}	else if (super.service == HostingAccount.BEANSTALK){
 				Hosts.beanstalk.loggedIn ? showChooser() : showLoginWindow(e);
 			}
 		}
@@ -46,9 +46,9 @@ package view.modals.upload {
 		private function showChooser():void
 		{
 			var m:String;
-			if (super.obj.service == HostingAccount.GITHUB){
+			if (super.service == HostingAccount.GITHUB){
 				m = 'You are currently logged into GitHub as "'+Hosts.github.loggedIn.acct+'".';
-			}	else if (super.obj.service == HostingAccount.BEANSTALK){
+			}	else if (super.service == HostingAccount.BEANSTALK){
 				m = 'You are currently logged into the Beanstalk account "'+Hosts.beanstalk.loggedIn.acct+'".';
 			}
 			m+='\nWhat would you like to do?';
@@ -58,12 +58,12 @@ package view.modals.upload {
 		
 		private function showLoginWindow(e:Event):void
 		{
-			_login = new AccountLogin(super.obj.service);
+			_login = new AccountLogin(super.service);
 			_login.y = 70;
 			_login.baseline = 280;
 			_login.addEventListener(AppEvent.LOGIN_SUCCESS, super.dispatchNext);
 			this.page = _login;
-			super.heading =  'Please login to your '+super.obj.service+' account';
+			super.heading =  'Please login to your '+super.service+' account';
 		}
 		
 	}

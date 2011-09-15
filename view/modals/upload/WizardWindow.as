@@ -1,7 +1,8 @@
 package view.modals.upload {
 
 	import events.UIEvent;
-	import model.vo.UploadObj;
+	import model.vo.Collaborator;
+	import model.vo.Repository;
 	import view.modals.base.ModalWindowBasic;
 	import view.ui.TextHeading;
 	import flash.display.Sprite;
@@ -14,8 +15,16 @@ package view.modals.upload {
 		private var _backBtn			:BackButton;
 		private var _heading			:TextHeading;
 		
-		private static var _uploadObj	:UploadObj = new UploadObj();
-		protected function get obj():UploadObj { return _uploadObj; }
+		protected var service			:String; 	// github or beanstalk //
+		protected var repoId			:uint;		// beanstalk only //
+		protected var repoName			:String;
+		protected var repoDesc			:String;	// github only  //
+		protected var repoURL			:String;
+		protected var repoPrivate		:Boolean;	// github only //
+		
+	// the newly created repo & collab on success //	
+		protected var repository		:Repository;
+		protected var collaborator		:Collaborator;
 		
 		protected function addHeading(s:String = ''):void
 		{

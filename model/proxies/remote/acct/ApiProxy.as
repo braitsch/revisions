@@ -44,7 +44,7 @@ package model.proxies.remote.acct {
 		protected function addRepositoryToAccount(header:String, data:String, url:String):void
 		{
 			startTimer();
-			super.request = BashMethods.ADD_BKMK_TO_ACCOUNT;
+			super.request = BashMethods.ADD_REPOSITORY;
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Connecting to '+StringUtils.capitalize(_account.type)}));
 			super.call(Vector.<String>([BashMethods.POST_REQUEST, header, data, _baseURL + url]));
 		}
@@ -102,7 +102,6 @@ package model.proxies.remote.acct {
 		
 		override protected function onProcessSuccess(r:String):void
 		{
-			trace("ApiProxy.onProcessSuccess(r)", r);
 			switch(super.request){
 				case BashMethods.LOGIN :
 					onLoginSuccess(r);
@@ -110,23 +109,23 @@ package model.proxies.remote.acct {
 				case BashMethods.GET_REPOSITORIES :
 					onRepositories(r);
 				break;
-				case BashMethods.ADD_BKMK_TO_ACCOUNT : 
+				case BashMethods.ADD_REPOSITORY : 
 					onRepositoryCreated(r);
 				break;	
 				case BashMethods.GET_COLLABORATORS : 
 					onCollaborators(r);
 				break;	
-				case BashMethods.GET_PERMISSIONS : 
-					onPermissions(r);
-				break;								
 				case BashMethods.ADD_COLLABORATOR : 
 					onCollaboratorAdded(r);
 				break;	
 				case BashMethods.KILL_COLLABORATOR : 
-					onCollaboratorRemoved();
+					onCollaboratorRemoved(r);
 				break;					
+				case BashMethods.GET_PERMISSIONS : 
+					onGetPermissions(r);
+				break;								
 				case BashMethods.SET_PERMISSIONS : 
-					dispatchCollaboratorAdded();
+					onSetPermissions(r);
 				break;
 			}			
 		}
@@ -141,9 +140,13 @@ package model.proxies.remote.acct {
 
 		protected function onCollaborators(s:String):void { }
 		
-		protected function onPermissions(s:String):void { }
-		
 		protected function onCollaboratorAdded(s:String):void { }
+		
+		protected function onCollaboratorRemoved(s:String):void { }
+		
+		protected function onGetPermissions(s:String):void { }
+		
+		protected function onSetPermissions(s:String):void { }
 		
 		protected function dispatchLoginSuccess():void 
 		{ 
@@ -151,22 +154,10 @@ package model.proxies.remote.acct {
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 		}
 		
-		protected function dispatchOnCollaborators():void 
+		protected function dispatchCollaborators():void 
 		{ 
-			dispatchEvent(new AppEvent(AppEvent.COLLABORATORS_RECEIEVED));
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
-		}		
-		
-		protected function dispatchCollaboratorAdded():void
-		{
-			dispatchEvent(new AppEvent(AppEvent.COLLABORATOR_ADDED));
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));			
-		}
-		
-		protected function onCollaboratorRemoved():void 
-		{ 
-			dispatchEvent(new AppEvent(AppEvent.COLLABORATOR_REMOVED));
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));				
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.COLLABORATORS_RECEIEVED));
 		}		
 		
 	}

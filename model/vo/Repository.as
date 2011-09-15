@@ -12,7 +12,7 @@ package model.vo {
 		private var _repoName		:String;
 		private var _homePage		:String;
 		private var _lastUpdated	:String;
-		private var _collaborators	:Array = [];
+		private var _collaborators	:Vector.<Collaborator>;
 
 		public function Repository(name:String, url:String)
 		{
@@ -51,23 +51,15 @@ package model.vo {
 		
 	// collaborators //
 	
-		public function get collaborators():Array
+		public function get collaborators():Vector.<Collaborator>
 		{
 			return _collaborators;	
 		}
 		
-		public function addCollaborator(o:Collaborator):void
+		public function set collaborators(v:Vector.<Collaborator>):void
 		{
-			trace("Repository.addCollaborator(o)", o.avatarURL);
-			_collaborators.push(o);	
+			_collaborators = v;
 		}
-		
-		public function killCollaborator(o:Collaborator):void
-		{
-			for (var i:int = 0; i < _collaborators.length; i++) {
-				if (_collaborators[i] == o) _collaborators.splice(i, 1);
-			}
-		}		
 	
 	// git@braitsch.beanstalkapp.com:/hello1234.git
 	// git@github.com:braitsch/Revisions-Source.git

@@ -22,7 +22,6 @@ package view.modals.upload {
 		private static var _confirmDetails	:ConfirmDetails = new ConfirmDetails();
 		private static var _onBkmkAdded		:OnBkmkAdded = new OnBkmkAdded();
 		private static var _addCollaborator	:AddCollaborator = new AddCollaborator();
-		private static var _collabAdded		:OnCollabAdded = new OnCollabAdded();
 		
 		public function UploadWizard()
 		{
@@ -62,10 +61,6 @@ package view.modals.upload {
 					nextPage(_onBkmkAdded);
 					super.setTitle(_view, 'Success!');
 				break;	
-				case _addCollaborator :
-					nextPage(_collabAdded);
-					super.setTitle(_view, 'Success!');
-				break;								
 			}
 		}
 		

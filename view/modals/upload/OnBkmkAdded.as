@@ -20,8 +20,8 @@ package view.modals.upload {
 
 		override protected function onAddedToStage(e:Event):void
 		{
-			_view.github.visible = super.obj.service == HostingAccount.GITHUB;
-			var m:String = 'You just pushed "'+AppModel.bookmark.label+'" up to a shiny new repository on '+super.obj.service+'! ';
+			_view.github.visible = super.service == HostingAccount.GITHUB;
+			var m:String = 'You just pushed "'+AppModel.bookmark.label+'" up to a shiny new repository on '+super.service+'! ';
 				m+='\nWhat would you like to do now?';
 			super.heading = m;
 		}

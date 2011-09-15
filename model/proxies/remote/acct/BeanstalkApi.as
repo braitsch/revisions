@@ -90,7 +90,7 @@ package model.proxies.remote.acct {
 			super.getCollaboratorsPermissions('/permissions/'+_users[_index]['id']+'.xml');
 		}
 		
-		override protected function onPermissions(s:String):void
+		override protected function onGetPermissions(s:String):void
 		{
 			var xml:XML = new XML(s); 
 			trace("BeanstalkApi.onPermissions(s)", xml);

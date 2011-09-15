@@ -36,15 +36,15 @@ package view.modals.upload {
 		private function attachForm():void
 		{
 			if (_form) removeChild(_form);
-			if (super.obj.service == HostingAccount.GITHUB){
+			if (super.service == HostingAccount.GITHUB){
 				attachGHForm();
-			}	else if (super.obj.service == HostingAccount.BEANSTALK){
+			}	else if (super.service == HostingAccount.BEANSTALK){
 				attachBSForm();
 			}
 			_preview.y = 90 + _form.height + 10;
 			_form.y = 90; addChild(_form);
 			_form.getInput(0).addEventListener(Event.CHANGE, onNameChange);
-			super.heading = 'What would you like to call your bookmark inside your '+super.obj.service+' account?';			
+			super.heading = 'What would you like to call your bookmark inside your '+super.service+' account?';			
 		}
 		
 		private function attachGHForm():void
@@ -67,7 +67,7 @@ package view.modals.upload {
 		{
 			attachForm();
 			_form.setField(0, AppModel.bookmark.label.toLowerCase());
-			if (super.obj.service == HostingAccount.GITHUB) _form.setField(1, '(optional)');
+			if (super.service == HostingAccount.GITHUB) _form.setField(1, '(optional)');
 			generatePreviewURL();
 			super.onAddedToStage(e);
 		}
@@ -79,9 +79,9 @@ package view.modals.upload {
 		
 		private function generatePreviewURL():void
 		{
-			if (super.obj.service == HostingAccount.GITHUB){
+			if (super.service == HostingAccount.GITHUB){
 				_preview.setField(0, 'https://github.com/'+Hosts.github.loggedIn.acct+'/');
-			} 	else if (super.obj.service == HostingAccount.BEANSTALK){
+			} 	else if (super.service == HostingAccount.BEANSTALK){
 				_preview.setField(0, 'https://'+Hosts.beanstalk.loggedIn.acct+'.beanstalkapp.com/');
 			}
 			_preview.getInput(0).text += _form.getField(0).replace(/\s/g, '-') + '.git';
@@ -90,10 +90,10 @@ package view.modals.upload {
 		override protected function onNextButton(e:Event):void
 		{
 			if (validate()){
-				super.obj.repoName = _form.getField(0).replace(/\s/g, '-');
-				super.obj.repoDesc = super.obj.service == HostingAccount.GITHUB ? _form.getField(1) : '';
-				super.obj.repoURL = _preview.getField(0);
-				super.obj.repoPrivate = _private.selected;
+				super.repoName = _form.getField(0).replace(/\s/g, '-');
+				super.repoDesc = super.service == HostingAccount.GITHUB ? _form.getField(1) : '';
+				super.repoURL = _preview.getField(0);
+				super.repoPrivate = _private.selected;
 				super.dispatchNext();
 			}
 		}
@@ -119,7 +119,7 @@ package view.modals.upload {
 		private function checkForDuplicate():Boolean
 		{
 			var n:String = _form.getField(0).replace(/\s/, '-').toLowerCase();
-			if (AppModel.bookmark.getRemoteByProp('name', super.obj.service.toLowerCase()+'-'+n)){
+			if (AppModel.bookmark.getRemoteByProp('name', super.service.toLowerCase()+'-'+n)){
 				return true;
 			}	else{
 				return false;

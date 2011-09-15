@@ -1,10 +1,10 @@
 package view.modals.collab {
 
-	import model.vo.Repository;
 	import events.AppEvent;
 	import model.AppModel;
 	import model.remote.Hosts;
 	import model.vo.Collaborator;
+	import model.vo.Repository;
 	import system.StringUtils;
 	import view.modals.system.Debug;
 	import view.modals.system.Message;
@@ -20,7 +20,7 @@ package view.modals.collab {
 	import flash.net.URLRequestMethod;
 	import flash.net.URLVariables;
 	
-	public class BeanstalkCollab extends Sprite {
+	public class AddBeanstalkCollab extends Sprite {
 
 		private var _form				:Form = new Form(new Form4());
 		private var _check				:ModalCheckbox = new ModalCheckbox(true);
@@ -29,14 +29,14 @@ package view.modals.collab {
 		private var _collab				:Collaborator = new Collaborator();	
 		private var _repository			:Repository;
 
-		public function BeanstalkCollab()
+		public function AddBeanstalkCollab()
 		{
 			_form.labels = ['First Name', 'Last Name', 'Email', 'Login Name'];
 			_form.enabled = [1, 2, 3, 4];
 			_form.setField(3, _message);
-			addChild(_form);
 			_check.label = 'Allow collaborator read & write access';
 			_check.y = 145;
+			addChild(_form);
 			addChild(_check);
 		}
 		
@@ -54,7 +54,6 @@ package view.modals.collab {
 			var m:String = validate();
 			if (m == null){
 				Hosts.beanstalk.api.addCollaborator(_collab, _repository);
-				Hosts.beanstalk.api.addEventListener(AppEvent.COLLABORATOR_ADDED, onCollaboratorAdded);
 			}	else{
 				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));
 			}	
@@ -75,13 +74,7 @@ package view.modals.collab {
 			return null;
 		}
 		
-		private function onCollaboratorAdded(e:AppEvent):void
-		{
-			dispatchEmail();
-			Hosts.beanstalk.api.removeEventListener(AppEvent.COLLABORATOR_ADDED, onCollaboratorAdded);
-		}		
-		
-		private function dispatchEmail():void
+		public function dispatchEmail():void
 		{
 			var vrs:URLVariables = new URLVariables();
 				vrs.recipientName = _form.getField(0);
@@ -103,7 +96,7 @@ package view.modals.collab {
 
 		private function onEmailSuccess(e:Event):void
 		{
-			dispatchEvent(new AppEvent(AppEvent.COLLABORATOR_ADDED, _collab));			
+			// trace('email successfully sent');	
 		}
 		
 		private function onEmailFailure(e:Event):void

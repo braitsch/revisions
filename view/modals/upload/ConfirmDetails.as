@@ -32,21 +32,21 @@ package view.modals.upload {
 		private function setFields():void
 		{
 			_form.setField(0, AppModel.bookmark.label);
-			_form.setField(1, super.obj.repoName);
-			if (super.obj.service == HostingAccount.GITHUB){
-				_form.setField(2, super.obj.repoDesc == '(optional)' ? '' : super.obj.repoDesc);
-				_form.setField(3, super.obj.repoURL);
-			}	else if (super.obj.service == HostingAccount.BEANSTALK){
-				_form.setField(2, super.obj.repoURL);
+			_form.setField(1, super.repoName);
+			if (super.service == HostingAccount.GITHUB){
+				_form.setField(2, super.repoDesc == '(optional)' ? '' : super.repoDesc);
+				_form.setField(3, super.repoURL);
+			}	else if (super.service == HostingAccount.BEANSTALK){
+				_form.setField(2, super.repoURL);
 			}					
 		}
 		
 		private function attachForm():void
 		{
 			if (_form) removeChild(_form);
-			if (super.obj.service == HostingAccount.GITHUB){
+			if (super.service == HostingAccount.GITHUB){
 				attachGHForm();
-			}	else if (super.obj.service == HostingAccount.BEANSTALK){
+			}	else if (super.service == HostingAccount.BEANSTALK){
 				attachBSForm();
 			}			
 			_form.y = 90; addChildAt(_form, 0); 
@@ -68,18 +68,18 @@ package view.modals.upload {
 		
 		private function onBkmkAddedToAcct(e:AppEvent):void
 		{
-			super.obj.repository = e.data as Repository;
+			super.repository = e.data as Repository;
 			super.onNextButton(e);
 		}		
 		
 		override protected function onNextButton(e:Event):void
 		{
-			var api:ApiProxy = super.obj.service == HostingAccount.GITHUB ? Hosts.github.api : Hosts.beanstalk.api; 
+			var api:ApiProxy = super.service == HostingAccount.GITHUB ? Hosts.github.api : Hosts.beanstalk.api; 
 			var o:Object = {	bkmk	:	AppModel.bookmark, 
 								acct	:	api,
 								name	:	_form.getField(1),
-								desc	:	super.obj.service == HostingAccount.GITHUB ? _form.getField(2) : '',
-								publik	:	super.obj.repoPrivate == false	};
+								desc	:	super.service == HostingAccount.GITHUB ? _form.getField(2) : '',
+								publik	:	super.repoPrivate == false	};
 			AppModel.proxies.remote.addBkmkToAccount(o);
 		}			
 		

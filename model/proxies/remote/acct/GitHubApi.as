@@ -34,7 +34,6 @@ package model.proxies.remote.acct {
 		
 		override public function killCollaborator(r:Repository, c:Collaborator):void
 		{
-			trace('/repos/'+super.account.user+'/'+r.repoName+'/collaborators/'+c.userName);
 			super.killCollaboratorFromRepo('/repos/'+super.account.user+'/'+r.repoName+'/collaborators/'+c.userName);
 		}		
 		
@@ -83,8 +82,16 @@ package model.proxies.remote.acct {
 		{
 			var o:Object = getResultObject(s);
 			if (o.message == null){
-				for (var i:int = 0; i < o.length; i++) addCollaboratorToRepository(o[i]);
-				super.dispatchOnCollaborators();
+				var v:Vector.<Collaborator> = new Vector.<Collaborator>();
+				for (var i:int = 0; i < o.length; i++) {
+					var c:Collaborator = new Collaborator();
+						c.userId = o[i]['id'];
+						c.userName = o[i]['login'];
+						c.avatarURL = o[i]['avatar_url'];
+					v.push(c);
+				}
+				_repository.collaborators = v;
+				super.dispatchCollaborators();
 			}	else{
 				handleJSONError(o.message);
 			}		
@@ -92,19 +99,23 @@ package model.proxies.remote.acct {
 		
 		override protected function onCollaboratorAdded(s:String):void
 		{
-		// adding collaborators does not return info about that collab //
-		// must call getCollaborators again to refresh app state and views //
-			getCollaborators(_repository);
+			var o:Object = getResultObject(s);
+			if (o.message == null){
+				getCollaborators(_repository);
+			}	else{
+				handleJSONError(o.message);
+			}
 		}
 		
-		private function addCollaboratorToRepository(o:Object):void
+		override protected function onCollaboratorRemoved(s:String):void
 		{
-			var c:Collaborator = new Collaborator();
-				c.userId = o['id'];
-				c.userName = o['login'];
-				c.avatarURL = o['avatar_url'];
-			_repository.addCollaborator(c);			
-		}
+			var o:Object = getResultObject(s);
+			if (o.message == null){
+				getCollaborators(_repository);
+			}	else{
+				handleJSONError(o.message);
+			}
+		}		
 		
 	// handle github specific errors //		
 		

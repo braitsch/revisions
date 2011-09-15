@@ -25,7 +25,7 @@ package view.modals.upload {
 			}	else if (e.target.name == 'beanstalk'){
 				s = HostingAccount.BEANSTALK;	
 			}
-			super.obj.service = s;
+			super.service = s;
 			dispatchEvent(new UIEvent(UIEvent.WIZARD_NEXT, s));
 		}
 		

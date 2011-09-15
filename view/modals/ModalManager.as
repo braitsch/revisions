@@ -154,11 +154,13 @@ package view.modals {
 		
 		private function showGitHubHome(e:UIEvent):void
 		{
+			Hosts.github.home.account = Hosts.github.loggedIn;
 			showModalWindow(Hosts.github.home);
 		}
 		
 		private function showBeanstalkHome(e:UIEvent):void
 		{
+			Hosts.beanstalk.home.account = Hosts.beanstalk.loggedIn;
 			showModalWindow(Hosts.beanstalk.home);
 		}			
 		

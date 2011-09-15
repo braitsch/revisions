@@ -61,23 +61,23 @@ package view.modals.account {
 	
 		private function onCollabClick(e:UIEvent):void
 		{
-			if (super.repository.collaborators.length == 0){
+			if (super.repository.collaborators == null){
 				requestCollaborators();
 			}	else{
-				dispatchEvent(new UIEvent(UIEvent.WIZARD_NEXT, super.repository));
+				dispatchEvent(new UIEvent(UIEvent.WIZARD_NEXT));
 			}
 		}
 
 		private function requestCollaborators():void
 		{
 			super.proxy.getCollaborators(super.repository);
-			super.proxy.addEventListener(AppEvent.COLLABORATORS_RECEIEVED, onCollaboratorsReceived);
+			AppModel.engine.addEventListener(AppEvent.COLLABORATORS_RECEIEVED, onCollaboratorsReceived);
 		}
 	
 		private function onCollaboratorsReceived(e:AppEvent):void
 		{
-			dispatchEvent(new UIEvent(UIEvent.WIZARD_NEXT, super.repository));
-			super.proxy.removeEventListener(AppEvent.COLLABORATORS_RECEIEVED, onCollaboratorsReceived);
+			dispatchEvent(new UIEvent(UIEvent.WIZARD_NEXT));
+			AppModel.engine.removeEventListener(AppEvent.COLLABORATORS_RECEIEVED, onCollaboratorsReceived);
 		}		
 		
 	// cloning // 	
