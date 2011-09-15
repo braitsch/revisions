@@ -11,7 +11,6 @@ package model.vo {
 		public var userEmail			:String;
 		public var readWrite 			:Boolean;
 		public var avatarURL			:String;
-		public var repository			:Repository;
 		
 	}
 	

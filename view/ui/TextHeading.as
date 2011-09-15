@@ -9,17 +9,25 @@ package view.ui {
 
 		public function TextHeading(s:String = '')
 		{
-			_txt.x = 10; _txt.y = 70;
+			this.x = 10; 
+			this.y = 70;
+			this.mouseChildren = this.mouseEnabled = false;
 			_txt.label_txt.autoSize = TextFieldAutoSize.LEFT;
 			addChild(_txt);
-			if (s) this.text = s;
+			this.text = s;
 		}
 		
 		public function set text(s:String):void
 		{
-			_txt.label_txt.text = s;	
+			_txt.label_txt.text = s || '';	
+		}
+		
+		public function set color(n:uint):void
+		{
+			_txt.label_txt.textColor = n;
 		}
 		
 	}
 	
 }
+

@@ -2,6 +2,7 @@ package view.modals.account {
 
 	import events.AppEvent;
 	import events.UIEvent;
+	import view.ui.TextHeading;
 	import com.greensock.TweenLite;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -11,6 +12,8 @@ package view.modals.account {
 
 		private var _view			:CollaboratorViewMC = new CollaboratorViewMC();
 		private var _item			:CollaboratorItem; // item queued for removal //
+		private var _line1			:TextHeading = new TextHeading();
+		private var _line2			:TextHeading = new TextHeading();		
 		private var _collabs		:Sprite = new Sprite();
 
 		public function CollaboratorView()
@@ -18,6 +21,7 @@ package view.modals.account {
 			addChild(_view);
 			addChild(_collabs);
 			registerButtons();
+			addTextHeadings();
 			_collabs.y = 43;
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(UIEvent.KILL_COLLABORATOR, onKillCollaborator);
@@ -32,7 +36,7 @@ package view.modals.account {
 		private function attachCollaborators():void
 		{
 			while(_collabs.numChildren) _collabs.removeChildAt(0);
-			var n:uint = super.repository.collaborators.length <= 15 ? super.repository.collaborators.length : 15; 
+			var n:uint = super.repository.collaborators.length <= 15 ? super.repository.collaborators.length : 15;
 			for (var i:int = 0; i < n; i++) {
 				var k:CollaboratorItem = new CollaboratorItem(super.repository.collaborators[i]);
 					k.x = 199.5 * (i % 3);
@@ -45,7 +49,7 @@ package view.modals.account {
 		{
 			var n:uint = super.repository.collaborators.length;
 			var s:String = n > 1 ? 's' : '';
-			_view.line2.text = 'You currently have '+n+' collaborator'+s+' on this repository.';
+			_line2.text = 'You currently have '+n+' collaborator'+s+' on this repository.';
 		}
 		
 		private function onKillCollaborator(e:UIEvent):void
@@ -72,8 +76,7 @@ package view.modals.account {
 					TweenLite.to(k, .3, {x:-199.5, onComplete:moveUpOnLevel, onCompleteParams:[k]});
 				}
 			}			
-			drawText();
-			super.repository.killCollaborator(_item.collaborator);
+			super.repository.killCollaborator(_item.collaborator); drawText();
 		}
 		
 		private function moveUpOnLevel(k:CollaboratorItem):void
@@ -87,6 +90,14 @@ package view.modals.account {
 			_view.addCollab.addEventListener(MouseEvent.CLICK, onAddCollaborator);
 			super.addButtons([_view.back, _view.addCollab]);
 		}
+		
+		private function addTextHeadings():void
+		{
+			addChild(_line1);
+			addChild(_line2);
+			_line1.y = 0; _line2.y = 17;
+			_line1.text = 'These are your collaborators.';
+		}			
 		
 		private function onAddCollaborator(e:MouseEvent):void
 		{

@@ -4,6 +4,7 @@ package view.modals.account {
 	import events.UIEvent;
 	import model.AppModel;
 	import model.vo.Repository;
+	import view.ui.TextHeading;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -13,6 +14,8 @@ package view.modals.account {
 	
 		private var _mask			:Shape = new Shape();
 		private var _view			:RepositoryViewMC = new RepositoryViewMC();
+		private var _line1			:TextHeading = new TextHeading();
+		private var _line2			:TextHeading = new TextHeading();
 		private var _repos			:Sprite = new Sprite();
 		private var _cloneURL		:String;
 		private var _savePath		:String;
@@ -20,6 +23,7 @@ package view.modals.account {
 		public function RepositoryView() 
 		{
 			addChild(_view);
+			addTextHeadings();
 			buildRepoContainer();
 			addEventListener(UIEvent.LOGGED_IN_CLONE, onCloneClick);
 			addEventListener(UIEvent.GET_COLLABORATORS, onCollabClick);
@@ -42,7 +46,7 @@ package view.modals.account {
 					rp.y = 44 * i;
 				_repos.addChild(rp);
 			}
-			_view.line1.text = 'Welcome, these are your '+super.account.type+' repositories!';		
+			_line1.text = 'Welcome, these are your '+super.account.type+' repositories!';		
 		}
 		
 		private function sortOn(v:*):Array
@@ -107,7 +111,15 @@ package view.modals.account {
 			_mask.graphics.drawRect(0, 0, 574, 309);
 			_mask.graphics.endFill();
 			_repos.mask = _mask;					
-		}			
+		}
+		
+		private function addTextHeadings():void
+		{
+			addChild(_line1);
+			addChild(_line2);
+			_line1.y = 0; _line2.y = 17;
+			_line2.text = 'Select one to clone or to manage your collaborators';
+		}					
 		
 		private function onMouseWheel(e:MouseEvent):void
 		{

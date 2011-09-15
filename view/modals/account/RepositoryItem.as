@@ -1,8 +1,12 @@
 package view.modals.account {
 
-	import system.StringUtils;
+	import events.AppEvent;
 	import events.UIEvent;
+	import model.AppModel;
+	import model.remote.HostingAccount;
 	import model.vo.Repository;
+	import system.StringUtils;
+	import view.modals.system.Message;
 	import view.ui.BasicButton;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -22,7 +26,7 @@ package view.modals.account {
  			_view.name_txt.autoSize = TextFieldAutoSize.LEFT;
 			_view.desc_txt.autoSize = TextFieldAutoSize.LEFT;
 			_view.name_txt.text = o.repoName;
-			_view.desc_txt.text = 'last commit :: '+StringUtils.parseISO8601Date(o.lastUpdated);
+			_view.desc_txt.text = 'last commit :: '+StringUtils.parseISO8601Date(o.lastUpdated).toLocaleString();
 			_clone.addEventListener(MouseEvent.CLICK, onCloneClick);
 			_collab.addEventListener(MouseEvent.CLICK, onCollabClick);
 		}
@@ -35,7 +39,12 @@ package view.modals.account {
 		private function onCollabClick(e:MouseEvent):void
 		{
 			AccountView.repository = _repo;
-			dispatchEvent(new UIEvent(UIEvent.GET_COLLABORATORS));
+			if (_repo.acctType == HostingAccount.GITHUB){
+				dispatchEvent(new UIEvent(UIEvent.GET_COLLABORATORS));
+			}	else{
+				var m:String = 'Beanstalk support for managing collaborators is still very buggy, but should hopefully be up and running soon.';
+				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));
+			}
 		}
 		
 	}

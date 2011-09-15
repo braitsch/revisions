@@ -1,16 +1,17 @@
 package model.proxies.remote.acct {
 
-	import model.vo.Repository;
 	import events.AppEvent;
 	import events.ErrEvent;
 	import model.remote.HostingAccount;
 	import model.remote.Hosts;
 	import model.vo.Collaborator;
 	import model.vo.GitHubRepo;
+	import model.vo.Repository;
 
 	public class GitHubApi extends ApiProxy {
 
 		private static var _repository		:Repository;
+		
 	// public methods //
 
 		override public function login(ra:HostingAccount):void
@@ -37,9 +38,9 @@ package model.proxies.remote.acct {
 			super.killCollaboratorFromRepo('/repos/'+super.account.user+'/'+r.repoName+'/collaborators/'+c.userName);
 		}		
 		
-		override public function addCollaborator(o:Collaborator):void
+		override public function addCollaborator(o:Collaborator, r:Repository):void
 		{
-			super.addCollaboratorToGitHub('Content-Length: 0', '/repos/'+super.account.user+'/'+o.repository.repoName+'/collaborators/'+o.userName);
+			super.addCollaboratorToGitHub('Content-Length: 0', '/repos/'+super.account.user+'/'+r.repoName+'/collaborators/'+o.userName);
 		}		
 		
 	// handlers //	
@@ -82,13 +83,7 @@ package model.proxies.remote.acct {
 		{
 			var o:Object = getResultObject(s);
 			if (o.message == null){
-				for (var i:int = 0; i < o.length; i++) {
-					var c:Collaborator = new Collaborator();
-						c.userId = o[i]['id'];
-						c.userName = o[i]['login'];
-						c.avatarURL = o[i]['avatar_url'];
-					_repository.addCollaborator(c);
-				}
+				for (var i:int = 0; i < o.length; i++) addCollaboratorToRepository(o[i]);
 				super.dispatchOnCollaborators();
 			}	else{
 				handleJSONError(o.message);
@@ -96,13 +91,19 @@ package model.proxies.remote.acct {
 		}
 		
 		override protected function onCollaboratorAdded(s:String):void
-		{	
-			var o:Object = getResultObject(s);
-			if (o.message == null){
-				super.dispatchCollaboratorAdded();
-			}	else{
-				handleJSONError(o.message);		
-			}
+		{
+		// adding collaborators does not return info about that collab //
+		// must call getCollaborators again to refresh app state and views //
+			getCollaborators(_repository);
+		}
+		
+		private function addCollaboratorToRepository(o:Object):void
+		{
+			var c:Collaborator = new Collaborator();
+				c.userId = o['id'];
+				c.userName = o['login'];
+				c.avatarURL = o['avatar_url'];
+			_repository.addCollaborator(c);			
 		}
 		
 	// handle github specific errors //		

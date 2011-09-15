@@ -67,16 +67,16 @@ package model.proxies.remote.acct {
 			super.request = BashMethods.KILL_COLLABORATOR;
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Removing Collaborator'}));
 			super.call(Vector.<String>([BashMethods.DELETE_REQUEST, _baseURL + url]));
+		}
+		
+		protected function getCollaboratorsPermissions(url:String):void
+		{
+			startTimer();
+			super.request = BashMethods.GET_PERMISSIONS;
+			super.call(Vector.<String>([BashMethods.GET_REQUEST, _baseURL + url]));			
 		}		
 		
-//		protected function getCollaboratorsPermissions(url:String):void
-//		{
-//			startTimer();
-//			super.request = BashMethods.GET_COLLABORATOR_PERMISSIONS;
-//			super.call(Vector.<String>([BashMethods.GET_REQUEST, _baseURL + url]));			
-//		}		
-		
-		public function addCollaborator(o:Collaborator):void { }
+		public function addCollaborator(o:Collaborator, r:Repository):void { }
 		protected function addCollaboratorToGitHub(header:String, url:String):void
 		{
 			startTimer();
@@ -102,7 +102,7 @@ package model.proxies.remote.acct {
 		
 		override protected function onProcessSuccess(r:String):void
 		{
-			trace("ApiProxy.onProcessSuccess(r)", super.request, r);
+			trace("ApiProxy.onProcessSuccess(r)", r);
 			switch(super.request){
 				case BashMethods.LOGIN :
 					onLoginSuccess(r);
@@ -115,7 +115,10 @@ package model.proxies.remote.acct {
 				break;	
 				case BashMethods.GET_COLLABORATORS : 
 					onCollaborators(r);
-				break;					
+				break;	
+				case BashMethods.GET_PERMISSIONS : 
+					onPermissions(r);
+				break;								
 				case BashMethods.ADD_COLLABORATOR : 
 					onCollaboratorAdded(r);
 				break;	
@@ -137,6 +140,8 @@ package model.proxies.remote.acct {
 		protected function onRepositoryCreated(s:String):void { }
 
 		protected function onCollaborators(s:String):void { }
+		
+		protected function onPermissions(s:String):void { }
 		
 		protected function onCollaboratorAdded(s:String):void { }
 		

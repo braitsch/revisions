@@ -1,10 +1,10 @@
 package view.modals.account {
 
-	import model.remote.Hosts;
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
 	import model.remote.HostingAccount;
+	import model.remote.Hosts;
 	import model.vo.Repository;
 	import view.modals.base.ModalWindow;
 	import view.modals.base.ModalWindowBasic;

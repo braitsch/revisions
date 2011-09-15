@@ -24,13 +24,13 @@ package system {
 		
 		public static function parseISO8601Date(x:String):Date
 		{
-			var y:String = x.substr(0, 4);
-			var m:String = x.substr(5, 2);
-			var d:String = x.substr(8, 2);
-			var h:String = x.substr(11, 2);
-			var n:String = x.substr(14, 2);
-			var s:String = x.substr(17, 2);
-			return new Date(y, m, d, h, n, s);
+			var y:uint = uint(x.substr(0, 4));
+			var m:uint = uint(x.substr(5, 2)) - 1;
+			var d:uint = uint(x.substr(8, 2));
+			var h:uint = uint(x.substr(11, 2));
+			var n:uint = uint(x.substr(14, 2));
+			var s:uint = uint(x.substr(17, 2));
+			return new Date(Date.UTC(y, m, d, h, n, s));
 		}		
 		
 	}

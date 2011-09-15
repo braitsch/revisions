@@ -58,13 +58,14 @@ package model.vo {
 		
 		public function addCollaborator(o:Collaborator):void
 		{
+			trace("Repository.addCollaborator(o)", o.avatarURL);
 			_collaborators.push(o);	
 		}
 		
 		public function killCollaborator(o:Collaborator):void
 		{
 			for (var i:int = 0; i < _collaborators.length; i++) {
-				if (_collaborators[i] == o) _collaborators.splice(i, 0);
+				if (_collaborators[i] == o) _collaborators.splice(i, 1);
 			}
 		}		
 	

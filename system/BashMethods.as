@@ -77,6 +77,7 @@ package system{
 		public static const KILL_COLLABORATOR		:String = "KILL_COLLABORATOR";
 		public static const SET_PERMISSIONS			:String = "SET_PERMISSIONS";
 		public static const GET_COLLABORATORS		:String = "GET_COLLABORATORS";
+		public static const GET_PERMISSIONS			:String = "GET_PERMISSIONS";
 		
 	}
 	
