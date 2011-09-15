@@ -32,7 +32,6 @@ package view.modals.local {
 			
 			_check.y = 170; 
 			_check.label = 'Autosave Every 60 Minutes';
-		//	_view.name_txt.text = _view.local_txt.text = ''; 
 			addEventListener(UIEvent.ENTER_KEY, onOkButton);
 		}
 
@@ -48,13 +47,13 @@ package view.modals.local {
 			var n:String = p.substr(p.lastIndexOf('/') + 1);
 		// if we get a file, strip off the file extension //	
 			if (!$file.isDirectory) n = n.substr(0, n.lastIndexOf('.'));
-			_view.local_txt.text = p;
-			_view.name_txt.text = n.substr(0,1).toUpperCase() + n.substr(1);
-		}			
+			_form.setField(0, n.substr(0,1).toUpperCase() + n.substr(1));
+			_form.setField(1, p);
+		}
 		
 		private function onOkButton(e:Event):void 
 		{	
-			var m:String = Bookmark.validate(_view.name_txt.text, _view.local_txt.text);
+			var m:String = Bookmark.validate(_form.getField(0), _form.getField(1));
 			if (m == '') {
 				initNewBookmark();
 			}	else{
@@ -64,11 +63,11 @@ package view.modals.local {
 		
 		private function initNewBookmark():void
 		{
-			var b:Boolean = new File('file://'+_view.local_txt.text).isDirectory;
+			var b:Boolean = new File('file://'+_form.getField(1)).isDirectory;
 			var o:Object = {
-				label		:	_view.name_txt.text,
+				label		:	_form.getField(0),
 				type		: 	b ? Bookmark.FOLDER : Bookmark.FILE,
-				path		:	_view.local_txt.text,
+				path		:	_form.getField(1),
 				active 		:	1,
 				autosave	:	_check.selected ? 60 : 0
 			};		
