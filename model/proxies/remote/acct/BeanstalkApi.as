@@ -1,11 +1,12 @@
 package model.proxies.remote.acct {
 
-	import model.remote.Hosts;
 	import events.AppEvent;
 	import events.ErrEvent;
 	import model.remote.HostingAccount;
+	import model.remote.Hosts;
 	import model.vo.BeanstalkRepo;
 	import model.vo.Collaborator;
+	import com.adobe.crypto.MD5;
 
 	public class BeanstalkApi extends ApiProxy {
 		
@@ -27,16 +28,21 @@ package model.proxies.remote.acct {
 			super.addRepositoryToAccount(HEADER_XML, getRepoObj(o.name), '/repositories.xml');
 		}
 		
-		override public function addCollaborator(o:Collaborator):void
-		{
-			_collab = o;
-			super.addCollaboratorToBeanstalk(HEADER_XML, getCollabObj(_collab), '/users.xml');
-		}	
-		
 		override public function getCollaborators():void
 		{
 			super.getCollaboratorsOfRepo('/users.xml');
 		}						
+		
+		override public function addCollaborator(o:Collaborator):void
+		{
+			_collab = o;
+			super.addCollaboratorToBeanstalk(HEADER_XML, getCollabObj(_collab), '/users.xml');
+		}
+		
+		override public function killCollaborator(c:Collaborator):void
+		{
+			super.setCollaboratorPermissions(HEADER_XML, getPermissionsObj(c, false), '/permissions.xml');
+		}				
 		
 	// handlers //			
 		
@@ -83,15 +89,50 @@ package model.proxies.remote.acct {
 		override protected function onCollaborators(s:String):void
 		{
 			_users = new XML(s)['user']; _index = 0;
-			trace('id=', _users[_index]['id']);
 			super.getCollaboratorsPermissions('/permissions/'+_users[_index]['id']+'.xml');
 		}
 		
 		override protected function onGetPermissions(s:String):void
 		{
 			var xml:XML = new XML(s); 
-			trace("BeanstalkApi.onPermissions(s)", xml);
-			if (++_index < _users.length()) super.getCollaboratorsPermissions('/permissions/'+_users[_index]['id']+'.xml');
+			_users[_index].appendChild(xml);
+			if (++_index == _users.length()) {
+				attachCollaboratorsToRepo();
+			}	else{
+				super.getCollaboratorsPermissions('/permissions/'+_users[_index]['id']+'.xml');
+			}
+		}
+		
+		private function attachCollaboratorsToRepo():void
+		{
+			var n:uint = super.account.repository.id;
+			var v:Vector.<Collaborator> = new Vector.<Collaborator>();
+			for (var i:int = 0; i < _users.length(); i++) {
+				if (_users[i]['owner'] == true){
+					v.push(newCollaborator(_users[i], false));
+				}	else if (_users[i]['admin'] == true){
+					v.push(newCollaborator(_users[i]));
+				}	else{
+					var p:XMLList = _users[i]['permissions']['permission'];
+					for (var k:int = 0; k < p.length(); k++) {
+						if (p[k]['repository-id'] == n){
+							if (p[k]['write'] == true) v.push(newCollaborator(_users[i]));
+						}
+					}
+				}
+			}
+			super.account.repository.collaborators = v;
+			super.dispatchCollaborators();
+		}
+		
+		private function newCollaborator(xml:XML, killable:Boolean = true):Collaborator
+		{
+			var c:Collaborator = new Collaborator();
+				c.userId = xml['id'];
+				c.userName = xml['login'];
+				c.killable = killable;
+				c.avatarURL = 'http://www.gravatar.com/avatar/'+MD5.hash(xml['email'])+'?s=26';
+			return c;				
 		}
 		
 		override protected function onCollaboratorAdded(s:String):void
@@ -101,7 +142,7 @@ package model.proxies.remote.acct {
 				dispatchFailure(xml.error);
 			}	else{
 				_collab.userId = xml.id;
-				super.setCollaboratorPermissions(HEADER_XML, getPermissionsObj(_collab), '/permissions.xml');
+				super.setCollaboratorPermissions(HEADER_XML, getPermissionsObj(_collab, _collab.readWrite), '/permissions.xml');
 			}
 		}	
 		
@@ -150,14 +191,15 @@ package model.proxies.remote.acct {
 			return s;			
 		}
 		
-		private function getPermissionsObj(o:Collaborator):String
+		private function getPermissionsObj(o:Collaborator, p:Boolean):String
 		{
 			var s:String = '';
 				s+='<?xml version="1.0" encoding="UTF-8"?>';
 				s+='<permission>';
   				s+='<user-id>'+o.userId+'</user-id>';
   				s+='<repository-id>'+super.account.repository.id+'</repository-id>';
-  				s+='<write>'+o.readWrite+'</write>';
+  				s+='<read type="boolean">'+p+'</read>';
+  				s+='<write>'+p+'</write>';
 				s+='</permission>';
 			return s;			
 		}

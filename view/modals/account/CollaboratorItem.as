@@ -1,7 +1,6 @@
 package view.modals.account {
 
 	import events.UIEvent;
-	import model.remote.Hosts;
 	import model.vo.Avatar;
 	import model.vo.Collaborator;
 	import flash.display.Sprite;
@@ -18,13 +17,13 @@ package view.modals.account {
 			_view.label.text = _data.userName;
 			addChild(_view);
 			attachAvatar();
-			attachCloseButton();
+			showKillButton();
 		}
 
 		public function get collaborator():Collaborator
 		{
 			return _data;
-		}	
+		}
 		
 		private function attachAvatar():void
 		{
@@ -33,14 +32,14 @@ package view.modals.account {
 			_view.addChild(a);
 		}
 		
-		private function attachCloseButton():void
+		private function showKillButton():void
 		{
-			if (_data.userName == Hosts.github.loggedIn.user){
+			if (_data.killable == false){
 				_view.close.visible = false;
 			}	else{
 				_view.close.buttonMode = true;
-				_view.close.addEventListener(MouseEvent.CLICK, onKillCollaborator);			
-			}
+				_view.close.addEventListener(MouseEvent.CLICK, onKillCollaborator);
+			}		
 		}
 
 		private function onKillCollaborator(e:MouseEvent):void
