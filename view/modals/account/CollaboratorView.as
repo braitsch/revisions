@@ -1,5 +1,6 @@
 package view.modals.account {
 
+	import model.vo.Collaborator;
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
@@ -37,9 +38,10 @@ package view.modals.account {
 		private function attachCollaborators():void
 		{
 			while(_collabs.numChildren) _collabs.removeChildAt(0);
-			var n:uint = super.repository.collaborators.length <= 15 ? super.repository.collaborators.length : 15;
+			var v:Vector.<Collaborator> = super.account.repository.collaborators;
+			var n:uint = v.length <= 15 ? v.length : 15;
 			for (var i:int = 0; i < n; i++) {
-				var k:CollaboratorItem = new CollaboratorItem(super.repository.collaborators[i]);
+				var k:CollaboratorItem = new CollaboratorItem(v[i]);
 					k.x = 199.5 * (i % 3);
 					k.y = Math.floor(i/3) * 57;
 				_collabs.addChild(k);
@@ -48,7 +50,7 @@ package view.modals.account {
 
 		private function drawText():void
 		{
-			var n:uint = super.repository.collaborators.length;
+			var n:uint = super.account.repository.collaborators.length;
 			var s:String = n > 1 ? 's' : '';
 			_line2.text = 'You currently have '+n+' collaborator'+s+' on this repository.';
 		}
@@ -56,7 +58,7 @@ package view.modals.account {
 		private function onKillCollaborator(e:UIEvent):void
 		{
 			_item = e.target as CollaboratorItem;
-			super.proxy.killCollaborator(super.repository, _item.collaborator);
+			super.proxy.killCollaborator(_item.collaborator);
 			AppModel.engine.addEventListener(AppEvent.COLLABORATORS_RECEIEVED, onCollaboratorRemoved);
 		}
 

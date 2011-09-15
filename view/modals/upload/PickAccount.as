@@ -1,11 +1,12 @@
 package view.modals.upload {
 
 	import events.AppEvent;
+	import events.ErrEvent;
+	import model.AppModel;
 	import model.remote.HostingAccount;
 	import model.remote.Hosts;
 	import view.modals.login.AccountLogin;
 	import flash.display.Sprite;
-	import flash.events.Event;
 	import flash.events.MouseEvent;
 
 	public class PickAccount extends WizardWindow {
@@ -13,25 +14,27 @@ package view.modals.upload {
 		private static var _page		:Sprite;
 		private static var _pick		:PickAccountMC = new PickAccountMC();
 		private static var _login		:AccountLogin;
+		private static var _service		:String;
 
 		public function PickAccount()
 		{
 			super.addHeading();
 			super.addBackButton();
 			super.addButtons([_pick.linkThis, _pick.linkDiff]);
-			_pick.linkDiff.addEventListener(MouseEvent.CLICK, showLoginWindow);
-			_pick.linkThis.addEventListener(MouseEvent.CLICK, super.dispatchNext);
+			_pick.linkDiff.addEventListener(MouseEvent.CLICK, onLinkDiff);
+			_pick.linkThis.addEventListener(MouseEvent.CLICK, onLinkThis);
 		}
 
-		override protected function onAddedToStage(e:Event):void
+		public function set service(s:String):void
 		{
-			if (super.service == HostingAccount.GITHUB){
-				Hosts.github.loggedIn ? showChooser() : showLoginWindow(e);
-			}	else if (super.service == HostingAccount.BEANSTALK){
-				Hosts.beanstalk.loggedIn ? showChooser() : showLoginWindow(e);
+			_service = s;
+			if (s == HostingAccount.GITHUB){
+				Hosts.github.loggedIn ? showChooser(Hosts.github.loggedIn) : showLoginWindow();
+			}	else if (s == HostingAccount.BEANSTALK){
+				Hosts.beanstalk.loggedIn ? showChooser(Hosts.beanstalk.loggedIn) : showLoginWindow();
 			}
 		}
-		
+
 		private function set page(w:Sprite):void
 		{
 			if (_page) removeChild(_page);
@@ -43,27 +46,59 @@ package view.modals.upload {
 			}
 		}
 		
-		private function showChooser():void
+		private function onLinkDiff(e:MouseEvent):void
 		{
-			var m:String;
-			if (super.service == HostingAccount.GITHUB){
-				m = 'You are currently logged into GitHub as "'+Hosts.github.loggedIn.acct+'".';
-			}	else if (super.service == HostingAccount.BEANSTALK){
-				m = 'You are currently logged into the Beanstalk account "'+Hosts.beanstalk.loggedIn.acct+'".';
-			}
-			m+='\nWhat would you like to do?';
-			super.heading = m;
+			showLoginWindow();
+		}		
+		
+		private function onLinkThis(e:MouseEvent):void
+		{
+			super.dispatchNext();
+		}		
+		
+		private function showChooser(a:HostingAccount):void
+		{
+			super.account = a;
+			super.heading = 'You are currently logged into the '+a.type+' account "'+a.acctName+'".\nWhat would you like to do?';
 			this.page = _pick;
 		}
 		
-		private function showLoginWindow(e:Event):void
+		private function showLoginWindow():void
 		{
-			_login = new AccountLogin(super.service);
+			_login = new AccountLogin(_service);
 			_login.y = 70;
 			_login.baseline = 280;
-			_login.addEventListener(AppEvent.LOGIN_SUCCESS, super.dispatchNext);
+			_login.addEventListener(AppEvent.ATTEMPT_LOGIN, onAttemptLogin);
 			this.page = _login;
-			super.heading =  'Please login to your '+super.service+' account';
+			super.heading =  'Please login to your '+_service+' account';
+		}
+
+		private function onAttemptLogin(e:AppEvent):void
+		{
+			AppModel.engine.addEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);
+			AppModel.engine.addEventListener(ErrEvent.LOGIN_FAILURE, onLoginFailure);
+		}
+
+		private function onLoginSuccess(e:AppEvent):void
+		{
+			if (_service == HostingAccount.GITHUB){
+				super.account = Hosts.github.loggedIn;
+			}	else if (_service == HostingAccount.BEANSTALK){
+				super.account = Hosts.beanstalk.loggedIn;
+			}
+			removeListeners();
+			super.dispatchNext();	
+		}
+		
+		private function onLoginFailure(e:ErrEvent):void
+		{
+			removeListeners();
+		}
+
+		private function removeListeners():void
+		{
+			AppModel.engine.removeEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);
+			AppModel.engine.removeEventListener(ErrEvent.LOGIN_FAILURE, onLoginFailure);			
 		}
 		
 	}

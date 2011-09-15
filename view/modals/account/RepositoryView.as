@@ -61,7 +61,8 @@ package view.modals.account {
 	
 		private function onCollabClick(e:UIEvent):void
 		{
-			if (super.repository.collaborators == null){
+			super.account.repository = e.data as Repository;
+			if (super.account.repository.collaborators == null){
 				requestCollaborators();
 			}	else{
 				dispatchEvent(new UIEvent(UIEvent.WIZARD_NEXT));
@@ -70,7 +71,7 @@ package view.modals.account {
 
 		private function requestCollaborators():void
 		{
-			super.proxy.getCollaborators(super.repository);
+			super.proxy.getCollaborators();
 			AppModel.engine.addEventListener(AppEvent.COLLABORATORS_RECEIEVED, onCollaboratorsReceived);
 		}
 	

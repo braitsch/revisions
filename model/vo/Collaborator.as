@@ -4,13 +4,12 @@ package model.vo {
 	
 		public var firstName			:String;
 		public var lastName				:String;
-		public var fullName				:String;
-		public var userId				:uint;
+		public var avatarURL			:String;
+		public var userId				:uint;		// beanstalk only //
 		public var userName				:String;
 		public var passWord				:String;
 		public var userEmail			:String;
-		public var readWrite 			:Boolean;
-		public var avatarURL			:String;
+		public var readWrite 			:Boolean;	// beanstalk specific privileges
 		
 	}
 	

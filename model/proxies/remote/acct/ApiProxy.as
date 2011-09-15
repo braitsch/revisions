@@ -1,6 +1,5 @@
 package model.proxies.remote.acct {
 
-	import model.vo.Repository;
 	import events.AppEvent;
 	import model.AppModel;
 	import model.proxies.remote.base.CurlProxy;
@@ -51,7 +50,7 @@ package model.proxies.remote.acct {
 		
 	// collaborators //	
 	
-		public function getCollaborators(r:Repository):void { }	
+		public function getCollaborators():void { }	
 		protected function getCollaboratorsOfRepo(url:String):void
 		{
 			startTimer();
@@ -60,7 +59,7 @@ package model.proxies.remote.acct {
 			super.call(Vector.<String>([BashMethods.GET_REQUEST, _baseURL + url]));			
 		}
 		
-		public function killCollaborator(r:Repository, c:Collaborator):void { }	
+		public function killCollaborator(c:Collaborator):void { }	
 		protected function killCollaboratorFromRepo(url:String):void
 		{
 			startTimer();
@@ -76,7 +75,7 @@ package model.proxies.remote.acct {
 			super.call(Vector.<String>([BashMethods.GET_REQUEST, _baseURL + url]));			
 		}		
 		
-		public function addCollaborator(o:Collaborator, r:Repository):void { }
+		public function addCollaborator(o:Collaborator):void { }
 		protected function addCollaboratorToGitHub(header:String, url:String):void
 		{
 			startTimer();
@@ -125,7 +124,7 @@ package model.proxies.remote.acct {
 					onGetPermissions(r);
 				break;								
 				case BashMethods.SET_PERMISSIONS : 
-					onSetPermissions(r);
+					dispatchCollaborators();
 				break;
 			}			
 		}
@@ -146,12 +145,10 @@ package model.proxies.remote.acct {
 		
 		protected function onGetPermissions(s:String):void { }
 		
-		protected function onSetPermissions(s:String):void { }
-		
 		protected function dispatchLoginSuccess():void 
 		{ 
-			dispatchEvent(new AppEvent(AppEvent.LOGIN_SUCCESS, _account));
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.LOGIN_SUCCESS));
 		}
 		
 		protected function dispatchCollaborators():void 

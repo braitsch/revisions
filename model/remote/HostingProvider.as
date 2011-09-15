@@ -22,9 +22,9 @@ package model.remote {
 		public function get login()			:ModalWindow 		{ return _model.login; 			}
 		public function get addRepoObj()	:Object				{ return _model.addRepoObj; 	}
 
-		public function HostingProvider(o:IHostingProvider):void{
+		public function HostingProvider(o:IHostingProvider):void
+		{
 			_model = o;
-			_model.api.addEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);
 			_model.key.addEventListener(AppEvent.REMOTE_KEY_READY, onRemoteKeyReady);
 		}
 		
@@ -52,11 +52,9 @@ package model.remote {
 			return null;
 		}
 		
-	// private methods //	
-		
-		private function onLoginSuccess(e:AppEvent):void
+		public function set loggedIn(a:HostingAccount):void
 		{
-			_loggedIn = e.data as HostingAccount;
+			_loggedIn = a;
 			if (_saveAccount) writeAcctToDatabase(_loggedIn);
 			if (_model.type == HostingAccount.BEANSTALK) _model.key.checkKey(_loggedIn);
 		}

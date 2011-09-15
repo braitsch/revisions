@@ -65,7 +65,7 @@ package model.db {
 		{
 			var s:SQLStatement = new SQLStatement();
 			s.text = "INSERT INTO accounts (type, acct, user, pass, sshKeyId) ";
-			s.text+= "VALUES ('"+a.type+"', '"+a.acct+"', '"+a.user+"', '"+a.pass+"', '"+a.sshKeyId+"')";
+			s.text+= "VALUES ('"+a.type+"', '"+a.acctName+"', '"+a.user+"', '"+a.pass+"', '"+a.sshKeyId+"')";
 			return s;			
 		}
 

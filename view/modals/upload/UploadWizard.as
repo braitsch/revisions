@@ -46,6 +46,7 @@ package view.modals.upload {
 				case _pickService :
 					_status.page = 2;
 					_status.service = e.data as String;
+					_pickAccount.service = e.data as String;
 					nextPage(_pickAccount);
 				break;
 				case _pickAccount :

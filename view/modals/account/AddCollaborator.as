@@ -60,7 +60,7 @@ package view.modals.account {
 		
 		private function onNextButton(e:Event):void
 		{
-			_view.addCollaborator(super.repository);
+			_view.addCollaborator();
 			AppModel.engine.addEventListener(AppEvent.COLLABORATORS_RECEIEVED, onCollabAdded);
 		}
 		

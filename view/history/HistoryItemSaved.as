@@ -45,22 +45,22 @@ package view.history {
 			_buttons = [_view.buttons.revert, _view.buttons.download, _view.buttons.info];
 			var l:Array = ['Revert', 'Download', 'Info'];
 			for (var i:int = 0; i < 3; i++) {
-				var b:BasicButton = new BasicButton(_buttons[i], l[i]);
-					b.addEventListener(MouseEvent.CLICK, onButtonClick);
+				new BasicButton(_buttons[i], l[i]);
+				_buttons[i].addEventListener(MouseEvent.CLICK, onButtonClick);
 			}
 		}
 
 		private function onButtonClick(e:MouseEvent):void
 		{
-			switch (e.currentTarget.name){
-				case 'revert'	:
+			switch (e.currentTarget){
+				case _buttons[0]	:
 					dispatchEvent(new UIEvent(UIEvent.REVERT, _commit));
 				break;	
-				case 'info' 	: 
-					dispatchEvent(new UIEvent(UIEvent.SHOW_COMMIT, _commit));
-				break;
-				case 'download'	:
+				case _buttons[1] 	: 
 					dispatchEvent(new UIEvent(UIEvent.DOWNLOAD, _commit));
+				break;
+				case _buttons[2]	:
+					dispatchEvent(new UIEvent(UIEvent.SHOW_COMMIT, _commit));
 				break;				
 			}
 		}		

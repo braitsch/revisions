@@ -1,26 +1,24 @@
 package model.proxies.remote.acct {
 
+	import model.remote.Hosts;
 	import events.AppEvent;
 	import events.ErrEvent;
 	import model.remote.HostingAccount;
-	import model.remote.Hosts;
 	import model.vo.BeanstalkRepo;
 	import model.vo.Collaborator;
-	import model.vo.Repository;
 
 	public class BeanstalkApi extends ApiProxy {
 		
 		private static var _index		:uint;
 		private static var _users		:XMLList;
 		private static var _collab		:Collaborator;
-		private static var _repository	:BeanstalkRepo;
 
 	// public methods //
 
 		override public function login(ra:HostingAccount):void
 		{
 			super.login(ra);
-			super.baseURL = 'https://'+ra.user+':'+ra.pass+'@'+ra.acct+'.beanstalkapp.com/api';
+			super.baseURL = 'https://'+ra.user+':'+ra.pass+'@'+ra.acctName+'.beanstalkapp.com/api';
 			super.loginToAccount('/users.xml');
 		}
 		
@@ -29,15 +27,14 @@ package model.proxies.remote.acct {
 			super.addRepositoryToAccount(HEADER_XML, getRepoObj(o.name), '/repositories.xml');
 		}
 		
-		override public function addCollaborator(o:Collaborator, r:Repository):void
+		override public function addCollaborator(o:Collaborator):void
 		{
-			_collab = o; _repository = r as BeanstalkRepo;
+			_collab = o;
 			super.addCollaboratorToBeanstalk(HEADER_XML, getCollabObj(_collab), '/users.xml');
 		}	
 		
-		override public function getCollaborators(r:Repository):void
+		override public function getCollaborators():void
 		{
-			_repository = r as BeanstalkRepo;
 			super.getCollaboratorsOfRepo('/users.xml');
 		}						
 		
@@ -71,16 +68,16 @@ package model.proxies.remote.acct {
 					super.account.addRepository(new BeanstalkRepo(xl[i], url));
 				}
 			}
+			Hosts.beanstalk.loggedIn = super.account;
 			dispatchLoginSuccess();
 		}
 		
 		override protected function onRepositoryCreated(s:String):void
 		{
 			var xml:XML = new XML(s);
-			var url:String = 'git@'+super.account.acct+'.beanstalkapp.com:/'+xml.name+'.git';
-			var rpo:BeanstalkRepo = new BeanstalkRepo(xml, url);
-			Hosts.beanstalk.home.addRepository(rpo);
-			dispatchEvent(new AppEvent(AppEvent.REPOSITORY_CREATED, rpo));
+			var url:String = 'git@'+super.account.acctName+'.beanstalkapp.com:/'+xml.name+'.git';
+			super.account.addRepository(new BeanstalkRepo(xml, url));
+			dispatchEvent(new AppEvent(AppEvent.REPOSITORY_CREATED));
 		}
 		
 		override protected function onCollaborators(s:String):void
@@ -104,7 +101,7 @@ package model.proxies.remote.acct {
 				dispatchFailure(xml.error);
 			}	else{
 				_collab.userId = xml.id;
-				super.setCollaboratorPermissions(HEADER_XML, getPermissionsObj(_collab, _repository), '/permissions.xml');
+				super.setCollaboratorPermissions(HEADER_XML, getPermissionsObj(_collab), '/permissions.xml');
 			}
 		}	
 		
@@ -153,16 +150,15 @@ package model.proxies.remote.acct {
 			return s;			
 		}
 		
-		private function getPermissionsObj(o:Collaborator, r:BeanstalkRepo):String
+		private function getPermissionsObj(o:Collaborator):String
 		{
 			var s:String = '';
 				s+='<?xml version="1.0" encoding="UTF-8"?>';
 				s+='<permission>';
   				s+='<user-id>'+o.userId+'</user-id>';
-  				s+='<repository-id>'+r.id+'</repository-id>';
+  				s+='<repository-id>'+super.account.repository.id+'</repository-id>';
   				s+='<write>'+o.readWrite+'</write>';
 				s+='</permission>';
-			trace("BeanstalkApi.getPermissionsObj(o) >>", s);	
 			return s;			
 		}
 		

@@ -38,9 +38,8 @@ package view.modals.account {
 		
 		private function onCollabClick(e:MouseEvent):void
 		{
-			AccountView.repository = _repo;
 			if (_repo.acctType == HostingAccount.GITHUB){
-				dispatchEvent(new UIEvent(UIEvent.GET_COLLABORATORS));
+				dispatchEvent(new UIEvent(UIEvent.GET_COLLABORATORS, _repo));
 			}	else{
 				var m:String = 'Beanstalk support for managing collaborators is still very buggy, but should hopefully be up and running soon.';
 				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));

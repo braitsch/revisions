@@ -4,7 +4,6 @@ package view.modals.collab {
 	import model.AppModel;
 	import model.remote.Hosts;
 	import model.vo.Collaborator;
-	import model.vo.Repository;
 	import system.StringUtils;
 	import view.modals.system.Debug;
 	import view.modals.system.Message;
@@ -27,7 +26,6 @@ package view.modals.collab {
 		private var _message			:String = '(optional) we\'ll use their last name if you leave this blank.';
 		private var _urlLoader			:URLLoader;
 		private var _collab				:Collaborator = new Collaborator();	
-		private var _repository			:Repository;
 
 		public function AddBeanstalkCollab()
 		{
@@ -40,20 +38,20 @@ package view.modals.collab {
 			addChild(_check);
 		}
 		
-		public function addCollaborator(r:Repository):void
+		public function get collab():Collaborator { return _collab; }
+		
+		public function addCollaborator():void
 		{
-			_repository = r;
 			_collab.firstName 	= 	_form.getField(0);
 			_collab.lastName 	= 	_form.getField(1);
 			_collab.userEmail	=	_form.getField(2); 
 			_collab.userName	=	_form.getField(3); 
 			_collab.readWrite 	= 	_check.selected;
-			_collab.fullName 	= 	_form.getField(0) +' '+_form.getField(1);
 			_collab.passWord 	= 	MD5.hash(new Date().toString());		
 			if (_collab.userName == _message || _collab.userName == '') _collab.userName = _collab.lastName.toLowerCase();
 			var m:String = validate();
 			if (m == null){
-				Hosts.beanstalk.api.addCollaborator(_collab, _repository);
+				Hosts.beanstalk.api.addCollaborator(_collab);
 			}	else{
 				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));
 			}	
@@ -83,7 +81,7 @@ package view.modals.collab {
 				vrs.sendersEmail = 'stephen@quietless';
 				vrs.userName = _collab.userName;
 				vrs.userPass = _collab.passWord;
-				vrs.homePage = _repository.homePage;
+				vrs.homePage = Hosts.beanstalk.loggedIn.repository.homePage;
 			var req:URLRequest = new URLRequest('http://revisions-app.com/email/add-collaborator.php');
 				req.method = URLRequestMethod.POST;
 				req.data = vrs;

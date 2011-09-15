@@ -4,8 +4,9 @@ package model.vo {
 
 	public class Repository {
 
-		private var _name			:String; // ex. github-revisions-source //
+		private var _id				:uint;
 		private var _url			:String;
+		private var _name			:String; // ex. github-revisions-source //
 		private var _branches		:Array = [];
 		private var _acctType		:String;
 		private var _acctName		:String;
@@ -23,6 +24,7 @@ package model.vo {
 			_homePage = getRepositoryHomePage(url);
 		}
 		
+		public function get id()			:uint 	{ return _id; 		   }
 		public function get url()			:String { return _url; 		   }
 		public function get name()			:String { return _name; 	   }
 		public function get acctType()		:String { return _acctType;	   }	

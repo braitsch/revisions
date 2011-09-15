@@ -5,7 +5,6 @@ package view.modals.account {
 	import model.AppModel;
 	import model.remote.HostingAccount;
 	import model.remote.Hosts;
-	import model.vo.Repository;
 	import view.modals.base.ModalWindow;
 	import view.modals.base.ModalWindowBasic;
 	import view.modals.system.Message;
@@ -46,12 +45,6 @@ package view.modals.account {
 			_viewRepos.reset();
 		}
 
-		public function addRepository(o:Repository):void
-		{
-			_account.repositories.push(o);
-			_viewRepos.reset();
-		}
-		
 		private function attachAvatar():void
 		{
 			_account.avatar.y = 8; 

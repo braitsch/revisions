@@ -13,7 +13,7 @@ package model.vo {
 			super.lastUpdated = _xml['last-commit-at'];
 		}
 
-		public function get id():uint
+		override public function get id():uint
 		{
 			return _xml.id;
 		}

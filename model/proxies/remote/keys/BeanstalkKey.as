@@ -8,7 +8,7 @@ package model.proxies.remote.keys {
 		override public function checkKey(ra:HostingAccount):void
 		{
 			super.account = ra;
-			super.baseURL = 'https://'+ra.user+':'+ra.pass+'@'+ra.acct+'.beanstalkapp.com/api';
+			super.baseURL = 'https://'+ra.user+':'+ra.pass+'@'+ra.acctName+'.beanstalkapp.com/api';
 			super.getAllRemoteKeys('/public_keys.xml');
 		}
 		
@@ -36,7 +36,7 @@ package model.proxies.remote.keys {
 		{
 			var xml:XML = new XML(s);
 			super.account.sshKeyId = xml['id'];
-			super.addToKnownHosts(super.account.acct+'.beanstalkapp.com');
+			super.addToKnownHosts(super.account.acctName+'.beanstalkapp.com');
 		}
 		
 		override protected function onKeyRemovedFromAccount(s:String):void

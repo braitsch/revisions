@@ -4,13 +4,11 @@ package view.modals.account {
 	import model.remote.HostingAccount;
 	import model.remote.HostingProvider;
 	import model.remote.Hosts;
-	import model.vo.Repository;
 	import view.modals.base.ModalWindowBasic;
 
 	public class AccountView extends ModalWindowBasic {
 
 		private static var _account			:HostingAccount;
-		private static var _repository		:Repository;
 		private static var _service			:HostingProvider;
 		private static var _proxy			:ApiProxy;
 
@@ -23,11 +21,6 @@ package view.modals.account {
 				_service = Hosts.beanstalk;
 			}
 			_proxy = _service.api;
-		}
-		
-		public static function set repository(r:Repository):void	
-		{
-			_repository = r; 
 		}
 		
 	// instance getters //	
@@ -47,11 +40,6 @@ package view.modals.account {
 			return _proxy;
 		}
 
-		public function get repository():Repository
-		{
-			return _repository;
-		}				
-		
 	}
 	
 }

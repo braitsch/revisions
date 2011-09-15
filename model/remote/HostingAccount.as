@@ -19,6 +19,7 @@ package model.remote {
 		private var _avatar				:Avatar;
 		private var _fullName			:String;
 		private var _location			:String;
+		private var _repository			:Repository;
 		private var _repositories		:Vector.<Repository> = new Vector.<Repository>();
 
 		public function HostingAccount(o:Object)
@@ -37,7 +38,7 @@ package model.remote {
 			_avatar = new Avatar(o.avatar_url || 'http://www.gravatar.com/avatar/'+MD5.hash(o.email)+'?s=26');
 		}
 
-		public function get acct()			:String 	{ return _acct; 		}
+		public function get acctName()		:String 	{ return _acct; 		}
 		public function get type()			:String 	{ return _type; 		}
 		public function get user()			:String 	{ return _user; 		}
 		public function get pass()			:String 	{ return _pass; 		}
@@ -51,12 +52,23 @@ package model.remote {
 		
 		public function addRepository(rpo:Repository):void
 		{
-			_repositories.push(rpo);	
+			_repository = rpo;
+			_repositories.push(rpo);
 		}
 		
 		public function get repositories():Vector.<Repository> 
 		{ 
-			return _repositories;	
+			return _repositories;
+		}
+
+		public function get repository():Repository
+		{
+			return _repository;
+		}
+
+		public function set repository(r:Repository):void
+		{
+			_repository = r;
 		}		
 		
 	}

@@ -3,10 +3,7 @@ package view.modals.upload {
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
-	import model.proxies.remote.acct.ApiProxy;
 	import model.remote.HostingAccount;
-	import model.remote.Hosts;
-	import model.vo.Repository;
 	import view.ui.Form;
 	import flash.events.Event;
 	
@@ -33,10 +30,10 @@ package view.modals.upload {
 		{
 			_form.setField(0, AppModel.bookmark.label);
 			_form.setField(1, super.repoName);
-			if (super.service == HostingAccount.GITHUB){
+			if (super.account.type == HostingAccount.GITHUB){
 				_form.setField(2, super.repoDesc == '(optional)' ? '' : super.repoDesc);
 				_form.setField(3, super.repoURL);
-			}	else if (super.service == HostingAccount.BEANSTALK){
+			}	else if (super.account.type == HostingAccount.BEANSTALK){
 				_form.setField(2, super.repoURL);
 			}					
 		}
@@ -44,9 +41,9 @@ package view.modals.upload {
 		private function attachForm():void
 		{
 			if (_form) removeChild(_form);
-			if (super.service == HostingAccount.GITHUB){
+			if (super.account.type == HostingAccount.GITHUB){
 				attachGHForm();
-			}	else if (super.service == HostingAccount.BEANSTALK){
+			}	else if (super.account.type == HostingAccount.BEANSTALK){
 				attachBSForm();
 			}			
 			_form.y = 90; addChildAt(_form, 0); 
@@ -68,17 +65,15 @@ package view.modals.upload {
 		
 		private function onBkmkAddedToAcct(e:AppEvent):void
 		{
-			super.repository = e.data as Repository;
 			super.onNextButton(e);
 		}		
 		
 		override protected function onNextButton(e:Event):void
 		{
-			var api:ApiProxy = super.service == HostingAccount.GITHUB ? Hosts.github.api : Hosts.beanstalk.api; 
 			var o:Object = {	bkmk	:	AppModel.bookmark, 
-								acct	:	api,
+								acct	:	super.account,
 								name	:	_form.getField(1),
-								desc	:	super.service == HostingAccount.GITHUB ? _form.getField(2) : '',
+								desc	:	super.account.type == HostingAccount.GITHUB ? _form.getField(2) : '',
 								publik	:	super.repoPrivate == false	};
 			AppModel.proxies.remote.addBkmkToAccount(o);
 		}			

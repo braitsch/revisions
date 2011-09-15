@@ -120,7 +120,7 @@ package model.proxies.remote.base {
 		{
 		// only github supports requests over https //	
 			var an:String = Repository.getAccountName(u);
-			var ha:HostingAccount = Hosts.github.getAccountByProp('acct', an);
+			var ha:HostingAccount = Hosts.github.getAccountByProp('acctName', an);
 			if (ha){
 				_request.url = Repository.buildHttpsURL(ha.user, ha.pass, an, u.substr(u.lastIndexOf('/') + 1));
 				attemptRequest();

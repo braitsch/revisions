@@ -1,8 +1,7 @@
 package view.modals.upload {
 
 	import events.UIEvent;
-	import model.vo.Collaborator;
-	import model.vo.Repository;
+	import model.remote.HostingAccount;
 	import view.modals.base.ModalWindowBasic;
 	import view.ui.TextHeading;
 	import flash.display.Sprite;
@@ -15,16 +14,12 @@ package view.modals.upload {
 		private var _backBtn			:BackButton;
 		private var _heading			:TextHeading;
 		
-		protected var service			:String; 	// github or beanstalk //
-		protected var repoId			:uint;		// beanstalk only //
-		protected var repoName			:String;
-		protected var repoDesc			:String;	// github only  //
-		protected var repoURL			:String;
-		protected var repoPrivate		:Boolean;	// github only //
-		
-	// the newly created repo & collab on success //	
-		protected var repository		:Repository;
-		protected var collaborator		:Collaborator;
+		private static var _account			:HostingAccount;
+		private static var _repoId			:uint;		// beanstalk only //
+		private static var _repoName		:String;
+		private static var _repoDesc		:String;	// github only  //
+		private static var _repoURL			:String;
+		private static var _repoPrivate		:Boolean;	// github only //
 		
 		protected function addHeading(s:String = ''):void
 		{
@@ -75,8 +70,26 @@ package view.modals.upload {
 		private function dispatchPrev(e:MouseEvent):void
 		{
 			dispatchEvent(new UIEvent(UIEvent.WIZARD_PREV));
-		}		
-		
+		}
+
+		public function get account():HostingAccount { return _account; }
+		public function set account(a:HostingAccount):void { _account = a; }
+
+		public function get repoId():uint { return _repoId; }
+		public function set repoId(repoId:uint):void { _repoId = repoId; }
+
+		public function get repoName():String { return _repoName; }
+		public function set repoName(repoName:String):void { _repoName = repoName; }
+
+		public function get repoDesc():String { return _repoDesc; }
+		public function set repoDesc(repoDesc:String):void { _repoDesc = repoDesc; }
+
+		public function get repoURL():String { return _repoURL; }
+		public function set repoURL(repoURL:String):void { _repoURL = repoURL; }
+
+		public function get repoPrivate():Boolean { return _repoPrivate; }
+		public function set repoPrivate(repoPrivate:Boolean):void { _repoPrivate = repoPrivate; }
+
 	}
 	
 }

@@ -1,5 +1,6 @@
 package model {
 
+	import model.vo.Repository;
 	import events.BookmarkEvent;
 	import flash.events.EventDispatcher;
 	import model.db.AppDatabase;
@@ -16,7 +17,8 @@ package model {
 		private static var _database		:AppDatabase = new AppDatabase();
 		private static var _settings		:AppSettings = new AppSettings();
 		private static var _updater			:UpdateManager = new UpdateManager();
-		private static var _bookmark		:Bookmark; // the active bookmark //
+		
+		private static var _bookmark		:Bookmark; // active bookmark //
 
 		public function AppModel() 
 		{
