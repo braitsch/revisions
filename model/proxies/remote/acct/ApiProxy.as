@@ -59,29 +59,13 @@ package model.proxies.remote.acct {
 			super.call(Vector.<String>([BashMethods.GET_REQUEST, _baseURL + url]));			
 		}
 		
-		public function killCollaborator(c:Collaborator):void { }	
-		protected function killCollaboratorFromRepo(url:String):void
-		{
-			startTimer();
-			super.request = BashMethods.KILL_COLLABORATOR;
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Removing Collaborator'}));
-			super.call(Vector.<String>([BashMethods.DELETE_REQUEST, _baseURL + url]));
-		}
-		
-		protected function getCollaboratorsPermissions(url:String):void
-		{
-			startTimer();
-			super.request = BashMethods.GET_PERMISSIONS;
-			super.call(Vector.<String>([BashMethods.GET_REQUEST, _baseURL + url]));			
-		}		
-		
 		public function addCollaborator(o:Collaborator):void { }
 		protected function addCollaboratorToGitHub(header:String, url:String):void
 		{
 			startTimer();
 			super.request = BashMethods.ADD_COLLABORATOR;
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Adding Collaborator'}));
-			super.call(Vector.<String>([BashMethods.PUT_REQUEST, header, _baseURL + url]));
+			super.call(Vector.<String>([BashMethods.PUT_REQUEST, header, header, _baseURL + url]));
 		}		
 		
 		protected function addCollaboratorToBeanstalk(header:String, data:Object, url:String):void
@@ -92,12 +76,37 @@ package model.proxies.remote.acct {
 			super.call(Vector.<String>([BashMethods.POST_REQUEST, header, data, _baseURL + url]));	
 		}
 		
+		public function killCollaborator(c:Collaborator):void { }	
+		protected function killCollaboratorFromRepo(url:String):void
+		{
+			startTimer();
+			super.request = BashMethods.KILL_COLLABORATOR;
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Removing Collaborator'}));
+			super.call(Vector.<String>([BashMethods.DELETE_REQUEST, _baseURL + url]));
+		}	
+		
+	// beanstalk permission methods //			
+		
+		protected function getCollaboratorsPermissions(url:String):void
+		{
+			startTimer();
+			super.request = BashMethods.GET_PERMISSIONS;
+			super.call(Vector.<String>([BashMethods.GET_REQUEST, _baseURL + url]));			
+		}
+		
 		protected function setCollaboratorPermissions(header:String, data:Object, url:String):void
 		{
 			startTimer();
 			super.request = BashMethods.SET_PERMISSIONS;
 			super.call(Vector.<String>([BashMethods.POST_REQUEST, header, data, _baseURL + url]));	
-		}		
+		}
+		
+		protected function setAdmin(header:String, data:Object, url:String):void
+		{
+			startTimer();
+			super.request = BashMethods.SET_ADMINISTRATOR;
+			super.call(Vector.<String>([BashMethods.PUT_REQUEST, header, data, _baseURL + url]));				
+		}			
 		
 		override protected function onProcessSuccess(r:String):void
 		{
@@ -124,8 +133,11 @@ package model.proxies.remote.acct {
 					onGetPermissions(r);
 				break;								
 				case BashMethods.SET_PERMISSIONS : 
-					dispatchCollaborators();
+					onSetPermissions(r);
 				break;
+				case BashMethods.SET_ADMINISTRATOR : 
+					dispatchCollaborators();
+				break;				
 			}			
 		}
 
@@ -145,6 +157,8 @@ package model.proxies.remote.acct {
 		
 		protected function onGetPermissions(s:String):void { }
 		
+		protected function onSetPermissions(s:String):void { }
+		
 		protected function dispatchLoginSuccess():void 
 		{ 
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
@@ -155,8 +169,8 @@ package model.proxies.remote.acct {
 		{ 
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.COLLABORATORS_RECEIEVED));
-		}		
-		
+		}
+
 	}
 	
 }

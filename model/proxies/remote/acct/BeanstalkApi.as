@@ -39,9 +39,15 @@ package model.proxies.remote.acct {
 			super.addCollaboratorToBeanstalk(HEADER_XML, getCollabObj(_collab), '/users.xml');
 		}
 		
-		override public function killCollaborator(c:Collaborator):void
+		public function setAdminPermissions(o:Collaborator):void
 		{
-			super.setCollaboratorPermissions(HEADER_XML, getPermissionsObj(c, false), '/permissions.xml');
+			super.setAdmin(HEADER_XML, getAdminObj(o), '/users/'+o.userId+'.xml');
+		}
+		
+		override public function killCollaborator(o:Collaborator):void
+		{
+			_collab = o;
+			super.killCollaboratorFromRepo('/users/'+o.userId+'.xml');
 		}				
 		
 	// handlers //			
@@ -97,42 +103,41 @@ package model.proxies.remote.acct {
 			var xml:XML = new XML(s); 
 			_users[_index].appendChild(xml);
 			if (++_index == _users.length()) {
-				attachCollaboratorsToRepo();
+				parseCollaborators();
 			}	else{
 				super.getCollaboratorsPermissions('/permissions/'+_users[_index]['id']+'.xml');
 			}
 		}
 		
-		private function attachCollaboratorsToRepo():void
+		override protected function onSetPermissions(s:String):void
 		{
-			var n:uint = super.account.repository.id;
-			var v:Vector.<Collaborator> = new Vector.<Collaborator>();
-			for (var i:int = 0; i < _users.length(); i++) {
-				if (_users[i]['owner'] == true){
-					v.push(newCollaborator(_users[i], false));
-				}	else if (_users[i]['admin'] == true){
-					v.push(newCollaborator(_users[i]));
-				}	else{
-					var p:XMLList = _users[i]['permissions']['permission'];
-					for (var k:int = 0; k < p.length(); k++) {
-						if (p[k]['repository-id'] == n){
-							if (p[k]['write'] == true) v.push(newCollaborator(_users[i]));
-						}
-					}
-				}
+			var xml:XML = new XML(s);
+			if (xml['error'][0] == "Mode can't be blank" && xml['error'][1] == "Mode is invalid"){
+				super.account.repository.killCollaborator(_collab);
+				super.dispatchCollaborators();
+			}	else{
+				dispatchFailure('Whoops, something went wrong. Failed to update user permissions.');
 			}
-			super.account.repository.collaborators = v;
-			super.dispatchCollaborators();
 		}
 		
-		private function newCollaborator(xml:XML, killable:Boolean = true):Collaborator
+		private function parseCollaborators():void
 		{
-			var c:Collaborator = new Collaborator();
-				c.userId = xml['id'];
-				c.userName = xml['login'];
-				c.killable = killable;
-				c.avatarURL = 'http://www.gravatar.com/avatar/'+MD5.hash(xml['email'])+'?s=26';
-			return c;				
+			var v:Vector.<Collaborator> = new Vector.<Collaborator>();
+			for (var i:int = 0; i < _users.length(); i++) {
+				var c:Collaborator = new Collaborator();
+					c.userId = _users[i]['id'];
+					c.userName = _users[i]['login'];
+					c.firstName = _users[i]['first-name'];
+					c.lastName = _users[i]['last-name'];
+					c.owner = _users[i]['owner'] == true;
+					c.admin = _users[i]['admin'] == true;
+					c.avatarURL = 'http://www.gravatar.com/avatar/'+MD5.hash(_users[i]['email'])+'?s=26';					
+					var p:XMLList = _users[i]['permissions']['permission'];
+				for (var k:int = 0; k < p.length(); k++) c.permissions.push(p[k]);
+				v.push(c);
+			}
+			super.account.collaborators = v;
+			super.dispatchCollaborators();
 		}
 		
 		override protected function onCollaboratorAdded(s:String):void
@@ -142,9 +147,16 @@ package model.proxies.remote.acct {
 				dispatchFailure(xml.error);
 			}	else{
 				_collab.userId = xml.id;
-				super.setCollaboratorPermissions(HEADER_XML, getPermissionsObj(_collab, _collab.readWrite), '/permissions.xml');
+				super.setCollaboratorPermissions(HEADER_XML, getPermissionsObj(_collab), '/permissions.xml');
 			}
-		}	
+		}
+		
+		override protected function onCollaboratorRemoved(s:String):void
+		{	
+			var xml:XML = new XML(s);
+			trace("BeanstalkApi.onCollaboratorRemoved(s)", xml);
+			super.dispatchCollaborators();
+		}			
 		
 	// handle beanstalk specific errors //
 		
@@ -187,19 +199,30 @@ package model.proxies.remote.acct {
   				s+='<email>'+o.userEmail+'</email>';
   				s+='<login>'+o.userName+'</login>';
   				s+='<password>'+o.passWord+'</password>';
+  				s+='<admin>'+(o.admin==true ? 1 : 0)+'</admin>';
+				s+='</user>';
+			return s;
+		}
+		
+		private function getAdminObj(o:Collaborator):String
+		{
+			var s:String = '';
+				s+='<?xml version="1.0" encoding="UTF-8"?>';
+				s+='<user>';
+  				s+='<admin>'+(o.admin==true ? 1 : 0)+'</admin>';
 				s+='</user>';
 			return s;			
 		}
 		
-		private function getPermissionsObj(o:Collaborator, p:Boolean):String
+		private function getPermissionsObj(o:Collaborator):String
 		{
 			var s:String = '';
 				s+='<?xml version="1.0" encoding="UTF-8"?>';
 				s+='<permission>';
-  				s+='<user-id>'+o.userId+'</user-id>';
-  				s+='<repository-id>'+super.account.repository.id+'</repository-id>';
-  				s+='<read type="boolean">'+p+'</read>';
-  				s+='<write>'+p+'</write>';
+  				s+='<user-id type="integer">'+o.userId+'</user-id>';
+  				s+='<repository-id type="integer">'+super.account.repository.id+'</repository-id>';
+  				s+='<read type="boolean">'+o.read+'</read>';
+  				s+='<write type="boolean">'+o.write+'</write>';
 				s+='</permission>';
 			return s;			
 		}

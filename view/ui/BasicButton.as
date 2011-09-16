@@ -14,7 +14,8 @@ package view.ui {
 		public function BasicButton(b:Sprite, s:String = '')
 		{
 			_btn = b;
-			_btn['over'].alpha = 0; 
+			_btn['over'].alpha = 0;
+			_btn.mouseChildren = false;
 			enabled = true;
 			if (s) addTooltip(s);
 		}

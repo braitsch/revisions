@@ -1,5 +1,6 @@
 package view.modals.account {
 
+	import model.remote.HostingAccount;
 	import model.vo.Collaborator;
 	import events.AppEvent;
 	import events.UIEvent;
@@ -12,10 +13,11 @@ package view.modals.account {
 
 	public class CollaboratorView extends AccountView {
 
+		private var _item			:Sprite;
 		private var _view			:CollaboratorViewMC = new CollaboratorViewMC();
-		private var _item			:CollaboratorItem; // item queued for removal //
 		private var _line1			:TextHeading = new TextHeading();
 		private var _line2			:TextHeading = new TextHeading();		
+		private var _pool			:Vector.<Collaborator>;
 		private var _collabs		:Sprite = new Sprite();
 
 		public function CollaboratorView()
@@ -31,34 +33,53 @@ package view.modals.account {
 
 		override protected function onAddedToStage(e:Event):void
 		{
-			drawText();
 			attachCollaborators();
 		}		
 
 		private function attachCollaborators():void
 		{
 			while(_collabs.numChildren) _collabs.removeChildAt(0);
-			var v:Vector.<Collaborator> = super.account.repository.collaborators;
-			var n:uint = v.length <= 15 ? v.length : 15;
+			if (super.account.type == HostingAccount.GITHUB){
+				attachGHCollabs();		
+			}	else if (super.account.type == HostingAccount.BEANSTALK){
+				attachBSCollabs();
+			}
+			drawText();
+		}
+		
+		private function attachGHCollabs():void
+		{
+			_pool = super.account.repository.collaborators;
+			var n:uint = _pool.length <= 15 ? _pool.length : 15;
 			for (var i:int = 0; i < n; i++) {
-				var k:CollaboratorItem = new CollaboratorItem(v[i]);
+				var k:CollaboratorGH = new CollaboratorGH(_pool[i]);
 					k.x = 199.5 * (i % 3);
 					k.y = Math.floor(i/3) * 57;
 				_collabs.addChild(k);
-			}
+			}			
+		}
+		
+		private function attachBSCollabs():void
+		{
+			_pool = super.account.collaborators;
+			var n:uint = _pool.length <= 15 ? _pool.length : 15;
+			for (var i:int = 0; i < n; i++) {
+				var k:CollaboratorBS = new CollaboratorBS(_pool[i], super.account.repository.id);
+					k.y = i * 41;
+				_collabs.addChild(k);
+			}				
 		}
 
 		private function drawText():void
 		{
-			var n:uint = super.account.repository.collaborators.length;
-			var s:String = n > 1 ? 's' : '';
-			_line2.text = 'You currently have '+n+' collaborator'+s+' on this repository.';
+			var s:String = _pool.length > 1 ? 's' : '';
+			_line2.text = 'You currently have '+_pool.length+' collaborator'+s+' on this repository.';
 		}
 		
 		private function onKillCollaborator(e:UIEvent):void
 		{
-			_item = e.target as CollaboratorItem;
-			super.proxy.killCollaborator(_item.collaborator);
+			_item = e.target as Sprite;
+			super.proxy.killCollaborator(e.data as Collaborator);
 			AppModel.engine.addEventListener(AppEvent.COLLABORATORS_RECEIEVED, onCollaboratorRemoved);
 		}
 
@@ -72,7 +93,7 @@ package view.modals.account {
 		{
 			var n:uint = _collabs.getChildIndex(_item); _collabs.removeChild(_item);
 			for (var i:int = n; i < _collabs.numChildren; i++) {
-				var k:CollaboratorItem = _collabs.getChildAt(i) as CollaboratorItem;
+				var k:Sprite = _collabs.getChildAt(i) as Sprite;
 				if (k.x != 0){
 					TweenLite.to(k, .3, {x:'-199.5'}); 
 				}	else{
@@ -82,7 +103,7 @@ package view.modals.account {
 			drawText();
 		}
 		
-		private function moveUpOnLevel(k:CollaboratorItem):void
+		private function moveUpOnLevel(k:Sprite):void
 		{
 			k.y -= 57; k.x = 600; TweenLite.to(k, .3, {x:399});
 		}

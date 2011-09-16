@@ -27,9 +27,9 @@ package view.modals.account {
 		override protected function onAddedToStage(e:Event):void
 		{
 			if (_view) removeChild(_view);
-			if (super.service.type == HostingAccount.GITHUB){
+			if (super.account.type == HostingAccount.GITHUB){
 				addGHCollab();
-			}	else if (super.service.type == HostingAccount.BEANSTALK) {
+			}	else if (super.account.type == HostingAccount.BEANSTALK) {
 				addBSCollab();
 			}			
 			_view.y = 35;
@@ -39,18 +39,19 @@ package view.modals.account {
 		private function addGHCollab():void
 		{
 			_view = new AddGitHubCollab(new Form1Wide());
-			_heading.text = 'Please enter the GitHub user you\'d like to collaborate with on "'+AppModel.bookmark.label+'"';			
+			_heading.text = 'Please enter the GitHub user you\'d like to collaborate with on "'+AppModel.bookmark.label+'"';
+			_okBtn.y = _backBtn.y = 120;
 		}
 		
 		private function addBSCollab():void
 		{
 			_view = new AddBeanstalkCollab();
-			_heading.text = 'Fill in below to create a new user to collaborate with on "'+AppModel.bookmark.label+'"';		
+			_heading.text = 'Fill in below to create a new user to collaborate with on "'+AppModel.bookmark.label+'"';
+			_okBtn.y = _backBtn.y = 192;
 		}		
 		
 		private function addMybuttons():void
 		{
-			_okBtn.y = _backBtn.y = 120; 
 			_okBtn.x = 518; _backBtn.x = 414; 
 			_okBtn.addEventListener(MouseEvent.CLICK, onNextButton);	
 			_backBtn.addEventListener(MouseEvent.CLICK, onBackBtnClick);	

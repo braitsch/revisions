@@ -1,5 +1,6 @@
 package model.remote {
 
+	import model.vo.Collaborator;
 	import model.vo.Avatar;
 	import model.vo.Repository;
 	import com.adobe.crypto.MD5;
@@ -21,6 +22,7 @@ package model.remote {
 		private var _location			:String;
 		private var _repository			:Repository;
 		private var _repositories		:Vector.<Repository> = new Vector.<Repository>();
+		private var _collaborators		:Vector.<Collaborator>; // beanstalk only //
 
 		public function HostingAccount(o:Object)
 		{
@@ -69,6 +71,16 @@ package model.remote {
 		public function set repository(r:Repository):void
 		{
 			_repository = r;
+		}
+
+		public function get collaborators():Vector.<Collaborator>
+		{
+			return _collaborators;
+		}
+
+		public function set collaborators(v:Vector.<Collaborator>):void
+		{
+			_collaborators = v;
 		}		
 		
 	}

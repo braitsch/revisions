@@ -83,7 +83,7 @@ package model.proxies.remote.acct {
 					var c:Collaborator = new Collaborator();
 						c.userId = o[i]['id'];
 						c.userName = o[i]['login'];
-						c.killable = o[i]['login'] != super.account.user;
+						c.admin = o[i]['login'] == super.account.user;
 						c.avatarURL = o[i]['avatar_url'];
 					v.push(c);
 				}

@@ -53,15 +53,22 @@ package model.vo {
 		
 	// collaborators //
 	
+		public function set collaborators(v:Vector.<Collaborator>):void
+		{
+			_collaborators = v;
+		}
+		
 		public function get collaborators():Vector.<Collaborator>
 		{
 			return _collaborators;	
 		}
 		
-		public function set collaborators(v:Vector.<Collaborator>):void
+		public function killCollaborator(o:Collaborator):void
 		{
-			_collaborators = v;
-		}
+			for (var i:int = 0; i < _collaborators.length; i++) {
+				if (_collaborators[i] == o) _collaborators.splice(i, 1);
+			}	
+		}		
 	
 	// git@braitsch.beanstalkapp.com:/hello1234.git
 	// git@github.com:braitsch/Revisions-Source.git

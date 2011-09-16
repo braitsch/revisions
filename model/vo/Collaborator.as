@@ -3,7 +3,6 @@ package model.vo {
 	public class Collaborator {
 
 	// share props //	
-		public var killable				:Boolean;
 		public var firstName			:String;
 		public var lastName				:String;
 		public var avatarURL			:String;
@@ -15,7 +14,8 @@ package model.vo {
 		public var admin				:Boolean;
 		public var owner				:Boolean;
 		public var userId				:uint;		
-		public var readWrite 			:Boolean;
+		public var read					:Boolean = true;
+		public var write				:Boolean;
 		public var permissions			:Array = [];
 		
 	}

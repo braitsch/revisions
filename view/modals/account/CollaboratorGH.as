@@ -6,35 +6,30 @@ package view.modals.account {
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 
-	public class CollaboratorItem extends Sprite {
+	public class CollaboratorGH extends Sprite {
 
-		private var _data	:Collaborator;
-		private var _view	:CollaboratorMC = new CollaboratorMC();
+		private var _collab	:Collaborator;
+		private var _view	:GitHubCollaborator = new GitHubCollaborator();
 
-		public function CollaboratorItem(o:Collaborator)
+		public function CollaboratorGH(o:Collaborator)
 		{
-			_data = o;	
-			_view.label.text = _data.userName;
+			_collab = o;	
+			_view.label.text = _collab.userName;
 			addChild(_view);
 			attachAvatar();
 			showKillButton();
 		}
 
-		public function get collaborator():Collaborator
-		{
-			return _data;
-		}
-		
 		private function attachAvatar():void
 		{
-			var a:Avatar = new Avatar(_data.avatarURL);
+			var a:Avatar = new Avatar(_collab.avatarURL);
 				a.x = a.y = 6;
 			_view.addChild(a);
 		}
 		
 		private function showKillButton():void
 		{
-			if (_data.killable == false){
+			if (_collab.admin){
 				_view.close.visible = false;
 			}	else{
 				_view.close.buttonMode = true;
@@ -44,7 +39,7 @@ package view.modals.account {
 
 		private function onKillCollaborator(e:MouseEvent):void
 		{
-			dispatchEvent(new UIEvent(UIEvent.KILL_COLLABORATOR));
+			dispatchEvent(new UIEvent(UIEvent.KILL_COLLABORATOR, _collab));
 		}
 		
 	}
