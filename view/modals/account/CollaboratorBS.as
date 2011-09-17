@@ -3,7 +3,6 @@ package view.modals.account {
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
-	import model.proxies.remote.acct.BeanstalkApi;
 	import model.remote.Hosts;
 	import model.vo.Avatar;
 	import model.vo.Collaborator;
@@ -44,16 +43,16 @@ package view.modals.account {
 		
 		private function attachRadios():void
 		{
-			var l:Array = ['Admin', 'Read & Write', 'Read Only'];
+			var l:Array = ['Read & Write', 'Read Only', 'No Access'];
 			for (var i:int = 0; i < 3; i++) {
 				var r:AccountRadio = new AccountRadio(false);
 				r.y = 8.5;
 				r.label = l[i];
 				_radios.push(r);
 				if (i == 0){
-					r.x = 180;
+					r.x = 165;
 				}	else{
-					r.x = _radios[i-1].x + _radios[i-1].width + 7;
+					r.x = _radios[i-1].x + _radios[i-1].width + 5;
 				}
 				_view.addChild(r);
 			}
@@ -62,31 +61,40 @@ package view.modals.account {
 
 		private function onRadioSelected(e:UIEvent):void
 		{
-			for (var i:int = 0; i < 3; i++) {
-				if (e.target == _radios[i]) {
-					switch(i){
-						case 0 : setAdminPermissions(_radios[i].selected);
-						break;
-						case 1 : setWritePermissions(true);
-						break;
-						case 2 : setWritePermissions(false);
+			if (_collab.admin == false) {
+				for (var i:int = 0; i < 3; i++) {
+					if (e.target == _radios[i]) {
+						setWritePermissions(i);
+						_radios[i].selected = true;
+					}	else{
+						_radios[i].selected = false;
 					}
-				}	else{
-					_radios[i].selected = false;
 				}
+			}	else{
+				var m:String = _collab.firstName+' '+_collab.lastName+' has adminstrator privledges.\n';
+					m+='This means they have full access to all of you repositories.\n';
+					m+='Please login to your account online if you\'d like to change this.';
+				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));				
 			}
 		}
 
-		private function setAdminPermissions(on:Boolean):void
+		private function setWritePermissions(n:uint):void
 		{
-			trace("CollaboratorBS.setAdminPermissions(on) - setting admin to ", on);
-			_collab.admin = on;
-			BeanstalkApi(Hosts.beanstalk.api).setAdminPermissions(_collab);
-		}
-		
-		private function setWritePermissions(on:Boolean):void
-		{
-			trace("CollaboratorBS.setWritePermissions(on) - write perms = ", on);
+			switch(n){
+				case 0 : 
+					_collab.read = true;
+					_collab.write = true;
+				break;
+				case 1 : 
+					_collab.read = true;
+					_collab.write = false;
+				break;
+				case 2 : 
+					_collab.read = false;
+					_collab.write = false;
+				break;								
+			}
+			Hosts.beanstalk.api.setPermissions(_collab);
 		}
 
 		private function showPermissions():void
@@ -95,23 +103,24 @@ package view.modals.account {
 				_radios[0].selected = true;
 			}	else{
 				var p:Array = _collab.permissions;
-				for (var i:int = 0; i < _collab.permissions.length; i++) {
+				for (var i:int = 0; i < p.length; i++) {
 					if (p[i]['repository-id'] == _repoId){
 						if (p[i]['read'] == true){
 							if (p[i]['write'] == true){
-								_radios[1].selected = true;	
+								_radios[0].selected = true;	
 							}	else{
-								_radios[2].selected = true;
+								_radios[1].selected = true;
 							}
 						}
 					}
 				}
+				if (_radios[0].selected == false && _radios[1].selected == false) _radios[2].selected = true; // no access //
 			}
 		}
 
 		private function attachAvatar():void
 		{
-			var a:Avatar = new Avatar(_collab.avatarURL);
+			var a:Avatar = new Avatar(_collab.userEmail);
 				a.y = 5;
 				a.x = 10; 
 			_view.addChild(a);
@@ -119,8 +128,8 @@ package view.modals.account {
 		
 		private function onKillCollaborator(e:MouseEvent):void
 		{
-			var m:String = 'Support for deleting collaborators is not quite there yet.';
-			m+='We\'re working on resolving issues with Beanstalk\'s API and should have this up and running soon.';
+			var m:String = 'Support for deleting collaborators is not quite there yet.\n';
+			m+='We\'re working on resolving some issues with Beanstalk\'s API and should have this up and running soon.';
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));
 		//	dispatchEvent(new UIEvent(UIEvent.KILL_COLLABORATOR, _collab));
 		}

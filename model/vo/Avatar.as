@@ -1,5 +1,6 @@
 package model.vo {
 
+	import com.adobe.crypto.MD5;
 	import flash.display.Bitmap;
 	import flash.display.Loader;
 	import flash.display.Sprite;
@@ -9,20 +10,21 @@ package model.vo {
 
 	public class Avatar extends Sprite {
 
-		private var _loader:Loader = new Loader();
+		private var _size	:uint = 30;
+		private var _loader	:Loader = new Loader();
 
-		public function Avatar(url:String)
+		public function Avatar(email:String, isURL:Boolean = false)
 		{
 			drawBackground();
 			_loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onAvatarLoaded);
 			_loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onAvatarFailure);
-			_loader.load(new URLRequest(url));
+			_loader.load(new URLRequest(isURL ? email : 'http://www.gravatar.com/avatar/'+MD5.hash(email)+'?s='+_size));
 		}
 		
 		private function drawBackground():void
 		{
-			graphics.beginBitmapFill(new DkGreyPattern());
-			graphics.drawRect(0, 0, 30, 30);
+			graphics.beginFill(0xffffff);
+			graphics.drawRect(0, 0, _size, _size);
 			graphics.endFill();			
 		}
 
@@ -30,8 +32,7 @@ package model.vo {
 		{
 			var b:Bitmap = e.currentTarget.content as Bitmap;
 				b.smoothing = true;
-				b.x = b.y = 2;
-				b.width = b.height = 26;
+				b.width = b.height = _size;
 			addChild(b);
 		}	
 		

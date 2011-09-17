@@ -5,10 +5,10 @@ package model.vo {
 	// share props //	
 		public var firstName			:String;
 		public var lastName				:String;
-		public var avatarURL			:String;
 		public var userName				:String;
 		public var passWord				:String;
 		public var userEmail			:String;
+		public var avatarURL			:String;
 		
 	// beanstalk specific props //
 		public var admin				:Boolean;

@@ -13,11 +13,6 @@ package model.proxies.remote.acct {
 		private static var _baseURL		:String;
 		private static var _account		:HostingAccount;
 
-		public function ApiProxy()
-		{
-			super.executable = 'Account.sh';
-		}
-		
 		protected function get account()				:HostingAccount 	{ return _account; 		}
 		protected function set baseURL(baseURL:String)	:void 				{ _baseURL = baseURL; 	}	
 
@@ -65,7 +60,7 @@ package model.proxies.remote.acct {
 			startTimer();
 			super.request = BashMethods.ADD_COLLABORATOR;
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Adding Collaborator'}));
-			super.call(Vector.<String>([BashMethods.PUT_REQUEST, header, header, _baseURL + url]));
+			super.call(Vector.<String>([BashMethods.PUT_REQUEST, header, _baseURL + url]));
 		}		
 		
 		protected function addCollaboratorToBeanstalk(header:String, data:Object, url:String):void
@@ -94,6 +89,7 @@ package model.proxies.remote.acct {
 			super.call(Vector.<String>([BashMethods.GET_REQUEST, _baseURL + url]));			
 		}
 		
+		public function setPermissions(c:Collaborator):void { }
 		protected function setCollaboratorPermissions(header:String, data:Object, url:String):void
 		{
 			startTimer();
@@ -101,12 +97,12 @@ package model.proxies.remote.acct {
 			super.call(Vector.<String>([BashMethods.POST_REQUEST, header, data, _baseURL + url]));	
 		}
 		
-		protected function setAdmin(header:String, data:Object, url:String):void
-		{
-			startTimer();
-			super.request = BashMethods.SET_ADMINISTRATOR;
-			super.call(Vector.<String>([BashMethods.PUT_REQUEST, header, data, _baseURL + url]));				
-		}			
+//		protected function setAdmin(header:String, data:Object, url:String):void
+//		{
+//			startTimer();
+//			super.request = BashMethods.SET_ADMINISTRATOR;
+//			super.call(Vector.<String>([BashMethods.PUT_REQUEST, header, data, _baseURL + url]));				
+//		}			
 		
 		override protected function onProcessSuccess(r:String):void
 		{

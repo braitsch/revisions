@@ -9,6 +9,11 @@ package model.proxies.remote.acct {
 
 	public class GitHubApi extends ApiProxy {
 
+		public function GitHubApi()
+		{
+			super.executable = 'GitHub.sh';
+		}
+
 	// public methods //
 
 		override public function login(ra:HostingAccount):void

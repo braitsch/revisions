@@ -6,13 +6,17 @@ package model.proxies.remote.acct {
 	import model.remote.Hosts;
 	import model.vo.BeanstalkRepo;
 	import model.vo.Collaborator;
-	import com.adobe.crypto.MD5;
 
 	public class BeanstalkApi extends ApiProxy {
 		
 		private static var _index		:uint;
 		private static var _users		:XMLList;
 		private static var _collab		:Collaborator;
+
+		public function BeanstalkApi()
+		{
+			super.executable = 'Beanstalk.sh';
+		}
 
 	// public methods //
 
@@ -39,10 +43,15 @@ package model.proxies.remote.acct {
 			super.addCollaboratorToBeanstalk(HEADER_XML, getCollabObj(_collab), '/users.xml');
 		}
 		
-		public function setAdminPermissions(o:Collaborator):void
+		override public function setPermissions(o:Collaborator):void
 		{
-			super.setAdmin(HEADER_XML, getAdminObj(o), '/users/'+o.userId+'.xml');
+			super.setCollaboratorPermissions(HEADER_XML, getPermissionsObj(o), '/permissions.xml');
 		}
+		
+//		public function setAdminPermissions(o:Collaborator):void
+//		{
+//			super.setAdmin(HEADER_XML, getAdminObj(o), '/users/'+o.userId+'.xml');
+//		}
 		
 		override public function killCollaborator(o:Collaborator):void
 		{
@@ -111,9 +120,16 @@ package model.proxies.remote.acct {
 		
 		override protected function onSetPermissions(s:String):void
 		{
+			var ok:Boolean;
 			var xml:XML = new XML(s);
-			if (xml['error'][0] == "Mode can't be blank" && xml['error'][1] == "Mode is invalid"){
-				super.account.repository.killCollaborator(_collab);
+			trace('xml: ' + (xml));
+			if (xml.name() == 'permission'){
+				ok = true;
+			// weird error we sometimes receive when setting permissions for first time on new user //	
+			}	else if (xml['error'][0] == "Mode can't be blank" && xml['error'][1] == "Mode is invalid"){
+				ok = true;
+			}
+			if (ok){
 				super.dispatchCollaborators();
 			}	else{
 				dispatchFailure('Whoops, something went wrong. Failed to update user permissions.');
@@ -129,9 +145,9 @@ package model.proxies.remote.acct {
 					c.userName = _users[i]['login'];
 					c.firstName = _users[i]['first-name'];
 					c.lastName = _users[i]['last-name'];
+					c.userEmail = _users[i]['email'];
 					c.owner = _users[i]['owner'] == true;
 					c.admin = _users[i]['admin'] == true;
-					c.avatarURL = 'http://www.gravatar.com/avatar/'+MD5.hash(_users[i]['email'])+'?s=26';					
 					var p:XMLList = _users[i]['permissions']['permission'];
 				for (var k:int = 0; k < p.length(); k++) c.permissions.push(p[k]);
 				v.push(c);
@@ -204,15 +220,15 @@ package model.proxies.remote.acct {
 			return s;
 		}
 		
-		private function getAdminObj(o:Collaborator):String
-		{
-			var s:String = '';
-				s+='<?xml version="1.0" encoding="UTF-8"?>';
-				s+='<user>';
-  				s+='<admin>'+(o.admin==true ? 1 : 0)+'</admin>';
-				s+='</user>';
-			return s;			
-		}
+//		private function getAdminObj(o:Collaborator):String
+//		{
+//			var s:String = '';
+//				s+='<?xml version="1.0" encoding="UTF-8"?>';
+//				s+='<user>';
+//  				s+='<admin>'+(o.admin==true ? 1 : 0)+'</admin>';
+//				s+='</user>';
+//			return s;			
+//		}
 		
 		private function getPermissionsObj(o:Collaborator):String
 		{

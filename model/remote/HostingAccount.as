@@ -1,9 +1,8 @@
 package model.remote {
 
-	import model.vo.Collaborator;
 	import model.vo.Avatar;
+	import model.vo.Collaborator;
 	import model.vo.Repository;
-	import com.adobe.crypto.MD5;
 	import flash.events.EventDispatcher;
 	
 	public class HostingAccount extends EventDispatcher {
@@ -37,7 +36,7 @@ package model.remote {
 		{
 			_fullName = o.name;
 			_location = o.location;
-			_avatar = new Avatar(o.avatar_url || 'http://www.gravatar.com/avatar/'+MD5.hash(o.email)+'?s=26');
+			_avatar = new Avatar(o.email);
 		}
 
 		public function get acctName()		:String 	{ return _acct; 		}

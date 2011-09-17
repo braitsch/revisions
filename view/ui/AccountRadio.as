@@ -40,10 +40,7 @@ package view.ui {
 		
 		private function onRadioSelected(e:MouseEvent):void 
 		{
-			if (this.selected == false){
-				_view.check.visible = true;
-				dispatchEvent(new UIEvent(UIEvent.RADIO_SELECTED));
-			}
+			if (this.selected == false) dispatchEvent(new UIEvent(UIEvent.RADIO_SELECTED));
 		}
 		
 	}
