@@ -1,5 +1,6 @@
 package model.proxies.remote.acct {
 
+	import model.vo.Permission;
 	import events.AppEvent;
 	import model.AppModel;
 	import model.proxies.remote.base.CurlProxy;
@@ -36,7 +37,7 @@ package model.proxies.remote.acct {
 			super.call(Vector.<String>([BashMethods.GET_COLLABORATORS, url]));			
 		}
 		
-		public function addCollaborator(o:Collaborator):void { }
+		public function addCollaborator(o:Collaborator, p:Permission = null):void { }
 		protected function addCollaboratorX(url:String, data:Object = null):void
 		{
 			if (data == null){
@@ -59,8 +60,8 @@ package model.proxies.remote.acct {
 			super.call(Vector.<String>([BashMethods.GET_PERMISSIONS, url]));			
 		}
 		
-		public function setPermissions(c:Collaborator):void { }
-		protected function setCollaboratorX(data:Object, url:String):void
+		public function setPermissions(c:Collaborator, p:Permission):void { }
+		protected function setPermissionsX(data:Object, url:String):void
 		{
 			super.call(Vector.<String>([BashMethods.SET_PERMISSIONS, data, url]));	
 		}

@@ -1,5 +1,6 @@
 package model.proxies.remote.acct {
 
+	import model.vo.Permission;
 	import events.AppEvent;
 	import events.ErrEvent;
 	import model.remote.HostingAccount;
@@ -41,7 +42,7 @@ package model.proxies.remote.acct {
 			super.killCollaboratorX(_baseURL + '/repos/'+_account.user+'/'+_account.repository.repoName+'/collaborators/'+c.userName);
 		}		
 		
-		override public function addCollaborator(o:Collaborator):void
+		override public function addCollaborator(o:Collaborator, p:Permission = null):void
 		{
 			super.addCollaboratorX(_baseURL + '/repos/'+_account.user+'/'+_account.repository.repoName+'/collaborators/'+o.userName);
 		}		

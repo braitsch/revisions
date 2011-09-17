@@ -1,5 +1,6 @@
 package view.modals.collab {
 
+	import model.vo.Permission;
 	import events.AppEvent;
 	import model.AppModel;
 	import model.remote.Hosts;
@@ -46,12 +47,14 @@ package view.modals.collab {
 			_collab.lastName 	= 	_form.getField(1);
 			_collab.userEmail	=	_form.getField(2); 
 			_collab.userName	=	_form.getField(3); 
-			_collab.write 		= 	_check.selected;
 			_collab.passWord 	= 	MD5.hash(new Date().toString());
 			if (_collab.userName == _message || _collab.userName == '') _collab.userName = _collab.lastName.toLowerCase();
 			var m:String = validate();
 			if (m == null){
-				Hosts.beanstalk.api.addCollaborator(_collab);
+				var p:Permission = new Permission();
+					p.read = true;
+					p.write = _check.selected;
+				Hosts.beanstalk.api.addCollaborator(_collab, p);
 			}	else{
 				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));
 			}	

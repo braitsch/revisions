@@ -1,5 +1,6 @@
 package model.proxies.remote.acct {
 
+	import model.vo.Permission;
 	import events.AppEvent;
 	import events.ErrEvent;
 	import model.remote.HostingAccount;
@@ -10,8 +11,8 @@ package model.proxies.remote.acct {
 	public class BeanstalkApi extends ApiProxy {
 		
 		private static var _index		:uint;
-		private static var _users		:XMLList;
 		private static var _collab		:Collaborator;
+		private static var _permission	:Permission;
 		private static var _baseURL		:String;
 		private static var _account		:HostingAccount;
 
@@ -39,15 +40,15 @@ package model.proxies.remote.acct {
 			super.getCollaboratorsX(_baseURL + '/users.xml');
 		}						
 		
-		override public function addCollaborator(o:Collaborator):void
+		override public function addCollaborator(o:Collaborator, p:Permission = null):void
 		{
-			_collab = o;
+			_collab = o; _permission = p; _permission.repoId = _account.repository.id;
 			super.addCollaboratorX(_baseURL + '/users.xml', getCollabObj(_collab));
 		}
 
-		override public function setPermissions(o:Collaborator):void
+		override public function setPermissions(o:Collaborator, p:Permission):void
 		{
-			super.setCollaboratorX(getPermissionsObj(o), _baseURL + '/permissions.xml');
+			super.setPermissionsX(getPermissionsObj(o, p), _baseURL + '/permissions.xml');
 		}
 		
 //		public function setAdminPermissions(o:Collaborator):void
@@ -105,18 +106,66 @@ package model.proxies.remote.acct {
 		
 		override protected function onCollaborators(s:String):void
 		{
-			_users = new XML(s)['user']; _index = 0;
-			super.getPermissions(_baseURL + '/permissions/'+_users[_index]['id']+'.xml');
+			var u:XMLList = new XML(s)['user'];
+			var v:Vector.<Collaborator> = new Vector.<Collaborator>();
+			for (var i:int = 0; i < u.length(); i++) {
+				var c:Collaborator = new Collaborator();
+					c.userId 	= u[i]['id'];
+					c.userName 	= u[i]['login'];
+					c.firstName = u[i]['first-name'];
+					c.lastName 	= u[i]['last-name'];
+					c.userEmail = u[i]['email'];
+					c.owner 	= u[i]['owner'] == true;
+					c.admin 	= u[i]['admin'] == true;
+					c.permissions = new Vector.<Permission>();
+				v.push(c);
+			}
+			_account.collaborators = v;	_index = 0;
+			super.getPermissions(_baseURL + '/permissions/'+_account.collaborators[_index].userId+'.xml');
 		}
+		
+		override protected function onCollaboratorAdded(s:String):void
+		{	
+			var xml:XML = new XML(s);
+			if (xml.hasOwnProperty('error')){
+				dispatchFailure(xml.error);
+			}	else{
+				_collab.userId = xml.id;
+				_account.addCollaborator(_collab);
+				_collab.permissions = new <Permission>[_permission];
+				super.setPermissionsX(getPermissionsObj(_collab, _permission), _baseURL + '/permissions.xml');
+			}
+		}
+		
+		override protected function onCollaboratorRemoved(s:String):void
+		{	
+			var xml:XML = new XML(s);
+			trace("BeanstalkApi.onCollaboratorRemoved(s)", xml);
+			super.dispatchCollaborators();
+		}			
 		
 		override protected function onGetPermissions(s:String):void
 		{
-			var xml:XML = new XML(s); 
-			_users[_index].appendChild(xml);
-			if (++_index == _users.length()) {
-				parseCollaborators();
+			var x:XMLList = new XML(s)['permission'];
+			var c:Collaborator = _account.collaborators[_index];
+				c.permissions = new Vector.<Permission>();
+			for (var i:int = 0; i < _account.repositories.length; i++) {
+				var p:Permission = new Permission();
+					p.repoId = _account.repositories[i].id;
+				if (c.owner || c.admin)	p.read = true;
+				if (c.owner || c.admin)	p.write = true;
+				for (var k:int = 0; k < x.length(); k++) {
+					if (p.repoId == x[k]['repository-id']){
+						p.read = x[k]['read'] == true;
+						p.write = x[k]['write'] == true;
+					}
+				}
+				c.permissions.push(p);
+			}
+			if (++_index == _account.collaborators.length) {
+				super.dispatchCollaborators();
 			}	else{
-				super.getPermissions(_baseURL + '/permissions/'+_users[_index]['id']+'.xml');
+				super.getPermissions(_baseURL + '/permissions/'+_account.collaborators[_index].userId+'.xml');
 			}
 		}
 		
@@ -137,46 +186,6 @@ package model.proxies.remote.acct {
 			}
 		}
 		
-		private function parseCollaborators():void
-		{
-			var v:Vector.<Collaborator> = new Vector.<Collaborator>();
-			for (var i:int = 0; i < _users.length(); i++) {
-				var c:Collaborator = new Collaborator();
-					c.userId = _users[i]['id'];
-					c.userName = _users[i]['login'];
-					c.firstName = _users[i]['first-name'];
-					c.lastName = _users[i]['last-name'];
-					c.userEmail = _users[i]['email'];
-					c.owner = _users[i]['owner'] == true;
-					c.admin = _users[i]['admin'] == true;
-					var p:XMLList = _users[i]['permissions']['permission'];
-				for (var k:int = 0; k < p.length(); k++) c.permissions.push(p[k]);
-				v.push(c);
-			}
-			_account.collaborators = v;
-			super.dispatchCollaborators();
-		}
-		
-		override protected function onCollaboratorAdded(s:String):void
-		{	
-			var xml:XML = new XML(s);
-			if (xml.hasOwnProperty('error')){
-				dispatchFailure(xml.error);
-			}	else{
-				_collab.userId = xml.id;
-				_account.addCollaborator(_collab);
-				_collab.permissions.push(addNewUserPermissions());
-				super.setCollaboratorX(getPermissionsObj(_collab), _baseURL + '/permissions.xml');
-			}
-		}
-		
-		override protected function onCollaboratorRemoved(s:String):void
-		{	
-			var xml:XML = new XML(s);
-			trace("BeanstalkApi.onCollaboratorRemoved(s)", xml);
-			super.dispatchCollaborators();
-		}			
-		
 	// handle beanstalk specific errors //
 		
 		private function checkForErrors(s:String):Boolean
@@ -193,18 +202,7 @@ package model.proxies.remote.acct {
 			}	else{
 				return false;
 			}
-		}
-		
-		private function addNewUserPermissions():XML
-		{
-		// add the xml so we can refresh view w/o requesting all permissions //	
-			var p:String = '<permission>';
-				p+='<repository-id>'+_account.repository.id+'</repository-id>';
-				p+='<read>'+_collab.read+'</read>';
-				p+='<write>'+_collab.write+'</write>';
-				p+='</permission>';
-			return new XML(p);
-		}		
+		}	
 		
 		private function getRepoObj(n:String):String
 		{
@@ -244,15 +242,15 @@ package model.proxies.remote.acct {
 //			return s;			
 //		}
 		
-		private function getPermissionsObj(o:Collaborator):String
+		private function getPermissionsObj(o:Collaborator, p:Permission):String
 		{
 			var s:String = '';
 				s+='<?xml version="1.0" encoding="UTF-8"?>';
 				s+='<permission>';
   				s+='<user-id type="integer">'+o.userId+'</user-id>';
   				s+='<repository-id type="integer">'+_account.repository.id+'</repository-id>';
-  				s+='<read type="boolean">'+o.read+'</read>';
-  				s+='<write type="boolean">'+o.write+'</write>';
+  				s+='<read type="boolean">'+p.read+'</read>';
+  				s+='<write type="boolean">'+p.write+'</write>';
 				s+='</permission>';
 			return s;			
 		}

@@ -14,9 +14,16 @@ package model.vo {
 		public var admin				:Boolean;
 		public var owner				:Boolean;
 		public var userId				:uint;		
-		public var read					:Boolean = true;
-		public var write				:Boolean;
-		public var permissions			:Array = [];
+		public var permissions			:Vector.<Permission>;
+		
+		public function addPermission(p:Permission):void
+		{
+			if (permissions) {
+				permissions.push(p);
+			}	else{
+				permissions = new <Permission>[p];
+			}
+		}
 		
 	}
 	

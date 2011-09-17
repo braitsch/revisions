@@ -1,5 +1,6 @@
 package view.modals.account {
 
+	import model.vo.Permission;
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
@@ -18,6 +19,7 @@ package view.modals.account {
 		private var _view		:*;
 		private var _repoId		:uint;
 		private var _radios		:Vector.<AccountRadio>;
+		private var _permission	:Permission;
 
 		public function CollaboratorBS(o:Collaborator, n:uint)
 		{
@@ -29,9 +31,9 @@ package view.modals.account {
 		public function hasWriteAccess():Boolean
 		{
 			if (_collab.owner){
-				return true;			
+				return true;
 			}	else{
-				return _radios[0].selected;
+				return _permission.write;
 			}
 		}
 
@@ -92,39 +94,37 @@ package view.modals.account {
 		{
 			switch(n){
 				case 0 : 
-					_collab.read = true;
-					_collab.write = true;
+					_permission.read = true;
+					_permission.write = true;
 				break;
 				case 1 : 
-					_collab.read = true;
-					_collab.write = false;
+					_permission.read = true;
+					_permission.write = false;
 				break;
 				case 2 : 
-					_collab.read = false;
-					_collab.write = false;
+					_permission.read = false;
+					_permission.write = false;
 				break;
 			}
-			Hosts.beanstalk.api.setPermissions(_collab);
+			Hosts.beanstalk.api.setPermissions(_collab, _permission);
 		}
 
 		private function showPermissions():void
 		{
-			if (_collab.admin == true) {
-				_radios[0].selected = true;
-			}	else{
-				var p:Array = _collab.permissions;
-				for (var i:int = 0; i < p.length; i++) {
-					if (p[i]['repository-id'] == _repoId){
-						if (p[i]['read'] == true){
-							if (p[i]['write'] == true){
-								_radios[0].selected = true;	
-							}	else{
-								_radios[1].selected = true;
-							}
+			var p:Vector.<Permission> = _collab.permissions;
+			for (var i:int = 0; i < p.length; i++) {
+				if (p[i].repoId == _repoId){
+					_permission = p[i];
+					if (_permission.read == true){
+						if (_permission.write == true){
+							_radios[0].selected = true;	
+						}	else{
+							_radios[1].selected = true;
 						}
+					}	else{
+						_radios[2].selected = true; // no access //			
 					}
 				}
-				if (_radios[0].selected == false && _radios[1].selected == false) _radios[2].selected = true; // no access //
 			}
 		}
 
