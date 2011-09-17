@@ -1,10 +1,10 @@
 package view.modals.account {
 
-	import model.remote.HostingAccount;
-	import model.vo.Collaborator;
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
+	import model.remote.HostingAccount;
+	import model.vo.Collaborator;
 	import view.ui.TextHeading;
 	import com.greensock.TweenLite;
 	import flash.display.Sprite;
@@ -22,12 +22,13 @@ package view.modals.account {
 
 		public function CollaboratorView()
 		{
+			_collabs.y = 43;
 			addChild(_view);
 			addChild(_collabs);
 			registerButtons();
 			addTextHeadings();
-			_collabs.y = 43;
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+			addEventListener(UIEvent.RADIO_SELECTED, onRadioSelected);
 			addEventListener(UIEvent.KILL_COLLABORATOR, onKillCollaborator);
 		}
 
@@ -44,7 +45,6 @@ package view.modals.account {
 			}	else if (super.account.type == HostingAccount.BEANSTALK){
 				attachBSCollabs();
 			}
-			drawText();
 		}
 		
 		private function attachGHCollabs():void
@@ -56,24 +56,23 @@ package view.modals.account {
 					k.x = 199.5 * (i % 3);
 					k.y = Math.floor(i/3) * 57;
 				_collabs.addChild(k);
-			}			
+			}
+			writeGHText();			
 		}
 		
 		private function attachBSCollabs():void
 		{
 			_pool = super.account.collaborators;
 			var n:uint = _pool.length <= 15 ? _pool.length : 15;
+		// force account owner to the top of the list //
+			for (var m:int = 0; m < _pool.length; m++) if (_pool[m].owner == true) break;
+			_pool.unshift(_pool[m]); _pool.splice(m+1, 1);
 			for (var i:int = 0; i < n; i++) {
 				var k:CollaboratorBS = new CollaboratorBS(_pool[i], super.account.repository.id);
 					k.y = i * 41;
 				_collabs.addChild(k);
-			}				
-		}
-
-		private function drawText():void
-		{
-			var s:String = _pool.length > 1 ? 's' : '';
-			_line2.text = 'You currently have '+_pool.length+' collaborator'+s+' on this repository.';
+			}
+			writeBSText();
 		}
 		
 		private function onKillCollaborator(e:UIEvent):void
@@ -100,13 +99,42 @@ package view.modals.account {
 					TweenLite.to(k, .3, {x:-199.5, onComplete:moveUpOnLevel, onCompleteParams:[k]});
 				}
 			}			
-			drawText();
+			writeGHText();
 		}
 		
 		private function moveUpOnLevel(k:Sprite):void
 		{
 			k.y -= 57; k.x = 600; TweenLite.to(k, .3, {x:399});
 		}
+		
+		private function onRadioSelected(e:UIEvent):void
+		{
+			writeBSText();
+		}
+		
+		private function writeGHText():void
+		{
+			var s:String = _pool.length > 1 ? 's' : '';
+			_line2.text = 'You currently have '+_pool.length+' collaborator'+s+' on this repository.';
+		}
+		
+		private function writeBSText():void
+		{
+			var n:uint = 0;
+			for (var i:int = 0; i < _collabs.numChildren; i++) {
+				var k:CollaboratorBS = _collabs.getChildAt(i) as CollaboratorBS;
+				if (k.hasWriteAccess()) n++;
+			}
+			var s:String;
+			if (n == 1){
+				s = 'Looks like you\'re the only one with write access';
+			}	else if (n == 2){
+				s = 'You have one other collaborator who has write access';
+			}	else{
+				s = 'You are collaboraring with '+(n-1)+' others who have write access';
+			}
+			_line2.text = s;
+		}					
 		
 		private function registerButtons():void
 		{

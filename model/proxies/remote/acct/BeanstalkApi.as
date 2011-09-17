@@ -12,6 +12,8 @@ package model.proxies.remote.acct {
 		private static var _index		:uint;
 		private static var _users		:XMLList;
 		private static var _collab		:Collaborator;
+		private static var _baseURL		:String;
+		private static var _account		:HostingAccount;
 
 		public function BeanstalkApi()
 		{
@@ -20,43 +22,43 @@ package model.proxies.remote.acct {
 
 	// public methods //
 
-		override public function login(ra:HostingAccount):void
+		override public function login(ha:HostingAccount):void
 		{
-			super.login(ra);
-			super.baseURL = 'https://'+ra.user+':'+ra.pass+'@'+ra.acctName+'.beanstalkapp.com/api';
-			super.loginToAccount('/users.xml');
+			_account = ha;
+			_baseURL = 'https://'+_account.user+':'+_account.pass+'@'+_account.acctName+'.beanstalkapp.com/api';
+			super.loginX(_baseURL + '/users.xml');
 		}
 		
 		override public function addRepository(o:Object):void
 		{
-			super.addRepositoryToAccount(HEADER_XML, getRepoObj(o.name), '/repositories.xml');
+			super.addRepositoryX(getRepoObj(o.name), _baseURL + '/repositories.xml');
 		}
 		
 		override public function getCollaborators():void
 		{
-			super.getCollaboratorsOfRepo('/users.xml');
+			super.getCollaboratorsX(_baseURL + '/users.xml');
 		}						
 		
 		override public function addCollaborator(o:Collaborator):void
 		{
 			_collab = o;
-			super.addCollaboratorToBeanstalk(HEADER_XML, getCollabObj(_collab), '/users.xml');
+			super.addCollaboratorX(_baseURL + '/users.xml', getCollabObj(_collab));
 		}
-		
+
 		override public function setPermissions(o:Collaborator):void
 		{
-			super.setCollaboratorPermissions(HEADER_XML, getPermissionsObj(o), '/permissions.xml');
+			super.setCollaboratorX(getPermissionsObj(o), _baseURL + '/permissions.xml');
 		}
 		
 //		public function setAdminPermissions(o:Collaborator):void
 //		{
-//			super.setAdmin(HEADER_XML, getAdminObj(o), '/users/'+o.userId+'.xml');
+//			super.setAdmin(getAdminObj(o), _baseURL + '/users/'+o.userId+'.xml');
 //		}
 		
 		override public function killCollaborator(o:Collaborator):void
 		{
 			_collab = o;
-			super.killCollaboratorFromRepo('/users/'+o.userId+'.xml');
+			super.killCollaboratorX(_baseURL + '/users/'+o.userId+'.xml');
 		}				
 		
 	// handlers //			
@@ -67,15 +69,15 @@ package model.proxies.remote.acct {
 			var xml:XML = new XML(s);
 			var usr:XMLList = xml['user'];
 			for (var i:int = 0; i < usr.length(); i++) {
-				if (usr[i]['login'] == super.account.user) {
+				if (usr[i]['login'] == _account.user) {
 					var o:Object = {};
 						o.id = usr[i]['id'];
 						o.email = usr[i]['email'];
 						o.name = usr[i]['first-name']+' '+usr[i]['last-name'];
-					super.account.loginData = o;	
+					_account.loginData = o;	
 				}
 			}
-			super.getRepositories('/repositories.xml');
+			super.getRepositories(_baseURL + '/repositories.xml');
 		}
 		
 		override protected function onRepositories(s:String):void
@@ -85,26 +87,26 @@ package model.proxies.remote.acct {
 			var xl:XMLList = xml['repository'];			
 			for (var i:int = 0; i < xl.length(); i++) {
 				if (xl[i]['vcs'] == 'git') {
-					var url:String = 'git@'+super.account.user+'.beanstalkapp.com:/'+xl[i]['name']+'.git';
-					super.account.addRepository(new BeanstalkRepo(xl[i], url));
+					var url:String = 'git@'+_account.user+'.beanstalkapp.com:/'+xl[i]['name']+'.git';
+					_account.addRepository(new BeanstalkRepo(xl[i], url));
 				}
 			}
-			Hosts.beanstalk.loggedIn = super.account;
+			Hosts.beanstalk.loggedIn = _account;
 			dispatchLoginSuccess();
 		}
 		
 		override protected function onRepositoryCreated(s:String):void
 		{
 			var xml:XML = new XML(s);
-			var url:String = 'git@'+super.account.acctName+'.beanstalkapp.com:/'+xml.name+'.git';
-			super.account.addRepository(new BeanstalkRepo(xml, url));
+			var url:String = 'git@'+_account.acctName+'.beanstalkapp.com:/'+xml.name+'.git';
+			_account.addRepository(new BeanstalkRepo(xml, url));
 			dispatchEvent(new AppEvent(AppEvent.REPOSITORY_CREATED));
 		}
 		
 		override protected function onCollaborators(s:String):void
 		{
 			_users = new XML(s)['user']; _index = 0;
-			super.getCollaboratorsPermissions('/permissions/'+_users[_index]['id']+'.xml');
+			super.getPermissions(_baseURL + '/permissions/'+_users[_index]['id']+'.xml');
 		}
 		
 		override protected function onGetPermissions(s:String):void
@@ -114,7 +116,7 @@ package model.proxies.remote.acct {
 			if (++_index == _users.length()) {
 				parseCollaborators();
 			}	else{
-				super.getCollaboratorsPermissions('/permissions/'+_users[_index]['id']+'.xml');
+				super.getPermissions(_baseURL + '/permissions/'+_users[_index]['id']+'.xml');
 			}
 		}
 		
@@ -122,7 +124,6 @@ package model.proxies.remote.acct {
 		{
 			var ok:Boolean;
 			var xml:XML = new XML(s);
-			trace('xml: ' + (xml));
 			if (xml.name() == 'permission'){
 				ok = true;
 			// weird error we sometimes receive when setting permissions for first time on new user //	
@@ -152,7 +153,7 @@ package model.proxies.remote.acct {
 				for (var k:int = 0; k < p.length(); k++) c.permissions.push(p[k]);
 				v.push(c);
 			}
-			super.account.collaborators = v;
+			_account.collaborators = v;
 			super.dispatchCollaborators();
 		}
 		
@@ -163,7 +164,9 @@ package model.proxies.remote.acct {
 				dispatchFailure(xml.error);
 			}	else{
 				_collab.userId = xml.id;
-				super.setCollaboratorPermissions(HEADER_XML, getPermissionsObj(_collab), '/permissions.xml');
+				_account.addCollaborator(_collab);
+				_collab.permissions.push(addNewUserPermissions());
+				super.setCollaboratorX(getPermissionsObj(_collab), _baseURL + '/permissions.xml');
 			}
 		}
 		
@@ -191,6 +194,17 @@ package model.proxies.remote.acct {
 				return false;
 			}
 		}
+		
+		private function addNewUserPermissions():XML
+		{
+		// add the xml so we can refresh view w/o requesting all permissions //	
+			var p:String = '<permission>';
+				p+='<repository-id>'+_account.repository.id+'</repository-id>';
+				p+='<read>'+_collab.read+'</read>';
+				p+='<write>'+_collab.write+'</write>';
+				p+='</permission>';
+			return new XML(p);
+		}		
 		
 		private function getRepoObj(n:String):String
 		{
@@ -236,7 +250,7 @@ package model.proxies.remote.acct {
 				s+='<?xml version="1.0" encoding="UTF-8"?>';
 				s+='<permission>';
   				s+='<user-id type="integer">'+o.userId+'</user-id>';
-  				s+='<repository-id type="integer">'+super.account.repository.id+'</repository-id>';
+  				s+='<repository-id type="integer">'+_account.repository.id+'</repository-id>';
   				s+='<read type="boolean">'+o.read+'</read>';
   				s+='<write type="boolean">'+o.write+'</write>';
 				s+='</permission>';

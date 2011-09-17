@@ -17,13 +17,22 @@ package view.modals.account {
 		private var _collab		:Collaborator;
 		private var _view		:*;
 		private var _repoId		:uint;
-		private var _radios		:Vector.<AccountRadio> = new Vector.<AccountRadio>();
+		private var _radios		:Vector.<AccountRadio>;
 
 		public function CollaboratorBS(o:Collaborator, n:uint)
 		{
 			_collab = o; _repoId = n;
 			attachView();
 			attachAvatar();
+		}
+		
+		public function hasWriteAccess():Boolean
+		{
+			if (_collab.owner){
+				return true;			
+			}	else{
+				return _radios[0].selected;
+			}
 		}
 
 		private function attachView():void
@@ -43,6 +52,7 @@ package view.modals.account {
 		
 		private function attachRadios():void
 		{
+			_radios = new Vector.<AccountRadio>();
 			var l:Array = ['Read & Write', 'Read Only', 'No Access'];
 			for (var i:int = 0; i < 3; i++) {
 				var r:AccountRadio = new AccountRadio(false);
@@ -92,7 +102,7 @@ package view.modals.account {
 				case 2 : 
 					_collab.read = false;
 					_collab.write = false;
-				break;								
+				break;
 			}
 			Hosts.beanstalk.api.setPermissions(_collab);
 		}

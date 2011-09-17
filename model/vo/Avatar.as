@@ -18,7 +18,7 @@ package model.vo {
 			drawBackground();
 			_loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onAvatarLoaded);
 			_loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onAvatarFailure);
-			_loader.load(new URLRequest(isURL ? email : 'http://www.gravatar.com/avatar/'+MD5.hash(email)+'?s='+_size));
+			_loader.load(new URLRequest(isURL ? email : 'http://www.gravatar.com/avatar/'+MD5.hash(email)+'?s='+_size+'?d=mm'));
 		}
 		
 		private function drawBackground():void

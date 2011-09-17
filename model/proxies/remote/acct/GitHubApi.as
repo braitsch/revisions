@@ -8,6 +8,9 @@ package model.proxies.remote.acct {
 	import model.vo.GitHubRepo;
 
 	public class GitHubApi extends ApiProxy {
+		
+		private static var _baseURL		:String;
+		private static var _account		:HostingAccount;		
 
 		public function GitHubApi()
 		{
@@ -16,31 +19,31 @@ package model.proxies.remote.acct {
 
 	// public methods //
 
-		override public function login(ra:HostingAccount):void
+		override public function login(ha:HostingAccount):void
 		{
-			super.login(ra);
-			super.baseURL = 'https://'+ra.user+':'+ra.pass+'@api.github.com';
-			super.loginToAccount('/users/'+ra.user);
+			_account = ha;
+			_baseURL = 'https://'+_account.user+':'+_account.pass+'@api.github.com';
+			super.loginX(_baseURL + '/users/'+_account.user);
 		}
 		
 		override public function addRepository(o:Object):void
 		{
-			super.addRepositoryToAccount(HEADER_TXT, getRepoObj(o.name, o.desc, o.publik), '/user/repos');
+			super.addRepositoryX(getRepoObj(o.name, o.desc, o.publik), _baseURL + '/user/repos');
 		}
 		
 		override public function getCollaborators():void
 		{
-			super.getCollaboratorsOfRepo('/repos/'+super.account.user+'/'+super.account.repository.repoName+'/collaborators');
+			super.getCollaboratorsX(_baseURL + '/repos/'+_account.user+'/'+_account.repository.repoName+'/collaborators');
 		}
 		
 		override public function killCollaborator(c:Collaborator):void
 		{
-			super.killCollaboratorFromRepo('/repos/'+super.account.user+'/'+super.account.repository.repoName+'/collaborators/'+c.userName);
+			super.killCollaboratorX(_baseURL + '/repos/'+_account.user+'/'+_account.repository.repoName+'/collaborators/'+c.userName);
 		}		
 		
 		override public function addCollaborator(o:Collaborator):void
 		{
-			super.addCollaboratorToGitHub('Content-Length: 0', '/repos/'+super.account.user+'/'+super.account.repository.repoName+'/collaborators/'+o.userName);
+			super.addCollaboratorX(_baseURL + '/repos/'+_account.user+'/'+_account.repository.repoName+'/collaborators/'+o.userName);
 		}		
 		
 	// handlers //	
@@ -49,8 +52,8 @@ package model.proxies.remote.acct {
 		{
 			var o:Object = getResultObject(s);
 			if (o.message == null){
-				super.account.loginData = o;
-				super.getRepositories('/user/repos');
+				_account.loginData = o;
+				super.getRepositories(_baseURL + '/user/repos');
 			}	else{
 				dispatchFailure(ErrEvent.LOGIN_FAILURE);
 			}
@@ -60,8 +63,8 @@ package model.proxies.remote.acct {
 		{
 			var o:Object = getResultObject(s);
 			if (o.message == null){
-				for (var i:int = 0; i < o.length; i++) super.account.addRepository(new GitHubRepo(o[i]));
-				Hosts.github.loggedIn = super.account;
+				for (var i:int = 0; i < o.length; i++) _account.addRepository(new GitHubRepo(o[i]));
+				Hosts.github.loggedIn = _account;
 				super.dispatchLoginSuccess();
 			}	else{
 				handleJSONError(o.message);
@@ -72,7 +75,7 @@ package model.proxies.remote.acct {
 		{
 			var o:Object = getResultObject(s);
 			if (o.errors == null){
-				super.account.addRepository(new GitHubRepo(o));
+				_account.addRepository(new GitHubRepo(o));
 				dispatchEvent(new AppEvent(AppEvent.REPOSITORY_CREATED));
 			}	else{
 				handleJSONError(o.errors[0].message);		
@@ -88,11 +91,11 @@ package model.proxies.remote.acct {
 					var c:Collaborator = new Collaborator();
 						c.userId = o[i]['id'];
 						c.userName = o[i]['login'];
-						c.admin = o[i]['login'] == super.account.user;
+						c.admin = o[i]['login'] == _account.user;
 						c.avatarURL = o[i]['avatar_url'];
 					v.push(c);
 				}
-				super.account.repository.collaborators = v;
+				_account.repository.collaborators = v;
 				super.dispatchCollaborators();
 			}	else{
 				handleJSONError(o.message);

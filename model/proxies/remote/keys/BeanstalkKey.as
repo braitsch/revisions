@@ -19,7 +19,7 @@ package model.proxies.remote.keys {
 			var xml:XML = new XML(s);
 			var keys:XMLList = xml['public-key'];
 			if (keys.length() == 0){
-				super.addKeyToRemote(HEADER_XML, getKeyObject(), '/public_keys.xml');
+				super.addKeyToRemote(getKeyObject(), '/public_keys.xml');
 			}	else{
 				for (var i:int = 0; i < keys.length(); i++) {
 					if (checkKeysMatch(keys[i].content) == true){

@@ -80,7 +80,12 @@ package model.remote {
 		public function set collaborators(v:Vector.<Collaborator>):void
 		{
 			_collaborators = v;
-		}		
+		}
+
+		public function addCollaborator(o:Collaborator):void
+		{
+			_collaborators.push(o);
+		}
 		
 	}
 	

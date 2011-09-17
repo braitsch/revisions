@@ -47,7 +47,7 @@ package view.modals.collab {
 			_collab.userEmail	=	_form.getField(2); 
 			_collab.userName	=	_form.getField(3); 
 			_collab.write 		= 	_check.selected;
-			_collab.passWord 	= 	MD5.hash(new Date().toString());		
+			_collab.passWord 	= 	MD5.hash(new Date().toString());
 			if (_collab.userName == _message || _collab.userName == '') _collab.userName = _collab.lastName.toLowerCase();
 			var m:String = validate();
 			if (m == null){
@@ -56,7 +56,7 @@ package view.modals.collab {
 				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));
 			}	
 		}
-		
+
 		private function validate():String
 		{
 			var a:Array = ['first name', 'last name', 'login'];

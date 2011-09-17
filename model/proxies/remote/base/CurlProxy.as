@@ -8,9 +8,6 @@ package model.proxies.remote.base {
 		
 		private static var _request		:String;
 		
-		public static const HEADER_XML	:String = 'Content-Type:application/xml';
-		public static const HEADER_TXT	:String = 'Content-Type:application/x-www-form-urlencoded';
-
 		protected function get request()				:String 	{ return _request; 		}
 		protected function set request(request:String)	:void 		{ _request = request; 	}
 
@@ -18,7 +15,7 @@ package model.proxies.remote.base {
 		{
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);			
 		}
-
+		
 		protected function getResultObject(s:String):Object
 		{
 		// strip off any post headers we receive before parsing github json //	
@@ -40,16 +37,16 @@ package model.proxies.remote.base {
 				var r:String = s.substr(s.indexOf(',') + 1);
 				var x:uint = uint(s.substr(0, s.indexOf(',')));
 				if (x == 0){
-					onProcessSuccess(r);
+					onProcessSuccess(e.data.method, r);
 				}	else{
-					onProcessFailure(x);		
+					onProcessFailure(x, e.data.method);		
 				}
 			}
 		}
 		
-		protected function onProcessSuccess(r:String):void { }
+		protected function onProcessSuccess(m:String, r:String):void { }
 		
-		private function onProcessFailure(x:uint):void
+		private function onProcessFailure(x:uint, m:String):void
 		{
 			switch(x){
 				case 6 :
@@ -60,7 +57,7 @@ package model.proxies.remote.base {
 				break;
 				default :
 			// handle any other mysterious errors we get back from curl //
-				dispatchDebug({method:_request, message:'Request failed with exit code : '+x});
+				dispatchDebug({method:m, message:'Request failed with exit code : '+x});
 			}
 		}
 		

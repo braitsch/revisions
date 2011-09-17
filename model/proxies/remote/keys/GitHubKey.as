@@ -18,7 +18,7 @@ package model.proxies.remote.keys {
 		{
 			var a:Array = getResultObject(s) as Array;
 			if (a.length == 0){
-				super.addKeyToRemote(HEADER_TXT, getKeyObject(), '/user/keys');
+				super.addKeyToRemote(getKeyObject(), '/user/keys');
 			}	else{
 				for (var i:int = 0; i < a.length; i++) {
 					if (checkKeysMatch(a[i].key) == true){

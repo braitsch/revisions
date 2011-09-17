@@ -6,107 +6,70 @@ package model.proxies.remote.acct {
 	import model.remote.HostingAccount;
 	import model.vo.Collaborator;
 	import system.BashMethods;
-	import system.StringUtils;
 
 	public class ApiProxy extends CurlProxy {
 
-		private static var _baseURL		:String;
-		private static var _account		:HostingAccount;
-
-		protected function get account()				:HostingAccount 	{ return _account; 		}
-		protected function set baseURL(baseURL:String)	:void 				{ _baseURL = baseURL; 	}	
-
-		public function login(ra:HostingAccount):void { _account = ra; }
-		protected function loginToAccount(url:String):void
+		public function login(ra:HostingAccount):void { }
+		protected function loginX(url:String):void
 		{
-			startTimer();
-			super.request = BashMethods.LOGIN;
-			super.call(Vector.<String>([BashMethods.GET_REQUEST, _baseURL + url]));
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Attemping Login'}));
+			super.call(Vector.<String>([BashMethods.LOGIN, url]));
 		}
 		
 	// repositories //	
 	
 		protected function getRepositories(url:String):void
 		{
-			startTimer();
-			super.request = BashMethods.GET_REPOSITORIES;
-			super.call(Vector.<String>([BashMethods.GET_REQUEST, _baseURL + url]));
+			super.call(Vector.<String>([BashMethods.GET_REPOSITORIES, url]));
 		}	
 		
 		public function addRepository(o:Object):void { }
-		protected function addRepositoryToAccount(header:String, data:String, url:String):void
+		protected function addRepositoryX(data:String, url:String):void
 		{
-			startTimer();
-			super.request = BashMethods.ADD_REPOSITORY;
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Connecting to '+StringUtils.capitalize(_account.type)}));
-			super.call(Vector.<String>([BashMethods.POST_REQUEST, header, data, _baseURL + url]));
+			super.call(Vector.<String>([BashMethods.ADD_REPOSITORY, data, url]));
 		}
 		
 	// collaborators //	
 	
 		public function getCollaborators():void { }	
-		protected function getCollaboratorsOfRepo(url:String):void
+		protected function getCollaboratorsX(url:String):void
 		{
-			startTimer();
-			super.request = BashMethods.GET_COLLABORATORS;
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Fetching Collaborators'}));
-			super.call(Vector.<String>([BashMethods.GET_REQUEST, _baseURL + url]));			
+			super.call(Vector.<String>([BashMethods.GET_COLLABORATORS, url]));			
 		}
 		
 		public function addCollaborator(o:Collaborator):void { }
-		protected function addCollaboratorToGitHub(header:String, url:String):void
+		protected function addCollaboratorX(url:String, data:Object = null):void
 		{
-			startTimer();
-			super.request = BashMethods.ADD_COLLABORATOR;
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Adding Collaborator'}));
-			super.call(Vector.<String>([BashMethods.PUT_REQUEST, header, _baseURL + url]));
-		}		
-		
-		protected function addCollaboratorToBeanstalk(header:String, data:Object, url:String):void
-		{
-			startTimer();
-			super.request = BashMethods.ADD_COLLABORATOR;
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Adding Collaborator'}));
-			super.call(Vector.<String>([BashMethods.POST_REQUEST, header, data, _baseURL + url]));	
+			if (data == null){
+				super.call(Vector.<String>([BashMethods.ADD_COLLABORATOR, url]));	
+			}	else{
+				super.call(Vector.<String>([BashMethods.ADD_COLLABORATOR, data, url]));	
+			}
 		}
 		
 		public function killCollaborator(c:Collaborator):void { }	
-		protected function killCollaboratorFromRepo(url:String):void
+		protected function killCollaboratorX(url:String):void
 		{
-			startTimer();
-			super.request = BashMethods.KILL_COLLABORATOR;
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Removing Collaborator'}));
-			super.call(Vector.<String>([BashMethods.DELETE_REQUEST, _baseURL + url]));
+			super.call(Vector.<String>([BashMethods.KILL_COLLABORATOR, url]));
 		}	
 		
 	// beanstalk permission methods //			
 		
-		protected function getCollaboratorsPermissions(url:String):void
+		protected function getPermissions(url:String):void
 		{
-			startTimer();
-			super.request = BashMethods.GET_PERMISSIONS;
-			super.call(Vector.<String>([BashMethods.GET_REQUEST, _baseURL + url]));			
+			super.call(Vector.<String>([BashMethods.GET_PERMISSIONS, url]));			
 		}
 		
 		public function setPermissions(c:Collaborator):void { }
-		protected function setCollaboratorPermissions(header:String, data:Object, url:String):void
+		protected function setCollaboratorX(data:Object, url:String):void
 		{
-			startTimer();
-			super.request = BashMethods.SET_PERMISSIONS;
-			super.call(Vector.<String>([BashMethods.POST_REQUEST, header, data, _baseURL + url]));	
+			super.call(Vector.<String>([BashMethods.SET_PERMISSIONS, data, url]));	
 		}
 		
-//		protected function setAdmin(header:String, data:Object, url:String):void
-//		{
-//			startTimer();
-//			super.request = BashMethods.SET_ADMINISTRATOR;
-//			super.call(Vector.<String>([BashMethods.PUT_REQUEST, header, data, _baseURL + url]));				
-//		}			
+	// callbacks //			
 		
-		override protected function onProcessSuccess(r:String):void
+		override protected function onProcessSuccess(m:String, r:String):void
 		{
-			switch(super.request){
+			switch(m){
 				case BashMethods.LOGIN :
 					onLoginSuccess(r);
 				break;
@@ -137,8 +100,6 @@ package model.proxies.remote.acct {
 			}			
 		}
 
-	// callbacks //	
-		
 		protected function onLoginSuccess(s:String):void { }
 		
 		protected function onRepositories(s:String):void { }

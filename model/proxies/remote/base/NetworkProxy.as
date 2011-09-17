@@ -1,5 +1,6 @@
 package model.proxies.remote.base {
 
+	import system.BashMethods;
 	import view.modals.system.Message;
 	import view.modals.system.Debug;
 	import events.AppEvent;
@@ -14,6 +15,32 @@ package model.proxies.remote.base {
 		private static var _timeout		:Timer = new Timer(20000, 1);
 		
 		protected function get timerIsRunning():Boolean { return _timeout.running; }
+		
+		override protected function call(v:Vector.<String>):void
+		{
+			var msg:String;
+			switch(v[0]){
+				case BashMethods.LOGIN :
+					msg = 'Attemping Login';
+				break;
+				case BashMethods.ADD_REPOSITORY :
+					msg = 'Uploading Bookmark';
+				break;
+				case BashMethods.GET_COLLABORATORS :
+					msg = 'Fetching Collaborators';
+				break;	
+				case BashMethods.ADD_COLLABORATOR :
+					msg = 'Adding Collaborator';
+				break;	
+				case BashMethods.KILL_COLLABORATOR :
+					msg = 'Removing Collaborator';
+				break;												
+				
+			}
+			startTimer();
+			super.call(v);
+			if (msg) AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:msg}));
+		}		
 		
 		protected function startTimer():void
 		{

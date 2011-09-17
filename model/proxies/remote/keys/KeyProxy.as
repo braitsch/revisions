@@ -30,11 +30,11 @@ package model.proxies.remote.keys {
 			super.call(Vector.<String>([BashMethods.GET_REQUEST, _baseURL + url]));
 		}
 		
-		protected function addKeyToRemote(header:String, data:String, url:String):void
+		protected function addKeyToRemote(data:String, url:String):void
 		{
 			startTimer();
 			super.request = BashMethods.ADD_KEY_TO_REMOTE;
-			super.call(Vector.<String>([BashMethods.POST_REQUEST, header, data, _baseURL + url]));
+			super.call(Vector.<String>([BashMethods.POST_REQUEST, data, _baseURL + url]));
 		}
 		
 		protected function repairRemoteKey(vrb:String, key:String, url:String):void
@@ -58,9 +58,9 @@ package model.proxies.remote.keys {
 			super.call(Vector.<String>([BashMethods.ADD_NEW_KNOWN_HOST, h]));			
 		}
 		
-		override protected function onProcessSuccess(r:String):void
+		override protected function onProcessSuccess(m:String, r:String):void
 		{
-			switch(super.request){
+			switch(m){
 				case BashMethods.GET_REMOTE_KEYS :
 					onRemoteKeysReceived(r);
 				break;
