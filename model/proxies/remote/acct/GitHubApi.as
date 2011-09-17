@@ -1,5 +1,6 @@
 package model.proxies.remote.acct {
 
+	import model.vo.Repository;
 	import model.vo.Permission;
 	import events.AppEvent;
 	import events.ErrEvent;
@@ -64,7 +65,9 @@ package model.proxies.remote.acct {
 		{
 			var o:Object = getResultObject(s);
 			if (o.message == null){
-				for (var i:int = 0; i < o.length; i++) _account.addRepository(new GitHubRepo(o[i]));
+				var v:Vector.<Repository> = new Vector.<Repository>();
+				for (var i:int = 0; i < o.length; i++) v.push(new GitHubRepo(o[i]));
+				_account.repositories = v;
 				Hosts.github.loggedIn = _account;
 				super.dispatchLoginSuccess();
 			}	else{

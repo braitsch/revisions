@@ -55,38 +55,26 @@ package model.remote {
 		{
 			_repository = rpo;
 			_repositories.push(rpo);
+			_repositories = sortByName(_repositories);
 		}
 		
-		public function get repositories():Vector.<Repository> 
-		{ 
-			return _repositories;
-		}
+		public function set repositories(v:Vector.<Repository>):void 	{ _repositories = sortByName(v);}
+		public function get repositories():Vector.<Repository> 			{ return _repositories;	}
 
-		public function get repository():Repository
-		{
-			return _repository;
-		}
+		public function set repository(r:Repository):void 				{ _repository = r; 		}
+		public function get repository():Repository 					{ return _repository; 	}
 
-		public function set repository(r:Repository):void
-		{
-			_repository = r;
-		}
-
-		public function get collaborators():Vector.<Collaborator>
-		{
-			return _collaborators;
-		}
-
-		public function set collaborators(v:Vector.<Collaborator>):void
-		{
-			_collaborators = v;
-		}
-
-		public function addCollaborator(o:Collaborator):void
-		{
-			_collaborators.push(o);
-		}
+		public function set collaborators(v:Vector.<Collaborator>):void { _collaborators = v; 	}
+		public function get collaborators():Vector.<Collaborator> 		{ return _collaborators;}
 		
+		private function sortByName(v:Vector.<Repository>):Vector.<Repository>
+		{
+			var a:Array = [];
+			for (var i:int = 0; i < v.length; i++) a[i] = v[i];
+				a.sortOn('repoName', Array.CASEINSENSITIVE);
+			return Vector.<Repository>(a);
+		}
+
 	}
 	
 }

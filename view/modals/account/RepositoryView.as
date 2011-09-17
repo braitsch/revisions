@@ -38,23 +38,15 @@ package view.modals.account {
 		
 		private function attachRepositories():void
 		{
-			var a:Vector.<Repository> = Vector.<Repository>(sortOn(super.account.repositories));
+			var v:Vector.<Repository> = super.account.repositories;
 			while(_repos.numChildren) _repos.removeChildAt(0);
-			for (var i:int = 0; i < a.length; i++) {
-				var rp:RepositoryItem = new RepositoryItem(a[i]);
+			for (var i:int = 0; i < v.length; i++) {
+				var rp:RepositoryItem = new RepositoryItem(v[i]);
 					rp.y = i * 41;
 				_repos.addChild(rp);
 			}
 			_line1.text = 'Welcome, these are your '+super.account.type+' repositories!';		
 		}
-		
-		private function sortOn(v:*):Array
-		{
-			var a:Array = [];
-			for (var i:int = 0; i < v.length; i++) a[i] = v[i];
-				a.sortOn('repoName', Array.CASEINSENSITIVE);
-			return a;
-		}		
 		
 	// collaborators //
 	

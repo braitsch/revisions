@@ -53,7 +53,7 @@ package system{
 		public static const LOGIN					:String = 'login';
 		public static const LOGOUT					:String = 'logout';
 		public static const GET_REPOSITORIES		:String = 'getRepositories';
-		public static const ADD_REPOSITORY			:String = 'addBkmkToAccount';
+		public static const ADD_REPOSITORY			:String = 'addRepository';
 		
 	// remote keys //	
 		public static const GET_REMOTE_KEYS			:String = 'getAllKeys';
@@ -73,12 +73,12 @@ package system{
 		public static const PUT_REQUEST				:String = 'putRequest';
 		public static const PATCH_REQUEST			:String = 'patchRequest';
 		public static const DELETE_REQUEST			:String = 'deleteRequest';
-		public static const GET_COLLABORATORS		:String = "getCollaborators";
-		public static const ADD_COLLABORATOR		:String = "addCollaborator";
-		public static const KILL_COLLABORATOR		:String = "killCollaborator";
-		public static const GET_PERMISSIONS			:String = "getPermissions";
-		public static const SET_PERMISSIONS			:String = "setPermissions";
-		public static const SET_ADMINISTRATOR		:String = "setAdministrator";
+		public static const GET_COLLABORATORS		:String = 'getCollaborators';
+		public static const ADD_COLLABORATOR		:String = 'addCollaborator';
+		public static const KILL_COLLABORATOR		:String = 'killCollaborator';
+		public static const GET_PERMISSIONS			:String = 'getPermissions';
+		public static const SET_PERMISSIONS			:String = 'setPermissions';
+		public static const SET_ADMINISTRATOR		:String = 'setAdministrator';
 		
 	}
 	

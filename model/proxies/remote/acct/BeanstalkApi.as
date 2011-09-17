@@ -1,5 +1,6 @@
 package model.proxies.remote.acct {
 
+	import model.vo.Repository;
 	import view.modals.system.Message;
 	import model.AppModel;
 	import model.vo.Permission;
@@ -99,12 +100,14 @@ package model.proxies.remote.acct {
 			if (checkForErrors(s) == true) return;
 			var xml:XML = new XML(s);
 			var xl:XMLList = xml['repository'];			
+			var v:Vector.<Repository> = new Vector.<Repository>(); 
 			for (var i:int = 0; i < xl.length(); i++) {
 				if (xl[i]['vcs'] == 'git') {
 					var url:String = 'git@'+_account.user+'.beanstalkapp.com:/'+xl[i]['name']+'.git';
-					_account.addRepository(new BeanstalkRepo(xl[i], url));
+					v.push(new BeanstalkRepo(xl[i], url));
 				}
 			}
+			_account.repositories = v;
 			Hosts.beanstalk.loggedIn = _account;
 			dispatchLoginSuccess();
 		}
@@ -144,8 +147,6 @@ package model.proxies.remote.acct {
 				dispatchFailure(xml.error);
 			}	else{
 				_collab.userId = xml.id;
-				_account.addCollaborator(_collab);
-				_collab.permissions = new <Permission>[_permission];
 				super.setPermissionsX(getPermissionsObj(_collab, _permission), _baseURL + '/permissions.xml');
 			}
 		}
