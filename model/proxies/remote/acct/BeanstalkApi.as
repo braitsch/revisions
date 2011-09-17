@@ -1,5 +1,7 @@
 package model.proxies.remote.acct {
 
+	import view.modals.system.Message;
+	import model.AppModel;
 	import model.vo.Permission;
 	import events.AppEvent;
 	import events.ErrEvent;
@@ -71,6 +73,11 @@ package model.proxies.remote.acct {
 			var usr:XMLList = xml['user'];
 			for (var i:int = 0; i < usr.length(); i++) {
 				if (usr[i]['login'] == _account.user) {
+				// reject regular users for now //	
+					if (usr[i]['owner'] == false && usr[i]['admin'] == false)
+					{
+						dispatchAccessDenied(); _account = null; return;
+					}
 					var o:Object = {};
 						o.id = usr[i]['id'];
 						o.email = usr[i]['email'];
@@ -79,6 +86,12 @@ package model.proxies.remote.acct {
 				}
 			}
 			super.getRepositories(_baseURL + '/repositories.xml');
+		}
+
+		private function dispatchAccessDenied():void
+		{
+			var m:String = 'You must have owner or admin privledges to access your account right now. Support for regular users is coming soon.';
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));
 		}
 		
 		override protected function onRepositories(s:String):void

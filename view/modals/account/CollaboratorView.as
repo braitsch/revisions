@@ -63,16 +63,20 @@ package view.modals.account {
 		private function attachBSCollabs():void
 		{
 			_pool = super.account.collaborators;
-			var n:uint = _pool.length <= 15 ? _pool.length : 15;
-		// force account owner to the top of the list //
-			for (var m:int = 0; m < _pool.length; m++) if (_pool[m].owner == true) break;
-			_pool.unshift(_pool[m]); _pool.splice(m+1, 1);
+			forceOwnerToTopOfList();
+			var n:uint = _pool.length <= 8 ? _pool.length : 8;
 			for (var i:int = 0; i < n; i++) {
 				var k:CollaboratorBS = new CollaboratorBS(_pool[i], super.account.repository.id);
 					k.y = i * 41;
 				_collabs.addChild(k);
 			}
 			writeBSText();
+		}
+		
+		private function forceOwnerToTopOfList():void
+		{
+			for (var i:int = 0; i < _pool.length; i++) if (_pool[i].owner == true) break;
+			_pool.unshift(_pool[i]); _pool.splice(i+1, 1);			
 		}
 		
 		private function onKillCollaborator(e:UIEvent):void
@@ -114,8 +118,9 @@ package view.modals.account {
 		
 		private function writeGHText():void
 		{
-			var s:String = _pool.length > 1 ? 's' : '';
-			_line2.text = 'You currently have '+_pool.length+' collaborator'+s+' on this repository.';
+			var n:uint = super.account.repository.collaborators.length;
+			var s:String = n > 1 ? 's' : '';
+			_line2.text = 'You currently have '+n+' collaborator'+s+' on this repository.';
 		}
 		
 		private function writeBSText():void

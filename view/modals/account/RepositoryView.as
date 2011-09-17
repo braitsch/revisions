@@ -42,8 +42,7 @@ package view.modals.account {
 			while(_repos.numChildren) _repos.removeChildAt(0);
 			for (var i:int = 0; i < a.length; i++) {
 				var rp:RepositoryItem = new RepositoryItem(a[i]);
-					rp.x = 3;
-					rp.y = 44 * i;
+					rp.y = i * 41;
 				_repos.addChild(rp);
 			}
 			_line1.text = 'Welcome, these are your '+super.account.type+' repositories!';		
@@ -104,14 +103,13 @@ package view.modals.account {
 		
 		private function buildRepoContainer():void
 		{
-			_view.repoBkgd.x = 2;
-			_view.repoBkgd.addChild(_repos);
-			_view.repoBkgd.addChild(_mask);	
-			_mask.y = _repos.y = 2;
+			_view.addChild(_repos);
+			_view.addChild(_mask);	
+			_mask.y = _repos.y = 43;
 			_mask.graphics.beginFill(0xff0000, .3);
-			_mask.graphics.drawRect(0, 0, 574, 309);
+			_mask.graphics.drawRect(0, 0, 580, 328);
 			_mask.graphics.endFill();
-			_repos.mask = _mask;					
+			_repos.mask = _mask;
 		}
 		
 		private function addTextHeadings():void
@@ -127,10 +125,10 @@ package view.modals.account {
 			var h:uint = _repos.height - 11; // offset padding on pngs //
 			if (h <= _mask.height) return;
 			_repos.y += e.delta;
-		// 2 is the home yPos of the repos container sprite //
-			var minY:int = 2 - h + _mask.height;
-			if (_repos.y >= 2) {
-				_repos.y = 2;
+		// 43 is the home yPos of the repos container sprite //
+			var minY:int = 43 - h + _mask.height;
+			if (_repos.y >= 43) {
+				_repos.y = 43;
 			}	else if (_repos.y < minY){
 				_repos.y = minY;
 			}

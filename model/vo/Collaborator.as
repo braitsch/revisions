@@ -16,15 +16,6 @@ package model.vo {
 		public var userId				:uint;		
 		public var permissions			:Vector.<Permission>;
 		
-		public function addPermission(p:Permission):void
-		{
-			if (permissions) {
-				permissions.push(p);
-			}	else{
-				permissions = new <Permission>[p];
-			}
-		}
-		
 	}
 	
 }
