@@ -1,15 +1,13 @@
 package model.proxies.remote.acct {
 
-	import model.vo.Repository;
-	import view.modals.system.Message;
-	import model.AppModel;
-	import model.vo.Permission;
 	import events.AppEvent;
 	import events.ErrEvent;
 	import model.remote.HostingAccount;
 	import model.remote.Hosts;
 	import model.vo.BeanstalkRepo;
 	import model.vo.Collaborator;
+	import model.vo.Permission;
+	import model.vo.Repository;
 
 	public class BeanstalkApi extends ApiProxy {
 		
@@ -74,11 +72,6 @@ package model.proxies.remote.acct {
 			var usr:XMLList = xml['user'];
 			for (var i:int = 0; i < usr.length(); i++) {
 				if (usr[i]['login'] == _account.user) {
-				// reject regular users for now //	
-					if (usr[i]['owner'] == false && usr[i]['admin'] == false)
-					{
-						dispatchAccessDenied(); _account = null; return;
-					}
 					var o:Object = {};
 						o.id = usr[i]['id'];
 						o.email = usr[i]['email'];
@@ -89,12 +82,6 @@ package model.proxies.remote.acct {
 			super.getRepositories(_baseURL + '/repositories.xml');
 		}
 
-		private function dispatchAccessDenied():void
-		{
-			var m:String = 'You must have owner or admin privledges to access your account right now. Support for regular users is coming soon.';
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));
-		}
-		
 		override protected function onRepositories(s:String):void
 		{
 			if (checkForErrors(s) == true) return;
@@ -119,6 +106,8 @@ package model.proxies.remote.acct {
 			_account.addRepository(new BeanstalkRepo(xml, url));
 			dispatchEvent(new AppEvent(AppEvent.REPOSITORY_CREATED));
 		}
+		
+	// collaborators //	
 		
 		override protected function onCollaborators(s:String):void
 		{
@@ -147,6 +136,8 @@ package model.proxies.remote.acct {
 				dispatchFailure(xml.error);
 			}	else{
 				_collab.userId = xml.id;
+				_collab.permissions = new <Permission>[_permission];
+				_account.addCollaborator(_collab);
 				super.setPermissionsX(getPermissionsObj(_collab, _permission), _baseURL + '/permissions.xml');
 			}
 		}
@@ -155,6 +146,7 @@ package model.proxies.remote.acct {
 		{	
 			var xml:XML = new XML(s);
 			trace("BeanstalkApi.onCollaboratorRemoved(s)", xml);
+			// _account.removeCollaborator(_collab);
 			super.dispatchCollaborators();
 		}			
 		
@@ -213,6 +205,9 @@ package model.proxies.remote.acct {
 			}	else if (s.indexOf('API is disabled for this account') != -1){
 				dispatchFailure(ErrEvent.API_DISABLED);
 				return true;
+			}	else if (s.indexOf('You need admin privileges to access this action') != -1){
+				dispatchFailure(ErrEvent.UNAUTHORIZED);
+				return true;				
 			}	else{
 				return false;
 			}

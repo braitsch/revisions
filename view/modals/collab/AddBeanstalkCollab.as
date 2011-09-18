@@ -55,9 +55,16 @@ package view.modals.collab {
 					p.read = true;
 					p.write = _check.selected;
 				Hosts.beanstalk.api.addCollaborator(_collab, p);
+				AppModel.engine.addEventListener(AppEvent.COLLABORATORS_RECEIEVED, onCollaboratorAdded);
 			}	else{
 				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));
 			}	
+		}
+
+		private function onCollaboratorAdded(e:AppEvent):void
+		{
+			dispatchEmail();
+			AppModel.engine.removeEventListener(AppEvent.COLLABORATORS_RECEIEVED, onCollaboratorAdded);
 		}
 
 		private function validate():String
@@ -75,7 +82,7 @@ package view.modals.collab {
 			return null;
 		}
 		
-		public function dispatchEmail():void
+		private function dispatchEmail():void
 		{
 			var vrs:URLVariables = new URLVariables();
 				vrs.recipientName = _form.getField(0);
@@ -97,7 +104,7 @@ package view.modals.collab {
 
 		private function onEmailSuccess(e:Event):void
 		{
-			// trace('email successfully sent');	
+			//trace('email successfully sent');	
 		}
 		
 		private function onEmailFailure(e:Event):void

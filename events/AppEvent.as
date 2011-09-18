@@ -28,6 +28,7 @@ package events {
 		public static const GIT_NAME_AND_EMAIL		:String = "GIT_NAME_AND_EMAIL";		
 		public static const GIT_DIR_UPDATED			:String = "GIT_DIR_UPDATED";
 		
+		public static const ATTEMPT_LOGIN			:String = "ATTEMPT_LOGIN";
 		public static const LOGIN_SUCCESS			:String = "LOGIN_SUCCESS";
 		
 	// remote calls //	
@@ -45,8 +46,7 @@ package events {
 		public static const REMOTE_KEY_READY		:String = "REMOTE_KEY_READY";
 		public static const PERMISSIONS_FAILURE		:String = "PERMISSIONS_FAILURE";
 		public static const RETRY_REMOTE_REQUEST	:String = "RETRY_REMOTE_REQUEST";
-		public static const COLLABORATORS_RECEIEVED:String = "COLLABORATORS_RECEIEVED";
-		public static const ATTEMPT_LOGIN:String = "ATTEMPT_LOGIN";
+		public static const COLLABORATORS_RECEIEVED :String = "COLLABORATORS_RECEIEVED";
 		
 		public var data:Object;
 

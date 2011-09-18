@@ -22,7 +22,7 @@ package view.modals.account {
 
 		private function attachAvatar():void
 		{
-			var a:Avatar = new Avatar(_collab.avatarURL, true);
+			var a:Avatar = new Avatar(_collab.avatarURL);
 				a.x = a.y = 6;
 			_view.addChild(a);
 		}

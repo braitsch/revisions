@@ -55,7 +55,6 @@ package view.modals.upload {
 		{
 			dispatchComplete();
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-			if (_view is AddBeanstalkCollab) _view.dispatchEmail();
 			AppModel.engine.removeEventListener(AppEvent.COLLABORATORS_RECEIEVED, onCollabAdded);			
 		}
 		

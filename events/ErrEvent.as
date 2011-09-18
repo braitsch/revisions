@@ -15,6 +15,7 @@ package events {
 		public static const OVER_QUOTA			:String = 'Whoops! Looks like you\'re all out of private repositories, consider making this one public or upgrade your account.';
 		public static const API_DISABLED		:String = 'It looks like remote access to your Beanstalk account is currently disabled. Not to fear, this is easily remedied by enabling the \'Developer API\' option in your account settings.';
 		public static const COLLAB_NOT_FOUND	:String = 'Hmm, I can\'t seem to find that collaborator, are you sure you entered their name correctly?';
+		public static const UNAUTHORIZED		:String = 'You must be the account owner or have admin privileges to access your account through Revisions.';
 	
 		public function ErrEvent(type:String)
 		{

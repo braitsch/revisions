@@ -13,12 +13,18 @@ package model.vo {
 		private var _size	:uint = 30;
 		private var _loader	:Loader = new Loader();
 
-		public function Avatar(email:String, isURL:Boolean = false)
+		public function Avatar(url:String)
 		{
 			drawBackground();
 			_loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onAvatarLoaded);
 			_loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onAvatarFailure);
-			_loader.load(new URLRequest(isURL ? email : 'http://www.gravatar.com/avatar/'+MD5.hash(email)+'?s='+_size+'?d=mm'));
+			if (url.indexOf('http://') == -1) url = encodeURL(url);
+			_loader.load(new URLRequest(url));
+		}
+		
+		private function encodeURL(email:String):String
+		{
+			return 'http://www.gravatar.com/avatar/'+MD5.hash(email)+'?s='+_size+'&d=http://revisions-app.com/img/rev-icon-30.png';			
 		}
 		
 		private function drawBackground():void

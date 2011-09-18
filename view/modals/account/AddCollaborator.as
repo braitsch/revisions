@@ -39,14 +39,14 @@ package view.modals.account {
 		private function addGHCollab():void
 		{
 			_view = new AddGitHubCollab(new Form1Wide());
-			_heading.text = 'Please enter the GitHub user you\'d like to collaborate with on "'+AppModel.bookmark.label+'"';
+			_heading.text = 'Please enter the GitHub user you\'d like to collaborate with on "'+super.account.repository.repoName+'"';
 			_okBtn.y = _backBtn.y = 120;
 		}
 		
 		private function addBSCollab():void
 		{
 			_view = new AddBeanstalkCollab();
-			_heading.text = 'Fill in below to create a new user to collaborate with on "'+AppModel.bookmark.label+'"';
+			_heading.text = 'Fill in below to create a new user to collaborate with on "'+super.account.repository.repoName+'"';
 			_okBtn.y = _backBtn.y = 192;
 		}		
 		

@@ -96,7 +96,6 @@ package model.proxies.remote.acct {
 					onSetPermissions(r);
 				break;
 				case BashMethods.SET_ADMINISTRATOR : 
-					dispatchCollaborators();
 				break;				
 			}			
 		}

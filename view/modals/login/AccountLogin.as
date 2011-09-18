@@ -77,9 +77,6 @@ package view.modals.login {
 			_form = new Form(new Form3());
 			_form.labels = ['Account', 'Username', 'Password'];
 			_form.enabled = [1, 2, 3];
-			_form.setField(0, 'braitsch');
-			_form.setField(1, 'braitsch');
-			_form.setField(2, 'aelisch76');
 			_signUp.y = 130;
 			_signUpURL = 'http://beanstalkapp.com/pricing';
 		}

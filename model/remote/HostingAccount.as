@@ -67,6 +67,12 @@ package model.remote {
 		public function set collaborators(v:Vector.<Collaborator>):void { _collaborators = v; 	}
 		public function get collaborators():Vector.<Collaborator> 		{ return _collaborators;}
 		
+		public function addCollaborator(o:Object):void
+		{
+		// avoids requesting list when adding collab from account view //
+			if (_collaborators) _collaborators.push(o);	
+		}
+		
 		private function sortByName(v:Vector.<Repository>):Vector.<Repository>
 		{
 			var a:Array = [];
