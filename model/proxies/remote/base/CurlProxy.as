@@ -50,10 +50,10 @@ package model.proxies.remote.base {
 		{
 			switch(x){
 				case 6 :
-					dispatchFailure(ErrEvent.NO_CONNECTION);
+					dispatchError(ErrEvent.NO_CONNECTION);
 				break;
 				case 7 :
-					dispatchFailure(ErrEvent.SERVER_FAILURE);
+					dispatchError(ErrEvent.SERVER_FAILURE);
 				break;
 				default :
 			// handle any other mysterious errors we get back from curl //

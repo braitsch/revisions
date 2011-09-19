@@ -1,8 +1,6 @@
 package view.modals.upload {
 
 	import events.AppEvent;
-	import events.ErrEvent;
-	import model.AppModel;
 	import model.remote.HostingAccount;
 	import model.remote.Hosts;
 	import view.modals.login.AccountLogin;
@@ -68,15 +66,9 @@ package view.modals.upload {
 			_login = new AccountLogin(_service);
 			_login.y = 70;
 			_login.baseline = 280;
-			_login.addEventListener(AppEvent.ATTEMPT_LOGIN, onAttemptLogin);
+			_login.addEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);
 			this.page = _login;
 			super.heading =  'Please login to your '+_service+' account';
-		}
-
-		private function onAttemptLogin(e:AppEvent):void
-		{
-			AppModel.engine.addEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);
-			AppModel.engine.addEventListener(ErrEvent.LOGIN_FAILURE, onLoginFailure);
 		}
 
 		private function onLoginSuccess(e:AppEvent):void
@@ -86,19 +78,7 @@ package view.modals.upload {
 			}	else if (_service == HostingAccount.BEANSTALK){
 				super.account = Hosts.beanstalk.loggedIn;
 			}
-			removeListeners();
 			super.dispatchNext();	
-		}
-		
-		private function onLoginFailure(e:ErrEvent):void
-		{
-			removeListeners();
-		}
-
-		private function removeListeners():void
-		{
-			AppModel.engine.removeEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);
-			AppModel.engine.removeEventListener(ErrEvent.LOGIN_FAILURE, onLoginFailure);			
 		}
 		
 	}

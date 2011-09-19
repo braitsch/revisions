@@ -46,10 +46,10 @@ package view.modals.login {
 			addChild(_form); 
 			addChild(_check);
 			addChild(_signUp);
-			
 			addEventListener(UIEvent.ENTER_KEY, onLoginButton);
-			AppModel.engine.addEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);
 			AppModel.engine.addEventListener(ErrEvent.LOGIN_FAILURE, onLoginFailure);
+			AppModel.engine.addEventListener(ErrEvent.NO_CONNECTION, onLoginFailure);
+			AppModel.engine.addEventListener(ErrEvent.SERVER_FAILURE, onLoginFailure);
 		}
 		
 		private function attachSignUp():void
@@ -102,10 +102,10 @@ package view.modals.login {
 				}	else if (_type == HostingAccount.BEANSTALK){
 					attemptBSLogin();
 				}
-			}			
-			dispatchEvent(new AppEvent(AppEvent.ATTEMPT_LOGIN));
+			}
+			AppModel.engine.addEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);
 		}
-		
+
 		private function attemptGHLogin():void
 		{
 			var a:HostingAccount = new HostingAccount({type:HostingAccount.GITHUB, 
@@ -123,11 +123,14 @@ package view.modals.login {
 		protected function onLoginSuccess(e:AppEvent):void
 		{
 			_loginBtn.enabled = true;
+			dispatchEvent(new AppEvent(AppEvent.LOGIN_SUCCESS));
+			AppModel.engine.removeEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);
 		}
 
 		private function onLoginFailure(e:ErrEvent):void 
 		{
 			_loginBtn.enabled = true;
+			AppModel.engine.removeEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);			
 		}
 		
 	}

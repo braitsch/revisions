@@ -133,7 +133,7 @@ package model.proxies.remote.acct {
 		{	
 			var xml:XML = new XML(s);
 			if (xml.hasOwnProperty('error')){
-				dispatchFailure(xml.error);
+				dispatchError(xml.error);
 			}	else{
 				_collab.userId = xml.id;
 				_collab.permissions = new <Permission>[_permission];
@@ -188,7 +188,7 @@ package model.proxies.remote.acct {
 			if (ok){
 				super.dispatchCollaborators();
 			}	else{
-				dispatchFailure('Whoops, something went wrong. Failed to update user permissions.');
+				dispatchError(ErrEvent.PERMISSIONS);
 			}
 		}
 		
@@ -197,16 +197,16 @@ package model.proxies.remote.acct {
 		private function checkForErrors(s:String):Boolean
 		{
 			if (s.indexOf('<html>') != -1){
-				dispatchFailure(ErrEvent.LOGIN_FAILURE);
+				dispatchError(ErrEvent.LOGIN_FAILURE);
 				return true;
 			}	else if (s.indexOf('Could\'t authenticate you') != -1){
-				dispatchFailure(ErrEvent.LOGIN_FAILURE);
+				dispatchError(ErrEvent.LOGIN_FAILURE);
 				return true;
 			}	else if (s.indexOf('API is disabled for this account') != -1){
-				dispatchFailure(ErrEvent.API_DISABLED);
+				dispatchError(ErrEvent.API_DISABLED);
 				return true;
 			}	else if (s.indexOf('You need admin privileges to access this action') != -1){
-				dispatchFailure(ErrEvent.UNAUTHORIZED);
+				dispatchError(ErrEvent.UNAUTHORIZED);
 				return true;				
 			}	else{
 				return false;

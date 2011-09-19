@@ -57,20 +57,20 @@ package model.proxies.remote.base {
 		
 		private function dispatchTimeOut(e:TimerEvent):void
 		{
-			dispatchFailure(ErrEvent.SERVER_FAILURE);
+			dispatchError(ErrEvent.SERVER_FAILURE);
 		}
-		
-		protected function dispatchFailure(m:String):void
-		{
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));
-			if (m == ErrEvent.LOGIN_FAILURE) AppModel.engine.dispatchEvent(new ErrEvent(ErrEvent.LOGIN_FAILURE));
-		}			
 		
 		protected function dispatchDebug(o:Object):void
 		{
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Debug(o)));
-		}		
+		}
 				
+		protected function dispatchError(m:String):void
+		{
+			AppModel.engine.dispatchEvent(new ErrEvent(m));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));
+		}
+		
 	}
 	
 }

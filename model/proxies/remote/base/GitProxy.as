@@ -89,10 +89,10 @@ package model.proxies.remote.base {
 					onAuthenticationFailure();
 				break;
 				case GitFailure.MALFORMED_URL	:
-					dispatchFailure(ErrEvent.UNRESOLVED_HOST);
+					dispatchError(ErrEvent.UNRESOLVED_HOST);
 				break;
 				case GitFailure.REPO_NOT_FOUND	:
-					dispatchFailure(ErrEvent.REPO_NOT_FOUND);
+					dispatchError(ErrEvent.REPO_NOT_FOUND);
 				break;
 			}
 		}
@@ -108,7 +108,7 @@ package model.proxies.remote.base {
 		{ 
 			if (hasString(u, 'git://github.com') || hasString(u, 'https://github.com')){
 		// a read-only request has failed //	
-				dispatchFailure('Sorry could not connect to that url. Are you sure you entered it correctly?');
+				dispatchError(ErrEvent.UNRESOLVED_HOST);
 			}	else if (hasString(u, 'git@github.com')){
 				attemptAccountLookup(u);
 			}	else{
