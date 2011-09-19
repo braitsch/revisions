@@ -3,24 +3,22 @@ package view.ui {
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.filters.GlowFilter;
-	import flash.text.TextFormat;
 
 	public class ModalCheckbox extends Sprite {
 
-		private var _format	:TextFormat = new TextFormat();
-		private var _view	:ModalCheckboxMC = new ModalCheckboxMC();
+		private var _view				:ModalCheckboxMC = new ModalCheckboxMC();
+		private static var _glowFilter	:GlowFilter = new GlowFilter(0x000000, .1, 2, 2, 3, 3);
 
 		public function ModalCheckbox(on:Boolean)
 		{
 			addChild(_view);
-			_view.x = 8;
+			_view.x = 9;
 			_view.buttonMode = true;
-			_view.cross.visible = on;
-			_format.letterSpacing = .6;
+			_view.check.visible = on;
 			_view.label_txt.autoSize = 'left';
 			_view.label_txt.mouseEnabled = false;
-			_view.label_txt.defaultTextFormat = _format;
-			_view.label_txt.filters = [new GlowFilter(0x000000, .2, 2, 2, 3, 3)];
+			_view.label_txt.mouseChildren = false;
+			_view.label_txt.filters = [_glowFilter];
 			_view.addEventListener(MouseEvent.CLICK, onToggle);
 		}
 		
@@ -29,18 +27,18 @@ package view.ui {
 			_view.label_txt.text = s;
 			_view.graphics.clear();
 			_view.graphics.beginFill(0xff0000, 0);
-			_view.graphics.drawRect(2, 2, _view.width-4, _view.height-4);
+			_view.graphics.drawRect(-2, -2, _view.width-2, _view.height-2);
 			_view.graphics.endFill();				
 		}
 		
 		public function set selected(b:Boolean):void
 		{
-			_view.cross.visible = b;
+			_view.check.visible = b;
 		}
 		
 		public function get selected():Boolean
 		{
-			return _view.cross.visible;	
+			return _view.check.visible;	
 		}
 		
 		override public function set visible(b:Boolean):void
@@ -50,7 +48,7 @@ package view.ui {
 
 		private function onToggle(e:MouseEvent):void 
 		{
-			_view.cross.visible = !_view.cross.visible;			
+			_view.check.visible = !_view.check.visible;			
 		}
 		
 	}

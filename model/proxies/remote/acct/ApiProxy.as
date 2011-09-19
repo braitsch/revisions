@@ -34,7 +34,6 @@ package model.proxies.remote.acct {
 		public function getCollaborators():void { }	
 		protected function getCollaboratorsX(url:String):void
 		{
-			trace("ApiProxy.getCollaboratorsX(url)", url);
 			super.call(Vector.<String>([BashMethods.GET_COLLABORATORS, url]));			
 		}
 		

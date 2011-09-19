@@ -18,10 +18,12 @@ package view.modals.local {
 
 		private static var _view		:GlobalSettingsMC = new GlobalSettingsMC();
 		private static var _form		:Form = new Form(new Form3());
-		private static var _check1		:ModalCheckbox = new ModalCheckbox(true);
-		private static var _check2		:ModalCheckbox = new ModalCheckbox(true);
-		private static var _check3		:ModalCheckbox = new ModalCheckbox(true);
-		private static var _check4		:ModalCheckbox = new ModalCheckbox(true);
+		private static var _checks		:Vector.<ModalCheckbox> = new Vector.<ModalCheckbox>();
+		private static var _labels		:Vector.<String> = new <String>[
+												'Automatically check for updates',
+												'Show tooltips',
+												'Prompt before downloading a previous version',
+												'Start Revisions on system startup'	];
 
 		public function GlobalSettings()
 		{
@@ -37,23 +39,18 @@ package view.modals.local {
 			
 			attachOptions();
 			addEventListener(UIEvent.ENTER_KEY, onOkButton);
-			AppModel.settings.addEventListener(AppEvent.APP_SETTINGS, onUserSettings);
 		}
 
 		private function attachOptions():void
 		{
-			_check1.label = 'Automatically check for updates';
-			_check2.label = 'Show tooltips';
-			_check3.label = 'Prompt before downloading a previous version';
-			_check4.label = 'Start Revisions on system startup';
-			_check1.addEventListener(MouseEvent.CLICK, onCheck1);
-			_check2.addEventListener(MouseEvent.CLICK, onCheck2);
-			_check3.addEventListener(MouseEvent.CLICK, onCheck3);
-			_check4.addEventListener(MouseEvent.CLICK, onCheck4);
-			_check1.y = 185; _check2.y = 205;			
-			_check3.y = 225; _check4.y = 245;			
-			addChild(_check1); addChild(_check2);
-			addChild(_check3); addChild(_check4);
+			for (var i:int = 0; i < 4; i++) {
+				var k:ModalCheckbox = new ModalCheckbox(true);
+				k.label = _labels[i];
+				k.addEventListener(MouseEvent.CLICK, onCheckboxSelection);
+				k.y = 185 + (20 * i);
+				addChild(k);
+				_checks.push(k);
+			}
 		}
 
 		override protected function onAddedToStage(e:Event):void
@@ -61,16 +58,12 @@ package view.modals.local {
 			_form.setField(0, AppModel.proxies.config.userName);
 			_form.setField(1, AppModel.proxies.config.userEmail);
 			_form.setField(2, LicenseManager.key);
+			_checks[0].selected = AppSettings.getSetting(AppSettings.CHECK_FOR_UPDATES);
+			_checks[1].selected = AppSettings.getSetting(AppSettings.SHOW_TOOL_TIPS);
+			_checks[2].selected = AppSettings.getSetting(AppSettings.PROMPT_BEFORE_DOWNLOAD);
+			_checks[3].selected = AppSettings.getSetting(AppSettings.START_AT_LOGIN);
 			AppModel.proxies.config.addEventListener(AppEvent.GIT_SETTINGS, onGitSettings);
 			super.onAddedToStage(e);
-		}
-
-		private function onUserSettings(e:AppEvent):void
-		{
-			_check1.selected = AppSettings.getSetting(AppSettings.CHECK_FOR_UPDATES);
-			_check2.selected = AppSettings.getSetting(AppSettings.SHOW_TOOL_TIPS);
-			_check3.selected = AppSettings.getSetting(AppSettings.PROMPT_BEFORE_DOWNLOAD);
-			_check4.selected = AppSettings.getSetting(AppSettings.START_AT_LOGIN);
 		}
 
 		private function onGitSettings(e:AppEvent):void
@@ -79,24 +72,22 @@ package view.modals.local {
 			AppModel.proxies.config.removeEventListener(AppEvent.GIT_SETTINGS, onGitSettings);			
 		}
 		
-		private function onCheck1(e:MouseEvent):void
+		private function onCheckboxSelection(e:MouseEvent):void
 		{
-			AppSettings.setSetting(AppSettings.CHECK_FOR_UPDATES, _check1.selected);
-		}
-		
-		private function onCheck2(e:MouseEvent):void
-		{
-			AppSettings.setSetting(AppSettings.SHOW_TOOL_TIPS , _check2.selected);
-		}
-
-		private function onCheck3(e:MouseEvent):void
-		{
-			AppSettings.setSetting(AppSettings.PROMPT_BEFORE_DOWNLOAD, _check3.selected);
-		}
-		
-		private function onCheck4(e:MouseEvent):void
-		{
-			AppSettings.setSetting(AppSettings.START_AT_LOGIN, _check4.selected);			
+			switch(e.currentTarget){
+				case _checks[0] :
+					AppSettings.setSetting(AppSettings.CHECK_FOR_UPDATES, _checks[0].selected);
+				break;
+				case _checks[1] :
+					AppSettings.setSetting(AppSettings.SHOW_TOOL_TIPS , _checks[1].selected);
+				break;
+				case _checks[2] :
+					AppSettings.setSetting(AppSettings.PROMPT_BEFORE_DOWNLOAD, _checks[2].selected);
+				break;
+				case _checks[3] :
+					AppSettings.setSetting(AppSettings.START_AT_LOGIN, _checks[3].selected);	
+				break;												
+			}
 		}		
 		
 		private function onOkButton(evt:Event):void

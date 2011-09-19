@@ -32,11 +32,12 @@ package view.modals.system {
 		
 		private function attachOptions():void
 		{
-			addChild(_trashGit);			
-			addChild(_trashFiles);
-			_trashFiles.y = 165; _trashGit.y = 190;
+			_trashFiles.y = 175; 
 			_trashFiles.label = 'Also Move Files to Trash';
-			_trashGit.label = 'Destroy History (warning this cannot be undone)';					
+			_trashGit.y = 195;
+			_trashGit.label = 'Destroy History (please note this cannot be undone)';					
+			addChild(_trashGit);
+			addChild(_trashFiles);
 		}
 		
 		override protected function onOkButton(e:Event):void
