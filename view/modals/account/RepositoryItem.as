@@ -1,5 +1,8 @@
 package view.modals.account {
 
+	import model.remote.Hosts;
+	import model.vo.GitHubRepo;
+	import model.remote.HostingAccount;
 	import events.UIEvent;
 	import model.vo.Repository;
 	import system.StringUtils;
@@ -24,7 +27,13 @@ package view.modals.account {
 			_view.name_txt.text = o.repoName;
 			_view.desc_txt.text = 'last commit :: '+StringUtils.parseISO8601Date(o.lastUpdated).toLocaleString();
 			_clone.addEventListener(MouseEvent.CLICK, onCloneClick);
-			_collab.addEventListener(MouseEvent.CLICK, onCollabClick);
+			if (o.acctType == HostingAccount.GITHUB) checkIfOwner();
+			if (_collab.enabled) _collab.addEventListener(MouseEvent.CLICK, onCollabClick);
+		}
+
+		private function checkIfOwner():void
+		{
+			_collab.enabled = GitHubRepo(_repo).owner==Hosts.github.loggedIn.user;
 		}
 		
 		private function onCloneClick(e:MouseEvent):void

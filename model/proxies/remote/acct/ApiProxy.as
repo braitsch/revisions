@@ -34,6 +34,7 @@ package model.proxies.remote.acct {
 		public function getCollaborators():void { }	
 		protected function getCollaboratorsX(url:String):void
 		{
+			trace("ApiProxy.getCollaboratorsX(url)", url);
 			super.call(Vector.<String>([BashMethods.GET_COLLABORATORS, url]));			
 		}
 		
@@ -81,6 +82,7 @@ package model.proxies.remote.acct {
 					onRepositoryCreated(r);
 				break;	
 				case BashMethods.GET_COLLABORATORS : 
+				trace("ApiProxy.onProcessSuccess(m, r)", m, r);
 					onCollaborators(r);
 				break;	
 				case BashMethods.ADD_COLLABORATOR : 

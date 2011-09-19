@@ -13,6 +13,11 @@ package model.vo {
 			super.lastUpdated = o.updated_at;
 		}
 		
+		public function get owner():String
+		{
+			return _obj.owner.login;
+		}
+		
 		public function get description():String
 		{
 			return _obj.description;
