@@ -2,7 +2,11 @@ package model.vo {
 
 	import com.adobe.crypto.MD5;
 	import flash.display.Bitmap;
+	import flash.display.CapsStyle;
+	import flash.display.JointStyle;
+	import flash.display.LineScaleMode;
 	import flash.display.Loader;
+	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
@@ -11,14 +15,15 @@ package model.vo {
 	public class Avatar extends Sprite {
 
 		private var _size	:uint = 30;
+		private var _stroke	:Shape = new Shape();	
 		private var _loader	:Loader = new Loader();
 
 		public function Avatar(url:String)
 		{
-			drawBackground();
+			drawStroke();
 			_loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onAvatarLoaded);
 			_loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onAvatarFailure);
-			if (url.indexOf('http://') == -1) url = encodeURL(url);
+			if (url.indexOf('https://') == -1) url = encodeURL(url);
 			_loader.load(new URLRequest(url));
 		}
 		
@@ -27,11 +32,11 @@ package model.vo {
 			return 'http://www.gravatar.com/avatar/'+MD5.hash(email)+'?s='+_size+'&d=http://revisions-app.com/img/rev-icon-30.png';			
 		}
 		
-		private function drawBackground():void
+		private function drawStroke():void
 		{
-			graphics.beginFill(0xffffff);
-			graphics.drawRect(0, 0, _size, _size);
-			graphics.endFill();			
+			_stroke.graphics.lineStyle(1, 0xDADADA, 1, true, LineScaleMode.NONE , CapsStyle.NONE, JointStyle.MITER);
+			_stroke.graphics.drawRect(0, 0, _size-1, _size-1);
+			addChild(_stroke);
 		}
 
 		private function onAvatarLoaded(e:Event):void
@@ -39,7 +44,7 @@ package model.vo {
 			var b:Bitmap = e.currentTarget.content as Bitmap;
 				b.smoothing = true;
 				b.width = b.height = _size;
-			addChild(b);
+			addChildAt(b, 0);
 		}	
 		
 		private function onAvatarFailure(e:IOErrorEvent):void
