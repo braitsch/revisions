@@ -25,18 +25,13 @@ package view.modals.account {
 			addChild(_view);
 			addTextHeadings();
 			buildRepoContainer();
+			addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 			addEventListener(UIEvent.LOGGED_IN_CLONE, onCloneClick);
 			addEventListener(UIEvent.GET_COLLABORATORS, onCollabClick);
 			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);
-			addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 		}
 
 		public function reset():void
-		{
-			attachRepositories();
-		}
-		
-		private function attachRepositories():void
 		{
 			var v:Vector.<Repository> = super.account.repositories;
 			while(_repos.numChildren) _repos.removeChildAt(0);

@@ -9,8 +9,6 @@ package view.modals.account {
 	public class CollaboratorView extends AccountView {
 
 		private var _bkgd			:CollaboratorViewMC = new CollaboratorViewMC();
-		private var _viewGH			:CollaboratorViewGH = new CollaboratorViewGH();
-		private var _viewBS			:CollaboratorViewBS = new CollaboratorViewBS();
 		private var _line1			:TextHeading = new TextHeading();
 
 		public function CollaboratorView()
@@ -23,11 +21,12 @@ package view.modals.account {
 
 		override protected function onAddedToStage(e:Event):void
 		{
-			if (numChildren > 1) removeChildAt(1);
-			if (super.account.type == HostingAccount.GITHUB){
-				addChild(_viewGH);
-			}	else if (super.account.type == HostingAccount.BEANSTALK){
-				addChild(_viewBS);
+			if (numChildren == 1){
+				if (super.account.type == HostingAccount.GITHUB){
+					addChild(new CollaboratorViewGH());
+				}	else if (super.account.type == HostingAccount.BEANSTALK){
+					addChild(new CollaboratorViewBS());
+				}
 			}
 		}		
 

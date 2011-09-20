@@ -148,8 +148,8 @@ package model.proxies.remote.acct {
 				_account.killCollaborator(_collab);
 				super.dispatchCollaborators();
 			}	else{
-				var m:String = 'Something went wrong. I was unable to remove collaborator "'+_collab.firstName+' '+_collab.lastName+'".';
-					m+='Please try again in a few moments';
+				var m:String = 'Something went wrong. I was unable to remove collaborator "'+_collab.firstName+' '+_collab.lastName+'". ';
+					m+='Please try again in a few moments.';
 				dispatchError(m);
 			}
 		}

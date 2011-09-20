@@ -35,7 +35,7 @@ package view.modals.base {
 		{
 			_closeButton = new ModalCloseButton();
 			_closeButton.over.alpha = 0;
-			_closeButton.y = 10;
+			_closeButton.y = 6;
 			_closeButton.buttonMode = true;
 			_closeButton.addEventListener(MouseEvent.CLICK, onCloseClick);
 			_closeButton.addEventListener(MouseEvent.ROLL_OUT, onButtonRollOut);
@@ -52,7 +52,7 @@ package view.modals.base {
 			_bkgd.graphics.beginBitmapFill(new LtGreyPattern());
 			_bkgd.graphics.drawRect(4, 4, w-8, h-8);
 			_bkgd.graphics.endFill();
-			if (_closeButton) _closeButton.x = w - 10;
+			if (_closeButton) _closeButton.x = w - 6;
 		}		
 		
 		protected function onCloseClick(e:MouseEvent):void 

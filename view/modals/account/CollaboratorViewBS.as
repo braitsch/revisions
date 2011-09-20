@@ -5,6 +5,7 @@ package view.modals.account {
 	import events.UIEvent;
 	import model.AppModel;
 	import model.vo.Collaborator;
+	import view.modals.system.Confirm;
 	import view.ui.TextHeading;
 	import com.greensock.TweenLite;
 	import flash.display.Sprite;
@@ -14,13 +15,13 @@ package view.modals.account {
 		private var _item			:Sprite;
 		private var _line2			:TextHeading = new TextHeading();		
 		private var _pool			:Vector.<Collaborator>;
+		private var _collab			:Collaborator;
 		private var _collabs		:Sprite = new Sprite();
 
 		public function CollaboratorViewBS()
 		{
 			_collabs.y = 43; _line2.y = 17;
 			addChild(_collabs); addChild(_line2);
-			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(UIEvent.RADIO_SELECTED, onRadioSelected);
 			addEventListener(UIEvent.KILL_COLLABORATOR, onKillCollaborator);							
 		}
@@ -71,8 +72,21 @@ package view.modals.account {
 		private function onKillCollaborator(e:UIEvent):void
 		{
 			_item = e.target as Sprite;
-			super.proxy.killCollaborator(e.data as Collaborator);
-			AppModel.engine.addEventListener(AppEvent.COLLABORATORS_RECEIEVED, onCollaboratorRemoved);
+			_collab = e.data as Collaborator;
+			var m:String = 'You are about to remove "'+_collab.firstName+' '+_collab.lastName+'" from your Beanstalk account. ';
+				m+='In addition to removing them from your account this action will also disconnect from all repositories they previously had access to. ';
+				m+='Would you like to continue?';
+			var k:Confirm = new Confirm(m);
+				k.addEventListener(UIEvent.CONFIRM, onConfirm);
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, k));			
+		}
+
+		private function onConfirm(e:UIEvent):void
+		{
+			if (e.data as Boolean == true) {
+				super.proxy.killCollaborator(_collab);
+				AppModel.engine.addEventListener(AppEvent.COLLABORATORS_RECEIEVED, onCollaboratorRemoved);
+			}
 		}
 
 		private function onCollaboratorRemoved(e:AppEvent):void

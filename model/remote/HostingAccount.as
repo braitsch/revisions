@@ -77,7 +77,7 @@ package model.remote {
 		{
 		// avoids requesting list when removing collab from account view //
 			for (var i:int = 0; i < _collaborators.length; i++) if (o == _collaborators[i]) break;
-			_collaborators.splice(i, 0);
+			_collaborators.splice(i, 1);
 		}		
 		
 		private function sortByName(v:Vector.<Repository>):Vector.<Repository>

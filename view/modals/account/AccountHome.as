@@ -56,7 +56,7 @@ package view.modals.account {
 	// alternating view modes //
 		
 		override protected function onAddedToStage(e:Event):void
-		{					
+		{
 			attachPage(_viewRepos, 10);
 			super.onAddedToStage(e);
 		}

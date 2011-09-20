@@ -34,6 +34,7 @@ package events {
 		public static const LOGGED_IN_CLONE			:String = "LOGGED_IN_CLONE";
 	
 	// miscellaneous //	
+		public static const CONFIRM					:String = "CONFIRM";
 		public static const ENTER_KEY				:String = "ENTER_KEY";
 		public static const CLOSE_MODAL_WINDOW		:String = "CLOSE_MODAL_WINDOW";
 		public static const FILE_BROWSER_SELECTION	:String = "FILE_BROWSER_SELECTION";

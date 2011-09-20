@@ -1,6 +1,5 @@
 package view.modals.account {
 
-
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
@@ -22,7 +21,6 @@ package view.modals.account {
 			addChild(_collabs);
 			_line2.y = 17;
 			addChild(_line2);
-			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			addEventListener(UIEvent.KILL_COLLABORATOR, onKillCollaborator);			
 		}
 		
