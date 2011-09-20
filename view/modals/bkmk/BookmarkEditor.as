@@ -24,8 +24,8 @@ package view.modals.bkmk {
 			addChild(_view);
 			initializeTabs();
 			super.addCloseButton();
-			super.drawBackground(550, 260);
-			super.setTitle(_view, 'Bookmark Editor');
+			super.drawBackground(550, 300);
+			super.setTitle(_view, 'Bookmark Settings');
 			_view.tabs.addEventListener(MouseEvent.CLICK, onTabSelection);
 		}
 
@@ -72,20 +72,19 @@ package view.modals.bkmk {
 		
 		private function tabOver(s:Sprite):void
 		{
-			TweenLite.to(s['grey'], .3, {alpha:1});
+			TweenLite.to(s['over'], .3, {alpha:1});	
 		}
 		
 		private function tabOut(s:Sprite):void
 		{
-			TweenLite.to(s['blue'], .3, {alpha:0});	
-			TweenLite.to(s['grey'], .3, {alpha:.5});
+			TweenLite.to(s['over'], .3, {alpha:0});	
 		}
 		
 		private function setTab(btn:Sprite, tab:ModalWindowBasic):void
 		{
 			if (_activePage) removeChild(_activePage);
 			_activeTab = btn; _activePage = tab; addChild(_activePage);	
-			TweenLite.to(_activeTab['blue'], .3, {alpha:1});		
+			TweenLite.to(_activeTab['over'], .3, {alpha:1});
 		}
 		
 	}

@@ -1,5 +1,6 @@
 package view.modals.bkmk {
 
+	import view.ui.BasicButton;
 	import model.remote.HostingAccount;
 	import model.vo.Repository;
 	import flash.display.Bitmap;
@@ -22,8 +23,11 @@ package view.modals.bkmk {
 			_view.desc_txt.autoSize = TextFieldAutoSize.LEFT;
 			_view.name_txt.text = rmt.acctName+' : '+rmt.repoName;
 			_view.desc_txt.text = rmt.homePage;
+			_view.name_txt.mouseEnabled = _view.name_txt.mouseChildren = false;
+			_view.desc_txt.mouseEnabled = _view.desc_txt.mouseChildren = false;
 			attachLogo();
-			buttonMode = true; mouseChildren = false;
+			buttonMode = true;
+			new BasicButton(_view.unlink);
 			addEventListener(MouseEvent.CLICK, onMouseClick);
 		}
 		
@@ -35,13 +39,17 @@ package view.modals.bkmk {
 			}	else if (_remote.acctType == HostingAccount.BEANSTALK){
 				b = new Bitmap(new Beanstalk30());
 			}
-			b.x = 11; b.y = 6;
+			b.x = 10; b.y = 6;
 			addChild(b);
 		}
 
 		private function onMouseClick(e:MouseEvent):void
 		{
-			navigateToURL(new URLRequest(_remote.homePage));
+			if (e.target.name == 'unlink'){
+				trace('unlinking');				
+			}	else{
+				navigateToURL(new URLRequest(_remote.homePage));
+			}
 		}
 		
 	}

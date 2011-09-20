@@ -32,7 +32,7 @@ package view.modals.bkmk {
 			super.setHeading(_view, 'General information about this bookmark');
 			addEventListener(UIEvent.ENTER_KEY, onUpdateBookmark);
 			
-			_form.y = 90;
+			_form.y = 110;
 			_form.labels = ['Name', 'Location'];
 			_form.enabled = [1];
 			_view.delete_btn.addEventListener(MouseEvent.CLICK, onDeleteButton);
