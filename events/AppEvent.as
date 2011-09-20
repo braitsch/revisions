@@ -40,7 +40,10 @@ package events {
 		public static const REPOSITORY_READY		:String = "REPOSITORY_READY";
 		public static const FILES_DELETED			:String = "FILES_DELETED";
 		public static const HISTORY_REQUESTED		:String = "HISTORY_REQUESTED";
+		public static const HISTORY_RECEIVED		:String = "HISTORY_RECEIVED";
 		public static const MODIFIED_REQUESTED		:String = "MODIFIED_REQUESTED";
+		public static const MODIFIED_RECEIVED		:String = "MODIFIED_RECEIVED";		
+		public static const SUMMARY_RECEIVED		:String = "SUMMARY_RECEIVED";
 		public static const HISTORY_RENDERED		:String = "HISTORY_RENDERED";
 		
 		public static const REMOTE_KEY_READY		:String = "REMOTE_KEY_READY";

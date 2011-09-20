@@ -1,5 +1,6 @@
 package model.proxies.local {
 
+	import model.vo.Bookmark;
 	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.NativeProcessEvent;
@@ -11,6 +12,8 @@ package model.proxies.local {
 
 	public class RepoEditor extends NativeProcessProxy {
 
+		private static var _bookmark:Bookmark;
+
 		public function RepoEditor()
 		{
 			super.executable = 'RepoEditor.sh';
@@ -20,9 +23,17 @@ package model.proxies.local {
 		
 		public function commit($msg:String):void
 		{
-			super.directory = AppModel.bookmark.gitdir;
+			_bookmark = AppModel.bookmark;
+			super.directory = _bookmark.gitdir;
 			super.call(Vector.<String>([BashMethods.COMMIT, $msg]));
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Saving Changes'}));
+		}
+		
+		public function autoSave(b:Bookmark):void
+		{
+			_bookmark = b;
+			super.directory = _bookmark.gitdir;
+			super.call(Vector.<String>([BashMethods.COMMIT, 'Auto Saved :: '+new Date().toLocaleString()]));
 		}
 		
 		public function trackFile($file:File):void
@@ -66,8 +77,8 @@ package model.proxies.local {
 					dispatchEvent(new BookmarkEvent(BookmarkEvent.BRANCH_CHANGED));
 				break;
 				case BashMethods.COMMIT : 
-					AppModel.branch.modified = [[], []];
-					dispatchEvent(new BookmarkEvent(BookmarkEvent.COMMIT_COMPLETE));
+					_bookmark.branch.modified = [[], []];
+					dispatchEvent(new BookmarkEvent(BookmarkEvent.COMMIT_COMPLETE, _bookmark));
 				break;
 				case BashMethods.TRACK_FILE : 
 				break;

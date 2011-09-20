@@ -1,7 +1,6 @@
 package system {
 
 	import events.AppEvent;
-	import events.BookmarkEvent;
 	import events.ErrEvent;
 	import events.UIEvent;
 	import model.AppModel;
@@ -37,7 +36,7 @@ package system {
             addLocalOptions();
             addAccountOptions();
             setKeyEquivalents();
-            AppModel.engine.addEventListener(BookmarkEvent.MODIFIED_RECEIVED, enableSaveCommit);
+            AppModel.engine.addEventListener(AppEvent.MODIFIED_RECEIVED, enableSaveCommit);
 		}
 
 		private static function setKeyEquivalents():void
@@ -88,7 +87,7 @@ package system {
             return null;
 		}
 		
-		private static function enableSaveCommit(e:BookmarkEvent):void
+		private static function enableSaveCommit(e:AppEvent):void
 		{
 			_commit.enabled = AppModel.bookmark.branch.isModified;
 		}		

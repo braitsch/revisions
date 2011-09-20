@@ -1,8 +1,6 @@
 package model.proxies.local {
 
-	import view.modals.system.Debug;
 	import events.AppEvent;
-	import events.BookmarkEvent;
 	import events.NativeProcessEvent;
 	import model.AppModel;
 	import model.proxies.air.NativeProcessQueue;
@@ -10,6 +8,7 @@ package model.proxies.local {
 	import model.vo.Commit;
 	import system.BashMethods;
 	import system.SystemRules;
+	import view.modals.system.Debug;
 
 	public class StatusProxy extends NativeProcessQueue {
 
@@ -25,7 +24,7 @@ package model.proxies.local {
 			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);
 		}
 		
-		public function getSummary(e:BookmarkEvent = null):void
+		public function getSummary():void
 		{
 			super.directory = AppModel.bookmark.gitdir;
 			super.queue = [	Vector.<String>([BashMethods.GET_LAST_COMMIT]),
@@ -41,9 +40,10 @@ package model.proxies.local {
 							Vector.<String>([BashMethods.GET_UNTRACKED_FILES]) ];
 		}
 
-		public function getHistory():void
+		public function getHistory(b:Bookmark):void
 		{
-			super.directory = AppModel.bookmark.gitdir;
+			_bookmark = b;
+			super.directory = _bookmark.gitdir;
 			super.queue = [	Vector.<String>([BashMethods.GET_HISTORY]), 
 							Vector.<String>([BashMethods.GET_TOTAL_COMMITS]) ];
 		}
@@ -75,7 +75,7 @@ package model.proxies.local {
 		// remove all the ignored files from the untracked array //	
 			u = stripDuplicates(u, i);
 			_bookmark.branch.modified = [m , u];
-			AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.MODIFIED_RECEIVED, _bookmark));			
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.MODIFIED_RECEIVED, _bookmark));			
 		}
 
 		private function stripDuplicates(a:Array, b:Array):Array
@@ -90,13 +90,12 @@ package model.proxies.local {
 			}
 			return a;
 		}
-		//AppModel.proxies.editor.commit('AutoSaved : '+new Date().toLocaleString(), _bookmark);
 
 		private function onSummary(a:Array):void
 		{
 			for (var i:int = 0; i < a.length; i++) a[i] = a[i].result;
 			AppModel.branch.lastCommit = new Commit(a[0], uint(a[1]) + 1);
-			AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.SUMMARY_RECEIVED, AppModel.bookmark));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SUMMARY_RECEIVED, AppModel.bookmark));
 		}
 
 		private function parseHistory(s:String, n:uint):void
@@ -104,8 +103,8 @@ package model.proxies.local {
 			var a:Array = s.split(/[\n\r\t]/g);
 			var v:Vector.<Commit> = new Vector.<Commit>();
 			for (var i:int = 0; i < a.length; i++) v.push(new Commit(a[i], n-i));
-			AppModel.bookmark.branch.history = v;
-			AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.HISTORY_RECEIVED, AppModel.bookmark));			
+			_bookmark.branch.history = v;
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HISTORY_RECEIVED, _bookmark));			
 		}	
 
 		private function splitAndTrim(s:String):Array

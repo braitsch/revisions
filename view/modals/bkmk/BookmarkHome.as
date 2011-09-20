@@ -43,7 +43,7 @@ package view.modals.bkmk {
 			_bookmark = b;
 			_form.setField(0, _bookmark.label);
 			_form.setField(1, _bookmark.path);
-			_view.autoSave.check.selected = _bookmark.autosave != 0;
+			_view.autoSave.check.visible = _bookmark.autosave != 0;
 			_view.autoSave.minutes.text = _bookmark.autosave==0 ? 60 : _bookmark.autosave;
 		}
 		

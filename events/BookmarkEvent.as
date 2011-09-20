@@ -7,9 +7,6 @@ package events {
 		public static const NO_BOOKMARKS					:String = "NO_BOOKMARKS";
 		public static const INITIALIZED						:String = 'INITIALIZED';		public static const ADDED							:String = "ADDED";		public static const DELETED							:String = "DELETED";
 		public static const SELECTED						:String = "SELECTED";
-		public static const SUMMARY_RECEIVED				:String = "SUMMARY_RECEIVED";
-		public static const HISTORY_RECEIVED				:String = "HISTORY_RECEIVED";
-		public static const MODIFIED_RECEIVED				:String = "MODIFIED_RECEIVED";
 		public static const EDITED							:String = "EDITED";
 		public static const PATH_ERROR						:String = "PATH_ERROR";
 		public static const BRANCH_CHANGED					:String = "BRANCH_CHANGED";

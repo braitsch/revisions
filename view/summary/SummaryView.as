@@ -45,9 +45,9 @@ package view.summary {
 			_details.save_btn.over.alpha = 0;
 			this.filters = [new DropShadowFilter(5, 45, 0, .5, 10, 10)];
 			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onSelected);
-			AppModel.engine.addEventListener(BookmarkEvent.SUMMARY_RECEIVED, drawView);
-			AppModel.engine.addEventListener(BookmarkEvent.HISTORY_RECEIVED, drawView);
-			AppModel.engine.addEventListener(BookmarkEvent.MODIFIED_RECEIVED, enableSaveButton);
+			AppModel.engine.addEventListener(AppEvent.SUMMARY_RECEIVED, drawView);
+			AppModel.engine.addEventListener(AppEvent.HISTORY_RECEIVED, drawView);
+			AppModel.engine.addEventListener(AppEvent.MODIFIED_RECEIVED, enableSaveButton);
 			AppModel.engine.addEventListener(AppEvent.BKMK_ADDED_TO_ACCOUNT, onBkmkAddedToAcct);
 		}
 
@@ -127,7 +127,7 @@ package view.summary {
 			if (_bookmark.type == Bookmark.FILE) _icon.y -= 10;
 		}
 
-		private function drawView(e:BookmarkEvent):void
+		private function drawView(e:AppEvent):void
 		{
 		// ignore if we're not showing the bookmark that just updated //
 			if (e.data != _bookmark) return;
@@ -137,7 +137,7 @@ package view.summary {
 			_details.branch_txt.text = 'On Branch : '+StringUtils.capitalize(_bookmark.branch.name);			
 		}
 		
-		private function enableSaveButton(a:BookmarkEvent = null):void
+		private function enableSaveButton(a:AppEvent = null):void
 		{
 			if (_bookmark.branch.isModified){
 				_details.save_btn.over.alpha = 1;
