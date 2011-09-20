@@ -13,7 +13,7 @@ package view.modals.account {
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 
-	public class CollaboratorBS extends Sprite {
+	public class CollaboratorItemBS extends Sprite {
 
 		private var _collab		:Collaborator;
 		private var _view		:*;
@@ -21,7 +21,7 @@ package view.modals.account {
 		private var _radios		:Vector.<AccountRadio>;
 		private var _permission	:Permission;
 
-		public function CollaboratorBS(o:Collaborator, n:uint)
+		public function CollaboratorItemBS(o:Collaborator, n:uint)
 		{
 			_collab = o; _repoId = n;
 			attachView();
@@ -138,10 +138,7 @@ package view.modals.account {
 		
 		private function onKillCollaborator(e:MouseEvent):void
 		{
-			var m:String = 'Support for deleting collaborators is not quite there yet.\n';
-			m+='We\'re working on resolving some issues with Beanstalk\'s API and should have this up and running soon.';
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));
-		//	dispatchEvent(new UIEvent(UIEvent.KILL_COLLABORATOR, _collab));
+			dispatchEvent(new UIEvent(UIEvent.KILL_COLLABORATOR, _collab));
 		}
 		
 	}

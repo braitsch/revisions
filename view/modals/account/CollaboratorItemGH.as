@@ -6,12 +6,12 @@ package view.modals.account {
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 
-	public class CollaboratorGH extends Sprite {
+	public class CollaboratorItemGH extends Sprite {
 
 		private var _collab	:Collaborator;
 		private var _view	:GitHubCollaborator = new GitHubCollaborator();
 
-		public function CollaboratorGH(o:Collaborator)
+		public function CollaboratorItemGH(o:Collaborator)
 		{
 			_collab = o;	
 			_view.label.text = _collab.userName;

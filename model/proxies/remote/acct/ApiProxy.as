@@ -81,7 +81,6 @@ package model.proxies.remote.acct {
 					onRepositoryCreated(r);
 				break;	
 				case BashMethods.GET_COLLABORATORS : 
-				trace("ApiProxy.onProcessSuccess(m, r)", m, r);
 					onCollaborators(r);
 				break;	
 				case BashMethods.ADD_COLLABORATOR : 

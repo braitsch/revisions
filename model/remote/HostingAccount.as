@@ -67,11 +67,18 @@ package model.remote {
 		public function set collaborators(v:Vector.<Collaborator>):void { _collaborators = v; 	}
 		public function get collaborators():Vector.<Collaborator> 		{ return _collaborators;}
 		
-		public function addCollaborator(o:Object):void
+		public function addCollaborator(o:Collaborator):void
 		{
 		// avoids requesting list when adding collab from account view //
 			if (_collaborators) _collaborators.push(o);	
 		}
+		
+		public function killCollaborator(o:Collaborator):void
+		{
+		// avoids requesting list when removing collab from account view //
+			for (var i:int = 0; i < _collaborators.length; i++) if (o == _collaborators[i]) break;
+			_collaborators.splice(i, 0);
+		}		
 		
 		private function sortByName(v:Vector.<Repository>):Vector.<Repository>
 		{

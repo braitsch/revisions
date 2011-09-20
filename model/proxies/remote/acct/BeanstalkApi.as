@@ -46,6 +46,12 @@ package model.proxies.remote.acct {
 			_collab = o; _permission = p; _permission.repoId = _account.repository.id;
 			super.addCollaboratorX(_baseURL + '/users.xml', getCollabObj(_collab));
 		}
+		
+		override public function killCollaborator(o:Collaborator):void
+		{
+			_collab = o;
+			super.killCollaboratorX(_baseURL + '/users/'+o.userId+'.xml');			
+		}		
 
 		override public function setPermissions(o:Collaborator, p:Permission):void
 		{
@@ -56,12 +62,6 @@ package model.proxies.remote.acct {
 //		{
 //			super.setAdmin(getAdminObj(o), _baseURL + '/users/'+o.userId+'.xml');
 //		}
-		
-		override public function killCollaborator(o:Collaborator):void
-		{
-			_collab = o;
-			super.killCollaboratorX(_baseURL + '/users/'+o.userId+'.xml');
-		}				
 		
 	// handlers //			
 		
@@ -144,11 +144,15 @@ package model.proxies.remote.acct {
 		
 		override protected function onCollaboratorRemoved(s:String):void
 		{	
-			var xml:XML = new XML(s);
-			trace("BeanstalkApi.onCollaboratorRemoved(s)", xml);
-			// _account.removeCollaborator(_collab);
-			super.dispatchCollaborators();
-		}			
+			if (s.indexOf('HTTP/1.1 200 OK') != -1) {
+				_account.killCollaborator(_collab);
+				super.dispatchCollaborators();
+			}	else{
+				var m:String = 'Something went wrong. I was unable to remove collaborator "'+_collab.firstName+' '+_collab.lastName+'".';
+					m+='Please try again in a few moments';
+				dispatchError(m);
+			}
+		}
 		
 		override protected function onGetPermissions(s:String):void
 		{
@@ -207,7 +211,7 @@ package model.proxies.remote.acct {
 				return true;
 			}	else if (s.indexOf('You need admin privileges to access this action') != -1){
 				dispatchError(ErrEvent.UNAUTHORIZED);
-				return true;				
+				return true;
 			}	else{
 				return false;
 			}
