@@ -18,6 +18,11 @@ package model.proxies.remote.repo {
 			_send.addBkmkToAccount(o);
 		}
 		
+		public function rmBkmkFromAccount(r:Repository):void
+		{
+			_send.rmBkmkFromAccount(r);
+		}
+		
 		public function syncRemotes(v:Vector.<Repository>):void
 		{
 			_sync.syncRemotes(v);

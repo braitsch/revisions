@@ -36,6 +36,7 @@ package events {
 		public static const CLONE_COMPLETE			:String = "CLONE_COMPLETE";
 		public static const REPOSITORY_CREATED		:String = "REPOSITORY_CREATED";
 		public static const BKMK_ADDED_TO_ACCOUNT	:String = "BKMK_ADDED_TO_ACCOUNT";
+		public static const BKMK_REMOVED_FROM_ACCOUNT:String = "BKMK_REMOVED_FROM_ACCOUNT";
 		
 		public static const REPOSITORY_READY		:String = "REPOSITORY_READY";
 		public static const FILES_DELETED			:String = "FILES_DELETED";
@@ -49,7 +50,7 @@ package events {
 		public static const REMOTE_KEY_READY		:String = "REMOTE_KEY_READY";
 		public static const PERMISSIONS_FAILURE		:String = "PERMISSIONS_FAILURE";
 		public static const RETRY_REMOTE_REQUEST	:String = "RETRY_REMOTE_REQUEST";
-		public static const COLLABORATORS_RECEIEVED :String = "COLLABORATORS_RECEIEVED";
+		public static const COLLABORATORS_RECEIEVED:String = "COLLABORATORS_RECEIEVED";
 		
 		public var data:Object;
 

@@ -70,8 +70,7 @@ package view.modals.upload {
 		
 		override protected function onNextButton(e:Event):void
 		{
-			var o:Object = {	bkmk	:	AppModel.bookmark, 
-								acct	:	super.account,
+			var o:Object = {	acct	:	super.account,
 								name	:	_form.getField(1),
 								desc	:	super.account.type == HostingAccount.GITHUB ? _form.getField(2) : '',
 								publik	:	super.repoPrivate == false	};

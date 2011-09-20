@@ -1,8 +1,9 @@
 package view.modals.bkmk {
 
-	import view.ui.BasicButton;
+	import events.UIEvent;
 	import model.remote.HostingAccount;
 	import model.vo.Repository;
+	import view.ui.BasicButton;
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -10,15 +11,15 @@ package view.modals.bkmk {
 	import flash.net.navigateToURL;
 	import flash.text.TextFieldAutoSize;
 
-	public class RemoteItem extends Sprite {
+	public class AccountItem extends Sprite {
 
-		private var _remote	:Repository;
+		private var _repo	:Repository;
 		private var _view	:RemoteItemMC = new RemoteItemMC();
 
-		public function RemoteItem(rmt:Repository)
+		public function AccountItem(rmt:Repository)
 		{
 			addChild(_view);
-			_remote = rmt;
+			_repo = rmt;
 			_view.name_txt.autoSize = TextFieldAutoSize.LEFT;
 			_view.desc_txt.autoSize = TextFieldAutoSize.LEFT;
 			_view.name_txt.text = rmt.acctName+' : '+rmt.repoName;
@@ -34,9 +35,9 @@ package view.modals.bkmk {
 		private function attachLogo():void
 		{
 			var b:Bitmap;
-			if (_remote.acctType == HostingAccount.GITHUB){
+			if (_repo.acctType == HostingAccount.GITHUB){
 				b = new Bitmap(new GitHub30());
-			}	else if (_remote.acctType == HostingAccount.BEANSTALK){
+			}	else if (_repo.acctType == HostingAccount.BEANSTALK){
 				b = new Bitmap(new Beanstalk30());
 			}
 			b.x = 10; b.y = 6;
@@ -45,10 +46,10 @@ package view.modals.bkmk {
 
 		private function onMouseClick(e:MouseEvent):void
 		{
-			if (e.target.name == 'unlink'){
-				trace('unlinking');				
+			if (e.target.name != 'unlink'){
+				navigateToURL(new URLRequest(_repo.homePage));
 			}	else{
-				navigateToURL(new URLRequest(_remote.homePage));
+				dispatchEvent(new UIEvent(UIEvent.UNLINK_ACCOUNT, _repo));
 			}
 		}
 		

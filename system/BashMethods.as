@@ -25,6 +25,7 @@ package system{
 		public static const CLONE					:String = 'clone';
 		public static const COMMIT					:String = 'commit';		
 		public static const ADD_REMOTE				:String = 'addRemote';
+		public static const KILL_REMOTE				:String = 'killRemote';
 		public static const EDIT_REMOTE				:String = 'editRemote';
 		public static const PULL_REMOTE				:String = 'pullFromRemote';
 		public static const PUSH_REMOTE				:String = 'pushToRemote';
@@ -78,7 +79,7 @@ package system{
 		public static const KILL_COLLABORATOR		:String = 'killCollaborator';
 		public static const GET_PERMISSIONS			:String = 'getPermissions';
 		public static const SET_PERMISSIONS			:String = 'setPermissions';
-		public static const SET_ADMINISTRATOR		:String = 'setAdministrator';
+		public static const SET_ADMINISTRATOR:String = 'setAdministrator';
 		
 	}
 	
