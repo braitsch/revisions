@@ -21,7 +21,9 @@ package view.modals.bkmk {
 		{
 			addChild(_view);
 			addChild(_branches);
-			super.setHeading(_view, "These are your branches, aren't they schnazzy? (features coming soon)");
+			_branches.x = 10; _branches.y = 100;
+			_branches.addEventListener(MouseEvent.CLICK, onBranchClick);
+			super.setHeading(_view, "These are your branches");
 			AppModel.proxies.editor.addEventListener(BookmarkEvent.BRANCH_CHANGED, onBranchChanged);
 		}
 		
@@ -34,24 +36,22 @@ package view.modals.bkmk {
 		private function attachBranches():void
 		{
 			while(_branches.numChildren) _branches.removeChildAt(0);
-			for (var i:int = 0; i < _bookmark.branches.length; i++) {
-				var br:Branch = _bookmark.branches[i];
-				var bi:BranchItem = new BranchItem(br);
-					bi.y = 40*i;
-					bi.selected = br == _bookmark.branch;
-				_branches.addChild(bi);
-				_branches.addEventListener(MouseEvent.CLICK, onBranchClick);
-			}
-			_branches.x = 10; _branches.y = 90;
+			for (var i:int = 0; i < _bookmark.branches.length; i++) _branches.addChild(new BranchItem(_bookmark.branches[i]));
+			layoutBranches();	
+		}
+		
+		private function layoutBranches():void
+		{
+			for (var i:int = 0; i < _branches.numChildren; i++) _branches.getChildAt(i).y = 44 * i;
 		}
 		
 		private function onBranchClick(e:MouseEvent):void
 		{
-			if (e.target is BranchItem){
-				if (e.target.branch != _bookmark.branch) checkoutBranch(e.target.branch);
-			}	else if (e.target is BranchItemDelete){
-				dispatchEvent(new UIEvent(UIEvent.DELETE_BRANCH, e.target.parent.branch));
-			}
+//			if (e.target is BranchItem){
+//				if (e.target.branch != _bookmark.branch) checkoutBranch(e.target.branch);
+//			}	else if (e.target is BranchItemDelete){
+//				dispatchEvent(new UIEvent(UIEvent.DELETE_BRANCH, e.target.parent.branch));
+//			}
 		}
 		
 		private function checkoutBranch(b:Branch):void
@@ -65,8 +65,8 @@ package view.modals.bkmk {
 		private function onBranchChanged(e:BookmarkEvent):void
 		{
 			for (var i:int = 0; i < _bookmark.branches.length; i++) {
-				var k:BranchItem = _branches.getChildAt(i) as BranchItem;
-				k.selected = k.branch == _bookmark.branch;
+			//	var k:BranchItem = _branches.getChildAt(i) as BranchItem;
+			//	k.selected = k.branch == _bookmark.branch;
 			}
 			trace("BookmarkBranches.onBranchChanged(e) -- now on branch ", _bookmark.branch.name);
 		}

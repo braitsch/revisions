@@ -1,55 +1,35 @@
 package view.modals.bkmk {
 
+	import model.vo.Avatar;
 	import model.vo.Branch;
-	import com.greensock.TweenLite;
+	import view.ui.BasicButton;
 	import flash.display.Sprite;
-	import flash.events.MouseEvent;
+	import flash.text.TextFieldAutoSize;
 
 	public class BranchItem extends Sprite {
 
-		private var _branch	:Branch;
-		private var _view	:BranchItemMC = new BranchItemMC();
+		private var _view		:BranchItemMC = new BranchItemMC();
+		private var _branch		:Branch;
 
 		public function BranchItem(b:Branch)
 		{
 			_branch = b;
+			_view.name_txt.autoSize = TextFieldAutoSize.LEFT;
+			_view.name_txt.text = _branch.name;
+			_view.desc_txt.text = _branch.lastCommit.note;
+			_view.desc_txt.mouseEnabled = _view.desc_txt.mouseChildren = false;
+			new BasicButton(_view.checkout);
+			attachAvatar();
 			addChild(_view);
-			_view.mouseEnabled = false;
-			_view.mouseChildren = false;
-			_view.label_txt.text = _branch.name;
-			_view.label_txt.mouseEnabled = false;
-			_view.label_txt.mouseChildren = false;
-		// TODO implement branch deleting //	
-		//	if (_branch.name != 'master') addKillButton();
 		}
-		
-		public function get branch():Branch { return _branch; }		
-		
-		public function set selected(on:Boolean):void
-		{
-			if (on){
-				onRollOver();
-				buttonMode = false;
-				removeEventListener(MouseEvent.ROLL_OUT, onRollOut);
-				removeEventListener(MouseEvent.ROLL_OVER, onRollOver);				
-			}	else{
-				onRollOut();
-				buttonMode = true;
-				addEventListener(MouseEvent.ROLL_OUT, onRollOut);
-				addEventListener(MouseEvent.ROLL_OVER, onRollOver);
-			}
-		}
-		
-		private function onRollOut(e:MouseEvent = null):void { TweenLite.to(_view.over, .3, {alpha:0}); }
-		private function onRollOver(e:MouseEvent = null):void { TweenLite.to(_view.over, .3, {alpha:1}); }
-		
-//		private function addKillButton():void
-//		{
-//			var k:BranchItemDelete = new BranchItemDelete();
-//				k.x = 162; k.y = 5;
-//			addChild(k);
-//		}
 
+		private function attachAvatar():void
+		{
+			var a:Avatar = new Avatar(_branch.lastCommit.email);
+				a.y = a.x = 5; 
+			_view.addChild(a);
+		}
+		
 	}
 	
 }

@@ -25,6 +25,7 @@ package view.modals.bkmk {
 			addChild(_view); 
 			addChild(_remotes);
 			new BasicButton(_view.linkBtn);
+			_remotes.x = 10; _remotes.y = 100;
 			_view.linkBtn.addEventListener(MouseEvent.CLICK, onLinkToAccount);
 			addEventListener(UIEvent.UNLINK_ACCOUNT, onUnlinkAccount);
 			AppModel.engine.addEventListener(AppEvent.BKMK_REMOVED_FROM_ACCOUNT, onBkmkRemovedFromAcct);
@@ -40,11 +41,10 @@ package view.modals.bkmk {
 		{
 			while(_remotes.numChildren) _remotes.removeChildAt(0);
 			for (var i:int = 0; i < _bookmark.remotes.length; i++) {
-				var ri:AccountItem = new AccountItem(_bookmark.remotes[i]);
-					ri.y = 44 * i;
-				_remotes.addChild(ri);
+				var ai:AccountItem = new AccountItem(_bookmark.remotes[i]);
+					ai.y = 44 * i;
+				_remotes.addChild(ai);
 			}
-			_remotes.x = 10; _remotes.y = 100;
 			writeHeading();
 		}
 

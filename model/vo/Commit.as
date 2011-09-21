@@ -2,24 +2,22 @@ package model.vo {
 
 	public class Commit {
 	
-		private var _sha1	:String;
-		private var _date	:String;
-		private var _author	:String;
-		private var _note	:String;
-		private var _index	:uint;
+		private var _sha1		:String;
+		private var _date		:String;
+		private var _author		:String;
+		private var _email		:String;
+		private var _note		:String;
+		private var _index		:uint;
 
 		public function Commit(s:String, n:uint)
 		{
-			var a:Array = s.split('##');
+			var a:Array = s.split('-#-');
+			_index  = n;
 			_sha1 	= a[0];
 			_date 	= a[1];
 			_author = a[2];
-			_note 	= a[3];
-			_index  = n;
-			if (_date == null) {
-				trace('***NO COMMIT DATA!!', a.length, a);
-				return;
-			}
+			_email	= a[3];
+			_note 	= a[4];
 			if (_date == '0 seconds ago') {
 				_date = 'Just now';
 			}	else if (_date.indexOf('1 year') != -1){
@@ -41,6 +39,11 @@ package model.vo {
 		{
 			return _author;
 		}
+		
+		public function get email():String
+		{
+			return _email;
+		}		
 
 		public function get note():String
 		{
