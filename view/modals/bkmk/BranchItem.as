@@ -1,5 +1,6 @@
 package view.modals.bkmk {
 
+	import events.UIEvent;
 	import flash.events.MouseEvent;
 	import model.AppModel;
 	import model.vo.Avatar;
@@ -25,10 +26,14 @@ package view.modals.bkmk {
 			_view.name_txt.addEventListener(FocusEvent.FOCUS_IN, onNameFocusIn);
 			_view.name_txt.addEventListener(FocusEvent.FOCUS_OUT, onNameFocusOut);
 			_view.checkout.addEventListener(MouseEvent.CLICK, onBranchCheckout);
-			_view.checkout.visible = (AppModel.branch != _branch);
 			new BasicButton(_view.checkout);
 			attachAvatar();
 			addChild(_view);
+		}
+		
+		public function checkIfActive():void
+		{
+			_view.checkout.visible = AppModel.branch != _branch;
 		}
 		
 		private function attachAvatar():void
@@ -58,7 +63,7 @@ package view.modals.bkmk {
 			if (AppModel.branch.isModified){
 				AppModel.alert('Please save your changes before moving to a new branch.');					
 			}	else{
-				AppModel.proxies.editor.changeBranch(_branch);
+				dispatchEvent(new UIEvent(UIEvent.CHANGE_BRANCH, _branch));
 			}
 		}
 

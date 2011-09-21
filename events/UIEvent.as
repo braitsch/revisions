@@ -51,6 +51,7 @@ package events {
 		public static const RADIO_SELECTED			:String = "RADIO_SELECTED";
 		public static const SET_PERMISSIONS:String = "SET_PERMISSIONS";
 		public static const UNLINK_ACCOUNT:String = "UNLINK_ACCOUNT";
+		public static const CHANGE_BRANCH:String = "CHANGE_BRANCH";
 		
 		public var data:Object;
 
