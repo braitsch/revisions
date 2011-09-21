@@ -33,28 +33,29 @@ package view.modals.bkmk {
 		{
 			while(_branches.numChildren) _branches.removeChildAt(0);
 			for (var i:int = 0; i < _bookmark.branches.length; i++) _branches.addChild(new BranchItem(_bookmark.branches[i]));
-			layoutBranches();	
+			layoutBranches(0);	
 		}
 		
-		private function layoutBranches():void
+		private function layoutBranches(n:Number):void
 		{
 			for (var i:int = 0; i < _branches.numChildren; i++) {
 				var b:BranchItem = _branches.getChildAt(i) as BranchItem;
-				b.y = 44 * i; b.checkIfActive();
+				TweenLite.to(b, n, {y:44 * i});
+				b.checkIfActive();
 			}
 			super.setHeading(_view, 'These are your branches, you are currently on branch "'+_bookmark.branch.name+'"');
 		}
 		
 		private function onChangeBranch(e:UIEvent):void
 		{
-			TweenLite.to(e.target, .3, {alpha:0, onComplete:collapseLayout, onCompleteParams:[e.target]});
+			TweenLite.to(e.target, .3, {alpha:0, onComplete:switchPosition, onCompleteParams:[e.target]});
 			AppModel.proxies.editor.changeBranch(e.data as Branch);
 		}
 		
-		private function collapseLayout(k:BranchItem):void
+		private function switchPosition(k:BranchItem):void
 		{
 			_branches.setChildIndex(k, 0);	
-			layoutBranches();
+			layoutBranches(.3);
 			TweenLite.to(k, .3, {alpha:1, delay:.2});
 		}
 		
