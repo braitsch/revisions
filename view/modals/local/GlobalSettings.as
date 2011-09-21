@@ -1,11 +1,11 @@
 package view.modals.local {
 
-	import system.StringUtils;
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
 	import system.AppSettings;
 	import system.LicenseManager;
+	import system.StringUtils;
 	import view.modals.base.ModalWindow;
 	import view.modals.system.Message;
 	import view.ui.Form;
@@ -17,7 +17,7 @@ package view.modals.local {
 	public class GlobalSettings extends ModalWindow {
 
 		private static var _view		:GlobalSettingsMC = new GlobalSettingsMC();
-		private static var _form		:Form = new Form(new Form3());
+		private static var _form		:Form = new Form(530);
 		private static var _checks		:Vector.<ModalCheckbox> = new Vector.<ModalCheckbox>();
 		private static var _labels		:Vector.<String> = new <String>[
 												'Automatically check for updates',
@@ -29,12 +29,14 @@ package view.modals.local {
 		{
 			addChild(_view);
 			super.addCloseButton();	
-			super.drawBackground(550, 285);
+			super.drawBackground(550, 300);
 			super.setTitle(_view, 'Global Settings');
 			super.defaultButton = _view.ok_btn;
+			_view.ok_btn.x = 491;
+			_view.ok_btn.y = 265;			
 			
-			_form.labels = ['Name', 'Email', 'License Key'];
-			_form.enabled = [1, 2];
+			_form.labelWidth = 90;
+			_form.fields = [{label:'Name'}, {label:'Email'}, {label:'License Key', enabled:false}];
 			_form.y = 70; _view.addChildAt(_form, 0);
 			
 			attachOptions();
@@ -47,7 +49,7 @@ package view.modals.local {
 				var k:ModalCheckbox = new ModalCheckbox(true);
 				k.label = _labels[i];
 				k.addEventListener(MouseEvent.CLICK, onCheckboxSelection);
-				k.y = 185 + (20 * i);
+				k.y = 200 + (20 * i);
 				addChild(k);
 				_checks.push(k);
 			}

@@ -35,13 +35,13 @@ package view.modals.upload {
 		
 		private function addGHCollab():void
 		{
-			_view = new AddGitHubCollab(new Form1());
+			_view = new AddGitHubCollab(530);
 			super.heading = 'Please enter the GitHub user you\'d like to collaborate with on "'+AppModel.bookmark.label+'"';			
 		}
 		
 		private function addBSCollab():void
 		{
-			_view = new AddBeanstalkCollab();
+			_view = new AddBeanstalkCollab(530);
 			super.heading = 'Fill in below to create a new user to collaborate with on "'+AppModel.bookmark.label+'"';			
 		}
 		

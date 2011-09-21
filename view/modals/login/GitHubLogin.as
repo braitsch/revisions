@@ -19,7 +19,7 @@ package view.modals.login {
 			super.drawBackground(550, 250);
 			super.setTitle(_view, 'Login To Github');
 			
-			_heading.text = 'Have a GitHub account? Please login. (Required for private repositories)';
+			_heading.text = 'Have a GitHub account? Please login.';
 			addChild(_heading);
 			
 			_login.y = 70; _view.addChildAt(_login, 0);

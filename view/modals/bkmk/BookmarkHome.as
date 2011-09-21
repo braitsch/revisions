@@ -17,24 +17,24 @@ package view.modals.bkmk {
 
 	public class BookmarkHome extends ModalWindowBasic {
 
+		private static var _form		:Form = new Form(525);
 		private static var _view		:BookmarkHomeMC = new BookmarkHomeMC();
-		private static var _form		:Form = new Form(new Form2());
 		private static var _bookmark	:Bookmark;
 		private static var _glowFilter	:GlowFilter = new GlowFilter(0x000000, .1, 2, 2, 3, 3);		
 
 		public function BookmarkHome()
 		{
 			addChild(_view);
-			addChildAt(_form, 0);
 			setupAutoSave();
 			super.addButtons([_view.delete_btn]);
 			super.defaultButton = _view.ok_btn;
 			super.setHeading(_view, 'General information about this bookmark');
 			addEventListener(UIEvent.ENTER_KEY, onUpdateBookmark);
-			_form.y = 100;
-			_form.labels = ['Name', 'Location'];
-			_form.enabled = [1];
 			_view.delete_btn.addEventListener(MouseEvent.CLICK, onDeleteButton);
+			
+			_form.y = 100;
+			_form.fields = [{label:'Name'}, {label:'Location', enabled:false}];
+			addChildAt(_form, 0);
 		}
 
 		public function set bookmark(b:Bookmark):void

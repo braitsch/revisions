@@ -13,12 +13,10 @@ package view.modals.collab {
 		private var _form 			:Form;
 		private var _collab			:Collaborator = new Collaborator();
 		
-		public function AddGitHubCollab(f:Sprite)
+		public function AddGitHubCollab(w:uint)
 		{
-			_form = new Form(f);
-			_form.labels = ['Username'];
-			_form.enabled = [1];
-			if (f is Form1Wide) _form.getInput(0).x = 110;
+			_form = new Form(w);
+			_form.fields = [{label:'Username'}];
 			addChild(_form);
 		}
 		

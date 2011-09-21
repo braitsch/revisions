@@ -14,7 +14,7 @@ package view.modals.local {
 	public class AddDragAndDrop extends ModalWindow {
 
 		private static var _view		:DragAndDropMC = new DragAndDropMC();
-		private static var _form		:Form = new Form(new Form2());
+		private static var _form		:Form = new Form(530);
 		private static var _check		:ModalCheckbox = new ModalCheckbox(true);			
 
 		public function AddDragAndDrop()
@@ -26,9 +26,10 @@ package view.modals.local {
 			super.setTitle(_view, 'New Bookmark');
 			super.defaultButton = _view.ok_btn;
 			
-			_form.labels = ['Name', 'Location'];
-			_form.enabled = [1];
-			_form.y = 70; _view.addChildAt(_form, 0);
+			_view.ok_btn.x = 491;
+			_form.fields = [{label:'Name'}, {label:'Location', enabled:false}];
+			_form.y = 70; 
+			_view.addChildAt(_form, 0);
 			
 			_check.y = 170; 
 			_check.label = 'Autosave Every 60 Minutes';

@@ -1,10 +1,10 @@
 package view.modals.collab {
 
-	import model.vo.Permission;
 	import events.AppEvent;
 	import model.AppModel;
 	import model.remote.Hosts;
 	import model.vo.Collaborator;
+	import model.vo.Permission;
 	import system.StringUtils;
 	import view.modals.system.Debug;
 	import view.modals.system.Message;
@@ -22,19 +22,20 @@ package view.modals.collab {
 	
 	public class AddBeanstalkCollab extends Sprite {
 
-		private var _form				:Form = new Form(new Form4());
+		private var _form				:Form;
 		private var _check				:ModalCheckbox = new ModalCheckbox(true);
 		private var _message			:String = '(optional) we\'ll use their last name if you leave this blank.';
 		private var _urlLoader			:URLLoader;
 		private var _collab				:Collaborator = new Collaborator();	
 
-		public function AddBeanstalkCollab()
+		public function AddBeanstalkCollab(w:uint)
 		{
-			_form.labels = ['First Name', 'Last Name', 'Email', 'Login Name'];
-			_form.enabled = [1, 2, 3, 4];
+			_form = new Form(w);
+			_form.labelWidth = 90;
+			_form.fields = [{label:'First Name'}, {label:'Last Name'}, {label:'Email'}, {label:'Login Name'}];			
 			_form.setField(3, _message);
 			_check.label = 'Allow collaborator read & write access';
-			_check.y = 145;
+			_check.y = 171;
 			addChild(_form);
 			addChild(_check);
 		}

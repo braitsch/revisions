@@ -8,19 +8,22 @@ package view.modals.local {
 
 	public class VersionDetails extends ModalWindow {
 
-		private static var _form		:Form = new Form(new Form4());
+		private static var _form		:Form = new Form(530);
 		private static var _view		:VersionDetailsMC = new VersionDetailsMC();
+		private static var _fields		:Array = [	{label:'Date', enabled:false}, {label:'Author', enabled:false}, 
+													{label:'Commit', enabled:false}, {label:'Details', enabled:false}];
 
 		public function VersionDetails()
 		{
 			addChild(_view);
 			super.addCloseButton();
-			super.drawBackground(550, 260);
+			super.drawBackground(550, 275);
 			super.defaultButton = _view.ok_btn;
 			super.setTitle(_view, 'Version Details');
 			_form.y = 70; _view.addChildAt(_form, 0);
-			_form.labels = ['Date', 'Author', 'Commit', 'Details'];
-			_form.enabled = [];
+			_form.fields = _fields;
+			_view.ok_btn.x = 491;
+			_view.ok_btn.y = 240;
 			addEventListener(UIEvent.ENTER_KEY, onClose);
 		}
 

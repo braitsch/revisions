@@ -18,7 +18,7 @@ package view.modals.login {
 
 	public class AccountLogin extends Sprite {
 
-		private var _form			:Form;
+		private var _form			:Form = new Form(530);
 		private var _type			:String;
 		private var _check			:ModalCheckbox = new ModalCheckbox(true);
 		private var _loginBtn		:BasicButton = new BasicButton(new LoginButton());
@@ -32,7 +32,7 @@ package view.modals.login {
 			
 			_loginBtn.enabled = true;
 			_loginBtn.addEventListener(MouseEvent.CLICK, onLoginButton);
-			_loginBtn.x = 484;
+			_loginBtn.x = 491;
 			_loginBtn.addTo(this);
 			
 			attachSignUp();
@@ -42,7 +42,6 @@ package view.modals.login {
 				attachBSForm();
 			}
 			_form.y = 20;
-			
 			addChild(_form); 
 			addChild(_check);
 			addChild(_signUp);
@@ -65,19 +64,15 @@ package view.modals.login {
 		
 		private function attachGHForm():void
 		{
-			_form = new Form(new Form2());
-			_form.labels = ['Username', 'Password'];
-			_form.enabled = [1, 2];
-			_signUp.y = 100;
+			_form.fields = [{label:'Username'}, {label:'Password', pass:true}];
+			_signUp.y = _form.y + _form.height + 30;
 			_signUpURL = 'https://github.com/signup';
 		}
 		
 		private function attachBSForm():void
 		{
-			_form = new Form(new Form3());
-			_form.labels = ['Account', 'Username', 'Password'];
-			_form.enabled = [1, 2, 3];
-			_signUp.y = 130;
+			_form.fields = [{label:'Account'}, {label:'Username'}, {label:'Password', pass:true}];			
+			_signUp.y = _form.y + _form.height + 30;
 			_signUpURL = 'http://beanstalkapp.com/pricing';
 		}
 		

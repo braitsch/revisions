@@ -51,16 +51,15 @@ package view.modals.upload {
 		
 		private function attachGHForm():void
 		{
-			_form = new Form(new Form4());
-			_form.labels = ['Bookmark', 'Repository', 'Description', 'Account URL'];
-			_form.enabled = [];
+			_form = new Form(530);
+			_form.fields = [{label:'Bookmark', enabled:false}, {label:'Repository', enabled:false}, 
+				{label:'Description', enabled:false}, {label:'Account URL', enabled:false}];
 		}
 		
 		private function attachBSForm():void
 		{
-			_form = new Form(new Form3());
-			_form.labels = ['Bookmark', 'Repository', 'Account URL'];
-			_form.enabled = [];
+			_form = new Form(530);
+			_form.fields = [{label:'Bookmark', enabled:false}, {label:'Repository', enabled:false}, {label:'Account URL', enabled:false}];			
 		}
 		
 		private function onBkmkAddedToAcct(e:AppEvent):void

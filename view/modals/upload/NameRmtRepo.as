@@ -1,7 +1,7 @@
 package view.modals.upload {
 
-	import events.UIEvent;
 	import events.AppEvent;
+	import events.UIEvent;
 	import model.AppModel;
 	import model.remote.HostingAccount;
 	import model.remote.Hosts;
@@ -13,7 +13,7 @@ package view.modals.upload {
 	public class NameRmtRepo extends WizardWindow {
 
 		private static var _form		:Form;
-		private static var _preview		:Form = new Form(new Form1());
+		private static var _preview		:Form = new Form(530);
 		private static var _private		:ModalCheckbox = new ModalCheckbox(false);
 
 		public function NameRmtRepo()
@@ -22,8 +22,7 @@ package view.modals.upload {
 			super.addBackButton();
 			super.nextButton = new NextButton();
 			
-			_preview.labels = ['URL Preview'];
-			_preview.enabled = [];
+			_preview.fields = [{label:'URL Preview'}];
 			addChild(_preview);
 			
 			_private.y = 235;
@@ -49,17 +48,15 @@ package view.modals.upload {
 		
 		private function attachGHForm():void
 		{
-			_form = new Form(new Form2());
-			_form.labels = ['Name', 'Description'];
-			_form.enabled = [1, 2];
+			_form = new Form(530);
+			_form.fields = [{label:'Name'}, {label:'Description'}];
 			_private.visible = true;
 		}
 
 		private function attachBSForm():void
 		{
-			_form = new Form(new Form1());
-			_form.labels = ['Name'];
-			_form.enabled = [1];
+			_form = new Form(530);
+			_form.fields = [{label:'Name'}];
 			_private.visible = false;			
 		}
 		

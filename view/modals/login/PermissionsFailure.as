@@ -19,7 +19,7 @@ package view.modals.login {
 		private static var _acctType	:String;
 		private static var _acctName	:String;
 		private static var _repoName	:String;
-		private static var _form		:Form = new Form(new Form2());
+		private static var _form		:Form = new Form(530);
 		private static var _check		:ModalCheckbox = new ModalCheckbox(true);
 
 		public function PermissionsFailure()
@@ -32,7 +32,7 @@ package view.modals.login {
 			super.addButtons([_view.cancel_btn]);
 			super.defaultButton = _view.ok_btn;
 			
-			_form.labels = ['Username', 'Password'];
+			_form.fields = [{label:'Username'}, {label:'Password', pass:true}];
 			_form.y = 110; _view.addChildAt(_form, 0);			
 			
 			_check.y = 210;
