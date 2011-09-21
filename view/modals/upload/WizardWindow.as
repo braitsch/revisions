@@ -36,8 +36,8 @@ package view.modals.upload {
 		protected function addBackButton():void
 		{
 			_backBtn = new BackButton();
-			_backBtn.x = 380;
-			_backBtn.y = 280 - 35; // 280 window height //
+			_backBtn.x = 390;
+			_backBtn.y = 300 - 35; // 300 window height //
 			_backBtn.addEventListener(MouseEvent.CLICK, dispatchPrev);
 			super.addButtons([_backBtn]);
 			addChild(_backBtn);
@@ -51,8 +51,8 @@ package view.modals.upload {
 		protected function set nextButton(s:Sprite):void
 		{
 			_nextBtn = s;
-			_nextBtn.x = 484;
-			_nextBtn.y = 280 - 35;
+			_nextBtn.x = 491;
+			_nextBtn.y = 300 - 35;
 			addChild(_nextBtn);			
 			super.defaultButton = _nextBtn;
 		}

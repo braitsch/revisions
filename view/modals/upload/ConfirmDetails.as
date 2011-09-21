@@ -52,6 +52,7 @@ package view.modals.upload {
 		private function attachGHForm():void
 		{
 			_form = new Form(530);
+			_form.labelWidth = 95;
 			_form.fields = [{label:'Bookmark', enabled:false}, {label:'Repository', enabled:false}, 
 				{label:'Description', enabled:false}, {label:'Account URL', enabled:false}];
 		}
@@ -59,6 +60,7 @@ package view.modals.upload {
 		private function attachBSForm():void
 		{
 			_form = new Form(530);
+			_form.labelWidth = 95;
 			_form.fields = [{label:'Bookmark', enabled:false}, {label:'Repository', enabled:false}, {label:'Account URL', enabled:false}];			
 		}
 		

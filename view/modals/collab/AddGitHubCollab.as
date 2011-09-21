@@ -4,7 +4,6 @@ package view.modals.collab {
 	import model.AppModel;
 	import model.remote.Hosts;
 	import model.vo.Collaborator;
-	import view.modals.system.Message;
 	import view.ui.Form;
 	import flash.display.Sprite;
 	
@@ -20,18 +19,23 @@ package view.modals.collab {
 			addChild(_form);
 		}
 		
-		public function get collab():Collaborator { return _collab; }		
-		
 		public function addCollaborator():void
 		{
 			_collab.userName = _form.getField(0);
 			_collab.firstName = '"'+_form.getField(0)+'"';
 			var m:String = validate();
-			if (m == null){
-				Hosts.github.api.addCollaborator(_collab);
+			if (m){
+				AppModel.alert(m);
 			}	else{
-				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));
+				Hosts.github.api.addCollaborator(_collab);
+				AppModel.engine.addEventListener(AppEvent.COLLABORATORS_RECEIEVED, onCollaboratorAdded);
 			}				
+		}
+
+		private function onCollaboratorAdded(e:AppEvent):void
+		{
+			dispatchEvent(new AppEvent(AppEvent.COLLABORATOR_ADDED, _collab));
+			AppModel.engine.removeEventListener(AppEvent.COLLABORATORS_RECEIEVED, onCollaboratorAdded);			
 		}
 		
 		private function validate():String

@@ -115,6 +115,11 @@ package model.vo {
 		
 		public function addRemote(r:Repository):void { _remotes.push(r); }
 		
+		public function killRemote(r:Repository):void
+		{
+			for (var i:int = 0; i < _remotes.length; i++) if (r == _remotes[i]) _remotes.splice(i, 1);
+		}
+		
 		public function getRemoteByProp($prop:String, $value:String):Repository
 		{
 			for (var i:int = 0; i < _remotes.length; i++) if (_remotes[i][$prop] == $value) return _remotes[i];

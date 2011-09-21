@@ -22,13 +22,13 @@ package view.modals.upload {
 			super.addBackButton();
 			super.nextButton = new NextButton();
 			
-			_preview.fields = [{label:'URL Preview'}];
+			_preview.labelWidth = 100;
+			_preview.fields = [{label:'URL Preview', enabled:false}];
 			addChild(_preview);
 			
-			_private.y = 235;
+			_private.y = 255;
 			_private.label = 'Make repository private';
 			addChild(_private);
-			
 			addEventListener(UIEvent.ENTER_KEY, onNextButton);
 		}
 		
@@ -40,7 +40,7 @@ package view.modals.upload {
 			}	else if (super.account.type == HostingAccount.BEANSTALK){
 				attachBSForm();
 			}
-			_preview.y = 90 + _form.height + 10;
+			_preview.y = 90 + _form.height + 15;
 			_form.y = 90; addChild(_form);
 			_form.getInput(0).addEventListener(Event.CHANGE, onNameChange);
 			super.heading = 'What would you like to call your bookmark inside your '+super.account.type+' account?';			
@@ -49,6 +49,7 @@ package view.modals.upload {
 		private function attachGHForm():void
 		{
 			_form = new Form(530);
+			_form.labelWidth = 100;
 			_form.fields = [{label:'Name'}, {label:'Description'}];
 			_private.visible = true;
 		}
@@ -56,6 +57,7 @@ package view.modals.upload {
 		private function attachBSForm():void
 		{
 			_form = new Form(530);
+			_form.labelWidth = 100;
 			_form.fields = [{label:'Name'}];
 			_private.visible = false;			
 		}

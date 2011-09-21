@@ -40,7 +40,10 @@ package view.modals.collab {
 			addChild(_check);
 		}
 		
-		public function get collab():Collaborator { return _collab; }
+		public function set checkY(y:uint):void
+		{
+			_check.y = y;
+		}
 		
 		public function addCollaborator():void
 		{
@@ -65,6 +68,7 @@ package view.modals.collab {
 		private function onCollaboratorAdded(e:AppEvent):void
 		{
 			dispatchEmail();
+			dispatchEvent(new AppEvent(AppEvent.COLLABORATOR_ADDED, _collab));
 			AppModel.engine.removeEventListener(AppEvent.COLLABORATORS_RECEIEVED, onCollaboratorAdded);
 		}
 

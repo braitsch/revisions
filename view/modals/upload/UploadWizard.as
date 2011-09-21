@@ -27,10 +27,10 @@ package view.modals.upload {
 		{
 			addChild(_view);
 			addChild(_mask);
-			drawMask(550, 280);
+			drawMask(550, 300);
 			_view.addChild(_status);
 			super.addCloseButton();
-			super.drawBackground(550, 280);
+			super.drawBackground(550, 300);
 			addEventListener(UIEvent.WIZARD_PREV, onWizardPrev);
 			addEventListener(UIEvent.WIZARD_NEXT, onWizardNext);
 			addEventListener(UIEvent.ADD_COLLABORATOR, onAddCollaborator);

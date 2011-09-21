@@ -38,9 +38,9 @@ package view.modals.upload {
 			if (_page) removeChild(_page);
 			_page = w; addChild(_page);
 			if (_page == _pick){
-				super.backBtnX = 484;
+				super.backBtnX = 491;
 			}	else if (_page is AccountLogin){
-				super.backBtnX = 380;
+				super.backBtnX = 390;
 			}
 		}
 		
@@ -65,7 +65,7 @@ package view.modals.upload {
 		{
 			_login = new AccountLogin(_service);
 			_login.y = 70;
-			_login.baseline = 280;
+			_login.baseline = 300;
 			_login.addEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);
 			this.page = _login;
 			super.heading =  'Please login to your '+_service+' account';

@@ -14,6 +14,7 @@ package model.proxies.remote.repo {
 
 		private static var _api		:ApiProxy;
 		private static var _acct	:HostingAccount;
+		private static var _repo	:Repository;
 
 		public function addBkmkToAccount(o:Object):void
 		{
@@ -25,9 +26,10 @@ package model.proxies.remote.repo {
 		
 		public function rmBkmkFromAccount(r:Repository):void
 		{
+			_repo = r;
 			super.startTimer();
 			super.directory = AppModel.bookmark.gitdir;
-			super.call(Vector.<String>([BashMethods.KILL_REMOTE, r.name]));			
+			super.call(Vector.<String>([BashMethods.KILL_REMOTE, _repo.name]));			
 		}
 		
 		private function onRepositoryCreated(e:AppEvent):void 
@@ -61,6 +63,7 @@ package model.proxies.remote.repo {
 		
 		private function onRemoteRemovedFromBookmark():void
 		{
+			AppModel.bookmark.killRemote(_repo);
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.BKMK_REMOVED_FROM_ACCOUNT));	
 		}		
 		

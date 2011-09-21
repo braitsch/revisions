@@ -40,7 +40,7 @@ package view.modals.account {
 		{
 			_view = new AddGitHubCollab(558);
 			_heading.text = 'Please enter the GitHub user you\'d like to collaborate with on "'+super.account.repository.repoName+'"';
-			_okBtn.y = _backBtn.y = 214;
+			_okBtn.y = _backBtn.y = 114;
 		}
 		
 		private function addBSCollab():void

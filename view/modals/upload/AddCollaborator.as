@@ -4,9 +4,9 @@ package view.modals.upload {
 	import events.UIEvent;
 	import model.AppModel;
 	import model.remote.HostingAccount;
+	import model.vo.Collaborator;
 	import view.modals.collab.AddBeanstalkCollab;
 	import view.modals.collab.AddGitHubCollab;
-	import view.modals.system.Message;
 	import flash.events.Event;
 
 	public class AddCollaborator extends WizardWindow {
@@ -42,27 +42,23 @@ package view.modals.upload {
 		private function addBSCollab():void
 		{
 			_view = new AddBeanstalkCollab(530);
+			_view.checkY = 167;
 			super.heading = 'Fill in below to create a new user to collaborate with on "'+AppModel.bookmark.label+'"';			
 		}
 		
 		override protected function onNextButton(e:Event):void
 		{
 			_view.addCollaborator();
-			AppModel.engine.addEventListener(AppEvent.COLLABORATORS_RECEIEVED, onCollabAdded);
+			_view.addEventListener(AppEvent.COLLABORATOR_ADDED, onCollabAdded);
 		}		
 
 		private function onCollabAdded(e:AppEvent):void
 		{
-			dispatchComplete();
-			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-			AppModel.engine.removeEventListener(AppEvent.COLLABORATORS_RECEIEVED, onCollabAdded);			
-		}
-		
-		private function dispatchComplete():void
-		{
-			var m:String = 'Awesome, I just added '+_view.collab.firstName+' to "'+super.repoName+'" on your '+super.account.type+' ';
+			var m:String = 'Awesome, I just added '+Collaborator(e.data).firstName+' to "'+super.repoName+'" on your '+super.account.type+' ';
 				m+=	'account and sent them an email to let them know!';
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));
+			AppModel.alert(m);	
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
+			_view.removeEventListener(AppEvent.COLLABORATOR_ADDED, onCollabAdded);
 		}
 		
 	}
