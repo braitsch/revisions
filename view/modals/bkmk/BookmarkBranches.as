@@ -54,7 +54,7 @@ package view.modals.bkmk {
 		
 		private function switchPosition(k:BranchItem):void
 		{
-			_branches.setChildIndex(k, 0);	
+			_branches.setChildIndex(k, 0); k.y = 0;
 			layoutBranches(.3);
 			TweenLite.to(k, .3, {alpha:1, delay:.2});
 		}

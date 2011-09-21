@@ -1,14 +1,15 @@
 package view.modals.bkmk {
 
 	import events.UIEvent;
-	import flash.events.MouseEvent;
 	import model.AppModel;
 	import model.vo.Avatar;
 	import model.vo.Branch;
 	import view.ui.BasicButton;
 	import flash.display.Sprite;
 	import flash.events.FocusEvent;
+	import flash.events.MouseEvent;
 	import flash.text.TextFieldAutoSize;
+	import flash.text.TextFieldType;
 
 	public class BranchItem extends Sprite {
 
@@ -23,6 +24,9 @@ package view.modals.bkmk {
 			_view.name_txt.text = _branch.name;
 			_view.desc_txt.text = _branch.lastCommit.note;
 			_view.desc_txt.mouseEnabled = _view.desc_txt.mouseChildren = false;
+		// temporary //	
+			_view.name_txt.type = TextFieldType.DYNAMIC;
+			_view.name_txt.selectable = false; // temporary //
 			_view.name_txt.addEventListener(FocusEvent.FOCUS_IN, onNameFocusIn);
 			_view.name_txt.addEventListener(FocusEvent.FOCUS_OUT, onNameFocusOut);
 			_view.checkout.addEventListener(MouseEvent.CLICK, onBranchCheckout);
