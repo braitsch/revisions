@@ -1,14 +1,15 @@
 package model {
 
-	import model.vo.Repository;
+	import view.modals.system.Message;
+	import events.AppEvent;
 	import events.BookmarkEvent;
-	import flash.events.EventDispatcher;
 	import model.db.AppDatabase;
 	import model.proxies.AppProxies;
 	import model.vo.Bookmark;
 	import model.vo.Branch;
 	import system.AppSettings;
 	import system.UpdateManager;
+	import flash.events.EventDispatcher;
 
 	public class AppModel extends EventDispatcher {
 
@@ -42,6 +43,11 @@ package model {
 		static public function get database()	:AppDatabase 	{ return _database; }
 		static public function get settings()	:AppSettings 	{ return _settings; }
 		static public function get updater()	:UpdateManager 	{ return _updater; }
+		
+		static public function alert(m:String):void
+		{
+			_engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));
+		}
 		
 	}
 	

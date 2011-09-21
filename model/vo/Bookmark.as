@@ -28,7 +28,6 @@ package model.vo {
 		private var _icon32				:Bitmap;
 		private var _icon128			:Bitmap;
 		private var _stash				:Array = [];
-		private var _branch				:Branch;	// the currently active branch //
 		private var _remotes			:Vector.<Repository> = new Vector.<Repository>();
 		private var _branches			:Vector.<Branch> = new Vector.<Branch>();
 
@@ -42,8 +41,6 @@ package model.vo {
 			if (_autosave) initAutoSave();
 		}
 
-		public function get branch():Branch 					{ return _branch; 	}		
-		public function set branch(b:Branch):void 				{ _branch = b; 		}
 		public function get active():Boolean 					{ return _active; 	}
 		public function set active(b:Boolean):void 				{ _active = b; 		}
 		public function set autosave(n:uint):void 				{ _autosave = n; 	}
@@ -65,6 +62,13 @@ package model.vo {
 			_label = s;
 			dispatchEvent(new BookmarkEvent(BookmarkEvent.EDITED));
 		}
+		
+		public function get branch():Branch 					{ return _branches[0]; 	}		
+		public function set branch(b:Branch):void
+		{ 
+			for (var i:int = 0; i < _branches.length; i++) if (b == _branches[i]) _branches.splice(i, 1);
+			_branches.unshift(b); 		
+		}		
 		
 		public function get path():String 						{ return _path; 	}
 		public function set path(p:String):void
@@ -124,8 +128,8 @@ package model.vo {
 					s = StringUtils.trim(s);
 				if (s.indexOf('*') == 0){
 					s = s.substr(2);
-					_branch = new Branch(s);
-					_branches.push(_branch);
+			// ensure active branch is first item in array //	
+					_branches.unshift(new Branch(s));
 				}	else{
 					_branches.push(new Branch(s));
 				}

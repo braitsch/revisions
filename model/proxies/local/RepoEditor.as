@@ -1,11 +1,12 @@
 package model.proxies.local {
 
-	import model.vo.Bookmark;
 	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.NativeProcessEvent;
 	import model.AppModel;
 	import model.proxies.air.NativeProcessProxy;
+	import model.vo.Bookmark;
+	import model.vo.Branch;
 	import system.BashMethods;
 	import view.modals.system.Debug;
 	import flash.filesystem.File;
@@ -48,10 +49,11 @@ package model.proxies.local {
 			super.call(Vector.<String>([BashMethods.UNTRACK_FILE, $file.nativePath]));
 		}		
 		
-		public function changeBranch(name:String):void
+		public function changeBranch(b:Branch):void
 		{
+			AppModel.bookmark.branch = b;
 			super.directory = AppModel.bookmark.gitdir;
-			super.call(Vector.<String>([BashMethods.CHANGE_BRANCH, name]));
+			super.call(Vector.<String>([BashMethods.CHANGE_BRANCH, b.name]));
 		}
 		
 		public function revert(sha1:String):void
