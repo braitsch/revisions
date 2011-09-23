@@ -24,11 +24,11 @@ package model.proxies.local {
 		public function getRepositoryInfo(b:Bookmark):void
 		{
 			_bookmark = b;
-			super.directory = _bookmark.worktree;
-			super.queue = [	Vector.<String>([BashMethods.GET_STASH, _bookmark.gitdir]),
-							Vector.<String>([BashMethods.GET_REMOTES, _bookmark.gitdir]),
-							Vector.<String>([BashMethods.GET_LOCAL_BRANCHES, _bookmark.gitdir]),
-							Vector.<String>([BashMethods.GET_REMOTE_BRANCHES, _bookmark.gitdir])];
+			super.appendArgs([_bookmark.gitdir, _bookmark.worktree]);
+			super.queue = [	Vector.<String>([BashMethods.GET_STASH]),
+							Vector.<String>([BashMethods.GET_REMOTES]),
+							Vector.<String>([BashMethods.GET_LOCAL_BRANCHES]),
+							Vector.<String>([BashMethods.GET_REMOTE_BRANCHES])];
 		}
 
 		private function onQueueComplete(e:NativeProcessEvent):void 
@@ -63,13 +63,13 @@ package model.proxies.local {
 			if (_index == _bookmark.branches.length){
 				dispatchEvent(new AppEvent(AppEvent.REPOSITORY_READY));
 			}	else{
-				super.queue = [	Vector.<String>([BashMethods.GET_LAST_COMMIT, _bookmark.gitdir, _bookmark.branches[_index].name])];
+				super.queue = [	Vector.<String>([BashMethods.GET_LAST_COMMIT, _bookmark.branches[_index].name])];
 			}
 		}
 		
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
-			e.data.source = 'BranchProxy.onProcessFailure(e)';
+			e.data.source = 'RepoReader.onProcessFailure(e)';
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Debug(e.data)));
 		}
 		

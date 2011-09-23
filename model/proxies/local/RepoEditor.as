@@ -25,9 +25,9 @@ package model.proxies.local {
 		public function commit($msg:String):void
 		{
 			_bookmark = AppModel.bookmark;
+			AppModel.showLoader('Saving Changes');
 			super.appendArgs([_bookmark.gitdir, _bookmark.worktree]);
 			super.call(Vector.<String>([BashMethods.COMMIT, $msg]));
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Saving Changes'}));
 		}
 		
 		public function autoSave(b:Bookmark):void

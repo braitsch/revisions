@@ -43,20 +43,18 @@ package model.proxies.remote.base {
 
 		private function showLoader():void
 		{
-			var m:String;
 			var a:String = Repository.getAccountType(_request.url);
 			switch(_request.method){
 				case BashMethods.CLONE :
-					m ='Cloning Remote Repository';
+					AppModel.showLoader('Cloning Remote Repository');
 				break;
 				case BashMethods.PULL_REMOTE :
-					m ='Fetching files from '+StringUtils.capitalize(a);
+					AppModel.showLoader('Fetching files from '+StringUtils.capitalize(a));
 				break;
 				case BashMethods.PUSH_REMOTE :
-					m ='Sending files to '+StringUtils.capitalize(a);
+					AppModel.showLoader('Sending files to '+StringUtils.capitalize(a));
 				break;								
 			}
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:m}));					
 		}
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 

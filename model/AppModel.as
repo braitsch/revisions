@@ -49,6 +49,11 @@ package model {
 			_engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));
 		}
 		
+		static public function showLoader(m:String, p:Boolean = false):void
+		{
+			_engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:m, prog:p}));
+		}
+		
 	}
 	
 }

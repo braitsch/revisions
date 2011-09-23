@@ -88,7 +88,7 @@ package model.proxies.local {
 			resetTimer();
 		// add slight delay so we have time to display the preloader //	
 			setTimeout(_status.getHistory, 500, b || AppModel.bookmark);
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Refreshing History'}));
+			AppModel.showLoader('Refreshing History');
 		}
 		
 		public function autoSave(b:Bookmark):void

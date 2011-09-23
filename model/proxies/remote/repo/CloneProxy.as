@@ -36,7 +36,7 @@ package model.proxies.remote.repo {
 		private function rewriteRemoteURL(u:String):void
 		{
 			super.startTimer();
-			super.directory = _savePath;
+			super.appendArgs([_savePath]);
 			super.call(Vector.<String>([BashMethods.EDIT_REMOTE, 'origin', u]));
 		}
 		

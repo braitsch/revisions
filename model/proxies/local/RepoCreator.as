@@ -46,7 +46,7 @@ package model.proxies.local {
 		
 		public function editAppStorageGitDirName($old:String, $new:String):void
 		{
-			super.directory =  File.applicationStorageDirectory.nativePath;
+			super.appendArgs([File.applicationStorageDirectory.nativePath]);
 			super.call(Vector.<String>([BashMethods.EDIT_GIT_DIR, $old, $new]));
 		}
 		
@@ -57,16 +57,16 @@ package model.proxies.local {
 			var hash:String = MD5.hash(_bookmark.path);
 			var path:File = File.applicationStorageDirectory.resolvePath(hash);
 			if (path.exists == false) path.createDirectory();
-			super.directory =  path.nativePath;
+			AppModel.showLoader('Reading File Contents');
+			super.appendArgs([path.nativePath, _bookmark.worktree]);
 			super.call(Vector.<String>([BashMethods.INIT_FILE, _bookmark.path, _bookmark.worktree]));
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Reading File Contents'}));						
 		}
 		
 		private function initFolder():void
 		{
-			super.directory = _bookmark.path;			
+			AppModel.showLoader('Reading Directory Contents', true);
+			super.appendArgs([_bookmark.worktree]);
 			super.call(Vector.<String>([BashMethods.INIT_FOLDER]));
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:'Reading Directory Contents', prog:true}));
 		}
 		
 	// sub-routines //	
@@ -78,12 +78,13 @@ package model.proxies.local {
 		
 		private function addFileToRepository(f:String):void
 		{
+			super.appendArgs([_bookmark.gitdir, _bookmark.worktree]);
 			super.call(Vector.<String>([BashMethods.TRACK_FILE, f]));
 		}
 		
 		private function addFirstCommit():void
 		{
-			super.directory = _bookmark.gitdir;
+			super.appendArgs([_bookmark.gitdir, _bookmark.worktree]);
 			super.call(Vector.<String>([BashMethods.ADD_INITIAL_COMMIT]));
 		}
 
@@ -91,7 +92,7 @@ package model.proxies.local {
 
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
-	//		trace("InitProxy.onProcessComplete(e)", e.data.method);
+			trace("RepoCreator.onProcessComplete(e)", e.data.method, e.data.result);
 			switch(e.data.method){
 				case BashMethods.INIT_FILE: 
 					onFileInitialized();
@@ -176,7 +177,7 @@ package model.proxies.local {
 			
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
-			e.data.source = 'InitProxy.onProcessFailure(e)';
+			e.data.source = 'RepoCreator.onProcessFailure(e)';
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Debug(e.data)));
 		}
 

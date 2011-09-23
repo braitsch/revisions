@@ -28,14 +28,14 @@ package model.proxies.remote.repo {
 		{
 			_repo = r;
 			super.startTimer();
-			super.directory = AppModel.bookmark.gitdir;
+			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
 			super.call(Vector.<String>([BashMethods.KILL_REMOTE, _repo.name]));			
 		}
 		
 		private function onRepositoryCreated(e:AppEvent):void 
 		{
 			super.startTimer();
-			super.directory = AppModel.bookmark.gitdir;
+			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
 			super.call(Vector.<String>([BashMethods.ADD_REMOTE, _acct.repository.name, _acct.repository.url]));
 			_acct.removeEventListener(AppEvent.REPOSITORY_CREATED, onRepositoryCreated);
 		}

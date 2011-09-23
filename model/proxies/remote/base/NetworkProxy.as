@@ -18,29 +18,28 @@ package model.proxies.remote.base {
 		
 		override protected function call(v:Vector.<String>):void
 		{
-			var msg:String;
+			var m:String;
 			switch(v[0]){
 				case BashMethods.LOGIN :
-					msg = 'Attemping Login';
+					m = 'Attemping Login';
 				break;
 				case BashMethods.ADD_REPOSITORY :
-					msg = 'Uploading Bookmark';
+					m = 'Uploading Bookmark';
 				break;
 				case BashMethods.GET_COLLABORATORS :
-					msg = 'Fetching Collaborators';
+					m = 'Fetching Collaborators';
 				break;	
 				case BashMethods.ADD_COLLABORATOR :
-					msg = 'Adding Collaborator';
+					m = 'Adding Collaborator';
 				break;	
 				case BashMethods.KILL_COLLABORATOR :
-					msg = 'Removing Collaborator';
-				break;												
-				
+					m = 'Removing Collaborator';
+				break;
 			}
 			startTimer();
 			super.call(v);
-			if (msg) AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:msg}));
-		}		
+			AppModel.showLoader(m);
+		}
 		
 		protected function startTimer():void
 		{
