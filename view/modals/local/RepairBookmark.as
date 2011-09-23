@@ -8,6 +8,7 @@ package view.modals.local {
 	import view.modals.base.ModalWindow;
 	import view.modals.system.Delete;
 	import view.modals.system.Message;
+	import com.adobe.crypto.MD5;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
@@ -75,7 +76,11 @@ package view.modals.local {
 				updateDatabase();		
 			}	else{
 		// the file path has changed //		
-				AppModel.proxies.creator.editAppStorageGitDirName(_broken[0].path, _view.path_txt.text);
+				var o:Object = {	oldFile	:_broken[0].path, 
+									newFile	:_view.path_txt.text,
+									oldMD5	:MD5.hash(_broken[0].path),
+									newMD5	:MD5.hash(_view.path_txt.text)};
+				AppModel.proxies.creator.editAppStorageGitDirName(o);
 				AppModel.proxies.creator.addEventListener(AppEvent.GIT_DIR_UPDATED, onGitDirUpdated);
 			}
 		}
@@ -109,6 +114,7 @@ package view.modals.local {
 				showBrokenBookmark();
 			}	else{
 				dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
+				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.BOOKMARKS_REPAIRED));
 			}
 			AppModel.database.removeEventListener(DataBaseEvent.RECORD_EDITED, onEditSuccessful);
 			AppModel.database.removeEventListener(DataBaseEvent.RECORD_DELETED, onEditSuccessful);

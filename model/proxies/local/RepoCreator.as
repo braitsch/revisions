@@ -44,10 +44,10 @@ package model.proxies.local {
 			dispatchEvent(new AppEvent(AppEvent.FILES_DELETED));
 		}
 		
-		public function editAppStorageGitDirName($old:String, $new:String):void
+		public function editAppStorageGitDirName(o:Object):void
 		{
 			super.appendArgs([File.applicationStorageDirectory.nativePath]);
-			super.call(Vector.<String>([BashMethods.EDIT_GIT_DIR, $old, $new]));
+			super.call(Vector.<String>([BashMethods.EDIT_GIT_DIR, o.oldFile, o.newFile, o.oldMD5, o.newMD5]));
 		}
 		
 	// bookmark initialization sequence //
@@ -92,7 +92,6 @@ package model.proxies.local {
 
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
-			trace("RepoCreator.onProcessComplete(e)", e.data.method, e.data.result);
 			switch(e.data.method){
 				case BashMethods.INIT_FILE: 
 					onFileInitialized();

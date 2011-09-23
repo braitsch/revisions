@@ -106,19 +106,17 @@ package model {
 					initializeBookmarks();
 				}	else{
 					dispatchEvent(new BookmarkEvent(BookmarkEvent.PATH_ERROR, _broken));
-					AppModel.database.addEventListener(DataBaseEvent.RECORD_EDITED, onBkmkRepaired);
+					addEventListener(AppEvent.BOOKMARKS_REPAIRED, onAllBookmarksRepaired);
 				}
 			}
 		}
 
-		private function onBkmkRepaired(e:DataBaseEvent):void
+		private function onAllBookmarksRepaired(e:AppEvent):void
 		{
-			if (_broken.length == 0) {
-				initializeBookmarks();
-				AppModel.database.removeEventListener(DataBaseEvent.RECORD_EDITED, onBkmkRepaired);
-			}
+			initializeBookmarks();
+			removeEventListener(AppEvent.BOOKMARKS_REPAIRED, onAllBookmarksRepaired);
 		}
-		
+
 		private function buildBkmksFromDatabase(a:Array):void
 		{
 			for (var i:int = 0; i < a.length; i++) {

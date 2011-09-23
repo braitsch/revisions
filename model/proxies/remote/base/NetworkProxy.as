@@ -38,7 +38,7 @@ package model.proxies.remote.base {
 			}
 			startTimer();
 			super.call(v);
-			AppModel.showLoader(m);
+			if (m) AppModel.showLoader(m);
 		}
 		
 		protected function startTimer():void

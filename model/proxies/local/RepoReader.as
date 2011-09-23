@@ -69,6 +69,7 @@ package model.proxies.local {
 		
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
+			trace("RepoReader.onProcessFailure(e)", e.data.result);
 			e.data.source = 'RepoReader.onProcessFailure(e)';
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Debug(e.data)));
 		}

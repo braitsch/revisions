@@ -81,7 +81,7 @@ package model.vo {
 				 _worktree = _file.nativePath;
 			}	else if (_type == Bookmark.FILE){
 				 _worktree = _file.parent.nativePath;
-				 _gitdir = File.applicationStorageDirectory.nativePath+'/'+MD5.hash(_path);			
+				 _gitdir = File.applicationStorageDirectory.nativePath+'/'+MD5.hash(_path);
 			}
 			getFileSystemIcons();
 		}
