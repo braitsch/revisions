@@ -13,7 +13,7 @@ package system{
 		public static const GET_USER_EMAIL			:String = 'getUserEmail';	
 		public static const GET_USER_REAL_NAME		:String = 'getLoggedInUsersRealName';
 		
-	// repository creator methods //		
+	// repo-creator.as //		
 		public static const INIT_FILE				:String = 'initFile';
 		public static const INIT_FOLDER				:String = 'initFolder';		public static const TRACK_FILE				:String = 'trackFile';
 		public static const UNTRACK_FILE			:String = 'unTrackFile';
@@ -21,7 +21,13 @@ package system{
 		public static const GET_DIRECTORY_FILES		:String = 'getDirectoryFiles';		
 		public static const ADD_INITIAL_COMMIT		:String = 'addInitialCommit';
 		
-	// repository editor methods //	
+	// repo-reader.as //			
+		public static const GET_STASH				:String = 'getStash';
+		public static const GET_REMOTES				:String = 'getRemotes';
+		public static const GET_LOCAL_BRANCHES		:String = 'getLocalBranches';
+		public static const GET_REMOTE_BRANCHES		:String = 'getRemoteBranches';
+		
+	// repo-remote.as //	
 		public static const CLONE					:String = 'clone';
 		public static const COMMIT					:String = 'commit';		
 		public static const ADD_REMOTE				:String = 'addRemote';
@@ -30,14 +36,13 @@ package system{
 		public static const PULL_REMOTE				:String = 'pullFromRemote';
 		public static const PUSH_REMOTE				:String = 'pushToRemote';
 		
-	// repository reader methods //			
-		public static const GET_STASH				:String = 'getStash';
-		public static const GET_REMOTES				:String = 'getRemotes';
-		public static const GET_LOCAL_BRANCHES		:String = 'getLocalBranches';
-		public static const GET_REMOTE_BRANCHES		:String = 'getRemoteBranches';
-		
-	// checkout proxy //		
-		public static const CHANGE_BRANCH			:String = 'checkoutBranch';
+	// repo-editor.as //		
+		public static const MERGE					:String = 'merge';
+		public static const UN_MERGE				:String = 'unmerge';
+		public static const SET_BRANCH				:String = 'setBranch';
+		public static const ADD_BRANCH				:String = 'addBranch';
+		public static const DEL_BRANCH				:String = 'delBranch';
+		public static const RENAME_BRANCH			:String = 'renameBranch';
 		public static const DOWNLOAD_VERSION		:String = 'downloadVersion';
 		public static const REVERT_TO_VERSION		:String = 'revertToVersion';
 		
@@ -55,6 +60,12 @@ package system{
 		public static const LOGOUT					:String = 'logout';
 		public static const GET_REPOSITORIES		:String = 'getRepositories';
 		public static const ADD_REPOSITORY			:String = 'addRepository';
+		public static const GET_COLLABORATORS		:String = 'getCollaborators';
+		public static const ADD_COLLABORATOR		:String = 'addCollaborator';
+		public static const KILL_COLLABORATOR		:String = 'killCollaborator';
+		public static const GET_PERMISSIONS			:String = 'getPermissions';
+		public static const SET_PERMISSIONS			:String = 'setPermissions';
+		public static const SET_ADMINISTRATOR		:String = 'setAdministrator';		
 		
 	// remote keys //	
 		public static const GET_REMOTE_KEYS			:String = 'getAllKeys';
@@ -74,12 +85,6 @@ package system{
 		public static const PUT_REQUEST				:String = 'putRequest';
 		public static const PATCH_REQUEST			:String = 'patchRequest';
 		public static const DELETE_REQUEST			:String = 'deleteRequest';
-		public static const GET_COLLABORATORS		:String = 'getCollaborators';
-		public static const ADD_COLLABORATOR		:String = 'addCollaborator';
-		public static const KILL_COLLABORATOR		:String = 'killCollaborator';
-		public static const GET_PERMISSIONS			:String = 'getPermissions';
-		public static const SET_PERMISSIONS			:String = 'setPermissions';
-		public static const SET_ADMINISTRATOR:String = 'setAdministrator';
 		
 	}
 	

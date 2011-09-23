@@ -1,8 +1,9 @@
 package view.modals.account {
 
 	import events.UIEvent;
-	import model.vo.Avatar;
 	import model.vo.Collaborator;
+	import view.avatars.Avatar;
+	import view.avatars.Avatars;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 
@@ -22,7 +23,7 @@ package view.modals.account {
 
 		private function attachAvatar():void
 		{
-			var a:Avatar = new Avatar(_collab.avatarURL);
+			var a:Avatar = Avatars.getAvatar(_collab.avatarURL);
 				a.x = a.y = 6;
 			_view.addChild(a);
 		}

@@ -187,7 +187,6 @@ package view.modals {
 
 		private function editBookmark(e:UIEvent):void
 		{
-			_edit.bookmark = e.data as Bookmark;
 			showModalWindow(_edit);
 		}
 		

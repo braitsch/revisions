@@ -12,6 +12,7 @@ package events {
 		public static const BRANCH_CHANGED					:String = "BRANCH_CHANGED";
 		public static const COMMIT_COMPLETE					:String = "COMMIT_COMPLETE";
 		public static const REVERTED						:String = "REVERTED";
+		public static const MERGE_COMPLETE					:String = "MERGE_COMPLETE";
 			
 		public var data:Object;
 		

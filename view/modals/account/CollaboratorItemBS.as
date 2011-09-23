@@ -1,12 +1,13 @@
 package view.modals.account {
 
-	import model.vo.Permission;
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
 	import model.remote.Hosts;
-	import model.vo.Avatar;
 	import model.vo.Collaborator;
+	import model.vo.Permission;
+	import view.avatars.Avatar;
+	import view.avatars.Avatars;
 	import view.modals.system.Message;
 	import view.ui.AccountRadio;
 	import view.ui.BasicButton;
@@ -130,7 +131,7 @@ package view.modals.account {
 
 		private function attachAvatar():void
 		{
-			var a:Avatar = new Avatar(_collab.userEmail);
+			var a:Avatar = Avatars.getAvatar(_collab.userEmail);
 				a.y = 5;
 				a.x = 10; 
 			_view.addChild(a);

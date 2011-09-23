@@ -49,6 +49,7 @@ package view.summary {
 			AppModel.engine.addEventListener(AppEvent.HISTORY_RECEIVED, drawView);
 			AppModel.engine.addEventListener(AppEvent.MODIFIED_RECEIVED, enableSaveButton);
 			AppModel.engine.addEventListener(AppEvent.BKMK_ADDED_TO_ACCOUNT, onBkmkAddedToAcct);
+			AppModel.proxies.editor.addEventListener(AppEvent.BRANCH_RENAMED, drawView);
 		}
 
 		public function resize(h:uint):void

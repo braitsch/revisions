@@ -1,8 +1,9 @@
 package model.remote {
 
-	import model.vo.Avatar;
 	import model.vo.Collaborator;
 	import model.vo.Repository;
+	import view.avatars.Avatar;
+	import view.avatars.Avatars;
 	import flash.events.EventDispatcher;
 	
 	public class HostingAccount extends EventDispatcher {
@@ -36,7 +37,7 @@ package model.remote {
 		{
 			_fullName = o.name;
 			_location = o.location;
-			_avatar = new Avatar(o.email);
+			_avatar = Avatars.getAvatar(o.email);
 		}
 
 		public function get acctName()		:String 	{ return _acct; 		}

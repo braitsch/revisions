@@ -1,6 +1,5 @@
 package view.modals.bkmk {
 
-	import model.vo.Bookmark;
 	import view.modals.base.ModalWindow;
 	import view.modals.base.ModalWindowBasic;
 	import com.greensock.TweenLite;
@@ -10,12 +9,12 @@ package view.modals.bkmk {
 	public class BookmarkEditor extends ModalWindow {
 
 		private static var _view		:BookmarkEditorMC = new BookmarkEditorMC();
-		private static var _home		:BookmarkHome = new BookmarkHome();
+		private static var _general		:BookmarkGeneral = new BookmarkGeneral();
+		private static var _accounts	:BookmarkAccounts = new BookmarkAccounts();		
 		private static var _branches	:BookmarkBranches = new BookmarkBranches();
-		private static var _accounts	:BookmarkAccounts = new BookmarkAccounts();
 		private static var _activeTab	:Sprite;
 		private static var _activePage	:ModalWindowBasic;
-		private static var _tabMap		:Array = [	{tab:_home, 	btn:_view.tabs.tab1, lbl:'General'},
+		private static var _tabMap		:Array = [	{tab:_general, 	btn:_view.tabs.tab1, lbl:'General'},
 													{tab:_branches, btn:_view.tabs.tab2, lbl:'Branches'},
 													{tab:_accounts, btn:_view.tabs.tab3, lbl:'Accounts'}];
 
@@ -24,16 +23,12 @@ package view.modals.bkmk {
 			addChild(_view);
 			initializeTabs();
 			super.addCloseButton();
-			super.drawBackground(550, 300);
+			super.drawBackground(600, 400);
 			super.setTitle(_view, 'Bookmark Settings');
+			_view.tabs.x = 231;
 			_view.tabs.addEventListener(MouseEvent.CLICK, onTabSelection);
 		}
 
-		public function set bookmark(b:Bookmark):void
-		{
-			_home.bookmark = _accounts.bookmark = _branches.bookmark = b;
-		}			
-		
 		private function initializeTabs():void
 		{
 			for (var i:int = 0; i < 3; i++) {

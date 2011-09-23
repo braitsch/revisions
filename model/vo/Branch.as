@@ -17,15 +17,17 @@ package model.vo {
 			_name = n;
 		}
 		
-		public function set status(a:Array)					:void {  _status = a; }
-		public function get name()							:String { return _name; }
+		public function set status(a:Array):void 			{  _status = a; }
 		
-		public function get history()						:Vector.<Commit> { return _history; }
+		public function set name(s:String):void 			{	_name = s;	}
+		public function get name():String 					{ return _name; }
 		
-		public function set lastCommit(c:Commit)			:void { _lastCommit = c; }
-		public function get lastCommit()					:Commit { return _lastCommit; }
+		public function get history():Vector.<Commit> 		{ return _history; }
 		
-		public function get totalCommits()					:uint { return _lastCommit.index; }
+		public function set lastCommit(c:Commit):void 		{ _lastCommit = c; }
+		public function get lastCommit():Commit 			{ return _lastCommit; }
+		
+		public function get totalCommits():uint 			{ return _lastCommit.index; }
 
 		public function set history(v:Vector.<Commit>):void
 		{ 

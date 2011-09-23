@@ -61,13 +61,13 @@ package view{
 		private function refreshHistory():void
 		{
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HISTORY_REQUESTED));
-			AppModel.engine.addEventListener(AppEvent.HISTORY_RENDERED, onHistoryRendered);
+			AppModel.engine.addEventListener(AppEvent.HISTORY_RECEIVED, onHistoryRendered);
 		}
 		
 		private function onHistoryRendered(e:AppEvent):void
 		{
 			hideSummary();
-			AppModel.engine.removeEventListener(AppEvent.HISTORY_RENDERED, onHistoryRendered);
+			AppModel.engine.removeEventListener(AppEvent.HISTORY_RECEIVED, onHistoryRendered);
 		}
 		
 		private function onNoBookmarks(e:BookmarkEvent):void

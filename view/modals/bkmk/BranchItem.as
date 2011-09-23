@@ -1,9 +1,10 @@
 package view.modals.bkmk {
 
-	import events.UIEvent;
+	import events.AppEvent;
 	import model.AppModel;
-	import model.vo.Avatar;
 	import model.vo.Branch;
+	import view.avatars.Avatar;
+	import view.avatars.Avatars;
 	import view.ui.BasicButton;
 	import flash.display.Sprite;
 	import flash.events.FocusEvent;
@@ -20,30 +21,34 @@ package view.modals.bkmk {
 		public function BranchItem(b:Branch)
 		{
 			_branch = b;
+			_view.name_txt.type = TextFieldType.INPUT;
 			_view.name_txt.autoSize = TextFieldAutoSize.LEFT;
-			_view.name_txt.text = _branch.name;
-			_view.desc_txt.text = _branch.lastCommit.note;
+			_view.desc_txt.autoSize = TextFieldAutoSize.LEFT;
 			_view.desc_txt.mouseEnabled = _view.desc_txt.mouseChildren = false;
-		// temporary //	
-			_view.name_txt.type = TextFieldType.DYNAMIC;
-			_view.name_txt.selectable = false; // temporary //
 			_view.name_txt.addEventListener(FocusEvent.FOCUS_IN, onNameFocusIn);
 			_view.name_txt.addEventListener(FocusEvent.FOCUS_OUT, onNameFocusOut);
 			_view.checkout.addEventListener(MouseEvent.CLICK, onBranchCheckout);
 			new BasicButton(_view.checkout);
-			attachAvatar();
-			addChild(_view);
+			setTextFields(); attachAvatar(); addChild(_view);
+			AppModel.engine.addEventListener(AppEvent.HISTORY_RECEIVED, setTextFields);			
 		}
+
+		public function get branch():Branch { return _branch; }
 		
-		public function checkIfActive():void
+		private function setTextFields(e:AppEvent = null):void
 		{
-			_view.checkout.visible = AppModel.branch != _branch;
+			_view.checkout.visible = _branch != AppModel.branch;
+			_view.name_txt.text = _branch.name;
+			_view.desc_txt.text = 'Last Saved '+_branch.lastCommit.date+' :: '+_branch.lastCommit.note;
+			if (_view.desc_txt.width > 420){
+				_view.desc_txt.text = _view.desc_txt.text.substr(0, _view.desc_txt.getCharIndexAtPoint(420, _view.desc_txt.y))+'...';
+			}
 		}
 		
 		private function attachAvatar():void
 		{
-			var a:Avatar = new Avatar(_branch.lastCommit.email);
-				a.y = a.x = 5; 
+			var a:Avatar = Avatars.getAvatar(_branch.lastCommit.email);
+				a.y = a.x = 6; 
 			_view.addChild(a);
 		}
 
@@ -57,8 +62,11 @@ package view.modals.bkmk {
 			if (_view.name_txt.text == ''){
 				_view.name_txt.text = _name;
 				AppModel.alert('Name cannot be blank.');
-			}	else{
-				trace("BranchItem.onNameFocusOut(e)", _view.name_txt.text);
+			}	else if (_branch.name != _view.name_txt.text){
+				var o:String = _branch.name; 
+				var n:String = _view.name_txt.text;
+				_branch.name = _view.name_txt.text;
+				AppModel.proxies.editor.renameBranch(o, n);
 			}
 		}
 
@@ -67,7 +75,7 @@ package view.modals.bkmk {
 			if (AppModel.branch.isModified){
 				AppModel.alert('Please save your changes before moving to a new branch.');					
 			}	else{
-				dispatchEvent(new UIEvent(UIEvent.CHANGE_BRANCH, _branch));
+				AppModel.proxies.editor.changeBranch(_branch);
 			}
 		}
 

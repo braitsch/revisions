@@ -1,14 +1,11 @@
 package view.history {
 
-	import events.AppEvent;
-	import model.AppModel;
 	import model.vo.Bookmark;
 	import model.vo.Branch;
 	import model.vo.Commit;
 	import com.greensock.TweenLite;
 	import flash.display.Sprite;
 	import flash.events.Event;
-	import flash.utils.setTimeout;
 
 	public class HistoryList extends Sprite {
 
@@ -38,8 +35,6 @@ package view.history {
 				_length = n; _modified = m; 
 				_branch = _bookmark.branch; 
 				drawList();
-			}	else{
-				dispatchRenderComplete();		
 			}
 		}
 		
@@ -62,18 +57,7 @@ package view.history {
 				if (stage) k.resize(stage.stageWidth - 204);
 				TweenLite.from(getChildAt(i), .2, {alpha:0, delay:i*.05});
 			}
-			dispatchRenderComplete();
 		}
-		
-		
-		private function dispatchRenderComplete():void
-		{
-		// add slight delay so the list has time to finish drawing itself //	
-			setTimeout(function():void{
-				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
-				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HISTORY_RENDERED));
-			}, 500);
-		}		
 		
 		private function showHideUnsaved():void
 		{

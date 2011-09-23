@@ -1,47 +1,49 @@
 package view.modals.bkmk {
 
-	import flash.events.MouseEvent;
-	import view.ui.BasicButton;
-	import view.modals.system.Confirm;
-	import com.greensock.TweenLite;
 	import events.AppEvent;
+	import events.BookmarkEvent;
 	import events.UIEvent;
 	import model.AppModel;
-	import model.vo.Bookmark;
 	import model.vo.Repository;
 	import view.modals.base.ModalWindowBasic;
+	import view.modals.system.Confirm;
+	import view.ui.BasicButton;
+	import view.ui.TextHeading;
+	import com.greensock.TweenLite;
 	import flash.display.Sprite;
+	import flash.events.MouseEvent;
 
 	public class BookmarkAccounts extends ModalWindowBasic {
 
 		private static var _view		:BookmarkAccountsMC = new BookmarkAccountsMC();
-		private static var _bookmark	:Bookmark;
 		private static var _item		:AccountItem;
 		private static var _repo		:Repository;
 		private static var _remotes		:Sprite = new Sprite();
+		private static var _heading		:TextHeading = new TextHeading();
 
 		public function BookmarkAccounts()
 		{
 			addChild(_view); 
 			addChild(_remotes);
-			new BasicButton(_view.linkBtn);
+			addChild(_heading);
+			addUnlinkButton();
 			_remotes.x = 10; _remotes.y = 100;
-			_view.linkBtn.addEventListener(MouseEvent.CLICK, onLinkToAccount);
-			addEventListener(UIEvent.UNLINK_ACCOUNT, onUnlinkAccount);
+			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onBookmarkSelected);
 			AppModel.engine.addEventListener(AppEvent.BKMK_REMOVED_FROM_ACCOUNT, onBkmkRemovedFromAcct);
 		}
-
-		public function set bookmark(b:Bookmark):void
+		
+		private function addUnlinkButton():void
 		{
-			_bookmark = b;
-			attachRemotes();
+			new BasicButton(_view.linkBtn);
+			_view.linkBtn.addEventListener(MouseEvent.CLICK, onLinkToAccount);
+			addEventListener(UIEvent.UNLINK_ACCOUNT, onUnlinkAccount);
 		}
 
-		private function attachRemotes():void
+		private function onBookmarkSelected(e:BookmarkEvent):void
 		{
 			while(_remotes.numChildren) _remotes.removeChildAt(0);
-			for (var i:int = 0; i < _bookmark.remotes.length; i++) {
-				var ai:AccountItem = new AccountItem(_bookmark.remotes[i]);
+			for (var i:int = 0; i < AppModel.bookmark.remotes.length; i++) {
+				var ai:AccountItem = new AccountItem(AppModel.bookmark.remotes[i]);
 					ai.y = 44 * i;
 				_remotes.addChild(ai);
 			}
@@ -59,7 +61,7 @@ package view.modals.bkmk {
 				m = 'It looks like you haven\'t pushed this bookmark online yet.\n';
 				m+= 'Why not link it up to your Beanstalk or GitHub account?';
 			}
-			super.setHeading(_view, m);
+			_heading.text = m;
 		}
 		
 		private function onLinkToAccount(e:MouseEvent):void
