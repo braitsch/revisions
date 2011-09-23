@@ -84,10 +84,10 @@ package model.proxies.local {
 			super.call(Vector.<String>([BashMethods.REVERT_TO_VERSION, sha1]));			
 		}
 		
-		public function download(sha1:String, saveAs:String, file:String):void
+		public function copyVersion(sha1:String, saveAs:String):void
 		{
 			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
-			super.call(Vector.<String>([BashMethods.DOWNLOAD_VERSION, sha1, saveAs, file]));
+			super.call(Vector.<String>([BashMethods.COPY_VERSION, AppModel.branch.name, sha1, AppModel.bookmark.path, saveAs]));
 		}
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
@@ -97,6 +97,8 @@ package model.proxies.local {
 				case BashMethods.REVERT_TO_VERSION : 
 					dispatchEvent(new BookmarkEvent(BookmarkEvent.REVERTED));
 				break;
+				case BashMethods.COPY_VERSION : 
+				break;				
 				case BashMethods.SET_BRANCH : 
 					onBranchSet();
 				break;

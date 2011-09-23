@@ -72,14 +72,10 @@ package view.modals.local {
 		
 		private function onBrowserSelection(e:UIEvent):void
 		{
-			var file:String = '';
 			var bkmk:Bookmark = AppModel.bookmark;
 			var saveAs:String = e.data.nativePath+'/'+bkmk.label+' Version '+_commit.index;
-			if (bkmk.type == Bookmark.FILE){
-				file = bkmk.path;
-				saveAs += bkmk.path.substr(bkmk.path.lastIndexOf('.'));
-			}			
-			AppModel.proxies.editor.download(_commit.sha1, saveAs, file);
+			if (bkmk.type == Bookmark.FILE) saveAs += bkmk.path.substr(bkmk.path.lastIndexOf('.'));
+			AppModel.proxies.editor.copyVersion(_commit.sha1, saveAs);
 		}		
 
 	}

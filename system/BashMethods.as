@@ -43,7 +43,7 @@ package system{
 		public static const ADD_BRANCH				:String = 'addBranch';
 		public static const DEL_BRANCH				:String = 'delBranch';
 		public static const RENAME_BRANCH			:String = 'renameBranch';
-		public static const DOWNLOAD_VERSION		:String = 'downloadVersion';
+		public static const COPY_VERSION			:String = 'copyVersion';
 		public static const REVERT_TO_VERSION		:String = 'revertToVersion';
 		
 	// history & status //	
