@@ -19,7 +19,8 @@ package model.vo {
 		private var _label				:String;	// user generated name of bookmark //
 		private var _path				:String;	// local file path to the thing we're tracking //
 		private var _type				:String; 	// is either FILE or FOLDER //
-		private var _gitdir				:String;	// location of the actual .git directory	
+		private var _gitdir				:String;	// location of the actual .git directory
+		private var _worktree			:String; 		
 		private var _active				:Boolean;
 		private var _autosave			:uint;	
 		
@@ -51,7 +52,7 @@ package model.vo {
 		public function get type():String 						{ return _type; 	}
 		public function get exists():Boolean 					{ return _file.exists;}
 		public function get gitdir():String 					{ return _gitdir;	}
-		public function get worktree():String 					{ return _file.parent.nativePath;}
+		public function get worktree():String 					{ return _worktree	;}
 		public function get stash():Array 						{ return _stash; 	}		
 		public function get remotes():Vector.<Repository> 		{ return _remotes; 	}
 		public function get branches():Vector.<Branch>			{ return _branches; }
@@ -74,12 +75,14 @@ package model.vo {
 		public function set path(p:String):void
 		{
 			_path = p;
+			_file = new File('file://'+_path);
 			if (_type == Bookmark.FOLDER){
 				 _gitdir = _path;
-			}	else{
+				 _worktree = _file.nativePath;
+			}	else if (_type == Bookmark.FILE){
+				 _worktree = _file.parent.nativePath;
 				 _gitdir = File.applicationStorageDirectory.nativePath+'/'+MD5.hash(_path);			
 			}
-			_file = new File('file://'+_path);
 			getFileSystemIcons();
 		}
 		
