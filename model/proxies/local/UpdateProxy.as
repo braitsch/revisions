@@ -122,7 +122,6 @@ package model.proxies.local {
 		
 		private function resetTimer(e:BookmarkEvent = null):void
 		{
-			trace("UpdateProxy.resetTimer(e)");
 			_timer.reset();
 			_timer.start();
 		}
