@@ -84,12 +84,17 @@ package model {
 		{
 			for (var i:int = 0; i < _bookmarks.length; i++) if (_bookmarks[i] == _bookmark) _bookmarks.splice(i, 1);
 			for (var j:int = 0; j < a.length; j++) if (a[j].active == 1) _bookmark = _bookmarks[j];
-			if (_broken.length == 0) {
-				if (_bookmarks.length > 0) {
-					dispatchActiveBookmark();
+			if (_broken.length > 0) {
+				_broken.splice(0, 1);
+				if (_broken.length == 0) {
+					initializeBookmarks();
 				}	else{
-					dispatchEvent(new BookmarkEvent(BookmarkEvent.NO_BOOKMARKS));
-				}		
+					dispatchEvent(new BookmarkEvent(BookmarkEvent.PATH_ERROR, _broken[0]));
+				}
+			}	else if (_bookmarks.length){
+				dispatchActiveBookmark();	
+			}	else{
+				dispatchEvent(new BookmarkEvent(BookmarkEvent.NO_BOOKMARKS));
 			}			
 		}
 		
@@ -105,16 +110,9 @@ package model {
 				if (_broken.length == 0) {
 					initializeBookmarks();
 				}	else{
-					dispatchEvent(new BookmarkEvent(BookmarkEvent.PATH_ERROR, _broken));
-					addEventListener(AppEvent.BOOKMARKS_REPAIRED, onAllBookmarksRepaired);
+					dispatchEvent(new BookmarkEvent(BookmarkEvent.PATH_ERROR, _broken[0]));
 				}
 			}
-		}
-
-		private function onAllBookmarksRepaired(e:AppEvent):void
-		{
-			initializeBookmarks();
-			removeEventListener(AppEvent.BOOKMARKS_REPAIRED, onAllBookmarksRepaired);
 		}
 
 		private function buildBkmksFromDatabase(a:Array):void

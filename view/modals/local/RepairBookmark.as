@@ -16,7 +16,7 @@ package view.modals.local {
 	public class RepairBookmark extends ModalWindow {
 
 		private static var _view		:RepairBookmarkMC = new RepairBookmarkMC();
-		private static var _broken		:Vector.<Bookmark>;
+		private static var _broken		:Bookmark;
 
 		public function RepairBookmark()
 		{
@@ -34,24 +34,19 @@ package view.modals.local {
 			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);
 		}
 		
-		public function set broken(v:Vector.<Bookmark>):void
+		public function set broken(b:Bookmark):void
 		{
-			_broken = v;
-			showBrokenBookmark();
+			_broken = b;
+			_view.name_txt.text = _broken.label;
+			_view.path_txt.text = _broken.path;
 		}
 		
-		private function showBrokenBookmark():void
-		{
-			_view.name_txt.text = _broken[0].label;
-			_view.path_txt.text = _broken[0].path;
-		}
-
 		private function onBrowseButton(e:MouseEvent):void 
 		{
-			if (_broken[0].type == Bookmark.FILE){
-				super.browseForFile('Select a file to be tracked by : '+_broken[0].label);
+			if (_broken.type == Bookmark.FILE){
+				super.browseForFile('Select a file to be tracked by : '+_broken.label);
 			}	else{
-				super.browseForDirectory('Select a folder to be tracked by : '+_broken[0].label);
+				super.browseForDirectory('Select a folder to be tracked by : '+_broken.label);
 			}		
 		}
 		
@@ -62,23 +57,23 @@ package view.modals.local {
 		
 		private function onUpdateBookmark(e:Event):void 
 		{
-			var m:String = Bookmark.validate(_view.name_txt.text, _view.path_txt.text, _broken[0]);
+			var m:String = Bookmark.validate(_view.name_txt.text, _view.path_txt.text, _broken);
 			if (m != '') {
 				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));
 			}	else {
-				_broken[0].type == Bookmark.FILE ? updateGitDir() : updateDatabase();
+				_broken.type == Bookmark.FILE ? updateGitDir() : updateDatabase();
 			}		
 		}
 		
 		private function updateGitDir():void
 		{
-			if (_view.path_txt.text == _broken[0].path){
+			if (_view.path_txt.text == _broken.path){
 				updateDatabase();		
 			}	else{
 		// the file path has changed //		
-				var o:Object = {	oldFile	:_broken[0].path, 
+				var o:Object = {	oldFile	:_broken.path, 
 									newFile	:_view.path_txt.text,
-									oldMD5	:MD5.hash(_broken[0].path),
+									oldMD5	:MD5.hash(_broken.path),
 									newMD5	:MD5.hash(_view.path_txt.text)};
 				AppModel.proxies.creator.editAppStorageGitDirName(o);
 				AppModel.proxies.creator.addEventListener(AppEvent.GIT_DIR_UPDATED, onGitDirUpdated);
@@ -88,34 +83,27 @@ package view.modals.local {
 		private function onGitDirUpdated(e:AppEvent):void
 		{
 			updateDatabase();
-			_broken[0].path = _view.path_txt.text;
+			_broken.path = _view.path_txt.text;
 			AppModel.proxies.creator.removeEventListener(AppEvent.GIT_DIR_UPDATED, onGitDirUpdated);			
 		}
 		
 		private function updateDatabase():void
 		{
 			AppModel.database.addEventListener(DataBaseEvent.RECORD_EDITED, onEditSuccessful);
-			AppModel.database.editRepository(_broken[0].label, _view.name_txt.text, _view.path_txt.text, _broken[0].autosave);				
+			AppModel.database.editRepository(_broken.label, _view.name_txt.text, _view.path_txt.text, _broken.autosave);				
 		}
 		
 		private function onDeleteBookmark(e:MouseEvent):void 
 		{
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Delete(_broken[0])));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Delete(_broken)));
 			AppModel.database.addEventListener(DataBaseEvent.RECORD_DELETED, onEditSuccessful);
 		}				
 		
 		private function onEditSuccessful(e:DataBaseEvent = null):void
 		{
-			_broken[0].path = _view.path_txt.text;
-			_broken[0].label = _view.name_txt.text;
-		// always check if there are more broken bkmks in the engine queue //
-			_broken.splice(0, 1);
-			if (_broken.length) {
-				showBrokenBookmark();
-			}	else{
-				dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.BOOKMARKS_REPAIRED));
-			}
+			_broken.path = _view.path_txt.text;
+			_broken.label = _view.name_txt.text;
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 			AppModel.database.removeEventListener(DataBaseEvent.RECORD_EDITED, onEditSuccessful);
 			AppModel.database.removeEventListener(DataBaseEvent.RECORD_DELETED, onEditSuccessful);
 		}

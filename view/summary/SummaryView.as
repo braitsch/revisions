@@ -85,7 +85,7 @@ package view.summary {
 		private function onSelected(e:BookmarkEvent):void
 		{
 			if (_bookmark) removeBookmarkListeners();
-			_bookmark = e.data as Bookmark;
+			_bookmark = AppModel.bookmark;
 			_options.bookmark = _bookmark;
 			onBookmarkEdited(e);
 			addBookmarkListeners();

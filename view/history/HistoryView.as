@@ -94,7 +94,7 @@ package view.history {
 		{
 			_activeList = null;
 			while(numChildren > 2) removeChildAt(0);
-			_activeList = getListByBookmark(e.data as Bookmark);
+			_activeList = getListByBookmark(AppModel.bookmark);
 			if (_activeList) {
 				_activeList.y = _listYpos;
 				addChildAt(_activeList, 0);

@@ -68,7 +68,7 @@ package model.vo {
 		public function set branch(b:Branch):void
 		{ 
 			for (var i:int = 0; i < _branches.length; i++) if (b == _branches[i]) _branches.splice(i, 1);
-			_branches.unshift(b); 		
+			_branches.unshift(b); 
 		}		
 		
 		public function get path():String 						{ return _path; 	}

@@ -101,11 +101,16 @@ package model.proxies.local {
 			b ? _timer.stop() : resetTimer();
 		}
 		
+		public function get locked():Boolean
+		{
+			return _timer.running == false;
+		}
+		
 		private function exists(b:Bookmark):Boolean
 		{
 			if (b.exists == false){
 				_timer.stop();
-				AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.PATH_ERROR, new <Bookmark>[b]));
+				AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.PATH_ERROR, b));
 			}	
 			return b.exists;
 		}
@@ -117,6 +122,7 @@ package model.proxies.local {
 		
 		private function resetTimer(e:BookmarkEvent = null):void
 		{
+			trace("UpdateProxy.resetTimer(e)");
 			_timer.reset();
 			_timer.start();
 		}

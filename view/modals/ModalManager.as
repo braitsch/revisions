@@ -192,7 +192,7 @@ package view.modals {
 		
 		private function repairBookmark(e:BookmarkEvent):void
 		{
-			_repair.broken = e.data as Vector.<Bookmark>;
+			_repair.broken = e.data as Bookmark;
 			showModalWindow(_repair);
 			if(NativeApplication.supportsDockIcon){
  				DockIcon(NativeApplication.nativeApplication.icon).bounce(NotificationType.CRITICAL);

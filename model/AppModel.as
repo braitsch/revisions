@@ -30,8 +30,7 @@ package model {
 		{
 			_bookmark = b;
 			_database.setActiveBookmark(_bookmark.label);
-		// TODO remove argument, all listeners should just access AppModel.bookmark	
-			_engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.SELECTED, _bookmark));
+			_engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.SELECTED));
 		}
 		
 	// public getters //

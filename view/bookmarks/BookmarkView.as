@@ -96,7 +96,7 @@ package view.bookmarks {
 		
 		private function onBookmarkSelected(e:BookmarkEvent):void 
 		{
-			_list.setActiveBookmark(e.data as Bookmark);
+			_list.setActiveBookmark(AppModel.bookmark);
 		}	
 		
 		private function onMouseWheel(e:MouseEvent):void

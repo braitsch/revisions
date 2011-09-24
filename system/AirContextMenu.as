@@ -1,7 +1,6 @@
 package system {
 
 	import events.AppEvent;
-	import events.BookmarkEvent;
 	import events.UIEvent;
 	import model.AppModel;
 	import model.vo.Bookmark;
@@ -79,7 +78,7 @@ package system {
 				case 'Delete Bookmark' : 
 					AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Delete(bkmk)));				break;
 				case 'Show Bookmark Summary' : 
-					AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.SELECTED, bkmk));	
+					AppModel.bookmark = bkmk;
 				break;				
 			}
 		}

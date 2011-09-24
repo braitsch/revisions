@@ -32,6 +32,7 @@ package system {
 		
 		private function onNativeDragDrop(e:NativeDragEvent):void 
 		{
+			if (AppModel.proxies.update.locked) return;
 			NativeApplication.nativeApplication.activate();			
 			NativeDragManager.dropAction = NativeDragActions.COPY;
 			var a:Array = e.clipboard.getData(ClipboardFormats.FILE_LIST_FORMAT) as Array;
