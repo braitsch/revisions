@@ -1,15 +1,15 @@
 package model {
 
-	import view.modals.system.Message;
 	import events.AppEvent;
 	import events.BookmarkEvent;
+	import flash.events.EventDispatcher;
 	import model.db.AppDatabase;
 	import model.proxies.AppProxies;
 	import model.vo.Bookmark;
 	import model.vo.Branch;
 	import system.AppSettings;
 	import system.UpdateManager;
-	import flash.events.EventDispatcher;
+	import view.windows.modals.system.Message;
 
 	public class AppModel extends EventDispatcher {
 

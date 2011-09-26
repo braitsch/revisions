@@ -7,7 +7,7 @@ package model.proxies.local {
 	import model.vo.Bookmark;
 	import model.vo.Commit;
 	import system.BashMethods;
-	import view.modals.system.Debug;
+	import view.windows.modals.system.Debug;
 
 	public class RepoReader extends NativeProcessQueue {
 

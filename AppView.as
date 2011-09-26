@@ -1,14 +1,14 @@
 package {
 
-	import system.AirDragAndDrop;
-	import view.Header;
-	import view.MainView;
-	import view.bookmarks.BookmarkView;
-	import view.modals.ModalManager;
 	import com.greensock.plugins.TintPlugin;
 	import com.greensock.plugins.TweenPlugin;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import system.AirDragAndDrop;
+	import view.Header;
+	import view.MainView;
+	import view.bookmarks.BookmarkView;
+	import view.windows.modals.ModalManager;
 
 	public class AppView extends Sprite {
 		

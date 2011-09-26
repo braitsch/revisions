@@ -2,12 +2,12 @@ package view.summary {
 
 	import events.AppEvent;
 	import events.UIEvent;
-	import model.AppModel;
-	import model.vo.Bookmark;
-	import view.modals.system.Message;
-	import view.ui.BasicButton;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
+	import model.AppModel;
+	import model.vo.Bookmark;
+	import view.ui.BasicButton;
+	import view.windows.modals.system.Message;
 	
 	public class SummaryOptions extends Sprite {
 

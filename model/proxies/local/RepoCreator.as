@@ -1,6 +1,5 @@
 package model.proxies.local {
 
-	import view.modals.system.Debug;
 	import com.adobe.crypto.MD5;
 	import events.AppEvent;
 	import events.BookmarkEvent;
@@ -10,6 +9,7 @@ package model.proxies.local {
 	import model.proxies.air.NativeProcessProxy;
 	import model.vo.Bookmark;
 	import system.BashMethods;
+	import view.windows.modals.system.Debug;
 
 	public class RepoCreator extends NativeProcessProxy {
 		

@@ -1,10 +1,10 @@
 package model.remote {
 
+	import flash.events.EventDispatcher;
 	import model.vo.Collaborator;
 	import model.vo.Repository;
 	import view.avatars.Avatar;
 	import view.avatars.Avatars;
-	import flash.events.EventDispatcher;
 	
 	public class HostingAccount extends EventDispatcher {
 		

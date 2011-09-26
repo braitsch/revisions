@@ -1,6 +1,5 @@
 package model.proxies.remote.repo {
 
-	import view.modals.system.Confirm;
 	import events.AppEvent;
 	import model.AppModel;
 	import model.proxies.remote.base.GitProxy;
@@ -8,6 +7,7 @@ package model.proxies.remote.repo {
 	import model.vo.Repository;
 	import system.AppSettings;
 	import system.BashMethods;
+	import view.windows.modals.system.Confirm;
 
 	public class SyncProxy extends GitProxy {
 

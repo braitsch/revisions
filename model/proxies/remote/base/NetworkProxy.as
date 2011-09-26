@@ -1,14 +1,14 @@
 package model.proxies.remote.base {
 
-	import system.BashMethods;
-	import view.modals.system.Message;
-	import view.modals.system.Debug;
 	import events.AppEvent;
 	import events.ErrEvent;
-	import model.AppModel;
-	import model.proxies.air.NativeProcessProxy;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
+	import model.AppModel;
+	import model.proxies.air.NativeProcessProxy;
+	import system.BashMethods;
+	import view.windows.modals.system.Debug;
+	import view.windows.modals.system.Message;
 
 	public class NetworkProxy extends NativeProcessProxy {
 

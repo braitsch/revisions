@@ -3,9 +3,6 @@ package system {
 	import events.AppEvent;
 	import events.ErrEvent;
 	import events.UIEvent;
-	import model.AppModel;
-	import model.remote.Hosts;
-	import view.modals.system.Message;
 	import flash.desktop.NativeApplication;
 	import flash.display.NativeMenu;
 	import flash.display.NativeMenuItem;
@@ -13,6 +10,9 @@ package system {
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.ui.Keyboard;
+	import model.AppModel;
+	import model.remote.Hosts;
+	import view.windows.modals.system.Message;
  
  
     public class AirNativeMenu extends Sprite 

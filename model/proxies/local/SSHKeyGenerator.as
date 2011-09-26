@@ -5,7 +5,7 @@ package model.proxies.local {
 	import model.AppModel;
 	import model.proxies.air.NativeProcessProxy;
 	import system.BashMethods;
-	import view.modals.system.Debug;
+	import view.windows.modals.system.Debug;
 
 	public class SSHKeyGenerator extends NativeProcessProxy {
 		

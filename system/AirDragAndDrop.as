@@ -2,8 +2,6 @@ package system {
 
 	import events.AppEvent;
 	import events.UIEvent;
-	import model.AppModel;
-	import view.modals.system.Message;
 	import flash.desktop.ClipboardFormats;
 	import flash.desktop.NativeApplication;
 	import flash.desktop.NativeDragActions;
@@ -11,6 +9,8 @@ package system {
 	import flash.display.InteractiveObject;
 	import flash.display.Sprite;
 	import flash.events.NativeDragEvent;
+	import model.AppModel;
+	import view.windows.modals.system.Message;
 
 	public class AirDragAndDrop extends Sprite {
 

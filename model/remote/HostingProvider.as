@@ -1,12 +1,12 @@
 package model.remote {
 
 	import events.AppEvent;
+	import flash.events.EventDispatcher;
 	import model.AppModel;
 	import model.proxies.remote.acct.ApiProxy;
 	import model.proxies.remote.keys.KeyProxy;
-	import view.modals.account.AccountHome;
-	import view.modals.base.ModalWindow;
-	import flash.events.EventDispatcher;
+	import view.windows.account.AccountHome;
+	import view.windows.base.ParentWindow;
 	
 	public class HostingProvider extends EventDispatcher {
 
@@ -19,7 +19,7 @@ package model.remote {
 		public function get api()			:ApiProxy 			{ return _model.api; 			}
 		public function get key()			:KeyProxy 			{ return _model.key;			}
 		public function get home()			:AccountHome		{ return _model.home; 			}
-		public function get login()			:ModalWindow 		{ return _model.login; 			}
+		public function get login()			:ParentWindow 		{ return _model.login; 			}
 		public function get addRepoObj()	:Object				{ return _model.addRepoObj; 	}
 
 		public function HostingProvider(o:IHostingProvider):void

@@ -2,14 +2,14 @@ package model.proxies.local {
 
 	import events.AppEvent;
 	import events.NativeProcessEvent;
+	import flash.utils.setTimeout;
 	import model.AppModel;
 	import model.proxies.air.NativeProcessQueue;
 	import model.vo.Bookmark;
 	import model.vo.Commit;
 	import system.BashMethods;
 	import system.SystemRules;
-	import view.modals.system.Debug;
-	import flash.utils.setTimeout;
+	import view.windows.modals.system.Debug;
 
 	public class StatusProxy extends NativeProcessQueue {
 

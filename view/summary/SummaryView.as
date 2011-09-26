@@ -3,10 +3,6 @@ package view.summary {
 	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.UIEvent;
-	import model.AppModel;
-	import model.vo.Bookmark;
-	import system.StringUtils;
-	import view.fonts.Fonts;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.MovieClip;
@@ -17,6 +13,10 @@ package view.summary {
 	import flash.filters.GlowFilter;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
+	import model.AppModel;
+	import model.vo.Bookmark;
+	import system.StringUtils;
+	import view.type.Fonts;
 
 	public class SummaryView extends Sprite {
 

@@ -6,7 +6,7 @@ package model.proxies.local {
 	import model.proxies.air.NativeProcessQueue;
 	import system.BashMethods;
 	import system.SystemRules;
-	import view.modals.system.Debug;
+	import view.windows.modals.system.Debug;
 
 	public class ConfigProxy extends NativeProcessQueue {
 

@@ -3,13 +3,13 @@ package model.proxies.local {
 	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.NativeProcessEvent;
+	import flash.filesystem.File;
 	import model.AppModel;
 	import model.proxies.air.NativeProcessProxy;
 	import model.vo.Bookmark;
 	import model.vo.Branch;
 	import system.BashMethods;
-	import view.modals.system.Debug;
-	import flash.filesystem.File;
+	import view.windows.modals.system.Debug;
 
 	public class RepoEditor extends NativeProcessProxy {
 
