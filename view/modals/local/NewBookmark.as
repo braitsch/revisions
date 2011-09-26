@@ -7,6 +7,7 @@ package view.modals.local {
 	import system.FileUtils;
 	import view.modals.base.ModalWindow;
 	import view.modals.system.Message;
+	import view.ui.DrawButton;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
@@ -18,41 +19,62 @@ package view.modals.local {
 		private static var _cloneURL	:String;
 		private static var _savePath	:String;
 		private static var _allowClone	:Boolean;
+		
+		private static var _file		:DrawButton = new DrawButton(250, 36, 'Track A File', 12);
+		private static var _folder		:DrawButton = new DrawButton(250, 36, 'Track A Folder', 12);
+		private static var _github		:DrawButton = new DrawButton(250, 36, 'Hello', 12);
+		private static var _beanstalk	:DrawButton = new DrawButton(250, 36, 'Hello', 12);				
 
 		public function NewBookmark()
 		{
 			addChild(_view);
+			setupButtons();
 			super.addCloseButton();
 			super.drawBackground(600, 330);
 			super.setTitle(_view, 'New Bookmark');
-			super.addButtons([_view.trackFile, _view.trackFolder, _view.loginGithub]);			
-			super.addButtons([_view.loginBeanstalk, _view.viewGithub, _view.viewBeanstalk, _view.custom.clone_btn]);			
+			super.addButtons([_view.custom.clone_btn]);
+			addEventListener(MouseEvent.CLICK, onButtonClick);
 			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);
-			_view.addEventListener(MouseEvent.CLICK, onButtonClick);
 			_view.custom.url_txt.getChildAt(1).addEventListener(KeyboardEvent.KEY_UP, onKeyUp);	
+		}
+
+		private function setupButtons():void
+		{
+			_file.addIcon(new FileLogoSM());
+			_folder.addIcon(new FolderLogoSM());
+			_github.addIcon(new GitHubLogoSM());
+			_beanstalk.addIcon(new BeanstalkLogoSM());
+			_file.y = _folder.y = 90;
+			_github.y = _beanstalk.y = 170;
+			_file.x = _github.x = 35;
+			_folder.x = _beanstalk.x = 315;
+			addChild(_file); addChild(_folder);
+			addChild(_github); addChild(_beanstalk);
 		}
 
 		private function onButtonClick(e:MouseEvent):void
 		{
 			switch(e.target){
-				case _view.trackFile :
+				case _file :
 					super.browseForFile('Select a file to track');
 				break;	
-				case _view.trackFolder :
+				case _folder :
 					super.browseForDirectory('Select a folder to track');
 				break;	
-				case _view.viewGithub :
-					dispatchEvent(new UIEvent(UIEvent.GITHUB_HOME));
+				case _github :
+					if (Hosts.github.loggedIn){
+						dispatchEvent(new UIEvent(UIEvent.GITHUB_HOME));
+					}	else{
+						dispatchEvent(new UIEvent(UIEvent.GITHUB_LOGIN, UIEvent.GITHUB_HOME));
+					}
 				break;
-				case _view.loginGithub :
-					dispatchEvent(new UIEvent(UIEvent.GITHUB_LOGIN, UIEvent.GITHUB_HOME));
-				break;
-				case _view.viewBeanstalk :
-					dispatchEvent(new UIEvent(UIEvent.BEANSTALK_HOME));
-				break;
-				case _view.loginBeanstalk :
-					dispatchEvent(new UIEvent(UIEvent.BEANSTALK_LOGIN, UIEvent.BEANSTALK_HOME));
-				break;
+				case _beanstalk :
+					if (Hosts.beanstalk.loggedIn){
+						dispatchEvent(new UIEvent(UIEvent.BEANSTALK_HOME));
+					}	else{
+						dispatchEvent(new UIEvent(UIEvent.BEANSTALK_LOGIN, UIEvent.BEANSTALK_HOME));
+					}
+				break;	
 			}
 		}
 		
@@ -61,8 +83,8 @@ package view.modals.local {
 			super.onAddedToStage(e);
 			_cloneURL = null;
 			enableCloneButton(false);
-			_view.loginGithub.visible = !Hosts.github.loggedIn;
-			_view.loginBeanstalk.visible = !Hosts.beanstalk.loggedIn;
+			_github.label = Hosts.github.loggedIn ? 'View My GitHub' : 'Login To GitHub';
+			_beanstalk.label = Hosts.beanstalk.loggedIn ? 'View My Beanstalk' : 'Login To Beanstalk';
 		}
 
 		private function onKeyUp(e:KeyboardEvent):void

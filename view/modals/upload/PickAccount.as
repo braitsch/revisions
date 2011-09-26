@@ -4,23 +4,25 @@ package view.modals.upload {
 	import model.remote.HostingAccount;
 	import model.remote.Hosts;
 	import view.modals.login.AccountLogin;
+	import view.ui.DrawButton;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 
 	public class PickAccount extends WizardWindow {
 
 		private static var _page		:Sprite;
-		private static var _pick		:PickAccountMC = new PickAccountMC();
+		private static var _pick		:Sprite;
 		private static var _login		:AccountLogin;
 		private static var _service		:String;
+		
+		private static var _thisAcct	:DrawButton = new DrawButton(250, 36, 'Link To This Account', 12);
+		private static var _diffAcct	:DrawButton = new DrawButton(250, 36, 'Link To A Different Account', 12);		
 
 		public function PickAccount()
 		{
+			setButtons();			
 			super.addHeading();
 			super.addBackButton();
-			super.addButtons([_pick.linkThis, _pick.linkDiff]);
-			_pick.linkDiff.addEventListener(MouseEvent.CLICK, onLinkDiff);
-			_pick.linkThis.addEventListener(MouseEvent.CLICK, onLinkThis);
 		}
 
 		public function set service(s:String):void
@@ -31,6 +33,15 @@ package view.modals.upload {
 			}	else if (s == HostingAccount.BEANSTALK){
 				Hosts.beanstalk.loggedIn ? showChooser(Hosts.beanstalk.loggedIn) : showLoginWindow();
 			}
+		}
+		
+		private function setButtons():void
+		{
+			_pick = new Sprite();
+			_thisAcct.x = _diffAcct.x = 150;
+			_thisAcct.y = 110; _diffAcct.y = 170;
+			_pick.addChild(_thisAcct); _pick.addChild(_diffAcct);
+			addEventListener(MouseEvent.CLICK, onButtonClick);
 		}
 
 		private function set page(w:Sprite):void
@@ -44,14 +55,13 @@ package view.modals.upload {
 			}
 		}
 		
-		private function onLinkDiff(e:MouseEvent):void
+		private function onButtonClick(e:MouseEvent):void
 		{
-			showLoginWindow();
-		}		
-		
-		private function onLinkThis(e:MouseEvent):void
-		{
-			super.dispatchNext();
+			if (e.target == _diffAcct){
+				showLoginWindow();
+			}	else if (e.target == _thisAcct){
+				super.dispatchNext();
+			}
 		}		
 		
 		private function showChooser(a:HostingAccount):void
