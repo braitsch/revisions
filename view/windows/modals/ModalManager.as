@@ -3,14 +3,6 @@ package view.windows.modals {
 	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.UIEvent;
-	import flash.desktop.DockIcon;
-	import flash.desktop.NativeApplication;
-	import flash.desktop.NotificationType;
-	import flash.display.Sprite;
-	import flash.display.Stage;
-	import flash.events.MouseEvent;
-	import flash.filesystem.File;
-	import flash.filters.BlurFilter;
 	import model.AppModel;
 	import model.remote.Hosts;
 	import model.vo.Bookmark;
@@ -26,18 +18,26 @@ package view.windows.modals {
 	import view.windows.modals.local.AddDragAndDrop;
 	import view.windows.modals.local.AppExpired;
 	import view.windows.modals.local.AppUpdate;
-	import view.windows.modals.local.DownloadVersion;
+	import view.windows.modals.local.CommitOptions;
+	import view.windows.modals.local.CommitSave;
+	import view.windows.modals.local.InspectVersion;
 	import view.windows.modals.local.GlobalSettings;
 	import view.windows.modals.local.NewBookmark;
-	import view.windows.modals.local.NewCommit;
 	import view.windows.modals.local.RepairBookmark;
-	import view.windows.modals.local.RevertToVersion;
 	import view.windows.modals.local.VersionDetails;
 	import view.windows.modals.local.WelcomeScreen;
 	import view.windows.modals.login.PermissionsFailure;
 	import view.windows.modals.system.Alert;
 	import view.windows.modals.system.Message;
 	import view.windows.upload.UploadWizard;
+	import flash.desktop.DockIcon;
+	import flash.desktop.NativeApplication;
+	import flash.desktop.NotificationType;
+	import flash.display.Sprite;
+	import flash.display.Stage;
+	import flash.events.MouseEvent;
+	import flash.filesystem.File;
+	import flash.filters.BlurFilter;
 
 	public class ModalManager extends Sprite {
 
@@ -47,9 +47,10 @@ package view.windows.modals {
 		private static var _edit				:BookmarkEditor = new BookmarkEditor();
 		private static var _repair				:RepairBookmark = new RepairBookmark();
 		private static var _dragAndDrop			:AddDragAndDrop = new AddDragAndDrop();
-		private static var _commit				:NewCommit = new NewCommit();
+		private static var _commit				:CommitSave = new CommitSave();
+		private static var _commitOptions		:CommitOptions = new CommitOptions();
 		private static var _details				:VersionDetails = new VersionDetails();
-		private static var _revert				:RevertToVersion = new RevertToVersion();		private static var _download			:DownloadVersion = new DownloadVersion();
+		private static var _saveCopy			:InspectVersion = new InspectVersion();
 		private static var _settings			:GlobalSettings = new GlobalSettings();
 		private static var _appUpdate			:AppUpdate = new AppUpdate();
 		private static var _appExpired			:AppExpired = new AppExpired();
@@ -93,8 +94,8 @@ package view.windows.modals {
 			stage.addEventListener(UIEvent.ADD_BOOKMARK, onNewButtonClick);
 			stage.addEventListener(UIEvent.EDIT_BOOKMARK, editBookmark);
 			stage.addEventListener(UIEvent.COMMIT, addNewCommit);
-			stage.addEventListener(UIEvent.REVERT, revertProject);
-			stage.addEventListener(UIEvent.DOWNLOAD, downloadVersion);
+			stage.addEventListener(UIEvent.COMMIT_OPTIONS, showCommitOptions);
+			stage.addEventListener(UIEvent.SAVE_COPY_OF_VERSION, saveCopyOfVersion);
 			stage.addEventListener(UIEvent.SHOW_COMMIT, commitDetails);
 			stage.addEventListener(UIEvent.ABOUT_GIT, onAboutGit);
 			stage.addEventListener(UIEvent.GLOBAL_SETTINGS, globalSettings);	
@@ -204,25 +205,25 @@ package view.windows.modals {
 			showModalWindow(_commit);
 		}
 		
+		private function showCommitOptions(e:UIEvent):void
+		{
+			_commitOptions.commit = e.data as Commit;
+			showModalWindow(_commitOptions);	
+		}		
+		
 		private function commitDetails(e:UIEvent):void
 		{
 			_details.commit = e.data as Commit;
 			showModalWindow(_details);
 		}		
 		
-		private function revertProject(e:UIEvent):void
+		private function saveCopyOfVersion(e:UIEvent):void
 		{
-			_revert.commit = e.data as Commit;
-			showModalWindow(_revert);			
-		}
-		
-		private function downloadVersion(e:UIEvent):void
-		{
-			_download.commit = e.data as Commit;
+			_saveCopy.commit = e.data as Commit;
 			if (AppSettings.getSetting(AppSettings.PROMPT_BEFORE_DOWNLOAD)){	
-				showModalWindow(_download);
+				showModalWindow(_saveCopy);
 			}	else{
-				_download.selectDownloadLocation();
+				_saveCopy.selectSaveToLocation();
 			}
 		}
 		

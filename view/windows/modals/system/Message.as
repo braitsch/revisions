@@ -9,7 +9,7 @@ package view.windows.modals.system {
 		{
 			addChild(_view);
 			super.drawBackground(550, 210);			
-			super.setTitle(_view, 'Achtung!');
+			super.title = 'Achtung!';
 			super.okButton = _view.ok_btn;
 			_view.textArea.message_txt.htmlText = m;
 		}

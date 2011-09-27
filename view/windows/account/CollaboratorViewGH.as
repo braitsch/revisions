@@ -1,13 +1,13 @@
 package view.windows.account {
 
+	import com.greensock.TweenLite;
 	import events.AppEvent;
 	import events.UIEvent;
-	import model.AppModel;
-	import model.vo.Collaborator;
-	import view.ui.TextHeading;
-	import com.greensock.TweenLite;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import model.AppModel;
+	import model.vo.Collaborator;
+	import view.type.TextHeading;
 	public class CollaboratorViewGH extends AccountView {
 
 		private var _item			:Sprite;

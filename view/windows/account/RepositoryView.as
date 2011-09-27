@@ -2,13 +2,13 @@ package view.windows.account {
 
 	import events.AppEvent;
 	import events.UIEvent;
-	import model.AppModel;
-	import model.vo.Repository;
-	import view.ui.TextHeading;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
+	import model.AppModel;
+	import model.vo.Repository;
+	import view.type.TextHeading;
 	
 	public class RepositoryView extends AccountView {
 	

@@ -11,19 +11,19 @@ package view.windows.modals.local {
 	import view.ui.ModalCheckbox;
 	import view.windows.base.ParentWindow;
 
-	public class DownloadVersion extends ParentWindow {
+	public class InspectVersion extends ParentWindow {
 
 		private static var _commit	:Commit;
 		private static var _view	:DownloadMC = new DownloadMC();
 		private static var _check	:ModalCheckbox = new ModalCheckbox(false);
 
-		public function DownloadVersion()
+		public function InspectVersion()
 		{
 			addChild(_view);
 			addChild(_check);
 			super.addCloseButton();
 			super.drawBackground(550, 210);
-			super.setTitle(_view, 'Download Version');
+			super.title = 'Inspect Version';
 			super.addButtons([_view.cancel_btn]);
 			super.defaultButton = _view.download_btn;
 			_check.y = 165;
@@ -38,13 +38,13 @@ package view.windows.modals.local {
 		public function set commit(cmt:Commit):void
 		{
 			_commit = cmt;
-			_view.textArea.message_txt.text = 'Are you sure you want to download "'+AppModel.bookmark.label+'" revision "'+cmt.note+'"?';
+			_view.textArea.message_txt.text = 'Save a copy of this version of "'+AppModel.bookmark.label+'" to your computer?';
 		}
 		
 	// called from ModalManager if user chose not to be prompted before downloads //	
-		public function selectDownloadLocation(e:MouseEvent = null):void
+		public function selectSaveToLocation(e:MouseEvent = null):void
 		{
-			super.browseForDirectory('Choose a location to save '+AppModel.bookmark.label);
+			super.browseForDirectory('Choose a location to save this copy of "'+AppModel.bookmark.label+'"');
 		}
 		
 		private function onUserSettings(e:AppEvent):void
@@ -66,7 +66,7 @@ package view.windows.modals.local {
 
 		private function onDownload(e:Event):void
 		{
-			selectDownloadLocation();
+			selectSaveToLocation();
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 		}
 		

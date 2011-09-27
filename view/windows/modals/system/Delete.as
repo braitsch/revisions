@@ -18,7 +18,7 @@ package view.windows.modals.system {
 			setBookmark(b);
 			attachOptions();
 			super.drawBackground(550, 230);
-			super.setTitle(_view, 'Delete Bookmark');
+			super.title = 'Delete Bookmark';
 			super.okButton = _view.delete_btn;
 		}				
 		private function setBookmark(b:Bookmark):void

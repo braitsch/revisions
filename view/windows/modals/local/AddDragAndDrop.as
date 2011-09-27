@@ -23,7 +23,7 @@ package view.windows.modals.local {
 			addChild(_check);
 			super.addCloseButton();
 			super.drawBackground(550, 210);
-			super.setTitle(_view, 'New Bookmark');
+			super.title = 'New Bookmark';
 			super.defaultButton = _view.ok_btn;
 			
 			_view.ok_btn.x = 491;

@@ -24,7 +24,7 @@ package view.windows.editor {
 			initializeTabs();
 			super.addCloseButton();
 			super.drawBackground(600, 400);
-			super.setTitle(_view, 'Bookmark Settings');
+			super.title = 'Bookmark Settings';
 			_view.tabs.x = 231;
 			_view.tabs.addEventListener(MouseEvent.CLICK, onTabSelection);
 		}

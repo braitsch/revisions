@@ -22,7 +22,7 @@ package view.windows.modals.local {
 		{
 			addChild(_view);
 			super.drawBackground(550, 230);
-			super.setTitle(_view, 'Repair Bookmark');
+			super.title = 'Repair Bookmark';
 			super.setHeading(_view, 'The file this bookmark was pointing to appears to be missing. Please locate it.');
 			super.defaultButton = _view.ok_btn;
 			super.addButtons([_view.browse_btn, _view.delete_btn]);

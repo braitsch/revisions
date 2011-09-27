@@ -16,7 +16,7 @@ package view.windows.modals.local {
 		{
 			addChild(_view);
 			super.drawBackground(550, 210);
-			super.setTitle(_view, 'Trial Expired');			
+			super.title = 'Trial Expired';			
 			super.addButtons([_view.cancel_btn]);
 			super.defaultButton = _view.ok_btn;
 			_view.textArea.message_txt.text = 'This beta version of Revisions has expired.\n';

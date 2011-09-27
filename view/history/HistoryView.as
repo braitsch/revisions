@@ -81,7 +81,8 @@ package view.history {
 		private function onHistory(e:AppEvent):void
 		{
 			var hl:HistoryList = getListByBookmark(e.data as Bookmark);
-			if (hl) hl.checkIfChanged();
+			if (hl) hl.checkIfChanged(); 
+			_header.refresh('History of '+AppModel.bookmark.label);
 		}
 
 		private function onModified(e:AppEvent):void
@@ -98,6 +99,11 @@ package view.history {
 			if (_activeList) {
 				_activeList.y = _listYpos;
 				addChildAt(_activeList, 0);
+				if (_activeList.numChildren == 0) {
+					_header.refresh('');
+				}	else{
+					_header.refresh('History of '+AppModel.bookmark.label);
+				}
 			}
 		}
 		

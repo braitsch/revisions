@@ -1,17 +1,17 @@
 package view.windows.editor {
 
+	import com.greensock.TweenLite;
 	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.UIEvent;
-	import model.AppModel;
-	import model.vo.Repository;
-	import view.ui.DrawButton;
-	import view.ui.TextHeading;
-	import view.windows.base.ChildWindow;
-	import view.windows.modals.system.Confirm;
-	import com.greensock.TweenLite;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
+	import model.AppModel;
+	import model.vo.Repository;
+	import view.type.TextHeading;
+	import view.ui.DrawButton;
+	import view.windows.base.ChildWindow;
+	import view.windows.modals.system.Confirm;
 
 	public class BookmarkAccounts extends ChildWindow {
 

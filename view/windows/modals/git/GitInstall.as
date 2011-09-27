@@ -8,7 +8,7 @@ package view.windows.modals.git {
 		{
 			super(_view);
 			super.drawBackground(550, 210);
-			super.setTitle(_view, 'Install Git');
+			super.title = 'Install Git';
 		}
 		
 		public function promptToInstall():void

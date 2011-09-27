@@ -2,7 +2,6 @@ package model.proxies.local {
 
 	import events.AppEvent;
 	import events.NativeProcessEvent;
-	import flash.utils.setTimeout;
 	import model.AppModel;
 	import model.proxies.air.NativeProcessQueue;
 	import model.vo.Bookmark;
@@ -105,10 +104,8 @@ package model.proxies.local {
 			var v:Vector.<Commit> = new Vector.<Commit>();
 			for (var i:int = 0; i < a.length; i++) v.push(new Commit(a[i], n-i));
 			_bookmark.branch.history = v;
-			setTimeout(function():void{ 
-				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
-				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HISTORY_RECEIVED, _bookmark));
-			}, 500);
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HISTORY_RECEIVED, _bookmark));
 		}	
 
 		private function splitAndTrim(s:String):Array

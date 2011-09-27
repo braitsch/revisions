@@ -19,7 +19,7 @@ package view.windows.modals.local {
 			super.addCloseButton();
 			super.drawBackground(550, 275);
 			super.defaultButton = _view.ok_btn;
-			super.setTitle(_view, 'Version Details');
+			super.title = 'Version Details';
 			_form.y = 70; _view.addChildAt(_form, 0);
 			_form.fields = _fields;
 			_view.ok_btn.x = 491;

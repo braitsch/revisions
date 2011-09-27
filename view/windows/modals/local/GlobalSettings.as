@@ -16,8 +16,8 @@ package view.windows.modals.local {
 
 	public class GlobalSettings extends ParentWindow {
 
-		private static var _view		:GlobalSettingsMC = new GlobalSettingsMC();
 		private static var _form		:Form = new Form(530);
+		private static var _okBtn		:OkButton = new OkButton();
 		private static var _checks		:Vector.<ModalCheckbox> = new Vector.<ModalCheckbox>();
 		private static var _labels		:Vector.<String> = new <String>[
 												'Automatically check for updates',
@@ -27,17 +27,18 @@ package view.windows.modals.local {
 
 		public function GlobalSettings()
 		{
-			addChild(_view);
 			super.addCloseButton();	
 			super.drawBackground(550, 300);
-			super.setTitle(_view, 'Global Settings');
-			super.defaultButton = _view.ok_btn;
-			_view.ok_btn.x = 491;
-			_view.ok_btn.y = 265;			
+			super.title = 'Global Settings';
+			super.defaultButton = _okBtn;
+			_okBtn.x = 491;
+			_okBtn.y = 265;			
+			addChild(_okBtn);
 			
 			_form.labelWidth = 90;
 			_form.fields = [{label:'Name'}, {label:'Email'}, {label:'License Key', enabled:false}];
-			_form.y = 70; _view.addChildAt(_form, 0);
+			_form.y = 70; 
+			addChild(_form);
 			
 			attachOptions();
 			addEventListener(UIEvent.ENTER_KEY, onOkButton);

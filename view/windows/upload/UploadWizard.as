@@ -60,7 +60,7 @@ package view.windows.upload {
 				case _confirmDetails :
 					_status.page = 5;
 					nextPage(_onBkmkAdded);
-					super.setTitle(_view, 'Success!');
+					super.title = 'Success!';
 				break;	
 			}
 		}
@@ -91,7 +91,7 @@ package view.windows.upload {
 		private function onAddCollaborator(e:UIEvent):void
 		{
 			nextPage(_addCollaborator);
-			super.setTitle(_view, 'Add Collaborator');			
+			super.title = 'Add Collaborator';			
 		}			
 
 		private function nextPage(p:ChildWindow):void
@@ -119,7 +119,7 @@ package view.windows.upload {
 			_status.page = 1;
 			_view.addChildAt(_page, 0);
 			super.onAddedToStage(e);
-			super.setTitle(_view, 'Link To Account');
+			super.title = 'Link To Account';
 		}
 
 		private function onRemovedFromStage(e:Event):void

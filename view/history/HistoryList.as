@@ -5,6 +5,7 @@ package view.history {
 	import model.vo.Commit;
 	import com.greensock.TweenLite;
 	import flash.display.Sprite;
+	import flash.utils.setTimeout;
 
 	public class HistoryList extends Sprite {
 
@@ -12,11 +13,18 @@ package view.history {
 		private var _modified			:Boolean;
 		private var _branch				:Branch;
 		private var _bookmark			:Bookmark;
+		private var _itemsSaved			:Vector.<HistoryItemSaved> = new Vector.<HistoryItemSaved>();
 		private var _itemUnsaved		:HistoryItemUnsaved = new HistoryItemUnsaved();
 
 		public function HistoryList($bkmk:Bookmark)
 		{
 			_bookmark = $bkmk;
+			setTimeout(generateItems, 1000);
+		}
+		
+		private function generateItems():void
+		{
+			for (var i:int = 0; i < 25; i++) _itemsSaved.push(new HistoryItemSaved());
 		}
 		
 	// public //	
@@ -41,8 +49,13 @@ package view.history {
 		{
 			while(numChildren) removeChildAt(0);
 			var v:Vector.<Commit> = _bookmark.branch.history;
-			for (var i:int = 0; i < v.length; i++) addChild(new HistoryItemSaved(v[i]));
-			sortList();						
+			for (var i:int = 0; i < v.length; i++) {
+				var k:HistoryItemSaved = _itemsSaved[i];
+					k.commit = v[i];
+					k.alpha = 0;
+				addChild(k);
+			}
+			sortList();
 		}
 		
 		private function sortList():void
@@ -51,7 +64,7 @@ package view.history {
 			for (var i:int = 0; i < numChildren; i++) {
 				var k:HistoryItem = getChildAt(i) as HistoryItem;
 					k.y = i * 41;
-				TweenLite.from(k, .2, {alpha:0, delay:i*.05});
+				TweenLite.to(k, .2, {alpha:1, delay:i*.05});
 			}
 		}
 		

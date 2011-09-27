@@ -25,7 +25,7 @@ package view.windows.modals.system {
 			super.drawBackground(550, 300);
 			super.noButton = _view.cancel;
 			super.defaultButton = _view.okBtn;
-			super.setTitle(_view, 'Confirm Merge');
+			super.title = 'Confirm Merge';
 			_check.y = 261; addChild(_check);
 			AppModel.proxies.editor.addEventListener(BookmarkEvent.MERGE_COMPLETE, onMergeComplete);
 		}

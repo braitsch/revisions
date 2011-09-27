@@ -9,16 +9,16 @@ package view.windows.modals.local {
 	import view.windows.base.ParentWindow;
 	import view.windows.modals.system.Message;
 
-	public class NewCommit extends ParentWindow {
+	public class CommitSave extends ParentWindow {
 
 		private static var _view:CommitMC = new CommitMC();
 
-		public function NewCommit()
+		public function CommitSave()
 		{
 			addChild(_view);
 			super.addCloseButton();	
 			super.drawBackground(550, 230);			
-			super.setTitle(_view, 'Save Version');
+			super.title = 'Save Version';
 			super.setHeading(_view, 'Write a short message so we can easily find this version again later.');
 			super.addButtons([_view.ok_btn]);
 			_view.textArea.message_txt.type = TextFieldType.INPUT;

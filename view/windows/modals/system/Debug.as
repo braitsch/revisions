@@ -10,7 +10,7 @@ package view.windows.modals.system {
 			setMessage(o);
 			addChild(_view);
 			super.drawBackground(500, 400);
-			super.setTitle(_view, '%&*@#^%!!');
+			super.title = 'Whoops!!';
 			super.okButton = _view.ok_btn;
 		}
 

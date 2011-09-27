@@ -14,7 +14,7 @@ package events {
 		
 	// history view actions //	
 		public static const REVERT					:String = "REVERT";
-		public static const DOWNLOAD				:String = "DOWNLOAD";
+		public static const SAVE_COPY_OF_VERSION	:String = "SAVE_COPY_OF_VERSION";
 		public static const SHOW_COMMIT				:String = "SHOW_COMMIT";
 		
 	// main toolbar actions //
@@ -52,6 +52,7 @@ package events {
 		public static const SET_PERMISSIONS:String = "SET_PERMISSIONS";
 		public static const UNLINK_ACCOUNT:String = "UNLINK_ACCOUNT";
 		public static const CHANGE_BRANCH:String = "CHANGE_BRANCH";
+		public static const COMMIT_OPTIONS:String = "COMMIT_OPTIONS";
 		
 		public var data:Object;
 

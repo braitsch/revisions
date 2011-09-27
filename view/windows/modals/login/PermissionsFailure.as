@@ -26,7 +26,7 @@ package view.windows.modals.login {
 		{
 			addChild(_view);
 			addChild(_check);
-			super.setTitle(_view, 'Credentials');
+			super.title = 'Credentials';
 			super.addCloseButton();
 			super.drawBackground(550, 260);
 			super.addButtons([_view.cancel_btn]);

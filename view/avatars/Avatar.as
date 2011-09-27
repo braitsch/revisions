@@ -11,6 +11,7 @@ package view.avatars {
 	public class Avatar extends Sprite {
 
 		private var _loader	:AvatarLoader;
+		private var _size	:uint = 30;
 		private var _stroke	:Shape = new Shape();
 
 		public function Avatar(x:AvatarLoader)
@@ -19,7 +20,14 @@ package view.avatars {
 			drawStroke();
 			attachAvatar();
 		}
-
+		
+		public function drawBackground(color:uint, padding:uint):void
+		{
+			graphics.beginFill(color);
+			graphics.drawRect(-padding, -padding, _size + padding*2, _size + padding*2);
+			graphics.endFill();
+		}
+		
 		private function attachAvatar():void
 		{
 			var n:Bitmap = _loader.getImage(); 

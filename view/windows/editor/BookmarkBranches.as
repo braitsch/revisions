@@ -14,7 +14,7 @@ package view.windows.editor {
 	import flash.geom.Point;
 	import model.AppModel;
 	import system.StringUtils;
-	import view.ui.TextHeading;
+	import view.type.TextHeading;
 	import view.windows.base.ChildWindow;
 	import view.windows.modals.system.Merge;
 

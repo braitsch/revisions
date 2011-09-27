@@ -20,7 +20,7 @@ package view.windows.modals.local {
 			addChild(_view);
 			addChild(_check);
 			super.drawBackground(550, 220);
-			super.setTitle(_view, 'Update Available');
+			super.title = 'Update Available';
 			super.addButtons([_view.skip_btn]);
 			super.defaultButton = _view.download_btn;
 			_check.y = 170; 

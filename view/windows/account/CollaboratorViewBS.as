@@ -8,7 +8,7 @@ package view.windows.account {
 	import flash.events.Event;
 	import model.AppModel;
 	import model.vo.Collaborator;
-	import view.ui.TextHeading;
+	import view.type.TextHeading;
 	import view.windows.modals.system.Confirm;
 	public class CollaboratorViewBS extends AccountView {
 	

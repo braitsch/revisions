@@ -15,7 +15,6 @@ package view.windows.base {
 
 		public function ParentWindow()
 		{
-			addChild(_bkgd);
 			_bkgd.filters = [_glow];			
 		}
 	
@@ -24,6 +23,14 @@ package view.windows.base {
 			this.x = uint(w / 2 - this.width / 2);
 			this.y = uint((h - _heightOffset) / 2 - this.height / 2 + _heightOffset);
 		}
+		
+		protected function set title(s:String):void
+		{
+			var pb:PageBadge = new PageBadge();
+				pb.label_txt.text = s;
+				pb.x = 10;
+			addChild(pb);
+		}		
 		
 		override protected function onAddedToStage(e:Event):void 
 		{
@@ -53,6 +60,7 @@ package view.windows.base {
 			_bkgd.graphics.drawRect(4, 4, w-8, h-8);
 			_bkgd.graphics.endFill();
 			if (_closeButton) _closeButton.x = w - 6;
+			addChildAt(_bkgd, 0);
 		}		
 		
 		protected function onCloseClick(e:MouseEvent):void 

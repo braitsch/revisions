@@ -1,10 +1,10 @@
 package view.windows.account {
 
 	import events.UIEvent;
-	import model.remote.HostingAccount;
-	import view.ui.TextHeading;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import model.remote.HostingAccount;
+	import view.type.TextHeading;
 
 	public class CollaboratorView extends AccountView {
 

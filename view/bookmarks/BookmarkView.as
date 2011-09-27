@@ -4,8 +4,8 @@ package view.bookmarks {
 	import model.AppModel;
 	import model.vo.Bookmark;
 	import system.AirContextMenu;
+	import view.type.WhiteHeading;
 	import view.ui.Scroller;
-	import flash.display.Bitmap;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -39,9 +39,13 @@ package view.bookmarks {
 
 		private function addHeader():void
 		{
-			var text:Bitmap = new Bitmap(new labelBookmarks());
+//			var text:Bitmap = new Bitmap(new labelBookmarks());
+//				text.y = 13;
+//				text.x = 65;
+			var text:WhiteHeading = new WhiteHeading();
+				text.text = 'Bookmarks';
 				text.y = 13;
-				text.x = 65;
+				text.x = 60;
 			var bkgd:Shape = new Shape();
 				bkgd.graphics.beginBitmapFill(new DkGreyPattern());
 				bkgd.graphics.drawRect(0, 0, 200, 32);

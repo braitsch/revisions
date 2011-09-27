@@ -10,8 +10,8 @@ package view.windows.editor {
 	import flash.text.engine.TextLine;
 	import model.AppModel;
 	import model.vo.Bookmark;
+	import view.type.TextHeading;
 	import view.ui.Form;
-	import view.ui.TextHeading;
 	import view.windows.base.ChildWindow;
 	import view.windows.modals.system.Delete;
 	import view.windows.modals.system.Message;

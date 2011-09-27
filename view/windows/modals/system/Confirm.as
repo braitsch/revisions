@@ -12,7 +12,7 @@ package view.windows.modals.system {
 		{
 			addChild(_view);
 			super.drawBackground(550, 240);
-			super.setTitle(_view, 'Confirm');
+			super.title = 'Confirm';
 			super.noButton = _view.cancel_btn;
 			super.defaultButton = _view.ok_btn;
 			_view.textArea.message_txt.htmlText = m;

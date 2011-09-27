@@ -11,7 +11,7 @@ package view.windows.modals.git {
 		{
 			super(_view);
 			super.drawBackground(550, 230);
-			super.setTitle(_view, 'Upgrade Git');
+			super.title = 'Upgrade Git';
 		}
 		
 		public function promptToUpgrade():void

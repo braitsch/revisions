@@ -6,7 +6,7 @@ package view.windows.account {
 	import flash.events.MouseEvent;
 	import model.AppModel;
 	import model.remote.HostingAccount;
-	import view.ui.TextHeading;
+	import view.type.TextHeading;
 	import view.windows.modals.collab.AddBeanstalkCollab;
 	import view.windows.modals.collab.AddGitHubCollab;
 	public class AddCollaborator extends AccountView {

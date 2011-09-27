@@ -31,7 +31,7 @@ package view.windows.modals.local {
 			setupButtons();
 			super.addCloseButton();
 			super.drawBackground(600, 330);
-			super.setTitle(_view, 'New Bookmark');
+			super.title = 'New Bookmark';
 			super.addButtons([_view.custom.clone_btn]);
 			addEventListener(MouseEvent.CLICK, onButtonClick);
 			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);

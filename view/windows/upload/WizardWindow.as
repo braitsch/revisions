@@ -5,7 +5,7 @@ package view.windows.upload {
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import model.remote.HostingAccount;
-	import view.ui.TextHeading;
+	import view.type.TextHeading;
 	import view.windows.base.ChildWindow;
 
 	public class WizardWindow extends ChildWindow {

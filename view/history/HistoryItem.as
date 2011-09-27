@@ -3,11 +3,12 @@ package view.history {
 	import view.Box;
 	import view.avatars.Avatar;
 	import view.avatars.Avatars;
+	import view.type.TextDouble;
 	import flash.display.Sprite;
 
 	public class HistoryItem extends Sprite {
 
-		private var _text			:TextDoubleMC = new TextDoubleMC();		
+		private var _text			:TextDouble = new TextDouble();		
 
 		public function HistoryItem()
 		{
@@ -17,10 +18,10 @@ package view.history {
 		protected function setText(l1:String, l2:String):void
 		{
 			_text.x = 60; _text.y = 8;
-			_text.line1.text = l1;
-			_text.line2.text = l2;
-			_text.line1.mouseEnabled = _text.line1.mouseChildren = false; 
-			_text.line2.mouseEnabled = _text.line2.mouseChildren = false; 
+			_text.line1 = l1;
+			_text.line2 = l2;
+		//	_text.line1.mouseEnabled = _text.line1.mouseChildren = false; 
+		//	_text.line2.mouseEnabled = _text.line2.mouseChildren = false; 
 			addChild(_text);			
 		}
 		
