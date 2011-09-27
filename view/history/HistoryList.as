@@ -5,7 +5,6 @@ package view.history {
 	import model.vo.Commit;
 	import com.greensock.TweenLite;
 	import flash.display.Sprite;
-	import flash.events.Event;
 
 	public class HistoryList extends Sprite {
 
@@ -18,8 +17,6 @@ package view.history {
 		public function HistoryList($bkmk:Bookmark)
 		{
 			_bookmark = $bkmk;
-			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
 		}
 		
 	// public //	
@@ -52,10 +49,9 @@ package view.history {
 		{
 			showHideUnsaved();
 			for (var i:int = 0; i < numChildren; i++) {
-				var k:HistoryItem = getChildAt(i) as HistoryItem;
-				k.y = i * 30;
-				if (stage) k.resize(stage.stageWidth - 204);
-				TweenLite.from(getChildAt(i), .2, {alpha:0, delay:i*.05});
+				var k:Sprite = getChildAt(i) as Sprite;
+					k.y = i * 40;
+				TweenLite.from(k, .2, {alpha:0, delay:i*.05});
 			}
 		}
 		
@@ -68,24 +64,6 @@ package view.history {
 				removeChildAt(0);
 			}				
 		}
-		
-	// adjust list items on stage resizing //	
-		
-		private function onAddedToStage(e:Event):void
-		{
-			resize();
-			stage.addEventListener(Event.RESIZE, resize);
-		}
-		
-		private function onRemovedFromStage(e:Event):void
-		{
-			stage.removeEventListener(Event.RESIZE, resize);
-		}
-
-		private function resize(e:Event = null):void
-		{
-			for (var i:int = 0; i < numChildren; i++) HistoryItem(getChildAt(i)).resize(stage.stageWidth - 204);
-		}	
 		
 	}
 	

@@ -37,6 +37,7 @@ package view{
 			_summary.resize(h);
 			_history.resize(w, h);
 			_summary.x = Math.round(w/2 - 175);
+			_pattern.graphics.clear();
 			_pattern.graphics.beginBitmapFill(new LtGreyPattern());	
 			_pattern.graphics.drawRect(0, 0, w, h);	
 			_pattern.graphics.endFill();
