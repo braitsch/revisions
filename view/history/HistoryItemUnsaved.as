@@ -2,34 +2,28 @@ package view.history {
 
 	import events.UIEvent;
 	import view.Box;
-	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 
-	public class HistoryItemUnsaved extends Sprite {
+	public class HistoryItemUnsaved extends HistoryItem {
 
 		private var _bkgd			:Box;
 
 		public function HistoryItemUnsaved()
 		{
-			drawShapes();
-			addTextDetails();
-			buttonMode = true;
+			drawBkgd();
+			super.attachAvatar('');
+			super.setText('Working Version - Unsaved', 'Right Now');
 			addEventListener(MouseEvent.CLICK, onSaveSelection);
 		}
 
-		private function drawShapes():void
+		private function drawBkgd():void
 		{
-			_bkgd = new Box(500, 40, Box.SOLID);
+			_bkgd = new Box(500, 41, Box.WHITE);
 			_bkgd.scalable = true;
 			_bkgd.scaleOffset = 210;
 			addChild(_bkgd);
 		}
 		
-		private function addTextDetails():void
-		{
-			
-		}
-
 		private function onSaveSelection(e:MouseEvent):void
 		{
 			dispatchEvent(new UIEvent(UIEvent.COMMIT));

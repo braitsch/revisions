@@ -49,8 +49,8 @@ package view.history {
 		{
 			showHideUnsaved();
 			for (var i:int = 0; i < numChildren; i++) {
-				var k:Sprite = getChildAt(i) as Sprite;
-					k.y = i * 40;
+				var k:HistoryItem = getChildAt(i) as HistoryItem;
+					k.y = i * 41;
 				TweenLite.from(k, .2, {alpha:0, delay:i*.05});
 			}
 		}

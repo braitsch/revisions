@@ -1,5 +1,6 @@
 package view {
 
+	import flash.display.BitmapData;
 	import flash.display.CapsStyle;
 	import flash.display.GradientType;
 	import flash.display.JointStyle;
@@ -10,47 +11,46 @@ package view {
 
 	public class Box extends Shape {
 	
-		private var _width					:uint;
-		private var _height					:uint;
-		private var _draw					:Function;
-		private var _mtrx					:Matrix = new Matrix();
-		private var _scaleOffset			:uint;
+		public static const WHITE		:uint = 0xffffff;
+		public static const DK_GREY		:uint = 0x888888;
+		public static const LT_GREY		:uint = 0xC0C0C0;
 		
-		public static const	SOLID			:String = 'solid';
-		public static const	STROKE			:String = 'stroke';
-		public static const	GRADIENT		:String = 'gradient';
-		public static const	INVERSE			:String = 'inverse';
-		
-		private static const WHITE			:uint = 0xffffff;
-		private static const DK_GREY		:uint = 0x888888;
-		private static const STROKE_GREY	:uint = 0xC0C0C0;		
+		private var _width				:uint;
+		private var _height				:uint;
+		private var _color1				:uint;
+		private var _color2				:uint;
+		private var _stroke				:int = -1;
+		private var _draw				:Function;
+		private var _mtrx				:Matrix;
+		private var _scaleOffset		:uint;
+		private var _ratios				:Array;
+		private var _pattern			:BitmapData;
 	
-		public function Box(w:uint, h:uint, type:String = GRADIENT)
+		public function Box(w:uint, h:uint, c1:uint, c2:int = -1, flip:Boolean = false)
 		{
 			_width = w; _height = h;
-			setBoxType(type);
-		}
-
-		private function setBoxType(type:String):void
-		{
-			switch(type){
-				case SOLID : 
-					_draw = drawWhite;
-				break;
-				case GRADIENT : 
-					_draw = drawGradient;
-					_mtrx.createGradientBox(_width, _height, Math.PI / 2);
-				break;
-				case INVERSE : 
-					_draw = drawGradientInverse;
-					_mtrx.createGradientBox(_width, _height, Math.PI / 2);
-				break;
-				case STROKE	: 
-					_draw = drawStroke;
-				break;												
+			_color1 = c1; _color2 = c2;
+			if (c2 == -1){
+				_draw = drawSolid;
+			}	else{
+				_draw = drawGradient;
+				_mtrx = new Matrix();
+				_mtrx.createGradientBox(_width, _height, Math.PI / 2);
+				_ratios = flip ? [0, 170] : [80, 255];
 			}
+			_draw();
 		}
 		
+		public function set stroke(n:uint):void
+		{
+			_stroke = n; _draw();
+		}
+		
+		public function set pattern(b:BitmapData):void
+		{
+			_pattern = b;
+		}
+
 		public function set scalable(b:Boolean):void
 		{
 			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
@@ -62,10 +62,12 @@ package view {
 			_scaleOffset = x;	
 		}
 		
-		private function drawWhite():void
+		private function drawSolid():void
 		{
 			graphics.clear();
-			graphics.beginFill(0xFFFFFF);
+			graphics.beginFill(_color1);
+			if (_stroke > -1 ) graphics.lineStyle(1, _stroke, 1, true, LineScaleMode.NORMAL, CapsStyle.NONE, JointStyle.MITER);
+			if (_pattern) graphics.beginBitmapFill(_pattern);
 			graphics.drawRect(0, 0, _width, _height);
 			graphics.endFill();			
 		}
@@ -74,30 +76,14 @@ package view {
 		{
 			graphics.clear();
 			graphics.beginFill(0xFFFFFF);
-			graphics.drawRect(0, 0, _width, _height);			
-			graphics.beginGradientFill(GradientType.LINEAR, [WHITE, DK_GREY], [.3, .3], [80, 255], _mtrx);
+			graphics.drawRect(0, 0, _width, _height);
+			if (_stroke > -1 ) graphics.lineStyle(1, _stroke, 1, true, LineScaleMode.NORMAL, CapsStyle.NONE, JointStyle.MITER);
+			graphics.beginGradientFill(GradientType.LINEAR, [_color1, _color2], [.3, .3], _ratios, _mtrx);
+			if (_pattern) graphics.beginBitmapFill(_pattern);
 			graphics.drawRect(0, 0, _width, _height);
 			graphics.endFill();
 		}
 		
-		private function drawGradientInverse():void
-		{
-			graphics.clear();
-			graphics.beginFill(0xFFFFFF);
-			graphics.drawRect(0, 0, _width, _height);
-			graphics.beginGradientFill(GradientType.LINEAR, [DK_GREY, WHITE], [.3, .3], [0, 170], _mtrx);
-			graphics.drawRect(0, 0, _width, _height);
-			graphics.endFill();
-		}
-		
-		private function drawStroke():void
-		{
-			graphics.clear();
-			graphics.lineStyle(1, STROKE_GREY, 1, true, LineScaleMode.NORMAL, CapsStyle.NONE, JointStyle.MITER);
-			graphics.drawRect(0, 0, _width, _height);
-			graphics.endFill();				
-		}					
-	
 		private function onAddedToStage(e:Event):void
 		{
 			onResize(e);

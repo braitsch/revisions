@@ -2,44 +2,36 @@ package view.history {
 
 	import model.vo.Commit;
 	import view.Box;
-	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 
-	public class HistoryItemSaved extends Sprite {
+	public class HistoryItemSaved extends HistoryItem {
 
 		private var _bkgd			:Box;
-		private var _strk			:Box;
-		private var _text			:TextDoubleMC = new TextDoubleMC();
+		private var _ptrn			:Box;
 		private var _commit			:Commit;
 
 		public function HistoryItemSaved(c:Commit)
 		{
 			_commit = c;
-			drawShapes();
-			addTextDetails();
-			buttonMode = true;
+			drawBkgd();
+			super.attachAvatar(_commit.email);
+			super.setText(_commit.note, _commit.date);
 			addEventListener(MouseEvent.CLICK, onItemSelection);
 		}
-		
-		private function addTextDetails():void
+
+		private function drawBkgd():void
 		{
-			_text.x = 50; _text.y = 8;
-			_text.line1.text = _commit.note;
-			_text.line2.text = _commit.date;
-			_text.line1.mouseEnabled = _text.line1.mouseChildren = false; 
-			_text.line2.mouseEnabled = _text.line2.mouseChildren = false; 
-			addChild(_text);
-		}
-		
-		private function drawShapes():void
-		{
-			_bkgd = new Box(500, 40, Box.GRADIENT);
+			_bkgd = new Box(500, 41, Box.WHITE, Box.DK_GREY);
 			_bkgd.scalable = true;
+			_bkgd.stroke = Box.LT_GREY;
 			_bkgd.scaleOffset = 210;
-			_strk = new Box(500, 40, Box.STROKE);
-			_strk.scalable = true;
-			_strk.scaleOffset = 210;
-			addChild(_bkgd); addChild(_strk);
+			_ptrn = new Box(500, 41, Box.WHITE);
+			_ptrn.scalable = true;
+			_ptrn.scaleOffset = 210;
+			_ptrn.pattern = new Diagonals();
+			_ptrn.alpha = .1;
+			addChild(_bkgd);
+			addChild(_ptrn);
 		}
 		
 		private function onItemSelection(e:MouseEvent):void
