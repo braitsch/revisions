@@ -1,9 +1,9 @@
 package view.windows.upload {
 
-	import view.ui.DrawButton;
 	import events.UIEvent;
-	import model.remote.HostingAccount;
 	import flash.events.MouseEvent;
+	import model.remote.HostingAccount;
+	import view.btns.DrawButton;
 
 	public class PickService extends WizardWindow {
 

@@ -10,8 +10,8 @@ package view.windows.modals.git {
 		public function GitUpgrade()
 		{
 			super(_view);
-			super.drawBackground(550, 230);
 			super.title = 'Upgrade Git';
+			super.drawBackground(550, 230);
 		}
 		
 		public function promptToUpgrade():void

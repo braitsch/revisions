@@ -2,10 +2,7 @@ package view.windows.modals.local {
 
 	import events.AppEvent;
 	import events.UIEvent;
-	import flash.events.Event;
-	import flash.events.MouseEvent;
 	import model.AppModel;
-	import mx.utils.StringUtil;
 	import system.AppSettings;
 	import system.LicenseManager;
 	import system.StringUtils;
@@ -13,11 +10,13 @@ package view.windows.modals.local {
 	import view.ui.ModalCheckbox;
 	import view.windows.base.ParentWindow;
 	import view.windows.modals.system.Message;
+	import mx.utils.StringUtil;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
 
 	public class GlobalSettings extends ParentWindow {
 
 		private static var _form		:Form = new Form(530);
-		private static var _okBtn		:OkButton = new OkButton();
 		private static var _checks		:Vector.<ModalCheckbox> = new Vector.<ModalCheckbox>();
 		private static var _labels		:Vector.<String> = new <String>[
 												'Automatically check for updates',
@@ -27,12 +26,9 @@ package view.windows.modals.local {
 		public function GlobalSettings()
 		{
 			super.addCloseButton();	
-			super.drawBackground(550, 300);
+			super.drawBackground(550, 280);
 			super.title = 'Global Settings';
-			super.defaultButton = _okBtn;
-			_okBtn.x = 491;
-			_okBtn.y = 265;			
-			addChild(_okBtn);
+			addOkButton();
 			
 			_form.labelWidth = 90;
 			_form.fields = [{label:'Name'}, {label:'Email'}, {label:'License Key', enabled:false}];

@@ -4,10 +4,6 @@ package view.windows.editor {
 	import events.BookmarkEvent;
 	import events.DataBaseEvent;
 	import events.UIEvent;
-	import flash.events.FocusEvent;
-	import flash.events.MouseEvent;
-	import flash.filters.GlowFilter;
-	import flash.text.engine.TextLine;
 	import model.AppModel;
 	import model.vo.Bookmark;
 	import view.type.TextHeading;
@@ -15,16 +11,17 @@ package view.windows.editor {
 	import view.windows.base.ChildWindow;
 	import view.windows.modals.system.Delete;
 	import view.windows.modals.system.Message;
+	import flash.events.FocusEvent;
+	import flash.events.MouseEvent;
+	import flash.filters.GlowFilter;
+	import flash.text.engine.TextLine;
 
 	public class BookmarkGeneral extends ChildWindow {
 
 		private static var _text		:TextHeading;
 		private static var _form		:Form = new Form(580);
 		private static var _autoSave	:BookmarkAutoSave = new BookmarkAutoSave();
-		private static var _okBtn		:OkButton = new OkButton();
-		private static var _delete		:DeleteButton = new DeleteButton();
 		private static var _glowFilter	:GlowFilter = new GlowFilter(0x000000, .1, 2, 2, 3, 3);
-		private static var _width		:uint = 600;
 		private static var _height		:uint = 400;
 
 		public function BookmarkGeneral()
@@ -32,13 +29,10 @@ package view.windows.editor {
 			setupHeading();
 			setupForm();
 			setupAutoSave();
-			setupButtons();
-			
-			super.addButtons([_delete]);
-			super.defaultButton = _okBtn;
-			
+			addOkButton('OK', 466, 350);
+			addNoButton('Delete', 336, 350);
 			addEventListener(UIEvent.ENTER_KEY, onUpdateBookmark);
-			_delete.addEventListener(MouseEvent.CLICK, onDeleteButton);
+			addEventListener(UIEvent.NO_BUTTON, onDeleteBookmark);
 			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onBookmarkSelected);
 		}
 
@@ -72,14 +66,6 @@ package view.windows.editor {
 			_autoSave.y = _height - 50;
 			addChild(_autoSave);
 		}
-		
-		private function setupButtons():void
-		{
-			_okBtn.x = _width - 55;
-			_delete.x = _okBtn.x - 100;
-			_okBtn.y = _delete.y = _height - 35;
-			addChild(_okBtn); addChild(_delete);
-		}		
 		
 		private function onBookmarkSelected(e:BookmarkEvent):void
 		{
@@ -123,7 +109,7 @@ package view.windows.editor {
 			if ((e.target is TextLine) == false) _autoSave.check.visible = !_autoSave.check.visible;
 		}
 		
-		private function onDeleteButton(e:MouseEvent):void
+		private function onDeleteBookmark(e:UIEvent):void
 		{
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Delete(AppModel.bookmark)));
 		}

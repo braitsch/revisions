@@ -1,4 +1,4 @@
-package view.ui {
+package view.btns {
 
 	import fl.text.TLFTextField;
 	import flash.display.Bitmap;
@@ -39,7 +39,6 @@ package view.ui {
 			drawOver();
 			drawStroke();
 			addLabel(s);
-			addEventListeners();
 		}
 		
 		public function addIcon(b:BitmapData):void
@@ -50,7 +49,7 @@ package view.ui {
 				bmp.filters = [GLOW];
 			addChild(bmp);
 		}
-		
+
 		public function set label(s:String):void
 		{
 			_label.text = s;
@@ -62,16 +61,10 @@ package view.ui {
 		{
 			_width = w;
 			_height = h;
-			_format.size = n;	
-			buttonMode = true;
+			_format.size = n;
+			this.enabled = true;
 			this.filters = [GLOW];
 			_mtrx.createGradientBox(w, h, Math.PI / 2);
-		}
-
-		private function addEventListeners():void
-		{
-			addEventListener(MouseEvent.ROLL_OVER, onRollOver);
-			addEventListener(MouseEvent.ROLL_OUT, onRollOut);
 		}
 
 		private function drawBkgd():void
@@ -107,9 +100,29 @@ package view.ui {
 			_label.mouseChildren = _label.mouseEnabled = false;
 			_label.setTextFormat(_format);
 			_label.filters = [GLOW];
-			addChild(_label);
 			this.label = s;
+			addChild(_label);
 		}
+		
+		public function set enabled(b:Boolean):void
+		{
+			if (b){
+				alpha = 1;
+				buttonMode = true;
+				addEventListener(MouseEvent.ROLL_OUT, onRollOut);
+				addEventListener(MouseEvent.ROLL_OVER, onRollOver);
+			}	else{
+				alpha = .5;
+				buttonMode = false;
+				removeEventListener(MouseEvent.ROLL_OUT, onRollOut);
+				removeEventListener(MouseEvent.ROLL_OVER, onRollOver);
+			}			
+		}	
+		
+		public function get enabled():Boolean
+		{
+			return alpha == 1;
+		}				
 		
 		private function onRollOver(e:MouseEvent):void
 		{

@@ -10,8 +10,8 @@ package view.windows.account {
 	import model.vo.Permission;
 	import view.avatars.Avatar;
 	import view.avatars.Avatars;
+	import view.btns.IconButton;
 	import view.ui.AccountRadio;
-	import view.ui.BasicButton;
 	import view.windows.modals.system.Message;
 
 	public class CollaboratorItemBS extends Sprite {
@@ -44,7 +44,7 @@ package view.windows.account {
 				_view = new BeanstalkOwner();
 			}	else{
 				_view = new BeanstalkRegular();
-				new BasicButton(_view.kill);
+				new IconButton(_view.kill);
 				attachRadios();
 				showPermissions();	
 				_view.kill.addEventListener(MouseEvent.CLICK, onKillCollaborator);

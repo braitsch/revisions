@@ -6,7 +6,7 @@ package view.summary {
 	import flash.events.MouseEvent;
 	import model.AppModel;
 	import model.vo.Bookmark;
-	import view.ui.BasicButton;
+	import view.btns.IconButton;
 	import view.windows.modals.system.Message;
 	
 	public class SummaryOptions extends Sprite {
@@ -36,7 +36,7 @@ package view.summary {
 		{
 			var l:Array = ['Settings', 'Link To Account', 'Sync Remote', 'History'];
 			var a:Array = [_view.settings_btn, _view.upload_btn, _view.sync_btn, _view.history_btn];
-			for (var i:int = 0; i < 4; i++) new BasicButton(a[i], l[i]);
+			for (var i:int = 0; i < 4; i++) new IconButton(a[i], l[i]);
 			_view.sync_btn.addEventListener(MouseEvent.CLICK, onSyncButton);
 			_view.upload_btn.addEventListener(MouseEvent.CLICK, onUploadButton);
 			_view.history_btn.addEventListener(MouseEvent.CLICK, onHistoryButton);

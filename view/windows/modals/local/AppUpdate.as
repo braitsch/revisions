@@ -2,13 +2,12 @@ package view.windows.modals.local {
 
 	import events.AppEvent;
 	import events.UIEvent;
-	import flash.events.Event;
-	import flash.events.MouseEvent;
-	import flash.events.ProgressEvent;
 	import model.AppModel;
 	import system.AppSettings;
 	import view.ui.ModalCheckbox;
 	import view.windows.base.ParentWindow;
+	import flash.events.MouseEvent;
+	import flash.events.ProgressEvent;
 
 	public class AppUpdate extends ParentWindow {
 
@@ -18,16 +17,21 @@ package view.windows.modals.local {
 		public function AppUpdate()
 		{
 			addChild(_view);
-			addChild(_check);
 			super.drawBackground(550, 220);
 			super.title = 'Update Available';
-			super.addButtons([_view.skip_btn]);
-			super.defaultButton = _view.download_btn;
+			addCheckBox();
+			addOkButton('Skip');
+			addNoButton('Download');
+			addEventListener(UIEvent.ENTER_KEY, onDownload);
+			addEventListener(UIEvent.NO_BUTTON, onSkipUpdate);
+		}
+
+		private function addCheckBox():void
+		{
 			_check.y = 170; 
 			_check.label = "Don't prompt me to update again.";
 			_check.addEventListener(MouseEvent.CLICK, onCheckbox);
-			_view.skip_btn.addEventListener(MouseEvent.CLICK, onSkipUpdate);
-			addEventListener(UIEvent.ENTER_KEY, onDownload);
+			addChild(_check);
 		}
 
 		public function set newVersion(n:String):void
@@ -41,23 +45,28 @@ package view.windows.modals.local {
 			AppSettings.setSetting(AppSettings.CHECK_FOR_UPDATES, !_check.selected);
 		}		
 		
-		private function onSkipUpdate(e:MouseEvent):void
+		private function onSkipUpdate(e:UIEvent):void
 		{
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 			AppModel.updater.dispatchEvent(new AppEvent(AppEvent.APP_UPDATE_IGNORED));
 		}
 
-		private function onDownload(e:Event):void
+		private function onDownload(e:UIEvent):void
 		{
+			disableButtons();
 			_view.textArea.message_txt.text = "Downloading Update..";
-			super.enableButton(_view.skip_btn, false);
-			super.enableButton(_view.download_btn, false);
-			removeEventListener(UIEvent.ENTER_KEY, onDownload);
-			
 			AppModel.updater.updateApplication();
 			AppModel.updater.addEventListener(AppEvent.APP_UPDATE_FAILURE, onUpdateError);
 			AppModel.updater.addEventListener(AppEvent.APP_UPDATE_PROGRESS, onUpdateProgress);
 			AppModel.updater.addEventListener(AppEvent.APP_UPDATE_COMPLETE, onUpdateComplete);
+		}
+		
+		private function disableButtons():void
+		{
+			super.okButton.enabled = false;
+			super.noButton.enabled = false;
+			removeEventListener(UIEvent.ENTER_KEY, onDownload);
+			removeEventListener(UIEvent.NO_BUTTON, onSkipUpdate);			
 		}
 
 		private function onUpdateError(e:AppEvent):void

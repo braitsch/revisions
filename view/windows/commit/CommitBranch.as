@@ -5,8 +5,8 @@ package view.windows.commit {
 	import model.AppModel;
 	import model.vo.Branch;
 	import model.vo.Commit;
+	import view.btns.FormButton;
 	import view.type.TextHeading;
-	import view.ui.DrawButton;
 	import view.ui.Form;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -16,8 +16,8 @@ package view.windows.commit {
 		private static var _commit		:Commit;
 		private static var _form		:Form = new Form(534);
 		private static var _heading		:TextHeading = new TextHeading('What would you like to call your new branch?');
-		private static var _backBtn		:DrawButton = new DrawButton(120, 30, 'Go Back', 11);
-		private static var _makeBtn		:DrawButton = new DrawButton(120, 30, 'Create Branch', 11);		
+		private static var _backBtn		:FormButton = new FormButton('Go Back');
+		private static var _makeBtn		:FormButton = new FormButton('Create Branch');		
 
 		public function CommitBranch()
 		{

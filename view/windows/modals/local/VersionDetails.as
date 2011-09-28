@@ -9,21 +9,18 @@ package view.windows.modals.local {
 	public class VersionDetails extends ParentWindow {
 
 		private static var _form		:Form = new Form(530);
-		private static var _view		:VersionDetailsMC = new VersionDetailsMC();
 		private static var _fields		:Array = [	{label:'Date', enabled:false}, {label:'Author', enabled:false}, 
 													{label:'Commit', enabled:false}, {label:'Details', enabled:false}];
 
 		public function VersionDetails()
 		{
-			addChild(_view);
+			super.title = 'Version Details';
 			super.addCloseButton();
 			super.drawBackground(550, 275);
-			super.defaultButton = _view.ok_btn;
-			super.title = 'Version Details';
-			_form.y = 70; _view.addChildAt(_form, 0);
+			addOkButton();
 			_form.fields = _fields;
-			_view.ok_btn.x = 491;
-			_view.ok_btn.y = 240;
+			_form.y = 70; 
+			addChild(_form);
 			addEventListener(UIEvent.ENTER_KEY, onClose);
 		}
 

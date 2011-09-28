@@ -120,9 +120,22 @@ package view.windows.account {
 		
 		private function addLogOut():void
 		{
-			super.addButtons([_view.logOut]);
-			_view.logOut.addEventListener(MouseEvent.CLICK, onLogOutClick);					
+			_view.logOut.buttonMode = true;
+			_view.logOut['over'].alpha = 0;
+			_view.logOut.addEventListener(MouseEvent.ROLL_OUT, onRollOut);	
+			_view.logOut.addEventListener(MouseEvent.ROLL_OVER, onRollOver);	
+			_view.logOut.addEventListener(MouseEvent.CLICK, onLogOutClick);	
 		}
+
+		private function onRollOver(e:MouseEvent):void
+		{
+			TweenLite.to(e.target.over, .3, {alpha:1});
+		}
+
+		private function onRollOut(e:MouseEvent):void
+		{
+			TweenLite.to(e.target.over, .3, {alpha:0});
+		}		
 		
 		private function onLogOutClick(e:MouseEvent):void
 		{

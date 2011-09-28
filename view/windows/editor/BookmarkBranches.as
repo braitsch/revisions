@@ -1,9 +1,13 @@
 package view.windows.editor {
 
-	import com.greensock.TweenLite;
 	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.UIEvent;
+	import model.AppModel;
+	import view.type.TextHeading;
+	import view.windows.base.ChildWindow;
+	import view.windows.modals.system.Merge;
+	import com.greensock.TweenLite;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
@@ -12,11 +16,6 @@ package view.windows.editor {
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
-	import model.AppModel;
-	import system.StringUtils;
-	import view.type.TextHeading;
-	import view.windows.base.ChildWindow;
-	import view.windows.modals.system.Merge;
 
 	public class BookmarkBranches extends ChildWindow {
 
@@ -71,7 +70,7 @@ package view.windows.editor {
 
 		private function onBookmarkSelected(e:BookmarkEvent):void
 		{
-			_branchName.text = StringUtils.capitalize(AppModel.bookmark.branch.name);
+			_branchName.text = AppModel.branch.name;
 			while(_branches.numChildren) _branches.removeChildAt(0);
 			for (var i:int = 0; i < AppModel.bookmark.branches.length; i++) _branches.addChild(new BranchItem(AppModel.bookmark.branches[i]));
 			layoutBranches(0);
@@ -93,12 +92,12 @@ package view.windows.editor {
 					TweenLite.to(b, .3, {alpha:0, onComplete:switchPosition, onCompleteParams:[b]});
 				}
 			}
-			_branchName.text = StringUtils.capitalize(AppModel.branch.name);
+			_branchName.text = AppModel.branch.name;
 		}
 		
 		private function onBranchRenamed(e:AppEvent):void
 		{
-			_branchName.text = StringUtils.capitalize(AppModel.branch.name);
+			_branchName.text = AppModel.branch.name;
 		}				
 		
 		private function switchPosition(k:BranchItem):void

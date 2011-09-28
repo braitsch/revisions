@@ -17,9 +17,10 @@ package view.windows.modals.system {
 			addChild(_view);
 			setBookmark(b);
 			attachOptions();
-			super.drawBackground(550, 230);
 			super.title = 'Delete Bookmark';
-			super.okButton = _view.delete_btn;
+			super.drawBackground(550, 260);
+			addOkButton();
+			addNoButton();
 		}				
 		private function setBookmark(b:Bookmark):void
 		{
@@ -32,9 +33,9 @@ package view.windows.modals.system {
 		
 		private function attachOptions():void
 		{
-			_trashFiles.y = 175; 
+			_trashFiles.y = 160; 
 			_trashFiles.label = 'Also Move Files to Trash';
-			_trashGit.y = 195;
+			_trashGit.y = 180;
 			_trashGit.label = 'Destroy History (please note this cannot be undone)';					
 			addChild(_trashGit);
 			addChild(_trashFiles);

@@ -2,38 +2,37 @@ package view.windows.modals.local {
 
 	import events.AppEvent;
 	import events.UIEvent;
-	import flash.events.Event;
-	import flash.filesystem.File;
 	import model.AppModel;
 	import model.vo.Bookmark;
 	import view.ui.Form;
 	import view.ui.ModalCheckbox;
 	import view.windows.base.ParentWindow;
 	import view.windows.modals.system.Message;
+	import flash.events.Event;
+	import flash.filesystem.File;
 
 	public class AddDragAndDrop extends ParentWindow {
 
-		private static var _view		:DragAndDropMC = new DragAndDropMC();
 		private static var _form		:Form = new Form(530);
 		private static var _check		:ModalCheckbox = new ModalCheckbox(true);			
 
 		public function AddDragAndDrop()
 		{
-			addChild(_view);
-			addChild(_check);
 			super.addCloseButton();
-			super.drawBackground(550, 210);
 			super.title = 'New Bookmark';
-			super.defaultButton = _view.ok_btn;
+			super.drawBackground(550, 210);
+			addOkButton();
+			addNoButton();
 			
-			_view.ok_btn.x = 491;
 			_form.fields = [{label:'Name'}, {label:'Location', enabled:false}];
 			_form.y = 70; 
-			_view.addChildAt(_form, 0);
+			addChild(_form);
 			
 			_check.y = 170; 
 			_check.label = 'Autosave Every 60 Minutes';
+			addChild(_check);
 			addEventListener(UIEvent.ENTER_KEY, onOkButton);
+			addEventListener(UIEvent.NO_BUTTON, onNoButton);
 		}
 
 		public function set file(f:File):void
@@ -60,7 +59,12 @@ package view.windows.modals.local {
 			}	else{
 				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));
 			}
-		}	
+		}
+		
+		private function onNoButton(e:UIEvent):void
+		{
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
+		}			
 		
 		private function initNewBookmark():void
 		{

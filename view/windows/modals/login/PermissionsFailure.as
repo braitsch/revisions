@@ -2,43 +2,45 @@ package view.windows.modals.login {
 
 	import events.AppEvent;
 	import events.UIEvent;
-	import flash.events.Event;
-	import flash.events.MouseEvent;
 	import model.AppModel;
 	import model.remote.HostingAccount;
 	import model.remote.Hosts;
 	import model.vo.Repository;
+	import view.type.TextHeading;
 	import view.ui.Form;
 	import view.ui.ModalCheckbox;
 	import view.windows.base.ParentWindow;
+	import flash.events.Event;
 
 	public class PermissionsFailure extends ParentWindow {
 
-		private static var _view		:PermissionsFailureMC = new PermissionsFailureMC();
 		private static var _url			:String;
 		private static var _acctType	:String;
 		private static var _acctName	:String;
 		private static var _repoName	:String;
 		private static var _form		:Form = new Form(530);
 		private static var _check		:ModalCheckbox = new ModalCheckbox(true);
+		private static var _heading		:TextHeading = new TextHeading();	
 
 		public function PermissionsFailure()
 		{
-			addChild(_view);
-			addChild(_check);
 			super.title = 'Credentials';
 			super.addCloseButton();
 			super.drawBackground(550, 260);
-			super.addButtons([_view.cancel_btn]);
-			super.defaultButton = _view.ok_btn;
-			
+		
 			_form.fields = [{label:'Username'}, {label:'Password', pass:true}];
-			_form.y = 110; _view.addChildAt(_form, 0);			
+			_form.y = 110; 
+			addChild(_form);
 			
 			_check.y = 210;
-			_check.label = 'Remember my login for this account';			
-			_view.cancel_btn.addEventListener(MouseEvent.CLICK, onCancelButton);
+			_check.label = 'Remember my login for this account';
+			addChild(_check);
+			addChild(_heading);
+			
+			addOkButton();
+			addNoButton();			
 			addEventListener(UIEvent.ENTER_KEY, onOkButton);
+			addEventListener(UIEvent.NO_BUTTON, onNoButton);
 		}
 		
 		public function set request(u:String):void
@@ -49,7 +51,7 @@ package view.windows.modals.login {
 			_repoName = Repository.getRepositoryName(u);
 			var m:String = 'I\'m sorry, '+_acctType+' denied us access to the account named "'+_acctName+'".\n';
 				m+='Please enter your username & password to try again :';
-			super.setHeading(_view, m);
+			_heading.text = m;
 		}
 		
 		private function onOkButton(e:Event):void
@@ -89,7 +91,7 @@ package view.windows.modals.login {
 			return new HostingAccount({type:t, acct:_acctName, user:_form.getField(0), pass:_form.getField(1)});			
 		}
 		
-		private function onCancelButton(e:MouseEvent):void
+		private function onNoButton(e:UIEvent):void
 		{
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.RETRY_REMOTE_REQUEST, {u:null}));

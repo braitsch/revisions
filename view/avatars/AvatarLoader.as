@@ -55,7 +55,8 @@ package view.avatars {
 		
 		private function onAvatarFailure(e:IOErrorEvent):void
 		{
-			trace("--------Avatar.onAvatarFailure(e)--------");
+			_bmd = new UserIcon30();
+			dispatchEvent(new AppEvent(AppEvent.AVATAR_LOADED));
 		}				
 		
 	}

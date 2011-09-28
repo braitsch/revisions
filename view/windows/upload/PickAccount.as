@@ -5,7 +5,7 @@ package view.windows.upload {
 	import flash.events.MouseEvent;
 	import model.remote.HostingAccount;
 	import model.remote.Hosts;
-	import view.ui.DrawButton;
+	import view.btns.DrawButton;
 	import view.windows.modals.login.AccountLogin;
 
 	public class PickAccount extends WizardWindow {
@@ -49,9 +49,9 @@ package view.windows.upload {
 			if (_page) removeChild(_page);
 			_page = w; addChild(_page);
 			if (_page == _pick){
-				super.backBtnX = 491;
+				super.moveBackButtonRight();
 			}	else if (_page is AccountLogin){
-				super.backBtnX = 390;
+				super.moveBackButtonLeft();
 			}
 		}
 		
@@ -60,7 +60,7 @@ package view.windows.upload {
 			if (e.target == _diffAcct){
 				showLoginWindow();
 			}	else if (e.target == _thisAcct){
-				super.dispatchNext();
+				super.onNextButton(e);
 			}
 		}		
 		
@@ -88,7 +88,7 @@ package view.windows.upload {
 			}	else if (_service == HostingAccount.BEANSTALK){
 				super.account = Hosts.beanstalk.loggedIn;
 			}
-			super.dispatchNext();	
+			super.onNextButton(e);	
 		}
 		
 	}

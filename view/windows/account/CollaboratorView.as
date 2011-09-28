@@ -32,7 +32,8 @@ package view.windows.account {
 
 		private function registerButtons():void
 		{
-			super.addButtons([_bkgd.back, _bkgd.addCollab]);
+			super.enableButton(_bkgd.back);
+			super.enableButton(_bkgd.addCollab);
 			_bkgd.back.addEventListener(MouseEvent.CLICK, onBackBtnClick);	
 			_bkgd.addCollab.addEventListener(MouseEvent.CLICK, onAddCollaborator);
 		}

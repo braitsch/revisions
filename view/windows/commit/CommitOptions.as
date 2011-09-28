@@ -1,29 +1,30 @@
 package view.windows.commit {
 
 	import events.UIEvent;
+	import flash.events.MouseEvent;
 	import model.AppModel;
 	import model.vo.Bookmark;
 	import model.vo.Commit;
-	import view.ui.DrawButton;
+	import view.btns.DrawButton;
+	import view.type.TextHeading;
 	import view.windows.base.ChildWindow;
-	import flash.events.MouseEvent;
 
 	public class CommitOptions extends ChildWindow {
 
 		private static var _commit		:Commit;
-		private static var _branch		:DrawButton = new DrawButton(460, 40, 'Start a new branch from this version', 12);
-		private static var _saveCopy	:DrawButton = new DrawButton(460, 40, 'Or save a copy of this version to your computer', 12);
+		private static var _heading		:TextHeading = new TextHeading('What would you like to do?'); 
+		private static var _branch		:DrawButton = new DrawButton(360, 40, 'Start a new branch from this version', 12);
+		private static var _saveCopy	:DrawButton = new DrawButton(360, 40, 'Save a copy of this version to my computer', 12);
 
 		public function CommitOptions()
 		{
-			_branch.y = 100;
-			_saveCopy.y = 160;
-			_branch.x = _saveCopy.x = 279 - 230;
 			_branch.addIcon(new BranchIcon());
 			_saveCopy.addIcon(new SaveIcon());
+			_branch.y = 100; _saveCopy.y = 160;
+			_branch.x = _saveCopy.x = 279 - 180;
 			_branch.addEventListener(MouseEvent.CLICK, onNewBranch);
 			_saveCopy.addEventListener(MouseEvent.CLICK, onSaveLocal);
-			addChild(_branch); addChild(_saveCopy);
+			addChild(_branch); addChild(_saveCopy); addChild(_heading);
 			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);
 		}
 

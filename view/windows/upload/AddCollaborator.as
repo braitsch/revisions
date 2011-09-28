@@ -16,7 +16,7 @@ package view.windows.upload {
 		public function AddCollaborator()
 		{
 			super.addHeading();
-			super.nextButton = new OkButton();
+			super.addNextButton('OK');
 			super.addBackButton();
 			addEventListener(UIEvent.ENTER_KEY, onNextButton);
 		}

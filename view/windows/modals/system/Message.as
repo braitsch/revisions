@@ -8,9 +8,9 @@ package view.windows.modals.system {
 		public function Message(m:String)
 		{
 			addChild(_view);
-			super.drawBackground(550, 210);			
 			super.title = 'Achtung!';
-			super.okButton = _view.ok_btn;
+			super.drawBackground(550, 210);			
+			addOkButton();
 			_view.textArea.message_txt.htmlText = m;
 		}
 		

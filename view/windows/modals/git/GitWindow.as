@@ -20,10 +20,10 @@ package view.windows.modals.git {
 		{
 			_view = v;
 			addChild(_view);
-			super.defaultButton = _view.ok_btn;
-			super.addButtons([_view.cancel_btn]);
+			addOkButton();
+			addNoButton();
 			addEventListener(UIEvent.ENTER_KEY, installAndUpdate);
-			_view.cancel_btn.addEventListener(MouseEvent.CLICK, quitApplication);
+			addEventListener(UIEvent.NO_BUTTON, quitApplication);
 		}
 		
 		protected function attachBadge(bmd:BitmapData):void
@@ -43,14 +43,6 @@ package view.windows.modals.git {
 			}	else{
 				return '';
 			}
-		}			
-		
-		private function disableButtons():void
-		{
-			super.enableButton(_view.ok_btn, false);
-			super.enableButton(_view.cancel_btn, false);
-			removeEventListener(UIEvent.ENTER_KEY, installAndUpdate);
-			_view.cancel_btn.removeEventListener(MouseEvent.CLICK, quitApplication);
 		}
 		
 		private function installAndUpdate(e:Event):void
@@ -80,8 +72,7 @@ package view.windows.modals.git {
 
 		private function onInstallComplete(e:AppEvent):void 
 		{
-			super.enableButton(_view.ok_btn, true);
-			addEventListener(UIEvent.ENTER_KEY, closeWindow);
+			enableButtons();
 			_view.textArea.message_txt.text = "You're All Set - ";
 			_view.textArea.message_txt.text+= AppModel.proxies.config.gitVersion ? 'Update' : 'Install';
 			_view.textArea.message_txt.text+= ' Complete!!';
@@ -89,6 +80,20 @@ package view.windows.modals.git {
 		// read and update the gui with newly installed git version //	
 			AppModel.proxies.config.detectGit();			
 		}
+		
+		private function disableButtons():void
+		{
+			super.okButton.enabled = false;
+			super.noButton.enabled = false;
+			removeEventListener(UIEvent.ENTER_KEY, installAndUpdate);
+			removeEventListener(UIEvent.NO_BUTTON, quitApplication);
+		}
+		
+		private function enableButtons():void
+		{
+			super.noButton.enabled = true;
+			addEventListener(UIEvent.ENTER_KEY, closeWindow);			
+		}		
 		
 		private function quitApplication(e:MouseEvent):void 
 		{

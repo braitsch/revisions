@@ -11,7 +11,7 @@ package view.windows.modals.system {
 			addChild(_view);
 			super.drawBackground(500, 400);
 			super.title = 'Whoops!!';
-			super.okButton = _view.ok_btn;
+			addOkButton();
 		}
 
 		private function setMessage(o:Object):void

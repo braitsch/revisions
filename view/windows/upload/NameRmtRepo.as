@@ -20,7 +20,7 @@ package view.windows.upload {
 		{
 			super.addHeading();
 			super.addBackButton();
-			super.nextButton = new NextButton();
+			super.addNextButton();
 			
 			_preview.labelWidth = 100;
 			_preview.fields = [{label:'URL Preview', enabled:false}];
@@ -93,7 +93,7 @@ package view.windows.upload {
 				super.repoDesc = super.account.type == HostingAccount.GITHUB ? _form.getField(1) : '';
 				super.repoURL = _preview.getField(0);
 				super.repoPrivate = _private.selected;
-				super.dispatchNext();
+				super.onNextButton(e);
 			}
 		}
 		

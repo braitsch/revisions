@@ -16,7 +16,7 @@ package view.windows.modals.git {
 			super.addCloseButton();
 			super.drawBackground(550, 210);
 			super.title = 'About Git';
-			super.defaultButton = _view.ok_btn;
+			addOkButton();
 			addEventListener(UIEvent.ENTER_KEY, onOkButton);
 		}
 

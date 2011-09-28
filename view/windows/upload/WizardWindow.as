@@ -1,17 +1,17 @@
 package view.windows.upload {
 
 	import events.UIEvent;
-	import flash.display.Sprite;
-	import flash.events.Event;
-	import flash.events.MouseEvent;
 	import model.remote.HostingAccount;
+	import view.btns.FormButton;
 	import view.type.TextHeading;
 	import view.windows.base.ChildWindow;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
 
 	public class WizardWindow extends ChildWindow {
 
-		private var _nextBtn			:Sprite;
-		private var _backBtn			:BackButton;
+		private var _nextBtn			:FormButton;
+		private var _backBtn			:FormButton;
 		private var _heading			:TextHeading;
 		
 		private static var _account			:HostingAccount;
@@ -20,6 +20,9 @@ package view.windows.upload {
 		private static var _repoDesc		:String;	// github only  //
 		private static var _repoURL			:String;
 		private static var _repoPrivate		:Boolean;	// github only //
+		private static var _buttonY			:uint = 300 - 50; // 300 window height //
+		private static var _buttonX1		:uint = 280;
+		private static var _buttonX2		:uint = 415;
 		
 		protected function addHeading(s:String = ''):void
 		{
@@ -35,34 +38,38 @@ package view.windows.upload {
 		
 		protected function addBackButton():void
 		{
-			_backBtn = new BackButton();
-			_backBtn.x = 390;
-			_backBtn.y = 300 - 35; // 300 window height //
+			_backBtn = new FormButton('Back');
+			_backBtn.y = _buttonY;
+			_backBtn.x = _buttonX1;
 			_backBtn.addEventListener(MouseEvent.CLICK, dispatchPrev);
-			super.addButtons([_backBtn]);
 			addChild(_backBtn);
 		}
 		
-		protected function set backBtnX(x:uint):void
+		protected function addNextButton(s:String = ''):void
 		{
-			_backBtn.x = x;	
-		}
-		
-		protected function set nextButton(s:Sprite):void
+			_nextBtn = new FormButton(s || 'Next');
+			_nextBtn.y = _buttonY;
+			_nextBtn.x = _buttonX2;
+			_nextBtn.addEventListener(MouseEvent.CLICK, onNextButton);
+			addChild(_nextBtn);
+		}		
+
+		protected function moveBackButtonLeft():void
 		{
-			_nextBtn = s;
-			_nextBtn.x = 491;
-			_nextBtn.y = 300 - 35;
-			addChild(_nextBtn);			
-			super.defaultButton = _nextBtn;
+			_backBtn.x = _buttonX1;
 		}
 
+		protected function moveBackButtonRight():void
+		{
+			_backBtn.x = _buttonX2;
+		}		
+		
 		protected function onNextButton(e:Event):void
 		{
 			dispatchNext();
 		}
 		
-		protected function dispatchNext(e:Event = null):void
+		private function dispatchNext():void
 		{
 			dispatchEvent(new UIEvent(UIEvent.WIZARD_NEXT));
 		}

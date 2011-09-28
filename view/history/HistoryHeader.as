@@ -29,7 +29,7 @@ package view.history {
 		public function refresh():void
 		{
 			var m:String = 'History of '+AppModel.bookmark.label;
-			if (AppModel.branch.name != 'master') m+= ' :: Currently Working on Branch "'+ AppModel.branch.name+'"' ;
+			if (AppModel.branch.name != 'master') m+= ' :: On Branch "'+ AppModel.branch.name+'"' ;
 			_header.text = m;
 		}
 		

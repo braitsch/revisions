@@ -1,11 +1,11 @@
 package view.windows.upload {
 
 	import events.UIEvent;
-	import model.AppModel;
-	import model.remote.HostingAccount;
-	import view.ui.DrawButton;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import model.AppModel;
+	import model.remote.HostingAccount;
+	import view.btns.DrawButton;
 
 	public class OnBkmkAdded extends WizardWindow {
 

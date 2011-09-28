@@ -10,7 +10,7 @@ package view.windows.editor {
 	import model.vo.Branch;
 	import view.avatars.Avatar;
 	import view.avatars.Avatars;
-	import view.ui.BasicButton;
+	import view.btns.IconButton;
 
 	public class BranchItem extends Sprite {
 
@@ -28,7 +28,7 @@ package view.windows.editor {
 			_view.name_txt.addEventListener(FocusEvent.FOCUS_IN, onNameFocusIn);
 			_view.name_txt.addEventListener(FocusEvent.FOCUS_OUT, onNameFocusOut);
 			_view.checkout.addEventListener(MouseEvent.CLICK, onBranchCheckout);
-			new BasicButton(_view.checkout);
+			new IconButton(_view.checkout);
 			setTextFields(); attachAvatar(); addChild(_view);
 			AppModel.engine.addEventListener(AppEvent.HISTORY_RECEIVED, setTextFields);			
 		}

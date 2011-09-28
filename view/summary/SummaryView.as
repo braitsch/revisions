@@ -3,6 +3,11 @@ package view.summary {
 	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.UIEvent;
+	import model.AppModel;
+	import model.vo.Bookmark;
+	import system.StringUtils;
+	import view.btns.DrawButton;
+	import view.type.Fonts;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.MovieClip;
@@ -13,16 +18,13 @@ package view.summary {
 	import flash.filters.GlowFilter;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
-	import model.AppModel;
-	import model.vo.Bookmark;
-	import system.StringUtils;
-	import view.type.Fonts;
 
 	public class SummaryView extends Sprite {
 
 		private static var _icon		:Bitmap;
 		private static var _bkgd		:Shape = new Shape();
 		private static var _offset		:int;
+		private static var _saveBtn		:DrawButton = new DrawButton(184, 35, 'Save Version');
 		private static var _details		:MovieClip;
 		private static var _view		:SummaryViewMC = new SummaryViewMC();
 		private static var _options		:SummaryOptions = new SummaryOptions(_view.details.options);
@@ -41,15 +43,23 @@ package view.summary {
 			addChild(_view);
 			addChild(_fringe);
 			addChild(_options);
+			addSaveButton();
 			initTextFields();
-			_details.save_btn.over.alpha = 0;
 			this.filters = [new DropShadowFilter(5, 45, 0, .5, 10, 10)];
 			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onSelected);
 			AppModel.engine.addEventListener(AppEvent.SUMMARY_RECEIVED, drawView);
 			AppModel.engine.addEventListener(AppEvent.HISTORY_RECEIVED, drawView);
-			AppModel.engine.addEventListener(AppEvent.MODIFIED_RECEIVED, enableSaveButton);
+			AppModel.engine.addEventListener(AppEvent.MODIFIED_RECEIVED, onModifiedReceived);
 			AppModel.engine.addEventListener(AppEvent.BKMK_ADDED_TO_ACCOUNT, onBkmkAddedToAcct);
 			AppModel.proxies.editor.addEventListener(AppEvent.BRANCH_RENAMED, drawView);
+		}
+
+		private function addSaveButton():void
+		{
+			_saveBtn.y = 115;
+			_saveBtn.x = -_saveBtn.width / 2;
+ 			_details.addChild(_saveBtn);
+			_saveBtn.addEventListener(MouseEvent.CLICK, onSaveButton);
 		}
 
 		public function resize(h:uint):void
@@ -132,28 +142,20 @@ package view.summary {
 		{
 		// ignore if we're not showing the bookmark that just updated //
 			if (e.data != _bookmark) return;
-			enableSaveButton();
+			_saveBtn.enabled = _bookmark.branch.isModified;
 			_details.version_txt.text = 'Version #'+_bookmark.branch.totalCommits as String;
 			_details.lastSaved_txt.text = 'Last Saved : '+_bookmark.branch.lastCommit.date;
 			_details.branch_txt.text = 'On Branch : '+StringUtils.capitalize(_bookmark.branch.name);			
 		}
 		
-		private function enableSaveButton(a:AppEvent = null):void
+		private function onModifiedReceived(e:AppEvent):void
 		{
-			if (_bookmark.branch.isModified){
-				_details.save_btn.over.alpha = 1;
-				_details.save_btn.buttonMode = true;
-				_details.save_btn.addEventListener(MouseEvent.CLICK, onSaveButton);
-			}	else{
-				_details.save_btn.over.alpha = 0;
-				_details.save_btn.buttonMode = false;
-				_details.save_btn.removeEventListener(MouseEvent.CLICK, onSaveButton);
-			}				
+			_saveBtn.enabled = _bookmark.branch.isModified;
 		}
 		
 		private function onSaveButton(e:MouseEvent):void
 		{
-			dispatchEvent(new UIEvent(UIEvent.COMMIT));
+			if (_saveBtn.enabled) dispatchEvent(new UIEvent(UIEvent.COMMIT));
 		}		
 		
 	}

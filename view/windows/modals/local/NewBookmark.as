@@ -5,8 +5,9 @@ package view.windows.modals.local {
 	import model.AppModel;
 	import model.remote.Hosts;
 	import system.FileUtils;
+	import view.btns.DrawButton;
+	import view.btns.FormButton;
 	import view.type.TextHeading;
-	import view.ui.DrawButton;
 	import view.ui.Form;
 	import view.windows.base.ParentWindow;
 	import view.windows.modals.system.Message;
@@ -28,7 +29,7 @@ package view.windows.modals.local {
 		private static var _folder		:DrawButton = new DrawButton(250, 36, 'Track A Folder', 12);
 		private static var _github		:DrawButton = new DrawButton(250, 36, 'Hello', 12);
 		private static var _beanstalk	:DrawButton = new DrawButton(250, 36, 'Hello', 12);				
-		private static var _customBtn	:DrawButton = new DrawButton(120, 30, 'Download', 11);
+		private static var _customBtn	:FormButton = new FormButton('Download');
 
 		public function NewBookmark()
 		{
@@ -38,6 +39,7 @@ package view.windows.modals.local {
 			super.drawBackground(600, 330);
 			super.title = 'New Bookmark';
 			addCustomURLField();
+			addEventListener(UIEvent.ENTER_KEY, onEnterKey);
 			addEventListener(MouseEvent.CLICK, onButtonClick);
 			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);
 		}
@@ -117,13 +119,18 @@ package view.windows.modals.local {
 			_beanstalk.label = Hosts.beanstalk.loggedIn ? 'View My Beanstalk' : 'Login To Beanstalk';
 			super.onAddedToStage(e);
 		}
+		
+		private function onEnterKey(e:UIEvent):void
+		{
+			onCustomCloneClick(e);
+		}		
 
-		private function onCustomCloneClick(e:MouseEvent):void
+		private function onCustomCloneClick(e:Event):void
 		{
 			if (!validate()) return;
 			_cloneURL = _customURL.getField(0);
 			super.browseForDirectory('Select a location to clone to');
-		}		
+		}
 		
 		private function onBrowserSelection(e:UIEvent):void
 		{

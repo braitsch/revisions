@@ -2,7 +2,6 @@ package view.windows.modals.system {
 
 	import events.UIEvent;
 	import flash.events.Event;
-	import flash.events.MouseEvent;
 
 	public class Confirm extends Alert {
 
@@ -13,8 +12,8 @@ package view.windows.modals.system {
 			addChild(_view);
 			super.drawBackground(550, 240);
 			super.title = 'Confirm';
-			super.noButton = _view.cancel_btn;
-			super.defaultButton = _view.ok_btn;
+			addOkButton();
+			addNoButton();
 			_view.textArea.message_txt.htmlText = m;
 		}
 
@@ -24,7 +23,7 @@ package view.windows.modals.system {
 			dispatchEvent(new UIEvent(UIEvent.CONFIRM, true));
 		}
 		
-		override protected function onNoButton(e:MouseEvent):void
+		override protected function onNoButton(e:UIEvent):void
 		{
 			super.onNoButton(e);
 			dispatchEvent(new UIEvent(UIEvent.CONFIRM, false));

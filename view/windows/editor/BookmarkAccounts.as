@@ -8,8 +8,8 @@ package view.windows.editor {
 	import flash.events.MouseEvent;
 	import model.AppModel;
 	import model.vo.Repository;
+	import view.btns.DrawButton;
 	import view.type.TextHeading;
-	import view.ui.DrawButton;
 	import view.windows.base.ChildWindow;
 	import view.windows.modals.system.Confirm;
 

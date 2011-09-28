@@ -14,7 +14,7 @@ package view.windows.upload {
 		public function ConfirmDetails()
 		{
 			super.addBackButton();
-			super.nextButton = new OkButton();
+			super.addNextButton('OK');
 			super.addHeading('Please confirm before we upload your bookmark:');
 			addEventListener(UIEvent.ENTER_KEY, onNextButton);
 			AppModel.engine.addEventListener(AppEvent.BKMK_ADDED_TO_ACCOUNT, onBkmkAddedToAcct);

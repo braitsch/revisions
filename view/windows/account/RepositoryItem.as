@@ -1,22 +1,22 @@
 package view.windows.account {
 
-	import model.remote.Hosts;
-	import model.vo.GitHubRepo;
-	import model.remote.HostingAccount;
 	import events.UIEvent;
-	import model.vo.Repository;
-	import system.StringUtils;
-	import view.ui.BasicButton;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.text.TextFieldAutoSize;
+	import model.remote.HostingAccount;
+	import model.remote.Hosts;
+	import model.vo.GitHubRepo;
+	import model.vo.Repository;
+	import system.StringUtils;
+	import view.btns.IconButton;
 
 	public class RepositoryItem extends Sprite {
 
 		private var _repo	:Repository;
 		private var _view	:RepositoryItemMC = new RepositoryItemMC();
-		private var _clone	:BasicButton = new BasicButton(_view.clone, 'Clone Repository');
-		private var _collab	:BasicButton = new BasicButton(_view.collab, 'Collaborators');
+		private var _clone	:IconButton = new IconButton(_view.clone, 'Clone Repository');
+		private var _collab	:IconButton = new IconButton(_view.collab, 'Collaborators');
 	
 		public function RepositoryItem(o:Repository):void
 		{

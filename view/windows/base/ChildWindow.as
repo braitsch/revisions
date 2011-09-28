@@ -1,17 +1,19 @@
 package view.windows.base {
 
 	import events.UIEvent;
+	import view.btns.FormButton;
 	import com.greensock.TweenLite;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
-	import flash.text.TextFieldAutoSize;
 
 	public class ChildWindow extends Sprite {
 
 		private static var _file	:File = File.desktopDirectory;
+		private var _okButton		:FormButton;
+		private var _noButton		:FormButton;
 
 		public function ChildWindow()
 		{
@@ -35,42 +37,22 @@ package view.windows.base {
 			if (e.keyCode == 13 && stage.focus == this) dispatchEvent(new UIEvent(UIEvent.ENTER_KEY));
 		}		
 
-		protected function setHeading(view:*, s:String):void
+		protected function addOkButton(s:String = 'OK', x:uint = 0, y:uint = 0):void
 		{
-			view.heading.label_txt.autoSize = TextFieldAutoSize.LEFT;
-			view.heading.label_txt.htmlText = s;
+			_okButton = new FormButton(s);
+			_okButton.x = x || this.width - _okButton.width - 34;
+			_okButton.y = y || this.height - _okButton.height - 35;
+			_okButton.addEventListener(MouseEvent.CLICK, function(e:MouseEvent):void{ dispatchEvent(new UIEvent(UIEvent.ENTER_KEY)); } );
+			addChild(_okButton);
 		}
 		
-		protected function set defaultButton(b:Sprite):void
+		protected function addNoButton(s:String = 'Cancel', x:uint = 0, y:uint = 0):void
 		{
-			b['over'].alpha = 1;
-			b.buttonMode = true;
-			b.mouseChildren = false;
-			b.addEventListener(MouseEvent.CLICK, function(e:MouseEvent):void{ dispatchEvent(new UIEvent(UIEvent.ENTER_KEY)); } );
-		}
-		
-		protected function addButtons(a:Array):void
-		{
-			for (var i:int=0; i < a.length; i++) {
-				a[i]['over'].alpha = 0;
-				a[i].mouseChildren = false;
-				enableButton(a[i], true);
-			}
-		}
-		
-		protected function enableButton(b:Sprite, on:Boolean):void
-		{
-			if (on){
-				b.alpha = 1;
-				b.buttonMode = true;
-				b.addEventListener(MouseEvent.ROLL_OUT, onButtonRollOut);
-				b.addEventListener(MouseEvent.ROLL_OVER, onButtonRollOver);
-			}	else{
-				b.alpha = .5;
-				b.buttonMode = false;
-				b.removeEventListener(MouseEvent.ROLL_OUT, onButtonRollOut);
-				b.removeEventListener(MouseEvent.ROLL_OVER, onButtonRollOver);				
-			}
+			_noButton = new FormButton(s);
+			_noButton.x = x || this.width - (_noButton.width * 2) - 44;
+			_noButton.y = y || this.height - _noButton.height - 35;
+			_noButton.addEventListener(MouseEvent.CLICK, function(e:MouseEvent):void{ dispatchEvent(new UIEvent(UIEvent.NO_BUTTON)); } );				
+			addChild(_noButton);			
 		}
 		
 		protected function browseForFile($msg:String):void
@@ -90,8 +72,18 @@ package view.windows.base {
 			dispatchEvent(new UIEvent(UIEvent.FILE_BROWSER_SELECTION, e.target as File));
 		}
 		
-		protected function onButtonRollOut(e:MouseEvent):void {TweenLite.to(e.target.over, .3, {alpha:0});}
-		protected function onButtonRollOver(e:MouseEvent):void {TweenLite.to(e.target.over, .5, {alpha:1});}
+		protected function onButtonRollOut(e:MouseEvent):void
+		{
+			TweenLite.to(e.target.over, .3, {alpha:0});
+		}
+
+		protected function onButtonRollOver(e:MouseEvent):void
+		{
+			TweenLite.to(e.target.over, .5, {alpha:1});
+		}
+
+		protected function get okButton():FormButton { return _okButton; }
+		protected function get noButton():FormButton { return _noButton; }
 
 	}
 	

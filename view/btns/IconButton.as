@@ -1,17 +1,18 @@
-package view.ui {
+package view.btns {
 
 	import com.greensock.TweenLite;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
 	import flash.events.EventDispatcher;
 	import flash.events.MouseEvent;
+	import view.ui.Tooltip;
 	
-	public class BasicButton extends EventDispatcher {
+	public class IconButton extends EventDispatcher {
 		
 		private var _btn		:Sprite;
 		private var _tooltip	:Tooltip;
 
-		public function BasicButton(b:Sprite, s:String = '')
+		public function IconButton(b:Sprite, s:String = '')
 		{
 			_btn = b;
 			_btn['over'].alpha = 0;

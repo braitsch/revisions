@@ -1,12 +1,11 @@
 package view.windows.modals.local {
 
 	import events.UIEvent;
-	import flash.desktop.NativeApplication;
-	import flash.events.Event;
-	import flash.events.MouseEvent;
 	import model.AppModel;
 	import system.AppSettings;
 	import view.windows.base.ParentWindow;
+	import flash.desktop.NativeApplication;
+	import flash.events.Event;
 
 	public class AppExpired extends ParentWindow {
 
@@ -15,17 +14,17 @@ package view.windows.modals.local {
 		public function AppExpired()
 		{
 			addChild(_view);
+			super.title = 'Trial Expired';
 			super.drawBackground(550, 210);
-			super.title = 'Trial Expired';			
-			super.addButtons([_view.cancel_btn]);
-			super.defaultButton = _view.ok_btn;
+			addOkButton();
+			addNoButton();
 			_view.textArea.message_txt.text = 'This beta version of Revisions has expired.\n';
 			_view.textArea.message_txt.text+= 'Please update to the most current version.';
-			_view.cancel_btn.addEventListener(MouseEvent.CLICK, onCancel);
 			addEventListener(UIEvent.ENTER_KEY, onCheckForUpdates);
+			addEventListener(UIEvent.NO_BUTTON, onCloseApplication);
 		}
 
-		private function onCancel(e:MouseEvent):void
+		private function onCloseApplication(e:UIEvent):void
 		{
 			NativeApplication.nativeApplication.exit();			
 		}

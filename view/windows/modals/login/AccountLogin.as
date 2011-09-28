@@ -6,7 +6,7 @@ package view.windows.modals.login {
 	import model.AppModel;
 	import model.remote.HostingAccount;
 	import model.remote.Hosts;
-	import view.ui.BasicButton;
+	import view.btns.FormButton;
 	import view.ui.Form;
 	import view.ui.ModalCheckbox;
 	import flash.display.Sprite;
@@ -21,7 +21,7 @@ package view.windows.modals.login {
 		private var _form			:Form = new Form(530);
 		private var _type			:String;
 		private var _check			:ModalCheckbox = new ModalCheckbox(true);
-		private var _loginBtn		:BasicButton = new BasicButton(new LoginButton());
+		private var _loginBtn		:FormButton = new FormButton('Login');
 		private var _signUp			:TextLinkMC = new TextLinkMC();
 		private var _signUpURL		:String;
 
@@ -30,10 +30,9 @@ package view.windows.modals.login {
 			_type = s;
 			_check.label = 'Remember my login for this account';
 			
-			_loginBtn.enabled = true;
+			_loginBtn.x = 415;
 			_loginBtn.addEventListener(MouseEvent.CLICK, onLoginButton);
-			_loginBtn.x = 491;
-			_loginBtn.addTo(this);
+			addChild(_loginBtn);
 			
 			attachSignUp();
 			if (_type == HostingAccount.GITHUB){
@@ -78,8 +77,9 @@ package view.windows.modals.login {
 		
 		public function set baseline(y:uint):void
 		{
-			y = y - this.y - 35;
-			_loginBtn.y = y; _check.y = y - 10; 
+			y -= this.y;
+			_check.y = y - 43; 
+			_loginBtn.y = y - 50; 
 		}
 		
 		private function gotoNewAccountPage(e:MouseEvent):void 

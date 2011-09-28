@@ -1,15 +1,15 @@
 package view.windows.editor {
 
 	import events.UIEvent;
-	import model.remote.HostingAccount;
-	import model.vo.Repository;
-	import view.ui.BasicButton;
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.net.URLRequest;
 	import flash.net.navigateToURL;
 	import flash.text.TextFieldAutoSize;
+	import model.remote.HostingAccount;
+	import model.vo.Repository;
+	import view.btns.IconButton;
 
 	public class AccountItem extends Sprite {
 
@@ -28,7 +28,7 @@ package view.windows.editor {
 			_view.desc_txt.mouseEnabled = _view.desc_txt.mouseChildren = false;
 			attachLogo();
 			buttonMode = true;
-			new BasicButton(_view.unlink);
+			new IconButton(_view.unlink);
 			addEventListener(MouseEvent.CLICK, onMouseClick);
 		}
 		

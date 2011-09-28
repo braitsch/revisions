@@ -49,10 +49,11 @@ package events {
 		public static const ADD_COLLABORATOR		:String = "ADD_COLLABORATOR";
 		public static const KILL_COLLABORATOR		:String = "KILL_COLLABORATOR";
 		public static const RADIO_SELECTED			:String = "RADIO_SELECTED";
-		public static const SET_PERMISSIONS:String = "SET_PERMISSIONS";
-		public static const UNLINK_ACCOUNT:String = "UNLINK_ACCOUNT";
-		public static const CHANGE_BRANCH:String = "CHANGE_BRANCH";
-		public static const COMMIT_OPTIONS:String = "COMMIT_OPTIONS";
+		public static const SET_PERMISSIONS			:String = "SET_PERMISSIONS";
+		public static const UNLINK_ACCOUNT			:String = "UNLINK_ACCOUNT";
+		public static const CHANGE_BRANCH			:String = "CHANGE_BRANCH";
+		public static const COMMIT_OPTIONS			:String = "COMMIT_OPTIONS";
+		public static const NO_BUTTON				:String = "NO_BUTTON";
 		
 		public var data:Object;
 
