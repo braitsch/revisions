@@ -55,7 +55,7 @@ package view.ui {
 		{
 			_label.text = s;
 			_label.x = _width / 2 - _label.width / 2;
-			_label.y = _height / 2 - _label.height / 2 + 2;
+			_label.y = _height / 2 - _label.height / 2 + 1;
 		}
 
 		private function setup(w:uint, h:uint, n:uint):void

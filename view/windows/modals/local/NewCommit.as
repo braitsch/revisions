@@ -9,11 +9,11 @@ package view.windows.modals.local {
 	import view.windows.base.ParentWindow;
 	import view.windows.modals.system.Message;
 
-	public class CommitSave extends ParentWindow {
+	public class NewCommit extends ParentWindow {
 
 		private static var _view:CommitMC = new CommitMC();
 
-		public function CommitSave()
+		public function NewCommit()
 		{
 			addChild(_view);
 			super.addCloseButton();	
