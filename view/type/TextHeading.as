@@ -13,9 +13,11 @@
 
 		public function TextHeading(txt:String = '')
 		{
+			_fmt.leading = 1;
 			this.x = 10; this.y = 70;
 			this.text = txt;
 			this.mouseChildren = this.mouseEnabled = false;
+			_txt.label_txt.y = -3; // correct for the leading adjusment //
 			_txt.label_txt.autoSize = TextFieldAutoSize.LEFT;
 			addChild(_txt);
 		}

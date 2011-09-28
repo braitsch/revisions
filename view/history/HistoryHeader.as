@@ -1,5 +1,6 @@
 package view.history {
 
+	import model.AppModel;
 	import view.type.WhiteHeading;
 	import view.ui.Scroller;
 	import flash.display.Shape;
@@ -17,14 +18,19 @@ package view.history {
 		{
 			_hrule.y = 32; _header.y = 12;
 			_hrule.filters = [new DropShadowFilter(1, 90, 0, .5, 4, 4, 1, 3)];
-			
-			addChild(_pattern); addChild(_scroller);
-			addChild(_hrule); addChild(_header);
+			addChild(_pattern); addChild(_scroller); addChild(_hrule); addChild(_header);
+		}
+		
+		public function clear():void
+		{
+			_header.text = '';
 		}
 
-		public function refresh(s:String):void
+		public function refresh():void
 		{
-			_header.text = s;
+			var m:String = 'History of '+AppModel.bookmark.label;
+			if (AppModel.branch.name != 'master') m+= ' :: Currently Working on Branch "'+ AppModel.branch.name+'"' ;
+			_header.text = m;
 		}
 		
 		public function resize(w:uint, h:uint):void

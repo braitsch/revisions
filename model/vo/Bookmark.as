@@ -144,6 +144,11 @@ package model.vo {
 			}
 		}
 		
+		public function addLocalBranch(b:Branch):void
+		{
+			_branches.unshift(b);
+		}
+		
 		public function addRemoteBranches(a:Array):void
 		{
 			for (var i:int = 0; i < _remotes.length; i++) {

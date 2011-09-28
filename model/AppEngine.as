@@ -110,6 +110,19 @@ package model {
 				if (_broken.length == 0) {
 					initializeBookmarks();
 				}	else{
+					addEventListener(AppEvent.BOOKMARK_REPAIRED, onBookmarkRepaired);
+					dispatchEvent(new BookmarkEvent(BookmarkEvent.PATH_ERROR, _broken[0]));
+				}
+			}
+		}
+
+		private function onBookmarkRepaired(e:AppEvent):void
+		{
+			if (_broken.length > 0) {
+				_broken.splice(0, 1);
+				if (_broken.length == 0) {
+					initializeBookmarks();
+				}	else {
 					dispatchEvent(new BookmarkEvent(BookmarkEvent.PATH_ERROR, _broken[0]));
 				}
 			}

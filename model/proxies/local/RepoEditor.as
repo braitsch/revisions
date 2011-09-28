@@ -18,7 +18,6 @@ package model.proxies.local {
 		public function RepoEditor()
 		{
 			super.executable = 'RepoEditor.sh';
-			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);					
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 		}
 		
@@ -55,9 +54,10 @@ package model.proxies.local {
 			super.call(Vector.<String>([BashMethods.UNTRACK_FILE, $file.nativePath]));
 		}
 		
-		public function addBranch():void
+		public function addBranch(name:String, cId:String = ''):void
 		{
-			
+			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
+			super.call(Vector.<String>([BashMethods.ADD_BRANCH, name, cId]));			
 		}
 		
 		public function changeBranch(b:Branch):void
@@ -92,6 +92,7 @@ package model.proxies.local {
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
+			trace("RepoEditor.onProcessComplete(e)", e.data.result);
 			switch(e.data.method) {
 			// auto update the history after reverting to an earlier version //	
 				case BashMethods.REVERT_TO_VERSION : 
@@ -109,13 +110,20 @@ package model.proxies.local {
 				case BashMethods.MERGE : 
 					onMergeComplete(e.data.result);
 				break;	
+				case BashMethods.ADD_BRANCH : 
+					dispatchEvent(new AppEvent(AppEvent.BRANCH_CREATED));
+				break;				
 				case BashMethods.RENAME_BRANCH : 
 					dispatchEvent(new AppEvent(AppEvent.BRANCH_RENAMED, AppModel.bookmark));
-				break;								
+				break;
 				case BashMethods.TRACK_FILE : 
 				break;
 				case BashMethods.UNTRACK_FILE : 
-				break;					
+				break;
+				default :
+					e.data.source = 'RepoEditor.onProcessFailure(e)';
+					AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Debug(e.data)));				
+				break;
 			}
 		}
 
@@ -140,14 +148,8 @@ package model.proxies.local {
 		private function reponseHas(s1:String, s2:String):Boolean
 		{
 			return s1.indexOf(s2) != -1;
-;		}		
+		}		
 		
-		private function onProcessFailure(e:NativeProcessEvent):void 
-		{
-			e.data.source = 'CheckoutProxy.onProcessFailure(e)';
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Debug(e.data)));
-		}
-
 	}
 	
 }

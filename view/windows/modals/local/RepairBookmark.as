@@ -83,29 +83,34 @@ package view.windows.modals.local {
 		private function onGitDirUpdated(e:AppEvent):void
 		{
 			updateDatabase();
-			_broken.path = _view.path_txt.text;
 			AppModel.proxies.creator.removeEventListener(AppEvent.GIT_DIR_UPDATED, onGitDirUpdated);			
 		}
 		
 		private function updateDatabase():void
 		{
-			AppModel.database.addEventListener(DataBaseEvent.RECORD_EDITED, onEditSuccessful);
+			AppModel.database.addEventListener(DataBaseEvent.RECORD_EDITED, onBookmarkRepaired);
 			AppModel.database.editRepository(_broken.label, _view.name_txt.text, _view.path_txt.text, _broken.autosave);				
 		}
-		
+
 		private function onDeleteBookmark(e:MouseEvent):void 
 		{
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Delete(_broken)));
-			AppModel.database.addEventListener(DataBaseEvent.RECORD_DELETED, onEditSuccessful);
-		}				
+			AppModel.database.addEventListener(DataBaseEvent.RECORD_DELETED, onBookmarkDeleted);
+		}
 		
-		private function onEditSuccessful(e:DataBaseEvent = null):void
+		private function onBookmarkRepaired(e:DataBaseEvent):void
 		{
 			_broken.path = _view.path_txt.text;
 			_broken.label = _view.name_txt.text;
-			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-			AppModel.database.removeEventListener(DataBaseEvent.RECORD_EDITED, onEditSuccessful);
-			AppModel.database.removeEventListener(DataBaseEvent.RECORD_DELETED, onEditSuccessful);
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));			
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.BOOKMARK_REPAIRED));
+			AppModel.database.removeEventListener(DataBaseEvent.RECORD_EDITED, onBookmarkRepaired);			
+		}		
+
+		private function onBookmarkDeleted(e:DataBaseEvent):void
+		{
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));			
+			AppModel.database.removeEventListener(DataBaseEvent.RECORD_DELETED, onBookmarkDeleted);
 		}
 
 	}

@@ -69,6 +69,9 @@ package model.proxies.local {
 		private function onModified(a:Array):void
 		{
 			for (var k:int = 0; k < a.length; k++) a[k] = a[k].result;
+			if (a[0] == null) trace("StatusProxy.onModified(a) - no ignored files");
+			if (a[1] == null) trace("StatusProxy.onModified(a) - no modified files");
+			if (a[2] == null) trace("StatusProxy.onModified(a) - no untracked files");
 			var i:Array = ignoreHiddenFiles(splitAndTrim(a[0]));
 			var m:Array = ignoreHiddenFiles(splitAndTrim(a[1]));
 			var u:Array = ignoreHiddenFiles(splitAndTrim(a[2]));
@@ -110,6 +113,7 @@ package model.proxies.local {
 
 		private function splitAndTrim(s:String):Array
 		{
+			if (s == null) return [];
 			var a:Array = s.split(/[\n\r\t]/g);
 			for (var i:int = 0; i < a.length; i++) if (a[i]=='') a.splice(i, 1);
 			return a;		
