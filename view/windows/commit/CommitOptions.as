@@ -1,12 +1,14 @@
 package view.windows.commit {
 
 	import events.UIEvent;
+	import model.AppModel;
+	import model.vo.Bookmark;
 	import model.vo.Commit;
 	import view.ui.DrawButton;
-	import flash.display.Sprite;
+	import view.windows.base.ChildWindow;
 	import flash.events.MouseEvent;
 
-	public class CommitOptions extends Sprite {
+	public class CommitOptions extends ChildWindow {
 
 		private static var _commit		:Commit;
 		private static var _branch		:DrawButton = new DrawButton(460, 40, 'Start a new branch from this version', 12);
@@ -22,8 +24,9 @@ package view.windows.commit {
 			_branch.addEventListener(MouseEvent.CLICK, onNewBranch);
 			_saveCopy.addEventListener(MouseEvent.CLICK, onSaveLocal);
 			addChild(_branch); addChild(_saveCopy);
+			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);
 		}
-		
+
 		public function set commit(o:Commit):void
 		{
 			_commit = o;
@@ -36,8 +39,16 @@ package view.windows.commit {
 		
 		private function onSaveLocal(e:MouseEvent):void
 		{
-			dispatchEvent(new UIEvent(UIEvent.SAVE_COPY_OF_VERSION, _commit));
-		}		
+			super.browseForDirectory('Choose a location to save this copy of "'+AppModel.bookmark.label+'"');
+		}	
+		
+		private function onBrowserSelection(e:UIEvent):void
+		{
+			var bkmk:Bookmark = AppModel.bookmark;
+			var saveAs:String = e.data.nativePath+'/'+bkmk.label+' Version '+_commit.index;
+			if (bkmk.type == Bookmark.FILE) saveAs += bkmk.path.substr(bkmk.path.lastIndexOf('.'));
+			AppModel.proxies.editor.copyVersion(_commit.sha1, saveAs);
+		}				
 		
 	}
 	

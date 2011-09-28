@@ -22,7 +22,6 @@ package view.windows.modals.local {
 		private static var _labels		:Vector.<String> = new <String>[
 												'Automatically check for updates',
 												'Show tooltips',
-												'Prompt before downloading a previous version',
 												'Start Revisions on system startup'	];
 
 		public function GlobalSettings()
@@ -46,7 +45,7 @@ package view.windows.modals.local {
 
 		private function attachOptions():void
 		{
-			for (var i:int = 0; i < 4; i++) {
+			for (var i:int = 0; i < 3; i++) {
 				var k:ModalCheckbox = new ModalCheckbox(true);
 				k.label = _labels[i];
 				k.addEventListener(MouseEvent.CLICK, onCheckboxSelection);
@@ -63,8 +62,7 @@ package view.windows.modals.local {
 			_form.setField(2, LicenseManager.key);
 			_checks[0].selected = AppSettings.getSetting(AppSettings.CHECK_FOR_UPDATES);
 			_checks[1].selected = AppSettings.getSetting(AppSettings.SHOW_TOOL_TIPS);
-			_checks[2].selected = AppSettings.getSetting(AppSettings.PROMPT_BEFORE_DOWNLOAD);
-			_checks[3].selected = AppSettings.getSetting(AppSettings.START_AT_LOGIN);
+			_checks[2].selected = AppSettings.getSetting(AppSettings.START_AT_LOGIN);
 			AppModel.proxies.config.addEventListener(AppEvent.GIT_SETTINGS, onGitSettings);
 			super.onAddedToStage(e);
 		}
@@ -85,10 +83,7 @@ package view.windows.modals.local {
 					AppSettings.setSetting(AppSettings.SHOW_TOOL_TIPS , _checks[1].selected);
 				break;
 				case _checks[2] :
-					AppSettings.setSetting(AppSettings.PROMPT_BEFORE_DOWNLOAD, _checks[2].selected);
-				break;
-				case _checks[3] :
-					AppSettings.setSetting(AppSettings.START_AT_LOGIN, _checks[3].selected);	
+					AppSettings.setSetting(AppSettings.START_AT_LOGIN, _checks[2].selected);	
 				break;												
 			}
 		}		
