@@ -2,40 +2,69 @@ package view.windows.modals.local {
 
 	import events.AppEvent;
 	import events.UIEvent;
-	import flash.events.Event;
-	import flash.events.KeyboardEvent;
-	import flash.events.MouseEvent;
-	import flash.filesystem.File;
 	import model.AppModel;
 	import model.remote.Hosts;
 	import system.FileUtils;
+	import view.type.TextHeading;
 	import view.ui.DrawButton;
+	import view.ui.Form;
 	import view.windows.base.ParentWindow;
 	import view.windows.modals.system.Message;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.filesystem.File;
 
 	public class NewBookmark extends ParentWindow {
 
-		private static var _view		:NewBookmarkMC = new NewBookmarkMC();
 		private static var _cloneURL	:String;
 		private static var _savePath	:String;
-		private static var _allowClone	:Boolean;
+		private static var _customURL	:Form = new Form(580);
+		
+		private static var _tf1			:TextHeading = new TextHeading();
+		private static var _tf2			:TextHeading = new TextHeading();
+		private static var _tf3			:TextHeading = new TextHeading();
 		
 		private static var _file		:DrawButton = new DrawButton(250, 36, 'Track A File', 12);
 		private static var _folder		:DrawButton = new DrawButton(250, 36, 'Track A Folder', 12);
 		private static var _github		:DrawButton = new DrawButton(250, 36, 'Hello', 12);
 		private static var _beanstalk	:DrawButton = new DrawButton(250, 36, 'Hello', 12);				
+		private static var _customBtn	:DrawButton = new DrawButton(120, 30, 'Download', 11);
 
 		public function NewBookmark()
 		{
-			addChild(_view);
 			setupButtons();
+			addTextHeadings();
 			super.addCloseButton();
 			super.drawBackground(600, 330);
 			super.title = 'New Bookmark';
-			super.addButtons([_view.custom.clone_btn]);
+			addCustomURLField();
 			addEventListener(MouseEvent.CLICK, onButtonClick);
 			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);
-			_view.custom.url_txt.getChildAt(1).addEventListener(KeyboardEvent.KEY_UP, onKeyUp);	
+		}
+
+		private function addTextHeadings():void
+		{
+			_tf1.text = 'Start working with files on this computer :';
+			_tf2.text = 'Download a repository from an online account :';
+			_tf3.text = 'Or enter a repository URL to download from :';
+			_tf1.y = 70; _tf2.y = 150; _tf3.y = 230;
+			addChild(_tf1); addChild(_tf2); addChild(_tf3);
+		}
+
+		private function addCustomURLField():void
+		{
+			_customURL.y = 255;
+			_customURL.labelWidth = 45;
+			_customURL.fields = [{label:'URL'}];
+			_customURL.getInput(0).width = 500;
+			_customURL.getInput(0).addEventListener(MouseEvent.CLICK, onTextFieldClick);
+			_customBtn.y = _customURL.y + 4; _customBtn.x = 464; 
+			_customBtn.addEventListener(MouseEvent.CLICK, onCustomCloneClick);
+			addChild(_customURL); addChild(_customBtn);
+		}
+		private function onTextFieldClick(e:MouseEvent):void 
+		{
+			if (_customURL.getField(0) == 'git@github.com:user-name/repository-name.git') _customURL.setField(0, '');	
 		}
 
 		private function setupButtons():void
@@ -44,10 +73,12 @@ package view.windows.modals.local {
 			_folder.addIcon(new FolderIcon());
 			_github.addIcon(new GitHub26());
 			_beanstalk.addIcon(new Beanstalk26());
-			_file.y = _folder.y = 90;
-			_github.y = _beanstalk.y = 170;
+			
+			_file.y = _folder.y = 95;
+			_github.y = _beanstalk.y = 175;
 			_file.x = _github.x = 35;
 			_folder.x = _beanstalk.x = 315;
+			
 			addChild(_file); addChild(_folder);
 			addChild(_github); addChild(_beanstalk);
 		}
@@ -80,46 +111,17 @@ package view.windows.modals.local {
 		
 		override protected function onAddedToStage(e:Event):void
 		{
-			super.onAddedToStage(e);
 			_cloneURL = null;
-			enableCloneButton(false);
+			_customURL.setField(0, 'git@github.com:user-name/repository-name.git');
 			_github.label = Hosts.github.loggedIn ? 'View My GitHub' : 'Login To GitHub';
 			_beanstalk.label = Hosts.beanstalk.loggedIn ? 'View My Beanstalk' : 'Login To Beanstalk';
+			super.onAddedToStage(e);
 		}
 
-		private function onKeyUp(e:KeyboardEvent):void
-		{
-			if (!_allowClone) enableCloneButton(true);
-			if (this.stage && e.keyCode == 13 && e.keyCode != 15 && _allowClone) onCloneClick();				
-		}
-		
-		private function onURLTextFieldClick(e:MouseEvent):void
-		{
-			if (!_allowClone) enableCloneButton(true);
-		}
-		
-		private function enableCloneButton(b:Boolean):void
-		{
-			if (b){
-				_allowClone = true;
-				super.enableButton(_view.custom.clone_btn, true);
-				_view.custom.url_txt.removeEventListener(MouseEvent.CLICK, onURLTextFieldClick);
-				_view.custom.clone_btn.addEventListener(MouseEvent.CLICK, onCloneClick);
-			}	else{
-				_allowClone = false;
-				super.enableButton(_view.custom.clone_btn, false);
-				_view.custom.url_txt.text = 'git@github.com:user-name/repository-name.git';
-				_view.custom.url_txt.setSelection(0, _view.custom.url_txt.length);
-				_view.custom.url_txt.textFlow.interactionManager.setFocus();			
-				_view.custom.url_txt.addEventListener(MouseEvent.CLICK, onURLTextFieldClick);
-				_view.custom.clone_btn.removeEventListener(MouseEvent.CLICK, onCloneClick);				
-			}
-		}
-		
-		private function onCloneClick(e:MouseEvent = null):void
+		private function onCustomCloneClick(e:MouseEvent):void
 		{
 			if (!validate()) return;
-			_cloneURL = _view.custom.url_txt.text;
+			_cloneURL = _customURL.getField(0);
 			super.browseForDirectory('Select a location to clone to');
 		}		
 		
@@ -151,7 +153,7 @@ package view.windows.modals.local {
 		
 		private function validate():Boolean
 		{
-			var url:String = _view.custom.url_txt.text;
+			var url:String = _customURL.getField(0);
 			if (!hasString(url, 'git@') && !hasString(url, 'git://') && !hasString(url, 'https://')){
 				dispatchFailure("Invalid URL : URL's should start with 'git@', 'git://', or 'https://'");
 				return false;
