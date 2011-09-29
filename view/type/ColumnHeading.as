@@ -2,11 +2,11 @@ package view.type {
 
 	import flash.filters.GlowFilter;
 
-	public class WhiteHeading extends TextHeading {
+	public class ColumnHeading extends TextHeading {
 
 		private static var _dkGlow	:GlowFilter = new GlowFilter(0x000000, .3, 2, 2, 3, 3);		
 
-		public function WhiteHeading()
+		public function ColumnHeading()
 		{
 			super.size = 12;
 			super.color = 0xCCCCCC;

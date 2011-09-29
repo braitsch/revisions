@@ -2,7 +2,6 @@ package view.windows.base {
 
 	import events.UIEvent;
 	import view.btns.FormButton;
-	import com.greensock.TweenLite;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
@@ -58,30 +57,20 @@ package view.windows.base {
 		protected function browseForFile($msg:String):void
 		{
 			_file.browseForOpen($msg);	
-			_file.addEventListener(Event.SELECT, onSelect);			
+			_file.addEventListener(Event.SELECT, onBrowseSelection);			
 		}
 
 		protected function browseForDirectory($msg:String):void 
 		{
 			_file.browseForDirectory($msg);	
-			_file.addEventListener(Event.SELECT, onSelect);			
+			_file.addEventListener(Event.SELECT, onBrowseSelection);			
 		}
 
-		protected function onSelect(e:Event):void 
+		private function onBrowseSelection(e:Event):void 
 		{
 			dispatchEvent(new UIEvent(UIEvent.FILE_BROWSER_SELECTION, e.target as File));
 		}
 		
-		protected function onButtonRollOut(e:MouseEvent):void
-		{
-			TweenLite.to(e.target.over, .3, {alpha:0});
-		}
-
-		protected function onButtonRollOver(e:MouseEvent):void
-		{
-			TweenLite.to(e.target.over, .5, {alpha:1});
-		}
-
 		protected function get okButton():FormButton { return _okButton; }
 		protected function get noButton():FormButton { return _noButton; }
 

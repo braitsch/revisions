@@ -1,7 +1,7 @@
 package view.history {
 
 	import model.AppModel;
-	import view.type.WhiteHeading;
+	import view.type.ColumnHeading;
 	import view.ui.Scroller;
 	import flash.display.Shape;
 	import flash.display.Sprite;
@@ -9,28 +9,35 @@ package view.history {
 
 	public class HistoryHeader extends Sprite {
 
+		private static var _hrule		:Shape = new Shape();
 		private static var _pattern		:Shape = new Shape();
+		private static var _switcher	:BranchSwitcher = new BranchSwitcher();
 		private static var _scroller	:Scroller = new Scroller();
-		private static var _hrule		:Sprite = new Sprite();
-		private static var _header		:WhiteHeading = new WhiteHeading();
+		private static var _heading		:ColumnHeading = new ColumnHeading();
 
 		public function HistoryHeader()
 		{
-			_hrule.y = 32; _header.y = 12;
+			_hrule.y = 32; _heading.y = 12;
 			_hrule.filters = [new DropShadowFilter(1, 90, 0, .5, 4, 4, 1, 3)];
-			addChild(_pattern); addChild(_scroller); addChild(_hrule); addChild(_header);
+			
+			addChild(_pattern); 
+			addChild(_scroller); 
+			addChild(_hrule); 
+			addChild(_heading);
+			addChild(_switcher);
 		}
 		
 		public function clear():void
 		{
-			_header.text = '';
+			_heading.text = '';
+			_switcher.visible = false;
 		}
 
 		public function refresh():void
 		{
-			var m:String = 'History of '+AppModel.bookmark.label;
-			if (AppModel.branch.name != 'master') m+= ' :: On Branch "'+ AppModel.branch.name+'"' ;
-			_header.text = m;
+			_heading.text =	'History of '+AppModel.bookmark.label;
+			_switcher.redraw();
+			_switcher.x = _heading.width + 20;
 		}
 		
 		public function resize(w:uint, h:uint):void

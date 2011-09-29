@@ -4,7 +4,7 @@ package view.bookmarks {
 	import model.AppModel;
 	import model.vo.Bookmark;
 	import system.AirContextMenu;
-	import view.type.WhiteHeading;
+	import view.type.ColumnHeading;
 	import view.ui.Scroller;
 	import flash.display.Shape;
 	import flash.display.Sprite;
@@ -42,7 +42,7 @@ package view.bookmarks {
 //			var text:Bitmap = new Bitmap(new labelBookmarks());
 //				text.y = 13;
 //				text.x = 65;
-			var text:WhiteHeading = new WhiteHeading();
+			var text:ColumnHeading = new ColumnHeading();
 				text.text = 'Bookmarks';
 				text.y = 13;
 				text.x = 60;

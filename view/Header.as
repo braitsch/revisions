@@ -3,6 +3,7 @@ package view {
 	import events.UIEvent;
 	import com.greensock.TweenLite;
 	import flash.display.Bitmap;
+	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.net.URLRequest;
@@ -10,10 +11,10 @@ package view {
 	
 	public class Header extends Sprite {
 		
+		private static var _slices	:Shape = new Shape();
 		private static var _appLogo :Bitmap = new Bitmap(new AppLogo());
 		private static var _buttons	:GlobalButtons = new GlobalButtons();
 		private static var _right	:Bitmap = new Bitmap(new HeaderRight());
-		private static var _slices	:Sprite = new Sprite();
 		
 		public function Header()
 		{
@@ -23,6 +24,7 @@ package view {
 			addChild(_appLogo);
 			addChild(_buttons);
 			initButtons();
+			this.mouseEnabled = false;
 		}
 
 		public function resize(w:uint):void

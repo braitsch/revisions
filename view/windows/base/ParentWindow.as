@@ -1,6 +1,7 @@
 package view.windows.base {
 
 	import events.UIEvent;
+	import com.greensock.TweenLite;
 	import flash.display.Shape;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -8,10 +9,12 @@ package view.windows.base {
 
 	public class ParentWindow extends ChildWindow {
 
-		private var _bkgd			:Shape = new Shape();
-		private var _heightOffset	:uint = 50;
-		private var _closeButton	:ModalCloseButton;
-		private static var _glow	:GlowFilter = new GlowFilter(0x000000, .5, 20, 20, 2, 2);		
+		private var _bkgd					:Shape = new Shape();
+		private var _badge					:PageBadge;
+		private var _closeButton			:ModalCloseButton;
+		
+		private static var _glow			:GlowFilter = new GlowFilter(0x000000, .5, 20, 20, 2, 2);		
+		private static var _heightOffset	:uint = 50;
 
 		public function ParentWindow()
 		{
@@ -26,10 +29,12 @@ package view.windows.base {
 		
 		protected function set title(s:String):void
 		{
-			var pb:PageBadge = new PageBadge();
-				pb.label_txt.text = s;
-				pb.x = 10;
-			addChild(pb);
+			if (_badge == null){
+				_badge = new PageBadge();
+				_badge.x = 10;
+				addChild(_badge);
+			}
+			_badge.label_txt.text = s;
 		}		
 		
 		override protected function onAddedToStage(e:Event):void 
@@ -41,8 +46,8 @@ package view.windows.base {
 		protected function addCloseButton():void
 		{
 			_closeButton = new ModalCloseButton();
-			_closeButton.over.alpha = 0;
 			_closeButton.y = 6;
+			_closeButton.over.alpha = 0;
 			_closeButton.buttonMode = true;
 			_closeButton.addEventListener(MouseEvent.CLICK, onCloseClick);
 			_closeButton.addEventListener(MouseEvent.ROLL_OUT, onButtonRollOut);
@@ -67,6 +72,16 @@ package view.windows.base {
 		{
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 		}
+		
+		private function onButtonRollOut(e:MouseEvent):void
+		{
+			TweenLite.to(e.target.over, .3, {alpha:0});
+		}
+
+		private function onButtonRollOver(e:MouseEvent):void
+		{
+			TweenLite.to(e.target.over, .5, {alpha:1});
+		}		
 		
 	}
 	
