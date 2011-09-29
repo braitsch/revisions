@@ -1,11 +1,12 @@
 package view.history {
 
-	import model.AppModel;
-	import view.type.ColumnHeading;
-	import view.ui.Scroller;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.filters.DropShadowFilter;
+	import model.AppModel;
+	import view.history.switcher.BranchSwitcher;
+	import view.type.ColumnHeading;
+	import view.ui.Scroller;
 
 	public class HistoryHeader extends Sprite {
 

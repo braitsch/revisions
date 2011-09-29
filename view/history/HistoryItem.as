@@ -1,10 +1,10 @@
 package view.history {
 
-	import view.Box;
+	import flash.display.Sprite;
 	import view.avatars.Avatar;
 	import view.avatars.Avatars;
+	import view.graphics.Box;
 	import view.type.TextDouble;
-	import flash.display.Sprite;
 
 	public class HistoryItem extends Sprite {
 

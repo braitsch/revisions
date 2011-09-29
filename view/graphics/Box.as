@@ -1,4 +1,4 @@
-package view {
+package view.graphics {
 
 	import flash.display.BitmapData;
 	import flash.display.CapsStyle;

@@ -1,8 +1,8 @@
 package view.history {
 
 	import events.UIEvent;
-	import view.Box;
 	import flash.events.MouseEvent;
+	import view.graphics.Box;
 
 	public class HistoryItemUnsaved extends HistoryItem {
 

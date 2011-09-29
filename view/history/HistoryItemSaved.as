@@ -2,9 +2,9 @@ package view.history {
 
 	import com.greensock.TweenLite;
 	import events.UIEvent;
-	import model.vo.Commit;
-	import view.Box;
 	import flash.events.MouseEvent;
+	import model.vo.Commit;
+	import view.graphics.Box;
 
 	public class HistoryItemSaved extends HistoryItem {
 
