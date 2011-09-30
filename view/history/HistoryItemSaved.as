@@ -1,16 +1,19 @@
 package view.history {
 
-	import com.greensock.TweenLite;
 	import events.UIEvent;
-	import flash.events.MouseEvent;
 	import model.vo.Commit;
 	import view.graphics.Box;
+	import view.graphics.GradientBox;
+	import view.graphics.PatternBox;
+	import view.graphics.SolidBox;
+	import com.greensock.TweenLite;
+	import flash.events.MouseEvent;
 
 	public class HistoryItemSaved extends HistoryItem {
 
-		private var _bkgd			:Box;
-		private var _over			:Box;
-		private var _ptrn			:Box;
+		private var _bkgd			:GradientBox = new GradientBox(true);
+		private var _over			:SolidBox = new SolidBox(Box.WHITE, true);
+		private var _ptrn			:PatternBox = new PatternBox(new Diagonals());
 		private var _commit			:Commit;
 
 		public function HistoryItemSaved()
@@ -30,18 +33,15 @@ package view.history {
 
 		private function drawBkgd():void
 		{
-			_bkgd = new Box(500, 41, Box.WHITE, Box.DK_GREY);
+			_bkgd.draw(500, 41);
 			_bkgd.scalable = true;
-			_bkgd.stroke = Box.LT_GREY;
 			_bkgd.scaleOffset = 210;
-			_ptrn = new Box(500, 41, Box.WHITE);
+			_ptrn.draw(500, 41);
 			_ptrn.scalable = true;
 			_ptrn.scaleOffset = 210;
-			_ptrn.pattern = new Diagonals();
 			_ptrn.alpha = .1;
-			_over = new Box(500, 41, Box.WHITE);
+			_over.draw(500, 41);
 			_over.scalable = true;
-			_over.stroke = Box.LT_GREY;
 			_over.scaleOffset = 210;
 			_over.alpha = 0;			
 			addChild(_bkgd);

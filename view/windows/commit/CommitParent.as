@@ -1,16 +1,16 @@
 package view.windows.commit {
 
-	import com.greensock.TweenLite;
 	import events.UIEvent;
-	import flash.display.Shape;
-	import flash.display.Sprite;
-	import flash.events.Event;
 	import model.vo.Commit;
 	import view.avatars.Avatar;
 	import view.avatars.Avatars;
 	import view.graphics.Box;
 	import view.type.TextDouble;
 	import view.windows.base.ParentWindow;
+	import com.greensock.TweenLite;
+	import flash.display.Shape;
+	import flash.display.Sprite;
+	import flash.events.Event;
 	
 	public class CommitParent extends ParentWindow {
 

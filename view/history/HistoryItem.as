@@ -1,10 +1,11 @@
 package view.history {
 
-	import flash.display.Sprite;
 	import view.avatars.Avatar;
 	import view.avatars.Avatars;
 	import view.graphics.Box;
+	import view.graphics.SolidBox;
 	import view.type.TextDouble;
+	import flash.display.Sprite;
 
 	public class HistoryItem extends Sprite {
 
@@ -28,7 +29,8 @@ package view.history {
 		protected function attachAvatar(k:String):void
 		{
 			var a:Avatar = Avatars.getAvatar(k);
-			var b:Box = new Box(34, 34, Box.LT_GREY);
+			var b:SolidBox = new SolidBox(Box.LT_GREY);
+				b.draw(34, 34);
 			var s:Sprite = new Sprite();
 			a.x = 2; a.y = 2;
 			s.x = 14; s.y = 4;

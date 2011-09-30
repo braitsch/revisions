@@ -3,11 +3,8 @@ package view.graphics {
 	import flash.display.CapsStyle;
 	import flash.display.JointStyle;
 	import flash.display.LineScaleMode;
-	import flash.display.Shape;
 
-	public class SolidBox extends Shape {
-
-		private static var _stroke		:uint = 0xcfcfcf;
+	public class SolidBox extends Box {
 
 		private var _color			:uint;
 		private var _drawStroke		:Boolean;
@@ -18,11 +15,12 @@ package view.graphics {
 			_drawStroke = s;
 		}
 		
-		public function draw(w:uint, h:uint):void
+		override public function draw(w:uint, h:uint):void
 		{
+			super.draw(w, h);
 			graphics.clear();
 			graphics.beginFill(_color);
-			if (_drawStroke) graphics.lineStyle(1, _stroke, 1, true, LineScaleMode.NORMAL, CapsStyle.NONE, JointStyle.MITER);
+			if (_drawStroke) graphics.lineStyle(1, Box.STROKE, 1, true, LineScaleMode.NORMAL, CapsStyle.NONE, JointStyle.MITER);
 			graphics.drawRect(0, 0, w, h);
 			graphics.endFill();
 		}

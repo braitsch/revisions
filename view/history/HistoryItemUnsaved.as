@@ -1,12 +1,13 @@
 package view.history {
 
 	import events.UIEvent;
-	import flash.events.MouseEvent;
 	import view.graphics.Box;
+	import view.graphics.SolidBox;
+	import flash.events.MouseEvent;
 
 	public class HistoryItemUnsaved extends HistoryItem {
 
-		private var _bkgd			:Box;
+		private var _bkgd			:SolidBox = new SolidBox(Box.WHITE);
 
 		public function HistoryItemUnsaved()
 		{
@@ -18,9 +19,9 @@ package view.history {
 
 		private function drawBkgd():void
 		{
-			_bkgd = new Box(500, 41, Box.WHITE);
 			_bkgd.scalable = true;
 			_bkgd.scaleOffset = 210;
+			_bkgd.draw(500, 41);
 			addChild(_bkgd);
 		}
 		
