@@ -26,6 +26,7 @@ package view.windows.modals {
 	import view.windows.modals.local.WelcomeScreen;
 	import view.windows.modals.login.PermissionsFailure;
 	import view.windows.modals.system.Alert;
+	import view.windows.modals.system.Delete;
 	import view.windows.modals.system.Message;
 	import view.windows.upload.UploadWizard;
 	import flash.desktop.DockIcon;
@@ -253,9 +254,16 @@ package view.windows.modals {
 		
 		private function checkIsStickyWindow():void
 		{
-			if (_alert) return;
-			for (var i:int = 0; i < _stickies.length; i++) if (_window == _stickies[i]) return;
-			hideModalWindow();
+			if (_alert){
+				if (_alert is Delete){	
+					onHideAlert();
+				}	else {
+					return;
+				}
+			}	else{
+				for (var i:int = 0; i < _stickies.length; i++) if (_window == _stickies[i]) return;
+				hideModalWindow();
+			}
 		}
 		
 		private function showModalWindow(mw:ParentWindow):void
@@ -286,7 +294,7 @@ package view.windows.modals {
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 		}			
 		
-		private function onHideAlert(e:AppEvent):void
+		private function onHideAlert(e:AppEvent = null):void
 		{
 			removeChild(_alert);
 			if (_window) {
