@@ -5,7 +5,6 @@ package view.summary {
 	import events.UIEvent;
 	import model.AppModel;
 	import model.vo.Bookmark;
-	import system.StringUtils;
 	import view.btns.DrawButton;
 	import view.type.Fonts;
 	import flash.display.Bitmap;
@@ -56,7 +55,7 @@ package view.summary {
 
 		private function addSaveButton():void
 		{
-			_saveBtn.y = 115;
+			_saveBtn.y = 100;
 			_saveBtn.x = -_saveBtn.width / 2;
  			_details.addChild(_saveBtn);
 			_saveBtn.addEventListener(MouseEvent.CLICK, onSaveButton);
@@ -79,15 +78,12 @@ package view.summary {
 			_view.name_txt.wordWrap = true;
 			_view.name_txt.multiline = true;
 			_view.name_txt.filters = [_glowLarge];
-			_details.branch_txt.filters = [_glowSmall];
 			_details.version_txt.filters = [_glowSmall];
 			_details.lastSaved_txt.filters = [_glowSmall]; 
 			_view.name_txt.defaultTextFormat = _tformat;
-			_details.branch_txt.defaultTextFormat = Fonts.helveticaBold;
 			_details.version_txt.defaultTextFormat = Fonts.helveticaBold;
 			_details.lastSaved_txt.defaultTextFormat = Fonts.helveticaBold;
 			_view.name_txt.autoSize = TextFieldAutoSize.CENTER;
-			_details.branch_txt.autoSize = TextFieldAutoSize.CENTER;
 			_details.version_txt.autoSize = TextFieldAutoSize.CENTER;
 			_details.lastSaved_txt.autoSize = TextFieldAutoSize.CENTER;
 		}
@@ -145,7 +141,6 @@ package view.summary {
 			_saveBtn.enabled = _bookmark.branch.isModified;
 			_details.version_txt.text = 'Version #'+_bookmark.branch.totalCommits as String;
 			_details.lastSaved_txt.text = 'Last Saved : '+_bookmark.branch.lastCommit.date;
-			_details.branch_txt.text = 'On Branch : '+StringUtils.capitalize(_bookmark.branch.name);			
 		}
 		
 		private function onModifiedReceived(e:AppEvent):void
