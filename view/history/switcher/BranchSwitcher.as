@@ -1,5 +1,6 @@
 package view.history.switcher {
 
+	import events.AppEvent;
 	import model.AppModel;
 	import model.vo.Branch;
 	import com.firestarter.ScaleObject;
@@ -11,44 +12,54 @@ package view.history.switcher {
 
 	public class BranchSwitcher extends Sprite {
 
-		private static var _manage			:SwitcherManage = new SwitcherManage();
 		private static var _heading			:SwitcherHeading = new SwitcherHeading();
 		private static var _dsPlate			:ScaleObject = new ScaleObject(new DropShadowPlate(), new Rectangle(19, 7, 200, 106));
 		private static var _mask			:Shape = new Shape();
-		private static var _branches		:Sprite = new Sprite();	
+		private static var _branches		:Sprite = new Sprite();
+		private static var _width			:uint;
 
 		public function BranchSwitcher()
 		{
 			addChildren();
 			this.visible = false;
-			this.buttonMode = true;
 			this.addEventListener(MouseEvent.ROLL_OUT, hideBranches);
 			_heading.addEventListener(MouseEvent.ROLL_OVER, showBranches);
+			AppModel.proxies.editor.addEventListener(AppEvent.BRANCH_DELETED, onBranchDeleted);
+		}
+		
+		override public function get width():Number
+		{
+			return _width;
+		}
+		
+		private function onBranchDeleted(e:AppEvent):void
+		{
+			draw();
 		}
 
 		public function draw():void
 		{
-			_heading.draw();
-			drawBranches();
+			_heading.setText();
 			this.visible = true;
-		}
-		
-		private function drawBranches():void
-		{
 			while(_branches.numChildren) _branches.removeChildAt(0);
+			_width = _heading.width;
 			var b:Vector.<Branch> = AppModel.bookmark.branches;
-			var w:uint = _manage.width > _heading.width - 1 ? _manage.width : _heading.width - 1;
 			for (var i:int = 0; i < b.length; i++) {
 				if (b[i] == AppModel.branch) continue;
 				var k:SwitcherOption = new SwitcherOption(b[i]);
 					k.y = _branches.numChildren * (SwitcherItem.ITEM_HEIGHT + 2);
-				if (k.width > w) w = k.width;
+				if (k.width > _width) _width = k.width;
 				_branches.addChild(k);
 			}
-			_manage.y = _branches.numChildren * (SwitcherItem.ITEM_HEIGHT + 2);
-			_branches.addChild(_manage);
-			for (i = 0; i < _branches.numChildren; i++) SwitcherItem(_branches.getChildAt(i)).draw(w);
-			drawBranchesBkgd();
+			_width += 35; // padding //
+			_heading.draw(_width);
+			if (_branches.numChildren == 0){
+				this.buttonMode = false;
+			}	else{
+				this.buttonMode = true;
+				for (i = 0; i < _branches.numChildren; i++) SwitcherItem(_branches.getChildAt(i)).draw(_width - 1);
+				drawBranchesBkgd();			
+			}
 		}
 		
 		private function drawBranchesBkgd():void

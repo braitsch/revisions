@@ -13,6 +13,7 @@ package model.proxies.local {
 
 	public class RepoEditor extends NativeProcessProxy {
 
+		private static var _branch		:Branch;
 		private static var _bookmark	:Bookmark;
 
 		public function RepoEditor()
@@ -73,9 +74,11 @@ package model.proxies.local {
 			super.call(Vector.<String>([BashMethods.RENAME_BRANCH, o, n]));			
 		}		
 		
-		public function killBranch():void
+		public function killBranch(b:Branch):void
 		{
-			
+			_branch = b;
+			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
+			super.call(Vector.<String>([BashMethods.DEL_BRANCH, _branch.name]));
 		}
 		
 		public function revert(sha1:String):void
@@ -112,7 +115,10 @@ package model.proxies.local {
 				break;	
 				case BashMethods.ADD_BRANCH : 
 					dispatchEvent(new AppEvent(AppEvent.BRANCH_CREATED));
-				break;				
+				break;	
+				case BashMethods.DEL_BRANCH : 
+					onBranchDeleted();
+				break;								
 				case BashMethods.RENAME_BRANCH : 
 					dispatchEvent(new AppEvent(AppEvent.BRANCH_RENAMED, AppModel.bookmark));
 				break;
@@ -125,6 +131,12 @@ package model.proxies.local {
 					AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Debug(e.data)));				
 				break;
 			}
+		}
+
+		private function onBranchDeleted():void
+		{
+			AppModel.bookmark.killLocalBranch(_branch);
+			dispatchEvent(new AppEvent(AppEvent.BRANCH_DELETED));
 		}
 
 		private function onBranchSet():void

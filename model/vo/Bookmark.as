@@ -149,6 +149,13 @@ package model.vo {
 			_branches.unshift(b);
 		}
 		
+		public function killLocalBranch(b:Branch):void
+		{
+			for (var i:int = 0; i < _branches.length; i++) {
+				if (_branches[i] == b) _branches.splice(i, 1);	
+			}
+		}		
+		
 		public function addRemoteBranches(a:Array):void
 		{
 			for (var i:int = 0; i < _remotes.length; i++) {

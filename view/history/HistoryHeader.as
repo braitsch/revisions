@@ -1,5 +1,6 @@
 package view.history {
 
+	import view.history.merger.BranchMerger;
 	import view.history.switcher.BranchSwitcher;
 	import view.ui.Scroller;
 	import flash.display.Shape;
@@ -12,6 +13,7 @@ package view.history {
 		private static var _pattern		:Shape = new Shape();
 		private static var _title		:HistoryTitle = new HistoryTitle();
 		private static var _switcher	:BranchSwitcher = new BranchSwitcher();
+		private static var _merger		:BranchMerger = new BranchMerger();
 		private static var _scroller	:Scroller = new Scroller();
 
 		public function HistoryHeader()
@@ -23,17 +25,19 @@ package view.history {
 			addChild(_hrule); 
 			addChild(_title);
 			addChild(_switcher);
+			addChild(_merger);
 		}
 		
 		public function clear():void
 		{
-			_title.visible = _switcher.visible = false;
+			_title.visible = _switcher.visible = _merger.visible = false;
 		}
 
 		public function refresh():void
 		{
-			_title.draw(); _switcher.draw();
+			_title.draw(); _switcher.draw(); _merger.draw();
 			_switcher.x = _title.x + _title.width + 1;
+			_merger.x = _switcher.x + _switcher.width + 1;
 		}
 		
 		public function resize(w:uint, h:uint):void
