@@ -54,12 +54,29 @@ package view.history.switcher {
 			_width += 35; // padding //
 			_heading.draw(_width);
 			if (_branches.numChildren == 0){
+				allowAlert(true);
 				this.buttonMode = false;
 			}	else{
+				allowAlert(false);
 				this.buttonMode = true;
 				for (i = 0; i < _branches.numChildren; i++) SwitcherItem(_branches.getChildAt(i)).draw(_width - 1);
 				drawBranchesBkgd();			
 			}
+		}
+		
+	// temporary //	
+		private function allowAlert(b:Boolean):void
+		{
+			if (b){
+				addEventListener(MouseEvent.CLICK, onClick);
+			}	else{
+				removeEventListener(MouseEvent.CLICK, onClick);
+			}
+		}
+
+		private function onClick(e:MouseEvent):void
+		{
+			AppModel.alert('Select a saved item to create a new branch.');
 		}
 		
 		private function drawBranchesBkgd():void
