@@ -3,6 +3,7 @@ package view.bookmarks {
 	import events.BookmarkEvent;
 	import model.AppModel;
 	import model.vo.Bookmark;
+	import view.btns.ButtonIcon;
 	import com.greensock.TweenLite;
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
@@ -11,7 +12,7 @@ package view.bookmarks {
 	public class BookmarkListItem extends Sprite {
 
 		private var _view			:BookmarkItem = new BookmarkItem();
-		private var _icon			:Bitmap;
+		private var _icon			:ButtonIcon;
 		private var _bookmark		:Bookmark;
 		
 		public function BookmarkListItem($bkmk:Bookmark)
@@ -19,19 +20,30 @@ package view.bookmarks {
 			_bookmark = $bkmk;
 			_bookmark.addEventListener(BookmarkEvent.EDITED, onBookmarkEdited);
 			_view.blue.alpha = 0;
-			_view.label_txt.autoSize = 'left';
+			_view.label_txt.y = 11;
 			_view.label_txt.selectable = false;
 			_view.label_txt.text = _bookmark.label;
-			_icon = _bookmark.icon32;
-			_icon.y = 4;
-			_icon.x = 5;
-			_icon.width = _icon.height = 24;
-			_icon.smoothing = true;
 			addChild(_view);
-			addChild(_icon);
+			attachIcon();
 			this.buttonMode = true;
 			this.mouseChildren = false;
 			this.addEventListener(MouseEvent.CLICK, onBookmarkSelected);			
+		}
+
+		private function attachIcon():void
+		{
+			if (_bookmark.type == Bookmark.FILE){
+				var b:Bitmap = _bookmark.icon32;
+					b.smoothing = true;
+					b.width = b.height = 24;
+				_icon = new ButtonIcon(b, false, false);
+				_icon.y = 6; _icon.x = 5;
+			}	else{
+				_icon = new ButtonIcon(new FolderIcon(), true, false); 
+				_icon.y = 17; _icon.x = 17;
+				_icon.scaleX = _icon.scaleY = .7;
+			}
+			addChild(_icon);
 		}
 		
 		public function get bookmark():Bookmark
