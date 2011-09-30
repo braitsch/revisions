@@ -18,15 +18,19 @@ package view.history.switcher {
 			_bkgd = bkgd; 
 			_icon = icon;
 			_text = text;
-			_icon.x = 7;
+			_icon.x = 10;
 			_icon.y = 5;
 			_text.y = 9;
-			_text.x = 30;
+			_text.x = 35;
 			addChild(_bkgd);		
 			addChild(_icon);		
 			addChild(_text);
 		}
-		
+
+		override public function get width():Number
+		{
+			return _text.x + _text.width + 15;
+		}		
 		
 		public function draw(w:uint):void
 		{

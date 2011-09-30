@@ -1,44 +1,39 @@
 package view.history {
 
+	import view.history.switcher.BranchSwitcher;
+	import view.ui.Scroller;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.filters.DropShadowFilter;
-	import model.AppModel;
-	import view.history.switcher.BranchSwitcher;
-	import view.type.ColumnHeading;
-	import view.ui.Scroller;
 
 	public class HistoryHeader extends Sprite {
 
 		private static var _hrule		:Shape = new Shape();
 		private static var _pattern		:Shape = new Shape();
+		private static var _title		:HistoryTitle = new HistoryTitle();
 		private static var _switcher	:BranchSwitcher = new BranchSwitcher();
 		private static var _scroller	:Scroller = new Scroller();
-		private static var _heading		:ColumnHeading = new ColumnHeading();
 
 		public function HistoryHeader()
 		{
-			_hrule.y = 32; _heading.y = 12;
+			_hrule.y = 32;
 			_hrule.filters = [new DropShadowFilter(1, 90, 0, .5, 4, 4, 1, 3)];
-			
 			addChild(_pattern); 
 			addChild(_scroller); 
 			addChild(_hrule); 
-			addChild(_heading);
+			addChild(_title);
 			addChild(_switcher);
 		}
 		
 		public function clear():void
 		{
-			_heading.text = '';
-			_switcher.visible = false;
+			_title.visible = _switcher.visible = false;
 		}
 
 		public function refresh():void
 		{
-			_heading.text =	'History of '+AppModel.bookmark.label;
-			_switcher.redraw();
-			_switcher.x = _heading.width + 20;
+			_title.draw(); _switcher.draw();
+			_switcher.x = _title.x + _title.width + 1;
 		}
 		
 		public function resize(w:uint, h:uint):void
@@ -51,7 +46,7 @@ package view.history {
 			_scroller.draw(h);
 			drawHRule(w);
 		}
-
+		
 		private function drawHRule(w:uint):void
 		{
 			_hrule.graphics.clear();

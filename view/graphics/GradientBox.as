@@ -11,7 +11,7 @@ package view.graphics {
 
 		private static var _color1		:uint = 0xffffff;
 		private static var _color2		:uint = 0x888888;
-		private static var _stroke		:uint = 0xC0C0C0;
+		private static var _stroke		:uint = 0xcfcfcf;
 		private var _mtrx				:Matrix = new Matrix();
 		private var _ratios				:Array;
 		private var _colors				:Array;

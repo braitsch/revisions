@@ -7,7 +7,7 @@ package view.graphics {
 
 	public class SolidBox extends Shape {
 
-		private static var _stroke		:uint = 0xC0C0C0;
+		private static var _stroke		:uint = 0xcfcfcf;
 
 		private var _color			:uint;
 		private var _drawStroke		:Boolean;

@@ -2,19 +2,20 @@ package view.history.switcher {
 
 	import model.AppModel;
 	import model.vo.Branch;
+	import com.firestarter.ScaleObject;
 	import com.greensock.TweenLite;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
-	import flash.filters.GlowFilter;
+	import flash.geom.Rectangle;
 
 	public class BranchSwitcher extends Sprite {
 
 		private static var _manage			:SwitcherManage = new SwitcherManage();
 		private static var _heading			:SwitcherHeading = new SwitcherHeading();
+		private static var _dsPlate			:ScaleObject = new ScaleObject(new DropShadowPlate(), new Rectangle(19, 7, 200, 106));
 		private static var _mask			:Shape = new Shape();
 		private static var _branches		:Sprite = new Sprite();	
-		private static var _dkGlow			:GlowFilter = new GlowFilter(0x000000, .3, 4, 4, 3, 3);				
 
 		public function BranchSwitcher()
 		{
@@ -25,7 +26,7 @@ package view.history.switcher {
 			_heading.addEventListener(MouseEvent.ROLL_OVER, showBranches);
 		}
 
-		public function redraw():void
+		public function draw():void
 		{
 			_heading.draw();
 			drawBranches();
@@ -36,12 +37,12 @@ package view.history.switcher {
 		{
 			while(_branches.numChildren) _branches.removeChildAt(0);
 			var b:Vector.<Branch> = AppModel.bookmark.branches;
-			var w:uint = _manage.width > _heading.width ? _manage.width : _heading.width;
+			var w:uint = _manage.width > _heading.width - 1 ? _manage.width : _heading.width - 1;
 			for (var i:int = 0; i < b.length; i++) {
 				if (b[i] == AppModel.branch) continue;
 				var k:SwitcherOption = new SwitcherOption(b[i]);
 					k.y = _branches.numChildren * (SwitcherItem.ITEM_HEIGHT + 2);
-				if (k.width > w) w = k.width + 20;
+				if (k.width > w) w = k.width;
 				_branches.addChild(k);
 			}
 			_manage.y = _branches.numChildren * (SwitcherItem.ITEM_HEIGHT + 2);
@@ -52,10 +53,10 @@ package view.history.switcher {
 		
 		private function drawBranchesBkgd():void
 		{
-			_branches.graphics.clear();
-			_branches.graphics.beginFill(0xFFFFFF);
-			_branches.graphics.drawRect(0, 0, _branches.width, _branches.height);
-			_branches.graphics.endFill();
+			_dsPlate.x = -9;
+			_dsPlate.width = _branches.width + 18;
+			_dsPlate.height = _branches.height + 9;
+			_branches.addChildAt(_dsPlate, 0);
 			drawMask();			
 		}
 		
@@ -63,7 +64,7 @@ package view.history.switcher {
 		{
 			_mask.graphics.clear();
 			_mask.graphics.beginFill(0xff0000, .2);
-			_mask.graphics.drawRect(0, 0, _branches.width, _branches.height);
+			_mask.graphics.drawRect(-10, 0, _branches.width, _branches.height);
 			_mask.graphics.endFill();
 		}
 
@@ -72,7 +73,6 @@ package view.history.switcher {
 			_mask.scaleY = 0;
 			_branches.mask = _mask;
 			_branches.y = _mask.y = 33;
-			_branches.filters = [_dkGlow];
 			addChild(_heading);
 			addChild(_branches); 
 			addChild(_mask); 

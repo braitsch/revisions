@@ -11,7 +11,7 @@ package view.history.switcher {
 
 		private var _branch		:Branch;
 		private var _text		:TextHeading = new TextHeading();
-		private var _bkgd		:GradientBox = new GradientBox(false);
+		private var _bkgd		:GradientBox = new GradientBox(true);
 		private var _icon		:Bitmap = new Bitmap(new SwitcherItemLT());
 	
 		public function SwitcherOption(b:Branch)

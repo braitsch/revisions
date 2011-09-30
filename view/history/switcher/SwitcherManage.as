@@ -8,7 +8,7 @@ package view.history.switcher {
 	public class SwitcherManage extends SwitcherItem {
 
 		private static var _text		:TextHeading = new TextHeading('Manage My Branches');
-		private static var _bkgd		:SolidBox = new SolidBox(0xc4c3c3, false);
+		private static var _bkgd		:SolidBox = new SolidBox(0xc4c3c3, true);
 		private static var _icon		:Bitmap = new Bitmap(new SwitcherItemDK());
 
 		public function SwitcherManage()
