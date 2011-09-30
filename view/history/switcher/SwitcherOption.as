@@ -4,22 +4,20 @@ package view.history.switcher {
 	import events.UIEvent;
 	import model.AppModel;
 	import model.vo.Branch;
+	import view.btns.ButtonIcon;
 	import view.graphics.GradientBox;
 	import view.type.TextHeading;
 	import view.windows.modals.system.Confirm;
 	import com.greensock.TweenLite;
-	import flash.display.Bitmap;
-	import flash.display.Sprite;
 	import flash.events.MouseEvent;
-	import flash.geom.ColorTransform;
 
 	public class SwitcherOption extends SwitcherItem {
 
 		private var _branch		:Branch;
 		private var _text		:TextHeading = new TextHeading();
 		private var _bkgd		:GradientBox = new GradientBox(true);
-		private var _kill		:Sprite = new Sprite();
-		private var _icon		:Bitmap = new Bitmap(new SwitcherItemLT());
+		private var _icon		:ButtonIcon = new ButtonIcon(new BranchIcon());
+		private var _kill		:ButtonIcon = new ButtonIcon(new SwitcherDelete());
 		private var _tweening	:Boolean;
 	
 		public function SwitcherOption(b:Branch)
@@ -34,13 +32,8 @@ package view.history.switcher {
 
 		private function addKillButton():void
 		{
-			var b:SwitcherDelete = new SwitcherDelete();
-			var c:ColorTransform = new ColorTransform();
-				c.color = 0x999999;
 			_kill.y = 16;			
-			_kill.addChild(b);
 			_kill.mouseChildren = false;
-			_kill.transform.colorTransform = c;
 			_kill.addEventListener(MouseEvent.ROLL_OVER, onKillOver);
 			addChild(_kill);
 		}
@@ -79,7 +72,7 @@ package view.history.switcher {
 		
 		private function onDeleteBranch():void
 		{
-			var k:Confirm = new Confirm('Delete branch "'+_branch.name+'"? Warning this cannot be undone.');
+			var k:Confirm = new Confirm('Delete branch "'+_branch.name+'"?\nWarning this cannot be undone.');
 				k.addEventListener(UIEvent.CONFIRM, onConfirm);
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, k));			
 		}		

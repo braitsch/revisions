@@ -1,28 +1,31 @@
 package view.history.merger {
 
+	import model.AppModel;
+	import view.btns.ButtonIcon;
 	import view.graphics.GradientBox;
 	import view.type.TextHeading;
-	import flash.display.Bitmap;
 	import flash.display.CapsStyle;
 	import flash.display.JointStyle;
 	import flash.display.LineScaleMode;
 	import flash.display.Sprite;
+	import flash.events.MouseEvent;
 
 	public class MergerHeading extends Sprite {
 
 		private static var _text		:TextHeading = new TextHeading();
 		private static var _bkgd		:GradientBox = new GradientBox(false);
-		private static var _icon		:Bitmap = new Bitmap(new OpenOptionsArrow());
+		private static var _icon		:ButtonIcon = new ButtonIcon(new OptionsArrow());
 	
 		public function MergerHeading()
 		{
-			_icon.y = 10; _icon.x = 10;
+			_icon.y = 19; _icon.x = 20;
 			_text.y = 12; _text.x = 35;
 			_text.text = 'Open Merge View';
 			addChild(_bkgd); addChild(_icon); addChild(_text);
 			draw(this.width + 15);
+			addEventListener(MouseEvent.CLICK, onMouseClick);
 		}
-		
+
 		override public function get width():Number
 		{
 			return _text.x + _text.width;
@@ -40,6 +43,11 @@ package view.history.merger {
 			_bkgd.graphics.lineTo(width-1, 32);
 			_bkgd.graphics.endFill();		
 		}
+		
+		private function onMouseClick(e:MouseEvent):void
+		{
+			AppModel.alert('Coming Soon.');	
+		}		
 		
 	}
 	

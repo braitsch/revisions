@@ -1,8 +1,6 @@
 package view.btns {
 
 	import fl.text.TLFTextField;
-	import flash.display.Bitmap;
-	import flash.display.BitmapData;
 	import com.greensock.TweenLite;
 	import flash.display.CapsStyle;
 	import flash.display.GradientType;
@@ -30,6 +28,7 @@ package view.btns {
 		private var _bkgd		:Shape = new Shape();
 		private var _mtrx		:Matrix = new Matrix();
 		private var _label		:TLFTextField;
+		private var _icon		:ButtonIcon;
 		private var _format		:TextFormat = new TextFormat();
 
 		public function DrawButton(w:uint, h:uint, s:String, n:uint = 14)
@@ -41,20 +40,24 @@ package view.btns {
 			addLabel(s);
 		}
 		
-		public function addIcon(b:BitmapData):void
+		public function set icon(b:ButtonIcon):void
 		{
-			var bmp:Bitmap = new Bitmap(b);
-				bmp.x = 7;
-				bmp.y = _height / 2 - bmp.height/2;
-				bmp.filters = [GLOW];
-			addChild(bmp);
+			_icon = b;
+			_icon.x = 25;
+			_icon.y = _height / 2;
+			addChild(_icon);			
 		}
-
+		
+		public function get icon():ButtonIcon
+		{
+			return _icon;
+		}
+		
 		public function set label(s:String):void
 		{
 			_label.text = s;
 			_label.x = _width / 2 - _label.width / 2;
-			_label.y = _height / 2 - _label.height / 2 + 1;
+			_label.y = _height / 2 - _label.height / 2 + 1; 
 		}
 
 		private function setup(w:uint, h:uint, n:uint):void

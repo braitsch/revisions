@@ -70,7 +70,7 @@ package view.windows.commit {
 		{
 			for (var i:int = 0; i < AppModel.bookmark.branches.length; i++) {
 				if (_form.getField(0) == AppModel.bookmark.branches[i].name){
-					AppModel.alert('Sorry, A branch with that name already exists. Please choose something else.');return;	
+					AppModel.alert('Sorry, a branch with that name already exists. Please choose something else.');return;	
 				}
 			}
 			AppModel.proxies.editor.addBranch(_form.getField(0), _commit.sha1);

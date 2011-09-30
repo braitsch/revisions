@@ -1,9 +1,9 @@
 package view.history.switcher {
 
 	import model.AppModel;
+	import view.btns.ButtonIcon;
 	import view.graphics.GradientBox;
 	import view.type.TextHeading;
-	import flash.display.Bitmap;
 	import flash.display.CapsStyle;
 	import flash.display.JointStyle;
 	import flash.display.LineScaleMode;
@@ -12,12 +12,12 @@ package view.history.switcher {
 	public class SwitcherHeading extends Sprite {
 
 		private static var _text		:TextHeading = new TextHeading();
+		private static var _icon		:ButtonIcon = new ButtonIcon(new OptionsArrow());
 		private static var _bkgd		:GradientBox = new GradientBox(false);
-		private static var _icon		:Bitmap = new Bitmap(new OpenOptionsArrow());
 	
 		public function SwitcherHeading()
 		{
-			_icon.y = 10; _icon.x = 10;
+			_icon.y = 19; _icon.x = 20;
 			_text.y = 12; _text.x = 35;
 			addChild(_bkgd); addChild(_icon); addChild(_text);
 		}

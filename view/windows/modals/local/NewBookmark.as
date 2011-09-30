@@ -5,6 +5,7 @@ package view.windows.modals.local {
 	import model.AppModel;
 	import model.remote.Hosts;
 	import system.FileUtils;
+	import view.btns.ButtonIcon;
 	import view.btns.DrawButton;
 	import view.btns.FormButton;
 	import view.type.TextHeading;
@@ -71,10 +72,10 @@ package view.windows.modals.local {
 
 		private function setupButtons():void
 		{
-			_file.addIcon(new FileIcon());
-			_folder.addIcon(new FolderIcon());
-			_github.addIcon(new GitHub26());
-			_beanstalk.addIcon(new Beanstalk26());
+			_file.icon = new ButtonIcon(new FileIcon());
+			_folder.icon = new ButtonIcon(new FolderIcon());
+			_github.icon = new ButtonIcon(new GitHubIcon(), false);
+			_beanstalk.icon = new ButtonIcon(new BeanstalkIcon(), false);
 			
 			_file.y = _folder.y = 95;
 			_github.y = _beanstalk.y = 175;

@@ -1,9 +1,10 @@
 package view.windows.upload {
 
 	import events.UIEvent;
-	import flash.events.MouseEvent;
 	import model.remote.HostingAccount;
+	import view.btns.ButtonIcon;
 	import view.btns.DrawButton;
+	import flash.events.MouseEvent;
 
 	public class PickService extends WizardWindow {
 
@@ -20,8 +21,8 @@ package view.windows.upload {
 		{
 			_github.x = _beanstalk.x = 150;
 			_github.y = 110; _beanstalk.y = 170;
-			_github.addIcon(new GitHub26());
-			_beanstalk.addIcon(new Beanstalk26());
+			_github.icon = new ButtonIcon(new GitHubIcon(), false);
+			_beanstalk.icon = new ButtonIcon(new BeanstalkIcon(), false);
 			addChild(_github); addChild(_beanstalk);
 			addEventListener(MouseEvent.CLICK, onButtonClick);
 		}
