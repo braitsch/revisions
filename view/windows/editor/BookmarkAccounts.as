@@ -1,69 +1,75 @@
 package view.windows.editor {
 
-	import com.greensock.TweenLite;
 	import events.AppEvent;
-	import events.BookmarkEvent;
 	import events.UIEvent;
-	import flash.display.Sprite;
-	import flash.events.MouseEvent;
 	import model.AppModel;
 	import model.vo.Repository;
+	import view.btns.ButtonIcon;
 	import view.btns.DrawButton;
 	import view.type.TextHeading;
+	import view.ui.ScrollingList;
 	import view.windows.base.ChildWindow;
 	import view.windows.modals.system.Confirm;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
 
 	public class BookmarkAccounts extends ChildWindow {
 
 		private static var _item		:AccountItem;
 		private static var _repo		:Repository;
-		private static var _remotes		:Sprite = new Sprite();
 		private static var _heading		:TextHeading = new TextHeading();
-		private static var _linkBtn		:DrawButton = new DrawButton(320, 50, 'Link This Bookmark To An Online Account', 11);		
+		private static var _remotes		:ScrollingList = new ScrollingList(86);
+		private static var _linkBtn		:DrawButton = new DrawButton(400, 40, 'Link This Bookmark To An Online Account', 11);		
 
 		public function BookmarkAccounts()
 		{
 			addChild(_remotes);
 			addChild(_heading);
 			addUnlinkButton();
-			_remotes.x = 10; _remotes.y = 100;
+			_remotes.x = 10; _remotes.y = 95;
+			_linkBtn.icon = new ButtonIcon(new LinkIcon());
 			addEventListener(UIEvent.UNLINK_ACCOUNT, onUnlinkAccount);
-			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onBookmarkSelected);
 			AppModel.engine.addEventListener(AppEvent.BKMK_REMOVED_FROM_ACCOUNT, onBkmkRemovedFromAcct);
 		}
 		
 		private function addUnlinkButton():void
 		{
-			_linkBtn.x = 140; _linkBtn.y = 140;
+			_linkBtn.x = 100; _linkBtn.y = 120;
 			_linkBtn.addEventListener(MouseEvent.CLICK, onLinkToAccount);
 			addChild(_linkBtn);
 		}
 
-		private function onBookmarkSelected(e:BookmarkEvent):void
+		override protected function onAddedToStage(e:Event):void 
 		{
-			while(_remotes.numChildren) _remotes.removeChildAt(0);
-			for (var i:int = 0; i < AppModel.bookmark.remotes.length; i++) {
-				var ai:AccountItem = new AccountItem(AppModel.bookmark.remotes[i]);
-					ai.y = 44 * i;
-				_remotes.addChild(ai);
+			_remotes.clear();
+			var v:Vector.<Repository> = AppModel.bookmark.remotes;
+			if (v.length){
+				attachRemotes(v);
+			}	else{
+				attachDefaultButton();
 			}
-			writeHeading();
 		}
 
-		private function writeHeading():void
+		private function attachDefaultButton():void
 		{
-			var m:String;
-			if (_remotes.numChildren){
-				_linkBtn.visible = false;
-				m = 'This bookmark is linked to the following online accounts:';
-			}	else{
-				_linkBtn.visible = true;
-				m = 'It looks like you haven\'t pushed this bookmark online yet.\n';
+			_linkBtn.visible = true;
+			var m:String = 'It looks like you haven\'t saved this bookmark online yet.\n';
 				m+= 'Why not link it up to your Beanstalk or GitHub account?';
-			}
-			_heading.text = m;
+			_heading.text = m;	
 		}
-		
+
+		private function attachRemotes(v:Vector.<Repository>):void
+		{
+			for (var i:int = 0; i < v.length; i++) {
+				var ai:AccountItem = new AccountItem(v[i]);
+					ai.y = 44 * i;
+				_remotes.addItem(ai);
+			}
+			_remotes.draw(580);
+			_linkBtn.visible = false;
+			_heading.text = 'Online accounts linked to this bookmark';
+		}
+
 		private function onLinkToAccount(e:MouseEvent):void
 		{
 			dispatchEvent(new UIEvent(UIEvent.ADD_BKMK_TO_ACCOUNT));	
@@ -89,9 +95,7 @@ package view.windows.editor {
 
 		private function onBkmkRemovedFromAcct(e:AppEvent):void
 		{
-			TweenLite.to(_item, .3, {alpha:0, onComplete:function():void
-				{	_remotes.removeChild(_item); _item = null; writeHeading(); }
-			});
+			onAddedToStage(e);
 		}
 		
 	}

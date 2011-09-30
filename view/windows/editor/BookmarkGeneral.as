@@ -29,8 +29,8 @@ package view.windows.editor {
 			setupHeading();
 			setupForm();
 			setupAutoSave();
-			addOkButton('OK', 466, 350);
-			addNoButton('Delete', 336, 350);
+			addOkButton('OK', 464, 350);
+			addNoButton('Delete', 334, 350);
 			addEventListener(UIEvent.ENTER_KEY, onUpdateBookmark);
 			addEventListener(UIEvent.NO_BUTTON, onDeleteBookmark);
 			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onBookmarkSelected);

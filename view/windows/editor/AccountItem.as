@@ -1,20 +1,21 @@
 package view.windows.editor {
 
 	import events.UIEvent;
+	import model.remote.HostingAccount;
+	import model.vo.Repository;
+	import view.btns.FormButton;
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.net.URLRequest;
 	import flash.net.navigateToURL;
 	import flash.text.TextFieldAutoSize;
-	import model.remote.HostingAccount;
-	import model.vo.Repository;
-	import view.btns.IconButton;
 
 	public class AccountItem extends Sprite {
 
 		private var _repo	:Repository;
-		private var _view	:RemoteItemMC = new RemoteItemMC();
+		private var _view	:AccountItemMC = new AccountItemMC();
+		private var _unlink	:FormButton = new FormButton('Unlink');
 
 		public function AccountItem(rmt:Repository)
 		{
@@ -28,7 +29,7 @@ package view.windows.editor {
 			_view.desc_txt.mouseEnabled = _view.desc_txt.mouseChildren = false;
 			attachLogo();
 			buttonMode = true;
-			new IconButton(_view.unlink);
+			attachUnlinkBtn();
 			addEventListener(MouseEvent.CLICK, onMouseClick);
 		}
 		
@@ -43,10 +44,17 @@ package view.windows.editor {
 			b.x = 10; b.y = 6;
 			addChild(b);
 		}
+		
+		private function attachUnlinkBtn():void
+		{
+			_unlink.y = 6;
+			_unlink.x = 454;			
+			addChild(_unlink);
+		}
 
 		private function onMouseClick(e:MouseEvent):void
 		{
-			if (e.target.name != 'unlink'){
+			if (e.target != _unlink){
 				navigateToURL(new URLRequest(_repo.homePage));
 			}	else{
 				dispatchEvent(new UIEvent(UIEvent.UNLINK_ACCOUNT, _repo));
