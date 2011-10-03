@@ -1,5 +1,7 @@
 package view.history {
 
+	import events.AppEvent;
+	import model.AppModel;
 	import view.history.merger.BranchMerger;
 	import view.history.switcher.BranchSwitcher;
 	import view.ui.Scroller;
@@ -26,6 +28,12 @@ package view.history {
 			addChild(_title);
 			addChild(_switcher);
 			addChild(_merger);
+			AppModel.proxies.editor.addEventListener(AppEvent.BRANCH_DELETED, onBranchDeleted);
+		}
+
+		private function onBranchDeleted(e:AppEvent):void
+		{
+			refresh();
 		}
 		
 		public function clear():void

@@ -1,6 +1,5 @@
 package view.history.switcher {
 
-	import events.AppEvent;
 	import model.AppModel;
 	import model.vo.Branch;
 	import com.firestarter.ScaleObject;
@@ -24,7 +23,6 @@ package view.history.switcher {
 			this.visible = false;
 			this.addEventListener(MouseEvent.ROLL_OUT, hideBranches);
 			_heading.addEventListener(MouseEvent.ROLL_OVER, showBranches);
-			AppModel.proxies.editor.addEventListener(AppEvent.BRANCH_DELETED, onBranchDeleted);
 		}
 		
 		override public function get width():Number
@@ -32,11 +30,6 @@ package view.history.switcher {
 			return _width;
 		}
 		
-		private function onBranchDeleted(e:AppEvent):void
-		{
-			draw();
-		}
-
 		public function draw():void
 		{
 			_heading.setText();

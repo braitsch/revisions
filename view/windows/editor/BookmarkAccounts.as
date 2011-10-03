@@ -68,7 +68,7 @@ package view.windows.editor {
 			}
 			_remotes.draw(580, 86, 2);
 			_linkBtn.visible = false;
-			_heading.text = 'Online accounts linked to this bookmark';
+			_heading.text = 'Online Accounts Linked To This Bookmark';
 		}
 
 		private function onLinkToAccount(e:MouseEvent):void

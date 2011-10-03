@@ -1,9 +1,7 @@
 package view.windows.commit {
 
-	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
-	import model.vo.Branch;
 	import model.vo.Commit;
 	import view.btns.FormButton;
 	import view.type.TextHeading;
@@ -24,7 +22,6 @@ package view.windows.commit {
 			setupForm();
 			addButtons();
 			addChild(_heading);
-			AppModel.proxies.editor.addEventListener(AppEvent.BRANCH_CREATED, onBranchCreated);
 		}
 		
 		public function set commit(o:Commit):void
@@ -68,22 +65,13 @@ package view.windows.commit {
 		
 		private function makeNewBranch():void
 		{
+			var n:String = _form.getField(0).replace(/\s/g, '-');
 			for (var i:int = 0; i < AppModel.bookmark.branches.length; i++) {
-				if (_form.getField(0) == AppModel.bookmark.branches[i].name){
+				if (n == AppModel.bookmark.branches[i].name){
 					AppModel.alert('Sorry, a branch with that name already exists. Please choose something else.');return;	
 				}
 			}
-			AppModel.proxies.editor.addBranch(_form.getField(0), _commit.sha1);
-		}
-		
-		private function onBranchCreated(e:AppEvent):void
-		{
-			var h:Vector.<Commit> = AppModel.branch.history;
-			for (var i:int = 0; i < h.length; i++) if (h[i].sha1 == _commit.sha1) break;
-			var v:Vector.<Commit>  = h.slice(0, i+1);
-			var b:Branch = new Branch(_form.getField(0));
-				b.history = v;
-			AppModel.bookmark.addLocalBranch(b);
+			AppModel.proxies.editor.addBranch(n, _commit);
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));	
 		}
 		

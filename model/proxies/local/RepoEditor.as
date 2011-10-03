@@ -3,17 +3,19 @@ package model.proxies.local {
 	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.NativeProcessEvent;
-	import flash.filesystem.File;
 	import model.AppModel;
 	import model.proxies.air.NativeProcessProxy;
 	import model.vo.Bookmark;
 	import model.vo.Branch;
+	import model.vo.Commit;
 	import system.BashMethods;
 	import view.windows.modals.system.Debug;
+	import flash.filesystem.File;
 
 	public class RepoEditor extends NativeProcessProxy {
 
 		private static var _branch		:Branch;
+		private static var _commit		:Commit;
 		private static var _bookmark	:Bookmark;
 
 		public function RepoEditor()
@@ -37,28 +39,13 @@ package model.proxies.local {
 			super.call(Vector.<String>([BashMethods.COMMIT, 'Auto Saved :: '+new Date().toLocaleString()]));
 		}
 		
-		public function merge(a:Branch, b:Branch):void
-		{
-			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
-			super.call(Vector.<String>([BashMethods.MERGE, a.name, b.name]));
-		}
+	// branching //	
 		
-		public function trackFile($file:File):void
+		public function addBranch(name:String, cmt:Commit):void
 		{
+			_branch = new Branch(name); _commit = cmt;
 			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
-			super.call(Vector.<String>([BashMethods.TRACK_FILE, $file.nativePath]));
-		}
-		
-		public function unTrackFile($file:File):void
-		{
-			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
-			super.call(Vector.<String>([BashMethods.UNTRACK_FILE, $file.nativePath]));
-		}
-		
-		public function addBranch(name:String, cId:String = ''):void
-		{
-			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
-			super.call(Vector.<String>([BashMethods.ADD_BRANCH, name, cId]));			
+			super.call(Vector.<String>([BashMethods.ADD_BRANCH, name, cmt.sha1]));
 		}
 		
 		public function changeBranch(b:Branch):void
@@ -81,17 +68,31 @@ package model.proxies.local {
 			super.call(Vector.<String>([BashMethods.DEL_BRANCH, _branch.name]));
 		}
 		
-		public function revert(sha1:String):void
+		public function merge(a:Branch, b:Branch):void
 		{
 			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
-			super.call(Vector.<String>([BashMethods.REVERT_TO_VERSION, sha1]));			
+			super.call(Vector.<String>([BashMethods.MERGE, a.name, b.name]));
 		}
+		
+	// other stuff //			
 		
 		public function copyVersion(sha1:String, saveAs:String):void
 		{
 			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
 			super.call(Vector.<String>([BashMethods.COPY_VERSION, AppModel.branch.name, sha1, AppModel.bookmark.path, saveAs]));
 		}
+		
+		public function trackFile($file:File):void
+		{
+			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
+			super.call(Vector.<String>([BashMethods.TRACK_FILE, $file.nativePath]));
+		}
+		
+		public function unTrackFile($file:File):void
+		{
+			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
+			super.call(Vector.<String>([BashMethods.UNTRACK_FILE, $file.nativePath]));
+		}		
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
@@ -114,7 +115,7 @@ package model.proxies.local {
 					onMergeComplete(e.data.result);
 				break;	
 				case BashMethods.ADD_BRANCH : 
-					dispatchEvent(new AppEvent(AppEvent.BRANCH_CREATED));
+					onBranchCreated();
 				break;	
 				case BashMethods.DEL_BRANCH : 
 					onBranchDeleted();
@@ -132,6 +133,16 @@ package model.proxies.local {
 				break;
 			}
 		}
+		
+		private function onBranchCreated():void
+		{
+			var h:Vector.<Commit> = AppModel.branch.history;
+			for (var i:int = 0; i < h.length; i++) if (h[i].sha1 == _commit.sha1) break;
+			var v:Vector.<Commit>  = h.slice(0, i+1);
+			_branch.history = v;
+			AppModel.bookmark.addLocalBranch(_branch);
+			dispatchEvent(new BookmarkEvent(BookmarkEvent.BRANCH_CHANGED));
+		}		
 
 		private function onBranchDeleted():void
 		{
