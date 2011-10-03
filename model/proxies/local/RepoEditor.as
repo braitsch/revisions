@@ -41,7 +41,6 @@ package model.proxies.local {
 		
 		public function starCommit(o:Commit):void
 		{
-			trace("RepoEditor.starCommit(o)", '!important-'+o.sha1);
 			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
 			super.call(Vector.<String>([BashMethods.STAR_COMMIT, o.sha1]));
 		}
@@ -109,7 +108,7 @@ package model.proxies.local {
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
-			trace("RepoEditor.onProcessComplete(e)", e.data.method, e.data.result);
+		//	trace("RepoEditor.onProcessComplete(e)", e.data.method, e.data.result);
 			switch(e.data.method) {
 			// auto update the history after reverting to an earlier version //	
 				case BashMethods.REVERT_TO_VERSION : 

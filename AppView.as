@@ -53,11 +53,11 @@ package {
 			var w:uint = stage.stageWidth;
 			var h:uint = stage.stageHeight - 20;
 			_modal.resize(w, h);
-			_header.resize(w);
 			_bkmks.resize(h);
+			_header.resize(w);
 			_main.resize(w - _main.x, h - _main.y);
-			_drag.x = w-_drag.width; 
-			_drag.y = h-_drag.height + 20;
+			_drag.x = w - _drag.width; 
+			_drag.y = h - _drag.height + 20;
 			drawBackground(stage.stageWidth, stage.stageHeight);
 		}
 

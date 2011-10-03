@@ -40,7 +40,7 @@ package view.windows.base {
 		override protected function onAddedToStage(e:Event):void 
 		{
 			super.onAddedToStage(e);
-			resize(stage.stageWidth, stage.stageHeight);
+			resize(stage.stageWidth, stage.stageHeight - 20);
 		}	
 		
 		protected function addCloseButton():void
