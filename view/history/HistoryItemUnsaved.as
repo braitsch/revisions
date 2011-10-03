@@ -20,7 +20,7 @@ package view.history {
 		private function drawBkgd():void
 		{
 			_bkgd.scalable = true;
-			_bkgd.scaleOffset = 210;
+			_bkgd.scaleOffset = 214;
 			_bkgd.draw(500, 41);
 			addChild(_bkgd);
 		}

@@ -15,9 +15,9 @@ package view.windows.modals.local {
 		{
 			addChild(_view);
 			super.title = 'Trial Expired';
-			super.drawBackground(550, 210);
-			addOkButton();
-			addNoButton();
+			super.drawBackground(550, 250);
+			addOkButton('OK', 415, 200);
+			addNoButton('Cancel', 285, 200);
 			_view.textArea.message_txt.text = 'This beta version of Revisions has expired.\n';
 			_view.textArea.message_txt.text+= 'Please update to the most current version.';
 			addEventListener(UIEvent.ENTER_KEY, onCheckForUpdates);

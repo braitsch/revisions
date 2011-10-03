@@ -29,7 +29,7 @@ package view.graphics {
 		
 		public function set scaleOffset(x:uint):void
 		{
-			_scaleOffset = x;	
+			_scaleOffset = x;
 		}		
 		
 		private function onAddedToStage(e:Event):void

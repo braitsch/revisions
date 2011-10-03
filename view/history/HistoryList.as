@@ -3,11 +3,10 @@ package view.history {
 	import model.vo.Bookmark;
 	import model.vo.Branch;
 	import model.vo.Commit;
-	import com.greensock.TweenLite;
-	import flash.display.Sprite;
+	import view.ui.ScrollingList;
 	import flash.utils.setTimeout;
 
-	public class HistoryList extends Sprite {
+	public class HistoryList extends ScrollingList {
 
 		private var _length				:uint;
 		private var _modified			:Boolean;
@@ -16,9 +15,10 @@ package view.history {
 		private var _itemsSaved			:Vector.<HistoryItemSaved> = new Vector.<HistoryItemSaved>();
 		private var _itemUnsaved		:HistoryItemUnsaved = new HistoryItemUnsaved();
 
-		public function HistoryList($bkmk:Bookmark)
+		public function HistoryList()
 		{
-			_bookmark = $bkmk;
+			super.leading = 41;
+			super.bottomPadding = -1;
 			setTimeout(generateItems, 1000);
 		}
 		
@@ -27,12 +27,14 @@ package view.history {
 			for (var i:int = 0; i < 25; i++) _itemsSaved.push(new HistoryItemSaved());
 		}
 		
-	// public //	
+		public function set bookmark(b:Bookmark):void
+		{
+			_bookmark = b;
+			if (_bookmark.branch.history) checkIfChanged();
+		}
 		
-		public function get bookmark():Bookmark { return _bookmark; }
-		
-	// on summary & history updates //
-		public function checkIfChanged():void
+//	 on summary & history updates //
+		private function checkIfChanged():void
 		{
 			var m:Boolean = _bookmark.branch.isModified;
 			var n:uint = _bookmark.branch.history.length;
@@ -47,35 +49,14 @@ package view.history {
 
 		private function drawList():void
 		{
-			while(numChildren) removeChildAt(0);
+			super.clear();
+			if (_bookmark.branch.isModified) super.addItem(_itemUnsaved);
 			var v:Vector.<Commit> = _bookmark.branch.history;
 			for (var i:int = 0; i < v.length; i++) {
 				var k:HistoryItemSaved = _itemsSaved[i];
 					k.commit = v[i];
-					k.alpha = 0;
-				addChild(k);
+				super.addItem(k, .05*i);
 			}
-			sortList();
-		}
-		
-		private function sortList():void
-		{
-			showHideUnsaved();
-			for (var i:int = 0; i < numChildren; i++) {
-				var k:HistoryItem = getChildAt(i) as HistoryItem;
-					k.y = i * 41;
-				TweenLite.to(k, .2, {alpha:1, delay:i*.05});
-			}
-		}
-		
-		private function showHideUnsaved():void
-		{
-			var m:Boolean = _bookmark.branch.isModified;
-			if (m == true) {
-				addChildAt(_itemUnsaved, 0);
-			}	else if (m == false && _itemUnsaved.stage) {
-				removeChildAt(0);
-			}				
 		}
 		
 	}

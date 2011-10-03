@@ -18,7 +18,7 @@ package view.windows.editor {
 		private static var _item		:AccountItem;
 		private static var _repo		:Repository;
 		private static var _heading		:TextHeading = new TextHeading();
-		private static var _remotes		:ScrollingList = new ScrollingList(86);
+		private static var _remotes		:ScrollingList = new ScrollingList();
 		private static var _linkBtn		:DrawButton = new DrawButton(400, 40, 'Link This Bookmark To An Online Account', 11);		
 
 		public function BookmarkAccounts()
@@ -65,7 +65,7 @@ package view.windows.editor {
 					ai.y = 44 * i;
 				_remotes.addItem(ai);
 			}
-			_remotes.draw(580);
+			_remotes.draw(580, 86);
 			_linkBtn.visible = false;
 			_heading.text = 'Online accounts linked to this bookmark';
 		}
