@@ -1,4 +1,4 @@
-package view {
+package view.frame {
 
 	import events.UIEvent;
 	import com.greensock.TweenLite;
@@ -11,16 +11,20 @@ package view {
 	
 	public class Header extends Sprite {
 		
-		private static var _slices	:Shape = new Shape();
-		private static var _appLogo :Bitmap = new Bitmap(new AppLogo());
-		private static var _buttons	:GlobalButtons = new GlobalButtons();
-		private static var _right	:Bitmap = new Bitmap(new HeaderRight());
+		private static var _slices		:Shape = new Shape();
+		private static var _appLogo	 	:Bitmap = new Bitmap(new AppLogo());
+		private static var _buttons		:GlobalButtons = new GlobalButtons();
+		private static var _right		:Bitmap = new Bitmap(new HeaderRight());
+		private static var _controls	:WindowControls = new WindowControls();
+		private static var _dragArea	:HeaderDragArea = new HeaderDragArea();
 		
 		public function Header()
 		{
 			_appLogo.y = 12;
 			addChild(_slices);
 			addChild(_right);
+			addChild(_dragArea);
+			addChild(_controls);
 			addChild(_appLogo);
 			addChild(_buttons);
 			initButtons();
@@ -33,6 +37,7 @@ package view {
 			_slices.graphics.beginBitmapFill(new HeaderSlice());
 			_slices.graphics.drawRect(_right.width-w, 0, w-_right.width, 83);
 			_slices.graphics.endFill();
+			_dragArea.draw(w, 67);
 			_appLogo.x = w/2 - _appLogo.width/2;
 			_right.x = _slices.x = _buttons.x = w-_right.width;
 		}
@@ -47,6 +52,7 @@ package view {
 				k.addEventListener(MouseEvent.ROLL_OVER, onRollOver);
 				k.addEventListener(MouseEvent.ROLL_OUT, onRollOut);
 			}
+			_controls.x = _controls.y = 10;
 		}
 
 		private function onRollOver(e:MouseEvent):void

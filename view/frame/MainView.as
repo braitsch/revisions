@@ -1,4 +1,4 @@
-package view{
+package view.frame{
 
 	import com.greensock.TweenLite;
 	import events.AppEvent;

@@ -76,7 +76,7 @@ package view.history.switcher {
 
 		private function onClick(e:MouseEvent):void
 		{
-			AppModel.alert('Select a saved item to create a new branch.');
+			AppModel.alert('Select a saved version of this bookmark to create a new branch.');
 		}
 		
 		private function drawBranchesBkgd():void

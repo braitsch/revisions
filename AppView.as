@@ -1,15 +1,15 @@
 package {
 
-	import system.AirDragAndDrop;
-	import view.Header;
-	import view.MainView;
-	import view.bookmarks.BookmarkView;
-	import view.graphics.Box;
-	import view.graphics.SolidBox;
-	import view.windows.modals.ModalManager;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import system.AirDragAndDrop;
+	import view.bookmarks.BookmarkView;
+	import view.frame.Header;
+	import view.frame.MainView;
+	import view.graphics.Box;
+	import view.graphics.SolidBox;
+	import view.windows.modals.ModalManager;
 
 	public class AppView extends Sprite {
 		
@@ -73,16 +73,9 @@ package {
 		{
 			_drag.buttonMode = true;
 			_drag.addEventListener(MouseEvent.MOUSE_DOWN, startResize);
-			_header.addEventListener(MouseEvent.MOUSE_DOWN, startMove);
 			addChild(_drag);
 		}
 
-		private function startMove(e:MouseEvent):void
-		{
-			this.stage.nativeWindow.startMove();
-			this.stage.nativeWindow.startMove();
-		}	
-		
 		private function startResize(e:MouseEvent):void
 		{
 			this.stage.nativeWindow.startResize();
