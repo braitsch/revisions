@@ -23,7 +23,7 @@ package view.history {
 		public function resize(w:uint, h:uint):void
 		{
 			_header.resize(w, h);
-			_list.draw(w - 4, h - 34);
+			_list.draw(w, h - _list.y);
 		}
 		
 		private function onHistory(e:AppEvent):void

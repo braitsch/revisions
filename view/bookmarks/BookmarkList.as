@@ -1,63 +1,53 @@
 package view.bookmarks {
 
-	import com.greensock.TweenLite;
-	import flash.display.Sprite;
-	import flash.events.MouseEvent;
+	import events.BookmarkEvent;
 	import model.AppModel;
 	import model.vo.Bookmark;
+	import view.ui.ScrollingList;
 
-	public class BookmarkList extends Sprite {
+	public class BookmarkList extends ScrollingList {
 		
-		private static var _leading:uint = 1;
-
 		public function BookmarkList()
 		{	
-			addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
-			addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
-		}
-
-		public function addItem(b:Bookmark):void 
-		{
-			var n:BookmarkListItem = new BookmarkListItem(b);
-			n.y = (n.height + _leading) * numChildren;
-			addChild(n);
+			super.leading = 34;
+			AppModel.engine.addEventListener(BookmarkEvent.LOADED, onBookmarkList);
+			AppModel.engine.addEventListener(BookmarkEvent.ADDED, onBookmarkAdded);
+			AppModel.engine.addEventListener(BookmarkEvent.DELETED, onBookmarkDeleted);
+			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onBookmarkSelected);			
 		}
 		
-		public function removeItem(b:Bookmark):void 
+		public function resize(h:uint):void
 		{
-			for (var i:int = 0; i < numChildren; i++) {
-				var k:BookmarkListItem = getChildAt(i) as BookmarkListItem;
-				if (k.bookmark == b) break;
+			super.draw(200, h);
+		}
+		
+		private function onBookmarkList(e:BookmarkEvent):void 
+		{
+			var v:Vector.<Bookmark> = e.data as Vector.<Bookmark>;
+			for (var i:int = 0; i < v.length; i++) super.addItem(new BookmarkListItem(v[i]));
+		}
+
+		private function onBookmarkAdded(e:BookmarkEvent):void 
+		{
+			super.addItem(new BookmarkListItem(e.data as Bookmark));
+		}
+		
+		private function onBookmarkDeleted(e:BookmarkEvent):void 
+		{
+			for (var i:int = 0; i < super.list.numChildren; i++) {
+				var k:BookmarkListItem = super.list.getChildAt(i) as BookmarkListItem;
+				if (k.bookmark == e.data as Bookmark) super.removeItem(k);
 			}
-			if (!k) return; // the list hasn't been built yet //
-			TweenLite.to(k, .3, {alpha:0, onComplete:function():void{
-				removeChild(k);
-				for (i = 0; i < numChildren; i++) {
-					k = getChildAt(i) as BookmarkListItem;
-					TweenLite.to(k, .3, {y:(k.height + _leading) * i});
-				}	
-			}});
 		}
 		
-		public function setActiveBookmark(b:Bookmark):void
+		private function onBookmarkSelected(e:BookmarkEvent):void 
 		{
-			for (var i:int = 0; i < numChildren; i++) {
-				var k:BookmarkListItem = getChildAt(i) as BookmarkListItem;
-				k.active = (k.bookmark == b);
-			}			
-		}
-		
-		private function onMouseOver(e:MouseEvent):void
-		{
-			BookmarkListItem(e.target).active = true;
-		}
-
-		private function onMouseOut(e:MouseEvent):void
-		{
-			var b:BookmarkListItem = e.target as BookmarkListItem;
-			if (b.bookmark != AppModel.bookmark) b.active = false;
+			for (var i:int = 0; i < super.list.numChildren; i++) {
+				var k:BookmarkListItem = super.list.getChildAt(i) as BookmarkListItem;
+				k.active = (k.bookmark == AppModel.bookmark);
+			}					
 		}		
-				
+
 	}
 	
 }

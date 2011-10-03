@@ -26,6 +26,7 @@ package view.windows.editor {
 			addChild(_remotes);
 			addChild(_heading);
 			addUnlinkButton();
+			_remotes.bottomPadding = 8;
 			_remotes.x = 10; _remotes.y = 95;
 			_linkBtn.icon = new ButtonIcon(new LinkIcon());
 			addEventListener(UIEvent.UNLINK_ACCOUNT, onUnlinkAccount);
@@ -65,7 +66,7 @@ package view.windows.editor {
 					ai.y = 44 * i;
 				_remotes.addItem(ai);
 			}
-			_remotes.draw(580, 86);
+			_remotes.draw(580, 86, 2);
 			_linkBtn.visible = false;
 			_heading.text = 'Online accounts linked to this bookmark';
 		}

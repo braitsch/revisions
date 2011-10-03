@@ -13,7 +13,7 @@ package {
 
 	public class AppView extends Sprite {
 		
-		private static var _drag		:Sprite = new Sprite();
+		private static var _drag		:DragCorner = new DragCorner();
 		private static var _main		:MainView = new MainView();
 		private static var _bkgd		:SolidBox = new SolidBox(Box.WHITE);
 		private static var _bkmks		:BookmarkView = new BookmarkView();
@@ -36,7 +36,6 @@ package {
 			_base.addChild(_bkmks);
 			_base.addChild(_header);
 			_base.addChild(_modal);
-			_base.x = 4;
 			addChild(_bkgd);
 			addChild(_base);
 		}
@@ -51,13 +50,14 @@ package {
 
 		private function onStageResize(e:Event):void
 		{
-			var w:uint = stage.stageWidth - 8;
-			var h:uint = stage.stageHeight - 14;
+			var w:uint = stage.stageWidth;
+			var h:uint = stage.stageHeight - 20;
 			_modal.resize(w, h);
-			_header.resize(w + 4);
-			_bkmks.resize(h-_bkmks.y);
+			_header.resize(w);
+			_bkmks.resize(h);
 			_main.resize(w - _main.x, h - _main.y);
-			_drag.x = w-46; _drag.y = h-42;
+			_drag.x = w-_drag.width; 
+			_drag.y = h-_drag.height + 20;
 			drawBackground(stage.stageWidth, stage.stageHeight);
 		}
 
@@ -71,9 +71,7 @@ package {
 		
 		private function addStageControls():void
 		{
-			var b:SolidBox = new SolidBox(0xff0000);
-				b.draw(50, 50);
-			_drag.addChild(b);				
+			_drag.buttonMode = true;
 			_drag.addEventListener(MouseEvent.MOUSE_DOWN, startResize);
 			_header.addEventListener(MouseEvent.MOUSE_DOWN, startMove);
 			addChild(_drag);

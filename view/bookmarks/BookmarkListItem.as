@@ -27,7 +27,9 @@ package view.bookmarks {
 			attachIcon();
 			this.buttonMode = true;
 			this.mouseChildren = false;
-			this.addEventListener(MouseEvent.CLICK, onBookmarkSelected);			
+			addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
+			addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);						
+			addEventListener(MouseEvent.CLICK, onBookmarkSelected);
 		}
 
 		private function attachIcon():void
@@ -59,6 +61,16 @@ package view.bookmarks {
 		private function onBookmarkEdited(e:BookmarkEvent):void 		{
 			_view.label_txt.text = _bookmark.label;
 		}
+		
+		private function onMouseOver(e:MouseEvent):void
+		{
+			this.active = true;
+		}
+
+		private function onMouseOut(e:MouseEvent):void
+		{
+			this.active = _bookmark == AppModel.bookmark;
+		}			
 
 		private function onBookmarkSelected(e:MouseEvent):void
 		{

@@ -35,14 +35,14 @@ package view.history {
 		{
 			_bkgd.draw(500, 41);
 			_bkgd.scalable = true;
-			_bkgd.scaleOffset = 214;
+			_bkgd.scaleOffset = 210;
 			_ptrn.draw(500, 41);
 			_ptrn.scalable = true;
-			_ptrn.scaleOffset = 214;
+			_ptrn.scaleOffset = 210;
 			_ptrn.alpha = .1;
 			_over.draw(500, 41);
 			_over.scalable = true;
-			_over.scaleOffset = 214;
+			_over.scaleOffset = 210;
 			_over.alpha = 0;			
 			addChild(_bkgd);
 			addChild(_ptrn);

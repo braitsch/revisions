@@ -15,9 +15,13 @@ package view.ui {
 
 		public function ScrollingList()
 		{
+			addChild(_view);
+			addChild(_mask);
+			_view.mask = _mask;
 			addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 		}
 		
+		public function get list():Sprite { return _view; }
 		public function set leading(n:uint):void { _leading = n; }
 		public function set bottomPadding(n:uint):void { _bottomPadding = n; }
 		
@@ -34,19 +38,27 @@ package view.ui {
 			TweenLite.from(o, .3, {alpha:0, delay:n});
 		}
 		
-		public function draw(w:uint, h:uint, p:uint = 2):void
+		public function removeItem(o:DisplayObject):void
+		{
+			TweenLite.to(o, .3, {alpha:0, onComplete:function():void{
+				_view.removeChild(o);
+				for (var i:uint = 0; i < _view.numChildren; i++) {
+					TweenLite.to(_view.getChildAt(i), .3, {y:_leading * i});
+				}	
+			}});			
+		}
+		
+		public function draw(w:uint, h:uint, p:uint = 0):void
 		{
 			_mask.graphics.clear();	
 			_mask.graphics.beginFill(0xff0000, .3);
 			_mask.graphics.drawRect(-p, 0, w + (p*2), h);
 			_mask.graphics.endFill();
-			_view.mask = _mask;
-			addChild(_view);
-			addChild(_mask);
+			alignBottom();
 		}
 		
 		private function onMouseWheel(e:MouseEvent):void
-		{// 8 for the other guy
+		{
 			var h:uint = _view.height - _bottomPadding; // offset padding on pngs //
 			if (h <= _mask.height) return;
 			_view.y += e.delta;
@@ -56,7 +68,17 @@ package view.ui {
 			}	else if (_view.y < minY){
 				_view.y = minY;
 			}
-		}		
+		}	
+		
+		private function alignBottom():void
+		{
+			if (_mask.height > _view.height){
+				_view.y = 0;
+			}	else{
+				var k:Number = _view.height - _mask.height + _view.y;
+				if (k < 0) _view.y -= k;
+			}			
+		}
 		
 	}
 	
