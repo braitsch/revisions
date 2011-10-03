@@ -17,18 +17,18 @@ package view.windows.modals.local {
 		public function AppUpdate()
 		{
 			addChild(_view);
-			super.drawBackground(550, 220);
+			super.drawBackground(550, 240);
 			super.title = 'Update Available';
 			addCheckBox();
-			addOkButton('Skip');
-			addNoButton('Download');
+			addNoButton('Skip', 285, 190);
+			addOkButton('Download', 415, 190);
 			addEventListener(UIEvent.ENTER_KEY, onDownload);
 			addEventListener(UIEvent.NO_BUTTON, onSkipUpdate);
 		}
 
 		private function addCheckBox():void
 		{
-			_check.y = 170; 
+			_check.y = 195; 
 			_check.label = "Don't prompt me to update again.";
 			_check.addEventListener(MouseEvent.CLICK, onCheckbox);
 			addChild(_check);

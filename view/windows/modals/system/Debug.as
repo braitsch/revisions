@@ -19,7 +19,7 @@ package view.windows.modals.system {
 			var m:String = 'Sorry, it looks like there was a problem! \n';
 			m+='Source : '+o.source+'\n';
 			m+='Method : '+o.method+' failed \n';
-			m+='Message: '+o.message+'\n' || o.result+'\n';
+			o.message ? m+='Message: '+o.message+'\n' : m+='Message: '+o.result+'\n';
 			if (o.errors) for (var k:String in o.errors[0]) m+='Error: '+k+' -- '+o.errors[0][k]+'\n';		
 			_view.message_txt.htmlText = m;
 		}

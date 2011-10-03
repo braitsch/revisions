@@ -29,8 +29,8 @@ package view.windows.modals.local {
 			_heading = new TextHeading('The file this bookmark was pointing to appears to be missing. Please locate it.');
 			addChild(_heading);
 			addRepairForm();
-			addOkButton('OK', 415, 200);
 			addNoButton('Delete', 285, 200);
+			addOkButton('OK', 415, 200);
 			addEventListener(UIEvent.ENTER_KEY, onUpdateBookmark);
 			addEventListener(UIEvent.NO_BUTTON, onDeleteBookmark);
 			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);
@@ -40,7 +40,6 @@ package view.windows.modals.local {
 		{
 			_form.y = 100;
 			_form.fields = [{label:'Name'}, {label:'Location', enabled:false}];
-			_form.setField(0, 'my-experimental-branch');			
 			addChild(_form);
 			var b:FormButton = new FormButton('Browse');
 				b.x = 415; b.y = _form.y + 37;

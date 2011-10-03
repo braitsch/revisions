@@ -7,6 +7,7 @@ package model.proxies.local {
 	import system.BashMethods;
 	import system.SystemRules;
 	import view.windows.modals.system.Debug;
+	import flash.desktop.NativeApplication;
 
 	public class ConfigProxy extends NativeProcessQueue {
 
@@ -138,11 +139,15 @@ package model.proxies.local {
 			_userName = n;
 			setUserNameAndEmail(_userName , _userEmail);
 		}		
-		
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
-			e.data.source = 'ConfigProxy.onProcessFailure(e)';
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Debug(e.data)));
+			if (e.data.method == BashMethods.INSTALL_GIT && e.data.result.indexOf('User canceled') != -1){
+			// user clicked cancel button on password prompt //	
+				NativeApplication.nativeApplication.exit();
+			}	else{
+				e.data.source = 'ConfigProxy.onProcessFailure(e)';
+				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Debug(e.data)));
+			}
 		}
 
 	}
