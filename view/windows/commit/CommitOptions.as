@@ -38,7 +38,11 @@ package view.windows.commit {
 
 		private function onNewBranch(e:MouseEvent):void
 		{
-			dispatchEvent(new UIEvent(UIEvent.WIZARD_NEXT));
+			if (AppModel.branch.isModified == false){
+				dispatchEvent(new UIEvent(UIEvent.WIZARD_NEXT));
+			}	else{
+				AppModel.alert('Please save your changes before creating a new branch.');
+			}
 		}
 		
 		private function onSaveLocal(e:MouseEvent):void
