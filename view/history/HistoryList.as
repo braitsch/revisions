@@ -27,7 +27,11 @@ package view.history {
 		public function set bookmark(b:Bookmark):void
 		{
 			_bookmark = b;
-			if (_bookmark.branch.history) checkIfChanged();
+			if (_bookmark == null){
+				super.clear();
+			}	else if (_bookmark.branch.history) {
+				checkIfChanged();
+			}
 		}
 		
 		public function setSize(w:uint, h:uint):void

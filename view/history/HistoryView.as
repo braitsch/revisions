@@ -16,6 +16,7 @@ package view.history {
 			addChild(_list);
 			addChild(_header);
 			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onSelected);
+			AppModel.engine.addEventListener(BookmarkEvent.NO_BOOKMARKS, onNoBookmarks);
 			AppModel.engine.addEventListener(AppEvent.HISTORY_RECEIVED, onHistory);
 			AppModel.engine.addEventListener(AppEvent.MODIFIED_RECEIVED, onModified);
 		}
@@ -42,6 +43,12 @@ package view.history {
 			_list.bookmark = AppModel.bookmark;
 			if (AppModel.bookmark.branch.history) _header.refresh();
 		}
+		
+		private function onNoBookmarks(e:BookmarkEvent):void
+		{
+			_header.clear();
+			_list.bookmark = null;
+		}		
 		
 	}
 	

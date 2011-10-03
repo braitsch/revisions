@@ -169,12 +169,12 @@ package view.windows.modals {
 		
 		private function onDragAndDrop(e:UIEvent):void 
 		{
-			if (FileUtils.dirIsEmpty(e.data as File) == false){
-				_dragAndDrop.file = e.data as File;
-				showModalWindow(_dragAndDrop);
-			} 	else{
+			if (FileUtils.dirIsEmpty(e.data as File) == true){
 				var m:String = 'Please add some files to this folder before attempting to track it.';
 				onShowAlert(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));				
+			} 	else if (_alert == null && (_window == null || _window == _dragAndDrop || _window == _welcome)) {
+				_dragAndDrop.file = e.data as File;
+				showModalWindow(_dragAndDrop);
 			}
 		}
 

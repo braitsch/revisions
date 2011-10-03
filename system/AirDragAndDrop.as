@@ -25,7 +25,7 @@ package system {
 		
 		private function onNativeDragEnter(e:NativeDragEvent):void 
 		{
-			if(e.clipboard.hasFormat(ClipboardFormats.FILE_LIST_FORMAT)){
+			if (e.clipboard.hasFormat(ClipboardFormats.FILE_LIST_FORMAT)){
 				NativeDragManager.acceptDragDrop(_target); 		
 			}
 		}		

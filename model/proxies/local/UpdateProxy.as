@@ -103,7 +103,11 @@ package model.proxies.local {
 		
 		public function get locked():Boolean
 		{
-			return _timer.running == false;
+			if (AppModel.bookmark == null){
+				return false;
+			}	else{
+				return _timer.running == false;
+			}
 		}
 		
 		private function exists(b:Bookmark):Boolean
