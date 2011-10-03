@@ -1,6 +1,7 @@
 package view.btns {
 
 	import view.graphics.Box;
+	import com.greensock.TweenMax;
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.filters.GlowFilter;
@@ -15,6 +16,11 @@ package view.btns {
 			if (t) _btn.transform.colorTransform = Box.TINT;
 			addChild(_btn);
 			if (g) filters = [_glow];
+		}
+		
+		public function set tint(c:uint):void
+		{
+			TweenMax.to(_btn, 1, {colorTransform:{tint:c, tintAmount:1}});
 		}
 		
 	}

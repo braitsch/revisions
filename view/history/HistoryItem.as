@@ -16,13 +16,13 @@ package view.history {
 			buttonMode = true;
 		}
 		
+		public function setSize(w:uint, h:uint):void { }
+		
 		protected function setText(l1:String, l2:String):void
 		{
 			_text.x = 60; _text.y = 8;
 			_text.line1 = l1;
 			_text.line2 = l2;
-		//	_text.line1.mouseEnabled = _text.line1.mouseChildren = false; 
-		//	_text.line2.mouseEnabled = _text.line2.mouseChildren = false; 
 			addChild(_text);			
 		}
 		

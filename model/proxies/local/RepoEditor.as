@@ -39,6 +39,19 @@ package model.proxies.local {
 			super.call(Vector.<String>([BashMethods.COMMIT, 'Auto Saved :: '+new Date().toLocaleString()]));
 		}
 		
+		public function starCommit(o:Commit):void
+		{
+			trace("RepoEditor.starCommit(o)", '!important-'+o.sha1);
+			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
+			super.call(Vector.<String>([BashMethods.STAR_COMMIT, o.sha1]));
+		}
+		
+		public function unstarCommit(o:Commit):void
+		{
+			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
+			super.call(Vector.<String>([BashMethods.UNSTAR_COMMIT, o.sha1]));			
+		}
+		
 	// branching //	
 		
 		public function addBranch(name:String, cmt:Commit):void
@@ -96,7 +109,7 @@ package model.proxies.local {
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
-			trace("RepoEditor.onProcessComplete(e)", e.data.result);
+			trace("RepoEditor.onProcessComplete(e)", e.data.method, e.data.result);
 			switch(e.data.method) {
 			// auto update the history after reverting to an earlier version //	
 				case BashMethods.REVERT_TO_VERSION : 
@@ -127,6 +140,10 @@ package model.proxies.local {
 				break;
 				case BashMethods.UNTRACK_FILE : 
 				break;
+				case BashMethods.STAR_COMMIT : 
+				break;
+				case BashMethods.UNSTAR_COMMIT : 
+				break;				
 				default :
 					e.data.source = 'RepoEditor.onProcessFailure(e)';
 					AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Debug(e.data)));				
@@ -171,8 +188,8 @@ package model.proxies.local {
 		private function reponseHas(s1:String, s2:String):Boolean
 		{
 			return s1.indexOf(s2) != -1;
-		}		
-		
+		}
+
 	}
 	
 }

@@ -84,7 +84,10 @@ package system{
 		public static const POST_REQUEST			:String = 'postRequest';
 		public static const PUT_REQUEST				:String = 'putRequest';
 		public static const PATCH_REQUEST			:String = 'patchRequest';
-		public static const DELETE_REQUEST:String = 'deleteRequest';
+		public static const DELETE_REQUEST			:String = 'deleteRequest';
+		public static const STAR_COMMIT				:String = 'starCommit';
+		public static const UNSTAR_COMMIT			:String = 'unstarCommit';
+		public static const GET_FAVORITES			:String = 'getFavorites';
 		
 	}
 	

@@ -23,12 +23,12 @@ package view.history {
 		public function resize(w:uint, h:uint):void
 		{
 			_header.resize(w, h);
-			_list.draw(w, h - _list.y);
+			_list.setSize(w, h - _list.y);
 		}
 		
 		private function onHistory(e:AppEvent):void
 		{
-			 _header.refresh();
+			_header.refresh();
 			_list.bookmark = AppModel.bookmark;
 		}
 

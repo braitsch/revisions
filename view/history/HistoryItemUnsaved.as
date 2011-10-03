@@ -11,20 +11,17 @@ package view.history {
 
 		public function HistoryItemUnsaved()
 		{
-			drawBkgd();
+			addChild(_bkgd);
 			super.attachAvatar('');
 			super.setText('Working Version - Unsaved', 'Right Now');
 			addEventListener(MouseEvent.CLICK, onSaveSelection);
 		}
-
-		private function drawBkgd():void
-		{
-			_bkgd.scalable = true;
-			_bkgd.scaleOffset = 210;
-			_bkgd.draw(500, 41);
-			addChild(_bkgd);
-		}
 		
+		override public function setSize(w:uint, h:uint):void
+		{
+			_bkgd.draw(w, h);
+		}		
+
 		private function onSaveSelection(e:MouseEvent):void
 		{
 			dispatchEvent(new UIEvent(UIEvent.COMMIT));

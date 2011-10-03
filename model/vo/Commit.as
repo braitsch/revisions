@@ -8,6 +8,7 @@ package model.vo {
 		private var _email		:String;
 		private var _note		:String;
 		private var _index		:uint;
+		private var _starred	:Boolean;
 
 		public function Commit(s:String, n:uint)
 		{
@@ -53,7 +54,17 @@ package model.vo {
 		public function get index():uint
 		{
 			return _index;
-		}		
+		}
+
+		public function get starred():Boolean
+		{
+			return _starred;
+		}
+
+		public function set starred(b:Boolean):void
+		{
+			_starred = b;
+		}
 		
 	}
 	

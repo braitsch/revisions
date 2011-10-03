@@ -8,6 +8,8 @@ package view.history {
 
 	public class HistoryList extends ScrollingList {
 
+		private var _width				:uint;
+		private var _height				:uint;
 		private var _length				:uint;
 		private var _modified			:Boolean;
 		private var _branch				:Branch;
@@ -22,15 +24,22 @@ package view.history {
 			setTimeout(generateItems, 1000);
 		}
 		
-		private function generateItems():void
-		{
-			for (var i:int = 0; i < 25; i++) _itemsSaved.push(new HistoryItemSaved());
-		}
-		
 		public function set bookmark(b:Bookmark):void
 		{
 			_bookmark = b;
 			if (_bookmark.branch.history) checkIfChanged();
+		}
+		
+		public function setSize(w:uint, h:uint):void
+		{
+			_width = w; _height = h;
+			super.draw(_width, _height);
+			for (var i:int = 0; i < super.list.numChildren; i++) HistoryItem(super.list.getChildAt(i)).setSize(_width, 41);
+		}
+		
+		private function generateItems():void
+		{
+			for (var i:int = 0; i < 25; i++) _itemsSaved.push(new HistoryItemSaved());
 		}
 		
 //	 on summary & history updates //
@@ -57,6 +66,7 @@ package view.history {
 					k.commit = v[i];
 				super.addItem(k, .05*i);
 			}
+			setSize(_width, _height);
 		}
 		
 	}

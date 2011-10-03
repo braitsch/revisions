@@ -45,6 +45,7 @@ package model.proxies.local {
 			_bookmark = b;
 			super.directory = _bookmark.gitdir;
 			super.queue = [	Vector.<String>([BashMethods.GET_HISTORY]), 
+							Vector.<String>([BashMethods.GET_FAVORITES]),
 							Vector.<String>([BashMethods.GET_TOTAL_COMMITS]) ];
 		}
 		
@@ -54,14 +55,14 @@ package model.proxies.local {
 		{
 			var a:Array = e.data as Array;
 			switch(a[0].method){
+				case BashMethods.GET_HISTORY :
+					onHistory(a);
+				break;
 				case BashMethods.GET_LAST_COMMIT :
 					onSummary(a);	
 				break;
 				case BashMethods.GET_IGNORED_FILES:
 					onModified(a);
-				break;
-				case BashMethods.GET_HISTORY :
-					parseHistory(a[0].result, uint(a[1].result) + 1); 
 				break;
 			}
 		}
@@ -101,15 +102,24 @@ package model.proxies.local {
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SUMMARY_RECEIVED, AppModel.bookmark));
 		}
 
-		private function parseHistory(s:String, n:uint):void
+		private function onHistory(a:Array):void
 		{
-			var a:Array = s.split(/[\n\r\t]/g);
+			var h:Array = a[0].result.split(/[\n\r\t]/g);
+			var f:Array = a[1].result.split(/[\n\r\t]/g);
+			var n:uint = uint(a[2].result) + 1;
 			var v:Vector.<Commit> = new Vector.<Commit>();
-			for (var i:int = 0; i < a.length; i++) v.push(new Commit(a[i], n-i));
+			for (var i:int = 0; i < h.length; i++) v.push(new Commit(h[i], n-i));
 			_bookmark.branch.history = v;
+			for (var k:int = 0; k < f.length; k++) {
+				for (var x:int = 0; x < v.length; x++) {
+					if (v[x].sha1 == f[k].substr(11)){
+						v[x].starred = true; break;
+					}
+				}
+			}
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HISTORY_RECEIVED, _bookmark));
-		}	
+		}
 
 		private function splitAndTrim(s:String):Array
 		{
