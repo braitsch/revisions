@@ -59,7 +59,7 @@ package model.proxies.remote.base {
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
-		//	trace("GitProxy.onProcessComplete(e)", e.data.method, e.data.result);
+			trace("GitProxy.onProcessComplete(e)", e.data.method, e.data.result);
 			if (super.timerIsRunning == true){
 				super.stopTimer();
 				handleResponse(e.data.method, e.data.result);

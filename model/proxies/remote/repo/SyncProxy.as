@@ -30,6 +30,7 @@ package model.proxies.remote.repo {
 		
 		private function pullRemote():void
 		{
+			trace("SyncProxy.pullRemote()", _remote.url, AppModel.branch.name);
 			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
 			super.request = new GitRequest(BashMethods.PULL_REMOTE, _remote.url, [AppModel.branch.name]);
 		}

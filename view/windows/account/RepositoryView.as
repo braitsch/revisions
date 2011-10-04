@@ -2,13 +2,14 @@ package view.windows.account {
 
 	import events.AppEvent;
 	import events.UIEvent;
+	import model.AppModel;
+	import model.vo.Repository;
+	import system.FileUtils;
+	import view.type.TextHeading;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
-	import model.AppModel;
-	import model.vo.Repository;
-	import view.type.TextHeading;
 	
 	public class RepositoryView extends AccountView {
 	
@@ -77,9 +78,13 @@ package view.windows.account {
 		
 		private function onBrowserSelection(e:UIEvent):void
 		{
-			_savePath = File(e.data).nativePath;
-			AppModel.proxies.remote.clone(_cloneURL, _savePath);
-			AppModel.engine.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);
+			if (FileUtils.dirIsEmpty(e.data as File) == false){
+				AppModel.alert('Please select an empty folder to download your files to.');
+			}	else{
+				_savePath = File(e.data).nativePath;
+				AppModel.proxies.remote.clone(_cloneURL, _savePath);
+				AppModel.engine.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);
+			}
 		}
 
 		private function onCloneComplete(e:AppEvent):void

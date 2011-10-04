@@ -41,7 +41,12 @@ package view.history {
 		private function onSelected(e:BookmarkEvent):void 
 		{
 			_list.bookmark = AppModel.bookmark;
-			if (AppModel.bookmark.branch.history) _header.refresh();
+			if (AppModel.bookmark.branch.history == null) {
+				_header.clear();
+				_list.bookmark = null;	
+			}	else{
+				_header.refresh();
+			}
 		}
 		
 		private function onNoBookmarks(e:BookmarkEvent):void
