@@ -244,7 +244,7 @@ package view.windows.modals {
 		private function showLoader(e:AppEvent):void
 		{
 			setChildIndex(_preloader, numChildren-1);
-			resize(stage.stageWidth, stage.stageHeight);
+			resize(stage.stageWidth, stage.stageHeight - 20);
 		}
 		
 	// adding & removing modal windows //	
