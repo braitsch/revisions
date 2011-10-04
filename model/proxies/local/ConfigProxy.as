@@ -107,6 +107,7 @@ package model.proxies.local {
 		
 		private function parseGitDetails(s:String):void
 		{
+			trace("ConfigProxy.parseGitDetails(s)", s);
 			var a:Array = s.split(',');	
 			_gitInstall = a[0];
 			_gitVersion = a[1].substring(12);

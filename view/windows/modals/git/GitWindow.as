@@ -2,15 +2,14 @@ package view.windows.modals.git {
 
 	import events.AppEvent;
 	import events.UIEvent;
+	import model.AppModel;
+	import system.SystemRules;
+	import view.windows.base.ParentWindow;
 	import flash.desktop.NativeApplication;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.events.Event;
-	import flash.events.MouseEvent;
-	import model.AppModel;
-	import system.SystemRules;
-	import view.windows.base.ParentWindow;
 
 	public class GitWindow extends ParentWindow {
 
@@ -86,7 +85,7 @@ package view.windows.modals.git {
 			removeEventListener(UIEvent.NO_BUTTON, quitApplication);
 		}
 		
-		private function quitApplication(e:MouseEvent):void 
+		private function quitApplication(e:UIEvent):void 
 		{
 			NativeApplication.nativeApplication.exit();
 		}			
