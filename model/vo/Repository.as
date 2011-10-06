@@ -4,16 +4,17 @@ package model.vo {
 
 	public class Repository {
 
-		private var _id				:uint;
-		private var _url			:String;
-		private var _name			:String; // ex. github-revisions-source //
-		private var _branches		:Array = [];
-		private var _acctType		:String;
-		private var _acctName		:String;
-		private var _repoName		:String;
-		private var _homePage		:String;
-		private var _lastUpdated	:String;
-		private var _collaborators	:Vector.<Collaborator>;
+		private var _id					:uint;
+		private var _url				:String;
+		private var _name				:String; // ex. github-revisions-source //
+		private var _branches			:Array = [];
+		private var _acctType			:String;
+		private var _acctName			:String;
+		private var _repoName			:String;
+		private var _homePage			:String;
+		private var _fetched			:Boolean;
+		private var _lastUpdated		:String;
+		private var _collaborators		:Vector.<Collaborator>;
 
 		public function Repository(name:String, url:String)
 		{
@@ -24,14 +25,16 @@ package model.vo {
 			_homePage = getRepositoryHomePage(url);
 		}
 		
-		public function get id()			:uint 	{ return _id; 		   }
-		public function get url()			:String { return _url; 		   }
-		public function get name()			:String { return _name; 	   }
-		public function get acctType()		:String { return _acctType;	   }	
-		public function get acctName()		:String { return _acctName;	   }	
-		public function get repoName()		:String { return _repoName;	   }
-		public function get homePage()		:String { return _homePage;	   }
-		public function get lastUpdated()	:String { return _lastUpdated; }
+		public function get id()			:uint 		{ return _id; 		    }
+		public function get url()			:String 	{ return _url; 		    }
+		public function get name()			:String 	{ return _name; 	    }
+		public function get acctType()		:String 	{ return _acctType;	    }	
+		public function get acctName()		:String 	{ return _acctName;	    }	
+		public function get repoName()		:String 	{ return _repoName;		}
+		public function get homePage()		:String 	{ return _homePage;		}
+		public function get lastUpdated()	:String 	{ return _lastUpdated;  }
+		public function get fetched()		:Boolean	{ return _fetched;		}
+		public function set fetched(b:Boolean):void 	{ _fetched = b;			}
 		
 	// branches //	
 		
@@ -116,7 +119,7 @@ package model.vo {
 		
 		public static function buildHttpsURL(u:String, p:String, a:String, r:String):String
 		{
-			return 'https://' + u + ':' + p + '@github.com/' + a +'/'+ r;
+			return 'https://' + u + ':' + p + '@github.com/' + a + '/' + r;
 		}
 
 	}

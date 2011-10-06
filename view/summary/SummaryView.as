@@ -111,6 +111,7 @@ package view.summary {
 		
 		private function drawView(e:AppEvent):void
 		{
+			if (this.visible == false) return;
 			_saveBtn.enabled = AppModel.branch.isModified;
 			_details.version_txt.text = 'Version #'+AppModel.branch.totalCommits as String;
 			_details.lastSaved_txt.text = 'Last Saved : '+AppModel.branch.lastCommit.date;

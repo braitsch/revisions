@@ -29,8 +29,8 @@ package model.vo {
 		private var _icon32				:Bitmap;
 		private var _icon128			:Bitmap;
 		private var _stash				:Array = [];
-		private var _remotes			:Vector.<Repository> = new Vector.<Repository>();
 		private var _branches			:Vector.<Branch> = new Vector.<Branch>();
+		private var _remotes			:Vector.<Repository> = new Vector.<Repository>();
 
 		public function Bookmark(o:Object)
 		{
@@ -57,7 +57,7 @@ package model.vo {
 		public function get remotes():Vector.<Repository> 		{ return _remotes; 	}
 		public function get branches():Vector.<Branch>			{ return _branches; }
 		
-		public function get label():String 						{ return _label;	}		
+		public function get label():String 						{ return _label;	}
 		public function set label(s:String):void
 		{
 			_label = s;

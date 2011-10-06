@@ -12,7 +12,7 @@ package model.proxies.local {
 	public class UpdateProxy extends EventDispatcher {
 
 		private static var _status			:Timer = new Timer(3000);
-		private static var _remote			:Timer = new Timer(9999);
+		private static var _ticks			:uint = 0;
 		private static var _proxy 			:StatusProxy = new StatusProxy();
 		private static var _autoSaveQueue	:Vector.<Bookmark> = new Vector.<Bookmark>();
 
@@ -29,7 +29,7 @@ package model.proxies.local {
 		
 		public function set locked(b:Boolean):void
 		{	
-			b ? stopTimers() : startTimers();
+			b ? stopTimers() : resetTimer();
 		}
 
 		public function get locked():Boolean
@@ -45,7 +45,6 @@ package model.proxies.local {
 
 		private function initTimers():void
 		{
-			_remote.addEventListener(TimerEvent.TIMER, onTimerFetchRemote);
 			_status.addEventListener(TimerEvent.TIMER, onTimerCheckModified);			
 		}
 		
@@ -66,20 +65,23 @@ package model.proxies.local {
 		private function onBookmarkReverted(e:BookmarkEvent):void 	{	getHistory();		}
 		private function onBookmarkSelected(e:BookmarkEvent):void 	{ 	getSummary();		}
 		
-		private function onTimerFetchRemote(e:TimerEvent):void
-		{
-			getRemoteStatus();
-		}				
-		
 		private function onTimerCheckModified(e:TimerEvent):void 
 		{		
 			_autoSaveQueue.length ? getModified(_autoSaveQueue[0]) : getModified(AppModel.bookmark);		
 		}
 		
-		private function getRemoteStatus():void
+		private function getRemoteStatus(force:Boolean = false):void
 		{
-			resetFetchTimer(); 
-			if (exists(AppModel.bookmark) == true && AppModel.bookmark.remotes.length) _proxy.fetchRemote();
+			if (AppModel.bookmark.remotes.length){
+				if (exists(AppModel.bookmark) == true){
+					resetTimer(); 
+					if (AppModel.bookmark.remotes[0].fetched == false || force==true){
+						_proxy.fetchRepository();
+					}	else{
+						_proxy.getRemoteStatus();
+					}
+				}
+			}
 		}
 		
 		private function onSummaryReceived(e:AppEvent):void 		
@@ -89,19 +91,19 @@ package model.proxies.local {
 		
 		private function getModified(b:Bookmark):void
 		{
-			resetStatusTimer();
+			resetTimer();
 			if (exists(b) == true) _proxy.getModified(b);
 		}
 		
 		private function getSummary():void
 		{
-			resetStatusTimer();
-			_proxy.getSummary();
+			resetTimer();
+			_ticks = 0; _proxy.getSummary();
 		}
 		
 		private function getHistory():void
 		{
-			resetStatusTimer();
+			resetTimer();
 		// add slight delay so we have time to display the preloader //	
 			setTimeout(_proxy.getHistory, 500);
 			AppModel.showLoader('Refreshing History');
@@ -119,7 +121,7 @@ package model.proxies.local {
 					_autoSaveQueue.splice(0, 1);			
 				}
 			}
-			if (isNaN(AppModel.branch.remoteStatus)) getRemoteStatus();
+			getRemoteStatus(++_ticks % 4 == 0);
 		}
 		
 		private function onCommitComplete(e:BookmarkEvent):void 
@@ -149,24 +151,12 @@ package model.proxies.local {
 		private function stopTimers():void
 		{
 			_status.stop();
-			_remote.stop();		
 		}
 		
-		private function startTimers():void
+		private function resetTimer():void
 		{
 			_status.reset(); _status.start();
-			_remote.reset(); _remote.start();
 		}		
-		
-		private function resetStatusTimer():void
-		{
-			_status.reset(); _status.start();
-		}
-		
-		private function resetFetchTimer():void
-		{
-			_remote.reset(); _remote.start();	
-		}
 		
 	}
 	

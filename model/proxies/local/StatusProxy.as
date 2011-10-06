@@ -46,21 +46,23 @@ package model.proxies.local {
 							Vector.<String>([BashMethods.GET_TOTAL_COMMITS]) ];
 		}
 		
-		public function fetchRemote():void
+		public function fetchRepository():void
 		{
-			trace("StatusProxy.fetchRemote()");
+			_bookmark = AppModel.bookmark;
+			trace("StatusProxy.fetchRemote()", _bookmark.remotes[0].name);
 			if (_fetching) return; _fetching = true;
-			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
-			super.queue = [	Vector.<String>([BashMethods.GET_REMOTE_FILES, AppModel.bookmark.remotes[0].name]) ];
+			super.appendArgs([_bookmark.gitdir, _bookmark.worktree]);
+			super.queue = [	Vector.<String>([BashMethods.GET_REMOTE_FILES, _bookmark.remotes[0].name]) ];
 		}
 		
-		private function getRemoteStatus():void
+		public function getRemoteStatus():void
 		{
-			trace("StatusProxy.getRemoteStatus()");
-			var r:String = AppModel.bookmark.remotes[0].name;
-			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
-			super.queue = [	Vector.<String>([BashMethods.CHERRY_BRANCH, r+'/'+AppModel.branch.name, AppModel.branch.name]),
-							Vector.<String>([BashMethods.CHERRY_BRANCH, AppModel.branch.name, r+'/'+AppModel.branch.name]) ];			
+			_bookmark = AppModel.bookmark;
+			trace("StatusProxy.getRemoteStatus()", _bookmark.branch.name);
+			var r:String = _bookmark.remotes[0].name;
+			super.appendArgs([_bookmark.gitdir, _bookmark.worktree]);
+			super.queue = [	Vector.<String>([BashMethods.CHERRY_BRANCH, r+'/'+_bookmark.branch.name, _bookmark.branch.name]),
+							Vector.<String>([BashMethods.CHERRY_BRANCH, _bookmark.branch.name, r+'/'+_bookmark.branch.name]) ];			
 		}
 		
 	// private handlers //
@@ -79,23 +81,28 @@ package model.proxies.local {
 					onModified(a);
 				break;
 				case BashMethods.GET_REMOTE_FILES:
-					getRemoteStatus();
+					onRemoteFetched();
 				break;
 				case BashMethods.CHERRY_BRANCH:
 					onRemoteStatus(a);
 				break;				
 			}
 		}
+		
+		private function onRemoteFetched():void
+		{
+			_fetching = false;
+			_bookmark.remotes[0].fetched = true;
+		}
 
 		private function onRemoteStatus(a:Array):void
 		{
-			_fetching = false;
-			var n1:Array = a[0].result.split(/[\n\r\t]/g);
-			var n2:Array = a[1].result.split(/[\n\r\t]/g);
+			var n1:Array = splitAndTrim(a[0].result);
+			var n2:Array = splitAndTrim(a[1].result);
 			trace('local to remote = '+n1);
 			trace('remote to local = '+n2);
-			if (n1.length) AppModel.branch.remoteStatus = n1.length;
-			if (n2.length) AppModel.branch.remoteStatus = n2.length;
+			if (n1.length) _bookmark.branch.remoteStatus = n1.length;
+			if (n2.length) _bookmark.branch.remoteStatus = n2.length;
 		}
 		
 		private function onModified(a:Array):void
