@@ -12,7 +12,7 @@ package view.graphics {
 		public static const	TINT		:ColorTransform = new ColorTransform();	
 							TINT.color = 0x999999;
 
-		public function draw(w:uint, h:uint):void { }		
+		public function draw(w:uint, h:uint):void { }
 		
 	}
 	

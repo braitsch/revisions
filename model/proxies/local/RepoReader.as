@@ -5,13 +5,11 @@ package model.proxies.local {
 	import model.AppModel;
 	import model.proxies.air.NativeProcessQueue;
 	import model.vo.Bookmark;
-	import model.vo.Commit;
 	import system.BashMethods;
 	import view.windows.modals.system.Debug;
 
 	public class RepoReader extends NativeProcessQueue {
 
-		private static var _index		:uint;
 		private static var _bookmark	:Bookmark;
 
 		public function RepoReader() 
@@ -33,12 +31,7 @@ package model.proxies.local {
 
 		private function onQueueComplete(e:NativeProcessEvent):void 
 		{
-			var a:Array = e.data as Array;
-			if (a.length == 4){
-				onRepositoryInfo(a);
-			}	else if (a.length == 1){
-				onBranchLastCommit(a);	
-			}
+			onRepositoryInfo(e.data as Array);
 		}
 		
 		private function onRepositoryInfo(a:Array):void
@@ -49,27 +42,11 @@ package model.proxies.local {
 			_bookmark.addRemotes(a[1]);
 			_bookmark.addLocalBranches(a[2]);
 			_bookmark.addRemoteBranches(a[3]);
-			_index = 0; getLastCommitOfNextBranch();
-		}
-		
-		private function onBranchLastCommit(a:Array):void
-		{
-			_bookmark.branches[_index++].lastCommit = new Commit(a[0].result, 0);
-			getLastCommitOfNextBranch();
-		}
-
-		private function getLastCommitOfNextBranch():void
-		{
-			if (_index == _bookmark.branches.length){
-				dispatchEvent(new AppEvent(AppEvent.REPOSITORY_READY));
-			}	else{
-				super.queue = [	Vector.<String>([BashMethods.GET_LAST_COMMIT, _bookmark.branches[_index].name])];
-			}
+			dispatchEvent(new AppEvent(AppEvent.REPOSITORY_READY));
 		}
 		
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
-			trace("RepoReader.onProcessFailure(e)", e.data.result);
 			e.data.source = 'RepoReader.onProcessFailure(e)';
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Debug(e.data)));
 		}

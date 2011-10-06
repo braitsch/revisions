@@ -62,9 +62,9 @@ package model.proxies.local {
 		
 		public function changeBranch(b:Branch):void
 		{
-			AppModel.bookmark.branch = b;
+			_branch = b;
 			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
-			super.call(Vector.<String>([BashMethods.SET_BRANCH, b.name]));
+			super.call(Vector.<String>([BashMethods.SET_BRANCH, _branch.name]));
 		}
 		
 		public function renameBranch(o:String, n:String):void
@@ -120,7 +120,8 @@ package model.proxies.local {
 					onBranchSet();
 				break;
 				case BashMethods.COMMIT : 
-					_bookmark.branch.modified = [[], []];
+					_bookmark.branch.modified = [];
+					_bookmark.branch.untracked = [];
 					dispatchEvent(new BookmarkEvent(BookmarkEvent.COMMIT_COMPLETE, _bookmark));
 				break;
 				case BashMethods.MERGE : 
@@ -168,6 +169,7 @@ package model.proxies.local {
 
 		private function onBranchSet():void
 		{
+			AppModel.bookmark.branch = _branch;
 			dispatchEvent(new BookmarkEvent(BookmarkEvent.BRANCH_CHANGED));
 		}
 

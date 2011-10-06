@@ -1,37 +1,27 @@
 package view.summary {
 
 	import events.AppEvent;
+	import events.BookmarkEvent;
 	import events.UIEvent;
+	import model.AppModel;
+	import view.btns.IconButton;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
-	import model.AppModel;
-	import model.vo.Bookmark;
-	import view.btns.IconButton;
-	import view.windows.modals.system.Message;
 	
 	public class SummaryOptions extends Sprite {
 
 		private static var _view:*;
 		private static var _locked		:Boolean;
-		private static var _bookmark	:Bookmark;
 	
 		public function SummaryOptions(v:Sprite)
 		{
 			_view = v;
 			initButtons();
+			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onSelected);
 			AppModel.engine.addEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);
+			AppModel.engine.addEventListener(AppEvent.BKMK_ADDED_TO_ACCOUNT, onBkmkAddedToAcct);
 		}
-		
-		public function set bookmark(b:Bookmark):void { _bookmark = b; }
-		
-		public function positionButtons(b:Boolean):void
-		{
-			_view.sync_btn.visible = b;
-			_view.history_btn.x = b ? 60 : 40;
-			_view.upload_btn.x = b ? -20 : 0;
-			_view.settings_btn.x = b ? -60 : -40;
-		}		
-		
+
 		private function initButtons():void
 		{
 			var l:Array = ['Settings', 'Link Account', 'Sync Account', 'History'];
@@ -43,9 +33,28 @@ package view.summary {
 			_view.settings_btn.addEventListener(MouseEvent.CLICK, onSettingsButton);
 		}
 		
+		private function onSelected(e:BookmarkEvent):void
+		{
+			positionButtons();	
+		}
+
+		private function onBkmkAddedToAcct(e:AppEvent):void
+		{
+			positionButtons();	
+		}
+		
+		private function positionButtons():void
+		{
+			var b:Boolean = AppModel.bookmark.remotes.length > 0;
+			_view.sync_btn.visible = b;
+			_view.history_btn.x = b ? 60 : 40;
+			_view.upload_btn.x = b ? -20 : 0;
+			_view.settings_btn.x = b ? -60 : -40;
+		}			
+		
 		private function onSettingsButton(e:MouseEvent):void
 		{
-			dispatchEvent(new UIEvent(UIEvent.EDIT_BOOKMARK, _bookmark));			
+			dispatchEvent(new UIEvent(UIEvent.EDIT_BOOKMARK, AppModel.bookmark));			
 		}
 		
 		private function onUploadButton(e:MouseEvent):void
@@ -65,12 +74,11 @@ package view.summary {
 		
 		private function syncRemote():void
 		{
-			if (_bookmark.branch.isModified){
-				var m:Message = new Message('Please saves your lastest changes before syncing with the server.');
-				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
-			}	else{
+			if (AppModel.branch.isModified == false){
 				_locked = true;
-				AppModel.proxies.remote.syncRemotes(_bookmark.remotes);
+				AppModel.proxies.remote.syncRemotes(AppModel.bookmark.remotes);
+			}	else{
+				AppModel.alert('Please saves your lastest changes before syncing with the server.');
 			}
 		}
 

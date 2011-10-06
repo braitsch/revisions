@@ -40,13 +40,20 @@ package model.proxies.local {
 							Vector.<String>([BashMethods.GET_UNTRACKED_FILES]) ];
 		}
 
-		public function getHistory(b:Bookmark):void
+		public function getHistory():void
 		{
-			_bookmark = b;
-			super.directory = _bookmark.gitdir;
+			super.directory = AppModel.bookmark.gitdir;
 			super.queue = [	Vector.<String>([BashMethods.GET_HISTORY]), 
 							Vector.<String>([BashMethods.GET_FAVORITES]),
 							Vector.<String>([BashMethods.GET_TOTAL_COMMITS]) ];
+		}
+		
+		public function fetchRemote():void
+		{
+			if (AppModel.bookmark.remotes){
+				
+			}
+			trace("StatusProxy.fetchRemote()", AppModel.branch.remoteStatus);
 		}
 		
 	// private handlers //
@@ -77,8 +84,8 @@ package model.proxies.local {
 			var m:Array = ignoreHiddenFiles(splitAndTrim(a[1]));
 			var u:Array = ignoreHiddenFiles(splitAndTrim(a[2]));
 		// remove all the ignored files from the untracked array //	
-			u = stripDuplicates(u, i);
-			_bookmark.branch.modified = [m , u];
+			_bookmark.branch.modified = m;
+			_bookmark.branch.untracked = stripDuplicates(u, i);
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.MODIFIED_RECEIVED, _bookmark));			
 		}
 
@@ -99,7 +106,7 @@ package model.proxies.local {
 		{
 			for (var i:int = 0; i < a.length; i++) a[i] = a[i].result;
 			AppModel.branch.lastCommit = new Commit(a[0], uint(a[1]) + 1);
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SUMMARY_RECEIVED, AppModel.bookmark));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SUMMARY_RECEIVED));
 		}
 
 		private function onHistory(a:Array):void
@@ -109,7 +116,7 @@ package model.proxies.local {
 			var n:uint = uint(a[2].result) + 1;
 			var v:Vector.<Commit> = new Vector.<Commit>();
 			for (var i:int = 0; i < h.length; i++) v.push(new Commit(h[i], n-i));
-			_bookmark.branch.history = v;
+			AppModel.branch.history = v;
 			for (var k:int = 0; k < f.length; k++) {
 				for (var x:int = 0; x < v.length; x++) {
 					if (v[x].sha1 == f[k].substr(11)){
@@ -118,7 +125,7 @@ package model.proxies.local {
 				}
 			}
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HISTORY_RECEIVED, _bookmark));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HISTORY_RECEIVED));
 		}
 
 		private function splitAndTrim(s:String):Array
@@ -143,7 +150,7 @@ package model.proxies.local {
 			e.data.source = 'StatusProxy.onProcessFailure(e) -- request on '+_bookmark.label, _bookmark.branch.name;
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Debug(e.data)));
 		}
-		
+
 	}
 	
 }

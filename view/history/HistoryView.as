@@ -16,44 +16,47 @@ package view.history {
 			addChild(_list);
 			addChild(_header);
 			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onSelected);
-			AppModel.engine.addEventListener(BookmarkEvent.NO_BOOKMARKS, onNoBookmarks);
 			AppModel.engine.addEventListener(AppEvent.HISTORY_RECEIVED, onHistory);
 			AppModel.engine.addEventListener(AppEvent.MODIFIED_RECEIVED, onModified);
+			AppModel.engine.addEventListener(BookmarkEvent.NO_BOOKMARKS, onNoBookmarks);
 		}
 
 		public function resize(w:uint, h:uint):void
 		{
-			_header.resize(w, h);
-			_list.setSize(w, h - _list.y);
+			_header.resize(w, h); _list.setSize(w, h - _list.y);
 		}
 		
+		private function onSelected(e:BookmarkEvent):void 
+		{
+			AppModel.bookmark.branch.history ? drawView() : clearView();
+		}
+		
+		private function onModified(e:AppEvent):void
+		{
+			AppModel.bookmark.branch.history ? drawView() : clearView();
+		}									
+		
 		private function onHistory(e:AppEvent):void
+		{
+			drawView();
+		}		
+		
+		private function onNoBookmarks(e:BookmarkEvent):void
+		{
+			clearView();
+		}
+		
+		private function drawView():void
 		{
 			_header.refresh();
 			_list.bookmark = AppModel.bookmark;
 		}
-
-		private function onModified(e:AppEvent):void
-		{
-			_list.bookmark = AppModel.bookmark;			
-		}									
 		
-		private function onSelected(e:BookmarkEvent):void 
-		{
-			_list.bookmark = AppModel.bookmark;
-			if (AppModel.bookmark.branch.history == null) {
-				_header.clear();
-				_list.bookmark = null;	
-			}	else{
-				_header.refresh();
-			}
-		}
-		
-		private function onNoBookmarks(e:BookmarkEvent):void
+		private function clearView():void
 		{
 			_header.clear();
 			_list.bookmark = null;
-		}		
+		}
 		
 	}
 	
