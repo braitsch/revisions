@@ -9,7 +9,7 @@ package model.vo {
 		private var _modified		:Array = [];
 		private var _untracked		:Array = [];
 		private var _lastCommit		:Commit;
-		private var _remoteStatus	:Number; // ahead or behind remote tracking branch //
+		private var _remoteStatus	:int; // ahead or behind remote tracking branch //
 
 		public function Branch(n:String)  
 		{
@@ -24,10 +24,8 @@ package model.vo {
 		public function set lastCommit(c:Commit):void 		{ _lastCommit = c; 			}
 		public function get lastCommit():Commit 			{ return _lastCommit; 		}
 		public function get totalCommits():uint 			{ return _lastCommit.index; }
-		public function set remoteStatus(n:Number):void		{ _remoteStatus = n;
-			trace('_remoteStatus: ' + (_remoteStatus));
-		}
-		public function get remoteStatus():Number 			{ return _remoteStatus;		}
+		public function set remoteStatus(n:int):void		{ _remoteStatus = n;		}
+		public function get remoteStatus():int 				{ return _remoteStatus;		}
 	
 		public function set history(v:Vector.<Commit>):void
 		{ 

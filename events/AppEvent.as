@@ -53,8 +53,9 @@ package events {
 		public static const COLLABORATOR_ADDED		:String = "COLLABORATOR_ADDED";
 		public static const AVATAR_LOADED			:String = "AVATAR_LOADED";
 		
-		public static const BRANCH_RENAMED			:String = "BRANCH_RENAMED";
 		public static const BRANCH_CREATED			:String = "BRANCH_CREATED";
+		public static const BRANCH_STATUS			:String = "BRANCH_STATUS";
+		public static const BRANCH_RENAMED			:String = "BRANCH_RENAMED";
 		public static const BRANCH_DELETED			:String = "BRANCH_DELETED";
 		public static const BOOKMARK_REPAIRED		:String = 'BookmarksRepaired';
 		
