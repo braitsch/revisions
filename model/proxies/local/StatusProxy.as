@@ -12,9 +12,7 @@ package model.proxies.local {
 
 	public class StatusProxy extends NativeProcessQueue {
 
-		public static const	T			:uint = 0; // tracked
-		public static const	U			:uint = 1; // untracked		public static const	M			:uint = 2; // modified		public static const	I			:uint = 3; // ignored
-		
+		private static var _fetching		:Boolean;
 		private static var _bookmark		:Bookmark;
 		
 		public function StatusProxy()
@@ -26,7 +24,7 @@ package model.proxies.local {
 		
 		public function getSummary():void
 		{
-			super.directory = AppModel.bookmark.gitdir;
+			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
 			super.queue = [	Vector.<String>([BashMethods.GET_LAST_COMMIT]),
 							Vector.<String>([BashMethods.GET_TOTAL_COMMITS]) ];
 		}
@@ -34,7 +32,7 @@ package model.proxies.local {
 		public function getModified(b:Bookmark):void
 		{
 			_bookmark = b;
-			super.directory = _bookmark.gitdir;
+			super.appendArgs([_bookmark.gitdir, _bookmark.worktree]);
 			super.queue = [	Vector.<String>([BashMethods.GET_IGNORED_FILES]),
 							Vector.<String>([BashMethods.GET_MODIFIED_FILES]),
 							Vector.<String>([BashMethods.GET_UNTRACKED_FILES]) ];
@@ -42,7 +40,7 @@ package model.proxies.local {
 
 		public function getHistory():void
 		{
-			super.directory = AppModel.bookmark.gitdir;
+			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
 			super.queue = [	Vector.<String>([BashMethods.GET_HISTORY]), 
 							Vector.<String>([BashMethods.GET_FAVORITES]),
 							Vector.<String>([BashMethods.GET_TOTAL_COMMITS]) ];
@@ -50,10 +48,19 @@ package model.proxies.local {
 		
 		public function fetchRemote():void
 		{
-			if (AppModel.bookmark.remotes){
-				
-			}
-			trace("StatusProxy.fetchRemote()", AppModel.branch.remoteStatus);
+			trace("StatusProxy.fetchRemote()");
+			if (_fetching) return; _fetching = true;
+			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
+			super.queue = [	Vector.<String>([BashMethods.GET_REMOTE_FILES, AppModel.bookmark.remotes[0].name]) ];
+		}
+		
+		private function getRemoteStatus():void
+		{
+			trace("StatusProxy.getRemoteStatus()");
+			var r:String = AppModel.bookmark.remotes[0].name;
+			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
+			super.queue = [	Vector.<String>([BashMethods.CHERRY_BRANCH, r+'/'+AppModel.branch.name, AppModel.branch.name]),
+							Vector.<String>([BashMethods.CHERRY_BRANCH, AppModel.branch.name, r+'/'+AppModel.branch.name]) ];			
 		}
 		
 	// private handlers //
@@ -71,7 +78,24 @@ package model.proxies.local {
 				case BashMethods.GET_IGNORED_FILES:
 					onModified(a);
 				break;
+				case BashMethods.GET_REMOTE_FILES:
+					getRemoteStatus();
+				break;
+				case BashMethods.CHERRY_BRANCH:
+					onRemoteStatus(a);
+				break;				
 			}
+		}
+
+		private function onRemoteStatus(a:Array):void
+		{
+			_fetching = false;
+			var n1:Array = a[0].result.split(/[\n\r\t]/g);
+			var n2:Array = a[1].result.split(/[\n\r\t]/g);
+			trace('local to remote = '+n1);
+			trace('remote to local = '+n2);
+			if (n1.length) AppModel.branch.remoteStatus = n1.length;
+			if (n2.length) AppModel.branch.remoteStatus = n2.length;
 		}
 		
 		private function onModified(a:Array):void

@@ -24,6 +24,9 @@ package model.vo {
 		public function set lastCommit(c:Commit):void 		{ _lastCommit = c; 			}
 		public function get lastCommit():Commit 			{ return _lastCommit; 		}
 		public function get totalCommits():uint 			{ return _lastCommit.index; }
+		public function set remoteStatus(n:Number):void		{ _remoteStatus = n;
+			trace('_remoteStatus: ' + (_remoteStatus));
+		}
 		public function get remoteStatus():Number 			{ return _remoteStatus;		}
 	
 		public function set history(v:Vector.<Commit>):void

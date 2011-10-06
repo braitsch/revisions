@@ -79,7 +79,7 @@ package model.proxies.local {
 		private function getRemoteStatus():void
 		{
 			resetFetchTimer(); 
-			if (exists(AppModel.bookmark) == true) _proxy.fetchRemote();
+			if (exists(AppModel.bookmark) == true && AppModel.bookmark.remotes.length) _proxy.fetchRemote();
 		}
 		
 		private function onSummaryReceived(e:AppEvent):void 		

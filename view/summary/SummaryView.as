@@ -118,7 +118,7 @@ package view.summary {
 		
 		private function onSaveButton(e:MouseEvent):void
 		{
-			dispatchEvent(new UIEvent(UIEvent.COMMIT));
+			if (_saveBtn.enabled) dispatchEvent(new UIEvent(UIEvent.COMMIT));
 		}		
 		
 	}

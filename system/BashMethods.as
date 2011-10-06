@@ -88,6 +88,8 @@ package system{
 		public static const STAR_COMMIT				:String = 'starCommit';
 		public static const UNSTAR_COMMIT			:String = 'unstarCommit';
 		public static const GET_FAVORITES			:String = 'getFavorites';
+		public static const GET_REMOTE_FILES		:String = 'getRemoteFiles';
+		public static const CHERRY_BRANCH			:String = 'cherryBranch';
 		
 	}
 	
