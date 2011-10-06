@@ -34,7 +34,7 @@ package system{
 		public static const KILL_REMOTE				:String = 'killRemote';
 		public static const EDIT_REMOTE				:String = 'editRemote';
 		public static const PULL_REMOTE				:String = 'pullFromRemote';
-		public static const PUSH_REMOTE				:String = 'pushToRemote';
+		public static const PUSH_BRANCH				:String = 'pushToRemote';
 		
 	// repo-editor.as //		
 		public static const MERGE					:String = 'merge';

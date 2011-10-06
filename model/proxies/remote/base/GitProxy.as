@@ -51,7 +51,7 @@ package model.proxies.remote.base {
 				case BashMethods.PULL_REMOTE :
 					AppModel.showLoader('Fetching files from '+StringUtils.capitalize(a));
 				break;
-				case BashMethods.PUSH_REMOTE :
+				case BashMethods.PUSH_BRANCH :
 					AppModel.showLoader('Sending files to '+StringUtils.capitalize(a));
 				break;								
 			}

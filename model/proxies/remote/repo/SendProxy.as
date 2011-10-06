@@ -49,7 +49,7 @@ package model.proxies.remote.repo {
 				case BashMethods.KILL_REMOTE :
 					onRemoteRemovedFromBookmark();
 				break;				
-				case BashMethods.PUSH_REMOTE :
+				case BashMethods.PUSH_BRANCH :
 					onBookmarkPushedToAccount();
 				break;
 			}
@@ -58,7 +58,7 @@ package model.proxies.remote.repo {
 		private function onRemoteAddedToBookmark():void
 		{
 			AppModel.bookmark.addRemote(_acct.repository);
-			super.request = new GitRequest(BashMethods.PUSH_REMOTE, _acct.repository.url, [AppModel.branch.name]);			
+			super.request = new GitRequest(BashMethods.PUSH_BRANCH, _acct.repository.url, [AppModel.branch.name]);			
 		}
 		
 		private function onRemoteRemovedFromBookmark():void

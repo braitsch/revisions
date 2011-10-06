@@ -1,10 +1,13 @@
 package view.summary {
 
+	import model.vo.Repository;
 	import events.AppEvent;
 	import events.BookmarkEvent;
 	import events.UIEvent;
 	import model.AppModel;
+	import system.AppSettings;
 	import view.btns.IconButton;
+	import view.windows.modals.system.Confirm;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	
@@ -12,6 +15,8 @@ package view.summary {
 
 		private static var _view:*;
 		private static var _locked		:Boolean;
+		private static var _confirm		:Confirm;
+		private static var _remote		:Repository;
 	
 		public function SummaryOptions(v:Sprite)
 		{
@@ -94,7 +99,7 @@ package view.summary {
 		
 		private function onSyncButton(e:MouseEvent):void 
 		{
-			if (!_locked) syncRemote(); 
+			if (!_locked) checkBranchHasBeenPublished();
 		}
 		
 		private function onHistoryButton(e:MouseEvent):void
@@ -104,15 +109,48 @@ package view.summary {
 		
 		private function syncRemote():void
 		{
-			if (AppModel.branch.isModified == false){
-				_locked = true;
-				AppModel.proxies.remote.syncRemotes(AppModel.bookmark.remotes);
-			}	else{
-				AppModel.alert('Please saves your lastest changes before syncing with the server.');
+			_locked = true;
+			AppModel.proxies.remote.sync(AppModel.branch, _remote);
+		}
+		
+		private function checkBranchHasBeenPublished():void
+		{
+			if (AppModel.branch.isModified){
+				AppModel.alert('Please saves your lastest changes before syncing with the server.');		
+			}	else {
+				_remote = AppModel.bookmark.remotes[0];
+				if (_remote.hasBranch(AppModel.branch.name)){
+					syncRemote();
+				}	else {
+					if (AppSettings.getSetting(AppSettings.PROMPT_NEW_REMOTE_BRANCHES) == false){
+						syncRemote();
+					}	else{
+						confirmUnpublishedBranch();
+					}
+				}
 			}
 		}
+				
+		private function confirmUnpublishedBranch():void 
+		{
+			var m:String = 'The current branch "'+AppModel.branch.name+'" has not yet been published online.';
+				m+= '\nAre you sure you\'d like to add it to your '+_remote.acctType+' account?';
+			_confirm = new Confirm(m);
+			_confirm.addEventListener(UIEvent.CONFIRM, onConfirm);
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, _confirm));				
+		}
+		
+		private function onConfirm(e:UIEvent):void
+		{
+			trace("SyncProxy.onConfirm(e)", e.data);
+			if (e.data as Boolean == true) syncRemote();
+		}			
 
-		private function onRemoteSynced(e:AppEvent):void { _locked = false; }				
+		private function onRemoteSynced(e:AppEvent):void 
+		{
+			 _locked = false;
+			 showBranchStatus();
+		}				
 		
 	}
 	

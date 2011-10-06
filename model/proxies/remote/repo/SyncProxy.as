@@ -4,105 +4,47 @@ package model.proxies.remote.repo {
 	import model.AppModel;
 	import model.proxies.remote.base.GitProxy;
 	import model.proxies.remote.base.GitRequest;
+	import model.vo.Branch;
 	import model.vo.Repository;
-	import system.AppSettings;
 	import system.BashMethods;
-	import view.windows.modals.system.Confirm;
 
 	public class SyncProxy extends GitProxy {
 
-		private static var _confirm		:Confirm;
+		private static var _branch		:Branch;
 		private static var _remote		:Repository;
-		private static var _prompt		:Boolean;
-		private static var _remotes		:Vector.<Repository>;
 
-		public function syncRemotes(v:Vector.<Repository>):void
+		public function syncBranches(b:Branch, r:Repository):void
 		{
-			_remotes = v.concat();
-			syncNextRemote();			
+			_branch = b; _remote = r;
+			if (_branch.remoteStatus < 0){
+				// need to merge first
+			}	else{
+				pushBranch();
+			}
 		}
 		
-		private function syncNextRemote():void
-		{
-			_remote = _remotes[0];
-			pullRemote();
-		}
-		
-		private function pullRemote():void
-		{
-			trace("SyncProxy.pullRemote()", _remote.url, AppModel.branch.name);
-			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
-			super.request = new GitRequest(BashMethods.PULL_REMOTE, _remote.url, [AppModel.branch.name]);
-		}
-		
-		private function pushRemote():void
+		private function pushBranch():void
 		{
 			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
-			super.request = new GitRequest(BashMethods.PUSH_REMOTE, _remote.url, [AppModel.branch.name]);
-		}
-		
-		public function onConfirm(b:Boolean):void
-		{
-			_prompt = b;
-			_prompt ? onSyncComplete() : pushRemote();
-		}		
-		
-		public function skipRemoteSync():void 
-		{ 
-			onSyncComplete(); 
+			super.request = new GitRequest(BashMethods.PUSH_BRANCH, _remote.url, [_branch.name]);
 		}
 		
 		override protected function onProcessSuccess(m:String):void 
 		{
 			switch(m){
-				case BashMethods.PULL_REMOTE :
-					checkRemoteBranchExists();
-				break;
-				case BashMethods.PUSH_REMOTE :
-					onSyncComplete();
-				break;
-			}
-		}
-
-		private function checkRemoteBranchExists():void
-		{
-			var w:Boolean = AppSettings.getSetting(AppSettings.PROMPT_NEW_REMOTE_BRANCHES);
-			if (w == false || _prompt == false){
-				pushRemote();
-			}	else{
-				dispatchConfirmPushNewBranch();
-			}			
-		}
-		
-		private function onSyncComplete():void
-		{
-			_prompt = true;
-			if (_remotes) {
-				_remotes.splice(0, 1);
-				if (_remotes.length){
-					syncNextRemote();
-				}	else{
+				case BashMethods.PUSH_BRANCH :
 					dispatchSyncComplete();
-				}
-			}	else{
-				dispatchSyncComplete();
+				break;
 			}
 		}
 
 		private function dispatchSyncComplete():void
 		{
+			_branch.remoteStatus = 0;
 			trace("SyncProxy.dispatchSyncComplete()");
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.REMOTE_SYNCED));
 		}
-		
-		private function dispatchConfirmPushNewBranch():void
-		{
-			var m:String = 'The current branch "'+AppModel.branch.name+'" is not currently being tracked by your '+_remote.acctType+' repository: "'+_remote.repoName+'".';
-				m+= '\nAre you sure you want to continue?';
-			_confirm = new Confirm(m);
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, _confirm));			
-		}							
 		
 	}
 	

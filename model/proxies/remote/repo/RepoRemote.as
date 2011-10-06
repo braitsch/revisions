@@ -1,5 +1,6 @@
 package model.proxies.remote.repo {
 
+	import model.vo.Branch;
 	import model.vo.Repository;
 	
 	public class RepoRemote {
@@ -23,9 +24,9 @@ package model.proxies.remote.repo {
 			_send.rmBkmkFromAccount(r);
 		}
 		
-		public function syncRemotes(v:Vector.<Repository>):void
+		public function sync(b:Branch, r:Repository):void
 		{
-			_sync.syncRemotes(v);
+			_sync.syncBranches(b, r);
 		}
 		
 	}
