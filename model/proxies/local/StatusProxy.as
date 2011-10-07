@@ -135,7 +135,6 @@ package model.proxies.local {
 					}
 				}
 			}
-			AppModel.hideLoader();
 			AppModel.dispatch(AppEvent.HISTORY_RECEIVED);
 		}
 

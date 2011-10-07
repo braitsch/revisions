@@ -1,5 +1,6 @@
 package view.history {
 
+	import events.AppEvent;
 	import model.AppModel;
 	import model.vo.Bookmark;
 	import model.vo.Branch;
@@ -21,7 +22,7 @@ package view.history {
 		{
 			super.leading = 41;
 			super.bottomPadding = -1;
-			setTimeout(generateItems, 1000);
+			for (var i:int = 0; i < 25; i++) _itemsSaved.push(new HistoryItemSaved());
 		}
 
 		public function set bookmark(b:Bookmark):void
@@ -40,11 +41,6 @@ package view.history {
 			for (var i:int = 0; i < super.list.numChildren; i++) HistoryItem(super.list.getChildAt(i)).setSize(_width, 41);
 		}
 		
-		private function generateItems():void
-		{
-			for (var i:int = 0; i < 25; i++) _itemsSaved.push(new HistoryItemSaved());
-		}
-		
 		private function checkIfChanged():void
 		{
 			var b:Branch =  AppModel.branch;
@@ -55,6 +51,8 @@ package view.history {
 				_length = h;
 				_modified = m;
 				drawList();
+			}	else{
+				dispatchHistoryRendered();
 			}
 		}
 
@@ -69,6 +67,13 @@ package view.history {
 				super.addItem(k, .05*i);
 			}
 			setSize(_width, _height);
+			setTimeout(dispatchHistoryRendered, 2);
+		}
+		
+		private function dispatchHistoryRendered():void
+		{
+			AppModel.hideLoader();
+			AppModel.dispatch(AppEvent.HISTORY_RENDERED);
 		}
 		
 	}

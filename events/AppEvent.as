@@ -35,6 +35,7 @@ package events {
 		public static const FILES_DELETED				:String = "FILES_DELETED";
 		public static const HISTORY_REQUESTED			:String = "HISTORY_REQUESTED";
 		public static const HISTORY_RECEIVED			:String = "HISTORY_RECEIVED";
+		public static const HISTORY_RENDERED			:String = "HISTORY_RENDERED";
 		public static const MODIFIED_RECEIVED			:String = "MODIFIED_RECEIVED";		
 		public static const SUMMARY_RECEIVED			:String = "SUMMARY_RECEIVED";
 		
@@ -66,7 +67,7 @@ package events {
 		public static const BOOKMARK_EDITED				:String = "BOOKMARK_EDITED";
 		public static const BOOKMARK_REVERTED			:String = "BOOKMARK_REVERTED";
 		public static const COMMIT_COMPLETE				:String = "COMMIT_COMPLETE";
-		public static const MERGE_COMPLETE				:String = "MERGE_COMPLETE";
+		public static const MERGE_COMPLETE:String = "MERGE_COMPLETE";
 		
 		public var data:Object;
 

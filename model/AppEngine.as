@@ -4,6 +4,7 @@ package model {
 	import events.DataBaseEvent;
 	import model.vo.Bookmark;
 	import flash.events.EventDispatcher;
+	import flash.utils.setTimeout;
 
 	// class reposonsible for adding and removing bookmarks from the application //
 
@@ -165,9 +166,9 @@ package model {
 		
 		private function onAllBookmarksParsed():void
 		{
+			setTimeout(dispatchActiveBookmark, 500);
+			AppModel.dispatch(AppEvent.HIDE_LOADER, .5);
 			AppModel.dispatch(AppEvent.BOOKMARKS_LOADED, _bookmarks);
-			dispatchActiveBookmark();
-			AppModel.dispatch(AppEvent.HIDE_LOADER, .25);
 			removeEventListener(AppEvent.REPOSITORY_READY, onRepositoryReady);
 		}
 		
