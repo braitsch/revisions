@@ -44,7 +44,7 @@ package view.ui {
 			if (k.stage != null) {
 				TweenLite.to(k, f, {alpha:0, delay:n * .05, 
 					onCompleteParams:[k],
-					onComplete:function(k:Sprite):void { _view.removeChild(k);}});
+					onComplete:function(k:Sprite):void { if (k.stage) _view.removeChild(k);}});
 			}
 		}			
 		
