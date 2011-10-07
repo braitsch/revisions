@@ -5,9 +5,8 @@ package model.proxies.remote.repo {
 	import model.proxies.remote.acct.ApiProxy;
 	import model.remote.HostingAccount;
 	import model.remote.Hosts;
-	import flash.events.EventDispatcher;
 
-	public class SendProxy extends EventDispatcher {
+	public class SendProxy {
 
 		private static var _proxy	:ApiProxy;
 		private static var _account	:HostingAccount;
@@ -35,6 +34,7 @@ package model.proxies.remote.repo {
 
 		private function onBranchPushed(e:AppEvent):void
 		{
+			_account.repository.addBranch(AppModel.branch.name);
 			AppModel.dispatch(AppEvent.BKMK_ADDED_TO_ACCOUNT);
 			AppModel.engine.removeEventListener(AppEvent.BRANCH_PUSHED, onBranchPushed);
 		}

@@ -13,42 +13,32 @@ package model.proxies.remote.acct {
 		protected function set baseURL(baseURL:String)	:void 				{ _baseURL = baseURL; 	}
 		protected function set account(a:HostingAccount):void 				{ _account = a; 		}
 		
-		public function KeyProxy()
-		{
-			super.executable = 'Account.sh';
-		}
-		
 		public function checkKey(ra:HostingAccount):void { }
 		
 	// called from subclasses //	
 		
 		protected function getAllRemoteKeys(url:String):void
 		{
-			super.request = BashMethods.GET_REMOTE_KEYS;
-			super.call(Vector.<String>([BashMethods.GET_REQUEST, _baseURL + url]));
+			super.call(Vector.<String>([BashMethods.GET_REMOTE_KEYS, _baseURL + url]));
 		}
 		
 		protected function addKeyToRemote(data:String, url:String):void
 		{
-			super.request = BashMethods.ADD_KEY_TO_REMOTE;
-			super.call(Vector.<String>([BashMethods.POST_REQUEST, data, _baseURL + url]));
+			super.call(Vector.<String>([BashMethods.ADD_KEY_TO_REMOTE, data, _baseURL + url]));
 		}
 		
-		protected function repairRemoteKey(vrb:String, key:String, url:String):void
+		protected function repairRemoteKey(key:String, url:String):void
 		{
-			super.request = BashMethods.REPAIR_REMOTE_KEY;
-			super.call(Vector.<String>([vrb=='PUT' ? BashMethods.PUT_REQUEST : BashMethods.PATCH_REQUEST, key, _baseURL + url]));			
+			super.call(Vector.<String>([BashMethods.REPAIR_REMOTE_KEY, key, _baseURL + url]));			
 		}	
 		
 		protected function deleteKeyFromRemote(url:String):void
 		{
-			super.request = BashMethods.DELETE_KEY_FROM_REMOTE;
-			super.call(Vector.<String>([BashMethods.DELETE_REQUEST, _baseURL + url]));
+			super.call(Vector.<String>([BashMethods.DELETE_KEY_FROM_REMOTE, _baseURL + url]));
 		}
 		
 		protected function addToKnownHosts(h:String):void
 		{
-			super.request = BashMethods.ADD_NEW_KNOWN_HOST;
 			super.call(Vector.<String>([BashMethods.ADD_NEW_KNOWN_HOST, h]));			
 		}
 		

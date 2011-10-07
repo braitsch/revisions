@@ -21,6 +21,7 @@ package model.proxies.remote {
 
 		override protected function call(v:Vector.<String>):void
 		{
+			trace("RemoteProxy.call(v)", v[0], v[1]);
 			var m:String;
 			var n:uint = 8000;
 			switch(v[0]){
@@ -55,6 +56,7 @@ package model.proxies.remote {
 		protected function onProcessComplete(e:NativeProcessEvent):void 
 		{ 
 			stopTimer();
+			trace("RemoteProxy.onProcessComplete(e)", e.data.method, e.data.result);
 		}		
 		
 		private function startTimer(n:uint):void

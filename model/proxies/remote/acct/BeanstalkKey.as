@@ -5,6 +5,11 @@ package model.proxies.remote.acct {
 
 	public class BeanstalkKey extends KeyProxy {
 
+		public function BeanstalkKey()
+		{
+			super.executable = 'Beanstalk.sh';
+		}
+
 		override public function checkKey(ra:HostingAccount):void
 		{
 			super.account = ra;
@@ -26,7 +31,7 @@ package model.proxies.remote.acct {
 						super.account.sshKeyId = keys[i].id;
 						super.dispatchKeyValidated();
 					}	else if (super.account.sshKeyId == keys[i].id){
-						super.repairRemoteKey('PUT', getKeyObject(), '/public_keys/'+keys[i].id+'.xml');
+						super.repairRemoteKey(getKeyObject(), '/public_keys/'+keys[i].id+'.xml');
 					}
 				}
 			}			

@@ -20,7 +20,7 @@ package model.proxies.local {
 
 		public function BkmkEditor()
 		{
-			super.executable = 'RepoEditor.sh';
+			super.executable = 'BkmkEditor.sh';
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 		}
 		
@@ -80,11 +80,18 @@ package model.proxies.local {
 			super.call(Vector.<String>([BashMethods.DEL_BRANCH, _branch.name]));
 		}
 		
-		public function merge(a:Branch, b:Branch):void
+		public function mergeLocalIntoLocal(a:Branch, b:Branch):void
 		{
 			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
 			super.call(Vector.<String>([BashMethods.MERGE, a.name, b.name]));
 		}
+		
+		public function mergeRemoteIntoLocal():void
+		{
+			trace("BkmkEditor.mergeRemoteIntoLocal()", AppModel.branch.name, AppModel.repository.name+'/'+AppModel.branch.name); return;
+			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
+			super.call(Vector.<String>([BashMethods.MERGE, AppModel.branch.name, AppModel.repository.name+'/'+AppModel.branch.name]));
+		}		
 		
 	// remotes //	
 		

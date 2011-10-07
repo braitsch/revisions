@@ -12,12 +12,11 @@ package model.proxies.local {
 
 	public class StatusProxy extends NativeProcessQueue {
 
-		private static var _fetching		:Boolean;
 		private static var _bookmark		:Bookmark;
 		
 		public function StatusProxy()
 		{
-			super.executable = 'Status.sh';
+			super.executable = 'BkmkStatus.sh';
 			super.addEventListener(NativeProcessEvent.QUEUE_COMPLETE, onQueueComplete);
 			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);
 		}
@@ -46,14 +45,6 @@ package model.proxies.local {
 							Vector.<String>([BashMethods.GET_TOTAL_COMMITS]) ];
 		}
 		
-		public function fetchRepository():void
-		{
-			_bookmark = AppModel.bookmark;
-			if (_fetching) return; _fetching = true;
-			super.appendArgs([_bookmark.gitdir, _bookmark.worktree]);
-			super.queue = [	Vector.<String>([BashMethods.GET_REMOTE_FILES, _bookmark.remote.name]) ];
-		}
-		
 		public function getRemoteStatus():void
 		{
 			_bookmark = AppModel.bookmark;
@@ -78,21 +69,12 @@ package model.proxies.local {
 				case BashMethods.GET_IGNORED_FILES:
 					onModified(a);
 				break;
-				case BashMethods.GET_REMOTE_FILES:
-					onRemoteFetched();
-				break;
 				case BashMethods.CHERRY_BRANCH:
 					onRemoteStatus(a);
 				break;				
 			}
 		}
 		
-		private function onRemoteFetched():void
-		{
-			_fetching = false;
-			_bookmark.remote.fetched = true;
-		}
-
 		private function onRemoteStatus(a:Array):void
 		{
 			var n1:Array = splitAndTrim(a[0].result);

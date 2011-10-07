@@ -10,7 +10,7 @@ package model.proxies {
 	
 	public class StatusManager {
 
-		private static var _status			:Timer = new Timer(3000);
+		private static var _timer			:Timer = new Timer(3000);
 		private static var _ticks			:uint = 0;
 		private static var _proxy 			:StatusProxy = new StatusProxy();
 		private static var _autoSaveQueue	:Vector.<Bookmark> = new Vector.<Bookmark>();
@@ -36,7 +36,7 @@ package model.proxies {
 			if (AppModel.bookmark == null){
 				return false;
 			}	else{
-				return _status.running == false;
+				return _timer.running == false;
 			}
 		}	
 	
@@ -44,7 +44,7 @@ package model.proxies {
 
 		private function initTimers():void
 		{
-			_status.addEventListener(TimerEvent.TIMER, onTimerCheckModified);			
+			_timer.addEventListener(TimerEvent.TIMER, onTimerCheckModified);			
 		}
 		
 		private function addListeners():void
@@ -67,15 +67,14 @@ package model.proxies {
 			_autoSaveQueue.length ? getModified(_autoSaveQueue[0]) : getModified(AppModel.bookmark);		
 		}
 		
-		private function getRemoteStatus(force:Boolean = false):void
+		private function getRemoteStatus(fetch:Boolean = false):void
 		{
-			if (AppModel.repository){
+			trace('AppModel.repository: ' + (AppModel.repository));
+			if (AppModel.repository) {
 				if (exists(AppModel.bookmark) == true){
 					resetTimer(); 
-					if (AppModel.repository.fetched == false || force==true){
-						_proxy.fetchRepository();
-					}	else if (AppModel.repository.hasBranch(AppModel.branch.name)){
-						_proxy.getRemoteStatus();
+					if (AppModel.repository.hasBranch(AppModel.branch.name)){
+						fetch ? AppModel.proxies.sync.fetchRepository() : _proxy.getRemoteStatus();
 					}
 				}
 			}
@@ -147,12 +146,12 @@ package model.proxies {
 		
 		private function stopTimers():void
 		{
-			_status.stop();
+			_timer.stop();
 		}
 		
 		private function resetTimer():void
 		{
-			_status.reset(); _status.start();
+			_timer.reset(); _timer.start();
 		}		
 		
 	}

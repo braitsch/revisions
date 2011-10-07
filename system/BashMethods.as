@@ -30,7 +30,7 @@ package system{
 	// repo-remote.as //	
 		public static const CLONE					:String = 'clone';
 		public static const COMMIT					:String = 'commit';		
-		public static const PUSH_BRANCH				:String = 'pushToRemote';
+		public static const PUSH_BRANCH				:String = 'pushBranch';
 		
 	// repo-editor.as //		
 		public static const MERGE					:String = 'merge';

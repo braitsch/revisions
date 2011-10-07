@@ -17,7 +17,7 @@ package model.proxies.remote.repo {
 	
 		public function GitProxy()
 		{
-			super.executable = 'RepoRemote.sh';
+			super.executable = 'BkmkRemote.sh';
 		}
 		
 		protected function set request(req:GitRequest):void 
@@ -38,16 +38,11 @@ package model.proxies.remote.repo {
 		override protected function onProcessComplete(e:NativeProcessEvent):void 
 		{
 			super.onProcessComplete(e);
-			handleResponse(e.data.method, e.data.result);
-		}
-		
-		private function handleResponse(m:String, r:String):void
-		{
-			var f:String = RemoteFailure.detectFailure(r);
+			var f:String = RemoteFailure.detectFailure(e.data.result);
 			if (f){
 				onProcessFailure(f);
 			}	else{
-				onProcessSuccess(m);
+				onProcessSuccess(e.data.method);
 				if (_account) Hosts.github.writeAcctToDatabase(_account);
 			}
 			_account = null;

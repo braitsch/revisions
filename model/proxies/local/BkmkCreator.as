@@ -18,7 +18,7 @@ package model.proxies.local {
 		
 		public function BkmkCreator()
 		{
-			super.executable = 'RepoCreator.sh';
+			super.executable = 'BkmkCreator.sh';
 			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 		}

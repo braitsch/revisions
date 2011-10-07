@@ -7,11 +7,6 @@ package model.proxies.remote.acct {
 
 	public class CurlProxy extends RemoteProxy {
 		
-		private static var _request		:String;
-		
-		protected function get request()				:String 	{ return _request; 		}
-		protected function set request(request:String)	:void 		{ _request = request; 	}
-
 		protected function getResultObject(s:String):Object
 		{
 		// strip off any post headers we receive before parsing github json //	

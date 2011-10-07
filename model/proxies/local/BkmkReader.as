@@ -14,7 +14,7 @@ package model.proxies.local {
 
 		public function BkmkReader() 
 		{	
-			super.executable = 'RepoReader.sh';
+			super.executable = 'BkmkReader.sh';
 			super.addEventListener(NativeProcessEvent.QUEUE_COMPLETE, onQueueComplete);
 			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);
 		}

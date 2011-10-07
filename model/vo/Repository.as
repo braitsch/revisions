@@ -12,7 +12,6 @@ package model.vo {
 		private var _acctName			:String;
 		private var _repoName			:String;
 		private var _homePage			:String;
-		private var _fetched			:Boolean;
 		private var _lastUpdated		:String;
 		private var _collaborators		:Vector.<Collaborator>;
 
@@ -33,8 +32,6 @@ package model.vo {
 		public function get repoName()		:String 	{ return _repoName;		}
 		public function get homePage()		:String 	{ return _homePage;		}
 		public function get lastUpdated()	:String 	{ return _lastUpdated;  }
-		public function get fetched()		:Boolean	{ return _fetched;		}
-		public function set fetched(b:Boolean):void 	{ _fetched = b;			}
 		
 	// branches //	
 		

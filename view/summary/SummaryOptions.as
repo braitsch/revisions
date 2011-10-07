@@ -1,9 +1,9 @@
 package view.summary {
 
+	import com.greensock.TweenLite;
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
-	import model.vo.Repository;
 	import system.AppSettings;
 	import view.btns.IconButton;
 	import view.windows.modals.system.Confirm;
@@ -16,7 +16,6 @@ package view.summary {
 		private static var _view:*;
 		private static var _locked		:Boolean;
 		private static var _confirm		:Confirm;
-		private static var _remote		:Repository;
 	
 		public function SummaryOptions(v:Sprite)
 		{
@@ -32,6 +31,7 @@ package view.summary {
 			var l:Array = ['Settings', 'Link Account', 'Sync Account', 'History'];
 			var a:Array = [_view.settings_btn, _view.upload_btn, _view.sync_btn, _view.history_btn];
 			for (var i:int = 0; i < 4; i++) new IconButton(a[i], l[i]);
+			_view.sync_btn.syncCount.num.mouseEnabled = false;
 			_view.sync_btn.addEventListener(MouseEvent.CLICK, onSyncButton);
 			_view.upload_btn.addEventListener(MouseEvent.CLICK, onUploadButton);
 			_view.history_btn.addEventListener(MouseEvent.CLICK, onHistoryButton);
@@ -59,7 +59,7 @@ package view.summary {
 		
 		private function checkBranchStatus():void
 		{
-			trace("SummaryOptions.checkBranchStatus()", AppModel.repository.hasBranch(AppModel.branch.name), AppModel.branch.remoteStatus);
+
 			_view.sync_btn.syncCount.visible = true;
 			if (AppModel.repository.hasBranch(AppModel.branch.name)){
 				_view.sync_btn.syncCount.num.visible = true;
@@ -80,10 +80,17 @@ package view.summary {
 		
 		private function positionButtons(v:Boolean):void
 		{
-			_view.sync_btn.visible = v;
-			_view.history_btn.x = v ? 60 : 40;
-			_view.upload_btn.x = v ? -20 : 0;
-			_view.settings_btn.x = v ? -60 : -40;
+			if (v){
+				TweenLite.to(_view.history_btn, .3, {x:60});
+				TweenLite.to(_view.upload_btn, .3, {x:-20});
+				TweenLite.to(_view.settings_btn, .3, {x:-60});
+				TweenLite.to(_view.sync_btn, .3, {alpha:1, delay:.1});
+			}	else{
+				TweenLite.to(_view.sync_btn, .3, {alpha:0});
+				TweenLite.to(_view.history_btn, .3, {x:40, delay:.1});
+				TweenLite.to(_view.upload_btn, .3, {x:-0, delay:.1});
+				TweenLite.to(_view.settings_btn, .3, {x:-40, delay:.1});
+			}
 		}
 		
 		private function drawSyncCountBkgd(c:uint):void
@@ -92,7 +99,7 @@ package view.summary {
 			_view.sync_btn.syncCount.graphics.beginFill(c);
 			_view.sync_btn.syncCount.graphics.drawCircle(0, 0, 10);
 			_view.sync_btn.syncCount.graphics.endFill();
-			_view.sync_btn.syncCount.num.text =	AppModel.branch.remoteStatus;
+			_view.sync_btn.syncCount.num.text =	Math.abs(AppModel.branch.remoteStatus);
 		}
 		
 		private function onSettingsButton(e:MouseEvent):void
@@ -107,7 +114,16 @@ package view.summary {
 		
 		private function onSyncButton(e:MouseEvent):void 
 		{
-			if (!_locked) checkBranchHasBeenPublished();
+			if (_locked) return;
+			if (AppModel.branch.remoteStatus > 0){
+				checkBranchHasBeenPublished();
+			}	else{
+				if (AppModel.branch.isModified){
+					AppModel.alert(new Message('Please saves your lastest changes before syncing with the server.'));
+				}	else{
+					AppModel.proxies.editor.mergeRemoteIntoLocal();
+				}
+			}
 		}
 		
 		private function onHistoryButton(e:MouseEvent):void
@@ -117,18 +133,13 @@ package view.summary {
 		
 		private function checkBranchHasBeenPublished():void
 		{
-			if (AppModel.branch.isModified){
-				AppModel.alert(new Message('Please saves your lastest changes before syncing with the server.'));		
+			if (AppModel.repository.hasBranch(AppModel.branch.name)){
+				syncRemote();
 			}	else {
-				_remote = AppModel.repository;
-				if (_remote.hasBranch(AppModel.branch.name)){
+				if (AppSettings.getSetting(AppSettings.PROMPT_NEW_REMOTE_BRANCHES) == false){
 					syncRemote();
-				}	else {
-					if (AppSettings.getSetting(AppSettings.PROMPT_NEW_REMOTE_BRANCHES) == false){
-						syncRemote();
-					}	else{
-						confirmUnpublishedBranch();
-					}
+				}	else{
+					confirmUnpublishedBranch();
 				}
 			}
 		}
@@ -136,13 +147,13 @@ package view.summary {
 		private function syncRemote():void
 		{
 			_locked = true;
-			AppModel.proxies.sync.syncBranch(_remote);
+			AppModel.proxies.sync.pushBranch(AppModel.repository);
 		}		
 				
 		private function confirmUnpublishedBranch():void 
 		{
 			var m:String = 'The current branch "'+AppModel.branch.name+'" has not yet been published online.';
-				m+= '\nAre you sure you\'d like to add it to your '+_remote.acctType+' account?';
+				m+= '\nAre you sure you\'d like to add it to your '+AppModel.repository.acctType+' account?';
 			_confirm = new Confirm(m);
 			_confirm.addEventListener(UIEvent.CONFIRM, onConfirm);
 			AppModel.alert(_confirm);

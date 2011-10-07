@@ -4,6 +4,11 @@ package model.proxies.remote.acct {
 	import model.remote.HostingAccount;
 	
 	public class GitHubKey extends KeyProxy {
+
+		public function GitHubKey()
+		{
+			super.executable = 'GitHub.sh';			
+		}
 		
 		override public function checkKey(ra:HostingAccount):void
 		{
@@ -25,7 +30,7 @@ package model.proxies.remote.acct {
 						super.account.sshKeyId = a[i].id;
 						super.dispatchKeyValidated();
 					}	else if (super.account.sshKeyId == a[i].id){
-						super.repairRemoteKey('PATCH', getKeyObject(), '/user/keys/'+a[i].id);
+						super.repairRemoteKey(getKeyObject(), '/user/keys/'+a[i].id);
 					}
 				}
 			}

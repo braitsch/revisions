@@ -62,7 +62,7 @@ package view.windows.modals.system {
 		
 		private function onTweenComplete(e:Event):void
 		{
-			AppModel.proxies.editor.merge(_branchA, _branchB);
+			AppModel.proxies.editor.mergeLocalIntoLocal(_branchA, _branchB);
 		}
 
 		private function onMergeComplete(e:AppEvent):void
