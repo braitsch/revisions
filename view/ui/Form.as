@@ -3,6 +3,7 @@ package view.ui {
 	import events.UIEvent;
 	import fl.text.TLFTextField;
 	import model.AppModel;
+	import view.windows.modals.system.Message;
 	import flash.display.CapsStyle;
 	import flash.display.GradientType;
 	import flash.display.JointStyle;
@@ -64,7 +65,7 @@ package view.ui {
 		{
 			for (var i:int = 0; i < _inputs.length; i++){
 				if (_inputs[i].field.text == '') {
-					AppModel.alert('Please fill in all required fields.');
+					AppModel.alert(new Message('Please fill in all required fields.'));
 					return false;
 				}
 			}

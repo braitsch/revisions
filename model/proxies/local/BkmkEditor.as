@@ -171,7 +171,7 @@ package model.proxies.local {
 		{
 			_bookmark.branch.modified = [];
 			_bookmark.branch.untracked = [];
-			dispatchEvent(new AppEvent(AppEvent.COMMIT_COMPLETE, _bookmark));			
+			AppModel.dispatch(AppEvent.COMMIT_COMPLETE, _bookmark);
 		}
 		
 		private function onBranchAdded():void
@@ -181,41 +181,41 @@ package model.proxies.local {
 			var v:Vector.<Commit>  = h.slice(0, i+1);
 			_branch.history = v;
 			AppModel.bookmark.addLocalBranch(_branch);
-			dispatchEvent(new AppEvent(AppEvent.BRANCH_CHANGED));
+			AppModel.dispatch(AppEvent.BRANCH_CHANGED);
 		}		
 
 		private function onBranchDeleted():void
 		{
 			AppModel.bookmark.killLocalBranch(_branch);
-			dispatchEvent(new AppEvent(AppEvent.BRANCH_DELETED));
+			AppModel.dispatch(AppEvent.BRANCH_DELETED);
 		}
 
 		private function onBranchSet():void
 		{
 			AppModel.bookmark.branch = _branch;
-			dispatchEvent(new AppEvent(AppEvent.BRANCH_CHANGED));
+			AppModel.dispatch(AppEvent.BRANCH_CHANGED);
 		}
 		
 		private function onBranchRenamed():void
 		{
-			dispatchEvent(new AppEvent(AppEvent.BRANCH_RENAMED, AppModel.bookmark));
+			AppModel.dispatch(AppEvent.BRANCH_RENAMED, AppModel.bookmark);
 		}	
 		
 		private function onRemoteAdded():void
 		{
 			AppModel.bookmark.addRemote(_repository);
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.REMOTE_ADDED));
+			AppModel.dispatch(AppEvent.REMOTE_ADDED);
 		}
 		
 		private function onRemoteEdited():void
 		{
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.REMOTE_EDITED));
+			AppModel.dispatch(AppEvent.REMOTE_EDITED);
 		}		
 		
 		private function onRemoteRemoved():void
 		{
 			AppModel.bookmark.delRemote(_repository);
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.REMOTE_DELETED));
+			AppModel.dispatch(AppEvent.REMOTE_DELETED);
 		}			
 
 		private function onMergeComplete(s:String):void
@@ -225,7 +225,7 @@ package model.proxies.local {
 			if (reponseHas(s, 'Fast-forward')) ok = true;
 			if (reponseHas(s, 'Already up-to-date')) ok = true;
 			if (ok) {
-				dispatchEvent(new AppEvent(AppEvent.MERGE_COMPLETE));
+				AppModel.dispatch(AppEvent.MERGE_COMPLETE);
 			}	else{
 				trace("there was a conflict");
 			}

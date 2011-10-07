@@ -86,7 +86,7 @@ package view.windows.editor {
 				m+='Would you like to continue?';
 			var k:Confirm = new Confirm(m);
 				k.addEventListener(UIEvent.CONFIRM, onConfirm);
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, k));
+			AppModel.alert(k);
 		}
 
 		private function onConfirm(e:UIEvent):void

@@ -53,7 +53,7 @@ package view.windows.modals.git {
 			}	else{
 				AppModel.proxies.config.updatePackageManager();
 			}
-			AppModel.proxies.config.addEventListener(AppEvent.GIT_INSTALL_COMPLETE, onInstallComplete);
+			AppModel.engine.addEventListener(AppEvent.GIT_INSTALL_COMPLETE, onInstallComplete);
 		}
 		
 		private function getInstallMessage():String
@@ -73,7 +73,7 @@ package view.windows.modals.git {
 		{
 		// read and update the gui with newly installed git version //	
 			AppModel.proxies.config.detectGit();			
-			AppModel.proxies.config.removeEventListener(AppEvent.GIT_INSTALL_COMPLETE, onInstallComplete);
+			AppModel.engine.removeEventListener(AppEvent.GIT_INSTALL_COMPLETE, onInstallComplete);
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 		}
 		

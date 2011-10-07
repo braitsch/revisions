@@ -28,7 +28,7 @@ package view.history {
 			addChild(_title);
 			addChild(_switcher);
 			addChild(_merger);
-			AppModel.proxies.editor.addEventListener(AppEvent.BRANCH_DELETED, onBranchDeleted);
+			AppModel.engine.addEventListener(AppEvent.BRANCH_DELETED, onBranchDeleted);
 		}
 
 		private function onBranchDeleted(e:AppEvent):void

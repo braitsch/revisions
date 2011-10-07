@@ -1,12 +1,12 @@
 package view.windows.modals.local {
 
-	import view.type.TextHeading;
 	import events.AppEvent;
 	import events.DataBaseEvent;
 	import events.UIEvent;
 	import model.AppModel;
 	import model.vo.Bookmark;
 	import view.btns.FormButton;
+	import view.type.TextHeading;
 	import view.ui.Form;
 	import view.windows.base.ParentWindow;
 	import view.windows.modals.system.Delete;
@@ -72,7 +72,7 @@ package view.windows.modals.local {
 		{
 			var m:String = Bookmark.validate(_form.getField(0), _form.getField(1), _broken);
 			if (m != '') {
-				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));
+				AppModel.alert(new Message(m));
 			}	else {
 				_broken.type == Bookmark.FILE ? updateGitDir() : updateDatabase();
 			}		
@@ -80,7 +80,7 @@ package view.windows.modals.local {
 		
 		private function onDeleteBookmark(e:UIEvent):void 
 		{
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Delete(_broken)));
+			AppModel.alert(new Delete(_broken));
 			AppModel.database.addEventListener(DataBaseEvent.RECORD_DELETED, onBookmarkDeleted);
 		}		
 		

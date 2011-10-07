@@ -99,7 +99,7 @@ package model.proxies.local {
 					if (o.result != ''){
 						parseGitDetails(o.result);
 					}	else{
-						dispatchEvent(new AppEvent(AppEvent.GIT_NOT_INSTALLED));								
+						AppModel.dispatch(AppEvent.GIT_NOT_INSTALLED);
 					}
 				break;
 			}
@@ -115,13 +115,13 @@ package model.proxies.local {
 			if (_gitVersion >= SystemRules.MIN_GIT_VERSION){
 				getUserNameAndEmail();
 			}	else{
-				dispatchEvent(new AppEvent(AppEvent.GIT_NEEDS_UPDATING));					
+				AppModel.dispatch(AppEvent.GIT_NEEDS_UPDATING);
 			}
 		}
 
 		private function onInstallComplete():void
 		{
-			dispatchEvent(new AppEvent(AppEvent.GIT_INSTALL_COMPLETE));
+			AppModel.dispatch(AppEvent.GIT_INSTALL_COMPLETE);
 		}	
 		
 		private function checkUserNameAndEmail(n:String, e:String):void
@@ -131,7 +131,7 @@ package model.proxies.local {
 				getLoggedInUsersRealName();
 			}	else{
 				_userName = n;
-				dispatchEvent(new AppEvent(AppEvent.GIT_SETTINGS));			
+				AppModel.dispatch(AppEvent.GIT_SETTINGS);
 			}			
 		}
 		
@@ -147,7 +147,7 @@ package model.proxies.local {
 				NativeApplication.nativeApplication.exit();
 			}	else{
 				e.data.source = 'ConfigProxy.onProcessFailure(e)';
-				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Debug(e.data)));
+				AppModel.alert(new Debug(e.data));
 			}
 		}
 

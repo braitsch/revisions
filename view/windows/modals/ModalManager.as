@@ -79,9 +79,9 @@ package view.windows.modals {
 			AppModel.engine.addEventListener(AppEvent.NO_BOOKMARKS, showWelcomeScreen);
 			AppModel.engine.addEventListener(AppEvent.APP_EXPIRED, onAppExpired);
 			AppModel.engine.addEventListener(AppEvent.PERMISSIONS_FAILURE, onPermissionsFailure);
-			AppModel.updater.addEventListener(AppEvent.APP_UPDATE_AVAILABLE, promptToUpdate);
-			AppModel.proxies.config.addEventListener(AppEvent.GIT_NOT_INSTALLED, installGit);
-			AppModel.proxies.config.addEventListener(AppEvent.GIT_NEEDS_UPDATING, upgradeGit);
+			AppModel.engine.addEventListener(AppEvent.APP_UPDATE_AVAILABLE, promptToUpdate);
+			AppModel.engine.addEventListener(AppEvent.GIT_NOT_INSTALLED, installGit);
+			AppModel.engine.addEventListener(AppEvent.GIT_NEEDS_UPDATING, upgradeGit);
 		}
 
 		public function init(stage:Stage):void
@@ -169,8 +169,7 @@ package view.windows.modals {
 		private function onDragAndDrop(e:UIEvent):void 
 		{
 			if (FileUtils.dirIsEmpty(e.data as File) == true){
-				var m:String = 'Please add some files to this folder before attempting to track it.';
-				onShowAlert(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));				
+				AppModel.alert(new Message('Please add some files to this folder before attempting to track it.'));
 			} 	else if (_alert == null && (_window == null || _window == _dragAndDrop || _window == _welcome)) {
 				_dragAndDrop.file = e.data as File;
 				showModalWindow(_dragAndDrop);

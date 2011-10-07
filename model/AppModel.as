@@ -8,7 +8,7 @@ package model {
 	import model.vo.Repository;
 	import system.AppSettings;
 	import system.UpdateManager;
-	import view.windows.modals.system.Message;
+	import view.windows.modals.system.Alert;
 	import flash.events.EventDispatcher;
 
 	public class AppModel extends EventDispatcher {
@@ -29,7 +29,7 @@ package model {
 		{
 			_bookmark = b;
 			_database.setActiveBookmark(_bookmark.label);
-			_engine.dispatchEvent(new AppEvent(AppEvent.BOOKMARK_SELECTED));
+			dispatch(AppEvent.BOOKMARK_SELECTED);
 		}
 		
 	// public getters //
@@ -43,9 +43,9 @@ package model {
 		static public function get settings()	:AppSettings 	{ return _settings; }
 		static public function get updater()	:UpdateManager 	{ return _updater; }
 		
-		static public function alert(m:String):void
+		static public function alert(a:Alert):void
 		{
-			_engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));
+			_engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, a));
 		}
 		
 		static public function dispatch(s:String, o:Object = null):void

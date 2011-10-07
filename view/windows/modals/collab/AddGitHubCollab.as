@@ -5,6 +5,7 @@ package view.windows.modals.collab {
 	import model.remote.Hosts;
 	import model.vo.Collaborator;
 	import view.ui.Form;
+	import view.windows.modals.system.Message;
 	import flash.display.Sprite;
 	
 	public class AddGitHubCollab extends Sprite {
@@ -25,7 +26,7 @@ package view.windows.modals.collab {
 			_collab.firstName = '"'+_form.getField(0)+'"';
 			var m:String = validate();
 			if (m){
-				AppModel.alert(m);
+				AppModel.alert(new Message(m));
 			}	else{
 				Hosts.github.api.addCollaborator(_collab);
 				AppModel.engine.addEventListener(AppEvent.COLLABORATORS_RECEIEVED, onCollaboratorAdded);

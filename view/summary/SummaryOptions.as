@@ -7,6 +7,7 @@ package view.summary {
 	import system.AppSettings;
 	import view.btns.IconButton;
 	import view.windows.modals.system.Confirm;
+	import view.windows.modals.system.Message;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	
@@ -117,7 +118,7 @@ package view.summary {
 		private function checkBranchHasBeenPublished():void
 		{
 			if (AppModel.branch.isModified){
-				AppModel.alert('Please saves your lastest changes before syncing with the server.');		
+				AppModel.alert(new Message('Please saves your lastest changes before syncing with the server.'));		
 			}	else {
 				_remote = AppModel.repository;
 				if (_remote.hasBranch(AppModel.branch.name)){
@@ -144,7 +145,7 @@ package view.summary {
 				m+= '\nAre you sure you\'d like to add it to your '+_remote.acctType+' account?';
 			_confirm = new Confirm(m);
 			_confirm.addEventListener(UIEvent.CONFIRM, onConfirm);
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, _confirm));				
+			AppModel.alert(_confirm);
 		}
 		
 		private function onConfirm(e:UIEvent):void

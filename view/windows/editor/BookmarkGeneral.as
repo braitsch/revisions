@@ -79,7 +79,7 @@ package view.windows.editor {
 			if (checkMinutesInvalidValue()) {
 				var m:String = Bookmark.validate(_form.getField(0), _form.getField(1), AppModel.bookmark);
 				if (m != '') {
-					AppModel.alert(m);
+					AppModel.alert(new Message(m));
 				}	else {
 					saveNameInDatabase();
 				}
@@ -97,8 +97,7 @@ package view.windows.editor {
 			if (n >= 5 && n <= 90) {
 				return true;
 			}	else{
-				var m:String = 'Please enter a number between 5 & 90 minutes';
-				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));
+				AppModel.alert(new Message('Please enter a number between 5 & 90 minutes'));
 				return false;
 			}
 		}
@@ -110,7 +109,7 @@ package view.windows.editor {
 		
 		private function onDeleteBookmark(e:UIEvent):void
 		{
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Delete(AppModel.bookmark)));
+			AppModel.alert(new Delete(AppModel.bookmark));
 		}
 		
 		private function saveNameInDatabase():void

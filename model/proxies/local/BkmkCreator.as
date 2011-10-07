@@ -40,7 +40,7 @@ package model.proxies.local {
 				var f:File = File.desktopDirectory.resolvePath(bkmk.path);
 					f.moveToTrash();
 			}
-			dispatchEvent(new AppEvent(AppEvent.FILES_DELETED));
+			AppModel.dispatch(AppEvent.FILES_DELETED);
 		}
 		
 		public function editAppStorageGitDirName(o:Object):void
@@ -105,10 +105,10 @@ package model.proxies.local {
 					onFileAddedToRepository();
 				break;									
 				case BashMethods.ADD_INITIAL_COMMIT : 
-					dispatchEvent(new AppEvent(AppEvent.INITIALIZED));
+					AppModel.dispatch(AppEvent.INITIALIZED);
 				break;					
 				case BashMethods.EDIT_GIT_DIR : 
-					dispatchEvent(new AppEvent(AppEvent.GIT_DIR_UPDATED));
+					AppModel.dispatch(AppEvent.GIT_DIR_UPDATED);
 				break;	
 			}
 		}
@@ -126,7 +126,7 @@ package model.proxies.local {
 			// we have no branches, add all files and a first commit //
 				getDirectoryFiles();
 			}	else{
-				dispatchEvent(new AppEvent(AppEvent.INITIALIZED));
+				AppModel.dispatch(AppEvent.INITIALIZED);
 			}
 		}	
 
@@ -170,13 +170,13 @@ package model.proxies.local {
 	
 		private function dispatchLoadPercent():void
 		{
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.LOADER_PERCENT, {loaded:_index, total:_files.length}));
+			AppModel.dispatch(AppEvent.LOADER_PERCENT, {loaded:_index, total:_files.length});
 		}
 			
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
 			e.data.source = 'RepoCreator.onProcessFailure(e)';
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Debug(e.data)));
+			AppModel.alert(new Debug(e.data));
 		}
 
 	}

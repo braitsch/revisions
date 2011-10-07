@@ -4,6 +4,7 @@ package view.history.merger {
 	import view.btns.ButtonIcon;
 	import view.graphics.GradientBox;
 	import view.type.TextHeading;
+	import view.windows.modals.system.Message;
 	import flash.display.CapsStyle;
 	import flash.display.JointStyle;
 	import flash.display.LineScaleMode;
@@ -46,7 +47,7 @@ package view.history.merger {
 		
 		private function onMouseClick(e:MouseEvent):void
 		{
-			AppModel.alert('Coming Soon.');	
+			AppModel.alert(new Message('Coming Soon.'));	
 		}		
 		
 	}

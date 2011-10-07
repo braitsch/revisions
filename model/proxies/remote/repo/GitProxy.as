@@ -104,7 +104,7 @@ package model.proxies.remote.repo {
 		private function onPermissionsFailure(u:String):void
 		{
 			AppModel.hideLoader();
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.PERMISSIONS_FAILURE, u));
+			AppModel.dispatch(AppEvent.PERMISSIONS_FAILURE, u);
 			AppModel.engine.addEventListener(AppEvent.RETRY_REMOTE_REQUEST, onRetryRequest);
 		}
 		

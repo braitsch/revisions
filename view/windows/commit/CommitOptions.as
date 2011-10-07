@@ -8,6 +8,7 @@ package view.windows.commit {
 	import view.btns.DrawButton;
 	import view.type.TextHeading;
 	import view.windows.base.ChildWindow;
+	import view.windows.modals.system.Message;
 	import flash.events.MouseEvent;
 
 	public class CommitOptions extends ChildWindow {
@@ -41,7 +42,7 @@ package view.windows.commit {
 			if (AppModel.branch.isModified == false){
 				dispatchEvent(new UIEvent(UIEvent.WIZARD_NEXT));
 			}	else{
-				AppModel.alert('Please save your changes before creating a new branch.');
+				AppModel.alert(new Message('Please save your changes before creating a new branch.'));
 			}
 		}
 		

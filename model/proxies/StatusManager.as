@@ -54,14 +54,12 @@ package model.proxies {
 			AppModel.engine.addEventListener(AppEvent.HISTORY_REQUESTED, onHistoryRequested);
 			AppModel.engine.addEventListener(AppEvent.SUMMARY_RECEIVED, onSummaryReceived);
 			AppModel.engine.addEventListener(AppEvent.MODIFIED_RECEIVED, onModifiedReceived);
-			AppModel.proxies.editor.addEventListener(AppEvent.BOOKMARK_REVERTED, onBookmarkReverted);
-			AppModel.proxies.editor.addEventListener(AppEvent.BRANCH_CHANGED, onBranchChanged);
-			AppModel.proxies.editor.addEventListener(AppEvent.COMMIT_COMPLETE, onCommitComplete);			
+			AppModel.engine.addEventListener(AppEvent.BRANCH_CHANGED, onBranchChanged);
+			AppModel.engine.addEventListener(AppEvent.COMMIT_COMPLETE, onCommitComplete);			
 		}
 
 		private function onBranchChanged(e:AppEvent):void 		{	getHistory();   	}
-		private function onHistoryRequested(e:AppEvent):void		{	getHistory();		}
-		private function onBookmarkReverted(e:AppEvent):void 	{	getHistory();		}
+		private function onHistoryRequested(e:AppEvent):void	{	getHistory();		}
 		private function onBookmarkSelected(e:AppEvent):void 	{ 	getSummary();		}
 		
 		private function onTimerCheckModified(e:TimerEvent):void 
@@ -137,7 +135,7 @@ package model.proxies {
 				return true;
 			}	else{
 				stopTimers();
-				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.PATH_ERROR, b));
+				AppModel.dispatch(AppEvent.PATH_ERROR, b);
 				return false;
 			}
 		}

@@ -50,7 +50,7 @@ package view.frame{
 		
 		private function refreshHistory():void
 		{
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HISTORY_REQUESTED));
+			AppModel.dispatch(AppEvent.HISTORY_REQUESTED);
 			AppModel.engine.addEventListener(AppEvent.HISTORY_RECEIVED, onHistoryRendered);
 		}
 		

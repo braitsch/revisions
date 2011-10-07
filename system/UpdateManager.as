@@ -1,12 +1,12 @@
 package system {
 
 	import events.AppEvent;
+	import model.AppModel;
 	import flash.desktop.NativeApplication;
 	import flash.desktop.NativeProcess;
 	import flash.desktop.NativeProcessStartupInfo;
 	import flash.events.ErrorEvent;
 	import flash.events.Event;
-	import flash.events.EventDispatcher;
 	import flash.events.IOErrorEvent;
 	import flash.events.ProgressEvent;
 	import flash.events.TimerEvent;
@@ -20,7 +20,7 @@ package system {
 	import flash.utils.ByteArray;
 	import flash.utils.Timer;
 	
-	public class UpdateManager extends EventDispatcher
+	public class UpdateManager
 	{
 		private static const UPDATE_DESCRIPTOR_URL:String = "http://revisions-app.com/download/update.xml";
 		
@@ -82,9 +82,9 @@ package system {
 		// Compare current version with update version
 			if (oldVersion < newVersion && AppSettings.getSetting(AppSettings.CHECK_FOR_UPDATES)) {
 				_updateURL = newDescriptor.ndns::url.toString();
-				dispatchEvent(new AppEvent(AppEvent.APP_UPDATE_AVAILABLE, {o:oldVersion, n:newVersion}));
+				AppModel.dispatch(AppEvent.APP_UPDATE_AVAILABLE, {o:oldVersion, n:newVersion});
 			} else {
-				dispatchEvent(new AppEvent(AppEvent.APP_UP_TO_DATE, oldVersion));
+				AppModel.dispatch(AppEvent.APP_UP_TO_DATE, oldVersion);
 			}
 		}
 		
@@ -135,7 +135,7 @@ package system {
 			urlStream.readBytes(loadedBytes);
 		// Writing loaded bytes into the FileStream
 			fileStream.writeBytes(loadedBytes);
-			dispatchEvent(new AppEvent(AppEvent.APP_UPDATE_PROGRESS, event));			
+			AppModel.dispatch(AppEvent.APP_UPDATE_PROGRESS, event);
 		}
 		
 		private function onURLStreamError(e:IOErrorEvent):void
@@ -158,7 +158,7 @@ package system {
 			}	else if (os.indexOf('linux') != -1){
 				installUpdate(updateFile);
 			}
-			dispatchEvent(new AppEvent(AppEvent.APP_UPDATE_COMPLETE));
+			AppModel.dispatch(AppEvent.APP_UPDATE_COMPLETE);
 		}
 		
 	// mac osx install handlers //	
@@ -217,7 +217,7 @@ package system {
 		private function dispatchUpdateUnavailable(m:String = ''):void
 		{
 			_timeout.stop();
-			dispatchEvent(new AppEvent(AppEvent.APP_UPDATE_FAILURE, m));
+			AppModel.dispatch(AppEvent.APP_UPDATE_FAILURE, m);
 		}
 		
 	}

@@ -6,6 +6,7 @@ package view.windows.commit {
 	import view.btns.FormButton;
 	import view.type.TextHeading;
 	import view.ui.Form;
+	import view.windows.modals.system.Message;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 
@@ -68,7 +69,7 @@ package view.windows.commit {
 			var n:String = _form.getField(0).replace(/\s/g, '-');
 			for (var i:int = 0; i < AppModel.bookmark.branches.length; i++) {
 				if (n == AppModel.bookmark.branches[i].name){
-					AppModel.alert('Sorry, a branch with that name already exists. Please choose something else.');return;	
+					AppModel.alert(new Message('Sorry, a branch with that name already exists. Please choose something else.')); return;	
 				}
 			}
 			AppModel.proxies.editor.addBranch(n, _commit);

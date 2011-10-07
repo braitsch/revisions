@@ -1,7 +1,8 @@
 package system {
 
-	import events.AppEvent;
 	import events.UIEvent;
+	import model.AppModel;
+	import view.windows.modals.system.Message;
 	import flash.desktop.ClipboardFormats;
 	import flash.desktop.NativeApplication;
 	import flash.desktop.NativeDragActions;
@@ -9,8 +10,6 @@ package system {
 	import flash.display.InteractiveObject;
 	import flash.display.Sprite;
 	import flash.events.NativeDragEvent;
-	import model.AppModel;
-	import view.windows.modals.system.Message;
 
 	public class AirDragAndDrop extends Sprite {
 
@@ -39,7 +38,7 @@ package system {
 			if (a.length == 1){
 				_target.dispatchEvent(new UIEvent(UIEvent.DRAG_AND_DROP, a[0]));
 			}	else{
-				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message('Please add only one file at a time.')));
+				AppModel.alert(new Message('Please add only one file at a time.'));
 			}
 		}
 

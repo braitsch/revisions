@@ -59,14 +59,14 @@ package view.windows.modals.local {
 			_checks[0].selected = AppSettings.getSetting(AppSettings.CHECK_FOR_UPDATES);
 			_checks[1].selected = AppSettings.getSetting(AppSettings.SHOW_TOOL_TIPS);
 			_checks[2].selected = AppSettings.getSetting(AppSettings.START_AT_LOGIN);
-			AppModel.proxies.config.addEventListener(AppEvent.GIT_SETTINGS, onGitSettings);
+			AppModel.engine.addEventListener(AppEvent.GIT_SETTINGS, onGitSettings);
 			super.onAddedToStage(e);
 		}
 
 		private function onGitSettings(e:AppEvent):void
 		{
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-			AppModel.proxies.config.removeEventListener(AppEvent.GIT_SETTINGS, onGitSettings);			
+			AppModel.engine.removeEventListener(AppEvent.GIT_SETTINGS, onGitSettings);			
 		}
 		
 		private function onCheckboxSelection(e:MouseEvent):void
@@ -92,7 +92,7 @@ package view.windows.modals.local {
 			if (m == ''){
 				AppModel.proxies.config.setUserNameAndEmail(n, e);
 			}	else{
-				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));
+				AppModel.alert(new Message(m));
 			}	
 		}
 		

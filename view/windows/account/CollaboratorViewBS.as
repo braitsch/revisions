@@ -1,15 +1,15 @@
 package view.windows.account {
 
 
-	import com.greensock.TweenLite;
 	import events.AppEvent;
 	import events.UIEvent;
-	import flash.display.Sprite;
-	import flash.events.Event;
 	import model.AppModel;
 	import model.vo.Collaborator;
 	import view.type.TextHeading;
 	import view.windows.modals.system.Confirm;
+	import com.greensock.TweenLite;
+	import flash.display.Sprite;
+	import flash.events.Event;
 	public class CollaboratorViewBS extends AccountView {
 	
 		private var _item			:Sprite;
@@ -78,7 +78,7 @@ package view.windows.account {
 				m+='Would you like to continue?';
 			var k:Confirm = new Confirm(m);
 				k.addEventListener(UIEvent.CONFIRM, onConfirm);
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, k));			
+			AppModel.alert(k);			
 		}
 
 		private function onConfirm(e:UIEvent):void

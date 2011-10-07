@@ -182,7 +182,7 @@ package view.windows.modals.local {
 		
 		private function dispatchFailure(m:String):void
 		{
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));
+			AppModel.alert(new Message(m));
 		}
 
 	}

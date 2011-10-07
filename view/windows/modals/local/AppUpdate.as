@@ -48,7 +48,7 @@ package view.windows.modals.local {
 		private function onSkipUpdate(e:UIEvent):void
 		{
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-			AppModel.updater.dispatchEvent(new AppEvent(AppEvent.APP_UPDATE_IGNORED));
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.APP_UPDATE_IGNORED));
 		}
 
 		private function onDownload(e:UIEvent):void
@@ -56,9 +56,9 @@ package view.windows.modals.local {
 			disableButtons();
 			_view.textArea.message_txt.text = "Downloading Update..";
 			AppModel.updater.updateApplication();
-			AppModel.updater.addEventListener(AppEvent.APP_UPDATE_FAILURE, onUpdateError);
-			AppModel.updater.addEventListener(AppEvent.APP_UPDATE_PROGRESS, onUpdateProgress);
-			AppModel.updater.addEventListener(AppEvent.APP_UPDATE_COMPLETE, onUpdateComplete);
+			AppModel.engine.addEventListener(AppEvent.APP_UPDATE_FAILURE, onUpdateError);
+			AppModel.engine.addEventListener(AppEvent.APP_UPDATE_PROGRESS, onUpdateProgress);
+			AppModel.engine.addEventListener(AppEvent.APP_UPDATE_COMPLETE, onUpdateComplete);
 		}
 		
 		private function disableButtons():void

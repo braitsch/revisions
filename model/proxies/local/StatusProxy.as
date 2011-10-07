@@ -100,7 +100,7 @@ package model.proxies.local {
 			if (n1.length) _bookmark.branch.remoteStatus = n1.length;
 			if (n2.length) _bookmark.branch.remoteStatus =-n2.length;
 		//	trace("StatusProxy.onRemoteStatus(a)", _bookmark.branch.name, n1.length, n2.length);
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.BRANCH_STATUS));	
+			AppModel.dispatch(AppEvent.BRANCH_STATUS);	
 		}
 		
 		private function onModified(a:Array):void
@@ -115,7 +115,7 @@ package model.proxies.local {
 		// remove all the ignored files from the untracked array //	
 			_bookmark.branch.modified = m;
 			_bookmark.branch.untracked = stripDuplicates(u, i);
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.MODIFIED_RECEIVED, _bookmark));			
+			AppModel.dispatch(AppEvent.MODIFIED_RECEIVED, _bookmark);			
 		}
 
 		private function stripDuplicates(a:Array, b:Array):Array
@@ -135,7 +135,7 @@ package model.proxies.local {
 		{
 			for (var i:int = 0; i < a.length; i++) a[i] = a[i].result;
 			AppModel.branch.lastCommit = new Commit(a[0], uint(a[1]) + 1);
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SUMMARY_RECEIVED));
+			AppModel.dispatch(AppEvent.SUMMARY_RECEIVED);
 		}
 
 		private function onHistory(a:Array):void
@@ -153,8 +153,8 @@ package model.proxies.local {
 					}
 				}
 			}
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HISTORY_RECEIVED));
+			AppModel.hideLoader();
+			AppModel.dispatch(AppEvent.HISTORY_RECEIVED);
 		}
 
 		private function splitAndTrim(s:String):Array
@@ -182,7 +182,7 @@ package model.proxies.local {
 				break;
 				default :
 					e.data.source = 'StatusProxy.onProcessFailure(e) -- request on '+_bookmark.label, _bookmark.branch.name;
-					AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Debug(e.data)));
+					AppModel.alert(new Debug(e.data));
 				break;
 			}
 		}

@@ -3,6 +3,9 @@ package system {
 	import events.AppEvent;
 	import events.ErrEvent;
 	import events.UIEvent;
+	import model.AppModel;
+	import model.remote.Hosts;
+	import view.windows.modals.system.Message;
 	import flash.desktop.NativeApplication;
 	import flash.display.NativeMenu;
 	import flash.display.NativeMenuItem;
@@ -10,14 +13,9 @@ package system {
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.ui.Keyboard;
-	import model.AppModel;
-	import model.remote.Hosts;
-	import view.windows.modals.system.Message;
- 
  
     public class AirNativeMenu extends Sprite 
     { 
-    	
        	private static var _stage		:Stage;
        	private static var _appMenu		:NativeMenu;
        	private static var _accounts	:NativeMenuItem;
@@ -140,23 +138,23 @@ package system {
 		private static function onUpdateAppClick():void
 		{
 			AppSettings.setSetting(AppSettings.CHECK_FOR_UPDATES, true);
-	 		AppModel.updater.addEventListener(AppEvent.APP_UP_TO_DATE, onAppUpToDate);
-	 		AppModel.updater.addEventListener(AppEvent.APP_UPDATE_FAILURE, onUpdateUnavailable);
+	 		AppModel.engine.addEventListener(AppEvent.APP_UP_TO_DATE, onAppUpToDate);
+	 		AppModel.engine.addEventListener(AppEvent.APP_UPDATE_FAILURE, onUpdateUnavailable);
 	 		AppModel.updater.checkForUpdate();			
 		}
 
 		private static function onUpdateUnavailable(e:AppEvent):void
 		{
-			AppModel.updater.removeEventListener(AppEvent.APP_UP_TO_DATE, onAppUpToDate);			
-			AppModel.updater.removeEventListener(AppEvent.APP_UPDATE_FAILURE, onUpdateUnavailable);			
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(ErrEvent.NO_CONNECTION)));			
+			AppModel.alert(new Message(ErrEvent.NO_CONNECTION));
+			AppModel.engine.removeEventListener(AppEvent.APP_UP_TO_DATE, onAppUpToDate);			
+			AppModel.engine.removeEventListener(AppEvent.APP_UPDATE_FAILURE, onUpdateUnavailable);	
 		}
 
 		private static function onAppUpToDate(e:AppEvent):void
 		{
-			AppModel.updater.removeEventListener(AppEvent.APP_UP_TO_DATE, onAppUpToDate);			
-			AppModel.updater.removeEventListener(AppEvent.APP_UPDATE_FAILURE, onUpdateUnavailable);
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message('Revisions '+e.data+' is up to date')));
+			AppModel.alert(new Message('Revisions '+e.data+' is up to date'));
+			AppModel.engine.removeEventListener(AppEvent.APP_UP_TO_DATE, onAppUpToDate);			
+			AppModel.engine.removeEventListener(AppEvent.APP_UPDATE_FAILURE, onUpdateUnavailable);
 		}
       
     } 

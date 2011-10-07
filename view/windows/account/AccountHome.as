@@ -1,17 +1,16 @@
 package view.windows.account {
 
-	import com.greensock.TweenLite;
-	import events.AppEvent;
 	import events.UIEvent;
-	import flash.display.Shape;
-	import flash.events.Event;
-	import flash.events.MouseEvent;
 	import model.AppModel;
 	import model.remote.HostingAccount;
 	import model.remote.Hosts;
-	import view.windows.base.ParentWindow;
 	import view.windows.base.ChildWindow;
+	import view.windows.base.ParentWindow;
 	import view.windows.modals.system.Message;
+	import com.greensock.TweenLite;
+	import flash.display.Shape;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
 
 	public class AccountHome extends ParentWindow {
 
@@ -141,7 +140,7 @@ package view.windows.account {
 		{
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 			_account.type == HostingAccount.GITHUB ? Hosts.github.logOut() : Hosts.beanstalk.logOut();
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message('You Have Successfully Logged Out.')));
+			AppModel.alert(new Message('You Have Successfully Logged Out.'));
 		}			
 		
 	}

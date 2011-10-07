@@ -2,6 +2,7 @@ package view.history.switcher {
 
 	import model.AppModel;
 	import model.vo.Branch;
+	import view.windows.modals.system.Message;
 	import com.firestarter.ScaleObject;
 	import com.greensock.TweenLite;
 	import flash.display.Shape;
@@ -69,7 +70,7 @@ package view.history.switcher {
 
 		private function onClick(e:MouseEvent):void
 		{
-			AppModel.alert('Select a saved version of this bookmark to create a new branch.');
+			AppModel.alert(new Message('Select a saved version of this bookmark to create a new branch.'));
 		}
 		
 		private function drawBranchesBkgd():void

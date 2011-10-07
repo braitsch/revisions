@@ -1,9 +1,8 @@
 package view.windows.modals.local {
 
-	import view.type.TextHeading;
-	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
+	import view.type.TextHeading;
 	import view.windows.base.ParentWindow;
 	import view.windows.modals.system.Message;
 	import flash.events.Event;
@@ -39,7 +38,7 @@ package view.windows.modals.local {
 		private function onEnterKey(e:UIEvent):void 
 		{
 			if (_view.textArea.message_txt.text == ''){
-				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message('Commit Message Cannot Be Empty.')));
+				AppModel.alert(new Message('Commit Message Cannot Be Empty.'));
 			}	else{
 				dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 				AppModel.proxies.editor.commit(_view.textArea.message_txt.text);

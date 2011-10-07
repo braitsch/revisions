@@ -42,13 +42,13 @@ package model.proxies.local {
 			_bookmark.addRemotes(a[1]);
 			_bookmark.addLocalBranches(a[2]);
 			_bookmark.addRemoteBranches(a[3]);
-			dispatchEvent(new AppEvent(AppEvent.REPOSITORY_READY));
+			AppModel.dispatch(AppEvent.REPOSITORY_READY);
 		}
 		
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
 			e.data.source = 'RepoReader.onProcessFailure(e)';
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Debug(e.data)));
+			AppModel.alert(new Debug(e.data));
 		}
 		
 	}

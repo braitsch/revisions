@@ -1,14 +1,13 @@
 package view.windows.upload {
 
-	import events.AppEvent;
 	import events.UIEvent;
-	import flash.events.Event;
 	import model.AppModel;
 	import model.remote.HostingAccount;
 	import model.remote.Hosts;
 	import view.ui.Form;
 	import view.ui.ModalCheckbox;
 	import view.windows.modals.system.Message;
+	import flash.events.Event;
 
 	public class NameRmtRepo extends WizardWindow {
 
@@ -99,14 +98,11 @@ package view.windows.upload {
 		
 		private function validate():Boolean
 		{	
-			var m:Message;
 			if (_form.getField(0).search(/^\d/g) != -1){
-				m = new Message('The name of your bookmark online must begin with a letter.');
-				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
+				AppModel.alert(new Message('The name of your bookmark online must begin with a letter.'));
 				return false;
 			}	else if (checkForDuplicate() == true){
-				m = new Message('Remote repository already exists.');
-				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, m));
+				AppModel.alert(new Message('Remote repository already exists.'));
 				return false;
 			} 	else if (_form.validate() == false){
 				return false;

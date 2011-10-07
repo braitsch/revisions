@@ -1,18 +1,17 @@
 package system {
 
-	import events.AppEvent;
 	import events.UIEvent;
+	import model.AppModel;
+	import model.vo.Bookmark;
+	import view.bookmarks.BookmarkListItem;
+	import view.layout.ListItem;
+	import view.windows.modals.system.Delete;
 	import flash.display.DisplayObject;
 	import flash.display.InteractiveObject;
 	import flash.display.Stage;
 	import flash.events.ContextMenuEvent;
 	import flash.ui.ContextMenu;
 	import flash.ui.ContextMenuItem;
-	import model.AppModel;
-	import model.vo.Bookmark;
-	import view.bookmarks.BookmarkListItem;
-	import view.layout.ListItem;
-	import view.windows.modals.system.Delete;
 
 	public class AirContextMenu {
 		
@@ -76,7 +75,7 @@ package system {
 				case 'Edit Bookmark Settings' : 					_stage.dispatchEvent(new UIEvent(UIEvent.EDIT_BOOKMARK, bkmk));	
 				break;
 				case 'Delete Bookmark' : 
-					AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Delete(bkmk)));				break;
+					AppModel.alert(new Delete(bkmk));				break;
 				case 'Show Bookmark Summary' : 
 					AppModel.bookmark = bkmk;
 				break;				

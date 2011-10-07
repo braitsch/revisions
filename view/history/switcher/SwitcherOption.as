@@ -1,6 +1,5 @@
 package view.history.switcher {
 
-	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
 	import model.vo.Branch;
@@ -8,6 +7,7 @@ package view.history.switcher {
 	import view.graphics.GradientBox;
 	import view.type.TextHeading;
 	import view.windows.modals.system.Confirm;
+	import view.windows.modals.system.Message;
 	import com.greensock.TweenLite;
 	import flash.events.MouseEvent;
 
@@ -64,7 +64,7 @@ package view.history.switcher {
 		private function onChangeBranch():void
 		{
 			if (AppModel.branch.isModified){
-				AppModel.alert('Please save your changes before moving to a new branch.');					
+				AppModel.alert(new Message('Please save your changes before moving to a new branch.'));					
 			}	else{
 				AppModel.proxies.editor.changeBranch(_branch);
 			}			
@@ -74,7 +74,7 @@ package view.history.switcher {
 		{
 			var k:Confirm = new Confirm('Delete branch "'+_branch.name+'"?\nWarning this cannot be undone.');
 				k.addEventListener(UIEvent.CONFIRM, onConfirm);
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, k));			
+			AppModel.alert(k);			
 		}		
 		
 		private function onConfirm(e:UIEvent):void

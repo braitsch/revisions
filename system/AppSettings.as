@@ -1,15 +1,14 @@
 package system {
 
-	import model.AppModel;
 	import events.AppEvent;
+	import model.AppModel;
 	import flash.display.Stage;
 	import flash.events.Event;
-	import flash.events.EventDispatcher;
 	import flash.filesystem.File;
 	import flash.filesystem.FileMode;
 	import flash.filesystem.FileStream;
 	
-	public class AppSettings extends EventDispatcher {
+	public class AppSettings {
 
 		public static const START_AT_LOGIN				:String = "startAtLogin";
 		public static const CHECK_FOR_UPDATES			:String = 'checkForUpdates';
@@ -33,7 +32,7 @@ package system {
 		public static function setSetting(name:String, val:*):void
 		{
 			_settings[name] = val;
-			AppModel.settings.dispatchEvent(new AppEvent(AppEvent.APP_SETTINGS));
+			AppModel.dispatch(AppEvent.APP_SETTINGS);
 		}
 		
 		public static function getSetting(name:String):*
@@ -55,7 +54,7 @@ package system {
 		// store user-defined preferences //	
 			var p:XMLList = _xml['user-defined'].children();
 			for (var i:int = 0; i < p.length(); i++) _settings[p[i].name()] = castSetting(p[i].valueOf());
-			dispatchEvent(new AppEvent(AppEvent.APP_SETTINGS));
+			AppModel.dispatch(AppEvent.APP_SETTINGS);
 		//	traceSettings();
 		}
 		
@@ -73,7 +72,7 @@ package system {
 			_settings[CHECK_FOR_UPDATES] = true;
 			_settings[SHOW_TOOL_TIPS] = true;
 			_settings[PROMPT_BEFORE_DOWNLOAD] = true;
-			dispatchEvent(new AppEvent(AppEvent.APP_SETTINGS));			
+			AppModel.dispatch(AppEvent.APP_SETTINGS);			
 		}
 		
 		private function saveXML(e:Event = null):void

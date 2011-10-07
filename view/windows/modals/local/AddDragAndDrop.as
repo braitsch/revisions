@@ -1,6 +1,5 @@
 package view.windows.modals.local {
 
-	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
 	import model.vo.Bookmark;
@@ -57,7 +56,7 @@ package view.windows.modals.local {
 			if (m == '') {
 				initNewBookmark();
 			}	else{
-				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));
+				AppModel.alert(new Message(m));
 			}
 		}
 		

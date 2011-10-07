@@ -70,7 +70,7 @@ package model.proxies.local {
 		{
 			var m:String = e.data.method; var r:String = e.data.result;
 			if (m == BashMethods.ADD_KEY_TO_AUTH_AGENT && r.indexOf('Identity added') !=-1){
-				dispatchEvent(new AppEvent(AppEvent.SSH_KEY_READY));
+				AppModel.dispatch(AppEvent.SSH_KEY_READY);
 			}	else{
 				dispatchDebug(e.data);
 			}
@@ -84,7 +84,7 @@ package model.proxies.local {
 		private function dispatchDebug(o:Object):void
 		{
 			o.source = 'SSHProxy.onProcessFailure(e)';
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Debug(o)));			
+			AppModel.alert(new Debug(o));
 		}
 
 	}

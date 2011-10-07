@@ -1,15 +1,6 @@
 package view.windows.modals.collab {
 
-	import com.adobe.crypto.MD5;
 	import events.AppEvent;
-	import flash.display.Sprite;
-	import flash.events.Event;
-	import flash.events.IOErrorEvent;
-	import flash.events.SecurityErrorEvent;
-	import flash.net.URLLoader;
-	import flash.net.URLRequest;
-	import flash.net.URLRequestMethod;
-	import flash.net.URLVariables;
 	import model.AppModel;
 	import model.remote.Hosts;
 	import model.vo.Collaborator;
@@ -19,6 +10,15 @@ package view.windows.modals.collab {
 	import view.ui.ModalCheckbox;
 	import view.windows.modals.system.Debug;
 	import view.windows.modals.system.Message;
+	import com.adobe.crypto.MD5;
+	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.IOErrorEvent;
+	import flash.events.SecurityErrorEvent;
+	import flash.net.URLLoader;
+	import flash.net.URLRequest;
+	import flash.net.URLRequestMethod;
+	import flash.net.URLVariables;
 	
 	public class AddBeanstalkCollab extends Sprite {
 
@@ -61,7 +61,7 @@ package view.windows.modals.collab {
 				Hosts.beanstalk.api.addCollaborator(_collab, p);
 				AppModel.engine.addEventListener(AppEvent.COLLABORATORS_RECEIEVED, onCollaboratorAdded);
 			}	else{
-				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));
+				AppModel.alert(new Message(m));
 			}	
 		}
 
@@ -114,7 +114,7 @@ package view.windows.modals.collab {
 		
 		private function onEmailFailure(e:Event):void
 		{
-			dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Debug({source:this, method:'dispatchEmail()', message:e.type})));
+			AppModel.alert(new Debug({source:this, method:'dispatchEmail()', message:e.type}));
 		}		
 
 	}

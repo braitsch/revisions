@@ -1,9 +1,6 @@
 package view.windows.account {
 
-	import events.AppEvent;
 	import events.UIEvent;
-	import flash.display.Sprite;
-	import flash.events.MouseEvent;
 	import model.AppModel;
 	import model.remote.Hosts;
 	import model.vo.Collaborator;
@@ -13,6 +10,8 @@ package view.windows.account {
 	import view.btns.IconButton;
 	import view.ui.AccountRadio;
 	import view.windows.modals.system.Message;
+	import flash.display.Sprite;
+	import flash.events.MouseEvent;
 
 	public class CollaboratorItemBS extends Sprite {
 
@@ -87,7 +86,7 @@ package view.windows.account {
 				var m:String = _collab.firstName+' '+_collab.lastName+' has adminstrator privledges.\n';
 					m+='This means they have full access to all of you repositories.\n';
 					m+='Please login to your account online if you\'d like to change this.';
-				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));				
+				AppModel.alert(new Message(m));
 			}
 		}
 

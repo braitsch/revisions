@@ -2,12 +2,13 @@ package view.windows.upload {
 
 	import events.AppEvent;
 	import events.UIEvent;
-	import flash.events.Event;
 	import model.AppModel;
 	import model.remote.HostingAccount;
 	import model.vo.Collaborator;
 	import view.windows.modals.collab.AddBeanstalkCollab;
 	import view.windows.modals.collab.AddGitHubCollab;
+	import view.windows.modals.system.Message;
+	import flash.events.Event;
 
 	public class AddCollaborator extends WizardWindow {
 
@@ -56,7 +57,7 @@ package view.windows.upload {
 		{
 			var m:String = 'Awesome, I just added '+Collaborator(e.data).firstName+' to "'+super.repoName+'" on your '+super.account.type+' ';
 				m+=	'account and sent them an email to let them know!';
-			AppModel.alert(m);	
+			AppModel.alert(new Message(m));	
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 			_view.removeEventListener(AppEvent.COLLABORATOR_ADDED, onCollabAdded);
 		}

@@ -1,6 +1,5 @@
 package model.proxies.remote {
 
-	import events.AppEvent;
 	import events.ErrEvent;
 	import events.NativeProcessEvent;
 	import model.AppModel;
@@ -79,13 +78,13 @@ package model.proxies.remote {
 		
 		protected function dispatchDebug(o:Object):void
 		{
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Debug(o)));
+			AppModel.alert(new Debug(o));
 		}
 				
 		protected function dispatchError(m:String):void
 		{
+			AppModel.alert(new Message(m));
 			AppModel.engine.dispatchEvent(new ErrEvent(m));
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));
 		}
 		
 	}
