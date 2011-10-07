@@ -1,15 +1,14 @@
 package model.proxies.local {
 
-	import com.adobe.crypto.MD5;
 	import events.AppEvent;
-	import events.BookmarkEvent;
 	import events.NativeProcessEvent;
-	import flash.filesystem.File;
 	import model.AppModel;
 	import model.proxies.air.NativeProcessProxy;
 	import model.vo.Bookmark;
 	import system.BashMethods;
 	import view.windows.modals.system.Debug;
+	import com.adobe.crypto.MD5;
+	import flash.filesystem.File;
 
 	public class BkmkCreator extends NativeProcessProxy {
 		
@@ -106,7 +105,7 @@ package model.proxies.local {
 					onFileAddedToRepository();
 				break;									
 				case BashMethods.ADD_INITIAL_COMMIT : 
-					dispatchEvent(new BookmarkEvent(BookmarkEvent.INITIALIZED));
+					dispatchEvent(new AppEvent(AppEvent.INITIALIZED));
 				break;					
 				case BashMethods.EDIT_GIT_DIR : 
 					dispatchEvent(new AppEvent(AppEvent.GIT_DIR_UPDATED));
@@ -127,7 +126,7 @@ package model.proxies.local {
 			// we have no branches, add all files and a first commit //
 				getDirectoryFiles();
 			}	else{
-				dispatchEvent(new BookmarkEvent(BookmarkEvent.INITIALIZED));
+				dispatchEvent(new AppEvent(AppEvent.INITIALIZED));
 			}
 		}	
 

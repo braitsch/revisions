@@ -1,13 +1,12 @@
 package model.proxies {
 
 	import events.AppEvent;
-	import events.BookmarkEvent;
-	import flash.events.TimerEvent;
-	import flash.utils.Timer;
-	import flash.utils.setTimeout;
 	import model.AppModel;
 	import model.proxies.local.StatusProxy;
 	import model.vo.Bookmark;
+	import flash.events.TimerEvent;
+	import flash.utils.Timer;
+	import flash.utils.setTimeout;
 	
 	public class StatusManager {
 
@@ -50,20 +49,20 @@ package model.proxies {
 		
 		private function addListeners():void
 		{
-			AppModel.engine.addEventListener(BookmarkEvent.NO_BOOKMARKS, onNoBookmarks);
-			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onBookmarkSelected);
+			AppModel.engine.addEventListener(AppEvent.NO_BOOKMARKS, onNoBookmarks);
+			AppModel.engine.addEventListener(AppEvent.BOOKMARK_SELECTED, onBookmarkSelected);
 			AppModel.engine.addEventListener(AppEvent.HISTORY_REQUESTED, onHistoryRequested);
 			AppModel.engine.addEventListener(AppEvent.SUMMARY_RECEIVED, onSummaryReceived);
 			AppModel.engine.addEventListener(AppEvent.MODIFIED_RECEIVED, onModifiedReceived);
-			AppModel.proxies.editor.addEventListener(BookmarkEvent.REVERTED, onBookmarkReverted);
-			AppModel.proxies.editor.addEventListener(BookmarkEvent.BRANCH_CHANGED, onBranchChanged);
-			AppModel.proxies.editor.addEventListener(BookmarkEvent.COMMIT_COMPLETE, onCommitComplete);			
+			AppModel.proxies.editor.addEventListener(AppEvent.BOOKMARK_REVERTED, onBookmarkReverted);
+			AppModel.proxies.editor.addEventListener(AppEvent.BRANCH_CHANGED, onBranchChanged);
+			AppModel.proxies.editor.addEventListener(AppEvent.COMMIT_COMPLETE, onCommitComplete);			
 		}
 
-		private function onBranchChanged(e:BookmarkEvent):void 		{	getHistory();   	}
+		private function onBranchChanged(e:AppEvent):void 		{	getHistory();   	}
 		private function onHistoryRequested(e:AppEvent):void		{	getHistory();		}
-		private function onBookmarkReverted(e:BookmarkEvent):void 	{	getHistory();		}
-		private function onBookmarkSelected(e:BookmarkEvent):void 	{ 	getSummary();		}
+		private function onBookmarkReverted(e:AppEvent):void 	{	getHistory();		}
+		private function onBookmarkSelected(e:AppEvent):void 	{ 	getSummary();		}
 		
 		private function onTimerCheckModified(e:TimerEvent):void 
 		{		
@@ -124,7 +123,7 @@ package model.proxies {
 			getRemoteStatus(++_ticks % 4 == 0);
 		}
 		
-		private function onCommitComplete(e:BookmarkEvent):void 
+		private function onCommitComplete(e:AppEvent):void 
 		{ 		
 			if (_autoSaveQueue.length) {
 				if (e.data as Bookmark == _autoSaveQueue[0]) _autoSaveQueue.splice(0, 1);
@@ -138,12 +137,12 @@ package model.proxies {
 				return true;
 			}	else{
 				stopTimers();
-				AppModel.engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.PATH_ERROR, b));
+				AppModel.engine.dispatchEvent(new AppEvent(AppEvent.PATH_ERROR, b));
 				return false;
 			}
 		}
 		
-		private function onNoBookmarks(e:BookmarkEvent):void
+		private function onNoBookmarks(e:AppEvent):void
 		{
 			stopTimers();
 		}		

@@ -1,6 +1,6 @@
 package model.vo {
 
-	import events.BookmarkEvent;
+	import events.AppEvent;
 	import model.AppEngine;
 	import model.AppModel;
 	import system.StringUtils;
@@ -63,7 +63,7 @@ package model.vo {
 		public function set label(s:String):void
 		{
 			_label = s;
-			dispatchEvent(new BookmarkEvent(BookmarkEvent.EDITED));
+			dispatchEvent(new AppEvent(AppEvent.BOOKMARK_EDITED));
 		}
 		
 		public function get branch():Branch 					{ return _branches[0]; 	}		

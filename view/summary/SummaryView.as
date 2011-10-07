@@ -1,7 +1,6 @@
 package view.summary {
 
 	import events.AppEvent;
-	import events.BookmarkEvent;
 	import events.UIEvent;
 	import model.AppModel;
 	import model.vo.Bookmark;
@@ -79,12 +78,12 @@ package view.summary {
 		
 		private function addListeners():void
 		{
-			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onSelected);
+			AppModel.engine.addEventListener(AppEvent.BOOKMARK_SELECTED, onSelected);
 			AppModel.engine.addEventListener(AppEvent.SUMMARY_RECEIVED, drawView);
 			AppModel.engine.addEventListener(AppEvent.MODIFIED_RECEIVED, drawView);
 		}
 
-		private function onSelected(e:BookmarkEvent):void
+		private function onSelected(e:AppEvent):void
 		{
 			setTextFields();
 			getBookmarkIcon();

@@ -1,7 +1,6 @@
 package model {
 
 	import events.AppEvent;
-	import events.BookmarkEvent;
 	import model.db.AppDatabase;
 	import model.proxies.AppProxies;
 	import model.vo.Bookmark;
@@ -30,7 +29,7 @@ package model {
 		{
 			_bookmark = b;
 			_database.setActiveBookmark(_bookmark.label);
-			_engine.dispatchEvent(new BookmarkEvent(BookmarkEvent.SELECTED));
+			_engine.dispatchEvent(new AppEvent(AppEvent.BOOKMARK_SELECTED));
 		}
 		
 	// public getters //

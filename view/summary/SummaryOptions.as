@@ -1,10 +1,9 @@
 package view.summary {
 
-	import model.vo.Repository;
 	import events.AppEvent;
-	import events.BookmarkEvent;
 	import events.UIEvent;
 	import model.AppModel;
+	import model.vo.Repository;
 	import system.AppSettings;
 	import view.btns.IconButton;
 	import view.windows.modals.system.Confirm;
@@ -22,7 +21,7 @@ package view.summary {
 		{
 			_view = v;
 			initButtons();
-			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onSelected);
+			AppModel.engine.addEventListener(AppEvent.BOOKMARK_SELECTED, onSelected);
 			AppModel.engine.addEventListener(AppEvent.BRANCH_STATUS, onBranchStatus);
 			AppModel.engine.addEventListener(AppEvent.BRANCH_PUSHED, onBranchPushed);
 		}
@@ -38,7 +37,7 @@ package view.summary {
 			_view.settings_btn.addEventListener(MouseEvent.CLICK, onSettingsButton);
 		}
 		
-		private function onSelected(e:BookmarkEvent):void
+		private function onSelected(e:AppEvent):void
 		{
 			if (AppModel.repository){	
 				checkBranchStatus();

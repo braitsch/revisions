@@ -1,7 +1,6 @@
 package view.windows.modals {
 
 	import events.AppEvent;
-	import events.BookmarkEvent;
 	import events.UIEvent;
 	import model.AppModel;
 	import model.remote.Hosts;
@@ -75,9 +74,9 @@ package view.windows.modals {
 			AppModel.engine.addEventListener(AppEvent.SHOW_LOADER, showLoader);
 			AppModel.engine.addEventListener(AppEvent.SHOW_ALERT, onShowAlert);
 			AppModel.engine.addEventListener(AppEvent.HIDE_ALERT, onHideAlert);	
-			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onBookmarkSelected);
-			AppModel.engine.addEventListener(BookmarkEvent.PATH_ERROR, repairBookmark);
-			AppModel.engine.addEventListener(BookmarkEvent.NO_BOOKMARKS, showWelcomeScreen);
+			AppModel.engine.addEventListener(AppEvent.BOOKMARK_SELECTED, onBookmarkSelected);
+			AppModel.engine.addEventListener(AppEvent.PATH_ERROR, repairBookmark);
+			AppModel.engine.addEventListener(AppEvent.NO_BOOKMARKS, showWelcomeScreen);
 			AppModel.engine.addEventListener(AppEvent.APP_EXPIRED, onAppExpired);
 			AppModel.engine.addEventListener(AppEvent.PERMISSIONS_FAILURE, onPermissionsFailure);
 			AppModel.updater.addEventListener(AppEvent.APP_UPDATE_AVAILABLE, promptToUpdate);
@@ -118,12 +117,12 @@ package view.windows.modals {
 			if (_alert) _alert.resize(w, h);
 		}
 
-		private function onBookmarkSelected(e:BookmarkEvent):void
+		private function onBookmarkSelected(e:AppEvent):void
 		{
 			if (_window == _welcome) hideModalWindow();
 		}
 
-		private function showWelcomeScreen(e:BookmarkEvent):void
+		private function showWelcomeScreen(e:AppEvent):void
 		{
 			showModalWindow(_welcome);
 		}
@@ -188,7 +187,7 @@ package view.windows.modals {
 			showModalWindow(_edit);
 		}
 		
-		private function repairBookmark(e:BookmarkEvent):void
+		private function repairBookmark(e:AppEvent):void
 		{
 			_repair.broken = e.data as Bookmark;
 			showModalWindow(_repair);

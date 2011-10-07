@@ -1,6 +1,6 @@
 package view.bookmarks {
 
-	import events.BookmarkEvent;
+	import events.AppEvent;
 	import model.AppModel;
 	import model.vo.Bookmark;
 	import view.btns.ButtonIcon;
@@ -18,7 +18,7 @@ package view.bookmarks {
 		public function BookmarkListItem($bkmk:Bookmark)
 		{
 			_bookmark = $bkmk;
-			_bookmark.addEventListener(BookmarkEvent.EDITED, onBookmarkEdited);
+			_bookmark.addEventListener(AppEvent.BOOKMARK_EDITED, onBookmarkEdited);
 			_view.blue.alpha = 0;
 			_view.label_txt.y = 11;
 			_view.label_txt.selectable = false;
@@ -58,7 +58,7 @@ package view.bookmarks {
 			TweenLite.to(_view.blue, .5, {alpha: b ? 1 : 0});
 		}
 		
-		private function onBookmarkEdited(e:BookmarkEvent):void 		{
+		private function onBookmarkEdited(e:AppEvent):void 		{
 			_view.label_txt.text = _bookmark.label;
 		}
 		

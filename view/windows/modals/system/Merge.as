@@ -1,6 +1,6 @@
 package view.windows.modals.system {
 
-	import events.BookmarkEvent;
+	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
 	import model.vo.Branch;
@@ -29,7 +29,7 @@ package view.windows.modals.system {
 			addNoButton();
 			addChild(_heading);
 			_check.y = 261; addChild(_check);
-			AppModel.proxies.editor.addEventListener(BookmarkEvent.MERGE_COMPLETE, onMergeComplete);
+			AppModel.proxies.editor.addEventListener(AppEvent.MERGE_COMPLETE, onMergeComplete);
 		}
 		
 		public function setBranches(a:Branch, b:Branch):void
@@ -65,7 +65,7 @@ package view.windows.modals.system {
 			AppModel.proxies.editor.merge(_branchA, _branchB);
 		}
 
-		private function onMergeComplete(e:BookmarkEvent):void
+		private function onMergeComplete(e:AppEvent):void
 		{
 			super.onOkButton(e);
 			dispatchEvent(new UIEvent(UIEvent.CONFIRM, true));

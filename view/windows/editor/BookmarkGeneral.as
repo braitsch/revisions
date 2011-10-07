@@ -1,7 +1,6 @@
 package view.windows.editor {
 
 	import events.AppEvent;
-	import events.BookmarkEvent;
 	import events.DataBaseEvent;
 	import events.UIEvent;
 	import model.AppModel;
@@ -33,7 +32,7 @@ package view.windows.editor {
 			addNoButton('Delete', 334, 350);
 			addEventListener(UIEvent.ENTER_KEY, onUpdateBookmark);
 			addEventListener(UIEvent.NO_BUTTON, onDeleteBookmark);
-			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onBookmarkSelected);
+			AppModel.engine.addEventListener(AppEvent.BOOKMARK_SELECTED, onBookmarkSelected);
 		}
 
 		private function setupHeading():void
@@ -67,7 +66,7 @@ package view.windows.editor {
 			addChild(_autoSave);
 		}
 		
-		private function onBookmarkSelected(e:BookmarkEvent):void
+		private function onBookmarkSelected(e:AppEvent):void
 		{
 			_form.setField(1, AppModel.bookmark.path);
 			_form.setField(0, AppModel.bookmark.label);

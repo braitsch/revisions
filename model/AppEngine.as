@@ -1,7 +1,6 @@
 package model {
 
 	import events.AppEvent;
-	import events.BookmarkEvent;
 	import events.DataBaseEvent;
 	import model.vo.Bookmark;
 	import flash.events.EventDispatcher;
@@ -26,12 +25,12 @@ package model {
 			_bookmark = b;
 			AppModel.proxies.status.locked = true;
 			AppModel.proxies.creator.initBookmark(_bookmark);
-			AppModel.proxies.creator.addEventListener(BookmarkEvent.INITIALIZED, readRepository);		
+			AppModel.proxies.creator.addEventListener(AppEvent.INITIALIZED, readRepository);		
 		}
 		
-		private function readRepository(e:BookmarkEvent):void
+		private function readRepository(e:AppEvent):void
 		{
-			AppModel.proxies.creator.removeEventListener(BookmarkEvent.INITIALIZED, readRepository);
+			AppModel.proxies.creator.removeEventListener(AppEvent.INITIALIZED, readRepository);
 			AppModel.proxies.reader.getRepositoryInfo(_bookmark);
 			AppModel.proxies.reader.addEventListener(AppEvent.REPOSITORY_READY, addBkmkToDatabase);
 		}
@@ -46,7 +45,7 @@ package model {
 		private function onAddedToDatabase(e:DataBaseEvent):void 
 		{
 			_bookmarks.push(_bookmark);
-			dispatchEvent(new BookmarkEvent(BookmarkEvent.ADDED, _bookmark));
+			dispatchEvent(new AppEvent(AppEvent.BOOKMARK_ADDED, _bookmark));
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER, .25));
 			AppModel.database.removeEventListener(DataBaseEvent.RECORD_ADDED, onAddedToDatabase);
 			dispatchActiveBookmark();
@@ -75,7 +74,7 @@ package model {
 			
 		private function onRemovedFromDatabase(e:DataBaseEvent):void 
 		{
-			dispatchEvent(new BookmarkEvent(BookmarkEvent.DELETED, _bookmark));
+			dispatchEvent(new AppEvent(AppEvent.BOOKMARK_DELETED, _bookmark));
 			AppModel.database.removeEventListener(DataBaseEvent.RECORD_DELETED, onRemovedFromDatabase);
 			deleteAndSetNewActiveBookmark(e.data as Array);
 		}
@@ -89,12 +88,12 @@ package model {
 				if (_broken.length == 0) {
 					initializeBookmarks();
 				}	else{
-					dispatchEvent(new BookmarkEvent(BookmarkEvent.PATH_ERROR, _broken[0]));
+					dispatchEvent(new AppEvent(AppEvent.PATH_ERROR, _broken[0]));
 				}
 			}	else if (_bookmarks.length){
 				dispatchActiveBookmark();	
 			}	else{
-				dispatchEvent(new BookmarkEvent(BookmarkEvent.NO_BOOKMARKS));
+				dispatchEvent(new AppEvent(AppEvent.NO_BOOKMARKS));
 			}			
 		}
 		
@@ -104,14 +103,14 @@ package model {
 		{
 			buildBkmksFromDatabase(a);
 			if (_bookmarks.length == 0){
-				dispatchEvent(new BookmarkEvent(BookmarkEvent.NO_BOOKMARKS));	
+				dispatchEvent(new AppEvent(AppEvent.NO_BOOKMARKS));	
 			}	else{
 				checkForBrokenPaths();
 				if (_broken.length == 0) {
 					initializeBookmarks();
 				}	else{
 					addEventListener(AppEvent.BOOKMARK_REPAIRED, onBookmarkRepaired);
-					dispatchEvent(new BookmarkEvent(BookmarkEvent.PATH_ERROR, _broken[0]));
+					dispatchEvent(new AppEvent(AppEvent.PATH_ERROR, _broken[0]));
 				}
 			}
 		}
@@ -123,7 +122,7 @@ package model {
 				if (_broken.length == 0) {
 					initializeBookmarks();
 				}	else {
-					dispatchEvent(new BookmarkEvent(BookmarkEvent.PATH_ERROR, _broken[0]));
+					dispatchEvent(new AppEvent(AppEvent.PATH_ERROR, _broken[0]));
 				}
 			}
 		}
@@ -166,7 +165,7 @@ package model {
 		
 		private function onAllBookmarksParsed():void
 		{
-			dispatchEvent(new BookmarkEvent(BookmarkEvent.LOADED, _bookmarks));
+			dispatchEvent(new AppEvent(AppEvent.BOOKMARKS_LOADED, _bookmarks));
 			dispatchActiveBookmark();
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER, .25));
 			AppModel.proxies.reader.removeEventListener(AppEvent.REPOSITORY_READY, onRepositoryReady);

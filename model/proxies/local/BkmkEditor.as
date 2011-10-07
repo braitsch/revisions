@@ -1,7 +1,6 @@
 package model.proxies.local {
 
 	import events.AppEvent;
-	import events.BookmarkEvent;
 	import events.NativeProcessEvent;
 	import model.AppModel;
 	import model.proxies.air.NativeProcessProxy;
@@ -172,7 +171,7 @@ package model.proxies.local {
 		{
 			_bookmark.branch.modified = [];
 			_bookmark.branch.untracked = [];
-			dispatchEvent(new BookmarkEvent(BookmarkEvent.COMMIT_COMPLETE, _bookmark));			
+			dispatchEvent(new AppEvent(AppEvent.COMMIT_COMPLETE, _bookmark));			
 		}
 		
 		private function onBranchAdded():void
@@ -182,7 +181,7 @@ package model.proxies.local {
 			var v:Vector.<Commit>  = h.slice(0, i+1);
 			_branch.history = v;
 			AppModel.bookmark.addLocalBranch(_branch);
-			dispatchEvent(new BookmarkEvent(BookmarkEvent.BRANCH_CHANGED));
+			dispatchEvent(new AppEvent(AppEvent.BRANCH_CHANGED));
 		}		
 
 		private function onBranchDeleted():void
@@ -194,7 +193,7 @@ package model.proxies.local {
 		private function onBranchSet():void
 		{
 			AppModel.bookmark.branch = _branch;
-			dispatchEvent(new BookmarkEvent(BookmarkEvent.BRANCH_CHANGED));
+			dispatchEvent(new AppEvent(AppEvent.BRANCH_CHANGED));
 		}
 		
 		private function onBranchRenamed():void
@@ -226,7 +225,7 @@ package model.proxies.local {
 			if (reponseHas(s, 'Fast-forward')) ok = true;
 			if (reponseHas(s, 'Already up-to-date')) ok = true;
 			if (ok) {
-				dispatchEvent(new BookmarkEvent(BookmarkEvent.MERGE_COMPLETE));
+				dispatchEvent(new AppEvent(AppEvent.MERGE_COMPLETE));
 			}	else{
 				trace("there was a conflict");
 			}

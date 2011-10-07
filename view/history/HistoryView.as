@@ -1,7 +1,6 @@
 package view.history {
 
 	import events.AppEvent;
-	import events.BookmarkEvent;
 	import model.AppModel;
 	import flash.display.Sprite;
 
@@ -15,10 +14,10 @@ package view.history {
 			_list.y = 34;
 			addChild(_list);
 			addChild(_header);
-			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onSelected);
+			AppModel.engine.addEventListener(AppEvent.BOOKMARK_SELECTED, onSelected);
 			AppModel.engine.addEventListener(AppEvent.HISTORY_RECEIVED, onHistory);
 			AppModel.engine.addEventListener(AppEvent.MODIFIED_RECEIVED, onModified);
-			AppModel.engine.addEventListener(BookmarkEvent.NO_BOOKMARKS, onNoBookmarks);
+			AppModel.engine.addEventListener(AppEvent.NO_BOOKMARKS, onNoBookmarks);
 		}
 
 		public function resize(w:uint, h:uint):void
@@ -26,7 +25,7 @@ package view.history {
 			_header.resize(w, h); _list.setSize(w, h - _list.y);
 		}
 		
-		private function onSelected(e:BookmarkEvent):void 
+		private function onSelected(e:AppEvent):void 
 		{
 			AppModel.bookmark.branch.history ? drawView() : clearView();
 		}
@@ -41,7 +40,7 @@ package view.history {
 			drawView();
 		}		
 		
-		private function onNoBookmarks(e:BookmarkEvent):void
+		private function onNoBookmarks(e:AppEvent):void
 		{
 			clearView();
 		}

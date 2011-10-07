@@ -1,7 +1,6 @@
 package view.frame{
 
 	import events.AppEvent;
-	import events.BookmarkEvent;
 	import events.UIEvent;
 	import model.AppModel;
 	import view.graphics.PatternBox;
@@ -34,8 +33,8 @@ package view.frame{
 			_curtain.addEventListener(MouseEvent.CLICK, onCurtainClick);
 			_summary.addEventListener(UIEvent.SHOW_HISTORY, onShowHistory);
 			
-			AppModel.engine.addEventListener(BookmarkEvent.NO_BOOKMARKS, onNoBookmarks);
-			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onBookmarkSelected);
+			AppModel.engine.addEventListener(AppEvent.NO_BOOKMARKS, onNoBookmarks);
+			AppModel.engine.addEventListener(AppEvent.BOOKMARK_SELECTED, onBookmarkSelected);
 		}
 
 		public function resize(w:uint, h:uint):void
@@ -61,12 +60,12 @@ package view.frame{
 			AppModel.engine.removeEventListener(AppEvent.HISTORY_RECEIVED, onHistoryRendered);
 		}
 		
-		private function onNoBookmarks(e:BookmarkEvent):void
+		private function onNoBookmarks(e:AppEvent):void
 		{
 			hideSummary();
 		}
 		
-		private function onBookmarkSelected(e:BookmarkEvent):void
+		private function onBookmarkSelected(e:AppEvent):void
 		{
 			if (_summary.visible == false) showSummary();
 		}		
