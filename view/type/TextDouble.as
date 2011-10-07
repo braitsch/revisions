@@ -15,18 +15,19 @@ package view.type {
 			_line2.size = 9;
 			_line2.color = 0x777777;
 			_line1.x =_line2.x = 0;
+			_line1.multiline = _line2.multiline = false;
 			addChild(_line1);
 			addChild(_line2);
 		}
 
 		public function set line1(s:String):void
 		{
-			_line1.label.text = s;
+			_line1.text = s;
 		}
 		
 		public function set line2(s:String):void
 		{
-			_line2.label.text = s;
+			_line2.text = s;
 		}
 		
 		public function set maxWidth(n:uint):void

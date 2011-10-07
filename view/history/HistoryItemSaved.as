@@ -41,6 +41,7 @@ package view.history {
 			_bkgd.draw(w, h);
 			_ptrn.draw(w, h);
 			_over.draw(w, h);
+			super.setSize(w, h);
 		}
 
 		private function drawBkgd():void

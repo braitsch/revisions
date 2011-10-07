@@ -11,8 +11,7 @@ package view.type {
 			super.size = 12;
 			super.color = 0xCCCCCC;
 			super.letterSpacing = .8;
-			super.label.wordWrap = false;
-			super.label.multiline = false;
+			super.multiline = false;
 			this.filters = [_dkGlow];
 		}
 		

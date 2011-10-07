@@ -16,7 +16,10 @@ package view.history {
 			buttonMode = true;
 		}
 		
-		public function setSize(w:uint, h:uint):void { }
+		public function setSize(w:uint, h:uint):void 
+		{ 
+			_text.maxWidth = w - 130;
+		}
 		
 		protected function setText(l1:String, l2:String):void
 		{

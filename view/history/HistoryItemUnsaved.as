@@ -20,6 +20,7 @@ package view.history {
 		override public function setSize(w:uint, h:uint):void
 		{
 			_bkgd.draw(w, h);
+			super.setSize(w, h);
 		}		
 
 		private function onSaveSelection(e:MouseEvent):void
