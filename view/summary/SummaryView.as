@@ -78,9 +78,10 @@ package view.summary {
 		
 		private function addListeners():void
 		{
-			AppModel.engine.addEventListener(AppEvent.BOOKMARK_SELECTED, onSelected);
+			AppModel.engine.addEventListener(AppEvent.HISTORY_RECEIVED, drawView);
 			AppModel.engine.addEventListener(AppEvent.SUMMARY_RECEIVED, drawView);
 			AppModel.engine.addEventListener(AppEvent.MODIFIED_RECEIVED, drawView);
+			AppModel.engine.addEventListener(AppEvent.BOOKMARK_SELECTED, onSelected);
 		}
 
 		private function onSelected(e:AppEvent):void
