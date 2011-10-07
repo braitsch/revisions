@@ -40,7 +40,11 @@ package view.summary {
 		
 		private function onSelected(e:BookmarkEvent):void
 		{
-			checkBranchStatus();	
+			if (AppModel.repository){	
+				checkBranchStatus();
+			}	else{
+				positionButtons(false);
+			}
 		}
 
 		private function onBranchStatus(e:AppEvent):void

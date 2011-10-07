@@ -82,7 +82,7 @@ package model.proxies.remote.acct {
 				_account.addRepository(new GitHubRepo(o));
 				dispatchEvent(new AppEvent(AppEvent.REPOSITORY_CREATED));
 			}	else{
-				handleJSONError(o.errors[0].message);		
+				handleJSONError(o.errors[0].message);
 			}
 		}
 

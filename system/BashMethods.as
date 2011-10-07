@@ -30,21 +30,19 @@ package system{
 	// repo-remote.as //	
 		public static const CLONE					:String = 'clone';
 		public static const COMMIT					:String = 'commit';		
-		public static const ADD_REMOTE				:String = 'addRemote';
-		public static const DEL_REMOTE				:String = 'killRemote';
-		public static const EDIT_REMOTE				:String = 'editRemote';
-		public static const PULL_REMOTE				:String = 'pullFromRemote';
 		public static const PUSH_BRANCH				:String = 'pushToRemote';
 		
 	// repo-editor.as //		
 		public static const MERGE					:String = 'merge';
 		public static const UN_MERGE				:String = 'unmerge';
-		public static const SET_BRANCH				:String = 'setBranch';
 		public static const ADD_BRANCH				:String = 'addBranch';
-		public static const DEL_BRANCH				:String = 'delBranch';
+		public static const SET_BRANCH				:String = 'setBranch';
 		public static const RENAME_BRANCH			:String = 'renameBranch';
+		public static const DEL_BRANCH				:String = 'delBranch';
+		public static const ADD_REMOTE				:String = 'addRemote';
+		public static const EDIT_REMOTE				:String = 'editRemote';
+		public static const DEL_REMOTE				:String = 'delRemote';
 		public static const COPY_VERSION			:String = 'copyVersion';
-		public static const REVERT_TO_VERSION		:String = 'revertToVersion';
 		
 	// history & status //	
 		public static const GET_HISTORY				:String = 'getHistory';

@@ -30,6 +30,7 @@ package model.vo {
 		private var _icon128			:Bitmap;
 		private var _stash				:Array = [];
 		private var _branches			:Vector.<Branch> = new Vector.<Branch>();
+		private var _remote				:Repository;
 		private var _remotes			:Vector.<Repository> = new Vector.<Repository>();
 
 		public function Bookmark(o:Object)
@@ -54,8 +55,8 @@ package model.vo {
 		public function get gitdir():String 					{ return _gitdir;		}
 		public function get worktree():String 					{ return _worktree;		}
 		public function get stash():Array 						{ return _stash; 		}		
+		public function get remote():Repository					{ return _remote;		}
 		public function get remotes():Vector.<Repository> 		{ return _remotes; 		}
-		public function get repository():Repository				{ return _remotes[0];	}
 		public function get branches():Vector.<Branch>			{ return _branches;	 	}	
 		
 		public function get label():String 						{ return _label;		}
@@ -112,14 +113,17 @@ package model.vo {
 			for (var i:int = 0; i < a.length; i++) {
 				var n:String = a[i]; i++;
 				var u:String = a[i].substr(0, a[i].search(/\s/));
-				_remotes.push(new Repository(n, u));				
 				if (i % 1 == 0) i+=2;
+				addRemote(new Repository(n, u));
 			}
 		}
 		
-		public function addRemote(r:Repository):void { _remotes.push(r); }
+		public function addRemote(r:Repository):void 
+		{ 
+			_remote = r; _remotes.push(r);
+		}
 		
-		public function killRemote(r:Repository):void
+		public function delRemote(r:Repository):void
 		{
 			for (var i:int = 0; i < _remotes.length; i++) if (r == _remotes[i]) _remotes.splice(i, 1);
 		}

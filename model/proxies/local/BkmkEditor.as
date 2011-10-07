@@ -12,14 +12,14 @@ package model.proxies.local {
 	import system.BashMethods;
 	import flash.filesystem.File;
 
-	public class RepoEditor extends NativeProcessProxy {
+	public class BkmkEditor extends NativeProcessProxy {
 
 		private static var _branch		:Branch;
 		private static var _commit		:Commit;
 		private static var _bookmark	:Bookmark;
 		private static var _repository	:Repository;
 
-		public function RepoEditor()
+		public function BkmkEditor()
 		{
 			super.executable = 'RepoEditor.sh';
 			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
@@ -132,7 +132,7 @@ package model.proxies.local {
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
-		//	trace("RepoEditor.onProcessComplete(e)", e.data.method, e.data.result);
+			trace("RepoEditor.onProcessComplete(e)", e.data.method, e.data.result);
 			switch(e.data.method) {
 				case BashMethods.COMMIT : 
 					onCommitComplete();
@@ -215,7 +215,7 @@ package model.proxies.local {
 		
 		private function onRemoteRemoved():void
 		{
-			AppModel.bookmark.killRemote(_repository);
+			AppModel.bookmark.delRemote(_repository);
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.REMOTE_DELETED));
 		}			
 

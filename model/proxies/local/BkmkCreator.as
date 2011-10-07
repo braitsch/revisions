@@ -11,13 +11,13 @@ package model.proxies.local {
 	import system.BashMethods;
 	import view.windows.modals.system.Debug;
 
-	public class RepoCreator extends NativeProcessProxy {
+	public class BkmkCreator extends NativeProcessProxy {
 		
 		private static var _files		:Array;
 		private static var _index		:uint;
 		private static var _bookmark	:Bookmark;
 		
-		public function RepoCreator()
+		public function BkmkCreator()
 		{
 			super.executable = 'RepoCreator.sh';
 			super.addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);

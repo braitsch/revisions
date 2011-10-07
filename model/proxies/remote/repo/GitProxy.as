@@ -9,8 +9,6 @@ package model.proxies.remote.repo {
 	import model.remote.HostingAccount;
 	import model.remote.Hosts;
 	import model.vo.Repository;
-	import system.BashMethods;
-	import system.StringUtils;
 
 	public class GitProxy extends RemoteProxy {
 		
@@ -32,14 +30,9 @@ package model.proxies.remote.repo {
 			}
 		}
 		
-		protected function get request():GitRequest { return _request; }
-		
 		private function attemptRequest():void
 		{
 			super.call(Vector.<String>([_request.method, _request.url, _request.args.join(', ')]));
-			if (_request.method == BashMethods.PUSH_BRANCH){
-				AppModel.showLoader('Sending files to '+StringUtils.capitalize(Repository.getAccountType(_request.url)));
-			}
 		}
 
 		override protected function onProcessComplete(e:NativeProcessEvent):void 
@@ -54,7 +47,6 @@ package model.proxies.remote.repo {
 			if (f){
 				onProcessFailure(f);
 			}	else{
-				trace("GitProxy.handleResponse -- success(m, r)", r);
 				onProcessSuccess(m);
 				if (_account) Hosts.github.writeAcctToDatabase(_account);
 			}
@@ -111,6 +103,7 @@ package model.proxies.remote.repo {
 
 		private function onPermissionsFailure(u:String):void
 		{
+			AppModel.hideLoader();
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.PERMISSIONS_FAILURE, u));
 			AppModel.engine.addEventListener(AppEvent.RETRY_REMOTE_REQUEST, onRetryRequest);
 		}

@@ -51,13 +51,13 @@ package model.proxies.local {
 			_bookmark = AppModel.bookmark;
 			if (_fetching) return; _fetching = true;
 			super.appendArgs([_bookmark.gitdir, _bookmark.worktree]);
-			super.queue = [	Vector.<String>([BashMethods.GET_REMOTE_FILES, _bookmark.repository.name]) ];
+			super.queue = [	Vector.<String>([BashMethods.GET_REMOTE_FILES, _bookmark.remote.name]) ];
 		}
 		
 		public function getRemoteStatus():void
 		{
 			_bookmark = AppModel.bookmark;
-			var r:String = _bookmark.repository.name;
+			var r:String = _bookmark.remote.name;
 			super.appendArgs([_bookmark.gitdir, _bookmark.worktree]);
 			super.queue = [	Vector.<String>([BashMethods.CHERRY_BRANCH, r+'/'+_bookmark.branch.name, _bookmark.branch.name]),
 							Vector.<String>([BashMethods.CHERRY_BRANCH, _bookmark.branch.name, r+'/'+_bookmark.branch.name]) ];			
@@ -90,7 +90,7 @@ package model.proxies.local {
 		private function onRemoteFetched():void
 		{
 			_fetching = false;
-			_bookmark.repository.fetched = true;
+			_bookmark.remote.fetched = true;
 		}
 
 		private function onRemoteStatus(a:Array):void
@@ -99,7 +99,7 @@ package model.proxies.local {
 			var n2:Array = splitAndTrim(a[1].result);
 			if (n1.length) _bookmark.branch.remoteStatus = n1.length;
 			if (n2.length) _bookmark.branch.remoteStatus =-n2.length;
-			trace("StatusProxy.onRemoteStatus(a)", _bookmark.branch.name, n1.length, n2.length);
+		//	trace("StatusProxy.onRemoteStatus(a)", _bookmark.branch.name, n1.length, n2.length);
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.BRANCH_STATUS));	
 		}
 		

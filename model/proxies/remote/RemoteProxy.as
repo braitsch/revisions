@@ -23,7 +23,7 @@ package model.proxies.remote {
 		override protected function call(v:Vector.<String>):void
 		{
 			var m:String;
-			var n:uint = 10000;
+			var n:uint = 8000;
 			switch(v[0]){
 				case BashMethods.LOGIN :
 					m = 'Attemping Login';
@@ -40,13 +40,13 @@ package model.proxies.remote {
 				case BashMethods.KILL_COLLABORATOR :
 					m = 'Removing Collaborator';
 				break;
+				case BashMethods.PUSH_BRANCH:
+					n = 0;
+				break;
 				case BashMethods.CLONE :
 					n = 0;
 					m = 'Cloning Remote Repository';
 				break;	
-				case BashMethods.PUSH_BRANCH:
-					n = 0;
-				break;								
 			}
 			super.call(v);
 			if (n) startTimer(n);
@@ -55,7 +55,7 @@ package model.proxies.remote {
 		
 		protected function onProcessComplete(e:NativeProcessEvent):void 
 		{ 
-			stopTimer(); AppModel.hideLoader();
+			stopTimer();
 		}		
 		
 		private function startTimer(n:uint):void

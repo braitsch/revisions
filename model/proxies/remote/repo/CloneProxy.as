@@ -9,10 +9,10 @@ package model.proxies.remote.repo {
 
 	public class CloneProxy extends GitProxy {
 
-		private static var _cloneURL	:String;
-		private static var _savePath	:String;
-		private static var _bookmark	:Bookmark;
-		private static var _repository	:Repository;
+		private static var _cloneURL		:String;
+		private static var _savePath		:String;
+		private static var _bookmark		:Bookmark;
+		private static var _repository		:Repository;
 
 		public function clone(url:String, loc:String):void
 		{
@@ -46,7 +46,7 @@ package model.proxies.remote.repo {
 		private function stripPassFromRemoteURL():void
 		{
 			var b:Boolean = false;
-			var u:String = super.request.url;
+			var u:String = _cloneURL;
 			if (u.search(/(https:\/\/)(\w*)(:)/) != -1){
 				b = true; u = u.substr(8); // strip off https://
 				var a:String = u.substr(0, u.indexOf(':'));
@@ -59,20 +59,20 @@ package model.proxies.remote.repo {
 		
 		private function editRemoteRepoURL():void
 		{
-			AppModel.proxies.editor.addEventListener(AppEvent.REMOTE_EDITED, onRemoteEdited);
 			AppModel.proxies.editor.editRemote(_bookmark, _repository);
+			AppModel.engine.addEventListener(AppEvent.REMOTE_EDITED, onRemoteEdited);
 		}			
 		
 		private function onRemoteEdited(e:AppEvent):void 
 		{
 			dispatchNewBookmark();	
-			AppModel.proxies.editor.removeEventListener(AppEvent.REMOTE_EDITED, onRemoteEdited);
+			AppModel.engine.removeEventListener(AppEvent.REMOTE_EDITED, onRemoteEdited);
 		}
 
 		private function dispatchNewBookmark():void
 		{
 			AppModel.engine.addBookmark(_bookmark);
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.CLONE_COMPLETE));
+			AppModel.dispatch(AppEvent.CLONE_COMPLETE);
 		}
 
 	}

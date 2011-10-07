@@ -8,11 +8,11 @@ package model.proxies.local {
 	import system.BashMethods;
 	import view.windows.modals.system.Debug;
 
-	public class RepoReader extends NativeProcessQueue {
+	public class BkmkReader extends NativeProcessQueue {
 
 		private static var _bookmark	:Bookmark;
 
-		public function RepoReader() 
+		public function BkmkReader() 
 		{	
 			super.executable = 'RepoReader.sh';
 			super.addEventListener(NativeProcessEvent.QUEUE_COMPLETE, onQueueComplete);

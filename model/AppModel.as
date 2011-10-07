@@ -19,7 +19,6 @@ package model {
 		private static var _database		:AppDatabase = new AppDatabase();
 		private static var _settings		:AppSettings = new AppSettings();
 		private static var _updater			:UpdateManager = new UpdateManager();
-		
 		private static var _bookmark		:Bookmark; // active bookmark //
 
 		public function AppModel() 
@@ -38,7 +37,7 @@ package model {
 		
 		static public function get bookmark()	:Bookmark 		{ return _bookmark; }
 		static public function get branch()		:Branch 		{ return _bookmark.branch; }
-		static public function get repository()	:Repository 	{ return _bookmark.repository; }
+		static public function get repository()	:Repository 	{ return _bookmark.remote; }
 		static public function get engine()		:AppEngine 		{ return _engine; }
 		static public function get proxies()	:AppProxies 	{ return _proxies; }
 		static public function get database()	:AppDatabase 	{ return _database; }
@@ -50,6 +49,11 @@ package model {
 			_engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Message(m)));
 		}
 		
+		static public function dispatch(s:String, o:Object = null):void
+		{
+			_engine.dispatchEvent(new AppEvent(s, o));			
+		}
+		
 		static public function showLoader(m:String, p:Boolean = false):void
 		{
 			_engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:m, prog:p}));
@@ -58,7 +62,7 @@ package model {
 		static public function hideLoader():void
 		{
 			_engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
-		}		
+		}
 		
 	}
 	

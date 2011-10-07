@@ -3,16 +3,15 @@ package view.windows.upload {
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
-	import model.proxies.remote.acct.ApiProxy;
+	import model.proxies.remote.repo.SendProxy;
 	import model.remote.HostingAccount;
-	import model.remote.Hosts;
 	import view.ui.Form;
 	import flash.events.Event;
 	
 	public class ConfirmDetails extends WizardWindow {
 
-		private static var _api			:ApiProxy;
 		private static var _form		:Form;
+		private static var _send		:SendProxy = new SendProxy();
 
 		public function ConfirmDetails()
 		{
@@ -72,25 +71,11 @@ package view.windows.upload {
 								name	:	_form.getField(1),
 								desc	:	super.account.type == HostingAccount.GITHUB ? _form.getField(2) : '',
 								publik	:	super.repoPrivate == false	};
-			_api = super.account.type == HostingAccount.GITHUB ? Hosts.github.api : Hosts.beanstalk.api;
-			_api.addRepository(o);
-			_api.addEventListener(AppEvent.REPOSITORY_CREATED, onRepositoryCreated);
+			_send.uploadBookmark(o);
+			AppModel.engine.addEventListener(AppEvent.BKMK_ADDED_TO_ACCOUNT, onBkmkAddedToAccount);
 		}
 
-		private function onRepositoryCreated(e:AppEvent):void
-		{
-			_api.removeEventListener(AppEvent.REPOSITORY_CREATED, onRepositoryCreated);
-			AppModel.proxies.editor.addEventListener(AppEvent.REMOTE_ADDED, onRemoteAdded);
-			AppModel.proxies.editor.addRemote(super.account.repository);
-		}
-		private function onRemoteAdded(e:AppEvent):void 
-		{
-			AppModel.proxies.sync.pushBranch();
-			AppModel.proxies.sync.addEventListener(AppEvent.BRANCH_PUSHED, onBranchPushed);
-			AppModel.proxies.editor.removeEventListener(AppEvent.REMOTE_ADDED, onRemoteAdded);
-		}
-
-		private function onBranchPushed(e:AppEvent):void
+		private function onBkmkAddedToAccount(e:AppEvent):void
 		{
 			super.onNextButton(e);
 		}

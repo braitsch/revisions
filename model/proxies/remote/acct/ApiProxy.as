@@ -117,14 +117,14 @@ package model.proxies.remote.acct {
 		
 		protected function dispatchLoginSuccess():void 
 		{ 
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.LOGIN_SUCCESS));
+			AppModel.hideLoader();
+			AppModel.dispatch(AppEvent.LOGIN_SUCCESS);
 		}
 		
 		protected function dispatchCollaborators():void 
 		{ 
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.COLLABORATORS_RECEIEVED));
+			AppModel.hideLoader();
+			AppModel.dispatch(AppEvent.COLLABORATORS_RECEIEVED);
 		}
 
 	}
