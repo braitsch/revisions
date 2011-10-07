@@ -1,15 +1,15 @@
-package model.proxies.local {
+package model.proxies {
 
 	import events.AppEvent;
 	import events.BookmarkEvent;
-	import model.AppModel;
-	import model.vo.Bookmark;
-	import flash.events.EventDispatcher;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	import flash.utils.setTimeout;
+	import model.AppModel;
+	import model.proxies.local.StatusProxy;
+	import model.vo.Bookmark;
 	
-	public class UpdateProxy extends EventDispatcher {
+	public class StatusManager {
 
 		private static var _status			:Timer = new Timer(3000);
 		private static var _ticks			:uint = 0;
@@ -72,12 +72,12 @@ package model.proxies.local {
 		
 		private function getRemoteStatus(force:Boolean = false):void
 		{
-			if (AppModel.bookmark.remotes.length){
+			if (AppModel.repository){
 				if (exists(AppModel.bookmark) == true){
 					resetTimer(); 
-					if (AppModel.bookmark.remotes[0].fetched == false || force==true){
+					if (AppModel.repository.fetched == false || force==true){
 						_proxy.fetchRepository();
-					}	else{
+					}	else if (AppModel.repository.hasBranch(AppModel.branch.name)){
 						_proxy.getRemoteStatus();
 					}
 				}

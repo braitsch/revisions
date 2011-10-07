@@ -1,6 +1,6 @@
-package model.proxies.remote.base {
+package model.proxies.remote {
 
-	public class GitFailure {
+	public class RemoteFailure {
 		
 		public static const	AUTHENTICATION	:String = 'authentication';
 		public static const	MALFORMED_URL	:String = 'malformed-url';

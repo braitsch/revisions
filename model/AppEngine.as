@@ -24,7 +24,7 @@ package model {
 		public function addBookmark(b:Bookmark):void
 		{
 			_bookmark = b;
-			AppModel.proxies.update.locked = true;
+			AppModel.proxies.status.locked = true;
 			AppModel.proxies.creator.initBookmark(_bookmark);
 			AppModel.proxies.creator.addEventListener(BookmarkEvent.INITIALIZED, readRepository);		
 		}
@@ -57,7 +57,7 @@ package model {
 		public function deleteBookmark(bkmk:Bookmark, killGit:Boolean, killFiles:Boolean):void
 		{
 			_bookmark = bkmk;
-			AppModel.proxies.update.locked = true;
+			AppModel.proxies.status.locked = true;
 			if (!killGit && !killFiles){
 				removeFromBkmkView();
 			}	else{
@@ -177,7 +177,7 @@ package model {
 		// on database error, default to the first bookmark //	
 			if (_bookmark == null) _bookmark = _bookmarks[0];
 			AppModel.bookmark = _bookmark;
-			AppModel.proxies.update.locked = false;
+			AppModel.proxies.status.locked = false;
 		}
 
 	}

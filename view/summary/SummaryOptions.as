@@ -23,9 +23,8 @@ package view.summary {
 			_view = v;
 			initButtons();
 			AppModel.engine.addEventListener(BookmarkEvent.SELECTED, onSelected);
-			AppModel.engine.addEventListener(AppEvent.REMOTE_SYNCED, onRemoteSynced);
 			AppModel.engine.addEventListener(AppEvent.BRANCH_STATUS, onBranchStatus);
-			AppModel.engine.addEventListener(AppEvent.BKMK_ADDED_TO_ACCOUNT, onBkmkAddedToAcct);
+			AppModel.engine.addEventListener(AppEvent.BRANCH_PUSHED, onBranchPushed);
 		}
 
 		private function initButtons():void
@@ -41,42 +40,46 @@ package view.summary {
 		
 		private function onSelected(e:BookmarkEvent):void
 		{
-			positionButtons();	
+			checkBranchStatus();	
 		}
 
-		private function onBkmkAddedToAcct(e:AppEvent):void
-		{
-			positionButtons();	
-		}
-		
-		private function positionButtons():void
-		{
-			var b:Boolean = AppModel.bookmark.remotes.length > 0;
-			_view.sync_btn.visible = b;
-			_view.history_btn.x = b ? 60 : 40;
-			_view.upload_btn.x = b ? -20 : 0;
-			_view.settings_btn.x = b ? -60 : -40;
-			showBranchStatus();
-		}
-		
 		private function onBranchStatus(e:AppEvent):void
 		{
-			showBranchStatus();
-		}	
+			checkBranchStatus();
+		}
 		
-		private function showBranchStatus():void
+		private function onBranchPushed(e:AppEvent):void 
 		{
-			if (AppModel.branch.remoteStatus == 0){
-				_view.sync_btn.syncCount.visible = false;	
-			}	else{
-				_view.sync_btn.syncCount.visible = true;	
-				if (AppModel.branch.remoteStatus < 0){
+			 _locked = false; positionButtons(false);
+		}			
+		
+		private function checkBranchStatus():void
+		{
+			trace("SummaryOptions.checkBranchStatus()", AppModel.repository.hasBranch(AppModel.branch.name), AppModel.branch.remoteStatus);
+			_view.sync_btn.syncCount.visible = true;
+			if (AppModel.repository.hasBranch(AppModel.branch.name)){
+				_view.sync_btn.syncCount.num.visible = true;
+				_view.sync_btn.syncCount.plus.visible = false;
+				if (AppModel.branch.remoteStatus == 0){
+					_view.sync_btn.syncCount.visible = false;		
+				}	else if (AppModel.branch.remoteStatus < 0){
 					drawSyncCountBkgd(0xCC323E);
-				}	else{
+				}	else if (AppModel.branch.remoteStatus > 0){
 					drawSyncCountBkgd(0x009FAF);
 				}
-				_view.sync_btn.syncCount.num.text =	AppModel.branch.remoteStatus;
-			}
+			}	else{
+				_view.sync_btn.syncCount.num.visible = false;
+				_view.sync_btn.syncCount.plus.visible = true;				
+			}			
+			positionButtons(_view.sync_btn.syncCount.visible);
+		}
+		
+		private function positionButtons(v:Boolean):void
+		{
+			_view.sync_btn.visible = v;
+			_view.history_btn.x = v ? 60 : 40;
+			_view.upload_btn.x = v ? -20 : 0;
+			_view.settings_btn.x = v ? -60 : -40;
 		}
 		
 		private function drawSyncCountBkgd(c:uint):void
@@ -85,6 +88,7 @@ package view.summary {
 			_view.sync_btn.syncCount.graphics.beginFill(c);
 			_view.sync_btn.syncCount.graphics.drawCircle(0, 0, 10);
 			_view.sync_btn.syncCount.graphics.endFill();
+			_view.sync_btn.syncCount.num.text =	AppModel.branch.remoteStatus;
 		}
 		
 		private function onSettingsButton(e:MouseEvent):void
@@ -107,18 +111,12 @@ package view.summary {
 			dispatchEvent(new UIEvent(UIEvent.SHOW_HISTORY));
 		}
 		
-		private function syncRemote():void
-		{
-			_locked = true;
-			AppModel.proxies.remote.sync(AppModel.branch, _remote);
-		}
-		
 		private function checkBranchHasBeenPublished():void
 		{
 			if (AppModel.branch.isModified){
 				AppModel.alert('Please saves your lastest changes before syncing with the server.');		
 			}	else {
-				_remote = AppModel.bookmark.remotes[0];
+				_remote = AppModel.repository;
 				if (_remote.hasBranch(AppModel.branch.name)){
 					syncRemote();
 				}	else {
@@ -130,6 +128,12 @@ package view.summary {
 				}
 			}
 		}
+		
+		private function syncRemote():void
+		{
+			_locked = true;
+			AppModel.proxies.sync.syncBranch(_remote);
+		}		
 				
 		private function confirmUnpublishedBranch():void 
 		{
@@ -146,12 +150,6 @@ package view.summary {
 			if (e.data as Boolean == true) syncRemote();
 		}			
 
-		private function onRemoteSynced(e:AppEvent):void 
-		{
-			 _locked = false;
-			 showBranchStatus();
-		}				
-		
 	}
 	
 }

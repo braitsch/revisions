@@ -1,4 +1,4 @@
-package model.proxies.remote.base {
+package model.proxies.remote.repo {
 
 	public class GitRequest {
 

@@ -48,7 +48,7 @@ package model.proxies.air {
 		protected function get failed():Boolean
 		{
 			return _failed;
-		}			
+		}	
 		
 		protected function call(v:Vector.<String>):void
 		{

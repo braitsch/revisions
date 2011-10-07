@@ -1,11 +1,10 @@
 package model.proxies.remote.acct {
 
-	import model.vo.Permission;
 	import events.AppEvent;
 	import model.AppModel;
-	import model.proxies.remote.base.CurlProxy;
 	import model.remote.HostingAccount;
 	import model.vo.Collaborator;
+	import model.vo.Permission;
 	import system.BashMethods;
 
 	public class ApiProxy extends CurlProxy {

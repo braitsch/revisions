@@ -1,24 +1,29 @@
-package model.proxies.remote.base {
+package model.proxies.remote {
 
 	import events.AppEvent;
 	import events.ErrEvent;
-	import flash.events.TimerEvent;
-	import flash.utils.Timer;
+	import events.NativeProcessEvent;
 	import model.AppModel;
 	import model.proxies.air.NativeProcessProxy;
 	import system.BashMethods;
 	import view.windows.modals.system.Debug;
 	import view.windows.modals.system.Message;
+	import flash.events.TimerEvent;
+	import flash.utils.Timer;
 
-	public class NetworkProxy extends NativeProcessProxy {
+	public class RemoteProxy extends NativeProcessProxy {
 
-		private static var _timeout		:Timer = new Timer(20000, 1);
-		
-		protected function get timerIsRunning():Boolean { return _timeout.running; }
-		
+		private static var _timeout:Timer = new Timer(0, 1);
+
+		public function RemoteProxy()
+		{
+			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
+		}
+
 		override protected function call(v:Vector.<String>):void
 		{
 			var m:String;
+			var n:uint = 10000;
 			switch(v[0]){
 				case BashMethods.LOGIN :
 					m = 'Attemping Login';
@@ -35,20 +40,33 @@ package model.proxies.remote.base {
 				case BashMethods.KILL_COLLABORATOR :
 					m = 'Removing Collaborator';
 				break;
+				case BashMethods.CLONE :
+					n = 0;
+					m = 'Cloning Remote Repository';
+				break;	
+				case BashMethods.PUSH_BRANCH:
+					n = 0;
+				break;								
 			}
-			startTimer();
 			super.call(v);
+			if (n) startTimer(n);
 			if (m) AppModel.showLoader(m);
 		}
 		
-		protected function startTimer():void
+		protected function onProcessComplete(e:NativeProcessEvent):void 
+		{ 
+			stopTimer(); AppModel.hideLoader();
+		}		
+		
+		private function startTimer(n:uint):void
 		{
+			_timeout.delay = n;
 			_timeout.reset();		
 			_timeout.start();
 			_timeout.addEventListener(TimerEvent.TIMER_COMPLETE, dispatchTimeOut);			
 		}
 		
-		protected function stopTimer():void
+		private function stopTimer():void
 		{
 			_timeout.stop();
 			_timeout.removeEventListener(TimerEvent.TIMER_COMPLETE, dispatchTimeOut);

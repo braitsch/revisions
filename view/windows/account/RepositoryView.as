@@ -82,7 +82,7 @@ package view.windows.account {
 				AppModel.alert('Please select an empty folder to download your files to.');
 			}	else{
 				_savePath = File(e.data).nativePath;
-				AppModel.proxies.remote.clone(_cloneURL, _savePath);
+				AppModel.proxies.clone.clone(_cloneURL, _savePath);
 				AppModel.engine.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);
 			}
 		}

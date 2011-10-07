@@ -32,11 +32,11 @@ package events {
 		public static const LOGIN_SUCCESS			:String = "LOGIN_SUCCESS";
 		
 	// remote calls //	
-		public static const REMOTE_SYNCED			:String = "REMOTE_SYNCED";
+		public static const BRANCH_PUSHED			:String = "REMOTE_SYNCED";
 		public static const CLONE_COMPLETE			:String = "CLONE_COMPLETE";
 		public static const REPOSITORY_CREATED		:String = "REPOSITORY_CREATED";
 		public static const BKMK_ADDED_TO_ACCOUNT	:String = "BKMK_ADDED_TO_ACCOUNT";
-		public static const BKMK_REMOVED_FROM_ACCOUNT:String = "BKMK_REMOVED_FROM_ACCOUNT";
+		public static const REMOTE_DELETED:String = "BKMK_REMOVED_FROM_ACCOUNT";
 		
 		public static const REPOSITORY_READY		:String = "REPOSITORY_READY";
 		public static const FILES_DELETED			:String = "FILES_DELETED";
@@ -57,7 +57,9 @@ package events {
 		public static const BRANCH_STATUS			:String = "BRANCH_STATUS";
 		public static const BRANCH_RENAMED			:String = "BRANCH_RENAMED";
 		public static const BRANCH_DELETED			:String = "BRANCH_DELETED";
-		public static const BOOKMARK_REPAIRED		:String = 'BookmarksRepaired';
+		public static const BOOKMARK_REPAIRED:String = 'BookmarksRepaired';
+		public static const REMOTE_ADDED:String = "REMOTE_ADDED";
+		public static const REMOTE_EDITED:String = "REMOTE_EDITED";
 		
 		public var data:Object;
 

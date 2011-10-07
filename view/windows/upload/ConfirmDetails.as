@@ -3,12 +3,15 @@ package view.windows.upload {
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
+	import model.proxies.remote.acct.ApiProxy;
 	import model.remote.HostingAccount;
+	import model.remote.Hosts;
 	import view.ui.Form;
 	import flash.events.Event;
 	
 	public class ConfirmDetails extends WizardWindow {
 
+		private static var _api			:ApiProxy;
 		private static var _form		:Form;
 
 		public function ConfirmDetails()
@@ -17,7 +20,6 @@ package view.windows.upload {
 			super.addNextButton('OK');
 			super.addHeading('Please confirm before we upload your bookmark:');
 			addEventListener(UIEvent.ENTER_KEY, onNextButton);
-			AppModel.engine.addEventListener(AppEvent.BKMK_ADDED_TO_ACCOUNT, onBkmkAddedToAcct);
 		}
 		
 		override protected function onAddedToStage(e:Event):void
@@ -64,19 +66,34 @@ package view.windows.upload {
 			_form.fields = [{label:'Bookmark', enabled:false}, {label:'Repository', enabled:false}, {label:'Account URL', enabled:false}];			
 		}
 		
-		private function onBkmkAddedToAcct(e:AppEvent):void
-		{
-			super.onNextButton(e);
-		}		
-		
 		override protected function onNextButton(e:Event):void
 		{
 			var o:Object = {	acct	:	super.account,
 								name	:	_form.getField(1),
 								desc	:	super.account.type == HostingAccount.GITHUB ? _form.getField(2) : '',
 								publik	:	super.repoPrivate == false	};
-			AppModel.proxies.remote.addBkmkToAccount(o);
-		}			
+			_api = super.account.type == HostingAccount.GITHUB ? Hosts.github.api : Hosts.beanstalk.api;
+			_api.addRepository(o);
+			_api.addEventListener(AppEvent.REPOSITORY_CREATED, onRepositoryCreated);
+		}
+
+		private function onRepositoryCreated(e:AppEvent):void
+		{
+			_api.removeEventListener(AppEvent.REPOSITORY_CREATED, onRepositoryCreated);
+			AppModel.proxies.editor.addEventListener(AppEvent.REMOTE_ADDED, onRemoteAdded);
+			AppModel.proxies.editor.addRemote(super.account.repository);
+		}
+		private function onRemoteAdded(e:AppEvent):void 
+		{
+			AppModel.proxies.sync.pushBranch();
+			AppModel.proxies.sync.addEventListener(AppEvent.BRANCH_PUSHED, onBranchPushed);
+			AppModel.proxies.editor.removeEventListener(AppEvent.REMOTE_ADDED, onRemoteAdded);
+		}
+
+		private function onBranchPushed(e:AppEvent):void
+		{
+			super.onNextButton(e);
+		}
 		
 	}
 	

@@ -2,8 +2,8 @@ package model.remote {
 
 	import model.proxies.remote.acct.ApiProxy;
 	import model.proxies.remote.acct.BeanstalkApi;
-	import model.proxies.remote.keys.BeanstalkKey;
-	import model.proxies.remote.keys.KeyProxy;
+	import model.proxies.remote.acct.BeanstalkKey;
+	import model.proxies.remote.acct.KeyProxy;
 	import view.windows.account.AccountHome;
 	import view.windows.base.ParentWindow;
 	import view.windows.modals.login.BeanstalkLogin;

@@ -1,7 +1,7 @@
 package model.remote {
 
 	import model.proxies.remote.acct.ApiProxy;
-	import model.proxies.remote.keys.KeyProxy;
+	import model.proxies.remote.acct.KeyProxy;
 	import view.windows.account.AccountHome;
 	import view.windows.base.ParentWindow;
 	public interface IHostingProvider {

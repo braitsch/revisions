@@ -4,7 +4,7 @@ package model.remote {
 	import flash.events.EventDispatcher;
 	import model.AppModel;
 	import model.proxies.remote.acct.ApiProxy;
-	import model.proxies.remote.keys.KeyProxy;
+	import model.proxies.remote.acct.KeyProxy;
 	import view.windows.account.AccountHome;
 	import view.windows.base.ParentWindow;
 	

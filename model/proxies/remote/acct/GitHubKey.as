@@ -1,4 +1,4 @@
-package model.proxies.remote.keys {
+package model.proxies.remote.acct {
 
 	import model.proxies.local.SSHKeyGenerator;
 	import model.remote.HostingAccount;

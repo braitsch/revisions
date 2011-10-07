@@ -1,21 +1,17 @@
-package model.proxies.remote.base {
+package model.proxies.remote.acct {
 
+	import com.adobe.serialization.json.JSONDecoder;
 	import events.ErrEvent;
 	import events.NativeProcessEvent;
-	import com.adobe.serialization.json.JSONDecoder;
+	import model.proxies.remote.RemoteProxy;
 
-	public class CurlProxy extends NetworkProxy {
+	public class CurlProxy extends RemoteProxy {
 		
 		private static var _request		:String;
 		
 		protected function get request()				:String 	{ return _request; 		}
 		protected function set request(request:String)	:void 		{ _request = request; 	}
 
-		public function CurlProxy()
-		{
-			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);			
-		}
-		
 		protected function getResultObject(s:String):Object
 		{
 		// strip off any post headers we receive before parsing github json //	
@@ -29,18 +25,16 @@ package model.proxies.remote.base {
 			}					
 		}
 		
-		private function onProcessComplete(e:NativeProcessEvent):void
+		override protected function onProcessComplete(e:NativeProcessEvent):void
 		{
-			if (super.timerIsRunning == true){
-				super.stopTimer();
-				var s:String = e.data.result; 
-				var r:String = s.substr(s.indexOf(',') + 1);
-				var x:uint = uint(s.substr(0, s.indexOf(',')));
-				if (x == 0){
-					onProcessSuccess(e.data.method, r);
-				}	else{
-					onProcessFailure(x, e.data.method);		
-				}
+			super.onProcessComplete(e);
+			var s:String = e.data.result; 
+			var r:String = s.substr(s.indexOf(',') + 1);
+			var x:uint = uint(s.substr(0, s.indexOf(',')));
+			if (x == 0){
+				onProcessSuccess(e.data.method, r);
+			}	else{
+				onProcessFailure(x, e.data.method);		
 			}
 		}
 		

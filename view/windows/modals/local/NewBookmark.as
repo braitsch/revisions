@@ -148,7 +148,7 @@ package view.windows.modals.local {
 				dispatchFailure('The target directory you are attempting to clone to must be empty.');
 			}	else {
 				_savePath = f.nativePath;
-				AppModel.proxies.remote.clone(_cloneURL, _savePath);
+				AppModel.proxies.clone.clone(_cloneURL, _savePath);
 				AppModel.engine.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);				
 			}
 		}

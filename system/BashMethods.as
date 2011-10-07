@@ -31,7 +31,7 @@ package system{
 		public static const CLONE					:String = 'clone';
 		public static const COMMIT					:String = 'commit';		
 		public static const ADD_REMOTE				:String = 'addRemote';
-		public static const KILL_REMOTE				:String = 'killRemote';
+		public static const DEL_REMOTE				:String = 'killRemote';
 		public static const EDIT_REMOTE				:String = 'editRemote';
 		public static const PULL_REMOTE				:String = 'pullFromRemote';
 		public static const PUSH_BRANCH				:String = 'pushToRemote';

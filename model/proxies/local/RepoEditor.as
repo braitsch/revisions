@@ -8,8 +8,8 @@ package model.proxies.local {
 	import model.vo.Bookmark;
 	import model.vo.Branch;
 	import model.vo.Commit;
+	import model.vo.Repository;
 	import system.BashMethods;
-	import view.windows.modals.system.Debug;
 	import flash.filesystem.File;
 
 	public class RepoEditor extends NativeProcessProxy {
@@ -17,6 +17,7 @@ package model.proxies.local {
 		private static var _branch		:Branch;
 		private static var _commit		:Commit;
 		private static var _bookmark	:Bookmark;
+		private static var _repository	:Repository;
 
 		public function RepoEditor()
 		{
@@ -86,6 +87,29 @@ package model.proxies.local {
 			super.call(Vector.<String>([BashMethods.MERGE, a.name, b.name]));
 		}
 		
+	// remotes //	
+		
+		public function addRemote(r:Repository):void
+		{
+			_repository = r;
+			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
+			super.call(Vector.<String>([BashMethods.ADD_REMOTE, _repository.name, _repository.url]));			
+		}
+		
+		public function editRemote(b:Bookmark, r:Repository):void
+		{
+			_repository = r; _bookmark = b;
+			super.appendArgs([_bookmark.gitdir, _bookmark.worktree]);
+			super.call(Vector.<String>([BashMethods.ADD_REMOTE, _repository.name, _repository.url]));			
+		}		
+		
+		public function delRemote(r:Repository):void
+		{
+			_repository = r;
+			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
+			super.call(Vector.<String>([BashMethods.DEL_REMOTE, _repository.name]));
+		}		
+		
 	// other stuff //			
 		
 		public function copyVersion(sha1:String, saveAs:String):void
@@ -110,48 +134,48 @@ package model.proxies.local {
 		{
 		//	trace("RepoEditor.onProcessComplete(e)", e.data.method, e.data.result);
 			switch(e.data.method) {
-			// auto update the history after reverting to an earlier version //	
-				case BashMethods.REVERT_TO_VERSION : 
-					dispatchEvent(new BookmarkEvent(BookmarkEvent.REVERTED));
+				case BashMethods.COMMIT : 
+					onCommitComplete();
 				break;
-				case BashMethods.COPY_VERSION : 
-				break;				
+				case BashMethods.ADD_BRANCH : 
+					onBranchAdded();
+				break;	
 				case BashMethods.SET_BRANCH : 
 					onBranchSet();
 				break;
-				case BashMethods.COMMIT : 
-					_bookmark.branch.modified = [];
-					_bookmark.branch.untracked = [];
-					dispatchEvent(new BookmarkEvent(BookmarkEvent.COMMIT_COMPLETE, _bookmark));
-				break;
-				case BashMethods.MERGE : 
-					onMergeComplete(e.data.result);
-				break;	
-				case BashMethods.ADD_BRANCH : 
-					onBranchCreated();
-				break;	
 				case BashMethods.DEL_BRANCH : 
 					onBranchDeleted();
 				break;								
 				case BashMethods.RENAME_BRANCH : 
-					dispatchEvent(new AppEvent(AppEvent.BRANCH_RENAMED, AppModel.bookmark));
+					onBranchRenamed();
 				break;
+				case BashMethods.MERGE :
+					onMergeComplete(e.data.result);
+				break;	
+				case BashMethods.ADD_REMOTE :
+					onRemoteAdded();
+				break;
+				case BashMethods.EDIT_REMOTE :
+					onRemoteEdited();
+				break;				
+				case BashMethods.DEL_REMOTE :
+					onRemoteRemoved();
+				break;					
 				case BashMethods.TRACK_FILE : 
 				break;
 				case BashMethods.UNTRACK_FILE : 
 				break;
-				case BashMethods.STAR_COMMIT : 
-				break;
-				case BashMethods.UNSTAR_COMMIT : 
-				break;				
-				default :
-					e.data.source = 'RepoEditor.onProcessFailure(e)';
-					AppModel.engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, new Debug(e.data)));				
-				break;
 			}
 		}
 		
-		private function onBranchCreated():void
+		private function onCommitComplete():void
+		{
+			_bookmark.branch.modified = [];
+			_bookmark.branch.untracked = [];
+			dispatchEvent(new BookmarkEvent(BookmarkEvent.COMMIT_COMPLETE, _bookmark));			
+		}
+		
+		private function onBranchAdded():void
 		{
 			var h:Vector.<Commit> = AppModel.branch.history;
 			for (var i:int = 0; i < h.length; i++) if (h[i].sha1 == _commit.sha1) break;
@@ -172,6 +196,28 @@ package model.proxies.local {
 			AppModel.bookmark.branch = _branch;
 			dispatchEvent(new BookmarkEvent(BookmarkEvent.BRANCH_CHANGED));
 		}
+		
+		private function onBranchRenamed():void
+		{
+			dispatchEvent(new AppEvent(AppEvent.BRANCH_RENAMED, AppModel.bookmark));
+		}	
+		
+		private function onRemoteAdded():void
+		{
+			AppModel.bookmark.addRemote(_repository);
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.REMOTE_ADDED));
+		}
+		
+		private function onRemoteEdited():void
+		{
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.REMOTE_EDITED));
+		}		
+		
+		private function onRemoteRemoved():void
+		{
+			AppModel.bookmark.killRemote(_repository);
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.REMOTE_DELETED));
+		}			
 
 		private function onMergeComplete(s:String):void
 		{

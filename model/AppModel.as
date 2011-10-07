@@ -2,14 +2,15 @@ package model {
 
 	import events.AppEvent;
 	import events.BookmarkEvent;
-	import flash.events.EventDispatcher;
 	import model.db.AppDatabase;
 	import model.proxies.AppProxies;
 	import model.vo.Bookmark;
 	import model.vo.Branch;
+	import model.vo.Repository;
 	import system.AppSettings;
 	import system.UpdateManager;
 	import view.windows.modals.system.Message;
+	import flash.events.EventDispatcher;
 
 	public class AppModel extends EventDispatcher {
 
@@ -23,7 +24,7 @@ package model {
 
 		public function AppModel() 
 		{
-			_proxies.update.initialize();
+			_proxies.status.initialize();
 		}
 		
 		static public function set bookmark(b:Bookmark):void
@@ -37,6 +38,7 @@ package model {
 		
 		static public function get bookmark()	:Bookmark 		{ return _bookmark; }
 		static public function get branch()		:Branch 		{ return _bookmark.branch; }
+		static public function get repository()	:Repository 	{ return _bookmark.repository; }
 		static public function get engine()		:AppEngine 		{ return _engine; }
 		static public function get proxies()	:AppProxies 	{ return _proxies; }
 		static public function get database()	:AppDatabase 	{ return _database; }
@@ -52,6 +54,11 @@ package model {
 		{
 			_engine.dispatchEvent(new AppEvent(AppEvent.SHOW_LOADER, {msg:m, prog:p}));
 		}
+		
+		static public function hideLoader():void
+		{
+			_engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
+		}		
 		
 	}
 	

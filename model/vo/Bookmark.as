@@ -42,22 +42,23 @@ package model.vo {
 			if (_autosave) initAutoSave();
 		}
 
-		public function get active():Boolean 					{ return _active; 	}
-		public function set active(b:Boolean):void 				{ _active = b; 		}
-		public function set autosave(n:uint):void 				{ _autosave = n; 	}
-		public function get autosave():uint 					{ return _autosave; }
+		public function get active():Boolean 					{ return _active; 		}
+		public function set active(b:Boolean):void 				{ _active = b; 			}
+		public function set autosave(n:uint):void 				{ _autosave = n; 		}
+		public function get autosave():uint 					{ return _autosave;	 	}
 
-		public function get icon32():Bitmap 					{ return _icon32; 	}
-		public function get icon128():Bitmap 					{ return _icon128; 	}
-		public function get type():String 						{ return _type; 	}
-		public function get exists():Boolean 					{ return _file.exists;}
-		public function get gitdir():String 					{ return _gitdir;	}
-		public function get worktree():String 					{ return _worktree	;}
-		public function get stash():Array 						{ return _stash; 	}		
-		public function get remotes():Vector.<Repository> 		{ return _remotes; 	}
-		public function get branches():Vector.<Branch>			{ return _branches; }
+		public function get icon32():Bitmap 					{ return _icon32; 		}
+		public function get icon128():Bitmap 					{ return _icon128; 		}
+		public function get type():String 						{ return _type; 		}
+		public function get exists():Boolean 					{ return _file.exists;	}
+		public function get gitdir():String 					{ return _gitdir;		}
+		public function get worktree():String 					{ return _worktree;		}
+		public function get stash():Array 						{ return _stash; 		}		
+		public function get remotes():Vector.<Repository> 		{ return _remotes; 		}
+		public function get repository():Repository				{ return _remotes[0];	}
+		public function get branches():Vector.<Branch>			{ return _branches;	 	}	
 		
-		public function get label():String 						{ return _label;	}
+		public function get label():String 						{ return _label;		}
 		public function set label(s:String):void
 		{
 			_label = s;
@@ -177,7 +178,7 @@ package model.vo {
 
 		private function onTimerEvent(e:TimerEvent):void
 		{
-			AppModel.proxies.update.autoSave(this);
+			AppModel.proxies.status.autoSave(this);
 		}
 		
 	// static validation function //

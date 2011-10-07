@@ -1,13 +1,13 @@
 package model.proxies {
 
-	import flash.events.EventDispatcher;
 	import model.proxies.local.ConfigProxy;
 	import model.proxies.local.RepoCreator;
 	import model.proxies.local.RepoEditor;
 	import model.proxies.local.RepoReader;
 	import model.proxies.local.SSHKeyGenerator;
-	import model.proxies.local.UpdateProxy;
-	import model.proxies.remote.repo.RepoRemote;
+	import model.proxies.remote.repo.CloneProxy;
+	import model.proxies.remote.repo.SyncProxy;
+	import flash.events.EventDispatcher;
 
 	public class AppProxies extends EventDispatcher {
 		
@@ -15,8 +15,9 @@ package model.proxies {
 		private static var _creator		:RepoCreator 		= new RepoCreator();
 		private static var _reader		:RepoReader 		= new RepoReader();
 		private static var _editor		:RepoEditor 		= new RepoEditor();
-		private static var _remote		:RepoRemote			= new RepoRemote();
-		private static var _update		:UpdateProxy 		= new UpdateProxy();
+		private static var _status		:StatusManager 		= new StatusManager();
+		private static var _sync		:SyncProxy 			= new SyncProxy();
+		private static var _clone		:CloneProxy 		= new CloneProxy();		
 		private static var _sshKeyGen	:SSHKeyGenerator 	= new SSHKeyGenerator();
 
 	// public getters //	
@@ -41,19 +42,24 @@ package model.proxies {
 			return _editor;
 		}
 		
-		public function get remote():RepoRemote
+		public function get status():StatusManager
 		{
-			return _remote;
-		}				
-		
-		public function get update():UpdateProxy
-		{
-			return _update;
+			return _status;
 		}
 		
 		public function get sshKeyGen():SSHKeyGenerator
 		{
 			return _sshKeyGen;
+		}
+
+		public function get sync():SyncProxy
+		{
+			return _sync;
+		}
+
+		public function get clone():CloneProxy
+		{
+			return _clone;
 		}
 		
 	}

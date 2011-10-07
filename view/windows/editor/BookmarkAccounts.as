@@ -30,7 +30,7 @@ package view.windows.editor {
 			_remotes.x = 10; _remotes.y = 95;
 			_linkBtn.icon = new ButtonIcon(new LinkIcon());
 			addEventListener(UIEvent.UNLINK_ACCOUNT, onUnlinkAccount);
-			AppModel.engine.addEventListener(AppEvent.BKMK_REMOVED_FROM_ACCOUNT, onBkmkRemovedFromAcct);
+			AppModel.engine.addEventListener(AppEvent.REMOTE_DELETED, onBkmkRemovedFromAcct);
 		}
 		
 		private function addUnlinkButton():void
@@ -91,7 +91,7 @@ package view.windows.editor {
 
 		private function onConfirm(e:UIEvent):void
 		{
-			if (e.data as Boolean == true) AppModel.proxies.remote.rmBkmkFromAccount(_repo);
+			if (e.data as Boolean == true) AppModel.proxies.editor.delRemote(_repo);
 		}
 
 		private function onBkmkRemovedFromAcct(e:AppEvent):void

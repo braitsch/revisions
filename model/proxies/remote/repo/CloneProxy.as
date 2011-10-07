@@ -2,9 +2,8 @@ package model.proxies.remote.repo {
 
 	import events.AppEvent;
 	import model.AppModel;
-	import model.proxies.remote.base.GitProxy;
-	import model.proxies.remote.base.GitRequest;
 	import model.vo.Bookmark;
+	import model.vo.Repository;
 	import system.BashMethods;
 	import system.StringUtils;
 
@@ -12,53 +11,26 @@ package model.proxies.remote.repo {
 
 		private static var _cloneURL	:String;
 		private static var _savePath	:String;
+		private static var _bookmark	:Bookmark;
+		private static var _repository	:Repository;
 
 		public function clone(url:String, loc:String):void
 		{
-			_cloneURL = url;
-			_savePath = loc;
+			_cloneURL = url; _savePath = loc;
 			super.request = new GitRequest(BashMethods.CLONE, _cloneURL, [_savePath]);
 		}
-
-		private function stripPassFromRemoteURL():void
-		{
-			if (super.request.url.search(/(https:\/\/)(\w*)(:)/) != -1){
-				var u:String = super.request.url;
-				u = u.substr(8); // strip off https://
-				var a:String = u.substr(0, u.indexOf(':'));
-				u = 'https://'+a+u.substr(u.indexOf('@'));
-				rewriteRemoteURL(u);
-			}	else{
-				dispatchNewBookmark();
-			}
-		}
-
-		private function rewriteRemoteURL(u:String):void
-		{
-			super.startTimer();
-			super.appendArgs([_savePath]);
-			super.call(Vector.<String>([BashMethods.EDIT_REMOTE, 'origin', u]));
-		}
-		
-	// success / failure handlers //	
 
 		override protected function onProcessSuccess(m:String):void
 		{
 			switch(m) {
 				case BashMethods.CLONE :
-					stripPassFromRemoteURL();
-				break;
-				case BashMethods.EDIT_REMOTE :
-					dispatchNewBookmark();
-				break;				
+					generateNewBookmark();
+				break;	
 			}
 		}
 
-	// success request callbacks //	
-
-		private function dispatchNewBookmark():void
+		private function generateNewBookmark():void
 		{
-			trace("CloneProxy.dispatchNewBookmark()", _cloneURL);
 			var n:String = _savePath.substr(_savePath.lastIndexOf('/') + 1);
 			var o:Object = {
 				label		:	StringUtils.capitalize(n),
@@ -66,9 +38,40 @@ package model.proxies.remote.repo {
 				path		:	_savePath,
 				active 		:	1,
 				autosave	:	60 
-			};	
-			AppModel.engine.addBookmark(new Bookmark(o));
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
+			};
+			_bookmark = new Bookmark(o);
+			stripPassFromRemoteURL();
+		}
+		
+		private function stripPassFromRemoteURL():void
+		{
+			var b:Boolean = false;
+			var u:String = super.request.url;
+			if (u.search(/(https:\/\/)(\w*)(:)/) != -1){
+				b = true; u = u.substr(8); // strip off https://
+				var a:String = u.substr(0, u.indexOf(':'));
+				u = 'https://' + a + u.substr(u.indexOf('@'));
+			}
+			_repository = new Repository('origin', u);
+			_bookmark.addRemote(_repository);
+			b ? editRemoteRepoURL() : dispatchNewBookmark();
+		}	
+		
+		private function editRemoteRepoURL():void
+		{
+			AppModel.proxies.editor.addEventListener(AppEvent.REMOTE_EDITED, onRemoteEdited);
+			AppModel.proxies.editor.editRemote(_bookmark, _repository);
+		}			
+		
+		private function onRemoteEdited(e:AppEvent):void 
+		{
+			dispatchNewBookmark();	
+			AppModel.proxies.editor.removeEventListener(AppEvent.REMOTE_EDITED, onRemoteEdited);
+		}
+
+		private function dispatchNewBookmark():void
+		{
+			AppModel.engine.addBookmark(_bookmark);
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.CLONE_COMPLETE));
 		}
 

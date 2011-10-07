@@ -10,7 +10,7 @@ package model.proxies.air {
 
 		public function NativeProcessQueue()
 		{
-			addEventListener(NativeProcessEvent.PROCESS_FAILURE, onProcessFailure);			addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);		}
+			addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);		}
 
 		public function set queue($a:Array):void
 		{
@@ -20,23 +20,11 @@ package model.proxies.air {
 			call(_queue[_index]);
 		}
 		
-		public function die():void
-		{
-			_queue = [];
-		}
-		
 	// private methods //	
-		
-		private function onProcessFailure(e:NativeProcessEvent):void 
-		{
-			_queue = [];
-		}
 		
 		private function onProcessComplete(e:NativeProcessEvent):void
 		{
-			if (!_queue) return;
-			_index++;
-			_results.push(e.data);	
+			_index++; _results.push(e.data);	
 			if (_index < _queue.length) {
 				call(_queue[_index]);
 			}	else if (_index == _queue.length){

@@ -1,16 +1,18 @@
-package model.proxies.remote.base {
+package model.proxies.remote.repo {
 
 	import events.AppEvent;
 	import events.ErrEvent;
 	import events.NativeProcessEvent;
 	import model.AppModel;
+	import model.proxies.remote.RemoteFailure;
+	import model.proxies.remote.RemoteProxy;
 	import model.remote.HostingAccount;
 	import model.remote.Hosts;
 	import model.vo.Repository;
 	import system.BashMethods;
 	import system.StringUtils;
 
-	public class GitProxy extends NetworkProxy {
+	public class GitProxy extends RemoteProxy {
 		
 		private static var _request		:GitRequest;
 		private static var _account		:HostingAccount;
@@ -18,7 +20,6 @@ package model.proxies.remote.base {
 		public function GitProxy()
 		{
 			super.executable = 'RepoRemote.sh';
-			super.addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);
 		}
 		
 		protected function set request(req:GitRequest):void 
@@ -35,45 +36,25 @@ package model.proxies.remote.base {
 		
 		private function attemptRequest():void
 		{
-		//	trace("GitProxy.attemptRequest()", _request.method, _request.url);
-			showLoader();
-			super.startTimer();
 			super.call(Vector.<String>([_request.method, _request.url, _request.args.join(', ')]));
+			if (_request.method == BashMethods.PUSH_BRANCH){
+				AppModel.showLoader('Sending files to '+StringUtils.capitalize(Repository.getAccountType(_request.url)));
+			}
 		}
 
-		private function showLoader():void
+		override protected function onProcessComplete(e:NativeProcessEvent):void 
 		{
-			var a:String = Repository.getAccountType(_request.url);
-			switch(_request.method){
-				case BashMethods.CLONE :
-					AppModel.showLoader('Cloning Remote Repository');
-				break;
-				case BashMethods.PULL_REMOTE :
-					AppModel.showLoader('Fetching files from '+StringUtils.capitalize(a));
-				break;
-				case BashMethods.PUSH_BRANCH :
-					AppModel.showLoader('Sending files to '+StringUtils.capitalize(a));
-				break;								
-			}
-		}
-		
-		private function onProcessComplete(e:NativeProcessEvent):void 
-		{
-			trace("GitProxy.onProcessComplete(e)", e.data.method, e.data.result);
-			if (super.timerIsRunning == true){
-				super.stopTimer();
-				handleResponse(e.data.method, e.data.result);
-			} 	else if (e.data.method == BashMethods.CLONE) {
-				handleResponse(e.data.method, e.data.result);
-			}
+			super.onProcessComplete(e);
+			handleResponse(e.data.method, e.data.result);
 		}
 		
 		private function handleResponse(m:String, r:String):void
 		{
-			var f:String = GitFailure.detectFailure(r);
+			var f:String = RemoteFailure.detectFailure(r);
 			if (f){
 				onProcessFailure(f);
 			}	else{
+				trace("GitProxy.handleResponse -- success(m, r)", r);
 				onProcessSuccess(m);
 				if (_account) Hosts.github.writeAcctToDatabase(_account);
 			}
@@ -82,14 +63,15 @@ package model.proxies.remote.base {
 		
 		private function onProcessFailure(f:String):void 
 		{
+			trace("GitProxy.onProcessFailure(f)", f);
 			switch(f){
-				case GitFailure.AUTHENTICATION	:
+				case RemoteFailure.AUTHENTICATION	:
 					onAuthenticationFailure();
 				break;
-				case GitFailure.MALFORMED_URL	:
+				case RemoteFailure.MALFORMED_URL	:
 					dispatchError(ErrEvent.UNRESOLVED_HOST);
 				break;
-				case GitFailure.REPO_NOT_FOUND	:
+				case RemoteFailure.REPO_NOT_FOUND	:
 					dispatchError(ErrEvent.REPO_NOT_FOUND);
 				break;
 			}
@@ -129,7 +111,6 @@ package model.proxies.remote.base {
 
 		private function onPermissionsFailure(u:String):void
 		{
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.PERMISSIONS_FAILURE, u));
 			AppModel.engine.addEventListener(AppEvent.RETRY_REMOTE_REQUEST, onRetryRequest);
 		}
