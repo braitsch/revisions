@@ -27,18 +27,34 @@ package view.ui {
 		
 		public function clear():void
 		{
-			_view.y = 0;
 			while(_view.numChildren) _view.removeChildAt(0);
 		}
 		
-		public function addItem(o:DisplayObject, n:Number = 0):void
+		protected function showItem(k:DisplayObject, n:uint, f:Number = .5):void
 		{
-			o.y = _view.numChildren * _leading;
-			_view.addChild(o);
-			TweenLite.from(o, .3, {alpha:0, delay:n});
+			if (k.stage == null){
+				k.alpha = 0;
+				_view.addChild(k);
+				TweenLite.to(k, f, {alpha:1, delay:n * .05});
+			}
 		}
 		
-		public function removeItem(o:DisplayObject):void
+		protected function hideItem(k:DisplayObject, n:uint, f:Number = .5):void
+		{
+			if (k.stage != null) {
+				TweenLite.to(k, f, {alpha:0, delay:n * .05, 
+					onCompleteParams:[k],
+					onComplete:function(k:Sprite):void { _view.removeChild(k);}});
+			}
+		}			
+		
+		public function addItem(o:DisplayObject, n:Number):void
+		{
+			_view.addChild(o); o.y = n * _leading;
+			TweenLite.from(o, .5, {alpha:0, delay:.05 * n});
+		}	
+		
+		protected function removeItem(o:DisplayObject):void
 		{
 			TweenLite.to(o, .3, {alpha:0, onComplete:function():void{
 				_view.removeChild(o);
@@ -79,7 +95,7 @@ package view.ui {
 				if (k < 0) _view.y -= k;
 			}			
 		}
-		
+
 	}
 	
 }

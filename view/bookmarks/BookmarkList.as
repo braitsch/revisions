@@ -24,12 +24,12 @@ package view.bookmarks {
 		private function onBookmarkList(e:AppEvent):void 
 		{
 			var v:Vector.<Bookmark> = e.data as Vector.<Bookmark>;
-			for (var i:int = 0; i < v.length; i++) super.addItem(new BookmarkListItem(v[i]));
+			for (var i:int = 0; i < v.length; i++) super.addItem(new BookmarkListItem(v[i]), i);
 		}
 
 		private function onBookmarkAdded(e:AppEvent):void 
 		{
-			super.addItem(new BookmarkListItem(e.data as Bookmark));
+			super.addItem(new BookmarkListItem(e.data as Bookmark), super.list.numChildren);
 		}
 		
 		private function onBookmarkDeleted(e:AppEvent):void 

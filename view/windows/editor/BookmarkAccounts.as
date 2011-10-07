@@ -26,6 +26,7 @@ package view.windows.editor {
 			addChild(_remotes);
 			addChild(_heading);
 			addUnlinkButton();
+			_remotes.leading = 44;
 			_remotes.bottomPadding = 8;
 			_remotes.x = 10; _remotes.y = 95;
 			_linkBtn.icon = new ButtonIcon(new LinkIcon());
@@ -61,11 +62,7 @@ package view.windows.editor {
 
 		private function attachRemotes(v:Vector.<Repository>):void
 		{
-			for (var i:int = 0; i < v.length; i++) {
-				var ai:AccountItem = new AccountItem(v[i]);
-					ai.y = 44 * i;
-				_remotes.addItem(ai);
-			}
+			for (var i:int = 0; i < v.length; i++) _remotes.addItem(new AccountItem(v[i]), i);
 			_remotes.draw(580, 86, 2);
 			_linkBtn.visible = false;
 			_heading.text = 'Online Accounts Linked To This Bookmark';

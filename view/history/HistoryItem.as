@@ -5,6 +5,7 @@ package view.history {
 	import view.graphics.Box;
 	import view.graphics.SolidBox;
 	import view.type.TextDouble;
+	import com.greensock.TweenLite;
 	import flash.display.Sprite;
 
 	public class HistoryItem extends Sprite {

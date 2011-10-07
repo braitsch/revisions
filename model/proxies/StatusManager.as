@@ -69,7 +69,6 @@ package model.proxies {
 		
 		private function getRemoteStatus(fetch:Boolean = false):void
 		{
-			trace('AppModel.repository: ' + (AppModel.repository));
 			if (AppModel.repository) {
 				if (exists(AppModel.bookmark) == true){
 					resetTimer(); 

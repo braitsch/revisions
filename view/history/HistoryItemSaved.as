@@ -43,7 +43,7 @@ package view.history {
 			_over.draw(w, h);
 			super.setSize(w, h);
 		}
-
+		
 		private function drawBkgd():void
 		{
 			_ptrn.alpha = .1;

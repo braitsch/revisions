@@ -122,8 +122,8 @@ package model.proxies.local {
 
 		private function onHistory(a:Array):void
 		{
-			var h:Array = a[0].result.split(/[\n\r\t]/g);
-			var f:Array = a[1].result.split(/[\n\r\t]/g);
+			var h:Array = splitAndTrim(a[0].result);
+			var f:Array = splitAndTrim(a[1].result);
 			var n:uint = uint(a[2].result) + 1;
 			var v:Vector.<Commit> = new Vector.<Commit>();
 			for (var i:int = 0; i < h.length; i++) v.push(new Commit(h[i], n-i));
