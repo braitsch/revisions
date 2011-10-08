@@ -71,7 +71,7 @@ package model.proxies.remote.acct {
 				Hosts.github.loggedIn = _account;
 				super.dispatchLoginSuccess();
 			}	else{
-				handleJSONError(o.message);
+				handleJSONError(o);
 			}
 		}
 		
@@ -82,7 +82,7 @@ package model.proxies.remote.acct {
 				_account.addRepository(new GitHubRepo(o));
 				dispatchEvent(new AppEvent(AppEvent.REPOSITORY_CREATED));
 			}	else{
-				handleJSONError(o.errors[0].message);
+				handleJSONError(o);
 			}
 		}
 
@@ -102,7 +102,7 @@ package model.proxies.remote.acct {
 				_account.repository.collaborators = v;
 				super.dispatchCollaborators();
 			}	else{
-				handleJSONError(o.message);
+				handleJSONError(o);
 			}		
 		}
 		
@@ -112,7 +112,7 @@ package model.proxies.remote.acct {
 			if (o.message == null){
 				getCollaborators();
 			}	else{
-				handleJSONError(o.message);
+				handleJSONError(o);
 			}
 		}
 		
@@ -122,15 +122,15 @@ package model.proxies.remote.acct {
 			if (o.message == null){
 				getCollaborators();
 			}	else{
-				handleJSONError(o.message);
+				handleJSONError(o);
 			}
 		}		
 		
 	// handle github specific errors //		
 		
-		private function handleJSONError(m:String):void
+		private function handleJSONError(o:Object):void
 		{
-			switch(m){
+			switch(o.message){
 				case 'Bad Credentials' :
 					dispatchError(ErrEvent.LOGIN_FAILURE);
 				break;
@@ -143,6 +143,9 @@ package model.proxies.remote.acct {
 				case 'Not Found' :
 					dispatchError(ErrEvent.COLLAB_NOT_FOUND);
 				break;					
+			}
+			if (o.errors[0]['code'] == 'already_exists'){
+				dispatchError(ErrEvent.REPOSITORY_TAKEN);	
 			}
 		}
 		

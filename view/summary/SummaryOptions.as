@@ -20,9 +20,10 @@ package view.summary {
 		{
 			_view = v;
 			initButtons();
-			AppModel.engine.addEventListener(AppEvent.BOOKMARK_SELECTED, onSelected);
+			positionButtons(false);
 			AppModel.engine.addEventListener(AppEvent.BRANCH_STATUS, onBranchStatus);
 			AppModel.engine.addEventListener(AppEvent.BRANCH_PUSHED, onBranchPushed);
+			AppModel.engine.addEventListener(AppEvent.MODIFIED_RECEIVED, onModified);
 		}
 
 		private function initButtons():void
@@ -37,7 +38,7 @@ package view.summary {
 			_view.settings_btn.addEventListener(MouseEvent.CLICK, onSettingsButton);
 		}
 		
-		private function onSelected(e:AppEvent):void
+		private function onModified(e:AppEvent):void
 		{
 			if (AppModel.repository){	
 				checkBranchStatus();

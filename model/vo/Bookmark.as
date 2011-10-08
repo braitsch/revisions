@@ -126,6 +126,14 @@ package model.vo {
 		public function delRemote(r:Repository):void
 		{
 			for (var i:int = 0; i < _remotes.length; i++) if (r == _remotes[i]) _remotes.splice(i, 1);
+			if (_remote == r){
+				if (_remotes.length == 0) {
+					_remote = null;
+				}	else{
+			// auto set a new primary repository //	
+					_remote = _remotes[0];
+				}
+			}
 		}
 		
 		public function getRemoteByProp($prop:String, $value:String):Repository

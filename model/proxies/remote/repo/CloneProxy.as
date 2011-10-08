@@ -53,7 +53,6 @@ package model.proxies.remote.repo {
 				u = 'https://' + a + u.substr(u.indexOf('@'));
 			}
 			_repository = new Repository('origin', u);
-			_bookmark.addRemote(_repository);
 			b ? editRemoteRepoURL() : dispatchNewBookmark();
 		}	
 		
@@ -63,7 +62,7 @@ package model.proxies.remote.repo {
 			AppModel.engine.addEventListener(AppEvent.REMOTE_EDITED, onRemoteEdited);
 		}			
 		
-		private function onRemoteEdited(e:AppEvent):void 
+		private function onRemoteEdited(e:AppEvent):void
 		{
 			dispatchNewBookmark();	
 			AppModel.engine.removeEventListener(AppEvent.REMOTE_EDITED, onRemoteEdited);

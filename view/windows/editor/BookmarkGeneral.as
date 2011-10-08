@@ -110,8 +110,9 @@ package view.windows.editor {
 		private function onDeleteBookmark(e:UIEvent):void
 		{
 			AppModel.alert(new Delete(AppModel.bookmark));
+			AppModel.engine.addEventListener(AppEvent.BOOKMARK_DELETED, onBookmarkDeleted);
 		}
-		
+
 		private function saveNameInDatabase():void
 		{
 			AppModel.bookmark.autosave = _autoSave.check.visible ? uint(_autoSave.minutes.text) : 0;
@@ -125,7 +126,13 @@ package view.windows.editor {
 			AppModel.bookmark.label = _form.getField(0);
 			AppModel.database.removeEventListener(DataBaseEvent.RECORD_EDITED, onEditSuccessful);		
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-		}			
+		}
+		
+		private function onBookmarkDeleted(e:AppEvent):void
+		{
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
+			AppModel.engine.removeEventListener(AppEvent.BOOKMARK_DELETED, onBookmarkDeleted);
+		}					
 						
 	}
 	
