@@ -31,7 +31,7 @@ package view.btns {
 		private var _icon		:ButtonIcon;
 		private var _format		:TextFormat = new TextFormat();
 
-		public function DrawButton(w:uint, h:uint, s:String, n:uint = 14)
+		public function DrawButton(w:uint, h:uint, s:String, n:uint)
 		{
 			setup(w, h, n);
 			drawBkgd();

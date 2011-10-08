@@ -21,7 +21,7 @@ package view.summary {
 		private static var _icon		:Bitmap;
 		private static var _bkgd		:PatternBox = new PatternBox(new SummaryBkgdPattern());
 		private static var _offset		:int;
-		private static var _saveBtn		:DrawButton = new DrawButton(184, 35, 'Save Version');
+		private static var _saveBtn		:DrawButton = new DrawButton(184, 35, 'Save Version', 14);
 		private static var _details		:MovieClip;
 		private static var _view		:SummaryViewMC = new SummaryViewMC();
 		private static var _options		:SummaryOptions = new SummaryOptions(_view.details.options);

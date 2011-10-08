@@ -144,6 +144,7 @@ package model.proxies.local {
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
+			trace("BkmkEditor.onProcessComplete(e)", e.data.method, e.data.result);
 			switch(e.data.method) {
 				case BashMethods.COMMIT : 
 					onCommitComplete();

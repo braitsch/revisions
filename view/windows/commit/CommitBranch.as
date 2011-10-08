@@ -66,14 +66,30 @@ package view.windows.commit {
 		
 		private function makeNewBranch():void
 		{
-			var n:String = _form.getField(0).replace(/\s/g, '-');
+			var s:String = _form.getField(0).replace(/\s/g, '-');
+			if (validate(s)){
+				AppModel.proxies.editor.addBranch(s, _commit);
+				dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));	
+			}
+		}
+		
+		private function validate(s:String):Boolean
+		{
+			if (s == ''){
+				AppModel.alert(new Message('Please enter a name for your new branch.')); 
+				return false;	
+			}
+			if (s.search(/^\w/) == -1){
+				AppModel.alert(new Message('Branch name should start with a letter, number or underscore.')); 
+				return false;
+			}			
 			for (var i:int = 0; i < AppModel.bookmark.branches.length; i++) {
-				if (n == AppModel.bookmark.branches[i].name){
-					AppModel.alert(new Message('Sorry, a branch with that name already exists. Please choose something else.')); return;	
+				if (s == AppModel.bookmark.branches[i].name){
+					AppModel.alert(new Message('Sorry, a branch with that name already exists. Please choose something else.')); 
+					return false;
 				}
 			}
-			AppModel.proxies.editor.addBranch(n, _commit);
-			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));	
+			return true;
 		}
 		
 	}
