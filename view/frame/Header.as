@@ -15,7 +15,6 @@ package view.frame {
 		private static var _appLogo	 	:Bitmap = new Bitmap(new AppLogo());
 		private static var _buttons		:GlobalButtons = new GlobalButtons();
 		private static var _right		:Bitmap = new Bitmap(new HeaderRight());
-		private static var _controls	:WindowControls = new WindowControls();
 		private static var _dragArea	:HeaderDragArea = new HeaderDragArea();
 		
 		public function Header()
@@ -24,7 +23,6 @@ package view.frame {
 			addChild(_slices);
 			addChild(_right);
 			addChild(_dragArea);
-			addChild(_controls);
 			addChild(_appLogo);
 			addChild(_buttons);
 			initButtons();
@@ -52,7 +50,6 @@ package view.frame {
 				k.addEventListener(MouseEvent.ROLL_OVER, onRollOver);
 				k.addEventListener(MouseEvent.ROLL_OUT, onRollOut);
 			}
-			_controls.x = _controls.y = 10;
 		}
 
 		private function onRollOver(e:MouseEvent):void
