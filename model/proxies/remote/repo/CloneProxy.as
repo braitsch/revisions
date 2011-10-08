@@ -19,13 +19,13 @@ package model.proxies.remote.repo {
 			_cloneURL = url; _savePath = loc;
 			super.request = new GitRequest(BashMethods.CLONE, _cloneURL, [_savePath]);
 		}
-
+		
 		override protected function onProcessSuccess(m:String):void
 		{
 			switch(m) {
 				case BashMethods.CLONE :
 					generateNewBookmark();
-				break;	
+				break;
 			}
 		}
 
@@ -53,25 +53,26 @@ package model.proxies.remote.repo {
 				u = 'https://' + a + u.substr(u.indexOf('@'));
 			}
 			_repository = new Repository('origin', u);
-			b ? editRemoteRepoURL() : dispatchNewBookmark();
+			b ? editRemoteURL() : onRemoteEdited();
 		}	
 		
-		private function editRemoteRepoURL():void
+		private function editRemoteURL():void
 		{
 			AppModel.proxies.editor.editRemote(_bookmark, _repository);
 			AppModel.engine.addEventListener(AppEvent.REMOTE_EDITED, onRemoteEdited);
-		}			
-		
-		private function onRemoteEdited(e:AppEvent):void
-		{
-			dispatchNewBookmark();	
-			AppModel.engine.removeEventListener(AppEvent.REMOTE_EDITED, onRemoteEdited);
 		}
-
-		private function dispatchNewBookmark():void
+		
+		private function onRemoteEdited():void
+		{
+			AppModel.proxies.editor.addTrackingBranches(_bookmark);
+			AppModel.engine.addEventListener(AppEvent.TRACKING_BRANCHES_SET, onBranchesSet);
+		
+		}		
+		private function onBranchesSet(e:AppEvent):void
 		{
 			AppModel.engine.addBookmark(_bookmark);
 			AppModel.dispatch(AppEvent.CLONE_COMPLETE);
+			AppModel.engine.removeEventListener(AppEvent.REMOTE_EDITED, onRemoteEdited);
 		}
 
 	}

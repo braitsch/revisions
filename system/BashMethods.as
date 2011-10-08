@@ -88,6 +88,7 @@ package system{
 		public static const GET_FAVORITES			:String = 'getFavorites';
 		public static const GET_REMOTE_FILES		:String = 'getRemoteFiles';
 		public static const CHERRY_BRANCH			:String = 'cherryBranch';
+		public static const ADD_TRACKING_BRANCHES	:String = 'addTrackingBranches';
 		
 	}
 	

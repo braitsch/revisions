@@ -68,6 +68,7 @@ package events {
 		public static const BOOKMARK_REVERTED			:String = "BOOKMARK_REVERTED";
 		public static const COMMIT_COMPLETE				:String = "COMMIT_COMPLETE";
 		public static const MERGE_COMPLETE:String = "MERGE_COMPLETE";
+		public static const TRACKING_BRANCHES_SET:String = "TRACKING_BRANCHES_SET";
 		
 		public var data:Object;
 

@@ -48,7 +48,7 @@ package model.proxies.local {
 		public function unstarCommit(o:Commit):void
 		{
 			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
-			super.call(Vector.<String>([BashMethods.UNSTAR_COMMIT, o.sha1]));			
+			super.call(Vector.<String>([BashMethods.UNSTAR_COMMIT, o.sha1]));
 		}
 		
 	// branching //	
@@ -78,6 +78,12 @@ package model.proxies.local {
 			_branch = b;
 			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
 			super.call(Vector.<String>([BashMethods.DEL_BRANCH, _branch.name]));
+		}
+		
+		public function addTrackingBranches(b:Bookmark):void
+		{
+			super.appendArgs([b.gitdir, b.worktree]);
+			super.call(Vector.<String>([BashMethods.ADD_TRACKING_BRANCHES]));
 		}
 		
 		public function mergeLocalIntoLocal(a:Branch, b:Branch):void
@@ -154,6 +160,9 @@ package model.proxies.local {
 				case BashMethods.RENAME_BRANCH : 
 					onBranchRenamed();
 				break;
+				case BashMethods.ADD_TRACKING_BRANCHES : 
+					onTrackingBranches();
+				break;				
 				case BashMethods.MERGE :
 					onMergeComplete(e.data.result);
 				break;	
@@ -172,7 +181,7 @@ package model.proxies.local {
 				break;
 			}
 		}
-		
+
 		private function onCommitComplete():void
 		{
 			_bookmark.branch.modified = [];
@@ -205,7 +214,12 @@ package model.proxies.local {
 		private function onBranchRenamed():void
 		{
 			AppModel.dispatch(AppEvent.BRANCH_RENAMED, AppModel.bookmark);
-		}	
+		}
+		
+		private function onTrackingBranches():void
+		{	
+			AppModel.dispatch(AppEvent.TRACKING_BRANCHES_SET);	
+		}		
 		
 		private function onRemoteAdded():void
 		{
