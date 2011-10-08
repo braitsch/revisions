@@ -170,7 +170,7 @@ package view.windows.modals {
 		{
 			if (FileUtils.dirIsEmpty(e.data as File) == true){
 				AppModel.alert(new Message('Please add some files to this folder before attempting to track it.'));
-			} 	else if (_alert == null && (_window == null || _window == _dragAndDrop || _window == _welcome)) {
+			} 	else if (_alert == null && (_window == null || _window == _dragAndDrop || _window == _welcome || _window == _new)) {
 				_dragAndDrop.file = e.data as File;
 				showModalWindow(_dragAndDrop);
 			}

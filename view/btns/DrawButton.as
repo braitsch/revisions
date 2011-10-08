@@ -20,7 +20,7 @@ package view.btns {
 		private static const	WHITE	:uint = 0xffffff;
 		private static const	DK_GREY	:uint = 0x888888;
 		private static const	STROKE	:uint = 0xC0C0C0;
-		private static const 	GLOW	:GlowFilter = new GlowFilter(0xffffff, 1, 6, 6, 2, BitmapFilterQuality.HIGH);				
+		public static const 	GLOW	:GlowFilter = new GlowFilter(0xffffff, 1, 6, 6, 2, BitmapFilterQuality.HIGH);				
 		
 		private var _width		:uint;
 		private var _height		:uint;
