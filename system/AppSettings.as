@@ -72,6 +72,7 @@ package system {
 			_settings[CHECK_FOR_UPDATES] = true;
 			_settings[SHOW_TOOL_TIPS] = true;
 			_settings[PROMPT_BEFORE_DOWNLOAD] = true;
+			_settings[PROMPT_NEW_REMOTE_BRANCHES] = true;
 			AppModel.dispatch(AppEvent.APP_SETTINGS);			
 		}
 		

@@ -14,7 +14,6 @@ package view.summary {
 	public class SummaryOptions extends Sprite {
 
 		private static var _view:*;
-		private static var _locked		:Boolean;
 		private static var _confirm		:Confirm;
 	
 		public function SummaryOptions(v:Sprite)
@@ -54,12 +53,11 @@ package view.summary {
 		
 		private function onBranchPushed(e:AppEvent):void 
 		{
-			 _locked = false; positionButtons(false);
+			positionButtons(false);
 		}			
 		
 		private function checkBranchStatus():void
 		{
-
 			_view.sync_btn.syncCount.visible = true;
 			if (AppModel.repository.hasBranch(AppModel.branch.name)){
 				_view.sync_btn.syncCount.num.visible = true;
@@ -114,8 +112,7 @@ package view.summary {
 		
 		private function onSyncButton(e:MouseEvent):void 
 		{
-			if (_locked) return;
-			if (AppModel.branch.remoteStatus > 0){
+			if (AppModel.branch.remoteStatus >= 0){
 				checkBranchHasBeenPublished();
 			}	else{
 				if (AppModel.branch.isModified){
@@ -134,26 +131,25 @@ package view.summary {
 		private function checkBranchHasBeenPublished():void
 		{
 			if (AppModel.repository.hasBranch(AppModel.branch.name)){
-				syncRemote();
+				pushBranch();
 			}	else {
 				if (AppSettings.getSetting(AppSettings.PROMPT_NEW_REMOTE_BRANCHES) == false){
-					syncRemote();
+					pushBranch();
 				}	else{
 					confirmUnpublishedBranch();
 				}
 			}
 		}
 		
-		private function syncRemote():void
+		private function pushBranch():void
 		{
-			_locked = true;
 			AppModel.proxies.sync.pushBranch(AppModel.repository);
 		}		
 				
 		private function confirmUnpublishedBranch():void 
 		{
-			var m:String = 'The current branch "'+AppModel.branch.name+'" has not yet been published online.';
-				m+= '\nAre you sure you\'d like to add it to your '+AppModel.repository.acctType+' account?';
+			var m:String = 'The current branch "'+AppModel.branch.name+'" has not yet been added to your '+AppModel.repository.acctType+' account.';
+				m+= '\nAre you sure you\'d like to publish it online?';
 			_confirm = new Confirm(m);
 			_confirm.addEventListener(UIEvent.CONFIRM, onConfirm);
 			AppModel.alert(_confirm);
@@ -161,8 +157,7 @@ package view.summary {
 		
 		private function onConfirm(e:UIEvent):void
 		{
-			trace("SyncProxy.onConfirm(e)", e.data);
-			if (e.data as Boolean == true) syncRemote();
+			if (e.data as Boolean == true) pushBranch();
 		}			
 
 	}

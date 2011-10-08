@@ -21,12 +21,13 @@ package view.windows.modals.local {
 		private static var _labels		:Vector.<String> = new <String>[
 												'Automatically check for updates',
 												'Show tooltips',
-												'Start Revisions on system startup'	];
+												'Start Revisions on system startup',
+												'Warn before publishing new branches'];
 
 		public function GlobalSettings()
 		{
 			super.addCloseButton();	
-			super.drawBackground(550, 280);
+			super.drawBackground(550, 300);
 			super.title = 'Global Settings';
 			addOkButton();
 			
@@ -41,7 +42,7 @@ package view.windows.modals.local {
 
 		private function attachOptions():void
 		{
-			for (var i:int = 0; i < 3; i++) {
+			for (var i:int = 0; i < 4; i++) {
 				var k:ModalCheckbox = new ModalCheckbox(true);
 				k.label = _labels[i];
 				k.addEventListener(MouseEvent.CLICK, onCheckboxSelection);
@@ -59,6 +60,7 @@ package view.windows.modals.local {
 			_checks[0].selected = AppSettings.getSetting(AppSettings.CHECK_FOR_UPDATES);
 			_checks[1].selected = AppSettings.getSetting(AppSettings.SHOW_TOOL_TIPS);
 			_checks[2].selected = AppSettings.getSetting(AppSettings.START_AT_LOGIN);
+			_checks[3].selected = AppSettings.getSetting(AppSettings.PROMPT_NEW_REMOTE_BRANCHES);
 			AppModel.engine.addEventListener(AppEvent.GIT_SETTINGS, onGitSettings);
 			super.onAddedToStage(e);
 		}
@@ -80,7 +82,10 @@ package view.windows.modals.local {
 				break;
 				case _checks[2] :
 					AppSettings.setSetting(AppSettings.START_AT_LOGIN, _checks[2].selected);	
-				break;												
+				break;	
+				case _checks[3] :
+					AppSettings.setSetting(AppSettings.PROMPT_NEW_REMOTE_BRANCHES, _checks[3].selected);	
+				break;																
 			}
 		}		
 		
