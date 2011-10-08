@@ -94,6 +94,7 @@ package model {
 			}	else if (_bookmarks.length){
 				dispatchActiveBookmark();	
 			}	else{
+				AppModel.bookmark = null;
 				AppModel.dispatch(AppEvent.NO_BOOKMARKS);
 			}			
 		}

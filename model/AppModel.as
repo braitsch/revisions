@@ -28,8 +28,10 @@ package model {
 		static public function set bookmark(b:Bookmark):void
 		{
 			_bookmark = b;
-			_database.setActiveBookmark(_bookmark.label);
-			dispatch(AppEvent.BOOKMARK_SELECTED);
+			if (_bookmark) {
+				_database.setActiveBookmark(_bookmark.label);
+				dispatch(AppEvent.BOOKMARK_SELECTED);
+			}
 		}
 		
 	// public getters //

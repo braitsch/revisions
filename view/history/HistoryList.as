@@ -62,6 +62,11 @@ package view.history {
 
 		private function drawList():void
 		{
+			if (_modified){
+				super.showItem(_itemUnsaved, 0, 0);
+			}	else{
+				super.hideItem(_itemUnsaved, 0, 0);
+			}
 			var v:Vector.<Commit> = _branch.history;
 			for (var i:int = 0; i < 25; i++) {
 				if (i < v.length){
@@ -72,11 +77,6 @@ package view.history {
 				}
 				_itemsSaved[i].y = 41 * (_modified ? i + 1 : i);
 			}
-			if (_modified){
-				super.showItem(_itemUnsaved, 0, 0);
-			}	else{
-				super.hideItem(_itemUnsaved, 0, 0);
-			}			
 			setSize(_width, _height);
 			TweenLite.to(super.list, .5, {y:0});
 			_delay = setTimeout(dispatchHistoryRendered, 500);
@@ -84,7 +84,8 @@ package view.history {
 		
 		private function collapseList():void
 		{
-			for (var i:int = 0; i < 25; i++) super.hideItem(_itemsSaved[i], 24 - i);
+			var n:uint = super.list.numChildren;
+			for (var i:int = 0; i < n; i++) super.hideItem(super.list.getChildAt(i), n - i);
 		}
 		
 		private function dispatchHistoryRendered():void

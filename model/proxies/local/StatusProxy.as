@@ -123,6 +123,8 @@ package model.proxies.local {
 		private function onHistory(a:Array):void
 		{
 			var h:Array = splitAndTrim(a[0].result);
+		//TODO i think we're getting some null arrays here...	
+			if (h == null || h.length == 0) trace("StatusProxy.onHistory(a) ------- failure!!");
 			var f:Array = splitAndTrim(a[1].result);
 			var n:uint = uint(a[2].result) + 1;
 			var v:Vector.<Commit> = new Vector.<Commit>();

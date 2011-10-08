@@ -80,12 +80,13 @@ package view.summary {
 		private function positionButtons(v:Boolean):void
 		{
 			if (v){
+				_view.sync_btn.visible = true;
 				TweenLite.to(_view.history_btn, .3, {x:60});
 				TweenLite.to(_view.upload_btn, .3, {x:-20});
 				TweenLite.to(_view.settings_btn, .3, {x:-60});
 				TweenLite.to(_view.sync_btn, .2, {alpha:1, delay:.1});
 			}	else{
-				TweenLite.to(_view.sync_btn, .3, {alpha:0});
+				TweenLite.to(_view.sync_btn, .3, {alpha:0, onComplete:function():void{_view.sync_btn.visible = false;}});
 				TweenLite.to(_view.history_btn, .3, {x:40, delay:.1});
 				TweenLite.to(_view.upload_btn, .3, {x:-0, delay:.1});
 				TweenLite.to(_view.settings_btn, .3, {x:-40, delay:.1});

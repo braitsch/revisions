@@ -15,7 +15,7 @@ package view.windows.account {
 
 		private var _repo	:Repository;
 		private var _view	:RepositoryItemMC = new RepositoryItemMC();
-		private var _clone	:IconButton = new IconButton(_view.clone, 'Clone Repository');
+		private var _clone	:IconButton = new IconButton(_view.clone, 'Download');
 		private var _collab	:IconButton = new IconButton(_view.collab, 'Collaborators');
 	
 		public function RepositoryItem(o:Repository):void

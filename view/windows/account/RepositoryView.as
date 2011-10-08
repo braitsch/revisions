@@ -74,7 +74,7 @@ package view.windows.account {
 		private function onCloneClick(e:UIEvent):void
 		{
 			_cloneURL = e.data as String;
-			super.browseForDirectory('Select a location to clone to');
+			super.browseForDirectory('Where would you like to download these files?');
 		}					
 		
 		private function onBrowserSelection(e:UIEvent):void
