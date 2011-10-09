@@ -94,19 +94,21 @@ package view.windows.modals.local {
 									newFile	:_form.getField(1),
 									oldMD5	:MD5.hash(_broken.path),
 									newMD5	:MD5.hash(_form.getField(1))};
+				trace("RepairBookmark.updateGitDir()", o.oldMD5, o.newMD5);
 				AppModel.proxies.creator.editAppStorageGitDirName(o);
-				AppModel.proxies.creator.addEventListener(AppEvent.GIT_DIR_UPDATED, onGitDirUpdated);
+				AppModel.engine.addEventListener(AppEvent.GIT_DIR_UPDATED, onGitDirUpdated);
 			}
 		}
 		
 		private function onGitDirUpdated(e:AppEvent):void
 		{
 			updateDatabase();
-			AppModel.proxies.creator.removeEventListener(AppEvent.GIT_DIR_UPDATED, onGitDirUpdated);			
+			AppModel.engine.removeEventListener(AppEvent.GIT_DIR_UPDATED, onGitDirUpdated);			
 		}
 		
 		private function updateDatabase():void
 		{
+			trace("RepairBookmark.updateDatabase()");
 			AppModel.database.addEventListener(DataBaseEvent.RECORD_EDITED, onBookmarkRepaired);
 			AppModel.database.editRepository(_broken.label, _form.getField(0), _form.getField(1), _broken.autosave);				
 		}
