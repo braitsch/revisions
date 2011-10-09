@@ -144,14 +144,14 @@ package model.proxies.local {
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
-		//	trace("BkmkEditor.onProcessComplete(e)", e.data.method, e.data.result);
+			trace("BkmkEditor.onProcessComplete(e)", e.data.method, e.data.result);
 			switch(e.data.method) {
 				case BashMethods.COMMIT : 
 					onCommitComplete();
 				break;
 				case BashMethods.ADD_BRANCH : 
 					onBranchAdded();
-				break;	
+				break;
 				case BashMethods.SET_BRANCH : 
 					onBranchSet();
 				break;

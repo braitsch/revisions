@@ -85,8 +85,8 @@ package model.proxies.air {
 		{
 			_failed = true;
 			if (_result!='') _result+='\n'; // linebreak between batches of data received //
-			_result += StringUtils.trim(_np.standardError.readUTFBytes(_np.standardError.bytesAvailable));			            log('DataError @ '+_method+ ' :: Response = '+_result);
-			dispatchEvent(new NativeProcessEvent(NativeProcessEvent.PROCESS_FAILURE, {method:_method, result:_result}));
+			_result += StringUtils.trim(_np.standardError.readUTFBytes(_np.standardError.bytesAvailable));			
+            log('DataError @ '+_method+ ' :: Response = '+_result);			dispatchEvent(new NativeProcessEvent(NativeProcessEvent.PROCESS_FAILURE, {method:_method, result:_result}));
 		}	
 		
 		private function onIOError(e:IOErrorEvent):void 

@@ -66,6 +66,11 @@ package system {
 			_timeout.stop();			
 			var XMLLoader:URLLoader = URLLoader(event.currentTarget);
 			killUpdateXMLLoader(XMLLoader);
+			
+		// ignore any html returned by http login proxies //
+			if (XMLLoader.data.search('<html>') != -1){
+				dispatchUpdateUnavailable(); return;
+			}
 		
 		// Getting update descriptor XML from loaded data
 			var newDescriptor:XML = XML(XMLLoader.data);

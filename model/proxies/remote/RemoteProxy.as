@@ -21,7 +21,7 @@ package model.proxies.remote {
 
 		override protected function call(v:Vector.<String>):void
 		{
-			trace("RemoteProxy.call(v)", v[0], v[1]);
+			trace("RemoteProxy.call(v)", v[0], v[1], _timeout.running);
 			var m:String;
 			var n:uint = 8000;
 			switch(v[0]){
@@ -43,6 +43,9 @@ package model.proxies.remote {
 				case BashMethods.PUSH_BRANCH:
 					n = 0;
 				break;
+				case BashMethods.GET_REMOTE_FILES:
+					n = 0;
+				break;				
 				case BashMethods.CLONE :
 					n = 0;
 					m = 'Cloning Remote Repository';

@@ -21,7 +21,6 @@ package view.summary {
 			_view = v;
 			initButtons();
 			positionButtons(false);
-			AppModel.engine.addEventListener(AppEvent.BRANCH_STATUS, onBranchStatus);
 			AppModel.engine.addEventListener(AppEvent.BRANCH_PUSHED, onBranchPushed);
 			AppModel.engine.addEventListener(AppEvent.MODIFIED_RECEIVED, onModified);
 		}
@@ -47,11 +46,6 @@ package view.summary {
 			}
 		}
 
-		private function onBranchStatus(e:AppEvent):void
-		{
-			checkBranchStatus();
-		}
-		
 		private function onBranchPushed(e:AppEvent):void 
 		{
 			positionButtons(false);
@@ -60,7 +54,7 @@ package view.summary {
 		private function checkBranchStatus():void
 		{
 			_view.sync_btn.syncCount.visible = true;
-			if (AppModel.repository.hasBranch(AppModel.branch.name)){
+			if (AppModel.repository.hasBranch(AppModel.branch.name)) {
 				_view.sync_btn.syncCount.num.visible = true;
 				_view.sync_btn.syncCount.plus.visible = false;
 				if (AppModel.branch.remoteStatus == 0){
