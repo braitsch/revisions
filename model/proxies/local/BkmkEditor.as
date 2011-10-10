@@ -126,6 +126,7 @@ package model.proxies.local {
 		
 		public function copyVersion(sha1:String, saveAs:String):void
 		{
+		//	trace("BkmkEditor.copyVersion(sha1, saveAs)", AppModel.bookmark.path, saveAs); return;
 			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
 			super.call(Vector.<String>([BashMethods.COPY_VERSION, AppModel.branch.name, sha1, AppModel.bookmark.path, saveAs]));
 		}
