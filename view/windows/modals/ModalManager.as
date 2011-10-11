@@ -11,9 +11,6 @@ package view.windows.modals {
 	import view.windows.base.ParentWindow;
 	import view.windows.commit.CommitParent;
 	import view.windows.editor.BookmarkEditor;
-	import view.windows.modals.git.GitAbout;
-	import view.windows.modals.git.GitInstall;
-	import view.windows.modals.git.GitUpgrade;
 	import view.windows.modals.local.AddDragAndDrop;
 	import view.windows.modals.local.AppExpired;
 	import view.windows.modals.local.AppUpdate;
@@ -51,16 +48,13 @@ package view.windows.modals {
 		private static var _settings			:GlobalSettings = new GlobalSettings();
 		private static var _appUpdate			:AppUpdate = new AppUpdate();
 		private static var _appExpired			:AppExpired = new AppExpired();
-		private static var _gitAbout			:GitAbout = new GitAbout();
-		private static var _gitInstall			:GitInstall = new GitInstall();
-		private static var _gitUpgrade			:GitUpgrade = new GitUpgrade();
 		private static var _uploadWizard		:UploadWizard = new UploadWizard();
 		private static var _permissions			:PermissionsFailure = new PermissionsFailure();
 		private static var _preloader			:Preloader = new Preloader();
 		
 	// windows that force user to make a decision - autoclose disabled //	
 		private static var _stickies			:Vector.<ParentWindow> = new <ParentWindow>
-				[ _repair, _appExpired, _appUpdate, _gitInstall, _gitUpgrade ];
+				[ _repair, _appExpired, _appUpdate ];
 				
 		private static var _window				:ParentWindow;	// the active modal window //
 		private static var _curtain				:ModalCurtain = new ModalCurtain();
@@ -80,8 +74,6 @@ package view.windows.modals {
 			AppModel.engine.addEventListener(AppEvent.APP_EXPIRED, onAppExpired);
 			AppModel.engine.addEventListener(AppEvent.PERMISSIONS_FAILURE, onPermissionsFailure);
 			AppModel.engine.addEventListener(AppEvent.APP_UPDATE_AVAILABLE, promptToUpdate);
-			AppModel.engine.addEventListener(AppEvent.GIT_NOT_INSTALLED, installGit);
-			AppModel.engine.addEventListener(AppEvent.GIT_NEEDS_UPDATING, upgradeGit);
 		}
 
 		public function init(stage:Stage):void
@@ -93,7 +85,6 @@ package view.windows.modals {
 			stage.addEventListener(UIEvent.COMMIT, addNewCommit);
 			stage.addEventListener(UIEvent.COMMIT_OPTIONS, showCommitOptions);
 			stage.addEventListener(UIEvent.SHOW_COMMIT, commitDetails);
-			stage.addEventListener(UIEvent.ABOUT_GIT, onAboutGit);
 			stage.addEventListener(UIEvent.GLOBAL_SETTINGS, globalSettings);	
 			stage.addEventListener(UIEvent.GITHUB_HOME, showGitHubHome);
 			stage.addEventListener(UIEvent.GITHUB_LOGIN, showGitHubLogin);
@@ -127,18 +118,6 @@ package view.windows.modals {
 			showModalWindow(_welcome);
 		}
 	
-		private function installGit(e:AppEvent):void 
-		{
-			_gitInstall.promptToInstall();
-			showModalWindow(_gitInstall);
-		}	
-		
-		private function upgradeGit(e:AppEvent):void
-		{
-			_gitUpgrade.promptToUpgrade();
-			showModalWindow(_gitUpgrade);			
-		}
-		
 		private function showGitHubLogin(e:UIEvent):void
 		{
 			showModalWindow(Hosts.github.login);
@@ -217,11 +196,6 @@ package view.windows.modals {
 			showModalWindow(_settings);
 		}
 		
-		private function onAboutGit(e:UIEvent):void
-		{
-			showModalWindow(_gitAbout);
-		}
-		
 		private function onAppExpired(e:AppEvent):void
 		{
 			showModalWindow(_appExpired);		
@@ -283,17 +257,18 @@ package view.windows.modals {
 
 		private function onShowAlert(e:AppEvent):void
 		{
+			AppModel.proxies.status.locked = true;
+			if (_alert) return;
 			_alert = e.data as Alert;
 			addChild(_alert);
 			_curtain.show();
-			if (_window) {
-				_window.filters = [new BlurFilter(5, 5, 3)];			
-			}
+			if (_window) _window.filters = [new BlurFilter(5, 5, 3)];			
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_LOADER));
-		}			
+		}
 		
 		private function onHideAlert(e:AppEvent = null):void
 		{
+			AppModel.proxies.status.locked = false;
 			removeChild(_alert);
 			if (_window) {
 				stage.focus = _window;

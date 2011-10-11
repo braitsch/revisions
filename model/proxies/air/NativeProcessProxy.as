@@ -52,7 +52,7 @@ package model.proxies.air {
 		
 		protected function call(v:Vector.<String>):void
 		{
-			if(_np.running == false){
+			if (_np.running == false){
 				if (_args) for (var i:int = 0; i < _args.length; i++) v.push(_args[i]);
 			//	v.push(_dir);				_method = v[0];
 				_result = '';

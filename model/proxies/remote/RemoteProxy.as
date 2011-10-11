@@ -60,7 +60,7 @@ package model.proxies.remote {
 		{ 
 			stopTimer();
 			trace("RemoteProxy.onProcessComplete(e)", e.data.method, e.data.result);
-		}		
+		}
 		
 		private function startTimer(n:uint):void
 		{

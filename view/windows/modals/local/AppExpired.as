@@ -26,7 +26,7 @@ package view.windows.modals.local {
 
 		private function onCloseApplication(e:UIEvent):void
 		{
-			NativeApplication.nativeApplication.exit();			
+			NativeApplication.nativeApplication.exit();
 		}
 		
 		private function onCheckForUpdates(e:Event):void

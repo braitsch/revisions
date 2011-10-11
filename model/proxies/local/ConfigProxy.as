@@ -2,19 +2,19 @@ package model.proxies.local {
 
 	import events.AppEvent;
 	import events.NativeProcessEvent;
+	import events.UIEvent;
 	import model.AppModel;
 	import model.proxies.air.NativeProcessQueue;
 	import system.BashMethods;
 	import system.SystemRules;
+	import view.windows.modals.system.Confirm;
 	import view.windows.modals.system.Debug;
 	import flash.desktop.NativeApplication;
 
 	public class ConfigProxy extends NativeProcessQueue {
 
 		private static var _userName			:String;		private static var _userEmail			:String;
-		private static var _gitInstall			:String;
 		private static var _gitVersion			:String;
-		private static var _loadedFromCache		:String;
 
 		public function ConfigProxy()
 		{
@@ -26,8 +26,6 @@ package model.proxies.local {
 		public function get userName():String { return _userName; }
 		public function get userEmail():String { return _userEmail; }
 		public function get gitVersion():String { return _gitVersion; }
-		public function get gitInstall():String { return _gitInstall; }
-		public function get loadedFromCache():String { return _loadedFromCache; }
 
 		public function detectGit():void
 		{
@@ -35,21 +33,9 @@ package model.proxies.local {
 		}
 		
 		public function installGit():void
-		{	
-			super.queue = [	Vector.<String>([BashMethods.INSTALL_GIT]) ];
-		}
-		
-		public function updatePackageManager():void
 		{
-			switch(_gitInstall){
-				case SystemRules.MACPORTS :
-					super.queue = [	Vector.<String>([BashMethods.MACPORTS]) ];			
-				break;
-				case SystemRules.HOMEBREW : 
-					super.queue = [	Vector.<String>([BashMethods.HOMEBREW]) ];	
-				break;
-			}
-		}
+			super.queue = [	Vector.<String>([BashMethods.INSTALL_GIT]) ];
+		}		
 		
 		private function getLoggedInUsersRealName():void
 		{	
@@ -82,47 +68,59 @@ package model.proxies.local {
 
 		private function detectMethod(o:Object):void
 		{
-			switch(o.method){
-				case BashMethods.INSTALL_GIT :
-					onInstallComplete();
+			trace("ConfigProxy.detectMethod(o)", o.method, o.result);
+			switch(o.method){	
+				case BashMethods.DETECT_GIT :
+					onGitDetected(o.result);
 				break;
-				case BashMethods.MACPORTS :
-					onInstallComplete();
-				break;					
-				case BashMethods.HOMEBREW :
-					onInstallComplete();
-				break;	
-				case BashMethods.GET_USER_REAL_NAME:
+				case BashMethods.INSTALL_GIT :
+					onGitInstalled(o.result);
+				break;				
+				case BashMethods.GET_USER_REAL_NAME :
 					onUserRealName(o.result);
 				break;								
-				case BashMethods.DETECT_GIT :
-					if (o.result != ''){
-						parseGitDetails(o.result);
-					}	else{
-						AppModel.dispatch(AppEvent.GIT_NOT_INSTALLED);
-					}
-				break;
-			}
-		}
-		
-		private function parseGitDetails(s:String):void
-		{
-			var a:Array = s.split(',');	
-			_gitInstall = a[0];
-			_gitVersion = a[1].substring(12);
-			_loadedFromCache = a[2].substring(0, 5);
-			if (_gitVersion >= SystemRules.MIN_GIT_VERSION){
-				getUserNameAndEmail();
-			}	else{
-				AppModel.dispatch(AppEvent.GIT_NEEDS_UPDATING);
 			}
 		}
 
-		private function onInstallComplete():void
+		private function onGitDetected(s:String):void
 		{
-			AppModel.dispatch(AppEvent.GIT_INSTALL_COMPLETE);
-		}	
+			if (s == '0'){
+				installGit();
+			}	else{
+				_gitVersion = s.substring(12);
+				if (_gitVersion < SystemRules.MIN_GIT_VERSION){
+					promptForUpgrade();
+				}	else{
+					getUserNameAndEmail();
+				}
+			}
+		}
+
+		private function promptForUpgrade():void
+		{
+			var m:String = 'I see you already have version '+_gitVersion+' of Git installed. ';
+				m+='Revisions requires version '+SystemRules.MIN_GIT_VERSION+' or greater. OK if I update that for you?\n';
+				m+='Clicking OK will update your instance at /usr/local/git';
+			var c:Confirm = new Confirm(m);
+				c.addEventListener(UIEvent.CONFIRM, onConfirm);
+			AppModel.alert(c);
+		}
+
+		private function onConfirm(e:UIEvent):void
+		{
+			if (e.data == true){
+				installGit();
+			}	else{
+				NativeApplication.nativeApplication.exit();
+			}
+		}
 		
+		private function onGitInstalled(s:String):void
+		{
+			_gitVersion = s.substring(12);
+			getUserNameAndEmail();			
+		}		
+
 		private function checkUserNameAndEmail(n:String, e:String):void
 		{
 			_userEmail = e || 'yourname@yourdomain.com';
@@ -141,13 +139,8 @@ package model.proxies.local {
 		}		
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
-			if (e.data.method == BashMethods.INSTALL_GIT && e.data.result.indexOf('User canceled') != -1){
-			// user clicked cancel button on password prompt //	
-				NativeApplication.nativeApplication.exit();
-			}	else{
-				e.data.source = 'ConfigProxy.onProcessFailure(e)';
-				AppModel.alert(new Debug(e.data));
-			}
+			e.data.source = 'ConfigProxy.onProcessFailure(e)';
+			AppModel.alert(new Debug(e.data));
 		}
 
 	}

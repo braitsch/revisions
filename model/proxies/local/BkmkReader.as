@@ -23,8 +23,9 @@ package model.proxies.local {
 		{
 			_bookmark = b;
 			super.appendArgs([_bookmark.gitdir, _bookmark.worktree]);
-			super.queue = [	Vector.<String>([BashMethods.GET_STASH]),
-							Vector.<String>([BashMethods.GET_REMOTES]),
+		//	trace('_bookmark.gitdir: ' + (_bookmark.gitdir));
+		//	trace('_bookmark.worktree: ' + (_bookmark.worktree));
+			super.queue = [	Vector.<String>([BashMethods.GET_REMOTES]),
 							Vector.<String>([BashMethods.GET_LOCAL_BRANCHES]),
 							Vector.<String>([BashMethods.GET_REMOTE_BRANCHES])];
 		}
@@ -37,11 +38,10 @@ package model.proxies.local {
 		private function onRepositoryInfo(a:Array):void
 		{
 		// strip the method names off the result array //	
-			for (var i:int = 0; i < 4; i++) a[i] = a[i].result.split(/[\n\r\t]/g);
-			_bookmark.addStash(a[0]);
-			_bookmark.addRemotes(a[1]);
-			_bookmark.addLocalBranches(a[2]);
-			_bookmark.addRemoteBranches(a[3]);
+			for (var i:int = 0; i < 3; i++) a[i] = a[i].result.split(/[\n\r\t]/g);
+			_bookmark.addRemotes(a[0]);
+			_bookmark.addLocalBranches(a[1]);
+			_bookmark.addRemoteBranches(a[2]);
 			AppModel.dispatch(AppEvent.REPOSITORY_READY);
 		}
 		

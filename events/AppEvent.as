@@ -20,10 +20,6 @@ package events {
 		public static const APP_UPDATE_PROGRESS			:String = "APP_UPDATE_PROGRESS";
 		public static const APP_UPDATE_COMPLETE			:String = "APP_UPDATE_COMPLETE";
 		public static const APP_UPDATE_FAILURE			:String = "APP_UPDATE_FAILURE";
-		
-		public static const GIT_NOT_INSTALLED			:String = "GIT_NOT_INSTALLED";
-		public static const GIT_NEEDS_UPDATING			:String = "GIT_NEEDS_UPDATING";
-		public static const GIT_INSTALL_COMPLETE		:String = "GIT_INSTALL_COMPLETE";
 		public static const GIT_SETTINGS				:String = "GIT_SETTINGS";
 		public static const GIT_DIR_UPDATED				:String = "GIT_DIR_UPDATED";
 		

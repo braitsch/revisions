@@ -24,7 +24,6 @@ package system {
        	private static var _linkAcct	:NativeMenuItem = new NativeMenuItem('Link To Account');
        	private static var _newBkmk		:NativeMenuItem = new NativeMenuItem('New Bookmark');
        	private static var _commit		:NativeMenuItem = new NativeMenuItem('New Commit');
-       	private static var _aboutGit	:NativeMenuItem = new NativeMenuItem('About Git');
        	private static var _updateApp	:NativeMenuItem = new NativeMenuItem('Check For Updates');
                      
         public static function initialize(s:Stage):void
@@ -61,9 +60,7 @@ package system {
             _newBkmk.addEventListener(Event.SELECT, onOptionSelected);
 		// main menu //
             var m:NativeMenuItem = getMenuByName('adl') || getMenuByName('Revisions');
-         	   	m.submenu.addItemAt(_aboutGit, 1);
 				m.submenu.addItemAt(_updateApp, 2);
-            _aboutGit.addEventListener(Event.SELECT, onOptionSelected);
             _updateApp.addEventListener(Event.SELECT, onOptionSelected);
 		}
 		
@@ -99,9 +96,6 @@ package system {
         	 	case _commit	: 
         	 		if (AppModel.bookmark.branch.isModified) _stage.dispatchEvent(new UIEvent(UIEvent.COMMIT));
         	 	break;        	 	
-        	 	case _aboutGit : 
-        	 		_stage.dispatchEvent(new UIEvent(UIEvent.ABOUT_GIT));
-        	 	break;  
         	 	case _github : 
         	 		onGitHubClick();
         	 	break;   

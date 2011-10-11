@@ -57,8 +57,7 @@ package model.proxies.local {
 			var path:File = File.applicationStorageDirectory.resolvePath(hash);
 			if (path.exists == false) path.createDirectory();
 			AppModel.showLoader('Reading File Contents');
-			super.appendArgs([path.nativePath, _bookmark.worktree]);
-			super.call(Vector.<String>([BashMethods.INIT_FILE, _bookmark.path, _bookmark.worktree]));
+			super.call(Vector.<String>([BashMethods.INIT_FILE, path.nativePath, _bookmark.worktree]));
 		}
 		
 		private function initFolder():void
@@ -72,6 +71,7 @@ package model.proxies.local {
 		
 		private function getDirectoryFiles():void
 		{
+			super.appendArgs([_bookmark.worktree]);
 			super.call(Vector.<String>([BashMethods.GET_DIRECTORY_FILES]));
 		}
 		
@@ -83,7 +83,7 @@ package model.proxies.local {
 		
 		private function addFirstCommit():void
 		{
-			super.appendArgs([_bookmark.gitdir, _bookmark.worktree]);
+			super.appendArgs([_bookmark.gitdir]);
 			super.call(Vector.<String>([BashMethods.ADD_INITIAL_COMMIT]));
 		}
 

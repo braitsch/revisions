@@ -18,7 +18,6 @@ package events {
 		public static const SHOW_COMMIT				:String = "SHOW_COMMIT";
 		
 	// main toolbar actions //
-		public static const ABOUT_GIT				:String = "ABOUT_GIT";
 		public static const GLOBAL_SETTINGS			:String = "GLOBAL_SETTINGS";
 		
 	// summary view actions //	

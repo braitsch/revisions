@@ -23,7 +23,6 @@ package model.vo {
 		
 		public function set lastCommit(c:Commit):void 		{ _lastCommit = c; 			}
 		public function get lastCommit():Commit 			{ return _lastCommit; 		}
-		public function get totalCommits():uint 			{ return _lastCommit.index; }
 		public function set remoteStatus(n:int):void		{ _remoteStatus = n;		}
 		public function get remoteStatus():int 				{ return _remoteStatus;		}
 	
@@ -46,6 +45,15 @@ package model.vo {
 		{
 			return (_modified.length > 0 || _untracked.length > 0);
 		}
+		
+		public function get totalCommits():uint 			
+		{ 
+			if (_lastCommit == null){
+				return 1;
+			}	else{
+				return _lastCommit.index; 
+			}
+		}		
 
 	}
 	

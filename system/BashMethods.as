@@ -3,9 +3,7 @@ package system{
 	public class BashMethods {
 		
 	// config methods //
-		public static const DETECT_GIT				:String = 'getGitDetails';
-		public static const HOMEBREW				:String = 'updateHomebrew';
-		public static const MACPORTS				:String = 'updateMacports';				
+		public static const DETECT_GIT				:String = 'detectGit';
 		public static const INSTALL_GIT				:String = 'installGit';
 		public static const SET_USER_NAME			:String = 'setUserName';
 		public static const GET_USER_NAME			:String = 'getUserName';	
@@ -78,11 +76,6 @@ package system{
 		public static const CREATE_SSH_KEY			:String = 'createSSHKey';
 		public static const ADD_KEY_TO_AUTH_AGENT	:String = 'addKeyToAuthAgent';
 		
-		public static const GET_REQUEST				:String = 'getRequest';
-		public static const POST_REQUEST			:String = 'postRequest';
-		public static const PUT_REQUEST				:String = 'putRequest';
-		public static const PATCH_REQUEST			:String = 'patchRequest';
-		public static const DELETE_REQUEST			:String = 'deleteRequest';
 		public static const STAR_COMMIT				:String = 'starCommit';
 		public static const UNSTAR_COMMIT			:String = 'unstarCommit';
 		public static const GET_FAVORITES			:String = 'getFavorites';

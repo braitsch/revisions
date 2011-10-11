@@ -24,6 +24,7 @@ package model.proxies.air {
 		
 		private function onProcessComplete(e:NativeProcessEvent):void
 		{
+		//	trace("NativeProcessQueue.onProcessComplete(e)", e.data.method, e.data.result);
 			_index++; _results.push(e.data);	
 			if (_index < _queue.length) {
 				call(_queue[_index]);
