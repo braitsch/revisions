@@ -32,6 +32,7 @@ package view.history {
 		private function onHistory(e:AppEvent):void
 		{
 			drawView();
+			_branch = AppModel.branch;
 		}		
 		
 		private function onModified(e:AppEvent):void
@@ -58,7 +59,10 @@ package view.history {
 		
 		private function checkIfChanged():void
 		{
-			if (_branch == AppModel.branch && _modified != AppModel.branch.isModified) drawView();
+			if (_branch == AppModel.branch && _modified != AppModel.branch.isModified) {
+				drawView();
+				_modified = AppModel.branch.isModified;
+			}
 		}		
 		
 	}
