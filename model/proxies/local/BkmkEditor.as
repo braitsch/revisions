@@ -39,6 +39,12 @@ package model.proxies.local {
 			super.call(Vector.<String>([BashMethods.COMMIT, 'Auto Saved :: '+new Date().toLocaleString()]));
 		}
 		
+		public function trashUnsaved():void
+		{
+			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
+			super.call(Vector.<String>([BashMethods.TRASH_UNSAVED]));
+		}		
+		
 		public function starCommit(o:Commit):void
 		{
 			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
@@ -150,6 +156,9 @@ package model.proxies.local {
 				case BashMethods.COMMIT : 
 					onCommitComplete();
 				break;
+				case BashMethods.TRASH_UNSAVED: 
+					onTrashUnsaved();
+				break;				
 				case BashMethods.ADD_BRANCH : 
 					onBranchAdded();
 				break;
@@ -182,6 +191,11 @@ package model.proxies.local {
 				case BashMethods.UNTRACK_FILE : 
 				break;
 			}
+		}
+
+		private function onTrashUnsaved():void
+		{
+			AppModel.dispatch(AppEvent.HISTORY_REVERTED);
 		}
 
 		private function onCommitComplete():void

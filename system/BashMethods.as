@@ -29,6 +29,7 @@ package system{
 		public static const CLONE					:String = 'clone';
 		public static const COMMIT					:String = 'commit';		
 		public static const PUSH_BRANCH				:String = 'pushBranch';
+		public static const TRASH_UNSAVED			:String = 'trashUnsaved';		
 		
 	// repo-editor.as //		
 		public static const MERGE					:String = 'merge';

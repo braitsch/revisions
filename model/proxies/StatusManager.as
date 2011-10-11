@@ -55,11 +55,13 @@ package model.proxies {
 			AppModel.engine.addEventListener(AppEvent.SUMMARY_RECEIVED, onSummaryReceived);
 			AppModel.engine.addEventListener(AppEvent.MODIFIED_RECEIVED, onModifiedReceived);
 			AppModel.engine.addEventListener(AppEvent.BRANCH_CHANGED, onBranchChanged);
-			AppModel.engine.addEventListener(AppEvent.COMMIT_COMPLETE, onCommitComplete);			
+			AppModel.engine.addEventListener(AppEvent.COMMIT_COMPLETE, onCommitComplete);
+			AppModel.engine.addEventListener(AppEvent.HISTORY_REVERTED, onHistoryReverted);
 		}
 
 		private function onBranchChanged(e:AppEvent):void 		{	getHistory();   	}
 		private function onHistoryRequested(e:AppEvent):void	{	getHistory();		}
+		private function onHistoryReverted(e:AppEvent):void 	{ 	getHistory();		}
 		private function onBookmarkSelected(e:AppEvent):void 	{ 	getSummary();		}
 		
 		private function onTimerCheckModified(e:TimerEvent):void 
