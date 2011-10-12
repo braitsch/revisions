@@ -100,10 +100,16 @@ package model.proxies.local {
 		
 		public function mergeRemoteIntoLocal():void
 		{
-			trace("BkmkEditor.mergeRemoteIntoLocal()", AppModel.branch.name, AppModel.repository.name+'/'+AppModel.branch.name); return;
+			trace("BkmkEditor.mergeRemoteIntoLocal()", AppModel.branch.name, AppModel.repository.name+'/'+AppModel.branch.name);
 			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
 			super.call(Vector.<String>([BashMethods.MERGE, AppModel.branch.name, AppModel.repository.name+'/'+AppModel.branch.name]));
-		}		
+		}
+		
+		private function absorbRemoteIntoLocal():void
+		{
+			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
+			super.call(Vector.<String>([BashMethods.ABSORB]));
+		}
 		
 	// remotes //	
 		
@@ -132,7 +138,6 @@ package model.proxies.local {
 		
 		public function copyVersion(sha1:String, saveAs:String):void
 		{
-		//	trace("BkmkEditor.copyVersion(sha1, saveAs)", AppModel.bookmark.path, saveAs); return;
 			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
 			super.call(Vector.<String>([BashMethods.COPY_VERSION, AppModel.branch.name, sha1, AppModel.bookmark.path, saveAs]));
 		}
@@ -177,6 +182,9 @@ package model.proxies.local {
 				case BashMethods.MERGE :
 					onMergeComplete(e.data.result);
 				break;	
+				case BashMethods.ABSORB :
+					onAbsorbComplete(e.data.result);
+				break;					
 				case BashMethods.ADD_REMOTE :
 					onRemoteAdded();
 				break;
@@ -256,15 +264,24 @@ package model.proxies.local {
 
 		private function onMergeComplete(s:String):void
 		{
-			trace("RepoEditor.onMergeComplete(s)", s);
-			var ok:Boolean;
-			if (reponseHas(s, 'Fast-forward')) ok = true;
-			if (reponseHas(s, 'Already up-to-date')) ok = true;
-			if (ok) {
-				AppModel.dispatch(AppEvent.MERGE_COMPLETE);
+			trace("BkmkEditor.onMergeComplete(s)", s);
+			if (reponseHas(s, 'Fast-forward')) {
+				dispatchBranchSynced();
 			}	else{
-				trace("there was a conflict");
+				trace("--conflict - attempting absorb remote files--");
+				absorbRemoteIntoLocal();
 			}
+		}
+		
+		private function onAbsorbComplete(s:String):void
+		{
+			dispatchBranchSynced();
+		}
+		
+		private function dispatchBranchSynced():void
+		{
+			AppModel.proxies.sync.repository = AppModel.repository;
+			AppModel.proxies.sync.pushBranch();
 		}
 
 		private function reponseHas(s1:String, s2:String):Boolean

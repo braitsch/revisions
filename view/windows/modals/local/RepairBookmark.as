@@ -94,7 +94,6 @@ package view.windows.modals.local {
 									newFile	:_form.getField(1),
 									oldMD5	:MD5.hash(_broken.path),
 									newMD5	:MD5.hash(_form.getField(1))};
-				trace("RepairBookmark.updateGitDir()", o.oldMD5, o.newMD5);
 				AppModel.proxies.creator.editAppStorageGitDirName(o);
 				AppModel.engine.addEventListener(AppEvent.GIT_DIR_UPDATED, onGitDirUpdated);
 			}
@@ -108,7 +107,6 @@ package view.windows.modals.local {
 		
 		private function updateDatabase():void
 		{
-			trace("RepairBookmark.updateDatabase()");
 			AppModel.database.addEventListener(DataBaseEvent.RECORD_EDITED, onBookmarkRepaired);
 			AppModel.database.editRepository(_broken.label, _form.getField(0), _form.getField(1), _broken.autosave);				
 		}
@@ -120,7 +118,7 @@ package view.windows.modals.local {
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));			
 			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.BOOKMARK_REPAIRED));
 			AppModel.database.removeEventListener(DataBaseEvent.RECORD_EDITED, onBookmarkRepaired);			
-		}		
+		}
 
 		private function onBookmarkDeleted(e:DataBaseEvent):void
 		{

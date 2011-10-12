@@ -1,6 +1,5 @@
 package view.summary {
 
-	import com.greensock.TweenLite;
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
@@ -8,6 +7,7 @@ package view.summary {
 	import view.btns.IconButton;
 	import view.windows.modals.system.Confirm;
 	import view.windows.modals.system.Message;
+	import com.greensock.TweenLite;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	
@@ -21,7 +21,7 @@ package view.summary {
 			_view = v;
 			initButtons();
 			positionButtons(false);
-			AppModel.engine.addEventListener(AppEvent.BRANCH_PUSHED, onBranchPushed);
+			AppModel.engine.addEventListener(AppEvent.BRANCH_SYNCED, onBranchSynced);
 			AppModel.engine.addEventListener(AppEvent.MODIFIED_RECEIVED, onModified);
 		}
 
@@ -39,20 +39,21 @@ package view.summary {
 		
 		private function onModified(e:AppEvent):void
 		{
-			if (AppModel.repository){	
+			if (AppModel.repository){
 				checkBranchStatus();
 			}	else{
 				positionButtons(false);
 			}
 		}
 
-		private function onBranchPushed(e:AppEvent):void 
+		private function onBranchSynced(e:AppEvent):void 
 		{
 			positionButtons(false);
 		}			
 		
 		private function checkBranchStatus():void
 		{
+			trace("SummaryOptions.checkBranchStatus()", AppModel.branch.remoteStatus);
 			_view.sync_btn.syncCount.visible = true;
 			if (AppModel.repository.hasBranch(AppModel.branch.name)) {
 				_view.sync_btn.syncCount.num.visible = true;
@@ -114,8 +115,8 @@ package view.summary {
 				if (AppModel.branch.isModified){
 					AppModel.alert(new Message('Please saves your lastest changes before syncing with the server.'));
 				}	else{
-					AppModel.alert(new Message('Support for merging remote changes into your local branches is coming soon.'));
-				//	AppModel.proxies.editor.mergeRemoteIntoLocal();
+				//	AppModel.alert(new Message('Support for merging remote changes into your local branches is coming soon.'));
+					AppModel.proxies.editor.mergeRemoteIntoLocal();
 				}
 			}
 		}
@@ -140,7 +141,8 @@ package view.summary {
 		
 		private function pushBranch():void
 		{
-			AppModel.proxies.sync.pushBranch(AppModel.repository);
+			AppModel.proxies.sync.repository = AppModel.repository;
+			AppModel.proxies.sync.pushBranch();
 		}		
 				
 		private function confirmUnpublishedBranch():void 

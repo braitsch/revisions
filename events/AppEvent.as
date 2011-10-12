@@ -43,7 +43,7 @@ package events {
 		public static const COLLABORATOR_ADDED			:String = "COLLABORATOR_ADDED";
 		public static const COLLABORATORS_RECEIEVED		:String = "COLLABORATORS_RECEIEVED";
 		
-		public static const BRANCH_PUSHED				:String = "BRANCH_PUSHED";
+		public static const BRANCH_SYNCED				:String = "BRANCH_PUSHED";
 		public static const BRANCH_STATUS				:String = "BRANCH_STATUS";
 		public static const BRANCH_RENAMED				:String = "BRANCH_RENAMED";
 		public static const BRANCH_DELETED				:String = "BRANCH_DELETED";

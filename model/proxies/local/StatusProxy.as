@@ -47,11 +47,11 @@ package model.proxies.local {
 		
 		public function getRemoteStatus():void
 		{
-			_bookmark = AppModel.bookmark;
-			var r:String = _bookmark.remote.name;
-			super.appendArgs([_bookmark.gitdir, _bookmark.worktree]);
-			super.queue = [	Vector.<String>([BashMethods.CHERRY_BRANCH, r+'/'+_bookmark.branch.name, _bookmark.branch.name]),
-							Vector.<String>([BashMethods.CHERRY_BRANCH, _bookmark.branch.name, r+'/'+_bookmark.branch.name]) ];			
+			var r:String = AppModel.bookmark.remote.name;
+			var b:String = AppModel.bookmark.branch.name;
+			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
+			super.queue = [	Vector.<String>([BashMethods.CHERRY_BRANCH, r+'/'+b, b]),
+							Vector.<String>([BashMethods.CHERRY_BRANCH, b, r+'/'+b]) ];			
 		}
 		
 	// private handlers //
@@ -79,10 +79,9 @@ package model.proxies.local {
 		{
 			var n1:Array = splitAndTrim(a[0].result);
 			var n2:Array = splitAndTrim(a[1].result);
-			if (n1.length) _bookmark.branch.remoteStatus = n1.length;
-			if (n2.length) _bookmark.branch.remoteStatus =-n2.length;
-		//	trace("StatusProxy.onRemoteStatus(a)", _bookmark.branch.name, n1.length, n2.length);
-			AppModel.dispatch(AppEvent.BRANCH_STATUS);	
+			if (n1.length) AppModel.branch.remoteStatus = n1.length;
+			if (n2.length) AppModel.branch.remoteStatus =-n2.length;
+			AppModel.dispatch(AppEvent.BRANCH_STATUS);
 		}
 		
 		private function onModified(a:Array):void
@@ -95,6 +94,8 @@ package model.proxies.local {
 			var m:Array = ignoreHiddenFiles(splitAndTrim(a[1]));
 			var u:Array = ignoreHiddenFiles(splitAndTrim(a[2]));
 		// remove all the ignored files from the untracked array //	
+			trace("StatusProxy.modified = (a)", a[1]);
+			trace("StatusProxy.untracked = (a)", a[2]);
 			_bookmark.branch.modified = m;
 			_bookmark.branch.untracked = stripDuplicates(u, i);
 			AppModel.dispatch(AppEvent.MODIFIED_RECEIVED, _bookmark);			

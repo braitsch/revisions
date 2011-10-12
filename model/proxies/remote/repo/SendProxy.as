@@ -28,15 +28,16 @@ package model.proxies.remote.repo {
 		
 		private function onRemoteAdded(e:AppEvent):void 
 		{
-			AppModel.proxies.sync.pushBranch(_account.repository);
-			AppModel.engine.addEventListener(AppEvent.BRANCH_PUSHED, onBranchPushed);
+			AppModel.proxies.sync.repository = _account.repository;
+			AppModel.proxies.sync.pushBranch();
+			AppModel.engine.addEventListener(AppEvent.BRANCH_SYNCED, onBranchPushed);
 		}
 
 		private function onBranchPushed(e:AppEvent):void
 		{
 			_account.repository.addBranch(AppModel.branch.name);
 			AppModel.dispatch(AppEvent.BKMK_ADDED_TO_ACCOUNT);
-			AppModel.engine.removeEventListener(AppEvent.BRANCH_PUSHED, onBranchPushed);
+			AppModel.engine.removeEventListener(AppEvent.BRANCH_SYNCED, onBranchPushed);
 		}
 		
 	}
