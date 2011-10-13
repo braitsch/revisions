@@ -73,6 +73,7 @@ package view.windows.modals.local {
 		private function onUpdateBookmark(e:Event):void 
 		{
 			var m:String = Bookmark.validate(_form.getField(0), _form.getField(1), _broken);
+			trace("RepairBookmark.onUpdateBookmark(e)", m);
 			if (m != '') {
 				AppModel.alert(new Message(m));
 			}	else {

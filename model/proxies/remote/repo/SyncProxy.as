@@ -26,7 +26,7 @@ package model.proxies.remote.repo {
 				super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
 				super.request = new GitRequest(BashMethods.PUSH_BRANCH, _repository.name, [AppModel.branch.name]);
 			}
-			AppModel.showLoader('Sending files to '+StringUtils.capitalize(Repository.getAccountType(_repository.url)));
+			AppModel.showLoader('Syncing With Your '+StringUtils.capitalize(Repository.getAccountType(_repository.url))+' Account');
 		}
 		
 		public function fetchRepository():void

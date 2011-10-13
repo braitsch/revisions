@@ -10,9 +10,9 @@ package view.windows.base {
 
 	public class ChildWindow extends Sprite {
 
-		private static var _file	:File = File.desktopDirectory;
 		private var _okButton		:FormButton;
 		private var _noButton		:FormButton;
+		private var _file			:File = File.desktopDirectory;
 
 		public function ChildWindow()
 		{

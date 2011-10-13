@@ -69,6 +69,30 @@ package model.proxies {
 			_autoSaveQueue.length ? getModified(_autoSaveQueue[0]) : getModified(AppModel.bookmark);		
 		}
 		
+		private function getModified(b:Bookmark):void
+		{
+			resetTimer();
+			if (exists(b) == true) _proxy.getModified(b);
+		}
+		
+		private function getSummary():void
+		{
+			if (exists(AppModel.bookmark)){
+				resetTimer();
+				_ticks = 0; _proxy.getSummary();
+			}
+		}
+		
+		private function getHistory():void
+		{
+			if (exists(AppModel.bookmark)){
+				resetTimer();
+		// add slight delay so we have time to display the preloader //	
+				setTimeout(_proxy.getHistory, 500);
+				AppModel.showLoader('Refreshing History');
+			}
+		}
+		
 		private function getRemoteStatus(fetch:Boolean = false):void
 		{
 			if (AppModel.repository) {
@@ -79,34 +103,14 @@ package model.proxies {
 					}
 				}
 			}
-		}
+		}		
 		
+	// request callbacks //	
+	
 		private function onSummaryReceived(e:AppEvent):void 		
 		{	
 			getModified(AppModel.bookmark);		
 		}		
-		
-		private function getModified(b:Bookmark):void
-		{
-			resetTimer();
-			if (exists(b) == true) _proxy.getModified(b);
-		}
-		
-		private function getSummary():void
-		{
-			resetTimer();
-			_ticks = 0; _proxy.getSummary();
-		}
-		
-		private function getHistory():void
-		{
-			resetTimer();
-		// add slight delay so we have time to display the preloader //	
-			setTimeout(_proxy.getHistory, 500);
-			AppModel.showLoader('Refreshing History');
-		}
-		
-	// autoSave callbacks //	
 		
 		private function onModifiedReceived(e:AppEvent):void
 		{
