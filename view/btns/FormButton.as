@@ -41,11 +41,11 @@ package view.btns {
 
 		private function drawFlatBlueButton(s:String):void
 		{
-			var b:Bitmap = new Bitmap(new FormButtonBlue());
-			addChild(b);
-			addLabel(s);
-			buttonMode = true;
-			this.filters = [DrawButton.GLOW];
+//			var b:Bitmap = new Bitmap(new FormButtonBlue());
+//			addChild(b);
+//			addLabel(s);
+//			buttonMode = true;
+//			this.filters = [DrawButton.GLOW];
 		}
 		
 		private function addLabel(s:String):void

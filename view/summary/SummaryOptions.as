@@ -66,7 +66,7 @@ package view.summary {
 				}
 			}	else{
 				_view.sync_btn.syncCount.num.visible = false;
-				_view.sync_btn.syncCount.plus.visible = true;				
+				_view.sync_btn.syncCount.plus.visible = true;
 			}			
 			positionButtons(_view.sync_btn.syncCount.visible);
 		}

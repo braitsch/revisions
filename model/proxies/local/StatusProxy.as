@@ -8,6 +8,7 @@ package model.proxies.local {
 	import model.vo.Commit;
 	import system.BashMethods;
 	import system.SystemRules;
+	import view.graphics.AppIcon;
 	import view.windows.modals.system.Debug;
 
 	public class StatusProxy extends NativeProcessQueue {
@@ -31,7 +32,6 @@ package model.proxies.local {
 		public function getModified(b:Bookmark):void
 		{
 			_bookmark = b;
-		//	trace("StatusProxy.getModified(b)", _bookmark.gitdir, _bookmark.worktree);
 			super.appendArgs([_bookmark.gitdir, _bookmark.worktree]);
 			super.queue = [	Vector.<String>([BashMethods.GET_IGNORED_FILES]),
 							Vector.<String>([BashMethods.GET_MODIFIED_FILES]),
@@ -82,9 +82,10 @@ package model.proxies.local {
 			var n2:Array = splitAndTrim(a[1].result);
 			if (n1.length) AppModel.branch.remoteStatus = n1.length;
 			if (n2.length) AppModel.branch.remoteStatus =-n2.length;
+			AppIcon.setApplicationIcon();
 			AppModel.dispatch(AppEvent.BRANCH_STATUS);
 		}
-		
+
 		private function onModified(a:Array):void
 		{
 			for (var k:int = 0; k < a.length; k++) a[k] = a[k].result;
@@ -171,7 +172,7 @@ package model.proxies.local {
 				break;
 			}
 		}
-
+		
 	}
 	
 }

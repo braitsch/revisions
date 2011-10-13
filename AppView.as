@@ -55,7 +55,7 @@ package {
 			_footer.y = h;
 			_footer.draw(w, 20);
 		}
-
+		
 	}
 	
 }
