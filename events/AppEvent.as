@@ -21,9 +21,10 @@ package events {
 		public static const APP_UPDATE_COMPLETE			:String = "APP_UPDATE_COMPLETE";
 		public static const APP_UPDATE_FAILURE			:String = "APP_UPDATE_FAILURE";
 		public static const GIT_SETTINGS				:String = "GIT_SETTINGS";
-		public static const FILE_LOCAL_UPDATED				:String = "GIT_DIR_UPDATED";
+		public static const FILE_LOCAL_UPDATED			:String = "FILE_LOCAL_UPDATED";
 		
 		public static const CLONE_COMPLETE				:String = "CLONE_COMPLETE";
+		public static const DIRECTORY_READ				:String = "DIRECTORY_READ";		
 		public static const REPOSITORY_CREATED			:String = "REPOSITORY_CREATED";
 		public static const BKMK_ADDED_TO_ACCOUNT		:String = "BKMK_ADDED_TO_ACCOUNT";
 		
@@ -64,8 +65,9 @@ package events {
 		public static const BOOKMARK_REVERTED			:String = "BOOKMARK_REVERTED";
 		public static const COMMIT_COMPLETE				:String = "COMMIT_COMPLETE";
 		public static const MERGE_COMPLETE				:String = "MERGE_COMPLETE";
-		public static const TRACKING_BRANCHES_SET:String = "TRACKING_BRANCHES_SET";
-		public static const HISTORY_REVERTED:String = "HISTORY_REVERTED";
+		public static const TRACKING_BRANCHES_SET		:String = "TRACKING_BRANCHES_SET";
+		public static const HISTORY_REVERTED			:String = "HISTORY_REVERTED";
+	
 		
 		public var data:Object;
 

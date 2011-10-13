@@ -68,10 +68,9 @@ package model.proxies.local {
 		
 	// sub-routines //	
 		
-		private function getDirectoryFiles():void
+		public function getDirectoryFiles(d:String):void
 		{
-			super.appendArgs([_bookmark.worktree]);
-			super.call(Vector.<String>([BashMethods.GET_DIRECTORY_FILES]));
+			super.call(Vector.<String>([BashMethods.GET_DIRECTORY_FILES, d]));
 		}
 		
 		private function addFileToRepository(f:String):void
@@ -123,28 +122,29 @@ package model.proxies.local {
 		{
 			if (s == ''){
 			// we have no branches, add all files and a first commit //
-				getDirectoryFiles();
+				getDirectoryFiles(_bookmark.worktree);
+				AppModel.engine.addEventListener(AppEvent.DIRECTORY_READ, onDirectoryRead);
 			}	else{
 				AppModel.dispatch(AppEvent.INITIALIZED);
 			}
-		}	
+		}
 
 		private function onDirectoryListing(s:String):void
 		{
-			_index = 0;
-			_files = s.split(/\n/g);
-			checkArrayForLineBreaks();
-			addFileToRepository(_files[_index]);
+			var a:Array = s.split(/\n/g);
+			for (var i:int = 0; i < a.length; i++) {
+				if (a[i].indexOf('.') != 0){
+					a[i-1]+=a[i]; a.splice(i, 1);
+				}
+			}
+			AppModel.dispatch(AppEvent.DIRECTORY_READ, a);
 		}
 		
-		private function checkArrayForLineBreaks():void
+		private function onDirectoryRead(e:AppEvent):void
 		{
-			for (var i:int = 0; i < _files.length; i++) {
-				if (_files[i].indexOf('.') != 0){
-					_files[i-1]+=_files[i]; _files.splice(i, 1);
-				}
-			}			
-		}
+			_files = e.data as Array; _index = 0;
+			addFileToRepository(_files[_index]);
+		}		
 		
 		private function onFileAddedToRepository():void
 		{

@@ -24,9 +24,24 @@ package model.proxies.remote.repo {
 		{
 			switch(m) {
 				case BashMethods.CLONE :
-					generateNewBookmark();
+					onCloneComplete();
 				break;
 			}
+		}
+
+		private function onCloneComplete():void
+		{
+			AppModel.proxies.creator.getDirectoryFiles(_savePath);
+			AppModel.engine.addEventListener(AppEvent.DIRECTORY_READ, onDirectoryRead);
+		}
+
+		private function onDirectoryRead(e:AppEvent):void
+		{
+			var a:Array = e.data as Array;
+			if (a.length == 1){
+				trace("CloneProxy.onDirectoryRead(e) -- you downloaded a single file!");
+			}
+			generateNewBookmark();
 		}
 
 		private function generateNewBookmark():void
