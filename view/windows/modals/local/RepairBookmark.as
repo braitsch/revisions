@@ -11,6 +11,7 @@ package view.windows.modals.local {
 	import view.windows.base.ParentWindow;
 	import view.windows.modals.system.Delete;
 	import view.windows.modals.system.Message;
+	import com.adobe.crypto.MD5;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
@@ -75,7 +76,7 @@ package view.windows.modals.local {
 			if (m != '') {
 				AppModel.alert(new Message(m));
 			}	else {
-				_broken.type == Bookmark.FILE ? updateGitDir() : updateDatabase();
+				_broken.type == Bookmark.FILE ? setFileLocation() : updateDatabase();
 			}		
 		}
 		
@@ -85,28 +86,24 @@ package view.windows.modals.local {
 			AppModel.database.addEventListener(DataBaseEvent.RECORD_DELETED, onBookmarkDeleted);
 		}		
 		
-		private function updateGitDir():void
+		private function setFileLocation():void
 		{
 			if (_form.getField(1) == _broken.path){
 				updateDatabase();		
 			}	else{
 		// the file path has changed //		
-//				var o:Object = {	oldFile	:_broken.path, 
-//									newFile	:_form.getField(1),
-//									oldMD5	:MD5.hash(_broken.path),
-//									newMD5	:MD5.hash(_form.getField(1))};
-				var o:Object = {	oldFile	:_broken.path, 
-									newFile	:_newFile.nativePath,
+				var o:Object = {	oldFile	:MD5.hash(_broken.path), 
+									newFile	:MD5.hash(_newFile.nativePath),
 									newTree :_newFile.parent.nativePath};
-				AppModel.proxies.creator.editAppStorageGitDirName(o);
-				AppModel.engine.addEventListener(AppEvent.GIT_DIR_UPDATED, onGitDirUpdated);
+				AppModel.proxies.creator.setFileLocation(o);
+				AppModel.engine.addEventListener(AppEvent.FILE_LOCAL_UPDATED, onFileLocalUpdated);
 			}
 		}
 		
-		private function onGitDirUpdated(e:AppEvent):void
+		private function onFileLocalUpdated(e:AppEvent):void
 		{
 			updateDatabase();
-			AppModel.engine.removeEventListener(AppEvent.GIT_DIR_UPDATED, onGitDirUpdated);			
+			AppModel.engine.removeEventListener(AppEvent.FILE_LOCAL_UPDATED, onFileLocalUpdated);			
 		}
 		
 		private function updateDatabase():void

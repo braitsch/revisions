@@ -53,7 +53,6 @@ package view.summary {
 		
 		private function checkBranchStatus():void
 		{
-			trace("SummaryOptions.checkBranchStatus()", AppModel.branch.remoteStatus);
 			_view.sync_btn.syncCount.visible = true;
 			if (AppModel.repository.hasBranch(AppModel.branch.name)) {
 				_view.sync_btn.syncCount.num.visible = true;

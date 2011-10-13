@@ -21,7 +21,7 @@ package events {
 		public static const APP_UPDATE_COMPLETE			:String = "APP_UPDATE_COMPLETE";
 		public static const APP_UPDATE_FAILURE			:String = "APP_UPDATE_FAILURE";
 		public static const GIT_SETTINGS				:String = "GIT_SETTINGS";
-		public static const GIT_DIR_UPDATED				:String = "GIT_DIR_UPDATED";
+		public static const FILE_LOCAL_UPDATED				:String = "GIT_DIR_UPDATED";
 		
 		public static const CLONE_COMPLETE				:String = "CLONE_COMPLETE";
 		public static const REPOSITORY_CREATED			:String = "REPOSITORY_CREATED";

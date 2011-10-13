@@ -31,7 +31,6 @@ package model.proxies.remote.repo {
 		
 		public function fetchRepository():void
 		{
-			trace("SyncProxy.fetchRepository()");
 			if (_working){
 				_function = fetchRepository;
 			}	else{

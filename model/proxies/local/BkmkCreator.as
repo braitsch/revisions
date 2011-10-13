@@ -43,11 +43,9 @@ package model.proxies.local {
 			AppModel.dispatch(AppEvent.FILES_DELETED);
 		}
 		
-		public function editAppStorageGitDirName(o:Object):void
+		public function setFileLocation(o:Object):void
 		{
-		//	super.appendArgs([File.applicationStorageDirectory.nativePath]);
-			super.call(Vector.<String>([BashMethods.EDIT_GIT_DIR, File.applicationStorageDirectory.nativePath, o.oldFile, o.newFile, o.newTree]));
-		//	super.call(Vector.<String>([BashMethods.EDIT_GIT_DIR, o.oldFile, o.newFile, o.oldMD5, o.newMD5]));
+			super.call(Vector.<String>([BashMethods.SET_FILE_LOCATION, File.applicationStorageDirectory.nativePath, o.oldFile, o.newFile, o.newTree]));
 		}
 		
 	// bookmark initialization sequence //
@@ -108,8 +106,8 @@ package model.proxies.local {
 				case BashMethods.ADD_INITIAL_COMMIT : 
 					AppModel.dispatch(AppEvent.INITIALIZED);
 				break;					
-				case BashMethods.EDIT_GIT_DIR : 
-					AppModel.dispatch(AppEvent.GIT_DIR_UPDATED);
+				case BashMethods.SET_FILE_LOCATION : 
+					AppModel.dispatch(AppEvent.FILE_LOCAL_UPDATED);
 				break;	
 			}
 		}
