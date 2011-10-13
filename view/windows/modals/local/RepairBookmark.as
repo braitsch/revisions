@@ -11,7 +11,6 @@ package view.windows.modals.local {
 	import view.windows.base.ParentWindow;
 	import view.windows.modals.system.Delete;
 	import view.windows.modals.system.Message;
-	import com.adobe.crypto.MD5;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
@@ -21,6 +20,7 @@ package view.windows.modals.local {
 		private static var _form		:Form = new Form(530);
 		private static var _heading		:TextHeading;
 		private static var _broken		:Bookmark;
+		private static var _newFile		:File;
 
 		public function RepairBookmark()
 		{
@@ -65,7 +65,8 @@ package view.windows.modals.local {
 		
 		private function onBrowserSelection(e:UIEvent):void 
 		{
-			_form.setField(1, File(e.data).nativePath);
+			_newFile = e.data as File;
+			_form.setField(1, _newFile.nativePath);
 		}
 		
 		private function onUpdateBookmark(e:Event):void 
@@ -90,10 +91,13 @@ package view.windows.modals.local {
 				updateDatabase();		
 			}	else{
 		// the file path has changed //		
+//				var o:Object = {	oldFile	:_broken.path, 
+//									newFile	:_form.getField(1),
+//									oldMD5	:MD5.hash(_broken.path),
+//									newMD5	:MD5.hash(_form.getField(1))};
 				var o:Object = {	oldFile	:_broken.path, 
-									newFile	:_form.getField(1),
-									oldMD5	:MD5.hash(_broken.path),
-									newMD5	:MD5.hash(_form.getField(1))};
+									newFile	:_newFile.nativePath,
+									newTree :_newFile.parent.nativePath};
 				AppModel.proxies.creator.editAppStorageGitDirName(o);
 				AppModel.engine.addEventListener(AppEvent.GIT_DIR_UPDATED, onGitDirUpdated);
 			}

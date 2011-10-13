@@ -76,8 +76,7 @@ package model.vo {
 		public function get path():String 						{ return _path; 	}
 		public function set path(p:String):void
 		{
-			_path = p;
-			_file = new File('file://'+_path);
+			_path = p; _file = new File('file://'+_path);
 			if (_type == Bookmark.FOLDER){
 				 _gitdir = _path;
 				 _worktree = _file.nativePath;

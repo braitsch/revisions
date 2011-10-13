@@ -45,8 +45,9 @@ package model.proxies.local {
 		
 		public function editAppStorageGitDirName(o:Object):void
 		{
-			super.appendArgs([File.applicationStorageDirectory.nativePath]);
-			super.call(Vector.<String>([BashMethods.EDIT_GIT_DIR, o.oldFile, o.newFile, o.oldMD5, o.newMD5]));
+		//	super.appendArgs([File.applicationStorageDirectory.nativePath]);
+			super.call(Vector.<String>([BashMethods.EDIT_GIT_DIR, File.applicationStorageDirectory.nativePath, o.oldFile, o.newFile, o.newTree]));
+		//	super.call(Vector.<String>([BashMethods.EDIT_GIT_DIR, o.oldFile, o.newFile, o.oldMD5, o.newMD5]));
 		}
 		
 	// bookmark initialization sequence //

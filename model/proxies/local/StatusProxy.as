@@ -31,7 +31,7 @@ package model.proxies.local {
 		public function getModified(b:Bookmark):void
 		{
 			_bookmark = b;
-			trace("StatusProxy.getModified(b)", _bookmark.gitdir, _bookmark.worktree);
+		//	trace("StatusProxy.getModified(b)", _bookmark.gitdir, _bookmark.worktree);
 			super.appendArgs([_bookmark.gitdir, _bookmark.worktree]);
 			super.queue = [	Vector.<String>([BashMethods.GET_IGNORED_FILES]),
 							Vector.<String>([BashMethods.GET_MODIFIED_FILES]),
@@ -95,8 +95,8 @@ package model.proxies.local {
 			var m:Array = ignoreHiddenFiles(splitAndTrim(a[1]));
 			var u:Array = ignoreHiddenFiles(splitAndTrim(a[2]));
 		// remove all the ignored files from the untracked array //	
-			trace("StatusProxy.modified = (a)", a[1]);
-			trace("StatusProxy.untracked = (a)", a[2]);
+		//	trace("StatusProxy.modified = (a)", a[1]);
+		//	trace("StatusProxy.untracked = (a)", a[2]);
 			_bookmark.branch.modified = m;
 			_bookmark.branch.untracked = stripDuplicates(u, i);
 			AppModel.dispatch(AppEvent.MODIFIED_RECEIVED, _bookmark);			
