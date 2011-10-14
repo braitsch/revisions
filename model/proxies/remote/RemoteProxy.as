@@ -48,7 +48,7 @@ package model.proxies.remote {
 				break;				
 				case BashMethods.CLONE :
 					n = 0;
-					m = 'Cloning Remote Repository';
+					m = 'Downloading Files';
 				break;	
 			}
 			super.call(v);
