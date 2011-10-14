@@ -119,7 +119,7 @@ package view.windows.upload {
 			_status.page = 1;
 			_view.addChildAt(_page, 0);
 			super.onAddedToStage(e);
-			super.title = 'Link To Account';
+			super.title = 'Link Online';
 		}
 
 		private function onRemovedFromStage(e:Event):void

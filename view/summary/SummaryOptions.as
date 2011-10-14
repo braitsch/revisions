@@ -27,7 +27,7 @@ package view.summary {
 
 		private function initButtons():void
 		{
-			var l:Array = ['Settings', 'Link Account', 'Sync Account', 'History'];
+			var l:Array = ['Settings', 'Link Online', 'Sync Online', 'History'];
 			var a:Array = [_view.settings_btn, _view.upload_btn, _view.sync_btn, _view.history_btn];
 			for (var i:int = 0; i < 4; i++) new IconButton(a[i], l[i]);
 			_view.sync_btn.syncCount.num.mouseEnabled = false;

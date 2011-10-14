@@ -9,8 +9,8 @@ package view.windows.upload {
 
 	public class OnBkmkAdded extends WizardWindow {
 
-		private static var _viewAcct		:DrawButton = new DrawButton(250, 36, 'Link To GitHub', 12);
-		private static var _addCollab		:DrawButton = new DrawButton(250, 36, 'Add A Collaborator', 12);		
+		private static var _viewAcct		:DrawButton = new DrawButton(250, 45, 'Link To GitHub', 12);
+		private static var _addCollab		:DrawButton = new DrawButton(250, 45, 'Add A Collaborator', 12);		
 
 		public function OnBkmkAdded()
 		{
@@ -21,7 +21,7 @@ package view.windows.upload {
 		private function setButtons():void
 		{
 			_viewAcct.x = _addCollab.x = 150;
-			_viewAcct.y = 110; _addCollab.y = 170;
+			_viewAcct.y = 115; _addCollab.y = 180;
 			addChild(_viewAcct); addChild(_addCollab);			
 			addEventListener(MouseEvent.CLICK, onButtonSelection);
 		}
