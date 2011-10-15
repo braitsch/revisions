@@ -68,7 +68,7 @@ package model.proxies.local {
 
 		private function detectMethod(o:Object):void
 		{
-			trace("ConfigProxy.detectMethod(o)", o.method, o.result);
+		//	trace("ConfigProxy.detectMethod(o)", o.method, o.result);
 			switch(o.method){	
 				case BashMethods.DETECT_GIT :
 					onGitDetected(o.result);

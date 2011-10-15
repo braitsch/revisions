@@ -15,7 +15,7 @@ package system{
 		public static const INIT_FILE				:String = 'initFile';
 		public static const INIT_FOLDER				:String = 'initFolder';		public static const TRACK_FILE				:String = 'trackFile';
 		public static const UNTRACK_FILE			:String = 'unTrackFile';
-		public static const SET_FILE_LOCATION		:String = 'setFileLocation';
+		public static const UPDATE_WORKTREE		:String = 'setFileLocation';
 		public static const GET_DIRECTORY_FILES		:String = 'getDirectoryFiles';		
 		public static const ADD_INITIAL_COMMIT		:String = 'addInitialCommit';
 		
@@ -84,6 +84,7 @@ package system{
 		public static const GET_REMOTE_FILES		:String = 'getRemoteFiles';
 		public static const CHERRY_BRANCH			:String = 'cherryBranch';
 		public static const ADD_TRACKING_BRANCHES	:String = 'addTrackingBranches';
+		public static const SET_WORK_TREE	:String = 'initSingleFileRepo';
 		
 	}
 	

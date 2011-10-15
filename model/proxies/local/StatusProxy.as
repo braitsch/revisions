@@ -80,11 +80,11 @@ package model.proxies.local {
 		{
 			var n1:Array = splitAndTrim(a[0].result);
 			var n2:Array = splitAndTrim(a[1].result);
-			trace("StatusProxy.onRemoteStatus(a) n1=", a[0].result);
-			trace("StatusProxy.onRemoteStatus(a) n2=", a[1].result);
+	//		trace("StatusProxy.onRemoteStatus(a) n1=", a[0].result);
+	//		trace("StatusProxy.onRemoteStatus(a) n2=", a[1].result);
 			if (n1.length) AppModel.branch.remoteStatus = n1.length;
 			if (n2.length) AppModel.branch.remoteStatus =-n2.length;
-			trace("StatusProxy.onRemoteStatus(a)", AppModel.branch.name, AppModel.branch.remoteStatus);
+	//		trace("StatusProxy.onRemoteStatus(a)", AppModel.branch.name, AppModel.branch.remoteStatus);
 			AppIcon.setApplicationIcon();
 			AppModel.dispatch(AppEvent.BRANCH_STATUS);
 		}

@@ -21,12 +21,13 @@ package events {
 		public static const APP_UPDATE_COMPLETE			:String = "APP_UPDATE_COMPLETE";
 		public static const APP_UPDATE_FAILURE			:String = "APP_UPDATE_FAILURE";
 		public static const GIT_SETTINGS				:String = "GIT_SETTINGS";
-		public static const FILE_LOCAL_UPDATED			:String = "FILE_LOCAL_UPDATED";
 		
 		public static const CLONE_COMPLETE				:String = "CLONE_COMPLETE";
 		public static const DIRECTORY_READ				:String = "DIRECTORY_READ";		
 		public static const REPOSITORY_CREATED			:String = "REPOSITORY_CREATED";
 		public static const BKMK_ADDED_TO_ACCOUNT		:String = "BKMK_ADDED_TO_ACCOUNT";
+		public static const WORKTREE_SET				:String = "WORKTREE_SET";		
+		public static const WORKTREE_UPDATED			:String = "WORKTREE_UPDATED";
 		
 		public static const REPOSITORY_READY			:String = "REPOSITORY_READY";
 		public static const FILES_DELETED				:String = "FILES_DELETED";
@@ -44,7 +45,7 @@ package events {
 		public static const COLLABORATOR_ADDED			:String = "COLLABORATOR_ADDED";
 		public static const COLLABORATORS_RECEIEVED		:String = "COLLABORATORS_RECEIEVED";
 		
-		public static const BRANCH_SYNCED				:String = "BRANCH_PUSHED";
+		public static const BRANCH_SYNCED				:String = "BRANCH_SYNCED";
 		public static const BRANCH_STATUS				:String = "BRANCH_STATUS";
 		public static const BRANCH_RENAMED				:String = "BRANCH_RENAMED";
 		public static const BRANCH_DELETED				:String = "BRANCH_DELETED";
@@ -63,10 +64,10 @@ package events {
 		public static const BOOKMARK_SELECTED			:String = "BOOKMARK_SELECTED";
 		public static const BOOKMARK_EDITED				:String = "BOOKMARK_EDITED";
 		public static const BOOKMARK_REVERTED			:String = "BOOKMARK_REVERTED";
-		public static const COMMIT_COMPLETE				:String = "COMMIT_COMPLETE";
 		public static const MERGE_COMPLETE				:String = "MERGE_COMPLETE";
-		public static const TRACKING_BRANCHES_SET		:String = "TRACKING_BRANCHES_SET";
+		public static const COMMIT_COMPLETE				:String = "COMMIT_COMPLETE";
 		public static const HISTORY_REVERTED			:String = "HISTORY_REVERTED";
+		public static const TRACKING_BRANCHES_SET		:String = "TRACKING_BRANCHES_SET";
 	
 		
 		public var data:Object;

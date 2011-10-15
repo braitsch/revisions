@@ -45,7 +45,12 @@ package model.proxies.local {
 		
 		public function setFileLocation(o:Object):void
 		{
-			super.call(Vector.<String>([BashMethods.SET_FILE_LOCATION, File.applicationStorageDirectory.nativePath, o.oldFile, o.newFile, o.newTree]));
+			super.call(Vector.<String>([BashMethods.UPDATE_WORKTREE, File.applicationStorageDirectory.nativePath, o.oldFile, o.newFile, o.newTree]));
+		}
+		
+		public function setWorkTree(d:String, w:String):void
+		{
+			super.call(Vector.<String>([BashMethods.SET_WORK_TREE, d, w]));
 		}
 		
 	// bookmark initialization sequence //
@@ -105,8 +110,11 @@ package model.proxies.local {
 				case BashMethods.ADD_INITIAL_COMMIT : 
 					AppModel.dispatch(AppEvent.INITIALIZED);
 				break;					
-				case BashMethods.SET_FILE_LOCATION : 
-					AppModel.dispatch(AppEvent.FILE_LOCAL_UPDATED);
+				case BashMethods.SET_WORK_TREE :
+					AppModel.dispatch(AppEvent.WORKTREE_SET);
+				break;					
+				case BashMethods.UPDATE_WORKTREE : 
+					AppModel.dispatch(AppEvent.WORKTREE_UPDATED);
 				break;	
 			}
 		}
@@ -116,7 +124,7 @@ package model.proxies.local {
 		private function onFileInitialized():void
 		{
 			addFileToRepository(_bookmark.path);
-		}	
+		}
 		
 		private function onFolderInitialized(s:String):void
 		{

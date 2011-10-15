@@ -97,14 +97,14 @@ package view.windows.modals.local {
 									newFile	:MD5.hash(_newFile.nativePath),
 									newTree :_newFile.parent.nativePath};
 				AppModel.proxies.creator.setFileLocation(o);
-				AppModel.engine.addEventListener(AppEvent.FILE_LOCAL_UPDATED, onFileLocalUpdated);
+				AppModel.engine.addEventListener(AppEvent.WORKTREE_UPDATED, onFileLocalUpdated);
 			}
 		}
 		
 		private function onFileLocalUpdated(e:AppEvent):void
 		{
 			updateDatabase();
-			AppModel.engine.removeEventListener(AppEvent.FILE_LOCAL_UPDATED, onFileLocalUpdated);			
+			AppModel.engine.removeEventListener(AppEvent.WORKTREE_UPDATED, onFileLocalUpdated);			
 		}
 		
 		private function updateDatabase():void

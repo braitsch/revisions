@@ -4,7 +4,6 @@ package view.windows.modals.local {
 	import events.UIEvent;
 	import model.AppModel;
 	import model.remote.Hosts;
-	import system.FileUtils;
 	import view.btns.ButtonIcon;
 	import view.btns.DrawButton;
 	import view.btns.FormButton;
@@ -19,7 +18,6 @@ package view.windows.modals.local {
 	public class NewBookmark extends ParentWindow {
 
 		private static var _cloneURL	:String;
-		private static var _savePath	:String;
 		private static var _customURL	:Form = new Form(580);
 		
 		private static var _tf1			:TextHeading = new TextHeading();
@@ -144,13 +142,8 @@ package view.windows.modals.local {
 		
 		private function onCloneAttempt(f:File):void
 		{
-			if (FileUtils.dirIsEmpty(f) == false){
-				dispatchFailure('The target directory you are attempting to clone to must be empty.');
-			}	else {
-				_savePath = f.nativePath;
-				AppModel.proxies.clone.clone(_cloneURL, _savePath);
-				AppModel.engine.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);				
-			}
+			AppModel.proxies.clone.clone(_cloneURL, f);
+			AppModel.engine.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);
 		}
 
 		private function onCloneComplete(e:AppEvent):void

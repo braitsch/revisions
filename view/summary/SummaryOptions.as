@@ -114,7 +114,6 @@ package view.summary {
 				if (AppModel.branch.isModified){
 					AppModel.alert(new Message('Please saves your lastest changes before syncing with the server.'));
 				}	else{
-				//	AppModel.alert(new Message('Support for merging remote changes into your local branches is coming soon.'));
 					AppModel.proxies.editor.mergeRemoteIntoLocal();
 				}
 			}

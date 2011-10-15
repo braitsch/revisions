@@ -7,7 +7,7 @@ package view.windows.modals.system {
 
 		private var _view	:ConfirmMC = new ConfirmMC();
 
-		public function Confirm(m:String)
+		public function Confirm(m:String = '')
 		{
 			addChild(_view);
 			super.drawBackground(550, 240);
@@ -15,6 +15,11 @@ package view.windows.modals.system {
 			addOkButton();
 			addNoButton();
 			_view.textArea.message_txt.htmlText = m;
+		}
+		
+		public function set message(m:String):void
+		{
+			_view.textArea.message_txt.htmlText = m;	
 		}
 
 		override protected function onOkButton(e:Event):void
