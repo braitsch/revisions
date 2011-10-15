@@ -18,7 +18,6 @@ package view.windows.modals {
 	import view.windows.modals.local.NewBookmark;
 	import view.windows.modals.local.NewCommit;
 	import view.windows.modals.local.RepairBookmark;
-	import view.windows.modals.local.VersionDetails;
 	import view.windows.modals.local.WelcomeScreen;
 	import view.windows.modals.login.PermissionsFailure;
 	import view.windows.modals.system.Alert;
@@ -44,7 +43,6 @@ package view.windows.modals {
 		private static var _dragAndDrop			:AddDragAndDrop = new AddDragAndDrop();
 		private static var _commit				:NewCommit = new NewCommit();
 		private static var _commitOptions		:CommitParent = new CommitParent();
-		private static var _details				:VersionDetails = new VersionDetails();
 		private static var _settings			:GlobalSettings = new GlobalSettings();
 		private static var _appUpdate			:AppUpdate = new AppUpdate();
 		private static var _appExpired			:AppExpired = new AppExpired();
@@ -84,7 +82,6 @@ package view.windows.modals {
 			stage.addEventListener(UIEvent.EDIT_BOOKMARK, editBookmark);
 			stage.addEventListener(UIEvent.COMMIT, addNewCommit);
 			stage.addEventListener(UIEvent.COMMIT_OPTIONS, showCommitOptions);
-			stage.addEventListener(UIEvent.SHOW_COMMIT, commitDetails);
 			stage.addEventListener(UIEvent.GLOBAL_SETTINGS, globalSettings);	
 			stage.addEventListener(UIEvent.GITHUB_HOME, showGitHubHome);
 			stage.addEventListener(UIEvent.GITHUB_LOGIN, showGitHubLogin);
@@ -183,12 +180,6 @@ package view.windows.modals {
 		{
 			_commitOptions.commit = e.data as Commit;
 			showModalWindow(_commitOptions);	
-		}		
-		
-		private function commitDetails(e:UIEvent):void
-		{
-			_details.commit = e.data as Commit;
-			showModalWindow(_details);
 		}		
 		
 		private function globalSettings(e:UIEvent):void

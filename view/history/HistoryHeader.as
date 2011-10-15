@@ -1,9 +1,13 @@
 package view.history {
 
+	import view.history.combos.ComboGroup;
+	import events.UIEvent;
 	import events.AppEvent;
 	import model.AppModel;
-	import view.history.merger.BranchMerger;
-	import view.history.switcher.BranchSwitcher;
+	import view.graphics.PatternBox;
+	import view.history.combos.BranchMerger;
+	import view.history.combos.BranchSwitcher;
+	import view.history.combos.HistoryChooser;
 	import view.ui.Scroller;
 	import flash.display.Shape;
 	import flash.display.Sprite;
@@ -12,10 +16,10 @@ package view.history {
 	public class HistoryHeader extends Sprite {
 
 		private static var _hrule		:Shape = new Shape();
-		private static var _pattern		:Shape = new Shape();
-		private static var _title		:HistoryTitle = new HistoryTitle();
-		private static var _switcher	:BranchSwitcher = new BranchSwitcher();
+		private static var _pattern		:PatternBox = new PatternBox(new DkGreyPattern());
+		private static var _history		:HistoryChooser = new HistoryChooser();
 		private static var _merger		:BranchMerger = new BranchMerger();
+		private static var _switcher	:BranchSwitcher = new BranchSwitcher();
 		private static var _scroller	:Scroller = new Scroller();
 
 		public function HistoryHeader()
@@ -25,9 +29,10 @@ package view.history {
 			addChild(_pattern); 
 			addChild(_scroller); 
 			addChild(_hrule); 
-			addChild(_title);
+			addChild(_history);
 			addChild(_switcher);
 			addChild(_merger);
+			addEventListener(UIEvent.COMBO_HEADING_OVER, onComboRollOver);
 			AppModel.engine.addEventListener(AppEvent.BRANCH_DELETED, onBranchDeleted);
 		}
 
@@ -38,22 +43,19 @@ package view.history {
 		
 		public function clear():void
 		{
-			_title.visible = _switcher.visible = _merger.visible = false;
+			_history.visible = _switcher.visible = _merger.visible = false;
 		}
 
 		public function refresh():void
 		{
-			_title.draw(); _switcher.draw(); _merger.draw();
-			_switcher.x = _title.x + _title.width + 1;
+			_history.draw(); _switcher.draw(); _merger.draw();
+			_switcher.x = _history.x + _history.width + 1;
 			_merger.x = _switcher.x + _switcher.width + 1;
 		}
 		
 		public function resize(w:uint, h:uint):void
 		{
-			_pattern.graphics.clear();
-			_pattern.graphics.beginBitmapFill(new DkGreyPattern());
-			_pattern.graphics.drawRect(0, 0, w, 32);
-			_pattern.graphics.endFill();			
+			_pattern.draw(w, 32);
 			_scroller.x = w - 5;
 			_scroller.draw(h);
 			drawHRule(w);
@@ -68,6 +70,11 @@ package view.history {
 			_hrule.graphics.drawRect(0, 1, w, 1);
 			_hrule.graphics.endFill();			
 		}
+		
+		private function onComboRollOver(e:UIEvent):void
+		{
+			setChildIndex(e.data as ComboGroup, numChildren - 1);	
+		}		
 
 	}
 	

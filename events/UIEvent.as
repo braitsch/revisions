@@ -8,22 +8,11 @@ package events {
 	// adding and editing local bookmarks //	
 		public static const ADD_BOOKMARK			:String = "ADD_BOOKMARK";
 		public static const DRAG_AND_DROP			:String = "DRAG_AND_DROP";		public static const EDIT_BOOKMARK			:String = "EDIT_BOOKMARK";
-		public static const ADD_BKMK_TO_ACCOUNT		:String = "ADD_REMOTE_TO_BOOKMARK";
-			// adding and editing local branches //	
-		public static const DELETE_BRANCH			:String = "DELETE_BRANCH";
+		public static const ADD_BKMK_TO_ACCOUNT		:String = "ADD_BKMK_TO_ACCOUNT";
 		
-	// history view actions //	
-		public static const REVERT					:String = "REVERT";
-		public static const SAVE_COPY_OF_VERSION	:String = "SAVE_COPY_OF_VERSION";
-		public static const SHOW_COMMIT				:String = "SHOW_COMMIT";
-		
-	// main toolbar actions //
-		public static const GLOBAL_SETTINGS			:String = "GLOBAL_SETTINGS";
-		
-	// summary view actions //	
 		public static const COMMIT					:String = "COMMIT";
-		public static const SYNC_REMOTES			:String = "SYNC_REMOTES";
 		public static const SHOW_HISTORY			:String = "SHOW_HISTORY";
+		public static const GLOBAL_SETTINGS			:String = "GLOBAL_SETTINGS";
 
 	// remote specific views //
 		public static const GITHUB_HOME				:String = "GITHUB_HOME";
@@ -34,6 +23,7 @@ package events {
 	
 	// miscellaneous //	
 		public static const CONFIRM					:String = "CONFIRM";
+		public static const NO_BUTTON				:String = "NO_BUTTON";		
 		public static const ENTER_KEY				:String = "ENTER_KEY";
 		public static const CLOSE_MODAL_WINDOW		:String = "CLOSE_MODAL_WINDOW";
 		public static const FILE_BROWSER_SELECTION	:String = "FILE_BROWSER_SELECTION";
@@ -48,11 +38,13 @@ package events {
 		public static const ADD_COLLABORATOR		:String = "ADD_COLLABORATOR";
 		public static const KILL_COLLABORATOR		:String = "KILL_COLLABORATOR";
 		public static const RADIO_SELECTED			:String = "RADIO_SELECTED";
-		public static const SET_PERMISSIONS			:String = "SET_PERMISSIONS";
 		public static const UNLINK_ACCOUNT			:String = "UNLINK_ACCOUNT";
-		public static const CHANGE_BRANCH			:String = "CHANGE_BRANCH";
 		public static const COMMIT_OPTIONS			:String = "COMMIT_OPTIONS";
-		public static const NO_BUTTON				:String = "NO_BUTTON";
+		
+		public static const COMBO_HEADING_OVER		:String = "COMBO_HEADING_OVER";
+		public static const COMBO_HEADING_CLICK		:String = "COMBO_HEADING_CLICK";
+		public static const COMBO_OPTION_KILL		:String = "COMBO_OPTION_KILL";
+		public static const COMBO_OPTION_CLICK		:String = "COMBO_OPTION_CLICK";
 		
 		public var data:Object;
 

@@ -11,18 +11,19 @@ package view.history {
 
 	public class HistoryList extends ScrollingList {
 
-		private var _delay				:uint;
-		private var _width				:uint;
-		private var _height				:uint;
-		private var _branch				:Branch;
-		private var _itemsSaved			:Vector.<HistoryItemSaved> = new Vector.<HistoryItemSaved>();
-		private var _itemUnsaved		:HistoryItemUnsaved = new HistoryItemUnsaved();
+		public static const	ITEMS_PER_PAGE	:uint = 25;
+		private var _delay					:uint;
+		private var _width					:uint;
+		private var _height					:uint;
+		private var _branch					:Branch;
+		private var _itemsSaved				:Vector.<HistoryItemSaved> = new Vector.<HistoryItemSaved>();
+		private var _itemUnsaved			:HistoryItemUnsaved = new HistoryItemUnsaved();
 
 		public function HistoryList()
 		{
 			super.leading = 41;
 			super.bottomPadding = -1;
-			for (var i:int = 0; i < 25; i++) _itemsSaved.push(new HistoryItemSaved());
+			for (var i:int = 0; i < ITEMS_PER_PAGE; i++) _itemsSaved.push(new HistoryItemSaved());
 		}
 
 		public function set branch(b:Branch):void
@@ -51,7 +52,7 @@ package view.history {
 				super.hideItem(_itemUnsaved, 0, 0);
 			}
 			var v:Vector.<Commit> = _branch.history;
-			for (var i:int = 0; i < 25; i++) {
+			for (var i:int = 0; i < ITEMS_PER_PAGE; i++) {
 				if (i < v.length){
 					_itemsSaved[i].commit = v[i];
 					super.showItem(_itemsSaved[i], m ? i + 1 : i);
