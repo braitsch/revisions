@@ -19,7 +19,7 @@ package view.frame {
 		
 		public function Header()
 		{
-			_appLogo.y = 12;
+			_appLogo.y = 6;
 			addChild(_slices);
 			addChild(_right);
 			addChild(_dragArea);
@@ -33,7 +33,7 @@ package view.frame {
 		{
 			_slices.graphics.clear();
 			_slices.graphics.beginBitmapFill(new HeaderSlice());
-			_slices.graphics.drawRect(_right.width-w, 0, w-_right.width, 83);
+			_slices.graphics.drawRect(_right.width-w, 0, w-_right.width, 78);
 			_slices.graphics.endFill();
 			_dragArea.draw(w, 67);
 			_appLogo.x = w/2 - _appLogo.width/2;

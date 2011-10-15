@@ -28,7 +28,7 @@ package {
 		private function addChildren():void
 		{
 			_main.x = 204;
-			_bkmks.y = _main.y = 66;
+			_bkmks.y = _main.y = 61;
 			_base.addChild(_main);
 			_base.addChild(_bkmks);
 			_base.addChild(_header);
