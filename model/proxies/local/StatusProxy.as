@@ -10,6 +10,7 @@ package model.proxies.local {
 	import system.SystemRules;
 	import view.graphics.AppIcon;
 	import view.windows.modals.system.Debug;
+	import flash.utils.getTimer;
 
 	public class StatusProxy extends NativeProcessQueue {
 
@@ -130,7 +131,7 @@ package model.proxies.local {
 			var h:Array = splitHistory(a[0].result);
 			var f:Array = splitAndTrim(a[1].result);
 			var v:Vector.<Commit> = new Vector.<Commit>();
-			for (var i:int = 0; i < h.length; i++) v.push(new Commit(h[i], h.length-i));
+			for (var i:int = 0; i < h.length; i++) v.push(new Commit(h[i], i));
 			AppModel.branch.history = v;
 			for (var k:int = 0; k < f.length; k++) {
 				for (var x:int = 0; x < v.length; x++) {
@@ -152,7 +153,7 @@ package model.proxies.local {
 					a[i] = a[i].replace(/[\n\t\r]/g, '');
 				}
 			}
-			return a;		
+			return a.reverse();		
 		}
 
 		private function splitAndTrim(s:String):Array

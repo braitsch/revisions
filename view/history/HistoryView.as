@@ -69,7 +69,7 @@ package view.history {
 		
 		private function onPageRequest(e:UIEvent):void
 		{
-	//		_list.showFromIndex(e.data as uint);	
+			_list.showFromIndex(e.data as uint);	
 		}				
 		
 	}
