@@ -33,7 +33,7 @@ package view.history {
 		{
 			clearTimeout(_delay);
 			_total = AppModel.branch.totalCommits;
-			_index = _total - ITEMS_PER_PAGE - 1;
+			_index = _total - ITEMS_PER_PAGE;
 			_delay = setTimeout(drawList, 500);
 		}
 		

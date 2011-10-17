@@ -7,9 +7,9 @@ package model.proxies.local {
 	import model.vo.Bookmark;
 	import model.vo.Commit;
 	import system.BashMethods;
-	import system.SystemRules;
 	import view.graphics.AppIcon;
 	import view.windows.modals.system.Debug;
+	import flash.utils.getTimer;
 
 	public class StatusProxy extends NativeProcessQueue {
 
@@ -41,7 +41,9 @@ package model.proxies.local {
 		{
 			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
 			super.queue = [	Vector.<String>([BashMethods.GET_HISTORY]), 
-							Vector.<String>([BashMethods.GET_FAVORITES]) ];
+							Vector.<String>([BashMethods.GET_FAVORITES]),
+							Vector.<String>([BashMethods.GET_MODIFIED_FILES]),
+							Vector.<String>([BashMethods.GET_UNTRACKED_FILES])];
 		}
 		
 		public function getRemoteStatus():void
@@ -86,63 +88,58 @@ package model.proxies.local {
 
 		private function onModified(a:Array):void
 		{
-			for (var k:int = 0; k < 2; k++) a[k] = a[k].result;
-			var m:Array = ignoreHiddenFiles(splitAndTrim(a[0]));
-			var u:Array = ignoreHiddenFiles(splitAndTrim(a[1]));
-		// remove all the ignored files from the untracked array //	
+			var m:Array = splitAndTrim(a[0].result);
+			var u:Array = splitAndTrim(a[1].result);
 			_bookmark.branch.modified = m;
 			_bookmark.branch.untracked = u; //stripDuplicates(u, i);
 			AppModel.dispatch(AppEvent.MODIFIED_RECEIVED, _bookmark);			
 		}
 
-//		private function stripDuplicates(a:Array, b:Array):Array
-//		{
-//			for (var j:int = 0; j < a.length; j++) {
-//				for (var k:int = 0; k < b.length; k++) {
-//					if (a[j] == b[k]) {
-//						a.splice(j, 1); --j; 
-//						b.splice(k, 1); continue; 
-//					}
-//				}		
-//			}
-//			return a;
-//		}
-
 		private function onSummary(a:Array):void
 		{
-			for (var i:int = 0; i < 2; i++) a[i] = a[i].result;
-			AppModel.branch.lastCommit = new Commit(a[0], uint(a[1]) + 1);
+			AppModel.branch.lastCommit = new Commit(a[0].result, uint(a[1].result) + 1);
 			AppModel.dispatch(AppEvent.SUMMARY_RECEIVED);
 		}
 
 		private function onHistory(a:Array):void
 		{
-			var h:Array = splitHistory(a[0].result);
-			var f:Array = splitAndTrim(a[1].result);
-			var v:Vector.<Commit> = new Vector.<Commit>();
-			for (var i:int = 0; i < h.length; i++) v.push(new Commit(h[i], i + 1));
-			AppModel.branch.history = v;
-			for (var k:int = 0; k < f.length; k++) {
-				for (var x:int = 0; x < v.length; x++) {
-					if (v[x].sha1 == f[k].substr(11)){
-						v[x].starred = true; break;
-					}
-				}
-			}
+			var k:Number = getTimer();
+			parseHistory(a[0].result);
+			parseFavorites(a[1].result);
+			AppModel.branch.modified = splitAndTrim(a[2].result);
+			AppModel.branch.untracked = splitAndTrim(a[3].result);
+			trace("StatusProxy.onHistory(a) time=", getTimer() - k);
 			AppModel.dispatch(AppEvent.HISTORY_RECEIVED);
 		}
 
-		private function splitHistory(s:String):Array
+		private function parseHistory(s:String):void
 		{
+			var i:int = 0;
 			var a:Array = s.split('-##-');
-			for (var i:int = 0; i < a.length; i++) {
+			for (i = 0; i < a.length; i++) {
 				if (a[i]=='') {
 					a.splice(i, 1);
 				}	else{
 					a[i] = a[i].replace(/[\n\t\r]/g, '');
 				}
 			}
-			return a.reverse();		
+			a = a.reverse();		
+			var v:Vector.<Commit> = new Vector.<Commit>();
+			for (i = 0; i < a.length; i++) v.push(new Commit(a[i], i + 1));	
+			AppModel.branch.history = v;		
+		}
+		
+		private function parseFavorites(s:String):void
+		{
+			var f:Array = splitAndTrim(s);
+			var v:Vector.<Commit> = AppModel.branch.history;
+			for (var k:int = 0; k < f.length; k++) {
+				for (var x:int = 0; x < v.length; x++) {
+					if (v[x].sha1 == f[k].substr(11)){
+						v[x].starred = true; break;
+					}
+				}
+			}			
 		}
 
 		private function splitAndTrim(s:String):Array
@@ -153,15 +150,6 @@ package model.proxies.local {
 			return a;		
 		}
 		
-		private function ignoreHiddenFiles(a:Array):Array
-		{
-			var f:Vector.<String> = SystemRules.FORBIDDEN_FILES;
-			for (var i:int = 0; i < a.length; i++) {
-				for (var j:int = 0; j < f.length; j++) if (a[i].indexOf(f[j]) != -1) {a.splice(i, 1); --i;}
-			}
-			return a;
-		}
-
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
 			switch(e.data.method){
@@ -174,6 +162,28 @@ package model.proxies.local {
 				break;
 			}
 		}
+		
+//		private function ignoreHiddenFiles(a:Array):Array
+//		{
+//			var f:Vector.<String> = SystemRules.FORBIDDEN_FILES;
+//			for (var i:int = 0; i < a.length; i++) {
+//				for (var j:int = 0; j < f.length; j++) if (a[i].indexOf(f[j]) != -1) {a.splice(i, 1); --i;}
+//			}
+//			return a;
+//		}		
+		
+//		private function stripDuplicates(a:Array, b:Array):Array
+//		{
+//			for (var j:int = 0; j < a.length; j++) {
+//				for (var k:int = 0; k < b.length; k++) {
+//					if (a[j] == b[k]) {
+//						a.splice(j, 1); --j; 
+//						b.splice(k, 1); continue; 
+//					}
+//				}		
+//			}
+//			return a;
+//		}		
 		
 	}
 	
