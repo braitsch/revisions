@@ -1,5 +1,6 @@
 package view.history {
 
+	import flash.utils.getTimer;
 	import events.AppEvent;
 	import model.AppModel;
 	import model.vo.Commit;
@@ -41,7 +42,7 @@ package view.history {
 			clearTimeout(_delay);
 			_total = AppModel.branch.totalCommits;
 			_index = n;
-			_delay = setTimeout(drawList, 500);			
+			drawList();
 		}
 		
 		public function killHistory():void
@@ -61,10 +62,11 @@ package view.history {
 		private function drawList():void
 		{
 			getModified();
+			var k:Number = getTimer();
 			var n1:uint = _index;
 			var n2:uint = _index > _total - ITEMS_PER_PAGE ? _total : _index + ITEMS_PER_PAGE;
+			trace("showing items ", n1, n2);
 			var v:Vector.<Commit> = AppModel.branch.history.slice(n1, n2).reverse();
-			trace("list ", n1, n2, AppModel.branch.history.length, v.length);
 			for (var i:int = 0; i < ITEMS_PER_PAGE; i++) {
 				if (i < v.length){
 					_itemsSaved[i].commit = v[i];
@@ -76,6 +78,7 @@ package view.history {
 			}
 			setSize(_width, _height);
 			TweenLite.to(super.list, .5, {y:0});
+			trace("HistoryList.drawList() - time", getTimer() - k);
 			_delay = setTimeout(dispatchHistoryRendered, 500);
 		}
 

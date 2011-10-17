@@ -33,12 +33,14 @@ package view.history {
 		
 		private function onHistory(e:AppEvent):void
 		{
+			trace("HistoryView.onHistory(e)");
 			drawView();
 			_branch = AppModel.branch;
 		}		
 		
 		private function onModified(e:AppEvent):void
 		{
+			trace("HistoryView.onModified(e)");
 			if (AppModel.branch.history) checkIfChanged();
 		}	
 		

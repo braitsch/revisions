@@ -10,7 +10,6 @@ package model.proxies.local {
 	import system.SystemRules;
 	import view.graphics.AppIcon;
 	import view.windows.modals.system.Debug;
-	import flash.utils.getTimer;
 
 	public class StatusProxy extends NativeProcessQueue {
 
@@ -34,8 +33,7 @@ package model.proxies.local {
 		{
 			_bookmark = b;
 			super.appendArgs([_bookmark.gitdir, _bookmark.worktree]);
-			super.queue = [	Vector.<String>([BashMethods.GET_IGNORED_FILES]),
-							Vector.<String>([BashMethods.GET_MODIFIED_FILES]),
+			super.queue = [	Vector.<String>([BashMethods.GET_MODIFIED_FILES]),
 							Vector.<String>([BashMethods.GET_UNTRACKED_FILES]) ];
 		}
 
@@ -67,7 +65,7 @@ package model.proxies.local {
 				case BashMethods.GET_LAST_COMMIT :
 					onSummary(a);	
 				break;
-				case BashMethods.GET_IGNORED_FILES:
+				case BashMethods.GET_MODIFIED_FILES:
 					onModified(a);
 				break;
 				case BashMethods.CHERRY_BRANCH:
@@ -80,44 +78,35 @@ package model.proxies.local {
 		{
 			var n1:Array = splitAndTrim(a[0].result);
 			var n2:Array = splitAndTrim(a[1].result);
-	//		trace("StatusProxy.onRemoteStatus(a) n1=", a[0].result);
-	//		trace("StatusProxy.onRemoteStatus(a) n2=", a[1].result);
 			if (n1.length) AppModel.branch.remoteStatus = n1.length;
 			if (n2.length) AppModel.branch.remoteStatus =-n2.length;
-	//		trace("StatusProxy.onRemoteStatus(a)", AppModel.branch.name, AppModel.branch.remoteStatus);
 			AppIcon.setApplicationIcon();
 			AppModel.dispatch(AppEvent.BRANCH_STATUS);
 		}
 
 		private function onModified(a:Array):void
 		{
-			for (var k:int = 0; k < a.length; k++) a[k] = a[k].result;
-			if (a[0] == null) trace("StatusProxy.onModified(a) - no ignored files");
-			if (a[1] == null) trace("StatusProxy.onModified(a) - no modified files");
-			if (a[2] == null) trace("StatusProxy.onModified(a) - no untracked files");
-			var i:Array = ignoreHiddenFiles(splitAndTrim(a[0]));
-			var m:Array = ignoreHiddenFiles(splitAndTrim(a[1]));
-			var u:Array = ignoreHiddenFiles(splitAndTrim(a[2]));
+			for (var k:int = 0; k < 2; k++) a[k] = a[k].result;
+			var m:Array = ignoreHiddenFiles(splitAndTrim(a[0]));
+			var u:Array = ignoreHiddenFiles(splitAndTrim(a[1]));
 		// remove all the ignored files from the untracked array //	
-		//	trace("StatusProxy.modified = (a)", a[1]);
-		//	trace("StatusProxy.untracked = (a)", a[2]);
 			_bookmark.branch.modified = m;
-			_bookmark.branch.untracked = stripDuplicates(u, i);
+			_bookmark.branch.untracked = u; //stripDuplicates(u, i);
 			AppModel.dispatch(AppEvent.MODIFIED_RECEIVED, _bookmark);			
 		}
 
-		private function stripDuplicates(a:Array, b:Array):Array
-		{
-			for (var j:int = 0; j < a.length; j++) {
-				for (var k:int = 0; k < b.length; k++) {
-					if (a[j] == b[k]) {
-						a.splice(j, 1); --j; 
-						b.splice(k, 1); continue; 
-					}
-				}		
-			}
-			return a;
-		}
+//		private function stripDuplicates(a:Array, b:Array):Array
+//		{
+//			for (var j:int = 0; j < a.length; j++) {
+//				for (var k:int = 0; k < b.length; k++) {
+//					if (a[j] == b[k]) {
+//						a.splice(j, 1); --j; 
+//						b.splice(k, 1); continue; 
+//					}
+//				}		
+//			}
+//			return a;
+//		}
 
 		private function onSummary(a:Array):void
 		{
@@ -131,7 +120,7 @@ package model.proxies.local {
 			var h:Array = splitHistory(a[0].result);
 			var f:Array = splitAndTrim(a[1].result);
 			var v:Vector.<Commit> = new Vector.<Commit>();
-			for (var i:int = 0; i < h.length; i++) v.push(new Commit(h[i], i));
+			for (var i:int = 0; i < h.length; i++) v.push(new Commit(h[i], i + 1));
 			AppModel.branch.history = v;
 			for (var k:int = 0; k < f.length; k++) {
 				for (var x:int = 0; x < v.length; x++) {
