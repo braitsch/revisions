@@ -23,7 +23,7 @@ package view.history {
 			AppModel.engine.addEventListener(AppEvent.BOOKMARK_DELETED, onNoBookmarks);
 			AppModel.engine.addEventListener(AppEvent.HISTORY_RECEIVED, onHistory);
 			AppModel.engine.addEventListener(AppEvent.MODIFIED_RECEIVED, onModified);
-			AppModel.engine.addEventListener(AppEvent.BRANCH_CHANGED, onBranchChanged);
+	//		AppModel.engine.addEventListener(AppEvent.BRANCH_CHANGED, onBranchChanged);
 		}
 
 		public function resize(w:uint, h:uint):void
@@ -33,19 +33,29 @@ package view.history {
 		
 		private function onHistory(e:AppEvent):void
 		{
-			_branch = AppModel.branch;
-			checkIfChanged();
+			if (_branch != AppModel.branch){
+				_branch = AppModel.branch;
+				_modified = AppModel.branch.isModified;
+				drawView();
+			}	else{
+				AppModel.hideLoader();
+				AppModel.dispatch(AppEvent.HISTORY_RENDERED);				
+			}
 		}		
 		
 		private function onModified(e:AppEvent):void
 		{
-			if (AppModel.branch.history) checkIfChanged();
+			if (AppModel.branch.history == null) return;
+			if (AppModel.branch == _branch && AppModel.branch.isModified != _modified) {
+				_modified = AppModel.branch.isModified;
+				drawView();
+			}
 		}	
 		
-		private function onBranchChanged(e:AppEvent):void
-		{
-			_branch = AppModel.branch;
-		}										
+//		private function onBranchChanged(e:AppEvent):void
+//		{
+//			_branch = AppModel.branch;
+//		}						
 
 		private function drawView():void
 		{
@@ -57,17 +67,6 @@ package view.history {
 		{
 			_header.clear();
 			_list.killHistory();
-		}
-		
-		private function checkIfChanged():void
-		{
-			if (_branch == AppModel.branch && _modified != AppModel.branch.isModified) {
-				_modified = AppModel.branch.isModified;
-				drawView();
-			}	else{
-				AppModel.hideLoader();
-				AppModel.dispatch(AppEvent.HISTORY_RENDERED);				
-			}
 		}
 		
 		private function onPageRequest(e:UIEvent):void

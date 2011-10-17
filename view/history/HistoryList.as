@@ -32,15 +32,15 @@ package view.history {
 		public function showMostRecent():void
 		{
 			clearTimeout(_delay);
-			_total = AppModel.branch.totalCommits;
-			_index = _total - ITEMS_PER_PAGE;
+			_total = AppModel.branch.history.length;
+			_index = _total - ITEMS_PER_PAGE > 0 ? _total - ITEMS_PER_PAGE : 0;
 			_delay = setTimeout(drawList, 500);
 		}
 		
 		public function showFromIndex(n:uint):void
 		{
 			clearTimeout(_delay);
-			_total = AppModel.branch.totalCommits;
+			_total = AppModel.branch.history.length;
 			_index = n;
 			drawList();
 		}
@@ -65,7 +65,7 @@ package view.history {
 			var k:Number = getTimer();
 			var n1:uint = _index;
 			var n2:uint = _index > _total - ITEMS_PER_PAGE ? _total : _index + ITEMS_PER_PAGE;
-			trace("showing items ", n1, n2);
+			trace('_total: ' + (_total));
 			var v:Vector.<Commit> = AppModel.branch.history.slice(n1, n2).reverse();
 			for (var i:int = 0; i < ITEMS_PER_PAGE; i++) {
 				if (i < v.length){
@@ -78,7 +78,7 @@ package view.history {
 			}
 			setSize(_width, _height);
 			TweenLite.to(super.list, .5, {y:0});
-			trace("HistoryList.drawList() - time", getTimer() - k);
+			trace("HistoryList.drawList()", n1, n2, 'ms=', getTimer() - k);
 			_delay = setTimeout(dispatchHistoryRendered, 500);
 		}
 

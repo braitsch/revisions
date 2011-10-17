@@ -88,10 +88,8 @@ package model.proxies.local {
 
 		private function onModified(a:Array):void
 		{
-			var m:Array = splitAndTrim(a[0].result);
-			var u:Array = splitAndTrim(a[1].result);
-			_bookmark.branch.modified = m;
-			_bookmark.branch.untracked = u; //stripDuplicates(u, i);
+			_bookmark.branch.modified = splitAndTrim(a[0].result);
+			_bookmark.branch.untracked = splitAndTrim(a[1].result);
 			AppModel.dispatch(AppEvent.MODIFIED_RECEIVED, _bookmark);			
 		}
 
@@ -108,25 +106,24 @@ package model.proxies.local {
 			parseFavorites(a[1].result);
 			AppModel.branch.modified = splitAndTrim(a[2].result);
 			AppModel.branch.untracked = splitAndTrim(a[3].result);
-			trace("StatusProxy.onHistory(a) time=", getTimer() - k);
+			trace("StatusProxy.onHistory - parsed in", getTimer() - k, 'ms');
 			AppModel.dispatch(AppEvent.HISTORY_RECEIVED);
 		}
 
 		private function parseHistory(s:String):void
 		{
 			var i:int = 0;
-			var a:Array = s.split('-##-');
+			var a:Array = s.split('-##-').reverse();
 			for (i = 0; i < a.length; i++) {
-				if (a[i]=='') {
+				if (a[i] == '') {
 					a.splice(i, 1);
 				}	else{
 					a[i] = a[i].replace(/[\n\t\r]/g, '');
 				}
 			}
-			a = a.reverse();		
 			var v:Vector.<Commit> = new Vector.<Commit>();
 			for (i = 0; i < a.length; i++) v.push(new Commit(a[i], i + 1));	
-			AppModel.branch.history = v;		
+			AppModel.branch.history = v;
 		}
 		
 		private function parseFavorites(s:String):void
