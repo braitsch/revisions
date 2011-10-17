@@ -1,5 +1,6 @@
 package view.history {
 
+	import events.UIEvent;
 	import events.AppEvent;
 	import model.AppModel;
 	import model.vo.Branch;
@@ -17,6 +18,7 @@ package view.history {
 			_list.y = 34;
 			addChild(_list);
 			addChild(_header);
+			addEventListener(UIEvent.PAGE_HISTORY, onPageRequest);
 			AppModel.engine.addEventListener(AppEvent.NO_BOOKMARKS, onNoBookmarks);
 			AppModel.engine.addEventListener(AppEvent.BOOKMARK_DELETED, onNoBookmarks);
 			AppModel.engine.addEventListener(AppEvent.HISTORY_RECEIVED, onHistory);
@@ -48,13 +50,13 @@ package view.history {
 		private function drawView():void
 		{
 			_header.refresh();
-			_list.branch = AppModel.branch;
+			_list.showMostRecent();
 		}
 				
 		private function onNoBookmarks(e:AppEvent):void
 		{
 			_header.clear();
-			_list.branch = null;
+			_list.killHistory();
 		}
 		
 		private function checkIfChanged():void
@@ -63,7 +65,12 @@ package view.history {
 				drawView();
 				_modified = AppModel.branch.isModified;
 			}
-		}		
+		}
+		
+		private function onPageRequest(e:UIEvent):void
+		{
+	//		_list.showFromIndex(e.data as uint);	
+		}				
 		
 	}
 	

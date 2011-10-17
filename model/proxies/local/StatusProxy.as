@@ -42,8 +42,7 @@ package model.proxies.local {
 		{
 			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
 			super.queue = [	Vector.<String>([BashMethods.GET_HISTORY]), 
-							Vector.<String>([BashMethods.GET_FAVORITES]),
-							Vector.<String>([BashMethods.GET_TOTAL_COMMITS]) ];
+							Vector.<String>([BashMethods.GET_FAVORITES]) ];
 		}
 		
 		public function getRemoteStatus():void
@@ -128,13 +127,10 @@ package model.proxies.local {
 
 		private function onHistory(a:Array):void
 		{
-			var h:Array = splitAndTrim(a[0].result);
-		//TODO i think we're getting some null arrays here...	
-			if (h == null || h.length == 0) trace("StatusProxy.onHistory(a) ------- failure!!");
+			var h:Array = splitHistory(a[0].result);
 			var f:Array = splitAndTrim(a[1].result);
-			var n:uint = uint(a[2].result) + 1;
 			var v:Vector.<Commit> = new Vector.<Commit>();
-			for (var i:int = 0; i < h.length; i++) v.push(new Commit(h[i], n-i));
+			for (var i:int = 0; i < h.length; i++) v.push(new Commit(h[i], h.length-i));
 			AppModel.branch.history = v;
 			for (var k:int = 0; k < f.length; k++) {
 				for (var x:int = 0; x < v.length; x++) {
@@ -144,6 +140,19 @@ package model.proxies.local {
 				}
 			}
 			AppModel.dispatch(AppEvent.HISTORY_RECEIVED);
+		}
+
+		private function splitHistory(s:String):Array
+		{
+			var a:Array = s.split('-##-');
+			for (var i:int = 0; i < a.length; i++) {
+				if (a[i]=='') {
+					a.splice(i, 1);
+				}	else{
+					a[i] = a[i].replace(/[\n\t\r]/g, '');
+				}
+			}
+			return a;		
 		}
 
 		private function splitAndTrim(s:String):Array

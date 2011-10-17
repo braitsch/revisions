@@ -36,12 +36,12 @@ package view.history.combos {
 			_width = _heading.width;
 		}
 		
-		public function set options(a:Array):void
+		public function set options(v:Vector.<String>):void
 		{
 			this.visible = true;
 			while(_options.numChildren) _options.removeChildAt(0);
-			for (var i:int = 0; i < a.length; i++) {
-				var k:ComboItem = new ComboItem(a[i], _icon, _iconX, _allowKill);
+			for (var i:int = 0; i < v.length; i++) {
+				var k:ComboItem = new ComboItem(v[i], _icon, _iconX, _allowKill);
 					k.y = _options.numChildren * (ComboItem.ITEM_HEIGHT + 2);
 				if (k.width > _width) _width = k.width;
 				_options.addChild(k);

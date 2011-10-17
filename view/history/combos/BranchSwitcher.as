@@ -21,7 +21,7 @@ package view.history.combos {
 		public function draw():void
 		{
 			super.heading = AppModel.branch.name;
-			var a:Array = [];
+			var a:Vector.<String> = new Vector.<String>();
 			var b:Vector.<Branch> = AppModel.bookmark.branches;
 			for (var i:int = 0; i < b.length; i++) if (b[i] != AppModel.branch) a.push(b[i].name);
 			super.options = a;

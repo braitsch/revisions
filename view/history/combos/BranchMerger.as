@@ -16,7 +16,7 @@ package view.history.combos {
 		public function draw():void
 		{
 			super.heading = 'Open Merge View';
-			super.options = [];
+			super.options = new Vector.<String>();
 		}
 		
 		private function onHeadingClick(e:UIEvent):void

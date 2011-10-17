@@ -44,7 +44,8 @@ package events {
 		public static const COMBO_HEADING_OVER		:String = "COMBO_HEADING_OVER";
 		public static const COMBO_HEADING_CLICK		:String = "COMBO_HEADING_CLICK";
 		public static const COMBO_OPTION_KILL		:String = "COMBO_OPTION_KILL";
-		public static const COMBO_OPTION_CLICK		:String = "COMBO_OPTION_CLICK";
+		public static const COMBO_OPTION_CLICK:String = "COMBO_OPTION_CLICK";
+		public static const PAGE_HISTORY:String = "PAGE_HISTORY";
 		
 		public var data:Object;
 
