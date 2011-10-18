@@ -61,11 +61,11 @@ package view.history {
 		
 		private function drawList():void
 		{
+			if (AppModel.branch.history == null) return;
 			getModified();
 			var k:Number = getTimer();
 			var n1:uint = _index;
 			var n2:uint = _index > _total - ITEMS_PER_PAGE ? _total : _index + ITEMS_PER_PAGE;
-			trace('_total: ' + (_total));
 			var v:Vector.<Commit> = AppModel.branch.history.slice(n1, n2).reverse();
 			for (var i:int = 0; i < ITEMS_PER_PAGE; i++) {
 				if (i < v.length){
