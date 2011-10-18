@@ -32,7 +32,7 @@ package view.history {
 			_commit = o;
 			_star.tint = _commit.starred ? 0xEDC950 : 0x999999;
 			super.attachAvatar(_commit.email);
-			super.setText(_commit.note, 'Saved '+_commit.date);
+			super.setText(_commit.note, 'Version '+_commit.index+' - Saved '+_commit.date);
 		}
 		
 		override public function setSize(w:uint, h:uint):void

@@ -23,7 +23,6 @@ package view.history {
 			AppModel.engine.addEventListener(AppEvent.BOOKMARK_DELETED, onNoBookmarks);
 			AppModel.engine.addEventListener(AppEvent.HISTORY_RECEIVED, onHistory);
 			AppModel.engine.addEventListener(AppEvent.MODIFIED_RECEIVED, onModified);
-	//		AppModel.engine.addEventListener(AppEvent.BRANCH_CHANGED, onBranchChanged);
 		}
 
 		public function resize(w:uint, h:uint):void
@@ -52,11 +51,6 @@ package view.history {
 			}
 		}	
 		
-//		private function onBranchChanged(e:AppEvent):void
-//		{
-//			_branch = AppModel.branch;
-//		}						
-
 		private function drawView():void
 		{
 			_header.refresh();

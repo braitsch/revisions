@@ -50,13 +50,13 @@ package view.windows.commit {
 			TweenLite.to(_branch, .5, {x:this.width, onComplete:function():void{
 				_view.removeChild(_branch); _tweening = false; }});	
 			_view.addChild(_options); _options.x = -this.width; TweenLite.to(_options, .5, {x:0});
-		}		
+		}
 
 		public function set commit(o:Commit):void
 		{
 			attachAvatar(o);
 			_text.line1 = o.note;
-			_text.line2 = 'Saved '+o.date;
+			_text.line2 = 'Version '+o.index+' - Saved '+o.date;
 			_text.maxWidth = 300;
 			_branch.commit = _options.commit = o;
 		}		

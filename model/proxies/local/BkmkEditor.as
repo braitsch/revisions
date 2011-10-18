@@ -132,7 +132,7 @@ package model.proxies.local {
 			_repository = r;
 			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
 			super.call(Vector.<String>([BashMethods.DEL_REMOTE, _repository.name]));
-		}		
+		}
 		
 	// other stuff //			
 		
@@ -160,6 +160,9 @@ package model.proxies.local {
 			switch(e.data.method) {
 				case BashMethods.COMMIT : 
 					onCommitComplete();
+				break;
+				case BashMethods.COPY_VERSION : 
+					onCopyComplete();			
 				break;
 				case BashMethods.TRASH_UNSAVED: 
 					onTrashUnsaved();
@@ -201,17 +204,22 @@ package model.proxies.local {
 			}
 		}
 
-		private function onTrashUnsaved():void
-		{
-			AppModel.dispatch(AppEvent.HISTORY_REVERTED);
-		}
-
 		private function onCommitComplete():void
 		{
 			_bookmark.branch.modified = [];
 			_bookmark.branch.untracked = [];
 			AppModel.dispatch(AppEvent.COMMIT_COMPLETE, _bookmark);
 		}
+		
+		private function onCopyComplete():void
+		{
+			AppModel.dispatch(AppEvent.COPY_COMPLETE);
+		}
+
+		private function onTrashUnsaved():void
+		{
+			AppModel.dispatch(AppEvent.HISTORY_REVERTED);
+		}		
 		
 		private function onBranchAdded():void
 		{

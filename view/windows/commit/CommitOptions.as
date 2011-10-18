@@ -1,5 +1,6 @@
 package view.windows.commit {
 
+	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
 	import model.vo.Bookmark;
@@ -20,15 +21,17 @@ package view.windows.commit {
 
 		public function CommitOptions()
 		{
+			addChild(_heading);
 			_branch.icon = new ButtonIcon(new BranchIcon());
-			_branch.icon.scaleX = _branch.icon.scaleY = 1.3; 
+			_branch.icon.scaleX = _branch.icon.scaleY = 1.3;
+			_branch.addEventListener(MouseEvent.CLICK, onNewBranch);
+			addChild(_branch); 
 			_saveCopy.icon = new ButtonIcon(new SaveCopy());
-			_saveCopy.icon.scaleX = _saveCopy.icon.scaleY = 1.2; 			
+			_saveCopy.icon.scaleX = _saveCopy.icon.scaleY = 1.2;
+			_saveCopy.addEventListener(MouseEvent.CLICK, onSaveLocal);
+			addChild(_saveCopy); 
 			_branch.y = 110; _saveCopy.y = 180;
 			_branch.x = _saveCopy.x = 279 - _branch.width / 2;
-			_branch.addEventListener(MouseEvent.CLICK, onNewBranch);
-			_saveCopy.addEventListener(MouseEvent.CLICK, onSaveLocal);
-			addChild(_branch); addChild(_saveCopy); addChild(_heading);
 			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);
 		}
 
@@ -56,8 +59,19 @@ package view.windows.commit {
 			var bkmk:Bookmark = AppModel.bookmark;
 			var saveAs:String = e.data.nativePath+'/'+bkmk.label+' Version '+_commit.index;
 			if (bkmk.type == Bookmark.FILE) saveAs += bkmk.path.substr(bkmk.path.lastIndexOf('.'));
+			AppModel.showLoader('Fetching '+bkmk.label+' v'+_commit.index);
+			AppModel.proxies.status.locked = true;
 			AppModel.proxies.editor.copyVersion(_commit.sha1, saveAs);
-		}				
+			AppModel.engine.addEventListener(AppEvent.COPY_COMPLETE, onCopyVersionComplete);
+		}
+
+		private function onCopyVersionComplete(e:AppEvent):void
+		{
+			AppModel.hideLoader();
+			AppModel.proxies.status.locked = false;
+			AppModel.engine.removeEventListener(AppEvent.COPY_COMPLETE, onCopyVersionComplete);
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
+		}
 		
 	}
 	

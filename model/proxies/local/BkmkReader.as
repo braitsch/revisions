@@ -23,8 +23,6 @@ package model.proxies.local {
 		{
 			_bookmark = b;
 			super.appendArgs([_bookmark.gitdir, _bookmark.worktree]);
-		//	trace('_bookmark.gitdir: ' + (_bookmark.gitdir));
-		//	trace('_bookmark.worktree: ' + (_bookmark.worktree));
 			super.queue = [	Vector.<String>([BashMethods.GET_REMOTES]),
 							Vector.<String>([BashMethods.GET_LOCAL_BRANCHES]),
 							Vector.<String>([BashMethods.GET_REMOTE_BRANCHES])];
