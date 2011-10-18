@@ -4,6 +4,7 @@ package view.windows.modals.local {
 	import events.UIEvent;
 	import model.AppModel;
 	import system.AppSettings;
+	import system.LicenseManager;
 	import view.ui.ModalCheckbox;
 	import view.windows.base.ParentWindow;
 	import flash.events.MouseEvent;
@@ -26,19 +27,23 @@ package view.windows.modals.local {
 			addEventListener(UIEvent.NO_BUTTON, onSkipUpdate);
 		}
 
+		public function set newVersion(n:String):void
+		{
+			_view.textArea.message_txt.text = "Revisions "+n+" is now available!\n";
+			_view.textArea.message_txt.text+= "Would you like to update to this latest version?";
+			if (LicenseManager.checkExpired()){
+				super.noButton.enabled = false;
+				removeEventListener(UIEvent.NO_BUTTON, onSkipUpdate);
+			}
+		}
+		
 		private function addCheckBox():void
 		{
 			_check.y = 195; 
 			_check.label = "Don't prompt me to update again.";
 			_check.addEventListener(MouseEvent.CLICK, onCheckbox);
 			addChild(_check);
-		}
-
-		public function set newVersion(n:String):void
-		{
-			_view.textArea.message_txt.text = "Revisions "+n+" is now available!\n";
-			_view.textArea.message_txt.text+= "Would you like to update to this latest version?";
-		}
+		}		
 		
 		private function onCheckbox(e:MouseEvent):void
 		{
