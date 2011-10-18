@@ -9,7 +9,6 @@ package model.proxies.local {
 	import system.BashMethods;
 	import view.graphics.AppIcon;
 	import view.windows.modals.system.Debug;
-	import flash.utils.getTimer;
 
 	public class StatusProxy extends NativeProcessQueue {
 
@@ -101,12 +100,12 @@ package model.proxies.local {
 
 		private function onHistory(a:Array):void
 		{
-			var k:Number = getTimer();
+		//	var k:Number = getTimer();
 			parseHistory(a[0].result);
 			parseFavorites(a[1].result);
 			AppModel.branch.modified = splitAndTrim(a[2].result);
 			AppModel.branch.untracked = splitAndTrim(a[3].result);
-			trace("StatusProxy.onHistory - parsed in", getTimer() - k, 'ms');
+		//	trace("StatusProxy.onHistory - parsed in", getTimer() - k, 'ms');
 			AppModel.dispatch(AppEvent.HISTORY_RECEIVED);
 		}
 

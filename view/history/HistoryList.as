@@ -1,6 +1,5 @@
 package view.history {
 
-	import flash.utils.getTimer;
 	import events.AppEvent;
 	import model.AppModel;
 	import model.vo.Commit;
@@ -63,7 +62,7 @@ package view.history {
 		{
 			if (AppModel.branch.history == null) return;
 			getModified();
-			var k:Number = getTimer();
+		//	var k:Number = getTimer();
 			var n1:uint = _index;
 			var n2:uint = _index > _total - ITEMS_PER_PAGE ? _total : _index + ITEMS_PER_PAGE;
 			var v:Vector.<Commit> = AppModel.branch.history.slice(n1, n2).reverse();
@@ -78,7 +77,7 @@ package view.history {
 			}
 			setSize(_width, _height);
 			TweenLite.to(super.list, .5, {y:0});
-			trace("HistoryList.drawList()", n1, n2, 'ms=', getTimer() - k);
+		//	trace("HistoryList.drawList()", n1, n2, 'ms=', getTimer() - k);
 			_delay = setTimeout(dispatchHistoryRendered, 500);
 		}
 
