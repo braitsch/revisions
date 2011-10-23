@@ -7,7 +7,7 @@ package view.btns {
 	public class FormButton extends Sprite {
 		
 		private var _btn		:DrawButton;
-		private var _format		:TextFormat = new TextFormat();		
+		private var _format		:TextFormat = new TextFormat();	
 		
 		public function FormButton(label:String, blue:Boolean = false)
 		{

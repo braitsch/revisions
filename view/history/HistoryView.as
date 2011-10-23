@@ -9,6 +9,7 @@ package view.history {
 	public class HistoryView extends Sprite {
 
 		private static var _branch		:Branch;
+		private static var _length		:uint;
 		private static var _modified	:Boolean;
 		private static var _list		:HistoryList = new HistoryList();
 		private static var _header		:HistoryHeader = new HistoryHeader();
@@ -32,9 +33,10 @@ package view.history {
 		
 		private function onHistory(e:AppEvent):void
 		{
-			if (_branch != AppModel.branch || _modified != AppModel.branch.isModified) {
+			if (_branch != AppModel.branch || _modified != AppModel.branch.isModified || _length != AppModel.branch.history.length) {
 				_branch = AppModel.branch;
 				_modified = AppModel.branch.isModified;
+				_length = AppModel.branch.history.length;
 				drawView();
 			}	else{
 				AppModel.hideLoader();

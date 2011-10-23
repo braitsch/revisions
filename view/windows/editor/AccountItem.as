@@ -3,7 +3,7 @@ package view.windows.editor {
 	import events.UIEvent;
 	import model.remote.HostingAccount;
 	import model.vo.Repository;
-	import view.btns.FormButton;
+	import view.btns.DrawButton;
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -15,7 +15,7 @@ package view.windows.editor {
 
 		private var _repo	:Repository;
 		private var _view	:AccountItemMC = new AccountItemMC();
-		private var _unlink	:FormButton = new FormButton('Unlink');
+		private var _unlink	:DrawButton = new DrawButton(120, 30, 'Unlink', 11);
 
 		public function AccountItem(rmt:Repository)
 		{
@@ -48,7 +48,7 @@ package view.windows.editor {
 		private function attachUnlinkBtn():void
 		{
 			_unlink.y = 6;
-			_unlink.x = 454;			
+			_unlink.x = 454;
 			addChild(_unlink);
 		}
 

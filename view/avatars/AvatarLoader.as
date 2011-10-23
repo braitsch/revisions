@@ -19,10 +19,11 @@ package view.avatars {
 
 		public function AvatarLoader(id:String)
 		{
-			_id = id;
-			_loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onAvatarLoaded);
-			_loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onAvatarFailure);
-			_loader.load(new URLRequest(_id.indexOf('https://') == -1 ? encodeEmail(id) : id));
+			if (id){
+				requestAvatar(id);
+			}	else{
+				setAvatarToDefault();
+			}
 		}
 		
 		public function get id():String
@@ -42,6 +43,14 @@ package view.avatars {
 			}
 		}
 		
+		private function requestAvatar(id:String):void
+		{
+			_id = id;
+			_loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onAvatarLoaded);
+			_loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onAvatarFailure);
+			_loader.load(new URLRequest(_id.indexOf('https://') == -1 ? encodeEmail(id) : id));			
+		}
+		
 		private function encodeEmail(email:String):String
 		{
 			return 'http://www.gravatar.com/avatar/'+MD5.hash(email)+'?s='+_size+'&d=http://revisions-app.com/img/rev-icon-30.png';			
@@ -55,9 +64,14 @@ package view.avatars {
 		
 		private function onAvatarFailure(e:IOErrorEvent):void
 		{
+			setAvatarToDefault();
+		}
+		
+		private function setAvatarToDefault():void
+		{
 			_bmd = new UserIcon30();
-			dispatchEvent(new AppEvent(AppEvent.AVATAR_LOADED));
-		}				
+			dispatchEvent(new AppEvent(AppEvent.AVATAR_LOADED));						
+		}
 		
 	}
 	
