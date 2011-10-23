@@ -24,6 +24,7 @@ package model.proxies.remote.repo {
 		{ 
 			_request = req;
 			if (_request.url.search(/(https:\/\/)(\w*)(@github.com)/) == -1){
+			trace("GitProxy.request(req) ssh request attempting...");	
 				attemptRequest();
 			}	else{
 				attemptAccountLookup(_request.url);
@@ -37,6 +38,7 @@ package model.proxies.remote.repo {
 
 		override protected function onProcessComplete(e:NativeProcessEvent):void 
 		{
+			trace("GitProxy.onProcessComplete(e)", e.data.method, e.data.result);
 			super.onProcessComplete(e);
 			var f:String = RemoteFailure.detectFailure(e.data.result);
 			if (f){
@@ -68,6 +70,7 @@ package model.proxies.remote.repo {
 		
 		private function onAuthenticationFailure():void 
 		{ 
+			trace("GitProxy.onAuthenticationFailure()");
 			inspectURL(_request.url);
 		}
 
@@ -77,6 +80,7 @@ package model.proxies.remote.repo {
 		// a read-only request has failed //	
 				dispatchError(ErrEvent.UNRESOLVED_HOST);
 			}	else if (hasString(u, 'git@github.com')){
+				trace("GitProxy.inspectURL(u), an ssh request failed, attempting lookup..");
 				attemptAccountLookup(u);
 			}	else{
 				onPermissionsFailure(u);
@@ -87,9 +91,11 @@ package model.proxies.remote.repo {
 		{
 		// only github supports requests over https //	
 			var an:String = Repository.getAccountName(u);
+			trace("GitProxy.attemptAccountLookup(u) -- acct name", an);
 			var ha:HostingAccount = Hosts.github.getAccountByProp('acctName', an);
 			if (ha){
 				_request.url = Repository.buildHttpsURL(ha.user, ha.pass, an, u.substr(u.lastIndexOf('/') + 1));
+				trace('found user -- request: ' + (_request.url));
 				attemptRequest();
 			}	else{
 				onPermissionsFailure(u);		

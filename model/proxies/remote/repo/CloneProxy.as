@@ -139,6 +139,7 @@ package model.proxies.remote.repo {
 		
 		private function stripPassFromRemoteURL():void
 		{
+			trace('_cloneURL: ' + (_cloneURL));
 			var b:Boolean = false;
 			var u:String = _cloneURL;
 			if (u.search(/(https:\/\/)(\w*)(:)/) != -1){
@@ -146,6 +147,7 @@ package model.proxies.remote.repo {
 				var a:String = u.substr(0, u.indexOf(':'));
 				u = 'https://' + a + u.substr(u.indexOf('@'));
 			}
+			trace("CloneProxy.stripPassFromRemoteURL()", u);
 			_repository = new Repository('origin', u);
 			b ? editRemoteURL() : onRemoteEdited();
 		}	
