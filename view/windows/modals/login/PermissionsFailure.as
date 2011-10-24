@@ -32,7 +32,7 @@ package view.windows.modals.login {
 			_form.y = 110; 
 			addChild(_form);
 			
-			_check.y = 210;
+			_check.y = 220;
 			_check.label = 'Remember my login for this account';
 			addChild(_check);
 			addChild(_heading);
@@ -49,14 +49,28 @@ package view.windows.modals.login {
 			_acctType = Repository.getAccountType(u);
 			_acctName = Repository.getAccountName(u);
 			_repoName = Repository.getRepositoryName(u);
-			var m:String = 'I\'m sorry, '+_acctType+' denied us access to the account named "'+_acctName+'".\n';
-				m+='Please enter your username & password to try again :';
+			setHeading();
+		}
+
+		private function setHeading():void
+		{
+			var m:String;
+			if (_acctType == HostingAccount.GITHUB && !Hosts.github.loggedIn){
+				m = 'Please login to your GitHub account so I can complete your request.';
+			}	else if (_acctType == HostingAccount.BEANSTALK && !Hosts.beanstalk.loggedIn){
+				m = 'Please login to your Beanstalk account so I can complete your request.';
+			}	else{
+				m = 'I\'m sorry, '+_acctType+' denied us access to the account you are trying to connect to. ';
+				m+= 'Please enter your username & password to try again :';
+			}
 			_heading.text = m;
 		}
 		
 		private function onOkButton(e:Event):void
 		{
+			trace("PermissionsFailure.onOkButton(e)");
 			if (_form.validate()) {
+				trace('validated', _acctType);
 				if (_acctType == HostingAccount.GITHUB){
 					retryRequestOverHttps();
 				}	else if (_acctType == HostingAccount.BEANSTALK){
@@ -75,7 +89,7 @@ package view.windows.modals.login {
 
 		private function onKeyAddedToBeanstalk(e:AppEvent):void
 		{
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.RETRY_REMOTE_REQUEST, {u:_url}));
+			AppModel.dispatch(AppEvent.RETRY_REMOTE_REQUEST, {u:_url});
 			Hosts.beanstalk.key.removeEventListener(AppEvent.REMOTE_KEY_READY, onKeyAddedToBeanstalk);
 		}
 
@@ -83,7 +97,8 @@ package view.windows.modals.login {
 		{
 			var ha:HostingAccount = _check.selected ? makeAcctObj(HostingAccount.GITHUB) : null;
 			_url = Repository.buildHttpsURL(_form.getField(0), _form.getField(1) , _acctName , _repoName);
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.RETRY_REMOTE_REQUEST, {u:_url, a:ha}));
+			trace("PermissionsFailure.retryRequestOverHttps()", _url);
+			AppModel.dispatch(AppEvent.RETRY_REMOTE_REQUEST, {u:_url, a:ha});
 		}
 		
 		private function makeAcctObj(t:String):HostingAccount
@@ -94,7 +109,7 @@ package view.windows.modals.login {
 		private function onNoButton(e:UIEvent):void
 		{
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.RETRY_REMOTE_REQUEST, {u:null}));
+			AppModel.dispatch(AppEvent.RETRY_REMOTE_REQUEST, {u:null});
 		}
 		
 	}

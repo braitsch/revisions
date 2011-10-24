@@ -105,7 +105,7 @@ package model.proxies {
 					}
 				}
 			}
-		}		
+		}
 		
 	// request callbacks //	
 	

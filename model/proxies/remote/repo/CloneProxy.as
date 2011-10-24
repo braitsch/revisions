@@ -22,6 +22,7 @@ package model.proxies.remote.repo {
 
 		public function clone(url:String, dest:File):void
 		{
+			if (super.working) return;
 			_cloneURL = url; _savePath = dest; _repoName = Repository.getRepositoryName(url);
 			if (_savePath.resolvePath(_repoName).exists){
 				confirmDownload();
@@ -33,7 +34,7 @@ package model.proxies.remote.repo {
 		private function initCloneRequest():void
 		{
 			super.request = new GitRequest(BashMethods.CLONE, _cloneURL, [_savePath.nativePath]);
-		}		
+		}
 		
 		override protected function onProcessSuccess(m:String):void
 		{

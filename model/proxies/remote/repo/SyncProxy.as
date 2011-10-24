@@ -2,14 +2,14 @@ package model.proxies.remote.repo {
 
 	import events.AppEvent;
 	import model.AppModel;
+	import model.remote.HostingAccount;
+	import model.remote.Hosts;
 	import model.vo.Repository;
 	import system.BashMethods;
 	import system.StringUtils;
 
 	public class SyncProxy extends GitProxy {
 
-		private static var _working		:Boolean;
-		private static var _function	:Function;
 		private static var _repository	:Repository;
 		
 		public function set repository(r:Repository):void
@@ -19,30 +19,21 @@ package model.proxies.remote.repo {
 		
 		public function pushBranch():void
 		{
-			if (_working){
-				_function = pushBranch;
-			}	else{
-				_working = true;
-				super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
-				super.request = new GitRequest(BashMethods.PUSH_BRANCH, _repository.name, [AppModel.branch.name]);
-			}
+			if (super.working) return;
+			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
+			super.request = new GitRequest(BashMethods.PUSH_BRANCH, _repository.url, [AppModel.branch.name]);
 			AppModel.showLoader('Syncing With Your '+StringUtils.capitalize(Repository.getAccountType(_repository.url))+' Account');
 		}
 		
 		public function fetchRepository():void
 		{
-			if (_working){
-				_function = fetchRepository;
-			}	else{
-				_working = true;
-				super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
-				super.request = new GitRequest(BashMethods.GET_REMOTE_FILES, AppModel.bookmark.remote.url, []);
-			}
+			if (super.working || isLoggedIn() == false) return;
+			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
+			super.request = new GitRequest(BashMethods.GET_REMOTE_FILES, AppModel.bookmark.remote.url);
 		}
 		
 		override protected function onProcessSuccess(m:String):void 
 		{
-			_working = false;
 			switch(m){
 				case BashMethods.PUSH_BRANCH :
 					AppModel.hideLoader();
@@ -52,10 +43,19 @@ package model.proxies.remote.repo {
 				case BashMethods.GET_REMOTE_FILES :
 				break;
 			}
-			if (_function != null) {
-				_function(); _function = null;
-			}
 		}
+		
+		private function isLoggedIn():Boolean
+		{
+			var at:String = Repository.getAccountType(AppModel.bookmark.remote.url);
+			if (at == HostingAccount.GITHUB && Hosts.github.loggedIn){
+				return true;
+			}	else if (at == HostingAccount.BEANSTALK && Hosts.beanstalk.loggedIn){
+				return true;
+			}	else{
+				return false;
+			}
+		}		
 
 	}
 	

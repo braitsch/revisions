@@ -12,33 +12,41 @@ package model.proxies.remote.repo {
 
 	public class GitProxy extends RemoteProxy {
 		
-		private static var _request		:GitRequest;
-		private static var _account		:HostingAccount;
+		private static var _request			:GitRequest;
+		private static var _account			:HostingAccount;
+		private static var _working			:Boolean;		
+		private static var _httpsAttempted	:Boolean;
 	
 		public function GitProxy()
 		{
 			super.executable = 'BkmkRemote.sh';
 		}
 		
+		protected function get working():Boolean
+		{
+			return _working;
+		}
+		
 		protected function set request(req:GitRequest):void 
 		{ 
-			_request = req;
+			_request = req; _httpsAttempted = false;
+		// by default always attempt ssh request in the event user has keys setup //
 			if (_request.url.search(/(https:\/\/)(\w*)(@github.com)/) == -1){
-			trace("GitProxy.request(req) ssh request attempting...");	
 				attemptRequest();
 			}	else{
-				attemptAccountLookup(_request.url);
+		// if we get an https://username@github request, always prepend the user's pass in the url //
+				checkUserIsLoggedIn();
 			}
 		}
 		
 		private function attemptRequest():void
 		{
-			super.call(Vector.<String>([_request.method, _request.url, _request.args.join(', ')]));
+			trace("GitProxy.attemptRequest()", _request.method, _request.url);
+			super.call(Vector.<String>([_request.method, _request.url, _request.args]));
 		}
 
-		override protected function onProcessComplete(e:NativeProcessEvent):void 
+		override protected function onProcessComplete(e:NativeProcessEvent):void
 		{
-			trace("GitProxy.onProcessComplete(e)", e.data.method, e.data.result);
 			super.onProcessComplete(e);
 			var f:String = RemoteFailure.detectFailure(e.data.result);
 			if (f){
@@ -52,7 +60,6 @@ package model.proxies.remote.repo {
 		
 		private function onProcessFailure(f:String):void 
 		{
-			trace("GitProxy.onProcessFailure(f)", f);
 			switch(f){
 				case RemoteFailure.AUTHENTICATION	:
 					onAuthenticationFailure();
@@ -70,42 +77,43 @@ package model.proxies.remote.repo {
 		
 		private function onAuthenticationFailure():void 
 		{ 
-			trace("GitProxy.onAuthenticationFailure()");
-			inspectURL(_request.url);
-		}
-
-		private function inspectURL(u:String):void
-		{ 
-			if (hasString(u, 'git://github.com') || hasString(u, 'https://github.com')){
+			if (hasString(_request.url, 'git://github.com') || hasString(_request.url, 'https://github.com')){
 		// a read-only request has failed //	
 				dispatchError(ErrEvent.UNRESOLVED_HOST);
-			}	else if (hasString(u, 'git@github.com')){
-				trace("GitProxy.inspectURL(u), an ssh request failed, attempting lookup..");
-				attemptAccountLookup(u);
+			}	else if (hasString(_request.url, 'git@github.com') && !_httpsAttempted){
+				trace("GitProxy.onAuthenticationFailure() ssh failure, checking if logged in");
+		// user doesn't have an ssh key setup, retry over https //		
+				checkUserIsLoggedIn();
 			}	else{
-				onPermissionsFailure(u);
+		// a beanstalk ssh request or a private github https request has failed //		
+				dispatchPermissionsFailure();
 			}
 		}
 
-		private function attemptAccountLookup(u:String):void
-		{
-		// only github supports requests over https //	
-			var an:String = Repository.getAccountName(u);
-			trace("GitProxy.attemptAccountLookup(u) -- acct name", an);
-			var ha:HostingAccount = Hosts.github.getAccountByProp('acctName', an);
-			if (ha){
-				_request.url = Repository.buildHttpsURL(ha.user, ha.pass, an, u.substr(u.lastIndexOf('/') + 1));
-				trace('found user -- request: ' + (_request.url));
-				attemptRequest();
+		private function checkUserIsLoggedIn():void
+		{	
+			if (Hosts.github.loggedIn){
+				prependHttpsCredentials();
 			}	else{
-				onPermissionsFailure(u);		
+				dispatchPermissionsFailure();
 			}
 		}
-
-		private function onPermissionsFailure(u:String):void
+		
+		private function prependHttpsCredentials():void
 		{
+			var u:String = _request.url;
+			var n:String = Repository.getAccountName(u);
+			var a:HostingAccount = Hosts.github.loggedIn;
+			_request.url = Repository.buildHttpsURL(a.user, a.pass, n, u.substr(u.lastIndexOf('/') + 1));
+			_httpsAttempted = true;
+			attemptRequest();
+		}
+		
+		private function dispatchPermissionsFailure():void
+		{
+			trace("GitProxy.dispatchPermissionsFailure()", _request.method, _request.url);
 			AppModel.hideLoader();
-			AppModel.dispatch(AppEvent.PERMISSIONS_FAILURE, u);
+			AppModel.dispatch(AppEvent.PERMISSIONS_FAILURE, _request.url);
 			AppModel.engine.addEventListener(AppEvent.RETRY_REMOTE_REQUEST, onRetryRequest);
 		}
 		
@@ -116,7 +124,7 @@ package model.proxies.remote.repo {
 				attemptRequest();
 			}
 			AppModel.engine.removeEventListener(AppEvent.RETRY_REMOTE_REQUEST, onRetryRequest);				
-		}		
+		}	
 		
 		private static function hasString(s1:String, s2:String):Boolean { return s1.indexOf(s2) != -1; }		
 		

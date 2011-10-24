@@ -4,11 +4,12 @@ package model.proxies.remote.repo {
 
 		public var method	:String;
 		public var url		:String;
-		public var args		:Array;
+		public var args		:String = '';
 
-		public function GitRequest(m:String, u:String, a:Array)
+		public function GitRequest(m:String, u:String, a:Array = null)
 		{
-			method = m; url	= u; args = a;
+			method = m; url	= u;
+			if (a) args = a.join(', ');
 		}
 		
 	}
