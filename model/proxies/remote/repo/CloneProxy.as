@@ -18,7 +18,6 @@ package model.proxies.remote.repo {
 		private static var _clonedFile		:File;
 		private static var _savePath		:File;
 		private static var _bookmark		:Bookmark;
-		private static var _repository		:Repository;
 
 		public function clone(url:String, dest:File):void
 		{
@@ -122,7 +121,7 @@ package model.proxies.remote.repo {
 				autosave	:	60 
 			};
 			_bookmark = new Bookmark(o);
-			stripPassFromRemoteURL();
+			addTrackingBranches();
 		}
 		
 		private function addFolderBookmark():void
@@ -135,31 +134,10 @@ package model.proxies.remote.repo {
 				autosave	:	60 
 			};
 			_bookmark = new Bookmark(o);
-			stripPassFromRemoteURL();
+			addTrackingBranches();
 		}
 		
-		private function stripPassFromRemoteURL():void
-		{
-			trace('_cloneURL: ' + (_cloneURL));
-			var b:Boolean = false;
-			var u:String = _cloneURL;
-			if (u.search(/(https:\/\/)(\w*)(:)/) != -1){
-				b = true; u = u.substr(8); // strip off https://
-				var a:String = u.substr(0, u.indexOf(':'));
-				u = 'https://' + a + u.substr(u.indexOf('@'));
-			}
-			trace("CloneProxy.stripPassFromRemoteURL()", u);
-			_repository = new Repository('origin', u);
-			b ? editRemoteURL() : onRemoteEdited();
-		}	
-		
-		private function editRemoteURL():void
-		{
-			AppModel.proxies.editor.editRemote(_bookmark, _repository);
-			AppModel.engine.addEventListener(AppEvent.REMOTE_EDITED, onRemoteEdited);
-		}
-		
-		private function onRemoteEdited():void
+		private function addTrackingBranches():void
 		{
 			AppModel.proxies.editor.addTrackingBranches(_bookmark);
 			AppModel.engine.addEventListener(AppEvent.TRACKING_BRANCHES_SET, onBranchesSet);
@@ -169,8 +147,23 @@ package model.proxies.remote.repo {
 		{
 			AppModel.engine.addBookmark(_bookmark);
 			AppModel.dispatch(AppEvent.CLONE_COMPLETE);
-			AppModel.engine.removeEventListener(AppEvent.REMOTE_EDITED, onRemoteEdited);
 		}
+		
+//		private function stripPassFromRemoteURL():void
+//		{
+//			trace('_cloneURL: ' + (_cloneURL));
+//			var b:Boolean = false;
+//			var u:String = _cloneURL;
+//			if (u.search(/(https:\/\/)(\w*)(:)/) != -1){
+//				b = true; u = u.substr(8); // strip off https://
+//				var a:String = u.substr(0, u.indexOf(':'));
+//				u = 'https://' + a + u.substr(u.indexOf('@'));
+//			}
+//			trace("CloneProxy.stripPassFromRemoteURL()", u);
+//			_repository = new Repository('origin', u);
+//			b ? editRemoteURL() : onRemoteEdited();
+//		}			
+		
 
 	}
 	

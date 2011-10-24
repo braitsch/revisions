@@ -69,6 +69,8 @@ package events {
 		public static const HISTORY_REVERTED			:String = "HISTORY_REVERTED";
 		public static const TRACKING_BRANCHES_SET:String = "TRACKING_BRANCHES_SET";
 		public static const COPY_COMPLETE:String = "LOCAL_SAVE_COMPLETE";
+		public static const REMOTE_REPAIRED:String = "REMOTE_REPAIRED";
+		public static const REQUEST_CANCELLED:String = "REQUEST_CANCELLED";
 	
 		
 		public var data:Object;

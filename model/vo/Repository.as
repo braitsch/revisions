@@ -89,14 +89,28 @@ package model.vo {
 		{
 			if (u.indexOf('git@github.com') != -1 ){
 				return u.substring(u.indexOf(':') + 1, u.indexOf('/'));
-			}	else if (u.indexOf('https://') != -1 && u.indexOf('@github.com') != -1 ){
-				return u.substring(u.indexOf('/') + 2, u.indexOf('@'));
+			}	else if (u.indexOf('github.com') != -1 ){
+				u = u.substring(0, u.lastIndexOf('/'));
+				return u.substr(u.lastIndexOf('/') + 1);
 			}	else if (u.indexOf('.beanstalkapp.com:/') != -1){
 				return u.substring(u.indexOf('@') + 1, u.indexOf('.'));				
 			}	else{
 				return 'unable to detect account name';		
 			}
-		}
+		}	
+		
+//		public static function getAccountName(u:String):String
+//		{
+//			if (u.indexOf('git@github.com') != -1 ){
+//				return u.substring(u.indexOf(':') + 1, u.indexOf('/'));
+//			}	else if (u.indexOf('https://') != -1 && u.indexOf('@github.com') != -1 ){
+//				return u.substring(u.indexOf('/') + 2, u.indexOf('@'));
+//			}	else if (u.indexOf('.beanstalkapp.com:/') != -1){
+//				return u.substring(u.indexOf('@') + 1, u.indexOf('.'));				
+//			}	else{
+//				return 'unable to detect account name';		
+//			}
+//		}
 		
 		public static function getRepositoryName(u:String):String
 		{
@@ -114,11 +128,6 @@ package model.vo {
 			}
 		}
 		
-		public static function buildHttpsURL(u:String, p:String, a:String, r:String):String
-		{
-			return 'https://' + u + ':' + p + '@github.com/' + a + '/' + r;
-		}
-
 	}
 	
 }

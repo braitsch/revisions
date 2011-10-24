@@ -3,9 +3,6 @@ package view.windows.modals.login {
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
-	import model.remote.HostingAccount;
-	import model.remote.Hosts;
-	import model.vo.Repository;
 	import view.type.TextHeading;
 	import view.ui.Form;
 	import view.ui.ModalCheckbox;
@@ -14,10 +11,6 @@ package view.windows.modals.login {
 
 	public class PermissionsFailure extends ParentWindow {
 
-		private static var _url			:String;
-		private static var _acctType	:String;
-		private static var _acctName	:String;
-		private static var _repoName	:String;
 		private static var _form		:Form = new Form(530);
 		private static var _check		:ModalCheckbox = new ModalCheckbox(true);
 		private static var _heading		:TextHeading = new TextHeading();	
@@ -43,73 +36,23 @@ package view.windows.modals.login {
 			addEventListener(UIEvent.NO_BUTTON, onNoButton);
 		}
 		
-		public function set request(u:String):void
+		public function set request(m:String):void
 		{
-			_url = u;
-			_acctType = Repository.getAccountType(u);
-			_acctName = Repository.getAccountName(u);
-			_repoName = Repository.getRepositoryName(u);
-			setHeading();
-		}
-
-		private function setHeading():void
-		{
-			var m:String;
-			if (_acctType == HostingAccount.GITHUB && !Hosts.github.loggedIn){
-				m = 'Please login to your GitHub account so I can complete your request.';
-			}	else if (_acctType == HostingAccount.BEANSTALK && !Hosts.beanstalk.loggedIn){
-				m = 'Please login to your Beanstalk account so I can complete your request.';
-			}	else{
-				m = 'I\'m sorry, '+_acctType+' denied us access to the account you are trying to connect to. ';
-				m+= 'Please enter your username & password to try again :';
-			}
 			_heading.text = m;
 		}
-		
+
 		private function onOkButton(e:Event):void
 		{
-			trace("PermissionsFailure.onOkButton(e)");
 			if (_form.validate()) {
-				trace('validated', _acctType);
-				if (_acctType == HostingAccount.GITHUB){
-					retryRequestOverHttps();
-				}	else if (_acctType == HostingAccount.BEANSTALK){
-					addKeyToBeanstalkAcct();
-				}
 				dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
+				AppModel.dispatch(AppEvent.RETRY_REMOTE_REQUEST, {user:_form.getField(0), pass:_form.getField(1), save:_check.selected});
 			}
 		}
 
-		private function addKeyToBeanstalkAcct():void
-		{
-			var ha:HostingAccount = makeAcctObj(HostingAccount.BEANSTALK);
-			Hosts.beanstalk.addKeyToAccount(ha, _check.selected);
-			Hosts.beanstalk.key.addEventListener(AppEvent.REMOTE_KEY_READY, onKeyAddedToBeanstalk);
-		}
-
-		private function onKeyAddedToBeanstalk(e:AppEvent):void
-		{
-			AppModel.dispatch(AppEvent.RETRY_REMOTE_REQUEST, {u:_url});
-			Hosts.beanstalk.key.removeEventListener(AppEvent.REMOTE_KEY_READY, onKeyAddedToBeanstalk);
-		}
-
-		private function retryRequestOverHttps():void
-		{
-			var ha:HostingAccount = _check.selected ? makeAcctObj(HostingAccount.GITHUB) : null;
-			_url = Repository.buildHttpsURL(_form.getField(0), _form.getField(1) , _acctName , _repoName);
-			trace("PermissionsFailure.retryRequestOverHttps()", _url);
-			AppModel.dispatch(AppEvent.RETRY_REMOTE_REQUEST, {u:_url, a:ha});
-		}
-		
-		private function makeAcctObj(t:String):HostingAccount
-		{
-			return new HostingAccount({type:t, acct:_acctName, user:_form.getField(0), pass:_form.getField(1)});			
-		}
-		
 		private function onNoButton(e:UIEvent):void
 		{
+			AppModel.dispatch(AppEvent.RETRY_REMOTE_REQUEST);
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-			AppModel.dispatch(AppEvent.RETRY_REMOTE_REQUEST, {u:null});
 		}
 		
 	}

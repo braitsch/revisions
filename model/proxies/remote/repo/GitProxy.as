@@ -3,25 +3,22 @@ package model.proxies.remote.repo {
 	import events.AppEvent;
 	import events.ErrEvent;
 	import events.NativeProcessEvent;
-	import model.AppModel;
 	import model.proxies.remote.RemoteFailure;
 	import model.proxies.remote.RemoteProxy;
-	import model.remote.HostingAccount;
-	import model.remote.Hosts;
-	import model.vo.Repository;
 
 	public class GitProxy extends RemoteProxy {
 		
 		private static var _request			:GitRequest;
-		private static var _account			:HostingAccount;
 		private static var _working			:Boolean;		
-		private static var _httpsAttempted	:Boolean;
+		private static var _repairProxy		:RepairProxy = new RepairProxy();
 	
 		public function GitProxy()
 		{
 			super.executable = 'BkmkRemote.sh';
+			_repairProxy.addEventListener(AppEvent.REMOTE_REPAIRED, onRemoteRepaired);
+			_repairProxy.addEventListener(AppEvent.REQUEST_CANCELLED, onRequestCancelled);
 		}
-		
+
 		protected function get working():Boolean
 		{
 			return _working;
@@ -29,13 +26,13 @@ package model.proxies.remote.repo {
 		
 		protected function set request(req:GitRequest):void 
 		{ 
-			_request = req; _httpsAttempted = false;
+			_request = req;
 		// by default always attempt ssh request in the event user has keys setup //
 			if (_request.url.search(/(https:\/\/)(\w*)(@github.com)/) == -1){
 				attemptRequest();
 			}	else{
 		// if we get an https://username@github request, always prepend the user's pass in the url //
-				checkUserIsLoggedIn();
+				_repairProxy.request = req;
 			}
 		}
 		
@@ -53,9 +50,7 @@ package model.proxies.remote.repo {
 				onProcessFailure(f);
 			}	else{
 				onProcessSuccess(e.data.method);
-				if (_account) Hosts.github.writeAcctToDatabase(_account);
 			}
-			_account = null;
 		}
 		
 		private function onProcessFailure(f:String):void 
@@ -80,51 +75,25 @@ package model.proxies.remote.repo {
 			if (hasString(_request.url, 'git://github.com') || hasString(_request.url, 'https://github.com')){
 		// a read-only request has failed //	
 				dispatchError(ErrEvent.UNRESOLVED_HOST);
-			}	else if (hasString(_request.url, 'git@github.com') && !_httpsAttempted){
-				trace("GitProxy.onAuthenticationFailure() ssh failure, checking if logged in");
+			}	else if (hasString(_request.url, 'git@github.com')){
 		// user doesn't have an ssh key setup, retry over https //		
-				checkUserIsLoggedIn();
+				_repairProxy.request = _request;
 			}	else{
 		// a beanstalk ssh request or a private github https request has failed //		
-				dispatchPermissionsFailure();
-			}
-		}
-
-		private function checkUserIsLoggedIn():void
-		{	
-			if (Hosts.github.loggedIn){
-				prependHttpsCredentials();
-			}	else{
-				dispatchPermissionsFailure();
+				_repairProxy.request = _request;
 			}
 		}
 		
-		private function prependHttpsCredentials():void
+		private function onRemoteRepaired(e:AppEvent):void
 		{
-			var u:String = _request.url;
-			var n:String = Repository.getAccountName(u);
-			var a:HostingAccount = Hosts.github.loggedIn;
-			_request.url = Repository.buildHttpsURL(a.user, a.pass, n, u.substr(u.lastIndexOf('/') + 1));
-			_httpsAttempted = true;
-			attemptRequest();
+			onProcessSuccess(e.data.method);
 		}
 		
-		private function dispatchPermissionsFailure():void
+		private function onRequestCancelled(e:AppEvent):void
 		{
-			trace("GitProxy.dispatchPermissionsFailure()", _request.method, _request.url);
-			AppModel.hideLoader();
-			AppModel.dispatch(AppEvent.PERMISSIONS_FAILURE, _request.url);
-			AppModel.engine.addEventListener(AppEvent.RETRY_REMOTE_REQUEST, onRetryRequest);
-		}
-		
-		private function onRetryRequest(e:AppEvent):void
-		{
-			if (e.data.u != null) {
-				_request.url = e.data.u; _account = e.data.a;
-				attemptRequest();
-			}
-			AppModel.engine.removeEventListener(AppEvent.RETRY_REMOTE_REQUEST, onRetryRequest);				
-		}	
+			_working = false;
+			trace("GitProxy.onRequestCancelled(e)");
+		}			
 		
 		private static function hasString(s1:String, s2:String):Boolean { return s1.indexOf(s2) != -1; }		
 		
