@@ -73,7 +73,6 @@ package model.db {
 		
 		public function addAccount(a:HostingAccount):void
 		{
-			trace("AppDatabase.addAccount(a)", a.acctType, a.user);
 			_addAccount = new Vector.<SQLStatement>();
 			_addAccount.push(AppSQLQuery.ADD_ACCOUNT(a));
 			super.execute(_addAccount, true);
@@ -81,7 +80,6 @@ package model.db {
 		
 		public function editAccount(a:HostingAccount):void
 		{
-			trace("AppDatabase.editAccount(a)", a.acctType, a.user);
 			_editAccount = new Vector.<SQLStatement>();
 			_editAccount.push(AppSQLQuery.EDIT_ACCOUNT(a));
 			super.execute(_editAccount, true);						
@@ -125,11 +123,14 @@ package model.db {
 					dispatchEvent(new DataBaseEvent(DataBaseEvent.RECORD_DELETED, _bkmks));
 				break;
 				case _addAccount :
-			//		trace("AppDatabase.onTransactionComplete(e) -- new account added!!");	
+					trace("AppDatabase.onTransactionComplete(e) -- new account added!!");	
 				break;	
 				case _editAccount :
-					trace("AppDatabase.onTransactionComplete(e) -- account edited !!");	
-				break;						
+					trace("AppDatabase.onTransactionComplete(e) -- account updated !!");	
+				break;
+				case _delAccount :
+					trace("AppDatabase.onTransactionComplete(e) -- failed account deleted !!");	
+				break;										
 				case _setSSHKeyId :
 					trace("AppDatabase.onTransactionComplete(e) -- primary account set !!");	
 				break;									

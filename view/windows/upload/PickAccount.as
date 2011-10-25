@@ -29,9 +29,9 @@ package view.windows.upload {
 		{
 			_service = s;
 			if (s == HostingAccount.GITHUB){
-				Hosts.github.account ? showChooser(Hosts.github.account) : showLoginWindow();
+				Hosts.github.loggedIn ? showChooser(Hosts.github.account) : showLoginWindow();
 			}	else if (s == HostingAccount.BEANSTALK){
-				Hosts.beanstalk.account ? showChooser(Hosts.beanstalk.account) : showLoginWindow();
+				Hosts.beanstalk.loggedIn ? showChooser(Hosts.beanstalk.account) : showLoginWindow();
 			}
 		}
 		

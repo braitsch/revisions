@@ -3,7 +3,6 @@ package model.proxies.remote.acct {
 	import events.AppEvent;
 	import events.ErrEvent;
 	import model.remote.HostingAccount;
-	import model.remote.Hosts;
 	import model.vo.BeanstalkRepo;
 	import model.vo.Collaborator;
 	import model.vo.Permission;
@@ -16,6 +15,7 @@ package model.proxies.remote.acct {
 		private static var _permission	:Permission;
 		private static var _baseURL		:String;
 		private static var _account		:HostingAccount;
+		private static var _silentLogin	:Boolean;
 
 		public function BeanstalkApi()
 		{
@@ -24,9 +24,9 @@ package model.proxies.remote.acct {
 
 	// public methods //
 
-		override public function login(ha:HostingAccount):void
+		override public function login(ha:HostingAccount, silent:Boolean):void
 		{
-			_account = ha;
+			_account = ha; _silentLogin = silent;
 			_baseURL = 'https://'+_account.user+':'+_account.pass+'@'+_account.acctName+'.beanstalkapp.com/api';
 			super.loginX(_baseURL + '/users.xml');
 		}
@@ -95,7 +95,7 @@ package model.proxies.remote.acct {
 				}
 			}
 			_account.repositories = v;
-			Hosts.beanstalk.account = _account;
+			dispatchEvent(new AppEvent(AppEvent.LOGIN_SUCCESS, _account));
 		}
 		
 		override protected function onRepositoryCreated(s:String):void
@@ -200,10 +200,10 @@ package model.proxies.remote.acct {
 		private function checkForErrors(s:String):Boolean
 		{
 			if (s.indexOf('<html>') != -1){
-				dispatchError(ErrEvent.LOGIN_FAILURE);
+				onLoginFailure();
 				return true;
 			}	else if (s.indexOf('Could\'t authenticate you') != -1){
-				dispatchError(ErrEvent.LOGIN_FAILURE);
+				onLoginFailure();
 				return true;
 			}	else if (s.indexOf('API is disabled for this account') != -1){
 				dispatchError(ErrEvent.API_DISABLED);
@@ -214,7 +214,16 @@ package model.proxies.remote.acct {
 			}	else{
 				return false;
 			}
-		}	
+		}
+		
+		private function onLoginFailure():void
+		{
+			if (_silentLogin){
+				dispatchEvent(new AppEvent(AppEvent.LOGIN_FAILURE));
+			}	else{
+				dispatchError(ErrEvent.LOGIN_FAILURE);	
+			}
+		}
 		
 		private function getRepoObj(n:String):String
 		{

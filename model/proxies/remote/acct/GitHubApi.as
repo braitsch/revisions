@@ -1,18 +1,18 @@
 package model.proxies.remote.acct {
 
-	import model.vo.Repository;
-	import model.vo.Permission;
 	import events.AppEvent;
 	import events.ErrEvent;
 	import model.remote.HostingAccount;
-	import model.remote.Hosts;
 	import model.vo.Collaborator;
 	import model.vo.GitHubRepo;
+	import model.vo.Permission;
+	import model.vo.Repository;
 
 	public class GitHubApi extends ApiProxy {
 		
 		private static var _baseURL		:String;
 		private static var _account		:HostingAccount;		
+		private static var _silentLogin	:Boolean;
 
 		public function GitHubApi()
 		{
@@ -21,9 +21,9 @@ package model.proxies.remote.acct {
 
 	// public methods //
 
-		override public function login(ha:HostingAccount):void
+		override public function login(ha:HostingAccount, silent:Boolean):void
 		{
-			_account = ha;
+			_account = ha; _silentLogin = silent;
 			_baseURL = 'https://'+_account.user+':'+_account.pass+'@api.github.com';
 			super.loginX(_baseURL + '/users/'+_account.user);
 		}
@@ -57,7 +57,7 @@ package model.proxies.remote.acct {
 				_account.loginData = o;
 				super.getRepositories(_baseURL + '/user/repos');
 			}	else{
-				dispatchError(ErrEvent.LOGIN_FAILURE);
+				onLoginFailure();
 			}
 		}
 		
@@ -68,7 +68,7 @@ package model.proxies.remote.acct {
 				var v:Vector.<Repository> = new Vector.<Repository>();
 				for (var i:int = 0; i < o.length; i++) v.push(new GitHubRepo(o[i]));
 				_account.repositories = v;
-				Hosts.github.account = _account;				
+				dispatchEvent(new AppEvent(AppEvent.LOGIN_SUCCESS, _account));
 			}	else{
 				handleJSONError(o);
 			}
@@ -131,7 +131,7 @@ package model.proxies.remote.acct {
 		{
 			switch(o.message){
 				case 'Bad Credentials' :
-					dispatchError(ErrEvent.LOGIN_FAILURE);
+					onLoginFailure();
 				break;
 				case 'name can\'t be private. You are over your quota.' :
 					dispatchError(ErrEvent.OVER_QUOTA);
@@ -147,6 +147,15 @@ package model.proxies.remote.acct {
 				dispatchError(ErrEvent.REPOSITORY_TAKEN);	
 			}
 		}
+		
+		private function onLoginFailure():void
+		{
+			if (_silentLogin){
+				dispatchEvent(new AppEvent(AppEvent.LOGIN_FAILURE));
+			}	else{
+				dispatchError(ErrEvent.LOGIN_FAILURE);	
+			}
+		}		
 		
 		private function getRepoObj(n:String, d:String, p:Boolean):String
 		{

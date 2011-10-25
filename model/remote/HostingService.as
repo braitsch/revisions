@@ -24,23 +24,14 @@ package model.remote {
 		public function HostingService(o:IHostingService):void
 		{
 			_model = o;
+			_model.api.addEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);
+			_model.api.addEventListener(AppEvent.LOGIN_FAILURE, onLoginFailure);
 			_model.key.addEventListener(AppEvent.REMOTE_KEY_READY, onRemoteKeyReady);
 		}
-		
-		public function set savedAccount(a:HostingAccount):void
-		{
-			_account = a;	
-			trace("HostingService.savedAccount(a)", a.acctType, a.user);
-		}
-		
+
 		public function set account(a:HostingAccount):void
 		{
-			if (_model.type == HostingAccount.BEANSTALK) {
-				_model.key.checkKey(a);
-			}	else{
-				writeAcctToDatabase(a);
-			}
-			_loggedIn = true;
+			_account = a;	
 		}
 		
 		public function get account():HostingAccount 
@@ -55,7 +46,12 @@ package model.remote {
 		
 		public function attemptLogin(a:HostingAccount):void
 		{
-			_model.api.login(a);
+			_model.api.login(a, false);
+		}
+		
+		public function attemptAutoLogin():void
+		{
+			_model.api.login(_account, true);	
 		}
 		
 		public function addKeyToAccount(a:HostingAccount):void
@@ -79,6 +75,21 @@ package model.remote {
 			AppModel.hideLoader();
 			AppModel.dispatch(AppEvent.LOGIN_SUCCESS);			
 		}
+		
+		private function onLoginSuccess(e:AppEvent):void
+		{
+			if (_model.type == HostingAccount.BEANSTALK) {
+				_model.key.checkKey(e.data as HostingAccount);
+			}	else{
+				writeAcctToDatabase(e.data as HostingAccount);
+			}
+			_loggedIn = true;
+		}
+		
+		private function onLoginFailure(e:AppEvent):void
+		{
+			AppModel.database.deleteAccount(_account); _account == null;			
+		}				
 		
 		private function onRemoteKeyReady(e:AppEvent):void 
 		{

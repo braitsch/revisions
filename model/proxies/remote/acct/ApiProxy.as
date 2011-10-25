@@ -9,7 +9,7 @@ package model.proxies.remote.acct {
 
 	public class ApiProxy extends CurlProxy {
 
-		public function login(ra:HostingAccount):void { }
+		public function login(ra:HostingAccount, silent:Boolean):void { }
 		protected function loginX(url:String):void
 		{
 			super.call(Vector.<String>([BashMethods.LOGIN, url]));

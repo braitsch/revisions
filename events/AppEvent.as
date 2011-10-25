@@ -70,7 +70,8 @@ package events {
 		public static const TRACKING_BRANCHES_SET		:String = "TRACKING_BRANCHES_SET";
 		public static const COPY_COMPLETE				:String = "COPY_COMPLETE";
 		public static const REMOTE_REPAIRED				:String = "REMOTE_REPAIRED";
-		public static const REQUEST_CANCELLED			:String = "REQUEST_CANCELLED";
+		public static const REQUEST_CANCELLED:String = "REQUEST_CANCELLED";
+		public static const LOGIN_FAILURE:String = "LOGIN_FAILURE";
 	
 		
 		public var data:Object;

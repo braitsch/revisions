@@ -79,7 +79,7 @@ package model.db {
 		public static function DEL_ACCOUNT(a:HostingAccount):SQLStatement
 		{
 			var s:SQLStatement = new SQLStatement();
-			s.text = "DELETE FROM accounts WHERE type='"+a.acctType+"' AND user='"+a.user+"'";
+			s.text = "DELETE FROM accounts WHERE type='"+a.acctType+"'";
 			return s;				
 		}
 		
