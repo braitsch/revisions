@@ -59,7 +59,7 @@ package model.proxies.remote {
 		protected function onProcessComplete(e:NativeProcessEvent):void 
 		{ 
 			stopTimer();
-		//	trace("RemoteProxy.onProcessComplete(e)", e.data.method, e.data.result);
+			trace("RemoteProxy.onProcessComplete(e)", e.data.method, e.data.result);
 		}
 		
 		private function startTimer(n:uint):void
