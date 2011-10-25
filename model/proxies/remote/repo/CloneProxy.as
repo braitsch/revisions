@@ -1,5 +1,6 @@
 package model.proxies.remote.repo {
 
+	import events.NativeProcessEvent;
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
@@ -35,13 +36,14 @@ package model.proxies.remote.repo {
 			super.request = new GitRequest(BashMethods.CLONE, new Repository('origin', _cloneURL), [_savePath.nativePath]);
 		}
 		
-		override protected function onProcessSuccess(m:String):void
+		override protected function onProcessSuccess(e:NativeProcessEvent):void
 		{
-			switch(m) {
+			switch(e.data.method) {
 				case BashMethods.CLONE :
 					onCloneComplete();
 				break;
 			}
+			super.onProcessSuccess(e);
 		}
 
 		private function onCloneComplete():void

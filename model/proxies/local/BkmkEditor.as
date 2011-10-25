@@ -117,14 +117,14 @@ package model.proxies.local {
 		{
 			_repository = r;
 			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
-			super.call(Vector.<String>([BashMethods.ADD_REMOTE, _repository.name, _repository.url, AppModel.branch.name]));			
+			super.call(Vector.<String>([BashMethods.ADD_REMOTE, _repository.name, _repository.url, AppModel.branch.name]));
 		}
 		
-		public function editRemote(b:Bookmark, r:Repository):void
+		public function editRemote(r:Repository):void
 		{
-			_repository = r; _bookmark = b;
-			super.appendArgs([_bookmark.gitdir, _bookmark.worktree]);
-			super.call(Vector.<String>([BashMethods.ADD_REMOTE, _repository.name, _repository.url]));			
+			_repository = r;
+			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
+			super.call(Vector.<String>([BashMethods.EDIT_REMOTE, _repository.name, _repository.url, AppModel.branch.name]));
 		}		
 		
 		public function delRemote(r:Repository):void

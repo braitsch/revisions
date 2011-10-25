@@ -1,5 +1,6 @@
 package model.proxies.remote.repo {
 
+	import events.NativeProcessEvent;
 	import events.AppEvent;
 	import model.AppModel;
 	import model.remote.HostingAccount;
@@ -31,13 +32,11 @@ package model.proxies.remote.repo {
 			super.request = new GitRequest(BashMethods.GET_REMOTE_FILES, AppModel.repository, a);
 		}
 		
-		override protected function onProcessSuccess(m:String):void 
+		override protected function onProcessSuccess(e:NativeProcessEvent):void 
 		{
-			switch(m){
+			switch(e.data.method){
 				case BashMethods.PUSH_BRANCH :
-					AppModel.hideLoader();
-					AppModel.branch.remoteStatus = 0;
-					AppModel.dispatch(AppEvent.BRANCH_SYNCED);
+					onBranchPushed();
 				break;
 				case BashMethods.PUSH_AND_TRACK :
 					AppModel.hideLoader();
@@ -46,6 +45,14 @@ package model.proxies.remote.repo {
 				case BashMethods.GET_REMOTE_FILES :
 				break;
 			}
+			super.onProcessSuccess(e);
+		}
+
+		private function onBranchPushed():void
+		{
+			AppModel.hideLoader();
+			AppModel.branch.remoteStatus = 0;
+			AppModel.dispatch(AppEvent.BRANCH_SYNCED);			
 		}
 		
 		private function isLoggedIn():Boolean
