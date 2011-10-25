@@ -32,7 +32,7 @@ package model.proxies.remote.repo {
 
 		private function initCloneRequest():void
 		{
-			super.request = new GitRequest(BashMethods.CLONE, _cloneURL, [_savePath.nativePath]);
+			super.request = new GitRequest(BashMethods.CLONE, new Repository('origin', _cloneURL), [_savePath.nativePath]);
 		}
 		
 		override protected function onProcessSuccess(m:String):void

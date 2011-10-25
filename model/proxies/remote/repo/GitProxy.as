@@ -28,7 +28,7 @@ package model.proxies.remote.repo {
 		{ 
 			_request = req;
 		// by default always attempt ssh request in the event user has keys setup //
-			if (_request.url.search(/(https:\/\/)(\w*)(@github.com)/) == -1){
+			if (_request.remote.url.search(/(https:\/\/)(\w*)(@github.com)/) == -1){
 				attemptRequest();
 			}	else{
 		// if we get an https://username@github request, always prepend the user's pass in the url //
@@ -38,12 +38,13 @@ package model.proxies.remote.repo {
 		
 		private function attemptRequest():void
 		{
-			trace("GitProxy.attemptRequest()", _request.method, _request.url);
-			super.call(Vector.<String>([_request.method, _request.url, _request.args]));
+			super.appendArgs(_request.args);
+			super.call(Vector.<String>([_request.method, _request.remote.url]));
 		}
 
 		override protected function onProcessComplete(e:NativeProcessEvent):void
 		{
+			trace("GitProxy.onProcessComplete(e)", e.data.method, e.data.result);
 			super.onProcessComplete(e);
 			var f:String = RemoteFailure.detectFailure(e.data.result);
 			if (f){
@@ -59,6 +60,9 @@ package model.proxies.remote.repo {
 				case RemoteFailure.AUTHENTICATION	:
 					onAuthenticationFailure();
 				break;
+				case RemoteFailure.USER_FORBIDDEN	:
+					dispatchError(ErrEvent.USER_FORBIDDEN);
+				break;				
 				case RemoteFailure.MALFORMED_URL	:
 					dispatchError(ErrEvent.UNRESOLVED_HOST);
 				break;
@@ -72,10 +76,10 @@ package model.proxies.remote.repo {
 		
 		private function onAuthenticationFailure():void 
 		{ 
-			if (hasString(_request.url, 'git://github.com') || hasString(_request.url, 'https://github.com')){
+			if (hasString(_request.remote.url, 'git://github.com') || hasString(_request.remote.url, 'https://github.com')){
 		// a read-only request has failed //	
 				dispatchError(ErrEvent.UNRESOLVED_HOST);
-			}	else if (hasString(_request.url, 'git@github.com')){
+			}	else if (hasString(_request.remote.url, 'git@github.com')){
 		// user doesn't have an ssh key setup, retry over https //		
 				_repairProxy.request = _request;
 			}	else{

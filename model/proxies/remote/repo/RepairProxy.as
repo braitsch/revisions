@@ -1,22 +1,24 @@
 package model.proxies.remote.repo {
 
-	import model.remote.HostingAccount;
 	import events.AppEvent;
+	import events.ErrEvent;
 	import events.NativeProcessEvent;
 	import model.AppModel;
 	import model.proxies.remote.RemoteFailure;
 	import model.proxies.remote.RemoteProxy;
+	import model.remote.HostingAccount;
 	import model.remote.Hosts;
-	import model.vo.Repository;
 
 	public class RepairProxy extends RemoteProxy {
 
 		private var _request	:GitRequest;
 		private var _acctName	:String;
 		private var _repoName	:String;
+		private var _acctType	:String;
 		private var _userName	:String;
 		private var _userPass	:String;
 		private var _saveAcct	:Boolean;
+		private var _attemptNum	:uint;
 
 		public function RepairProxy()
 		{
@@ -25,14 +27,15 @@ package model.proxies.remote.repo {
 		
 		public function set request(req:GitRequest):void
 		{
-			_request = req; inspectRequest();
+			_attemptNum = 0; _request = req; inspectRequest();
 		}
 		
 		private function inspectRequest():void
 		{
-			_acctName = Repository.getAccountName(_request.url);
-			_repoName = _request.url.substr(_request.url.lastIndexOf('/') + 1);
-			if (_request.type == HostingAccount.BEANSTALK){
+			_acctName = _request.remote.acctName;
+			_repoName = _request.remote.repoName;
+			_acctType = _request.remote.acctType;
+			if (_acctType == HostingAccount.BEANSTALK){
 				promptForPassword();
 			}	else{
 				handleGitHubFailure();
@@ -60,12 +63,14 @@ package model.proxies.remote.repo {
 		private function getPermissionsMessage():String
 		{
 			var m:String;
-			if (_request.type == HostingAccount.GITHUB && !Hosts.github.loggedIn){
+			if (_attemptNum > 0){
+				m = 'Invalid username and / or password. Please try again.';
+			}	else if (_acctType == HostingAccount.GITHUB && !Hosts.github.loggedIn){
 				m = 'Please login to your GitHub account so I can complete your request.';
-			}	else if (_request.type == HostingAccount.BEANSTALK && !Hosts.beanstalk.loggedIn){
+			}	else if (_acctType == HostingAccount.BEANSTALK && !Hosts.beanstalk.loggedIn){
 				m = 'Please login to your Beanstalk account so I can complete your request.';
 			}	else{
-				m = 'I\'m sorry, '+_request.type+' denied us access to the account you are trying to connect to. ';
+				m = 'I\'m sorry, '+_acctType +' denied us access to the account you are trying to connect to. ';
 				m+= 'Please enter your username & password to try again :';
 			}
 			return m;
@@ -77,7 +82,7 @@ package model.proxies.remote.repo {
 				_userName = e.data.user;
 				_userPass = e.data.pass;
 				_saveAcct = e.data.save;
-				if (_request.type == HostingAccount.GITHUB){
+				if (_acctType == HostingAccount.GITHUB){
 					attemptHttpsRequest();
 				}	else{
 					addKeyToBeanstalkAcct();	
@@ -92,9 +97,13 @@ package model.proxies.remote.repo {
 
 		private function attemptHttpsRequest():void
 		{
-			_request.url = 'https://' + _userName + ':' + _userPass + '@github.com/' + _acctName + '/' + _repoName;
-			trace("RepairProxy.attemptHttpsRequest()", _request.url);
-			super.call(Vector.<String>([_request.method, _request.url, _request.args]));
+			_request.remote.url = 'https://' + _userName + ':' + _userPass + '@github.com/' + _acctName + '/' + _repoName +'.git';
+//			trace('---------------------------------');
+//			trace("RepairProxy.attemptHttpsRequest()", _request.method, _request.remote.url, _request.args);
+//			trace('---------------------------------');
+			super.appendArgs(_request.args);
+		// may need to inspect method here, regular git push may require 'remote-name' instead of url to sync with git cherry.	
+			super.call(Vector.<String>([_request.method, _request.remote.url]));
 		}		
 
 		private function addKeyToBeanstalkAcct():void
@@ -106,30 +115,48 @@ package model.proxies.remote.repo {
 		private function onKeyAddedToBeanstalk(e:AppEvent):void
 		{
 		// retry the failed beanstalk request //
-			super.call(Vector.<String>([_request.method, _request.url, _request.args]));
+			super.appendArgs(_request.args);
+			super.call(Vector.<String>([_request.method]));
 			Hosts.beanstalk.key.removeEventListener(AppEvent.REMOTE_KEY_READY, onKeyAddedToBeanstalk);
 		}
 		
 		private function makeAcctObj():HostingAccount
 		{
-			return new HostingAccount({type:_request.type, acct:_acctName, user:_userName, pass:_userPass});		
+			return new HostingAccount({type:_acctType, acct:_acctName, user:_userName, pass:_userPass});		
 		}						
 		
 	// handle responses //	
 		
 		override protected function onProcessComplete(e:NativeProcessEvent):void
 		{
-			trace("RepairProxy.onProcessComplete(e)", e.data.method, e.data.result);
 			super.onProcessComplete(e);
 			var f:String = RemoteFailure.detectFailure(e.data.result);
 			if (f){
-			//	onProcessFailure(f);
+				onProcessFailure(f);
 			}	else{
 				// rewrite remote url on the repository....!!!
 				dispatchEvent(new AppEvent(AppEvent.REMOTE_REPAIRED, {method:e.data.method, result:e.data.result}));
-				if (_saveAcct && _request.type == HostingAccount.GITHUB) Hosts.github.writeAcctToDatabase(makeAcctObj());
+				if (_saveAcct && _acctType == HostingAccount.GITHUB) Hosts.github.writeAcctToDatabase(makeAcctObj());
 			}
 		}
+		
+		private function onProcessFailure(f:String):void 
+		{
+			switch(f){
+				case RemoteFailure.AUTHENTICATION	:
+					_attemptNum++; promptForPassword();
+				break;
+				case RemoteFailure.USER_FORBIDDEN	:
+					dispatchError(ErrEvent.USER_FORBIDDEN);
+				break;				
+				case RemoteFailure.MALFORMED_URL	:
+					dispatchError(ErrEvent.UNRESOLVED_HOST);
+				break;
+				case RemoteFailure.REPO_NOT_FOUND	:
+					dispatchError(ErrEvent.REPO_NOT_FOUND);
+				break;
+			}
+		}		
 		
 	}
 	

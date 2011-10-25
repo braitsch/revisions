@@ -46,6 +46,11 @@ package model.vo {
 			return false;
 		}
 		
+		public function set url(s:String):void
+		{
+			_url = s;
+		}
+		
 		public function set lastUpdated(s:String):void
 		{
 			_lastUpdated = s;
@@ -98,19 +103,6 @@ package model.vo {
 				return 'unable to detect account name';		
 			}
 		}	
-		
-//		public static function getAccountName(u:String):String
-//		{
-//			if (u.indexOf('git@github.com') != -1 ){
-//				return u.substring(u.indexOf(':') + 1, u.indexOf('/'));
-//			}	else if (u.indexOf('https://') != -1 && u.indexOf('@github.com') != -1 ){
-//				return u.substring(u.indexOf('/') + 2, u.indexOf('@'));
-//			}	else if (u.indexOf('.beanstalkapp.com:/') != -1){
-//				return u.substring(u.indexOf('@') + 1, u.indexOf('.'));				
-//			}	else{
-//				return 'unable to detect account name';		
-//			}
-//		}
 		
 		public static function getRepositoryName(u:String):String
 		{

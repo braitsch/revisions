@@ -10,26 +10,25 @@ package model.proxies.remote.repo {
 
 	public class SyncProxy extends GitProxy {
 
-		private static var _repository	:Repository;
-		
-		public function set repository(r:Repository):void
-		{
-			_repository = r;			
-		}		
-		
-		public function pushBranch():void
+		public function pushBranch(r:Repository):void
 		{
 			if (super.working) return;
-			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
-			super.request = new GitRequest(BashMethods.PUSH_BRANCH, _repository.url, [AppModel.branch.name]);
-			AppModel.showLoader('Syncing With Your '+StringUtils.capitalize(Repository.getAccountType(_repository.url))+' Account');
+			var a:Array = [AppModel.branch.name, AppModel.bookmark.gitdir, AppModel.bookmark.worktree];
+			super.request = new GitRequest(BashMethods.PUSH_BRANCH, r, a);
+			AppModel.showLoader('Syncing With Your '+StringUtils.capitalize(r.acctType) + ' Account');
+		}
+		
+		public function pushAndTrack(r:Repository):void
+		{
+			var a:Array = [AppModel.branch.name, AppModel.bookmark.gitdir, AppModel.bookmark.worktree];
+			super.request = new GitRequest(BashMethods.PUSH_AND_TRACK, r, a);
 		}
 		
 		public function fetchRepository():void
 		{
 			if (super.working || isLoggedIn() == false) return;
-			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
-			super.request = new GitRequest(BashMethods.GET_REMOTE_FILES, AppModel.bookmark.remote.url);
+			var a:Array = [AppModel.bookmark.gitdir, AppModel.bookmark.worktree];
+			super.request = new GitRequest(BashMethods.GET_REMOTE_FILES, AppModel.repository, a);
 		}
 		
 		override protected function onProcessSuccess(m:String):void 
@@ -40,6 +39,10 @@ package model.proxies.remote.repo {
 					AppModel.branch.remoteStatus = 0;
 					AppModel.dispatch(AppEvent.BRANCH_SYNCED);
 				break;
+				case BashMethods.PUSH_AND_TRACK :
+					AppModel.hideLoader();
+					AppModel.dispatch(AppEvent.BRANCH_PUSHED);
+				break;				
 				case BashMethods.GET_REMOTE_FILES :
 				break;
 			}

@@ -1,18 +1,16 @@
 package model.proxies.remote.repo {
-	import model.remote.HostingAccount;
+
+	import model.vo.Repository;
 
 	public class GitRequest {
 
+		public var remote	:Repository;
 		public var method	:String;
-		public var url		:String;
-		public var type		:String;
-		public var args		:String = '';
+		public var args		:Array;
 
-		public function GitRequest(m:String, u:String, a:Array = null)
+		public function GitRequest(m:String, r:Repository, a:Array = null)
 		{
-			method = m; url	= u;
-			if (a) args = a.join(', ');
-			type = u.search('.beanstalkapp.com:/') == -1 ? HostingAccount.GITHUB : HostingAccount.BEANSTALK;
+			method = m; remote = r; args = a;
 		}
 		
 	}

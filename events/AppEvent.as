@@ -71,6 +71,7 @@ package events {
 		public static const COPY_COMPLETE:String = "LOCAL_SAVE_COMPLETE";
 		public static const REMOTE_REPAIRED:String = "REMOTE_REPAIRED";
 		public static const REQUEST_CANCELLED:String = "REQUEST_CANCELLED";
+		public static const BRANCH_PUSHED:String = "BRANCH_PUSHED";
 	
 		
 		public var data:Object;

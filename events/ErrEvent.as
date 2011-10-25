@@ -17,6 +17,7 @@ package events {
 		public static const COLLAB_NOT_FOUND	:String = 'Hmm, I can\'t seem to find that collaborator, are you sure you entered their name correctly?';
 		public static const PERMISSIONS			:String = 'Whoops, something went wrong. Failed to update user permissions.';
 		public static const UNAUTHORIZED		:String = 'You must be the account owner or have admin privileges to access your account through Revisions.';
+		public static const USER_FORBIDDEN		:String = 'It appears that you do not have permission to access this repository. Please contact the repository owner to resolve the issue.';
 	
 		public function ErrEvent(type:String)
 		{

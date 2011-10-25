@@ -15,7 +15,6 @@ package model.proxies.air {
 		
 		private var _np				:NativeProcess = new NativeProcess();
 		private var _npi			:NativeProcessStartupInfo = new NativeProcessStartupInfo();
-		private var _dir			:String = File.desktopDirectory.nativePath;
 		private var _args			:Array;
 		private var _method			:String;
 		private var _result			:String;
@@ -34,12 +33,6 @@ package model.proxies.air {
 		protected function set executable($file:String):void
 		{			_npi.executable = File.applicationDirectory.resolvePath('sh/'+$file);			}
 		
-		protected function set directory($dir:String):void
-		{
-			_dir = $dir;
-			_args = [$dir];
-		}
-		
 		protected function appendArgs(a:Array):void
 		{
 			_args = a;	
@@ -54,7 +47,7 @@ package model.proxies.air {
 		{
 			if (_np.running == false){
 				if (_args) for (var i:int = 0; i < _args.length; i++) v.push(_args[i]);
-			//	v.push(_dir);				_method = v[0];
+				_method = v[0];
 				_result = '';
 				_failed = false;
 				_npi.arguments = v;

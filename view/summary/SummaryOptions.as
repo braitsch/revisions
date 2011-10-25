@@ -139,9 +139,8 @@ package view.summary {
 		
 		private function pushBranch():void
 		{
-			AppModel.proxies.sync.repository = AppModel.repository;
-			AppModel.proxies.sync.pushBranch();
-		}		
+			AppModel.proxies.sync.pushBranch(AppModel.repository);
+		}
 				
 		private function confirmUnpublishedBranch():void 
 		{

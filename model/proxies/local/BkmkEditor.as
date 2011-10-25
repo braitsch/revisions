@@ -117,7 +117,7 @@ package model.proxies.local {
 		{
 			_repository = r;
 			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
-			super.call(Vector.<String>([BashMethods.ADD_REMOTE, _repository.name, _repository.url]));			
+			super.call(Vector.<String>([BashMethods.ADD_REMOTE, _repository.name, _repository.url, AppModel.branch.name]));			
 		}
 		
 		public function editRemote(b:Bookmark, r:Repository):void
@@ -288,8 +288,7 @@ package model.proxies.local {
 		
 		private function dispatchBranchSynced():void
 		{
-			AppModel.proxies.sync.repository = AppModel.repository;
-			AppModel.proxies.sync.pushBranch();
+			AppModel.proxies.sync.pushBranch(AppModel.repository);
 		}
 
 		private function reponseHas(s1:String, s2:String):Boolean
