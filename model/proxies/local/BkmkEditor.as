@@ -124,7 +124,7 @@ package model.proxies.local {
 		{
 			_repository = r;
 			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
-			super.call(Vector.<String>([BashMethods.EDIT_REMOTE, _repository.name, _repository.url, AppModel.branch.name]));
+			super.call(Vector.<String>([BashMethods.EDIT_REMOTE, _repository.name, _repository.url]));
 		}		
 		
 		public function delRemote(r:Repository):void

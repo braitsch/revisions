@@ -45,7 +45,7 @@ package events {
 		public static const COLLABORATOR_ADDED			:String = "COLLABORATOR_ADDED";
 		public static const COLLABORATORS_RECEIEVED		:String = "COLLABORATORS_RECEIEVED";
 		
-		public static const BRANCH_SYNCED				:String = "BRANCH_SYNCED";
+		public static const BRANCH_PUSHED				:String = "BRANCH_PUSHED";
 		public static const BRANCH_STATUS				:String = "BRANCH_STATUS";
 		public static const BRANCH_RENAMED				:String = "BRANCH_RENAMED";
 		public static const BRANCH_DELETED				:String = "BRANCH_DELETED";
@@ -67,11 +67,10 @@ package events {
 		public static const MERGE_COMPLETE				:String = "MERGE_COMPLETE";
 		public static const COMMIT_COMPLETE				:String = "COMMIT_COMPLETE";
 		public static const HISTORY_REVERTED			:String = "HISTORY_REVERTED";
-		public static const TRACKING_BRANCHES_SET:String = "TRACKING_BRANCHES_SET";
-		public static const COPY_COMPLETE:String = "LOCAL_SAVE_COMPLETE";
-		public static const REMOTE_REPAIRED:String = "REMOTE_REPAIRED";
-		public static const REQUEST_CANCELLED:String = "REQUEST_CANCELLED";
-		public static const BRANCH_PUSHED:String = "BRANCH_PUSHED";
+		public static const TRACKING_BRANCHES_SET		:String = "TRACKING_BRANCHES_SET";
+		public static const COPY_COMPLETE				:String = "COPY_COMPLETE";
+		public static const REMOTE_REPAIRED				:String = "REMOTE_REPAIRED";
+		public static const REQUEST_CANCELLED			:String = "REQUEST_CANCELLED";
 	
 		
 		public var data:Object;

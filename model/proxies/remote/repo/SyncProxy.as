@@ -22,7 +22,7 @@ package model.proxies.remote.repo {
 		public function pushAndTrack(r:Repository):void
 		{
 			var a:Array = [AppModel.branch.name, AppModel.bookmark.gitdir, AppModel.bookmark.worktree];
-			super.request = new GitRequest(BashMethods.PUSH_AND_TRACK, r, a);
+			super.request = new GitRequest(BashMethods.PUSH_BRANCH, r, a);
 		}
 		
 		public function fetchRepository():void
@@ -38,10 +38,6 @@ package model.proxies.remote.repo {
 				case BashMethods.PUSH_BRANCH :
 					onBranchPushed();
 				break;
-				case BashMethods.PUSH_AND_TRACK :
-					AppModel.hideLoader();
-					AppModel.dispatch(AppEvent.BRANCH_PUSHED);
-				break;				
 				case BashMethods.GET_REMOTE_FILES :
 				break;
 			}
@@ -52,7 +48,7 @@ package model.proxies.remote.repo {
 		{
 			AppModel.hideLoader();
 			AppModel.branch.remoteStatus = 0;
-			AppModel.dispatch(AppEvent.BRANCH_SYNCED);			
+			AppModel.dispatch(AppEvent.BRANCH_PUSHED);			
 		}
 		
 		private function isLoggedIn():Boolean

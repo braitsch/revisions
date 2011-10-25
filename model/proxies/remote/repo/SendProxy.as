@@ -22,22 +22,22 @@ package model.proxies.remote.repo {
 		private function onRepositoryCreated(e:AppEvent):void
 		{
 			_proxy.removeEventListener(AppEvent.REPOSITORY_CREATED, onRepositoryCreated);
-			AppModel.proxies.sync.pushAndTrack(_account.repository);
-			AppModel.engine.addEventListener(AppEvent.BRANCH_PUSHED, onBranchPushed);			
-		}
-		
-		private function onBranchPushed(e:AppEvent):void 
-		{
 			AppModel.proxies.editor.addRemote(_account.repository);
 			AppModel.engine.addEventListener(AppEvent.REMOTE_ADDED, onRemoteAdded);
-			AppModel.engine.removeEventListener(AppEvent.BRANCH_PUSHED, onBranchPushed);
+		}
+		
+		private function onRemoteAdded(e:AppEvent):void 
+		{
+			AppModel.proxies.sync.pushAndTrack(_account.repository);
+			AppModel.engine.addEventListener(AppEvent.BRANCH_PUSHED, onBranchPushed);			
+			AppModel.engine.removeEventListener(AppEvent.REMOTE_ADDED, onRemoteAdded);
 		}
 
-		private function onRemoteAdded(e:AppEvent):void
+		private function onBranchPushed(e:AppEvent):void
 		{
 			_account.repository.addBranch(AppModel.branch.name);
 			AppModel.dispatch(AppEvent.BKMK_ADDED_TO_ACCOUNT);
-			AppModel.engine.removeEventListener(AppEvent.REMOTE_ADDED, onBranchPushed);
+			AppModel.engine.removeEventListener(AppEvent.BRANCH_PUSHED, onBranchPushed);
 		}
 		
 	}

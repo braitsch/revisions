@@ -56,7 +56,7 @@ package model.proxies {
 			AppModel.engine.addEventListener(AppEvent.MODIFIED_RECEIVED, onModifiedReceived);
 			AppModel.engine.addEventListener(AppEvent.BRANCH_CHANGED, onBranchChanged);
 			AppModel.engine.addEventListener(AppEvent.COMMIT_COMPLETE, onCommitComplete);
-			AppModel.engine.addEventListener(AppEvent.BRANCH_SYNCED, onBranchSynced);
+			AppModel.engine.addEventListener(AppEvent.BRANCH_PUSHED, onBranchSynced);
 			AppModel.engine.addEventListener(AppEvent.HISTORY_REVERTED, onHistoryReverted);
 		}
 

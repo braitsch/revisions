@@ -21,7 +21,7 @@ package view.summary {
 			_view = v;
 			initButtons();
 			positionButtons(false);
-			AppModel.engine.addEventListener(AppEvent.BRANCH_SYNCED, onBranchSynced);
+			AppModel.engine.addEventListener(AppEvent.BRANCH_PUSHED, onBranchSynced);
 			AppModel.engine.addEventListener(AppEvent.MODIFIED_RECEIVED, onModified);
 		}
 
