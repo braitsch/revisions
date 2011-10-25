@@ -1,5 +1,6 @@
 package model.vo {
 
+	import model.remote.HostingAccount;
 	import events.AppEvent;
 	import model.AppEngine;
 	import model.AppModel;
@@ -118,8 +119,12 @@ package model.vo {
 		}
 		
 		public function addRemote(r:Repository):void 
-		{ 
-			_remote = r; _remotes.push(r);
+		{
+			trace("Bookmark.addRemote(r)", r.acctType);
+		// ignore any other remotes the user may have setup //	 
+			if (r.acctType == HostingAccount.GITHUB || r.acctType == HostingAccount.BEANSTALK){
+				_remote = r; _remotes.push(r);
+			}
 		}
 		
 		public function delRemote(r:Repository):void

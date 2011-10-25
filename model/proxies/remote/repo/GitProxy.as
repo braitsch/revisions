@@ -152,7 +152,7 @@ package model.proxies.remote.repo {
 		
 		override protected function onProcessComplete(e:NativeProcessEvent):void
 		{
-		//	trace("GitProxy.onProcessComplete(e)", 'm='+e.data.method, 'r='+e.data.result);
+			trace("GitProxy.onProcessComplete(e)", 'm='+e.data.method, 'r='+e.data.result);
 			_working = false;
 			super.onProcessComplete(e);
 			var f:String = RemoteFailure.detectFailure(e.data.result);
@@ -184,6 +184,7 @@ package model.proxies.remote.repo {
 		
 		private function onProcessFailure(f:String):void 
 		{
+			trace("GitProxy.onProcessFailure(f)", f);
 			switch(f){
 				case RemoteFailure.AUTHENTICATION	:
 					onAuthenticationFailure();
