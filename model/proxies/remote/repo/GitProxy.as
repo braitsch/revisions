@@ -83,11 +83,11 @@ package model.proxies.remote.repo {
 
 		private function handleGitHubFailure():void
 		{
-			if (Hosts.github.loggedIn == null){
+			if (Hosts.github.account == null){
 				promptForPassword();
 			}	else{
-				_userName = Hosts.github.loggedIn.user;
-				_userPass = Hosts.github.loggedIn.pass;
+				_userName = Hosts.github.account.user;
+				_userPass = Hosts.github.account.pass;
 				attemptHttpsRequest();
 			}
 		}
@@ -104,9 +104,9 @@ package model.proxies.remote.repo {
 			var m:String;
 			if (_attemptNum > 2){
 				m = 'Invalid username and / or password. Please try again.';
-			}	else if (_acctType == HostingAccount.GITHUB && !Hosts.github.loggedIn){
+			}	else if (_acctType == HostingAccount.GITHUB && !Hosts.github.account){
 				m = 'Please login to your GitHub account so I can complete your request.';
-			}	else if (_acctType == HostingAccount.BEANSTALK && !Hosts.beanstalk.loggedIn){
+			}	else if (_acctType == HostingAccount.BEANSTALK && !Hosts.beanstalk.account){
 				m = 'Please login to your Beanstalk account so I can complete your request.';
 			}	else{
 				m = 'I\'m sorry, '+_acctType +' denied us access to the account you are trying to connect to. ';

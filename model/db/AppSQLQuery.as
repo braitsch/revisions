@@ -72,7 +72,7 @@ package model.db {
 		public static function EDIT_ACCOUNT(a:HostingAccount):SQLStatement
 		{
 			var s:SQLStatement = new SQLStatement();
-			s.text = "UPDATE accounts SET pass='"+a.pass+"', sshKeyId='"+a.sshKeyId+"' WHERE type='"+a.acctType+"' AND user='"+a.user+"'";
+			s.text = "UPDATE accounts SET user='"+a.user+"', pass='"+a.pass+"', sshKeyId='"+a.sshKeyId+"' WHERE type='"+a.acctType+"'";
 			return s;
 		}
 

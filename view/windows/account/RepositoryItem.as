@@ -33,7 +33,7 @@ package view.windows.account {
 
 		private function checkIfOwner():void
 		{
-			_collab.enabled = GitHubRepo(_repo).owner==Hosts.github.loggedIn.user;
+			_collab.enabled = GitHubRepo(_repo).owner == Hosts.github.account.user;
 		}
 		
 		private function onCloneClick(e:MouseEvent):void

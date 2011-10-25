@@ -9,9 +9,9 @@ package model.remote {
 		{
 			for (var i:int = 0; i < a.length; i++) {
 				if (a[i].type == HostingAccount.GITHUB){
-					_github.addAccount(new HostingAccount(a[i]));
+					_github.savedAccount = new HostingAccount(a[i]);
 				}	else if (a[i].type == HostingAccount.BEANSTALK){
-					_beanstalk.addAccount(new HostingAccount(a[i]));
+					_beanstalk.savedAccount = new HostingAccount(a[i]);
 				}		
 			}
 		}
@@ -24,17 +24,6 @@ package model.remote {
 		public static function get beanstalk():HostingService
 		{
 			return _beanstalk;
-		}
-		
-		public static function getAccountByName(type:String, name:String):HostingAccount	
-		{
-			var am:HostingService;
-			if (type == HostingAccount.GITHUB){
-				am = _github;
-			}	else if (type == HostingAccount.BEANSTALK){
-				am = _beanstalk;
-			}
-			return am.getAccountByProp('user', name);
 		}
 		
 	}

@@ -95,8 +95,7 @@ package model.proxies.remote.acct {
 				}
 			}
 			_account.repositories = v;
-			Hosts.beanstalk.loggedIn = _account;
-			dispatchLoginSuccess();
+			Hosts.beanstalk.account = _account;
 		}
 		
 		override protected function onRepositoryCreated(s:String):void

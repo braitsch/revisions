@@ -78,9 +78,9 @@ package view.windows.upload {
 		private function generatePreviewURL():void
 		{
 			if (super.account.acctType == HostingAccount.GITHUB){
-				_preview.setField(0, 'https://github.com/'+Hosts.github.loggedIn.acctName+'/');
+				_preview.setField(0, 'https://github.com/'+Hosts.github.account.acctName+'/');
 			} 	else if (super.account.acctType == HostingAccount.BEANSTALK){
-				_preview.setField(0, 'https://'+Hosts.beanstalk.loggedIn.acctName+'.beanstalkapp.com/');
+				_preview.setField(0, 'https://'+Hosts.beanstalk.account.acctName+'.beanstalkapp.com/');
 			}
 			_preview.getInput(0).text += _form.getField(0).replace(/\s/g, '-') + '.git';
 		}

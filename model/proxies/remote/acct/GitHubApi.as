@@ -68,8 +68,7 @@ package model.proxies.remote.acct {
 				var v:Vector.<Repository> = new Vector.<Repository>();
 				for (var i:int = 0; i < o.length; i++) v.push(new GitHubRepo(o[i]));
 				_account.repositories = v;
-				Hosts.github.loggedIn = _account;
-				super.dispatchLoginSuccess();
+				Hosts.github.account = _account;				
 			}	else{
 				handleJSONError(o);
 			}

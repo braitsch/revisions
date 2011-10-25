@@ -115,12 +115,6 @@ package model.proxies.remote.acct {
 		
 		protected function onSetPermissions(s:String):void { }
 		
-		protected function dispatchLoginSuccess():void 
-		{ 
-			AppModel.hideLoader();
-			AppModel.dispatch(AppEvent.LOGIN_SUCCESS);
-		}
-		
 		protected function dispatchCollaborators():void 
 		{ 
 			AppModel.hideLoader();

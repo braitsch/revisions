@@ -29,9 +29,9 @@ package view.windows.upload {
 		{
 			_service = s;
 			if (s == HostingAccount.GITHUB){
-				Hosts.github.loggedIn ? showChooser(Hosts.github.loggedIn) : showLoginWindow();
+				Hosts.github.account ? showChooser(Hosts.github.account) : showLoginWindow();
 			}	else if (s == HostingAccount.BEANSTALK){
-				Hosts.beanstalk.loggedIn ? showChooser(Hosts.beanstalk.loggedIn) : showLoginWindow();
+				Hosts.beanstalk.account ? showChooser(Hosts.beanstalk.account) : showLoginWindow();
 			}
 		}
 		
@@ -84,9 +84,9 @@ package view.windows.upload {
 		private function onLoginSuccess(e:AppEvent):void
 		{
 			if (_service == HostingAccount.GITHUB){
-				super.account = Hosts.github.loggedIn;
+				super.account = Hosts.github.account;
 			}	else if (_service == HostingAccount.BEANSTALK){
-				super.account = Hosts.beanstalk.loggedIn;
+				super.account = Hosts.beanstalk.account;
 			}
 			super.onNextButton(e);	
 		}

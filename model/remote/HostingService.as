@@ -11,8 +11,8 @@ package model.remote {
 	public class HostingService extends EventDispatcher {
 
 		private var _model					:IHostingService;
-		private var _loggedIn				:HostingAccount;
-		private var _accounts				:Vector.<HostingAccount> = new Vector.<HostingAccount>();
+		private var _account				:HostingAccount;
+		private var _loggedIn				:Boolean;
 
 		public function get type()			:String				{ return _model.type; 			}
 		public function get api()			:ApiProxy 			{ return _model.api; 			}
@@ -27,13 +27,31 @@ package model.remote {
 			_model.key.addEventListener(AppEvent.REMOTE_KEY_READY, onRemoteKeyReady);
 		}
 		
-		public function logOut():void { _loggedIn = null; }
-		public function get loggedIn():HostingAccount { return _loggedIn; }		
-
-		public function addAccount(a:HostingAccount):void
+		public function set savedAccount(a:HostingAccount):void
 		{
-			_accounts.push(a);
+			_account = a;	
+			trace("HostingService.savedAccount(a)", a.acctType, a.user);
 		}
+		
+		public function set account(a:HostingAccount):void
+		{
+			if (_model.type == HostingAccount.BEANSTALK) {
+				_model.key.checkKey(a);
+			}	else{
+				writeAcctToDatabase(a);
+			}
+			_loggedIn = true;
+		}
+		
+		public function get account():HostingAccount 
+		{ 
+			return _account; 
+		}
+		
+		public function get loggedIn():Boolean
+		{
+			return _loggedIn;
+		}				
 		
 		public function attemptLogin(a:HostingAccount):void
 		{
@@ -45,44 +63,28 @@ package model.remote {
 			_model.key.checkKey(a);
 		}
 		
-		public function getAccountByProp(p:String, v:String):HostingAccount
+		public function logOut():void
 		{
-			for (var i:int = 0; i < _accounts.length; i++) if (_accounts[i][p] == v) return _accounts[i];
-			return null;
+			_loggedIn = false;
 		}
 		
-		public function set loggedIn(a:HostingAccount):void
-		{
-			_loggedIn = a;
-			writeAcctToDatabase(_loggedIn);
-			if (_model.type == HostingAccount.BEANSTALK) _model.key.checkKey(_loggedIn);
-		}
-		
-	// private methods //
-	
 		public function writeAcctToDatabase(n:HostingAccount):void
 		{
-			var o:HostingAccount = getAccountByProp('user', n.user);
-			if (o == null){
-				addAccount(n);
+			if (_account == null){
 				AppModel.database.addAccount(n);
 			}	else{
-				swapAccounts(n, o);
 				AppModel.database.editAccount(n);
 			}
+			_account = n;
+			AppModel.hideLoader();
+			AppModel.dispatch(AppEvent.LOGIN_SUCCESS);			
 		}
 		
 		private function onRemoteKeyReady(e:AppEvent):void 
 		{
-			writeAcctToDatabase(e.data as HostingAccount); 
+			writeAcctToDatabase(e.data as HostingAccount);
 		}
-		
-		private function swapAccounts(n:HostingAccount, o:HostingAccount):void
-		{
-			for (var i:int = 0; i < _accounts.length; i++) if (_accounts[i] == o) break;
-			_accounts.splice(i, 1); _accounts.push(n);
-		}
-		
+
 	}
 	
 }
