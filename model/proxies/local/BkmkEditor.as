@@ -100,7 +100,6 @@ package model.proxies.local {
 		
 		public function mergeRemoteIntoLocal():void
 		{
-			trace("BkmkEditor.mergeRemoteIntoLocal()", AppModel.branch.name, AppModel.repository.name+'/'+AppModel.branch.name);
 			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
 			super.call(Vector.<String>([BashMethods.MERGE, AppModel.branch.name, AppModel.repository.name+'/'+AppModel.branch.name]));
 		}
@@ -272,7 +271,6 @@ package model.proxies.local {
 
 		private function onMergeComplete(s:String):void
 		{
-			trace("BkmkEditor.onMergeComplete(s)", s);
 			if (reponseHas(s, 'Fast-forward')) {
 				dispatchBranchSynced();
 			}	else{

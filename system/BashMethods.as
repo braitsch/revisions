@@ -86,7 +86,7 @@ package system{
 		public static const CHERRY_BRANCH			:String = 'cherryBranch';
 		public static const ADD_TRACKING_BRANCHES	:String = 'addTrackingBranches';
 		public static const SET_WORK_TREE			:String = 'initSingleFileRepo';
-		public static const PUSH_REPAIR				:String = 'pushRepair';
+		public static const TEST_REPAIR				:String = 'pushRepair';
 		
 	}
 	

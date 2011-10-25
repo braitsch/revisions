@@ -120,7 +120,6 @@ package model.vo {
 		
 		public function addRemote(r:Repository):void 
 		{
-			trace("Bookmark.addRemote(r)", r.acctType);
 		// ignore any other remotes the user may have setup //	 
 			if (r.acctType == HostingAccount.GITHUB || r.acctType == HostingAccount.BEANSTALK){
 				_remote = r; _remotes.push(r);

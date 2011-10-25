@@ -20,6 +20,7 @@ package model.proxies.remote.repo {
 		private var _userPass			:String;
 		private var _saveAcct			:Boolean;
 		private var _attemptNum			:uint;
+		private var _failedMethod		:String;
 		private static var _working		:Boolean;		
 
 		public function GitProxy()
@@ -42,10 +43,19 @@ package model.proxies.remote.repo {
 			_working = true;
 		//	trace("GitProxy.attemptRequest()", _attemptNum, _request.method, _request.remote.url, _request.args);
 			super.appendArgs(_request.args);
-			if (_request.method == BashMethods.PUSH_BRANCH){
-				super.call(Vector.<String>([_request.method, _request.remote.name]));
-			}	else {
-				super.call(Vector.<String>([_request.method, _request.remote.url]));
+			switch(_request.method){
+				case BashMethods.CLONE :
+					super.call(Vector.<String>([_request.method, _request.remote.url]));
+				break;
+				case BashMethods.GET_REMOTE_FILES :
+					super.call(Vector.<String>([_request.method]));
+				break;								
+				case BashMethods.PUSH_BRANCH :
+					super.call(Vector.<String>([_request.method, _request.remote.name]));
+				break;
+				case BashMethods.TEST_REPAIR :
+					super.call(Vector.<String>([_request.method, _request.remote.url]));
+				break;
 			}
 		}
 		//	if (_request.remote.url.search(/(https:\/\/)(\w*)(@github.com)/) == -1){
@@ -152,7 +162,7 @@ package model.proxies.remote.repo {
 		
 		override protected function onProcessComplete(e:NativeProcessEvent):void
 		{
-			trace("GitProxy.onProcessComplete(e)", 'm='+e.data.method, 'r='+e.data.result);
+	//		trace("GitProxy.onProcessComplete(e)", 'm='+e.data.method, 'r='+e.data.result);
 			_working = false;
 			super.onProcessComplete(e);
 			var f:String = RemoteFailure.detectFailure(e.data.result);
@@ -165,20 +175,20 @@ package model.proxies.remote.repo {
 
 		protected function onProcessSuccess(e:NativeProcessEvent):void
 		{
-			if (_request.method == BashMethods.PUSH_REPAIR) editRemote();
+			if (_request.method == BashMethods.TEST_REPAIR) editRemote();
 			if (_saveAcct && _acctType == HostingAccount.GITHUB) Hosts.github.writeAcctToDatabase(makeAcctObj());
 		}
 
 		private function editRemote():void
 		{
-		// update the remote url so future push attempts will succeed //	
+		// update the remote url so future push / fetch attempts will succeed //	
 			AppModel.proxies.editor.editRemote(_request.remote);
 			AppModel.engine.addEventListener(AppEvent.REMOTE_EDITED, onRemoteEdited);
 		}
 
 		private function onRemoteEdited(e:AppEvent):void
 		{
-			_request.method = BashMethods.PUSH_BRANCH;
+			_request.method = _failedMethod;
 			_attemptNum = 1; retryRequest();			
 		}
 		
@@ -206,8 +216,9 @@ package model.proxies.remote.repo {
 			if (hasString(_request.remote.url, 'git://github.com') || hasString(_request.remote.url, 'https://github.com')){
 		// a read-only request has failed //	
 				dispatchError(ErrEvent.UNRESOLVED_HOST);
-			}	else if (_request.method == BashMethods.PUSH_BRANCH){
-				_request.method = BashMethods.PUSH_REPAIR; 
+			}	else if (_request.method == BashMethods.PUSH_BRANCH || _request.method == BashMethods.GET_REMOTE_FILES){
+				_failedMethod = _request.method;
+				_request.method = BashMethods.TEST_REPAIR; 
 				retryRequest();
 			}	else if (hasString(_request.remote.url, 'git@github.com')){
 		// user doesn't have an ssh key setup, retry over https //		
