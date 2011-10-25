@@ -26,9 +26,9 @@ package view.windows.account {
 		override protected function onAddedToStage(e:Event):void
 		{
 			if (_view) removeChild(_view);
-			if (super.account.type == HostingAccount.GITHUB){
+			if (super.account.acctType == HostingAccount.GITHUB){
 				addGHCollab();
-			}	else if (super.account.type == HostingAccount.BEANSTALK) {
+			}	else if (super.account.acctType == HostingAccount.BEANSTALK) {
 				addBSCollab();
 			}			
 			_view.y = 35;

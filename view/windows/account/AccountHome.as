@@ -49,7 +49,7 @@ package view.windows.account {
 			_account.avatar.y = 8; 
 			_account.avatar.x = 426;
 			_view.addChild(_account.avatar);
-			_view.badgePage.label_txt.text = _account.type == HostingAccount.GITHUB ? 'My Github' : 'My Beanstalk';
+			_view.badgePage.label_txt.text = _account.acctType == HostingAccount.GITHUB ? 'My Github' : 'My Beanstalk';
 		}
 		
 	// alternating view modes //
@@ -139,7 +139,7 @@ package view.windows.account {
 		private function onLogOutClick(e:MouseEvent):void
 		{
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-			_account.type == HostingAccount.GITHUB ? Hosts.github.logOut() : Hosts.beanstalk.logOut();
+			_account.acctType == HostingAccount.GITHUB ? Hosts.github.logOut() : Hosts.beanstalk.logOut();
 			AppModel.alert(new Message('You Have Successfully Logged Out.'));
 		}			
 		

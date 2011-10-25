@@ -28,8 +28,8 @@ package view.windows.upload {
 
 		override protected function onAddedToStage(e:Event):void
 		{
-			_viewAcct.label = 'View My '+super.account.type+' Account';
-			var m:String = 'You just pushed "'+AppModel.bookmark.label+'" up to a shiny new repository on '+super.account.type+'! ';
+			_viewAcct.label = 'View My '+super.account.acctType+' Account';
+			var m:String = 'You just pushed "'+AppModel.bookmark.label+'" up to a shiny new repository on '+super.account.acctType+'! ';
 				m+='\nWhat would you like to do now?';
 			super.heading = m;
 		}
@@ -37,9 +37,9 @@ package view.windows.upload {
 		private function onButtonSelection(e:MouseEvent):void
 		{
 			if (e.target == _viewAcct){
-				if (super.account.type == HostingAccount.GITHUB){
+				if (super.account.acctType == HostingAccount.GITHUB){
 					dispatchEvent(new UIEvent(UIEvent.GITHUB_HOME));
-				}	else if (super.account.type == HostingAccount.BEANSTALK){
+				}	else if (super.account.acctType == HostingAccount.BEANSTALK){
 					dispatchEvent(new UIEvent(UIEvent.BEANSTALK_HOME));
 				}
 			}	else if (e.target == _addCollab){

@@ -8,7 +8,7 @@ package model.remote {
 	import view.windows.base.ParentWindow;
 	import view.windows.modals.login.GitHubLogin;
 	
-	public class GitHub implements IHostingProvider {
+	public class GitHub implements IHostingService {
 		
 		private var _type			:String = HostingAccount.GITHUB;
 		private var _home	 		:AccountHome = new AccountHome();

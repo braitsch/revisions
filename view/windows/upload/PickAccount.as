@@ -67,7 +67,7 @@ package view.windows.upload {
 		private function showChooser(a:HostingAccount):void
 		{
 			super.account = a;
-			super.heading = 'You are currently logged into the '+a.type+' account "'+a.acctName+'".\nWhat would you like to do?';
+			super.heading = 'You are currently logged into the '+a.acctType+' account "'+a.acctName+'".\nWhat would you like to do?';
 			this.page = _pick;
 		}
 		

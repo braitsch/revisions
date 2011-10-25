@@ -2,8 +2,8 @@ package model.remote {
 
 	public class Hosts {
 		
-		private static var _github			:HostingProvider = new HostingProvider(new GitHub());
-		private static var _beanstalk		:HostingProvider = new HostingProvider(new Beanstalk());
+		private static var _github			:HostingService = new HostingService(new GitHub());
+		private static var _beanstalk		:HostingService = new HostingService(new Beanstalk());
 		
 		public static function initialize(a:Array):void
 		{
@@ -16,19 +16,19 @@ package model.remote {
 			}
 		}
 
-		public static function get github():HostingProvider
+		public static function get github():HostingService
 		{
 			return _github;
 		}
 		
-		public static function get beanstalk():HostingProvider
+		public static function get beanstalk():HostingService
 		{
 			return _beanstalk;
 		}
 		
 		public static function getAccountByName(type:String, name:String):HostingAccount	
 		{
-			var am:HostingProvider;
+			var am:HostingService;
 			if (type == HostingAccount.GITHUB){
 				am = _github;
 			}	else if (type == HostingAccount.BEANSTALK){

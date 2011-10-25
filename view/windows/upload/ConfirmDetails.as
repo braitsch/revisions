@@ -31,10 +31,10 @@ package view.windows.upload {
 		{
 			_form.setField(0, AppModel.bookmark.label);
 			_form.setField(1, super.repoName);
-			if (super.account.type == HostingAccount.GITHUB){
+			if (super.account.acctType == HostingAccount.GITHUB){
 				_form.setField(2, super.repoDesc == '(optional)' ? '' : super.repoDesc);
 				_form.setField(3, super.repoURL);
-			}	else if (super.account.type == HostingAccount.BEANSTALK){
+			}	else if (super.account.acctType == HostingAccount.BEANSTALK){
 				_form.setField(2, super.repoURL);
 			}					
 		}
@@ -42,9 +42,9 @@ package view.windows.upload {
 		private function attachForm():void
 		{
 			if (_form) removeChild(_form);
-			if (super.account.type == HostingAccount.GITHUB){
+			if (super.account.acctType == HostingAccount.GITHUB){
 				attachGHForm();
-			}	else if (super.account.type == HostingAccount.BEANSTALK){
+			}	else if (super.account.acctType == HostingAccount.BEANSTALK){
 				attachBSForm();
 			}			
 			_form.y = 90; addChildAt(_form, 0); 
@@ -69,7 +69,7 @@ package view.windows.upload {
 		{
 			var o:Object = {	acct	:	super.account,
 								name	:	_form.getField(1),
-								desc	:	super.account.type == HostingAccount.GITHUB ? _form.getField(2) : '',
+								desc	:	super.account.acctType == HostingAccount.GITHUB ? _form.getField(2) : '',
 								publik	:	super.repoPrivate == false	};
 			_send.uploadBookmark(o);
 			AppModel.engine.addEventListener(AppEvent.BKMK_ADDED_TO_ACCOUNT, onBkmkAddedToAccount);

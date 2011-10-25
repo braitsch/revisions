@@ -5,14 +5,12 @@ package view.windows.modals.login {
 	import model.AppModel;
 	import view.type.TextHeading;
 	import view.ui.Form;
-	import view.ui.ModalCheckbox;
 	import view.windows.base.ParentWindow;
 	import flash.events.Event;
 
 	public class PermissionsFailure extends ParentWindow {
 
 		private static var _form		:Form = new Form(530);
-		private static var _check		:ModalCheckbox = new ModalCheckbox(true);
 		private static var _heading		:TextHeading = new TextHeading();	
 
 		public function PermissionsFailure()
@@ -24,10 +22,6 @@ package view.windows.modals.login {
 			_form.fields = [{label:'Username'}, {label:'Password', pass:true}];
 			_form.y = 110; 
 			addChild(_form);
-			
-			_check.y = 220;
-			_check.label = 'Remember my login for this account';
-			addChild(_check);
 			addChild(_heading);
 			
 			addOkButton();
@@ -45,7 +39,7 @@ package view.windows.modals.login {
 		{
 			if (_form.validate()) {
 				dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-				AppModel.dispatch(AppEvent.RETRY_REMOTE_REQUEST, {user:_form.getField(0), pass:_form.getField(1), save:_check.selected});
+				AppModel.dispatch(AppEvent.RETRY_REMOTE_REQUEST, {user:_form.getField(0), pass:_form.getField(1)});
 			}
 		}
 

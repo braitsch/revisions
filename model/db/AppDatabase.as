@@ -73,7 +73,7 @@ package model.db {
 		
 		public function addAccount(a:HostingAccount):void
 		{
-			trace("AppDatabase.addAccount(a)", a.type, a.user);
+			trace("AppDatabase.addAccount(a)", a.acctType, a.user);
 			_addAccount = new Vector.<SQLStatement>();
 			_addAccount.push(AppSQLQuery.ADD_ACCOUNT(a));
 			super.execute(_addAccount, true);
@@ -81,7 +81,7 @@ package model.db {
 		
 		public function editAccount(a:HostingAccount):void
 		{
-			trace("AppDatabase.editAccount(a)", a.type, a.user);
+			trace("AppDatabase.editAccount(a)", a.acctType, a.user);
 			_editAccount = new Vector.<SQLStatement>();
 			_editAccount.push(AppSQLQuery.EDIT_ACCOUNT(a));
 			super.execute(_editAccount, true);						

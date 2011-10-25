@@ -8,7 +8,7 @@ package model.remote {
 	import view.windows.base.ParentWindow;
 	import view.windows.modals.login.BeanstalkLogin;
 	
-	public class Beanstalk implements IHostingProvider {
+	public class Beanstalk implements IHostingService {
 
 		private var _type			:String = HostingAccount.BEANSTALK;
 		private var _home	 		:AccountHome = new AccountHome();

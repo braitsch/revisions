@@ -16,9 +16,9 @@ package view.windows.account {
 		public static function set account(a:HostingAccount):void	
 		{
 			_account = a; 
-			if (_account.type == HostingAccount.GITHUB){
+			if (_account.acctType == HostingAccount.GITHUB){
 				_proxy = Hosts.github.api;
-			}	else if (_account.type == HostingAccount.BEANSTALK){
+			}	else if (_account.acctType == HostingAccount.BEANSTALK){
 				_proxy = Hosts.beanstalk.api;
 			}
 		}

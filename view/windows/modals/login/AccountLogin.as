@@ -8,7 +8,6 @@ package view.windows.modals.login {
 	import model.remote.Hosts;
 	import view.btns.FormButton;
 	import view.ui.Form;
-	import view.ui.ModalCheckbox;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -20,7 +19,6 @@ package view.windows.modals.login {
 
 		private var _form			:Form = new Form(530);
 		private var _type			:String;
-		private var _check			:ModalCheckbox = new ModalCheckbox(true);
 		private var _loginBtn		:FormButton = new FormButton('Login');
 		private var _signUp			:TextLinkMC = new TextLinkMC();
 		private var _signUpURL		:String;
@@ -28,8 +26,6 @@ package view.windows.modals.login {
 		public function AccountLogin(s:String)
 		{
 			_type = s;
-			_check.label = 'Remember my login for this account';
-			
 			_loginBtn.x = 415;
 			_loginBtn.addEventListener(MouseEvent.CLICK, onLoginButton);
 			addChild(_loginBtn);
@@ -42,7 +38,6 @@ package view.windows.modals.login {
 			}
 			_form.y = 20;
 			addChild(_form); 
-			addChild(_check);
 			addChild(_signUp);
 			addEventListener(UIEvent.ENTER_KEY, onLoginButton);
 			AppModel.engine.addEventListener(ErrEvent.LOGIN_FAILURE, onLoginFailure);
@@ -78,7 +73,6 @@ package view.windows.modals.login {
 		public function set baseline(y:uint):void
 		{
 			y -= this.y;
-			_check.y = y - 43; 
 			_loginBtn.y = y - 50; 
 		}
 		
@@ -105,14 +99,14 @@ package view.windows.modals.login {
 		{
 			var a:HostingAccount = new HostingAccount({type:HostingAccount.GITHUB, 
 				acct:_form.getField(0), user:_form.getField(0), pass:_form.getField(1)});
-			Hosts.github.attemptLogin(a, _check.selected);
+			Hosts.github.attemptLogin(a);
 		}
 
 		private function attemptBSLogin():void
 		{
 			var a:HostingAccount = new HostingAccount({type:HostingAccount.BEANSTALK, 
 				acct:_form.getField(0), user:_form.getField(1), pass:_form.getField(2)});
-			Hosts.beanstalk.attemptLogin(a, _check.selected);
+			Hosts.beanstalk.attemptLogin(a);
 		}
 		
 		protected function onLoginSuccess(e:AppEvent):void

@@ -11,10 +11,10 @@ package model.remote {
 		public static const GITHUB		:String = 'GitHub';
 		public static const BEANSTALK	:String = 'Beanstalk';
 		
-		private var _acct				:String;
-		private var _type				:String;
 		private var _user				:String;
 		private var _pass				:String;
+		private var _acctName			:String;
+		private var _acctType			:String;
 		private var _sshKeyId			:uint;
 		
 		private var _avatar				:Avatar;
@@ -26,10 +26,10 @@ package model.remote {
 
 		public function HostingAccount(o:Object)
 		{
-			_acct = o.acct;
-			_type = o.type;
 			_user = o.user;
 			_pass = o.pass;
+			_acctName = o.acct;
+			_acctType = o.type;
 			_sshKeyId = o.sshKeyId;
 		}
 		
@@ -40,11 +40,10 @@ package model.remote {
 			_avatar = Avatars.getAvatar(o.email);
 		}
 
-		public function get acctName()		:String 	{ return _acct; 		}
-		public function get type()			:String 	{ return _type; 		}
 		public function get user()			:String 	{ return _user; 		}
 		public function get pass()			:String 	{ return _pass; 		}
-		
+		public function get acctName()		:String 	{ return _acctName; 	}
+		public function get acctType()		:String 	{ return _acctType; 	}
 		public function get avatar()		:Avatar 	{ return _avatar; 		}
 		public function get fullName()		:String 	{ return _fullName; 	}
 		public function get location()		:String 	{ return _location; 	}

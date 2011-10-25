@@ -65,21 +65,21 @@ package model.db {
 		{
 			var s:SQLStatement = new SQLStatement();
 			s.text = "INSERT INTO accounts (type, acct, user, pass, sshKeyId) ";
-			s.text+= "VALUES ('"+a.type+"', '"+a.acctName+"', '"+a.user+"', '"+a.pass+"', '"+a.sshKeyId+"')";
+			s.text+= "VALUES ('"+a.acctType+"', '"+a.acctName+"', '"+a.user+"', '"+a.pass+"', '"+a.sshKeyId+"')";
 			return s;			
 		}
 
 		public static function EDIT_ACCOUNT(a:HostingAccount):SQLStatement
 		{
 			var s:SQLStatement = new SQLStatement();
-			s.text = "UPDATE accounts SET pass='"+a.pass+"', sshKeyId='"+a.sshKeyId+"' WHERE type='"+a.type+"' AND user='"+a.user+"'";
+			s.text = "UPDATE accounts SET pass='"+a.pass+"', sshKeyId='"+a.sshKeyId+"' WHERE type='"+a.acctType+"' AND user='"+a.user+"'";
 			return s;
 		}
 
 		public static function DEL_ACCOUNT(a:HostingAccount):SQLStatement
 		{
 			var s:SQLStatement = new SQLStatement();
-			s.text = "DELETE FROM accounts WHERE type='"+a.type+"' AND user='"+a.user+"'";
+			s.text = "DELETE FROM accounts WHERE type='"+a.acctType+"' AND user='"+a.user+"'";
 			return s;				
 		}
 		

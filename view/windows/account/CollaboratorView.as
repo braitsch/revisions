@@ -22,9 +22,9 @@ package view.windows.account {
 		override protected function onAddedToStage(e:Event):void
 		{
 			if (numChildren == 1){
-				if (super.account.type == HostingAccount.GITHUB){
+				if (super.account.acctType == HostingAccount.GITHUB){
 					addChild(new CollaboratorViewGH());
-				}	else if (super.account.type == HostingAccount.BEANSTALK){
+				}	else if (super.account.acctType == HostingAccount.BEANSTALK){
 					addChild(new CollaboratorViewBS());
 				}
 			}

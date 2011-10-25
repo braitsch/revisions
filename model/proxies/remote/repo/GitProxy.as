@@ -18,7 +18,6 @@ package model.proxies.remote.repo {
 		private var _acctType			:String;
 		private var _userName			:String;
 		private var _userPass			:String;
-		private var _saveAcct			:Boolean;
 		private var _attemptNum			:uint;
 		private var _failedMethod		:String;
 		private static var _working		:Boolean;		
@@ -41,7 +40,7 @@ package model.proxies.remote.repo {
 		private function attemptRequest():void
 		{
 			_working = true;
-		//	trace("GitProxy.attemptRequest()", _attemptNum, _request.method, _request.remote.url, _request.args);
+			trace("GitProxy.attemptRequest()", _attemptNum, _request.method, _request.remote.url, _request.args);
 			super.appendArgs(_request.args);
 			switch(_request.method){
 				case BashMethods.CLONE :
@@ -121,7 +120,6 @@ package model.proxies.remote.repo {
 			if (e.data){
 				_userName = e.data.user;
 				_userPass = e.data.pass;
-				_saveAcct = e.data.save;
 				if (_acctType == HostingAccount.GITHUB){
 					attemptHttpsRequest();
 				}	else{
@@ -141,7 +139,7 @@ package model.proxies.remote.repo {
 
 		private function addKeyToBeanstalkAcct():void
 		{
-			Hosts.beanstalk.addKeyToAccount(makeAcctObj(), _saveAcct);
+			Hosts.beanstalk.addKeyToAccount(makeAcctObj());
 			Hosts.beanstalk.key.addEventListener(AppEvent.REMOTE_KEY_READY, onKeyAddedToBeanstalk);
 		}
 		
@@ -162,7 +160,7 @@ package model.proxies.remote.repo {
 		
 		override protected function onProcessComplete(e:NativeProcessEvent):void
 		{
-	//		trace("GitProxy.onProcessComplete(e)", 'm='+e.data.method, 'r='+e.data.result);
+			trace("GitProxy.onProcessComplete(e)", 'm='+e.data.method, 'r='+e.data.result);
 			_working = false;
 			super.onProcessComplete(e);
 			var f:String = RemoteFailure.detectFailure(e.data.result);
@@ -176,7 +174,7 @@ package model.proxies.remote.repo {
 		protected function onProcessSuccess(e:NativeProcessEvent):void
 		{
 			if (_request.method == BashMethods.TEST_REPAIR) editRemote();
-			if (_saveAcct && _acctType == HostingAccount.GITHUB) Hosts.github.writeAcctToDatabase(makeAcctObj());
+			if (_acctType == HostingAccount.GITHUB) Hosts.github.writeAcctToDatabase(makeAcctObj());
 		}
 
 		private function editRemote():void

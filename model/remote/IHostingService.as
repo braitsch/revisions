@@ -4,7 +4,7 @@ package model.remote {
 	import model.proxies.remote.acct.KeyProxy;
 	import view.windows.account.AccountHome;
 	import view.windows.base.ParentWindow;
-	public interface IHostingProvider {
+	public interface IHostingService {
 		
 		function get type()			:String			
 		function get api()			:ApiProxy 			

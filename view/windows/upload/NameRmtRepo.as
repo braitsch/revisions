@@ -34,15 +34,15 @@ package view.windows.upload {
 		private function attachForm():void
 		{
 			if (_form) removeChild(_form);
-			if (super.account.type == HostingAccount.GITHUB) {
+			if (super.account.acctType == HostingAccount.GITHUB) {
 				attachGHForm();
-			}	else if (super.account.type == HostingAccount.BEANSTALK){
+			}	else if (super.account.acctType == HostingAccount.BEANSTALK){
 				attachBSForm();
 			}
 			_preview.y = 90 + _form.height + 15;
 			_form.y = 90; addChild(_form);
 			_form.getInput(0).addEventListener(Event.CHANGE, onNameChange);
-			super.heading = 'What would you like to call your bookmark inside your '+super.account.type+' account?';			
+			super.heading = 'What would you like to call your bookmark inside your '+super.account.acctType+' account?';			
 		}
 		
 		private function attachGHForm():void
@@ -65,7 +65,7 @@ package view.windows.upload {
 		{
 			attachForm();
 			_form.setField(0, AppModel.bookmark.label.toLowerCase());
-			if (super.account.type == HostingAccount.GITHUB) _form.setField(1, '(optional)');
+			if (super.account.acctType == HostingAccount.GITHUB) _form.setField(1, '(optional)');
 			generatePreviewURL();
 			super.onAddedToStage(e);
 		}
@@ -77,9 +77,9 @@ package view.windows.upload {
 		
 		private function generatePreviewURL():void
 		{
-			if (super.account.type == HostingAccount.GITHUB){
+			if (super.account.acctType == HostingAccount.GITHUB){
 				_preview.setField(0, 'https://github.com/'+Hosts.github.loggedIn.acctName+'/');
-			} 	else if (super.account.type == HostingAccount.BEANSTALK){
+			} 	else if (super.account.acctType == HostingAccount.BEANSTALK){
 				_preview.setField(0, 'https://'+Hosts.beanstalk.loggedIn.acctName+'.beanstalkapp.com/');
 			}
 			_preview.getInput(0).text += _form.getField(0).replace(/\s/g, '-') + '.git';
@@ -89,7 +89,7 @@ package view.windows.upload {
 		{
 			if (validate()){
 				super.repoName = _form.getField(0).replace(/\s/g, '-');
-				super.repoDesc = super.account.type == HostingAccount.GITHUB ? _form.getField(1) : '';
+				super.repoDesc = super.account.acctType == HostingAccount.GITHUB ? _form.getField(1) : '';
 				super.repoURL = _preview.getField(0);
 				super.repoPrivate = _private.selected;
 				super.onNextButton(e);
@@ -114,7 +114,7 @@ package view.windows.upload {
 		private function checkForDuplicate():Boolean
 		{
 			var n:String = _form.getField(0).replace(/\s/, '-').toLowerCase();
-			if (AppModel.bookmark.getRemoteByProp('name', super.account.type.toLowerCase()+'-'+n)){
+			if (AppModel.bookmark.getRemoteByProp('name', super.account.acctType.toLowerCase()+'-'+n)){
 				return true;
 			}	else{
 				return false;

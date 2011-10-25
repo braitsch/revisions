@@ -14,7 +14,7 @@ package model.proxies.remote.repo {
 		public function uploadBookmark(o:Object):void
 		{
 			_account = o.acct;
-			_proxy = _account.type == HostingAccount.GITHUB ? Hosts.github.api : Hosts.beanstalk.api;
+			_proxy = _account.acctType == HostingAccount.GITHUB ? Hosts.github.api : Hosts.beanstalk.api;
 			_proxy.addRepository(o);
 			_proxy.addEventListener(AppEvent.REPOSITORY_CREATED, onRepositoryCreated);
 		}

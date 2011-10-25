@@ -8,11 +8,10 @@ package model.remote {
 	import view.windows.account.AccountHome;
 	import view.windows.base.ParentWindow;
 	
-	public class HostingProvider extends EventDispatcher {
+	public class HostingService extends EventDispatcher {
 
-		private var _model					:IHostingProvider;
+		private var _model					:IHostingService;
 		private var _loggedIn				:HostingAccount;
-		private var _saveAccount			:Boolean;
 		private var _accounts				:Vector.<HostingAccount> = new Vector.<HostingAccount>();
 
 		public function get type()			:String				{ return _model.type; 			}
@@ -22,7 +21,7 @@ package model.remote {
 		public function get login()			:ParentWindow 		{ return _model.login; 			}
 		public function get addRepoObj()	:Object				{ return _model.addRepoObj; 	}
 
-		public function HostingProvider(o:IHostingProvider):void
+		public function HostingService(o:IHostingService):void
 		{
 			_model = o;
 			_model.key.addEventListener(AppEvent.REMOTE_KEY_READY, onRemoteKeyReady);
@@ -36,14 +35,14 @@ package model.remote {
 			_accounts.push(a);
 		}
 		
-		public function attemptLogin(a:HostingAccount, b:Boolean):void
+		public function attemptLogin(a:HostingAccount):void
 		{
-			_model.api.login(a); _saveAccount = b;
+			_model.api.login(a);
 		}
 		
-		public function addKeyToAccount(a:HostingAccount, b:Boolean):void
+		public function addKeyToAccount(a:HostingAccount):void
 		{
-			_model.key.checkKey(a); _saveAccount = b;
+			_model.key.checkKey(a);
 		}
 		
 		public function getAccountByProp(p:String, v:String):HostingAccount
@@ -55,7 +54,7 @@ package model.remote {
 		public function set loggedIn(a:HostingAccount):void
 		{
 			_loggedIn = a;
-			if (_saveAccount) writeAcctToDatabase(_loggedIn);
+			writeAcctToDatabase(_loggedIn);
 			if (_model.type == HostingAccount.BEANSTALK) _model.key.checkKey(_loggedIn);
 		}
 		
@@ -75,7 +74,7 @@ package model.remote {
 		
 		private function onRemoteKeyReady(e:AppEvent):void 
 		{
-			if (_saveAccount) writeAcctToDatabase(e.data as HostingAccount); 
+			writeAcctToDatabase(e.data as HostingAccount); 
 		}
 		
 		private function swapAccounts(n:HostingAccount, o:HostingAccount):void

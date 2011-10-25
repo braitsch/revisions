@@ -39,7 +39,7 @@ package view.windows.account {
 					rp.y = i * 41;
 				_repos.addChild(rp);
 			}
-			_line1.text = 'Welcome, these are your '+super.account.type+' repositories!';		
+			_line1.text = 'Welcome, these are your '+super.account.acctType+' repositories!';		
 		}
 		
 	// collaborators //
