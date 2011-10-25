@@ -40,7 +40,7 @@ package model.proxies.remote.repo {
 		private function attemptRequest():void
 		{
 			_working = true;
-			trace("GitProxy.attemptRequest()", _attemptNum, _request.method, _request.remote.url, _request.args);
+		//	trace("GitProxy.attemptRequest()", _attemptNum, _request.method, _request.remote.url, _request.args);
 			super.appendArgs(_request.args);
 			if (_request.method == BashMethods.PUSH_BRANCH && _attemptNum == 1){
 				super.call(Vector.<String>([_request.method, _request.remote.name]));
@@ -53,7 +53,6 @@ package model.proxies.remote.repo {
 		private function retryRequest():void
 		{
 			_attemptNum++;
-			trace('_attemptNum: ' + (_attemptNum));
 			if (_attemptNum == 2){
 				inspectRequest();
 			}	else{
@@ -149,7 +148,7 @@ package model.proxies.remote.repo {
 			return new HostingAccount({type:_acctType, acct:_acctName, user:_userName, pass:_userPass});		
 		}						
 		
-	// handle responses //	
+	// handle responses //
 		
 		override protected function onProcessComplete(e:NativeProcessEvent):void
 		{
@@ -157,7 +156,6 @@ package model.proxies.remote.repo {
 			_working = false;
 			super.onProcessComplete(e);
 			var f:String = RemoteFailure.detectFailure(e.data.result);
-			trace("GitProxy.onProcessComplete(e) -- failure = ",f);
 			if (f){
 				onProcessFailure(f);
 			}	else{
@@ -194,7 +192,6 @@ package model.proxies.remote.repo {
 		
 		private function onAuthenticationFailure():void 
 		{ 
-			trace("GitProxy.onAuthenticationFailure()");
 			if (hasString(_request.remote.url, 'git://github.com') || hasString(_request.remote.url, 'https://github.com')){
 		// a read-only request has failed //	
 				dispatchError(ErrEvent.UNRESOLVED_HOST);
