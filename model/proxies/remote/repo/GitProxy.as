@@ -157,7 +157,6 @@ package model.proxies.remote.repo {
 		override protected function onProcessComplete(e:NativeProcessEvent):void
 		{
 			trace("GitProxy.onProcessComplete(e)", 'm='+e.data.method, 'r='+e.data.result);
-			_working = false;
 			super.onProcessComplete(e);
 			var f:String = RemoteFailure.detectFailure(e.data.result);
 			if (f){
@@ -172,6 +171,8 @@ package model.proxies.remote.repo {
 			if (_request.method == BashMethods.TEST_REPAIR) {
 				Hosts.github.setUserAndPass(_userName, _userPass);
 				editRemote();
+			}	else {
+				_working = false;
 			}
 		}
 
@@ -196,12 +197,15 @@ package model.proxies.remote.repo {
 					onAuthenticationFailure();
 				break;
 				case RemoteFailure.USER_FORBIDDEN	:
+					_working = false;
 					dispatchError(ErrEvent.USER_FORBIDDEN);
 				break;				
 				case RemoteFailure.MALFORMED_URL	:
+					_working = false;
 					dispatchError(ErrEvent.UNRESOLVED_HOST);
 				break;
 				case RemoteFailure.REPO_NOT_FOUND	:
+					_working = false;
 					dispatchError(ErrEvent.REPO_NOT_FOUND);
 				break;
 			}
@@ -211,6 +215,7 @@ package model.proxies.remote.repo {
 		{ 
 			if (hasString(_request.remote.url, 'git://github.com') || hasString(_request.remote.url, 'https://github.com')){
 		// a read-only request has failed //	
+				_working = false;
 				dispatchError(ErrEvent.UNRESOLVED_HOST);
 			}	else if (_request.method == BashMethods.PUSH_BRANCH || _request.method == BashMethods.GET_REMOTE_FILES){
 				_failedMethod = _request.method;

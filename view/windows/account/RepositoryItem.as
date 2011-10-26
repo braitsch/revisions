@@ -25,7 +25,8 @@ package view.windows.account {
  			_view.name_txt.autoSize = TextFieldAutoSize.LEFT;
 			_view.desc_txt.autoSize = TextFieldAutoSize.LEFT;
 			_view.name_txt.text = o.repoName;
-			_view.desc_txt.text = 'last commit :: '+StringUtils.parseISO8601Date(o.lastUpdated).toLocaleString();
+			var n:String = o.lastUpdated == '' ? 'Just Now' : StringUtils.parseISO8601Date(o.lastUpdated).toLocaleString(); 
+			_view.desc_txt.text = 'last commit :: '+n;
 			_clone.addEventListener(MouseEvent.CLICK, onCloneClick);
 			if (o.acctType == HostingAccount.GITHUB) checkIfOwner();
 			if (_collab.enabled) _collab.addEventListener(MouseEvent.CLICK, onCollabClick);

@@ -81,7 +81,7 @@ package model.proxies.local {
 			var n2:Array = splitAndTrim(a[1].result);
 			if (n1.length) AppModel.branch.remoteStatus = n1.length;
 			if (n2.length) AppModel.branch.remoteStatus =-n2.length;
-			trace("StatusProxy.onRemoteStatus(a)", n1.length, n2.length);
+		//	trace("StatusProxy.onRemoteStatus(a)", n1.length, n2.length);
 			AppIcon.setApplicationIcon();
 			AppModel.dispatch(AppEvent.BRANCH_STATUS);
 		}
