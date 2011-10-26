@@ -25,7 +25,7 @@ package model.proxies.remote {
 			var m:String;
 			var n:uint = 8000;
 			switch(v[0]){
-				case BashMethods.LOGIN :
+				case BashMethods.ACTIVE_LOGIN :
 					m = 'Attemping Login';
 				break;
 				case BashMethods.ADD_REPOSITORY :

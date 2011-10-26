@@ -10,10 +10,15 @@ package model.proxies.remote.acct {
 	public class ApiProxy extends CurlProxy {
 
 		public function login(ra:HostingAccount, silent:Boolean):void { }
-		protected function loginX(url:String):void
+		protected function activeLogin(url:String):void
 		{
-			super.call(Vector.<String>([BashMethods.LOGIN, url]));
+			super.call(Vector.<String>([BashMethods.ACTIVE_LOGIN, url]));
 		}
+		
+		protected function silentLogin(url:String):void
+		{
+			super.call(Vector.<String>([BashMethods.SILENT_LOGIN, url]));
+		}		
 		
 	// repositories //	
 	
@@ -70,9 +75,12 @@ package model.proxies.remote.acct {
 		override protected function onProcessSuccess(m:String, r:String):void
 		{
 			switch(m){
-				case BashMethods.LOGIN :
+				case BashMethods.ACTIVE_LOGIN :
 					onLoginSuccess(r);
 				break;
+				case BashMethods.SILENT_LOGIN :
+					onLoginSuccess(r);
+				break;				
 				case BashMethods.GET_REPOSITORIES :
 					onRepositories(r);
 				break;

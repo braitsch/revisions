@@ -55,8 +55,9 @@ package system{
 		public static const GET_IGNORED_FILES		:String = 'getIgnoredFiles';
 		
 	// github & beanstalk api methods //
-		public static const LOGIN					:String = 'login';
 		public static const LOGOUT					:String = 'logout';
+		public static const ACTIVE_LOGIN			:String = 'activeLogin';
+		public static const SILENT_LOGIN			:String = 'silentLogin';
 		public static const GET_REPOSITORIES		:String = 'getRepositories';
 		public static const ADD_REPOSITORY			:String = 'addRepository';
 		public static const GET_COLLABORATORS		:String = 'getCollaborators';

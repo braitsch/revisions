@@ -2,6 +2,7 @@ package model.proxies.remote.acct {
 
 	import events.AppEvent;
 	import events.ErrEvent;
+	import model.AppModel;
 	import model.remote.HostingAccount;
 	import model.vo.BeanstalkRepo;
 	import model.vo.Collaborator;
@@ -28,7 +29,11 @@ package model.proxies.remote.acct {
 		{
 			_account = ha; _silentLogin = silent;
 			_baseURL = 'https://'+_account.user+':'+_account.pass+'@'+_account.acctName+'.beanstalkapp.com/api';
-			super.loginX(_baseURL + '/users.xml');
+			if (silent){
+				super.silentLogin(_baseURL + '/users.xml');
+			}	else{
+				super.activeLogin(_baseURL + '/users.xml');
+			}
 		}
 		
 		override public function addRepository(o:Object):void
@@ -95,6 +100,7 @@ package model.proxies.remote.acct {
 				}
 			}
 			_account.repositories = v;
+			AppModel.hideLoader();
 			dispatchEvent(new AppEvent(AppEvent.LOGIN_SUCCESS, _account));
 		}
 		

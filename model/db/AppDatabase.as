@@ -123,16 +123,16 @@ package model.db {
 					dispatchEvent(new DataBaseEvent(DataBaseEvent.RECORD_DELETED, _bkmks));
 				break;
 				case _addAccount :
-					trace("AppDatabase.onTransactionComplete(e) -- new account added!!");	
+			//		trace("AppDatabase.onTransactionComplete(e) -- new account added!!");	
 				break;	
 				case _editAccount :
-					trace("AppDatabase.onTransactionComplete(e) -- account updated !!");	
+			//		trace("AppDatabase.onTransactionComplete(e) -- account updated !!");	
 				break;
 				case _delAccount :
-					trace("AppDatabase.onTransactionComplete(e) -- failed account deleted !!");	
+			//		trace("AppDatabase.onTransactionComplete(e) -- failed account deleted !!");	
 				break;										
 				case _setSSHKeyId :
-					trace("AppDatabase.onTransactionComplete(e) -- primary account set !!");	
+			//		trace("AppDatabase.onTransactionComplete(e) -- primary account set !!");	
 				break;									
 			}
 		}

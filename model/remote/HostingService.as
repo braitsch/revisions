@@ -72,8 +72,7 @@ package model.remote {
 				AppModel.database.editAccount(n);
 			}
 			_account = n;
-			AppModel.hideLoader();
-			AppModel.dispatch(AppEvent.LOGIN_SUCCESS);			
+			AppModel.dispatch(AppEvent.LOGIN_SUCCESS);
 		}
 		
 		private function onLoginSuccess(e:AppEvent):void

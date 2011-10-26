@@ -48,7 +48,7 @@ package model.proxies.remote.repo {
 		{
 			AppModel.hideLoader();
 			AppModel.branch.remoteStatus = 0;
-			AppModel.dispatch(AppEvent.BRANCH_PUSHED);			
+			AppModel.dispatch(AppEvent.BRANCH_PUSHED);	
 		}
 		
 		private function isLoggedIn():Boolean
