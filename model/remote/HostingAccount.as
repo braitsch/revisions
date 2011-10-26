@@ -78,7 +78,13 @@ package model.remote {
 		// avoids requesting list when removing collab from account view //
 			for (var i:int = 0; i < _collaborators.length; i++) if (o == _collaborators[i]) break;
 			_collaborators.splice(i, 1);
-		}		
+		}	
+		
+		public function setUserAndPass(u:String, p:String):void
+		{
+		// allow git proxy to update the user / pass if they change at runtime //	
+			_user = u; _pass = p;
+		}			
 		
 		private function sortByName(v:Vector.<Repository>):Vector.<Repository>
 		{

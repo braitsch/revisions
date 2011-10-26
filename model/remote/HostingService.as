@@ -54,9 +54,9 @@ package model.remote {
 			_model.api.login(_account, true);	
 		}
 		
-		public function addKeyToAccount(a:HostingAccount):void
+		public function addKeyToAccount():void
 		{
-			_model.key.checkKey(a);
+			_model.key.checkKey(_account);
 		}
 		
 		public function logOut():void
@@ -64,7 +64,7 @@ package model.remote {
 			_loggedIn = false;
 		}
 		
-		public function writeAcctToDatabase(n:HostingAccount):void
+		private function writeAcctToDatabase(n:HostingAccount):void
 		{
 			if (_account == null){
 				AppModel.database.addAccount(n);
@@ -72,6 +72,7 @@ package model.remote {
 				AppModel.database.editAccount(n);
 			}
 			_account = n;
+			_model.home.account = _account;
 			AppModel.dispatch(AppEvent.LOGIN_SUCCESS);
 		}
 		
@@ -93,6 +94,12 @@ package model.remote {
 		private function onRemoteKeyReady(e:AppEvent):void 
 		{
 			writeAcctToDatabase(e.data as HostingAccount);
+		}
+
+		public function setUserAndPass(u:String, p:String):void
+		{
+			_account.setUserAndPass(u, p);
+			writeAcctToDatabase(_account);
 		}
 
 	}

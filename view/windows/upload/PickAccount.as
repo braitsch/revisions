@@ -15,8 +15,8 @@ package view.windows.upload {
 		private static var _login		:AccountLogin;
 		private static var _service		:String;
 		
-		private static var _thisAcct	:DrawButton = new DrawButton(250, 36, 'Link To This Account', 12);
-		private static var _diffAcct	:DrawButton = new DrawButton(250, 36, 'Link To A Different Account', 12);		
+		private static var _thisAcct	:DrawButton = new DrawButton(250, 45, 'Link To This Account', 12);
+		private static var _diffAcct	:DrawButton = new DrawButton(250, 45, 'Link To A Different Account', 12);		
 
 		public function PickAccount()
 		{
@@ -39,7 +39,7 @@ package view.windows.upload {
 		{
 			_pick = new Sprite();
 			_thisAcct.x = _diffAcct.x = 150;
-			_thisAcct.y = 110; _diffAcct.y = 170;
+			_thisAcct.y = 115; _diffAcct.y = 180;
 			_pick.addChild(_thisAcct); _pick.addChild(_diffAcct);
 			addEventListener(MouseEvent.CLICK, onButtonClick);
 		}

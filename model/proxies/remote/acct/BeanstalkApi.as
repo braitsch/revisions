@@ -4,6 +4,7 @@ package model.proxies.remote.acct {
 	import events.ErrEvent;
 	import model.AppModel;
 	import model.remote.HostingAccount;
+	import model.remote.Hosts;
 	import model.vo.BeanstalkRepo;
 	import model.vo.Collaborator;
 	import model.vo.Permission;
@@ -109,6 +110,8 @@ package model.proxies.remote.acct {
 			var xml:XML = new XML(s);
 			var url:String = 'git@'+_account.acctName+'.beanstalkapp.com:/'+xml.name+'.git';
 			_account.addRepository(new BeanstalkRepo(xml, url));
+		// force resets the home view, temporary //
+			Hosts.beanstalk.home.account = _account;			
 			dispatchEvent(new AppEvent(AppEvent.REPOSITORY_CREATED));
 		}
 		

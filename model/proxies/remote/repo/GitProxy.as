@@ -139,7 +139,8 @@ package model.proxies.remote.repo {
 
 		private function addKeyToBeanstalkAcct():void
 		{
-			Hosts.beanstalk.addKeyToAccount(makeAcctObj());
+			Hosts.beanstalk.setUserAndPass(_userName, _userPass);
+			Hosts.beanstalk.addKeyToAccount();
 			Hosts.beanstalk.key.addEventListener(AppEvent.REMOTE_KEY_READY, onKeyAddedToBeanstalk);
 		}
 		
@@ -150,11 +151,6 @@ package model.proxies.remote.repo {
 			super.call(Vector.<String>([_request.method]));
 			Hosts.beanstalk.key.removeEventListener(AppEvent.REMOTE_KEY_READY, onKeyAddedToBeanstalk);
 		}
-		
-		private function makeAcctObj():HostingAccount
-		{
-			return new HostingAccount({type:_acctType, acct:_acctName, user:_userName, pass:_userPass});		
-		}						
 		
 	// handle responses //
 		
@@ -173,8 +169,10 @@ package model.proxies.remote.repo {
 
 		protected function onProcessSuccess(e:NativeProcessEvent):void
 		{
-			if (_request.method == BashMethods.TEST_REPAIR) editRemote();
-			if (_acctType == HostingAccount.GITHUB) Hosts.github.writeAcctToDatabase(makeAcctObj());
+			if (_request.method == BashMethods.TEST_REPAIR) {
+				Hosts.github.setUserAndPass(_userName, _userPass);
+				editRemote();
+			}
 		}
 
 		private function editRemote():void
@@ -192,7 +190,7 @@ package model.proxies.remote.repo {
 		
 		private function onProcessFailure(f:String):void 
 		{
-			trace("GitProxy.onProcessFailure(f)", f);
+		//	trace("GitProxy.onProcessFailure(f)", f);
 			switch(f){
 				case RemoteFailure.AUTHENTICATION	:
 					onAuthenticationFailure();

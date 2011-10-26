@@ -29,7 +29,7 @@ package view.windows.account {
 			addEventListener(UIEvent.GET_COLLABORATORS, onCollabClick);
 			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);
 		}
-
+		
 		public function reset():void
 		{
 			var v:Vector.<Repository> = super.account.repositories;

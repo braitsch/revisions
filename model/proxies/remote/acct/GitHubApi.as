@@ -1,5 +1,6 @@
 package model.proxies.remote.acct {
 
+	import model.remote.Hosts;
 	import events.AppEvent;
 	import events.ErrEvent;
 	import model.AppModel;
@@ -85,6 +86,8 @@ package model.proxies.remote.acct {
 			var o:Object = getResultObject(s);
 			if (o.errors == null){
 				_account.addRepository(new GitHubRepo(o));
+			// force resets the home view, temporary //
+				Hosts.github.home.account = _account;
 				dispatchEvent(new AppEvent(AppEvent.REPOSITORY_CREATED));
 			}	else{
 				handleJSONError(o);

@@ -46,7 +46,7 @@ package view.windows.account {
 
 		private function attachAvatar():void
 		{
-			_account.avatar.y = 8; 
+			_account.avatar.y = 8;
 			_account.avatar.x = 426;
 			_view.addChild(_account.avatar);
 			_view.badgePage.label_txt.text = _account.acctType == HostingAccount.GITHUB ? 'My Github' : 'My Beanstalk';
