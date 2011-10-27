@@ -12,7 +12,6 @@ package model {
 		
 		private static var _index			:uint = 0;
 		private static var _bookmark		:Bookmark;
-		private static var _broken			:Vector.<Bookmark> = new Vector.<Bookmark>();
 		private static var _bookmarks		:Vector.<Bookmark> = new Vector.<Bookmark>();
 
 	// expose bookmarks to check against duplicates being added //
@@ -84,14 +83,7 @@ package model {
 		{
 			for (var i:int = 0; i < _bookmarks.length; i++) if (_bookmarks[i] == _bookmark) _bookmarks.splice(i, 1);
 			for (var j:int = 0; j < a.length; j++) if (a[j].active == 1) _bookmark = _bookmarks[j];
-			if (_broken.length > 0) {
-				_broken.splice(0, 1);
-				if (_broken.length == 0) {
-					initializeBookmarks();
-				}	else{
-					AppModel.dispatch(AppEvent.PATH_ERROR, _broken[0]);
-				}
-			}	else if (_bookmarks.length){
+			if (_bookmarks.length){
 				dispatchActiveBookmark();	
 			}	else{
 				AppModel.bookmark = null;
@@ -107,25 +99,7 @@ package model {
 			if (_bookmarks.length == 0){
 				AppModel.dispatch(AppEvent.NO_BOOKMARKS);	
 			}	else{
-				checkForBrokenPaths();
-				if (_broken.length == 0) {
-					initializeBookmarks();
-				}	else{
-					addEventListener(AppEvent.BOOKMARK_REPAIRED, onBookmarkRepaired);
-					AppModel.dispatch(AppEvent.PATH_ERROR, _broken[0]);
-				}
-			}
-		}
-
-		private function onBookmarkRepaired(e:AppEvent):void
-		{
-			if (_broken.length > 0) {
-				_broken.splice(0, 1);
-				if (_broken.length == 0) {
-					initializeBookmarks();
-				}	else {
-					AppModel.dispatch(AppEvent.PATH_ERROR, _broken[0]);
-				}
+				initializeBookmarks();
 			}
 		}
 
@@ -143,11 +117,6 @@ package model {
 				if (b.active) _bookmark = b;
 			}			
 		}		
-		
-		private function checkForBrokenPaths():void
-		{
-			for (var i:int = 0; i < _bookmarks.length; i++) if (!_bookmarks[i].exists) _broken.push(_bookmarks[i]);			
-		}
 		
 		private function initializeBookmarks():void
 		{

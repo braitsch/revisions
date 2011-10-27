@@ -1,9 +1,9 @@
 package model.proxies.remote.acct {
 
-	import com.adobe.serialization.json.JSONDecoder;
 	import events.ErrEvent;
 	import events.NativeProcessEvent;
 	import model.proxies.remote.RemoteProxy;
+	import com.adobe.serialization.json.JSONDecoder;
 
 	public class CurlProxy extends RemoteProxy {
 		
