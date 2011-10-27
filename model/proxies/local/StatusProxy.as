@@ -24,8 +24,7 @@ package model.proxies.local {
 		public function getSummary():void
 		{
 			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
-			super.queue = [	Vector.<String>([BashMethods.GET_LAST_COMMIT]),
-							Vector.<String>([BashMethods.GET_TOTAL_COMMITS]) ];
+			super.queue = [	Vector.<String>([BashMethods.GET_HISTORY])];
 		}
 		
 		public function getModified(b:Bookmark):void
@@ -61,10 +60,7 @@ package model.proxies.local {
 			var a:Array = e.data as Array;
 			switch(a[0].method){
 				case BashMethods.GET_HISTORY :
-					onHistory(a);
-				break;
-				case BashMethods.GET_LAST_COMMIT :
-					onSummary(a);	
+					a.length == 1 ? onSummary(a) : onHistory(a);
 				break;
 				case BashMethods.GET_MODIFIED_FILES:
 					onModified(a);
@@ -95,19 +91,19 @@ package model.proxies.local {
 
 		private function onSummary(a:Array):void
 		{
-			AppModel.branch.lastCommit = new Commit(a[0].result, uint(a[1].result) + 1);
+			parseHistory(a[0].result);
 			AppModel.dispatch(AppEvent.SUMMARY_RECEIVED);
 		}
 
 		private function onHistory(a:Array):void
 		{
-		//	var k:Number = getTimer();
+	//		var k:Number = getTimer();
 			parseHistory(a[0].result);
 			parseFavorites(a[1].result);
 			AppModel.branch.modified = splitAndTrim(a[2].result);
 			AppModel.branch.untracked = splitAndTrim(a[3].result);
-		//	trace("StatusProxy.onHistory - parsed in", getTimer() - k, 'ms');
 			AppModel.dispatch(AppEvent.HISTORY_RECEIVED);
+	//		trace("StatusProxy.onHistory - parsed in", getTimer() - k, 'ms');
 		}
 
 		private function parseHistory(s:String):void
