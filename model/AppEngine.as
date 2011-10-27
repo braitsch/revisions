@@ -111,8 +111,8 @@ package model {
 				if (_broken.length == 0) {
 					initializeBookmarks();
 				}	else{
-					addEventListener(AppEvent.BOOKMARK_REPAIRED, onBookmarkRepaired);
 					AppModel.dispatch(AppEvent.PATH_ERROR, _broken[0]);
+					addEventListener(AppEvent.BOOKMARK_REPAIRED, onBookmarkRepaired);
 				}
 			}
 		}
@@ -123,6 +123,7 @@ package model {
 				_broken.splice(0, 1);
 				if (_broken.length == 0) {
 					initializeBookmarks();
+					removeEventListener(AppEvent.BOOKMARK_REPAIRED, onBookmarkRepaired);
 				}	else {
 					AppModel.dispatch(AppEvent.PATH_ERROR, _broken[0]);
 				}

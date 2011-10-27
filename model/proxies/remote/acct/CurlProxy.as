@@ -1,5 +1,6 @@
 package model.proxies.remote.acct {
 
+	import system.BashMethods;
 	import com.adobe.serialization.json.JSONDecoder;
 	import events.ErrEvent;
 	import events.NativeProcessEvent;
@@ -37,6 +38,7 @@ package model.proxies.remote.acct {
 		
 		private function onProcessFailure(x:uint, m:String):void
 		{
+			if (m == BashMethods.SILENT_LOGIN) return;
 			switch(x){
 				case 6 :
 					dispatchError(ErrEvent.NO_CONNECTION);

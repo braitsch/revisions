@@ -110,7 +110,7 @@ package view.windows.modals.local {
 		private function updateDatabase():void
 		{
 			AppModel.database.addEventListener(DataBaseEvent.RECORD_EDITED, onBookmarkRepaired);
-			AppModel.database.editRepository(_broken.label, _form.getField(0), _form.getField(1), _broken.autosave);				
+			AppModel.database.editRepository(_broken.label, _form.getField(0), _form.getField(1), _broken.autosave);
 		}
 
 		private function onBookmarkRepaired(e:DataBaseEvent):void
@@ -118,13 +118,13 @@ package view.windows.modals.local {
 			_broken.path = _form.getField(1);
 			_broken.label = _form.getField(0);
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));			
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.BOOKMARK_REPAIRED));
+			AppModel.dispatch(AppEvent.BOOKMARK_REPAIRED);
 			AppModel.database.removeEventListener(DataBaseEvent.RECORD_EDITED, onBookmarkRepaired);			
 		}
 
 		private function onBookmarkDeleted(e:DataBaseEvent):void
 		{
-			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));			
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 			AppModel.database.removeEventListener(DataBaseEvent.RECORD_DELETED, onBookmarkDeleted);
 		}
 

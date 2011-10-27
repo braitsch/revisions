@@ -4,6 +4,8 @@ package view.windows.account {
 	import events.UIEvent;
 	import model.AppModel;
 	import model.vo.Repository;
+	import view.btns.ButtonIcon;
+	import view.btns.DrawButton;
 	import view.type.TextHeading;
 	import flash.display.Shape;
 	import flash.display.Sprite;
@@ -17,11 +19,13 @@ package view.windows.account {
 		private var _line1			:TextHeading = new TextHeading();
 		private var _line2			:TextHeading = new TextHeading();
 		private var _repos			:Sprite = new Sprite();
+		private var _upload			:DrawButton = new DrawButton(440, 50, 'Upload a bookmark to my account', 12);
 		private var _cloneURL		:String;
 
 		public function RepositoryView() 
 		{
 			addChild(_view);
+			addUploadButton();
 			addTextHeadings();
 			buildRepoContainer();
 			addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
@@ -29,17 +33,35 @@ package view.windows.account {
 			addEventListener(UIEvent.GET_COLLABORATORS, onCollabClick);
 			addEventListener(UIEvent.FILE_BROWSER_SELECTION, onBrowserSelection);
 		}
-		
+
 		public function reset():void
 		{
-			var v:Vector.<Repository> = super.account.repositories;
 			while(_repos.numChildren) _repos.removeChildAt(0);
+			if (super.account.repositories.length > 0){
+				showRepositories();	
+			}	else{
+				showNoRepositories();		
+			}
+		}
+
+		private function showRepositories():void
+		{
+			var v:Vector.<Repository> = super.account.repositories;
 			for (var i:int = 0; i < v.length; i++) {
 				var rp:RepositoryItem = new RepositoryItem(v[i]);
 					rp.y = i * 41;
 				_repos.addChild(rp);
 			}
-			_line1.text = 'Welcome, these are your '+super.account.acctType+' repositories!';		
+			_line1.text = 'Welcome, these are your '+super.account.acctType+' repositories!';
+			_line2.text = 'Select one to download or to manage your collaborators';
+			_upload.visible = false;
+		}
+		
+		private function showNoRepositories():void
+		{
+			_line1.text = 'Welcome, you are now logged into your '+super.account.acctType+' account!';
+			_line2.text = 'However it looks like you haven\'t uploaded any bookmarks yet.';
+			_upload.visible = true;
 		}
 		
 	// collaborators //
@@ -102,8 +124,22 @@ package view.windows.account {
 			addChild(_line1);
 			addChild(_line2);
 			_line1.y = 0; _line2.y = 17;
-			_line2.text = 'Select one to clone or to manage your collaborators';
-		}					
+		}
+		
+		private function addUploadButton():void
+		{
+			addChild(_upload);
+			_upload.y = 130;
+			_upload.x = 290 - _upload.width / 2;
+			_upload.icon = new ButtonIcon(new Upload());
+			_upload.icon.scaleX = _upload.icon.scaleY = 1.2;
+			_upload.addEventListener(MouseEvent.CLICK, onUploadClick);			
+		}
+
+		private function onUploadClick(e:MouseEvent):void
+		{
+			dispatchEvent(new UIEvent(UIEvent.ADD_BKMK_TO_ACCOUNT));
+		}
 		
 		private function onMouseWheel(e:MouseEvent):void
 		{

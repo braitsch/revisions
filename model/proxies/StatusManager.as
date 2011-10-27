@@ -40,7 +40,7 @@ package model.proxies {
 			}
 		}	
 	
-	// private methods //		
+	// private methods //
 
 		private function initTimers():void
 		{
