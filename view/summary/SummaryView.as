@@ -82,6 +82,8 @@ package view.summary {
 			AppModel.engine.addEventListener(AppEvent.SUMMARY_RECEIVED, drawView);
 			AppModel.engine.addEventListener(AppEvent.MODIFIED_RECEIVED, drawView);
 			AppModel.engine.addEventListener(AppEvent.BOOKMARK_SELECTED, onSelected);
+			AppModel.engine.addEventListener(AppEvent.BOOKMARK_EDITED, setTextFields);
+			AppModel.engine.addEventListener(AppEvent.BOOKMARK_REPAIRED, onSelected);
 		}
 
 		private function onSelected(e:AppEvent):void
@@ -90,7 +92,7 @@ package view.summary {
 			getBookmarkIcon();
 		}
 
-		private function setTextFields():void
+		private function setTextFields(e:AppEvent = null):void
 		{
 			_view.name_txt.text = AppModel.bookmark.label;
 			_offset = (_view.name_txt.height - 26) / 2;

@@ -124,6 +124,7 @@ package view.windows.editor {
 		{
 			AppModel.bookmark.path = _form.getField(1);
 			AppModel.bookmark.label = _form.getField(0);
+			AppModel.dispatch(AppEvent.BOOKMARK_EDITED);
 			AppModel.database.removeEventListener(DataBaseEvent.RECORD_EDITED, onEditSuccessful);		
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 		}

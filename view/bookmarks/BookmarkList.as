@@ -7,6 +7,8 @@ package view.bookmarks {
 
 	public class BookmarkList extends ScrollingList {
 		
+		private static var _active	:BookmarkListItem;
+		
 		public function BookmarkList()
 		{	
 			super.leading = 34;
@@ -14,8 +16,10 @@ package view.bookmarks {
 			AppModel.engine.addEventListener(AppEvent.BOOKMARK_ADDED, onBookmarkAdded);
 			AppModel.engine.addEventListener(AppEvent.BOOKMARK_DELETED, onBookmarkDeleted);
 			AppModel.engine.addEventListener(AppEvent.BOOKMARK_SELECTED, onBookmarkSelected);			
+			AppModel.engine.addEventListener(AppEvent.BOOKMARK_EDITED, onBookmarkEdited);
+			AppModel.engine.addEventListener(AppEvent.BOOKMARK_REPAIRED, onBookmarkRepaired);
 		}
-		
+
 		public function resize(h:uint):void
 		{
 			super.draw(200, h);
@@ -44,9 +48,25 @@ package view.bookmarks {
 		{
 			for (var i:int = 0; i < super.list.numChildren; i++) {
 				var k:BookmarkListItem = super.list.getChildAt(i) as BookmarkListItem;
-				k.active = (k.bookmark == AppModel.bookmark);
+				if (k.bookmark == AppModel.bookmark){
+					_active = k;
+					k.active = true;
+				}	else{
+					k.active = false;	
+				}
 			}					
-		}		
+		}
+		
+		private function onBookmarkEdited(e:AppEvent):void
+		{
+			_active.setLabel();
+		}
+		
+		private function onBookmarkRepaired(e:AppEvent):void
+		{
+			_active.setLabel();	
+			_active.attachIcon();
+		}					
 
 	}
 	

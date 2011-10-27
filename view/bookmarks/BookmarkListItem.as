@@ -1,6 +1,5 @@
 package view.bookmarks {
 
-	import events.AppEvent;
 	import model.AppModel;
 	import model.vo.Bookmark;
 	import view.btns.ButtonIcon;
@@ -18,7 +17,6 @@ package view.bookmarks {
 		public function BookmarkListItem($bkmk:Bookmark)
 		{
 			_bookmark = $bkmk;
-			_bookmark.addEventListener(AppEvent.BOOKMARK_EDITED, onBookmarkEdited);
 			_view.blue.alpha = 0;
 			_view.label_txt.y = 11;
 			_view.label_txt.selectable = false;
@@ -32,7 +30,34 @@ package view.bookmarks {
 			addEventListener(MouseEvent.CLICK, onBookmarkSelected);
 		}
 
-		private function attachIcon():void
+		public function get bookmark():Bookmark
+		{
+			return _bookmark;
+		}
+		
+		public function set active(b:Boolean):void
+		{
+			TweenLite.to(_view.blue, .5, {alpha: b ? 1 : 0});
+		}
+		
+		public function setLabel():void
+		{
+			_view.label_txt.text = _bookmark.label;
+		}
+		
+		public function attachIcon():void
+		{
+			if (_icon) removeChild(_icon);
+			if (_bookmark.exists){
+				getSystemIcon();
+			}	else{
+				_icon = new ButtonIcon(new BrokenIcon(), false, false);
+				_icon.y = 6; _icon.x = 5;				
+			}
+			addChild(_icon);
+		}
+		
+		private function getSystemIcon():void
 		{
 			if (_bookmark.type == Bookmark.FILE){
 				var b:Bitmap = _bookmark.icon32;
@@ -44,25 +69,9 @@ package view.bookmarks {
 				_icon = new ButtonIcon(new FolderIcon(), true, false); 
 				_icon.y = 17; _icon.x = 17;
 				_icon.scaleX = _icon.scaleY = .7;
-			}
-			addChild(_icon);
+			}					
 		}
-		
-		public function get bookmark():Bookmark
-		{
-			return _bookmark;
-		}
-		
-		public function set active(b:Boolean):void
-		{
-			TweenLite.to(_view.blue, .5, {alpha: b ? 1 : 0});
-		}
-		
-		private function onBookmarkEdited(e:AppEvent):void 		{
-			_view.label_txt.text = _bookmark.label;
-		}
-		
-		private function onMouseOver(e:MouseEvent):void
+				private function onMouseOver(e:MouseEvent):void
 		{
 			this.active = true;
 		}

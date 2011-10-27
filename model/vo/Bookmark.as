@@ -1,9 +1,8 @@
 package model.vo {
 
-	import model.remote.HostingAccount;
-	import events.AppEvent;
 	import model.AppEngine;
 	import model.AppModel;
+	import model.remote.HostingAccount;
 	import system.StringUtils;
 	import com.adobe.crypto.MD5;
 	import flash.display.Bitmap;
@@ -61,11 +60,7 @@ package model.vo {
 		public function get branches():Vector.<Branch>			{ return _branches;	 	}	
 		
 		public function get label():String 						{ return _label;		}
-		public function set label(s:String):void
-		{
-			_label = s;
-			dispatchEvent(new AppEvent(AppEvent.BOOKMARK_EDITED));
-		}
+		public function set label(s:String):void				{ _label = s;			}
 		
 		public function get branch():Branch 					{ return _branches[0]; 	}		
 		public function set branch(b:Branch):void

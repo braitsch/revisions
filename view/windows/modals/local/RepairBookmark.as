@@ -117,8 +117,8 @@ package view.windows.modals.local {
 		{
 			_broken.path = _form.getField(1);
 			_broken.label = _form.getField(0);
-			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));			
 			AppModel.dispatch(AppEvent.BOOKMARK_REPAIRED);
+			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));			
 			AppModel.database.removeEventListener(DataBaseEvent.RECORD_EDITED, onBookmarkRepaired);			
 		}
 
