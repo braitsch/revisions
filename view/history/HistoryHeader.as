@@ -34,13 +34,9 @@ package view.history {
 			addChild(_merger);
 			addEventListener(UIEvent.COMBO_HEADING_OVER, onComboRollOver);
 			AppModel.engine.addEventListener(AppEvent.BRANCH_DELETED, onBranchDeleted);
+			AppModel.engine.addEventListener(AppEvent.BOOKMARK_EDITED, onBookmarkEdited);
 		}
 
-		private function onBranchDeleted(e:AppEvent):void
-		{
-			refresh();
-		}
-		
 		public function clear():void
 		{
 			_history.visible = _switcher.visible = _merger.visible = false;
@@ -74,7 +70,17 @@ package view.history {
 		private function onComboRollOver(e:UIEvent):void
 		{
 			setChildIndex(e.data as ComboGroup, numChildren - 1);	
-		}		
+		}
+		
+		private function onBranchDeleted(e:AppEvent):void
+		{
+			refresh();
+		}				
+		
+		private function onBookmarkEdited(e:AppEvent):void
+		{
+			refresh();	
+		}
 
 	}
 	
