@@ -47,7 +47,6 @@ package system{
 		
 	// history & status //	
 		public static const GET_HISTORY				:String = 'getHistory';
-		public static const GET_LAST_COMMIT			:String = 'getLastCommit';
 		public static const GET_TOTAL_COMMITS		:String = 'getTotalCommits';
 		public static const GET_TRACKED_FILES		:String = 'getTrackedFiles';
 		public static const GET_UNTRACKED_FILES		:String = 'getUntrackedFiles';
