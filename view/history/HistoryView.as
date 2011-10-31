@@ -61,7 +61,6 @@ package view.history {
 				
 		private function onNoBookmarks(e:AppEvent):void
 		{
-			_header.clear();
 			_list.killHistory();
 		}
 		

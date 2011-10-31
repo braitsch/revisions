@@ -38,7 +38,6 @@ package view.history.combos {
 		
 		public function set options(v:Vector.<String>):void
 		{
-			this.visible = true;
 			while(_options.numChildren) _options.removeChildAt(0);
 			for (var i:int = 0; i < v.length; i++) {
 				var k:ComboItem = new ComboItem(v[i], _icon, _iconX, _allowKill);
@@ -78,7 +77,6 @@ package view.history.combos {
 			addChild(_heading);
 			addChild(_options); 
 			addChild(_mask); 
-			this.visible = false;
 			addEventListener(MouseEvent.ROLL_OUT, hideOptions);
 			_heading.addEventListener(MouseEvent.ROLL_OVER, showOptions);			
 		}

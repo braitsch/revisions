@@ -15,7 +15,6 @@ package view.history.combos {
 			super(OptionsArrow, BranchIcon, 20, true);
 			addEventListener(UIEvent.COMBO_OPTION_KILL, onBranchDelete);
 			addEventListener(UIEvent.COMBO_OPTION_CLICK, onBranchSelection);
-			addEventListener(UIEvent.COMBO_HEADING_CLICK, onHeadingClick);
 		}
 
 		public function draw():void
@@ -48,11 +47,6 @@ package view.history.combos {
 		{
 			if (e.data as Boolean == true) AppModel.proxies.editor.killBranch(_branch);
 		}	
-		
-		private function onHeadingClick(e:UIEvent):void
-		{
-			AppModel.alert(new Message('Select a saved version of this bookmark to create a new branch.'));			
-		}				
 		
 	}
 	
