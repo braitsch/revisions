@@ -101,13 +101,7 @@ package model.proxies.local {
 		public function mergeRemoteIntoLocal():void
 		{
 			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
-			super.call(Vector.<String>([BashMethods.MERGE, AppModel.branch.name, AppModel.repository.name+'/'+AppModel.branch.name]));
-		}
-		
-		private function absorbRemoteIntoLocal():void
-		{
-			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
-			super.call(Vector.<String>([BashMethods.ABSORB]));
+			super.call(Vector.<String>([BashMethods.MERGE, AppModel.repository.name, AppModel.branch.name, AppModel.proxies.config.userName]));
 		}
 		
 	// remotes //	
@@ -271,12 +265,8 @@ package model.proxies.local {
 
 		private function onMergeComplete(s:String):void
 		{
-			if (reponseHas(s, 'Fast-forward')) {
-				dispatchBranchSynced();
-			}	else{
-				trace("--conflict - attempting absorb remote files--");
-				absorbRemoteIntoLocal();
-			}
+			trace("BkmkEditor.onMergeComplete(s)", s);
+			dispatchBranchSynced();
 		}
 		
 		private function onAbsorbComplete(s:String):void
@@ -287,11 +277,6 @@ package model.proxies.local {
 		private function dispatchBranchSynced():void
 		{
 			AppModel.proxies.sync.pushBranch(AppModel.repository);
-		}
-
-		private function reponseHas(s1:String, s2:String):Boolean
-		{
-			return s1.indexOf(s2) != -1;
 		}
 
 	}
