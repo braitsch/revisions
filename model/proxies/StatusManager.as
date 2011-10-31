@@ -111,7 +111,7 @@ package model.proxies {
 	
 		private function onSummaryReceived(e:AppEvent):void 		
 		{	
-			getModified(AppModel.bookmark);		
+			getModified(AppModel.bookmark);	
 		}		
 		
 		private function onModifiedReceived(e:AppEvent):void

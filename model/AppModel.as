@@ -8,6 +8,7 @@ package model {
 	import model.vo.Repository;
 	import system.AppSettings;
 	import system.UpdateManager;
+	import view.graphics.AppIcon;
 	import view.windows.modals.system.Alert;
 	import view.windows.modals.system.ResolveMerge;
 	import flash.events.EventDispatcher;
@@ -34,6 +35,7 @@ package model {
 				_database.setActiveBookmark(_bookmark.label);
 				dispatch(AppEvent.BOOKMARK_SELECTED);
 			}
+			AppIcon.setApplicationIcon();
 		}
 		
 	// public getters //
