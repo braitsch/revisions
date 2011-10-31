@@ -26,7 +26,7 @@ package view.history {
 			_text.x = 60; _text.y = 8;
 			_text.line1 = l1;
 			_text.line2 = l2;
-			addChild(_text);			
+			addChild(_text);
 		}
 		
 		protected function attachAvatar(k:String):void

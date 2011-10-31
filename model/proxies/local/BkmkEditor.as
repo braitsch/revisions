@@ -104,6 +104,23 @@ package model.proxies.local {
 			super.call(Vector.<String>([BashMethods.MERGE, AppModel.repository.name, AppModel.branch.name, AppModel.proxies.config.userName]));
 		}
 		
+		public function mergeOurs():void
+		{
+			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
+			super.call(Vector.<String>([BashMethods.MERGE_OURS, AppModel.repository.name, AppModel.branch.name, AppModel.proxies.config.userName]));			
+		}
+		
+		public function mergeTheirs():void
+		{
+			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
+			super.call(Vector.<String>([BashMethods.MERGE_THEIRS, AppModel.repository.name, AppModel.branch.name, AppModel.proxies.config.userName]));			
+		}		
+		
+		private function getConflictDetails():void
+		{
+			super.call(Vector.<String>([BashMethods.COMPARE_COMMITS, AppModel.repository.name, AppModel.branch.name]));	
+		}
+		
 	// remotes //	
 		
 		public function addRemote(r:Repository):void
@@ -149,7 +166,7 @@ package model.proxies.local {
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
-			trace("BkmkEditor.onProcessComplete(e)", e.data.method, e.data.result);
+		//	trace("BkmkEditor.onProcessComplete(e)", e.data.method, e.data.result);
 			switch(e.data.method) {
 				case BashMethods.COMMIT : 
 					onCommitComplete();
@@ -177,9 +194,15 @@ package model.proxies.local {
 				break;				
 				case BashMethods.MERGE :
 					onMergeComplete(e.data.result);
-				break;	
-				case BashMethods.ABSORB :
-					onAbsorbComplete(e.data.result);
+				break;
+				case BashMethods.MERGE_OURS :
+					onMergeComplete(e.data.result);
+				break;
+				case BashMethods.MERGE_THEIRS :
+					onMergeComplete(e.data.result);
+				break;								
+				case BashMethods.COMPARE_COMMITS :
+					onCompareCommits(e.data.result);
 				break;					
 				case BashMethods.ADD_REMOTE :
 					onRemoteAdded();
@@ -265,19 +288,33 @@ package model.proxies.local {
 
 		private function onMergeComplete(s:String):void
 		{
-			trace("BkmkEditor.onMergeComplete(s)", s);
-			dispatchBranchSynced();
+			if (hasString(s, 'CONFLICT')){
+				getConflictDetails();
+			}	else{
+				AppModel.proxies.sync.pushBranch(AppModel.repository);
+			}
 		}
 		
-		private function onAbsorbComplete(s:String):void
+		private function onCompareCommits(s:String):void
 		{
-			dispatchBranchSynced();
+			AppModel.merge.commits = parseLogList(s);
+			AppModel.alert(AppModel.merge);
 		}
 		
-		private function dispatchBranchSynced():void
+		private function parseLogList(s:String):Array
 		{
-			AppModel.proxies.sync.pushBranch(AppModel.repository);
+			var a:Array = s.split('-##-');
+			for (var i:int = 0; i < a.length; i++) {
+				if (a[i] == '') {
+					a.splice(i, 1);
+				}	else{
+					a[i] = a[i].replace(/[\n\t\r]/g, '');
+				}
+			}
+			return a;
 		}
+		
+		private function hasString(s1:String, s2:String):Boolean { return s1.indexOf(s2) != -1; }			
 
 	}
 	

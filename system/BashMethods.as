@@ -34,8 +34,9 @@ package system{
 		
 	// repo-editor.as //		
 		public static const MERGE					:String = 'merge';
-		public static const UN_MERGE				:String = 'unmerge';
-		public static const ABSORB					:String = 'absorb';
+		public static const MERGE_OURS				:String = 'mergeOurs';
+		public static const MERGE_THEIRS			:String = 'mergeTheirs';		
+		public static const COMPARE_COMMITS			:String = 'compareCommits';
 		public static const ADD_BRANCH				:String = 'addBranch';
 		public static const SET_BRANCH				:String = 'setBranch';
 		public static const RENAME_BRANCH			:String = 'renameBranch';

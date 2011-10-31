@@ -18,7 +18,7 @@ package view.windows.modals.system {
 		private static var _check		:ModalCheckbox = new ModalCheckbox(true);
 		private static var _branchA		:Branch;
 		private static var _branchB		:Branch;
-		private static var _heading		:TextHeading = new TextHeading();			
+		private static var _heading		:TextHeading = new TextHeading();	
 
 		public function Merge()
 		{
