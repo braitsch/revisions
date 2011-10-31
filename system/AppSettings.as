@@ -10,11 +10,11 @@ package system {
 	
 	public class AppSettings {
 
-		public static const START_AT_LOGIN				:String = "startAtLogin";
+		public static const START_AT_LOGIN				:String = 'startAtLogin';
 		public static const CHECK_FOR_UPDATES			:String = 'checkForUpdates';
-		public static const SHOW_TOOL_TIPS				:String = "showToolTips";
-		public static const PROMPT_BEFORE_DOWNLOAD		:String = "promptBeforeDownload";
-		public static const PROMPT_NEW_REMOTE_BRANCHES	:String = "promptNewRemoteBranches";
+		public static const SHOW_TOOL_TIPS				:String = 'showToolTips';
+		public static const PROMPT_BEFORE_DOWNLOAD		:String = 'promptBeforeDownload';
+		public static const PROMPT_NEW_REMOTE_BRANCHES	:String = 'promptNewRemoteBranches';
 
 		private static var _file		:File;
 		private static var _xml			:XML;

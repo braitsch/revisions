@@ -22,6 +22,7 @@ package view.windows.editor {
 		private static var _autoSave	:BookmarkAutoSave = new BookmarkAutoSave();
 		private static var _glowFilter	:GlowFilter = new GlowFilter(0x000000, .1, 2, 2, 3, 3);
 		private static var _height		:uint = 400;
+//		private static var _promptSync	:ModalCheckbox = new ModalCheckbox(true, true);
 
 		public function BookmarkGeneral()
 		{
@@ -61,10 +62,18 @@ package view.windows.editor {
 			_autoSave.graphics.drawRect(0, 0, 225, 30);
 			_autoSave.graphics.endFill();				
 			_autoSave.addEventListener(MouseEvent.CLICK, onAutoSaveClick);
-			_autoSave.x = 10;
+			_autoSave.x = 7;
 			_autoSave.y = _height - 50;
 			addChild(_autoSave);
 		}
+		
+//		private function addCheckbox():void
+//		{
+//			_promptSync.label = 'Allow me to choose how I sync with the server.';
+//			_promptSync.x = 7;
+//			_promptSync.y = _height - 50;
+//			addChild(_promptSync);
+//		}		
 		
 		private function onBookmarkSelected(e:AppEvent):void
 		{

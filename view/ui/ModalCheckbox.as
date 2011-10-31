@@ -6,13 +6,18 @@ package view.ui {
 
 	public class ModalCheckbox extends Sprite {
 
-		private var _view				:ModalCheckboxMC = new ModalCheckboxMC();
+		private var _view				:*;
 		private static var _glowFilter	:GlowFilter = new GlowFilter(0x000000, .1, 2, 2, 3, 3);
 
-		public function ModalCheckbox(on:Boolean)
+		public function ModalCheckbox(on:Boolean, lg:Boolean = false)
 		{
+			if (lg){
+				_view = new ModalCheckboxLG();
+			}	else{
+				_view = new ModalCheckboxMC();
+				_view.x = 9;
+			}
 			addChild(_view);
-			_view.x = 9;
 			_view.buttonMode = true;
 			_view.check.visible = on;
 			_view.label_txt.autoSize = 'left';
