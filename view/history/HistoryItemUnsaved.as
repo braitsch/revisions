@@ -32,11 +32,11 @@ package view.history {
 			addChild(_kill);
 		}
 
-		override public function setSize(w:uint, h:uint):void
+		override public function setWidth(w:uint):void
 		{
 			_kill.x = w - 38;
-			_bkgd.draw(w, h);
-			super.setSize(w, h);
+			_bkgd.draw(w, 41);
+			super.setWidth(w);
 		}		
 
 		private function onSaveSelection(e:MouseEvent):void

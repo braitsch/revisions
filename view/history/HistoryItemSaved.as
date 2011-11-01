@@ -1,11 +1,10 @@
 package view.history {
 
-	import model.AppModel;
 	import events.UIEvent;
+	import model.AppModel;
 	import model.vo.Commit;
 	import view.btns.ButtonIcon;
 	import view.graphics.Box;
-	import view.graphics.GradientBox;
 	import view.graphics.PatternBox;
 	import view.graphics.SolidBox;
 	import com.greensock.TweenLite;
@@ -13,10 +12,9 @@ package view.history {
 
 	public class HistoryItemSaved extends HistoryItem {
 
-		private var _bkgd			:GradientBox = new GradientBox(true);
-		private var _over			:SolidBox = new SolidBox(Box.WHITE, true);
-		private var _ptrn			:PatternBox = new PatternBox(new Diagonals());
+		private var _over			:SolidBox = new SolidBox(Box.WHITE);
 		private var _star			:ButtonIcon = new ButtonIcon(new CommitStar());
+		private var _bkgd			:PatternBox = new PatternBox(new HistoryItemBkgd());
 		private var _commit			:Commit;
 
 		public function HistoryItemSaved()
@@ -35,24 +33,20 @@ package view.history {
 			super.setText(_commit.note, 'Version '+_commit.index+' - Saved '+_commit.date);
 		}
 		
-		override public function setSize(w:uint, h:uint):void
+		override public function setWidth(w:uint):void
 		{
 			_star.x = w - 38;
-			_bkgd.draw(w, h);
-			_ptrn.draw(w, h);
-			_over.draw(w, h);
-			super.setSize(w, h);
+			_over.draw(w, 41);
+			_bkgd.draw(w, 41);
+			super.setWidth(w);
 		}
 		
 		private function drawBkgd():void
 		{
-			_ptrn.alpha = .1;
-			_over.alpha = 0;
-			_star.y = 21;
 			addChild(_bkgd);
-			addChild(_ptrn);
 			addChild(_over);
 			addChild(_star);
+			_star.y = 21; _over.alpha = 0;
 			_star.addEventListener(MouseEvent.ROLL_OUT, onStarRollOut);
 			_star.addEventListener(MouseEvent.ROLL_OVER, onStarRollOver);
 		}

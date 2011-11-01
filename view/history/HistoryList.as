@@ -23,8 +23,8 @@ package view.history {
 
 		public function HistoryList()
 		{
-			super.leading = 41;
-			super.bottomPadding = -1;
+			super.leading = 42;
+			super.bkgdColor = 0x999999;
 			for (var i:int = 0; i < ITEMS_PER_PAGE; i++) _itemsSaved.push(new HistoryItemSaved());
 		}
 		
@@ -55,7 +55,7 @@ package view.history {
 		{
 			_width = w; _height = h;
 			super.draw(_width, _height);
-			for (var i:int = 0; i < super.list.numChildren; i++) HistoryItem(super.list.getChildAt(i)).setSize(_width, 41);
+			for (var i:int = 0; i < super.list.numChildren; i++) HistoryItem(super.list.getChildAt(i)).setWidth(_width);
 		}
 		
 		private function drawList():void
@@ -73,7 +73,7 @@ package view.history {
 				}	else{
 					super.hideItem(_itemsSaved[i], super.list.numChildren - i);
 				}
-				_itemsSaved[i].y = 41 * (_modified ? i + 1 : i);
+				_itemsSaved[i].y = 42 * (_modified ? i + 1 : i);
 			}
 			setSize(_width, _height);
 			TweenLite.to(super.list, .5, {y:0});

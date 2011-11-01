@@ -40,7 +40,7 @@ package model.proxies.remote.repo {
 		private function attemptRequest():void
 		{
 			_working = true;
-			trace("GitProxy.attemptRequest()", _attemptNum, _request.method, _request.remote.url, _request.args);
+		//	trace("GitProxy.attemptRequest()", _attemptNum, _request.method, _request.remote.url, _request.args);
 			super.appendArgs(_request.args);
 			switch(_request.method){
 				case BashMethods.CLONE :
@@ -156,7 +156,7 @@ package model.proxies.remote.repo {
 		
 		override protected function onProcessComplete(e:NativeProcessEvent):void
 		{
-			trace("GitProxy.onProcessComplete(e)", 'm='+e.data.method, 'r='+e.data.result);
+		//	trace("GitProxy.onProcessComplete(e)", 'm='+e.data.method, 'r='+e.data.result);
 			super.onProcessComplete(e);
 			var f:String = RemoteFailure.detectFailure(e.data.result);
 			if (f){

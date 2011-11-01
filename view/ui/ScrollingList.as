@@ -11,6 +11,7 @@ package view.ui {
 		private var _mask			:Shape = new Shape();
 		private var _view			:Sprite = new Sprite();
 		private var _leading		:uint;
+		private var _bkgdColor		:uint;
 		private var _bottomPadding	:int;
 
 		public function ScrollingList()
@@ -23,6 +24,7 @@ package view.ui {
 		
 		public function get list():Sprite { return _view; }
 		public function set leading(n:uint):void { _leading = n; }
+		public function set bkgdColor(n:uint):void { _bkgdColor = n; }
 		public function set bottomPadding(n:uint):void { _bottomPadding = n; }
 		
 		public function clear():void
@@ -70,6 +72,12 @@ package view.ui {
 			_mask.graphics.beginFill(0xff0000, .3);
 			_mask.graphics.drawRect(-p, 0, w + (p*2), h);
 			_mask.graphics.endFill();
+			if (_bkgdColor){
+				_view.graphics.clear();	
+				_view.graphics.beginFill(_bkgdColor);
+				_view.graphics.drawRect(0, 0, w, _view.height);
+				_view.graphics.endFill();
+			}
 			alignBottom();
 		}
 		
