@@ -37,7 +37,7 @@ package view.history {
 		{
 			_star.x = w - 38;
 			_over.draw(w, 41);
-			_bkgd.draw(w, 41);
+			_bkgd.draw(w, 42);
 			super.setWidth(w);
 		}
 		

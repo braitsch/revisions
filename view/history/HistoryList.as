@@ -24,7 +24,6 @@ package view.history {
 		public function HistoryList()
 		{
 			super.leading = 42;
-			super.bkgdColor = 0x999999;
 			for (var i:int = 0; i < ITEMS_PER_PAGE; i++) _itemsSaved.push(new HistoryItemSaved());
 		}
 		

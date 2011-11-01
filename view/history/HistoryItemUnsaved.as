@@ -11,7 +11,7 @@ package view.history {
 
 	public class HistoryItemUnsaved extends HistoryItem {
 
-		private var _bkgd			:SolidBox = new SolidBox(Box.WHITE);
+		private var _bkgd			:SolidBox = new SolidBox(Box.WHITE, true);
 		private var _kill			:ButtonIcon = new ButtonIcon(new TrashUnsaved());
 
 		public function HistoryItemUnsaved()
