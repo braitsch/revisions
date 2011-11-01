@@ -1,8 +1,6 @@
 package view.history.combos {
 
 	import events.UIEvent;
-	import model.AppModel;
-	import view.windows.modals.system.Message;
 	
 	public class BranchMerger extends ComboGroup {
 
@@ -21,7 +19,6 @@ package view.history.combos {
 		
 		private function onHeadingClick(e:UIEvent):void
 		{
-			AppModel.alert(new Message('Coming Soon.'));
 		}
 
 		private function onOptionClick(e:UIEvent):void

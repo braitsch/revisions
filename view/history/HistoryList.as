@@ -2,6 +2,7 @@ package view.history {
 
 	import events.AppEvent;
 	import model.AppModel;
+	import model.vo.Branch;
 	import model.vo.Commit;
 	import view.ui.ScrollingList;
 	import com.greensock.TweenLite;
@@ -18,6 +19,7 @@ package view.history {
 		private var _width					:uint;
 		private var _height					:uint;
 		private var _modified				:Boolean;
+		private var _branch					:Branch;
 		private var _itemsSaved				:Vector.<HistoryItemSaved> = new Vector.<HistoryItemSaved>();
 		private var _itemUnsaved			:HistoryItemUnsaved = new HistoryItemUnsaved();
 
@@ -27,29 +29,28 @@ package view.history {
 			for (var i:int = 0; i < ITEMS_PER_PAGE; i++) _itemsSaved.push(new HistoryItemSaved());
 		}
 		
-		public function showMostRecent():void
+		override public function clear():void
+		{
+			super.clear();
+			clearTimeout(_delay);
+		}		
+		
+		public function showMostRecent(b:Branch):void
 		{
 			clearTimeout(_delay);
-			_total = AppModel.branch.history.length;
+			_branch = b; _total = _branch.history.length;
 			_index = _total - ITEMS_PER_PAGE > 0 ? _total - ITEMS_PER_PAGE : 0;
-			_delay = setTimeout(drawList, 500);
+			drawList();
 		}
 		
-		public function showFromIndex(n:uint):void
+		public function startFromIndex(b:Branch, n:uint):void
 		{
 			clearTimeout(_delay);
-			_total = AppModel.branch.history.length;
+			_branch = b; _total = _branch.history.length;
 			_index = n;
 			drawList();
 		}
 		
-		public function killHistory():void
-		{
-			clearTimeout(_delay);
-			var n:uint = super.list.numChildren;
-			for (var i:int = 0; i < n; i++) super.hideItem(super.list.getChildAt(i), n - i);			
-		}
-
 		public function setSize(w:uint, h:uint):void
 		{
 			_width = w; _height = h;
@@ -59,12 +60,11 @@ package view.history {
 		
 		private function drawList():void
 		{
-			if (AppModel.branch.history == null) return;
 			getModified();
 		//	var k:Number = getTimer();
 			var n1:uint = _index;
 			var n2:uint = _index > _total - ITEMS_PER_PAGE ? _total : _index + ITEMS_PER_PAGE;
-			var v:Vector.<Commit> = AppModel.branch.history.slice(n1, n2).reverse();
+			var v:Vector.<Commit> = _branch.history.slice(n1, n2).reverse();
 			for (var i:int = 0; i < ITEMS_PER_PAGE; i++) {
 				if (i < v.length){
 					_itemsSaved[i].commit = v[i];
@@ -82,7 +82,7 @@ package view.history {
 
 		private function getModified():void
 		{
-			_modified = AppModel.branch.isModified && (_index >= _total - ITEMS_PER_PAGE - 1);
+			_modified = _branch.isModified && (_index >= _total - ITEMS_PER_PAGE - 1);
 			if (_modified){
 				super.showItem(_itemUnsaved, 0, 0);
 			}	else{
@@ -92,7 +92,6 @@ package view.history {
 
 		private function dispatchHistoryRendered():void
 		{
-			AppModel.hideLoader();
 			AppModel.dispatch(AppEvent.HISTORY_RENDERED);
 		}
 		

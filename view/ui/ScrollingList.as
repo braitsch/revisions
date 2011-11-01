@@ -27,7 +27,7 @@ package view.ui {
 		
 		public function clear():void
 		{
-			while(_view.numChildren) _view.removeChildAt(0);
+			for (var i:int = 0; i < _view.numChildren; i++) hideItem(_view.getChildAt(i), _view.numChildren - i);
 		}
 		
 		protected function showItem(k:DisplayObject, n:uint, f:Number = .5):void

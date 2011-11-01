@@ -5,6 +5,7 @@ package model.proxies.local {
 	import model.AppModel;
 	import model.proxies.air.NativeProcessQueue;
 	import model.vo.Bookmark;
+	import model.vo.Branch;
 	import model.vo.Commit;
 	import system.BashMethods;
 	import view.graphics.AppIcon;
@@ -12,6 +13,7 @@ package model.proxies.local {
 
 	public class StatusProxy extends NativeProcessQueue {
 
+		private static var _branch			:Branch;
 		private static var _bookmark		:Bookmark;
 		
 		public function StatusProxy()
@@ -23,8 +25,9 @@ package model.proxies.local {
 		
 		public function getSummary():void
 		{
+			_branch = AppModel.branch;
 			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
-			super.queue = [	Vector.<String>([BashMethods.GET_HISTORY])];
+			super.queue = [	Vector.<String>([BashMethods.GET_HISTORY, _branch.name])];
 		}
 		
 		public function getModified(b:Bookmark):void
@@ -35,10 +38,11 @@ package model.proxies.local {
 							Vector.<String>([BashMethods.GET_UNTRACKED_FILES]) ];
 		}
 
-		public function getHistory():void
+		public function getHistory(b:Branch):void
 		{
+			_branch = b;
 			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
-			super.queue = [	Vector.<String>([BashMethods.GET_HISTORY]), 
+			super.queue = [	Vector.<String>([BashMethods.GET_HISTORY, _branch.name]), 
 							Vector.<String>([BashMethods.GET_FAVORITES]),
 							Vector.<String>([BashMethods.GET_MODIFIED_FILES]),
 							Vector.<String>([BashMethods.GET_UNTRACKED_FILES])];
@@ -100,12 +104,12 @@ package model.proxies.local {
 	//		var k:Number = getTimer();
 			parseHistory(a[0].result);
 			parseFavorites(a[1].result);
-			AppModel.branch.modified = splitAndTrim(a[2].result);
-			AppModel.branch.untracked = splitAndTrim(a[3].result);
-			AppModel.dispatch(AppEvent.HISTORY_RECEIVED);
+			_branch.modified = splitAndTrim(a[2].result);
+			_branch.untracked = splitAndTrim(a[3].result);
+			AppModel.dispatch(AppEvent.HISTORY_RECEIVED, _branch);
 	//		trace("StatusProxy.onHistory - parsed in", getTimer() - k, 'ms');
 		}
-
+		
 		private function parseHistory(s:String):void
 		{
 			var i:int = 0;
@@ -119,13 +123,13 @@ package model.proxies.local {
 			}
 			var v:Vector.<Commit> = new Vector.<Commit>();
 			for (i = 0; i < a.length; i++) v.push(new Commit(a[i], i + 1));	
-			AppModel.branch.history = v;
+			_branch.history = v;
 		}
 		
 		private function parseFavorites(s:String):void
 		{
 			var f:Array = splitAndTrim(s);
-			var v:Vector.<Commit> = AppModel.branch.history;
+			var v:Vector.<Commit> = _branch.history;
 			for (var k:int = 0; k < f.length; k++) {
 				for (var x:int = 0; x < v.length; x++) {
 					if (v[x].sha1 == f[k].substr(11)){
@@ -150,7 +154,7 @@ package model.proxies.local {
 					trace("StatusProxy.onProcessFailure(e)", e.data.result);
 				break;
 				default :
-					e.data.source = 'StatusProxy.onProcessFailure(e) -- request on '+_bookmark.label, _bookmark.branch.name;
+					e.data.source = 'StatusProxy.onProcessFailure(e)';
 					AppModel.alert(new Debug(e.data));
 				break;
 			}

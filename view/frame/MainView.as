@@ -57,6 +57,7 @@ package view.frame{
 		private function onHistoryRendered(e:AppEvent):void
 		{
 			hideSummary();
+			AppModel.hideLoader();
 			AppModel.engine.removeEventListener(AppEvent.HISTORY_RENDERED, onHistoryRendered);
 		}
 		
@@ -72,18 +73,18 @@ package view.frame{
 		
 		private function showSummary():void
 		{
+			_history.filters = [_bkgdBlur];
 			_curtain.alpha = _summary.alpha = 0;
 			_curtain.visible = _summary.visible = true;
 			TweenLite.to(_curtain, .5, {alpha:.5});
 			TweenLite.to(_summary, .5, {alpha: 1});
-			_history.filters = [_bkgdBlur];
 		}		
 		
 		private function hideSummary():void
 		{
+			_history.filters = [];
 			TweenLite.to(_summary, .3, {alpha:0, onComplete:function():void{_summary.visible=false;}});
 			TweenLite.to(_curtain, .3, {alpha:0, onComplete:function():void{_curtain.visible=false;}});
-			_history.filters = [];
 		}
 
 	}

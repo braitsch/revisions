@@ -90,8 +90,8 @@ package model.proxies {
 			if (exists(AppModel.bookmark)){
 				resetTimer();
 		// add slight delay so we have time to display the preloader //	
-				setTimeout(_proxy.getHistory, 500);
 				AppModel.showLoader('Refreshing History');
+				setTimeout(_proxy.getHistory, 500, AppModel.branch);
 			}
 		}
 		

@@ -39,7 +39,6 @@ package view.history {
 				_length = AppModel.branch.history.length;
 				drawView();
 			}	else{
-				AppModel.hideLoader();
 				AppModel.dispatch(AppEvent.HISTORY_RENDERED);				
 			}
 		}		
@@ -56,17 +55,17 @@ package view.history {
 		private function drawView():void
 		{
 			_header.refresh();
-			_list.showMostRecent();
+			_list.showMostRecent(AppModel.branch);
 		}
 				
 		private function onNoBookmarks(e:AppEvent):void
 		{
-			_list.killHistory();
+			_list.clear();
 		}
 		
 		private function onPageRequest(e:UIEvent):void
 		{
-			_list.showFromIndex(e.data as uint);	
+			_list.startFromIndex(AppModel.branch, e.data as uint);	
 		}				
 		
 	}
