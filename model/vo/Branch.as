@@ -37,7 +37,7 @@ package model.vo {
 		{ 
 			if (_history == null) {
 				_history = v;
-			}	else if (v.length > _history.length){
+			}	else if (v.length >= _history.length){
 				_history = v;
 			}
 		}

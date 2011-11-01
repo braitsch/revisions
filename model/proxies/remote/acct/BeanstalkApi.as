@@ -2,7 +2,6 @@ package model.proxies.remote.acct {
 
 	import events.AppEvent;
 	import events.ErrEvent;
-	import model.AppModel;
 	import model.remote.HostingAccount;
 	import model.remote.Hosts;
 	import model.vo.BeanstalkRepo;
@@ -101,7 +100,6 @@ package model.proxies.remote.acct {
 				}
 			}
 			_account.repositories = v;
-			AppModel.hideLoader();
 			dispatchEvent(new AppEvent(AppEvent.LOGIN_SUCCESS, _account));
 		}
 		

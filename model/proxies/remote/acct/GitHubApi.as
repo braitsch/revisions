@@ -1,10 +1,9 @@
 package model.proxies.remote.acct {
 
-	import model.remote.Hosts;
 	import events.AppEvent;
 	import events.ErrEvent;
-	import model.AppModel;
 	import model.remote.HostingAccount;
+	import model.remote.Hosts;
 	import model.vo.Collaborator;
 	import model.vo.GitHubRepo;
 	import model.vo.Permission;
@@ -74,7 +73,6 @@ package model.proxies.remote.acct {
 				var v:Vector.<Repository> = new Vector.<Repository>();
 				for (var i:int = 0; i < o.length; i++) v.push(new GitHubRepo(o[i]));
 				_account.repositories = v;
-				AppModel.hideLoader();
 				dispatchEvent(new AppEvent(AppEvent.LOGIN_SUCCESS, _account));
 			}	else{
 				handleJSONError(o);
@@ -162,7 +160,7 @@ package model.proxies.remote.acct {
 			if (_silentLogin){
 				dispatchEvent(new AppEvent(AppEvent.LOGIN_FAILURE));
 			}	else{
-				dispatchError(ErrEvent.LOGIN_FAILURE);	
+				dispatchError(ErrEvent.LOGIN_FAILURE);
 			}
 		}		
 		

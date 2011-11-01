@@ -112,6 +112,7 @@ package view.windows.modals.login {
 		protected function onLoginSuccess(e:AppEvent):void
 		{
 			_loginBtn.enabled = true;
+			AppModel.hideLoader();
 			dispatchEvent(new AppEvent(AppEvent.LOGIN_SUCCESS));
 			AppModel.engine.removeEventListener(AppEvent.LOGIN_SUCCESS, onLoginSuccess);
 		}
