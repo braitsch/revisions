@@ -49,7 +49,7 @@ package view.history {
 				_length = AppModel.branch.history.length;
 				drawView();
 			}	else{
-				AppModel.dispatch(AppEvent.HISTORY_RENDERED);				
+				_listView.dispatchHistoryRendered();		
 			}
 		}		
 		

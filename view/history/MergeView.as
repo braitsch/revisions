@@ -1,5 +1,6 @@
 package view.history {
 
+	import model.vo.Commit;
 	import events.AppEvent;
 	import model.AppModel;
 	import model.vo.Branch;
@@ -17,6 +18,8 @@ package view.history {
 		private static var _height		:uint;
 		private static var _branchA		:HistorySnapshot;
 		private static var _branchB		:HistorySnapshot;
+		private static var _newCommits	:Vector.<Commit>;
+		private static var _oldCommits	:Vector.<Commit>;
 
 		public function MergeView()
 		{
@@ -34,10 +37,37 @@ package view.history {
 
 		private function onBranchData(e:AppEvent):void
 		{
-			_branchA = new HistorySnapshot(AppModel.branch);
-			_branchB = new HistorySnapshot(e.data as Branch);
+			var a:Vector.<Commit> = AppModel.branch.history.slice(-25).reverse();
+			var b:Vector.<Commit> = Branch(e.data).history.slice(-25).reverse();
+			if (a[0].sha1 == b[0].sha1){
+				trace('branches are the same');
+			}	else if (compare(a, b)) {
+		//		trace('a is larger');
+				_branchA = new HistorySnapshot(_oldCommits, _newCommits);
+				_branchB = new HistorySnapshot(_oldCommits);
+			}	else if (compare(b, a)) {
+		//		trace('b is larger');
+				_branchA = new HistorySnapshot(_oldCommits);
+				_branchB = new HistorySnapshot(_oldCommits, _newCommits);				
+			}
 			addChild(_branchA); addChild(_branchB);
 			drawLayout();
+		}
+		
+		private function compare(a:Vector.<Commit>, b:Vector.<Commit>):Boolean
+		{
+			_newCommits = null; _oldCommits = null;
+			for (var i:int = 0; i < a.length; i++) {
+				if (a[i].sha1 == b[0].sha1){
+					_newCommits = a.slice(0, i);
+					_oldCommits = a.slice(i, a.length);
+				}
+			}
+//			if (_newCommits && _oldCommits){
+//				for (i = 0; i < _newCommits.length; i++) trace('new commits = '+_newCommits[i].note);
+//				for (i = 0; i < _oldCommits.length; i++) trace('old commits = '+_oldCommits[i].note);	
+//			}
+			return _newCommits && _oldCommits;
 		}
 		
 		private function onAddedToStage(e:Event):void

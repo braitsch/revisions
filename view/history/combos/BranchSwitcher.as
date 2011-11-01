@@ -13,17 +13,17 @@ package view.history.combos {
 		public function BranchSwitcher()
 		{
 			super(BranchIcon, 20, true);
-			super.setHeadingIcon(OptionsArrow, 20);
+			super.setHeadingIcon(BranchIcon, 20);
 			addEventListener(UIEvent.COMBO_OPTION_KILL, onBranchDelete);
 			addEventListener(UIEvent.COMBO_OPTION_CLICK, onBranchSelection);
 		}
 
 		public function draw():void
 		{
-			super.heading = AppModel.branch.name;
+			super.heading = 'On Branch : '+AppModel.branch.name;
 			var a:Vector.<String> = new Vector.<String>();
 			var b:Vector.<Branch> = AppModel.bookmark.branches;
-			for (var i:int = 0; i < b.length; i++) if (b[i] != AppModel.branch) a.push(b[i].name);
+			for (var i:int = 0; i < b.length; i++) if (b[i] != AppModel.branch) a.push('Switch To : '+b[i].name);
 			super.options = a;
 		}
 		

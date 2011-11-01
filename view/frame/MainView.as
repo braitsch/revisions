@@ -57,7 +57,6 @@ package view.frame{
 		private function onHistoryRendered(e:AppEvent):void
 		{
 			hideSummary();
-			AppModel.hideLoader();
 			AppModel.engine.removeEventListener(AppEvent.HISTORY_RENDERED, onHistoryRendered);
 		}
 		

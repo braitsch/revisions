@@ -27,7 +27,7 @@ package view.history {
 		public function HistoryList()
 		{
 			super.leading = ITEM_SPACING;
-			for (var i:int = 0; i < ITEMS_PER_PAGE; i++) _itemsSaved.push(new HistoryItemSaved());
+			for (var i:int = 0; i < ITEMS_PER_PAGE; i++) _itemsSaved.push(new HistoryItemSaved(new HistoryItemBkgd()));
 		}
 		
 		override public function clear():void
@@ -91,8 +91,9 @@ package view.history {
 			}			
 		}
 
-		private function dispatchHistoryRendered():void
+		public function dispatchHistoryRendered():void
 		{
+			AppModel.hideLoader();
 			AppModel.dispatch(AppEvent.HISTORY_RENDERED);
 		}
 		

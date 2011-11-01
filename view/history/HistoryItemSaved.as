@@ -1,5 +1,6 @@
 package view.history {
 
+	import flash.display.BitmapData;
 	import events.UIEvent;
 	import model.AppModel;
 	import model.vo.Commit;
@@ -14,12 +15,12 @@ package view.history {
 
 		private var _over			:SolidBox = new SolidBox(Box.WHITE);
 		private var _star			:ButtonIcon = new ButtonIcon(new CommitStar());
-		private var _bkgd			:PatternBox = new PatternBox(new HistoryItemBkgd());
+		private var _bkgd			:PatternBox;
 		private var _commit			:Commit;
 
-		public function HistoryItemSaved()
+		public function HistoryItemSaved(bmd:BitmapData)
 		{
-			drawBkgd();
+			_bkgd = new PatternBox(bmd); drawBkgd();
 			addEventListener(MouseEvent.CLICK, onItemSelection);
 			addEventListener(MouseEvent.ROLL_OVER, onItemRollOver);
 			addEventListener(MouseEvent.ROLL_OUT, onItemRollOut);
