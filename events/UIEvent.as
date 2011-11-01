@@ -47,6 +47,7 @@ package events {
 		public static const COMBO_OPTION_CLICK:String = "COMBO_OPTION_CLICK";
 		public static const PAGE_HISTORY:String = "PAGE_HISTORY";
 		public static const SHOW_MERGE_PREVIEW:String = "SHOW_MERGE_PREVIEW";
+		public static const HIDE_MERGE_PREVIEW:String = "HIDE_MERGE_PREVIEW";
 		
 		public var data:Object;
 

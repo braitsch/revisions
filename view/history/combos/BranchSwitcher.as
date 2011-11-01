@@ -12,7 +12,8 @@ package view.history.combos {
 
 		public function BranchSwitcher()
 		{
-			super(OptionsArrow, BranchIcon, 20, true);
+			super(BranchIcon, 20, true);
+			super.setHeadingIcon(OptionsArrow, 20);
 			addEventListener(UIEvent.COMBO_OPTION_KILL, onBranchDelete);
 			addEventListener(UIEvent.COMBO_OPTION_CLICK, onBranchSelection);
 		}

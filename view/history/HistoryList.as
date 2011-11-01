@@ -61,7 +61,6 @@ package view.history {
 		
 		private function drawList():void
 		{
-			trace("HistoryList.drawList()", _branch.history.length);
 			getModified();
 		//	var k:Number = getTimer();
 			var n1:uint = _index;

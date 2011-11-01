@@ -12,22 +12,30 @@ package view.history.combos {
 
 	public class ComboHeading extends Sprite {
 
+		private var _icon		:ButtonIcon;
 		private var _text		:TextHeading = new TextHeading();
 		private var _bkgd		:GradientBox = new GradientBox(false);
 	
-		public function ComboHeading(i:Class, x:uint)
+		public function ComboHeading()
 		{
+			_text.y = 12;
 			addChild(_bkgd); addChild(_text);
-			var k:ButtonIcon = new ButtonIcon(new i());
-				k.y = 19; k.x = x;
-			addChild(k);
-			_text.y = 12; _text.x = k.x + 15;
+			addEventListener(MouseEvent.CLICK, onClick);
 			addEventListener(MouseEvent.ROLL_OVER, onRollOver);
 		}
 
-		public function set text(s:String):void
+		public function setText(s:String):void
 		{
 			_text.text = s;
+		}
+		
+		public function setIcon(i:Class, x:uint):void
+		{
+			if (_icon) removeChild(_icon);
+			_icon = new ButtonIcon(new i());
+			_icon.y = 19; _icon.x = x;
+			_text.x = _icon.x + 15;
+			addChild(_icon);
 		}
 		
 		override public function get width():Number
@@ -46,15 +54,6 @@ package view.history.combos {
 			_bkgd.graphics.moveTo(0, 32);
 			_bkgd.graphics.lineTo(w-1, 32);
 			_bkgd.graphics.endFill();		
-		}
-		
-		public function set allowSelection(b:Boolean):void
-		{
-			if (b){
-				addEventListener(MouseEvent.CLICK, onClick);
-			}	else{
-				removeEventListener(MouseEvent.CLICK, onClick);
-			}			
 		}
 		
 		private function onRollOver(e:MouseEvent):void

@@ -5,9 +5,11 @@ package view.history {
 	import model.vo.Branch;
 	import view.graphics.PatternBox;
 	import view.graphics.SolidBox;
+	import com.greensock.TweenLite;
 	import flash.display.Sprite;
+	import flash.events.Event;
 
-	public class MergePreview extends Sprite {
+	public class MergeView extends Sprite {
 
 		private static var _bkgd		:PatternBox = new PatternBox(new LtGreyPattern());
 		private static var _divider		:SolidBox = new SolidBox(0xffffff);
@@ -16,10 +18,11 @@ package view.history {
 		private static var _branchA		:HistorySnapshot;
 		private static var _branchB		:HistorySnapshot;
 
-		public function MergePreview()
+		public function MergeView()
 		{
 			addChild(_bkgd);
 			addChild(_divider);
+			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			AppModel.engine.addEventListener(AppEvent.BRANCH_HISTORY, onBranchData);
 		}
 
@@ -31,15 +34,15 @@ package view.history {
 
 		private function onBranchData(e:AppEvent):void
 		{
-			resetView();
 			_branchA = new HistorySnapshot(AppModel.branch);
 			_branchB = new HistorySnapshot(e.data as Branch);
 			addChild(_branchA); addChild(_branchB);
 			drawLayout();
 		}
 		
-		private function resetView():void
+		private function onAddedToStage(e:Event):void
 		{
+			this.alpha = 0;
 			if (_branchA) {removeChild(_branchA); _branchA = null;}
 			if (_branchB) {removeChild(_branchB); _branchB = null;}
 		}
@@ -52,6 +55,7 @@ package view.history {
 			_branchA.width = _width / 2 - 1;
 			_branchB.width = _width / 2 - 1;
 			_branchB.x = _width / 2 + _divider.width + 1;
+			TweenLite.to(this, .5, {alpha:1, delay:.3});
 		}		
 
 	}

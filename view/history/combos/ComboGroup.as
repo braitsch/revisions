@@ -18,22 +18,31 @@ package view.history.combos {
 		private var _options			:Sprite = new Sprite();
 		private var _dropShadow			:ScaleObject = new ScaleObject(new DropShadowPlate(), new Rectangle(19, 7, 200, 106));
 
-		public function ComboGroup(hi:Class, oi:Class, ox:uint, ak:Boolean)
+		public function ComboGroup(oi:Class, ox:uint, ak:Boolean)
 		{
-			_heading = new ComboHeading(hi, ox);
+			_heading = new ComboHeading();
 			_icon = oi; _iconX = ox; _allowKill = ak;
 			initialize();
 		}
 		
-		override public function get width():Number
-		{
-			return _width;
-		}
-		
 		public function set heading(s:String):void
 		{
-			_heading.text = s;	
+			_heading.setText(s);
 			_width = _heading.width;
+		}
+		
+		public function setHeadingIcon(hi:Class, x:uint):void
+		{
+			_heading.setIcon(hi, x);	
+		}
+		
+		public function set enabled(b:Boolean):void
+		{
+			if (b){
+				_heading.addEventListener(MouseEvent.ROLL_OVER, showOptions);
+			}	else{
+				_heading.removeEventListener(MouseEvent.ROLL_OVER, showOptions);
+			}
 		}
 		
 		public function set options(v:Vector.<String>):void
@@ -54,8 +63,12 @@ package view.history.combos {
 				for (i = 0; i < _options.numChildren; i++) ComboItem(_options.getChildAt(i)).draw(_width - 1);
 				drawBkgdAndMask();			
 			}
-			_heading.allowSelection = _options.numChildren == 0;
 		}
+		
+		override public function get width():Number
+		{
+			return _width;
+		}		
 		
 		private function drawBkgdAndMask():void
 		{
@@ -78,7 +91,6 @@ package view.history.combos {
 			addChild(_options); 
 			addChild(_mask); 
 			addEventListener(MouseEvent.ROLL_OUT, hideOptions);
-			_heading.addEventListener(MouseEvent.ROLL_OVER, showOptions);			
 		}
 		
 		private function showOptions(e:MouseEvent):void

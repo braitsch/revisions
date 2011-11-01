@@ -98,6 +98,7 @@ package model.proxies.local {
 
 		private function onModified(a:Array):void
 		{
+			if (a[0]==null || a[1]==null) return;
 			_bookmark.branch.modified = splitAndTrim(a[0].result);
 			_bookmark.branch.untracked = splitAndTrim(a[1].result);
 			AppModel.dispatch(AppEvent.MODIFIED_RECEIVED, _bookmark);			

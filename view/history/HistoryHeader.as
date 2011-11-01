@@ -59,9 +59,9 @@ package view.history {
 			drawHRule(w);
 		}
 		
-		public function get mergeComboXpos():Number
+		public function set mergeView(b:Boolean):void
 		{
-			return _merger.x;
+			_history.enabled = _switcher.enabled = _merger.enabled = !b;
 		}
 		
 		private function drawHRule(w:uint):void

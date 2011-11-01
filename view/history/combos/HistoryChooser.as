@@ -14,7 +14,8 @@ package view.history.combos {
 
 		public function HistoryChooser()
 		{
-			super(ClockIcon, ClockIcon, 32, false);
+			super(ClockIcon, 32, false);
+			super.setHeadingIcon(ClockIcon, 32);
 			_numPerPage = HistoryList.ITEMS_PER_PAGE;
 			addEventListener(UIEvent.COMBO_OPTION_CLICK, onOptionClick);
 		}

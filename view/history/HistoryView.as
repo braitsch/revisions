@@ -13,13 +13,14 @@ package view.history {
 		private static var _modified	:Boolean;
 		private static var _header		:HistoryHeader = new HistoryHeader();
 		private static var _listView	:HistoryList = new HistoryList();
-		private static var _mergeView	:MergePreview = new MergePreview();
+		private static var _mergeView	:MergeView = new MergeView();
 
 		public function HistoryView()
 		{
 			addChildren();
 			addEventListener(UIEvent.PAGE_HISTORY, onPageRequest);
 			addEventListener(UIEvent.SHOW_MERGE_PREVIEW, onShowMergePreview);
+			addEventListener(UIEvent.HIDE_MERGE_PREVIEW, onHideMergePreview);
 			AppModel.engine.addEventListener(AppEvent.NO_BOOKMARKS, onNoBookmarks);
 			AppModel.engine.addEventListener(AppEvent.BOOKMARK_DELETED, onNoBookmarks);
 			AppModel.engine.addEventListener(AppEvent.HISTORY_RECEIVED, onHistory);
@@ -65,22 +66,32 @@ package view.history {
 		{
 			_header.refresh();
 			_listView.showMostRecent(AppModel.branch);
+			onHideMergePreview();
 		}
 				
 		private function onNoBookmarks(e:AppEvent):void
 		{
 			_listView.clear();
+			onHideMergePreview();
 		}
 		
 		private function onPageRequest(e:UIEvent):void
 		{
-			_listView.startFromIndex(AppModel.branch, e.data as uint);	
+			_listView.startFromIndex(AppModel.branch, e.data as uint);
+			onHideMergePreview();
 		}
 		
 		private function onShowMergePreview(e:UIEvent):void
 		{
-			addChild(_mergeView);
-		}					
+			_header.mergeView = true;
+			addChildAt(_mergeView, numChildren - 1);
+		}
+		
+		private function onHideMergePreview(e:UIEvent = null):void
+		{
+			_header.mergeView = false;
+			if (_mergeView.stage) removeChild(_mergeView);
+		}						
 		
 	}
 	
