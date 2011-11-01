@@ -34,7 +34,7 @@ package view.frame{
 			_summary.addEventListener(UIEvent.SHOW_HISTORY, onShowHistory);
 			
 			AppModel.engine.addEventListener(AppEvent.NO_BOOKMARKS, onNoBookmarks);
-			AppModel.engine.addEventListener(AppEvent.BOOKMARK_SELECTED, onBookmarkSelected);
+			AppModel.engine.addEventListener(AppEvent.SUMMARY_RECEIVED, onBookmarkSelected);
 		}
 
 		public function resize(w:uint, h:uint):void

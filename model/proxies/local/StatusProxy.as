@@ -73,6 +73,7 @@ package model.proxies.local {
 		
 		private function onRemoteStatus(a:Array):void
 		{
+			if (a[0]==null || a[1]==null) return;
 			var n1:Array = splitAndTrim(a[0].result);
 			var n2:Array = splitAndTrim(a[1].result);
 			if (n1.length) AppModel.branch.remoteStatus = n1.length;

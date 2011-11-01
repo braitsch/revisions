@@ -71,11 +71,12 @@ package view.history {
 		
 		private function showBranchControls():void
 		{
-			_switcher.draw(); _merger.draw();
+			_switcher.draw();
 			_switcher.x = _history.x + _history.width + 1;
-			_merger.x = _switcher.x + _switcher.width + 1;
-			showCombo(_merger);
 			showCombo(_switcher);
+	//		_merger.draw();
+	//		_merger.x = _switcher.x + _switcher.width + 1;
+	//		showCombo(_merger);
 		}
 		
 		private function hideBranchControls():void

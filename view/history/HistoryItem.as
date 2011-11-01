@@ -18,7 +18,7 @@ package view.history {
 		
 		public function setWidth(w:uint):void 
 		{ 
-			_text.maxWidth = w - 130;
+		//	_text.maxWidth = w - 130;
 		}		
 		
 		protected function setText(l1:String, l2:String):void
