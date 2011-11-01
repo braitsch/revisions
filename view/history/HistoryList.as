@@ -11,6 +11,7 @@ package view.history {
 
 	public class HistoryList extends ScrollingList {
 
+		public static const ITEM_SPACING	:uint = 42;
 		public static const	ITEMS_PER_PAGE	:uint = 25;
 		
 		private var _delay					:uint;
@@ -25,7 +26,7 @@ package view.history {
 
 		public function HistoryList()
 		{
-			super.leading = 42;
+			super.leading = ITEM_SPACING;
 			for (var i:int = 0; i < ITEMS_PER_PAGE; i++) _itemsSaved.push(new HistoryItemSaved());
 		}
 		
@@ -60,6 +61,7 @@ package view.history {
 		
 		private function drawList():void
 		{
+			trace("HistoryList.drawList()", _branch.history.length);
 			getModified();
 		//	var k:Number = getTimer();
 			var n1:uint = _index;
@@ -72,7 +74,7 @@ package view.history {
 				}	else{
 					super.hideItem(_itemsSaved[i], super.list.numChildren - i);
 				}
-				_itemsSaved[i].y = 42 * (_modified ? i + 1 : i);
+				_itemsSaved[i].y = ITEM_SPACING * (_modified ? i + 1 : i);
 			}
 			setSize(_width, _height);
 			TweenLite.to(super.list, .5, {y:0});

@@ -27,7 +27,7 @@ package model.proxies.local {
 		{
 			_branch = AppModel.branch;
 			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
-			super.queue = [	Vector.<String>([BashMethods.GET_HISTORY, _branch.name])];
+			super.queue = [	Vector.<String>([BashMethods.GET_HISTORY])];
 		}
 		
 		public function getModified(b:Bookmark):void
@@ -38,15 +38,22 @@ package model.proxies.local {
 							Vector.<String>([BashMethods.GET_UNTRACKED_FILES]) ];
 		}
 
-		public function getHistory(b:Branch):void
+		public function getHistory():void
 		{
-			_branch = b;
+			_branch = AppModel.branch;
 			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
-			super.queue = [	Vector.<String>([BashMethods.GET_HISTORY, _branch.name]), 
+			super.queue = [	Vector.<String>([BashMethods.GET_HISTORY]), 
 							Vector.<String>([BashMethods.GET_FAVORITES]),
 							Vector.<String>([BashMethods.GET_MODIFIED_FILES]),
 							Vector.<String>([BashMethods.GET_UNTRACKED_FILES])];
 		}
+		
+		public function getBranchHistory(b:Branch):void
+		{
+			_branch = b;
+			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
+			super.queue = [	Vector.<String>([BashMethods.GET_BRANCH_HISTORY, _branch.name])];
+		}		
 		
 		public function getRemoteStatus():void
 		{
@@ -66,6 +73,9 @@ package model.proxies.local {
 				case BashMethods.GET_HISTORY :
 					a.length == 1 ? onSummary(a) : onHistory(a);
 				break;
+				case BashMethods.GET_BRANCH_HISTORY :
+					onMergePreview(a);
+				break;				
 				case BashMethods.GET_MODIFIED_FILES:
 					onModified(a);
 				break;
@@ -74,7 +84,7 @@ package model.proxies.local {
 				break;				
 			}
 		}
-		
+
 		private function onRemoteStatus(a:Array):void
 		{
 			if (a[0]==null || a[1]==null) return;
@@ -95,14 +105,14 @@ package model.proxies.local {
 
 		private function onSummary(a:Array):void
 		{
-			parseHistory(a[0].result);
+			_branch.history = parseHistory(a[0].result);
 			AppModel.dispatch(AppEvent.SUMMARY_RECEIVED);
 		}
 
 		private function onHistory(a:Array):void
 		{
 	//		var k:Number = getTimer();
-			parseHistory(a[0].result);
+			_branch.history = parseHistory(a[0].result);
 			parseFavorites(a[1].result);
 			_branch.modified = splitAndTrim(a[2].result);
 			_branch.untracked = splitAndTrim(a[3].result);
@@ -110,7 +120,13 @@ package model.proxies.local {
 	//		trace("StatusProxy.onHistory - parsed in", getTimer() - k, 'ms');
 		}
 		
-		private function parseHistory(s:String):void
+		private function onMergePreview(a:Array):void
+		{
+			_branch.history = parseHistory(a[0].result);
+			AppModel.dispatch(AppEvent.BRANCH_HISTORY, _branch);
+		}		
+		
+		private function parseHistory(s:String):Vector.<Commit>
 		{
 			var i:int = 0;
 			var a:Array = s.split('-##-').reverse();
@@ -123,7 +139,7 @@ package model.proxies.local {
 			}
 			var v:Vector.<Commit> = new Vector.<Commit>();
 			for (i = 0; i < a.length; i++) v.push(new Commit(a[i], i + 1));	
-			_branch.history = v;
+			return v;
 		}
 		
 		private function parseFavorites(s:String):void

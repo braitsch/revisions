@@ -59,6 +59,11 @@ package view.history {
 			drawHRule(w);
 		}
 		
+		public function get mergeComboXpos():Number
+		{
+			return _merger.x;
+		}
+		
 		private function drawHRule(w:uint):void
 		{
 			_hrule.graphics.clear();

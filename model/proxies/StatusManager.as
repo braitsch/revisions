@@ -4,6 +4,7 @@ package model.proxies {
 	import model.AppModel;
 	import model.proxies.local.StatusProxy;
 	import model.vo.Bookmark;
+	import model.vo.Branch;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	import flash.utils.setTimeout;
@@ -51,6 +52,7 @@ package model.proxies {
 		{
 			AppModel.engine.addEventListener(AppEvent.NO_BOOKMARKS, onNoBookmarks);
 			AppModel.engine.addEventListener(AppEvent.BOOKMARK_SELECTED, onBookmarkSelected);
+			AppModel.engine.addEventListener(AppEvent.GET_BRANCH_HISTORY, getBranchHistory);
 			AppModel.engine.addEventListener(AppEvent.HISTORY_REQUESTED, onHistoryRequested);
 			AppModel.engine.addEventListener(AppEvent.SUMMARY_RECEIVED, onSummaryReceived);
 			AppModel.engine.addEventListener(AppEvent.MODIFIED_RECEIVED, onModifiedReceived);
@@ -91,9 +93,15 @@ package model.proxies {
 				resetTimer();
 		// add slight delay so we have time to display the preloader //	
 				AppModel.showLoader('Refreshing History');
-				setTimeout(_proxy.getHistory, 500, AppModel.branch);
+				setTimeout(_proxy.getHistory, 500);
 			}
 		}
+		
+		private function getBranchHistory(e:AppEvent):void
+		{
+			resetTimer();
+			_proxy.getBranchHistory(e.data as Branch);	
+		}		
 		
 		private function getRemoteStatus(fetch:Boolean = false):void
 		{

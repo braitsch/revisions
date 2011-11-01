@@ -1,5 +1,7 @@
 package view.history.combos {
 
+	import events.AppEvent;
+	import model.AppModel;
 	import events.UIEvent;
 	
 	public class BranchMerger extends ComboGroup {
@@ -19,6 +21,8 @@ package view.history.combos {
 		
 		private function onHeadingClick(e:UIEvent):void
 		{
+			dispatchEvent(new UIEvent(UIEvent.SHOW_MERGE_PREVIEW));
+			AppModel.dispatch(AppEvent.GET_BRANCH_HISTORY, AppModel.bookmark.branches[1]);
 		}
 
 		private function onOptionClick(e:UIEvent):void
