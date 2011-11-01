@@ -10,6 +10,7 @@ package view.history {
 	public class HistoryItem extends Sprite {
 
 		private var _text			:TextDouble = new TextDouble();		
+		private var _mask			:SolidBox = new SolidBox(0xff0000);
 
 		public function HistoryItem()
 		{
@@ -18,7 +19,7 @@ package view.history {
 		
 		public function setWidth(w:uint):void 
 		{ 
-		//	_text.maxWidth = w - 130;
+			_mask.draw(w - 70, 42);
 		}		
 		
 		protected function setText(l1:String, l2:String):void
@@ -26,7 +27,8 @@ package view.history {
 			_text.x = 60; _text.y = 8;
 			_text.line1 = l1;
 			_text.line2 = l2;
-			addChild(_text);
+			_text.mask = _mask;
+			addChild(_text); addChild(_mask);
 		}
 		
 		protected function attachAvatar(k:String):void
