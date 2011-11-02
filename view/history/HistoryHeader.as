@@ -1,15 +1,15 @@
 package view.history {
 
-	import com.greensock.TweenLite;
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
 	import view.graphics.PatternBox;
-	import view.history.combos.MergeCombo;
 	import view.history.combos.BranchCombo;
 	import view.history.combos.ComboGroup;
 	import view.history.combos.HistoryCombo;
+	import view.history.combos.MergeCombo;
 	import view.ui.Scroller;
+	import com.greensock.TweenLite;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.filters.DropShadowFilter;

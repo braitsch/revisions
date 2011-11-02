@@ -15,6 +15,7 @@ package view.history.combos {
 		private var _allowKill			:Boolean;
 		private var _mask				:Shape = new Shape();
 		private var _heading			:ComboHeading;
+		private var _strings			:Vector.<String>;
 		private var _options			:Sprite = new Sprite();
 		private var _dropShadow			:ScaleObject = new ScaleObject(new DropShadowPlate(), new Rectangle(19, 7, 200, 106));
 
@@ -29,6 +30,7 @@ package view.history.combos {
 		{
 			_heading.setText(s);
 			_width = _heading.width;
+			if (_strings) sortAndDraw();
 		}
 		
 		public function setHeadingIcon(hi:Class, x:uint):void
@@ -38,9 +40,19 @@ package view.history.combos {
 		
 		public function set options(v:Vector.<String>):void
 		{
+			_strings = v; sortAndDraw();
+		}
+		
+		override public function get width():Number
+		{
+			return _width;
+		}
+		
+		private function sortAndDraw():void
+		{
 			while(_options.numChildren) _options.removeChildAt(0);
-			for (var i:int = 0; i < v.length; i++) {
-				var k:ComboItem = new ComboItem(v[i], _icon, _iconX, _allowKill);
+			for (var i:int = 0; i < _strings.length; i++) {
+				var k:ComboItem = new ComboItem(_strings[i], _icon, _iconX, _allowKill);
 					k.y = _options.numChildren * (ComboItem.ITEM_HEIGHT + 2);
 				if (k.width > _width) _width = k.width;
 				_options.addChild(k);
@@ -48,18 +60,13 @@ package view.history.combos {
 			_width += 35; // padding //
 			_heading.draw(_width);
 			if (_options.numChildren == 0){
-				this.buttonMode = false;
+				buttonMode = false;
 			}	else{
-				this.buttonMode = true;
+				buttonMode = true;
 				for (i = 0; i < _options.numChildren; i++) ComboItem(_options.getChildAt(i)).draw(_width - 1);
-				drawBkgdAndMask();			
+				drawBkgdAndMask();
 			}
 		}
-		
-		override public function get width():Number
-		{
-			return _width;
-		}		
 		
 		private function drawBkgdAndMask():void
 		{
