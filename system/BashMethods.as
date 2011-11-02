@@ -89,6 +89,8 @@ package system{
 		public static const ADD_TRACKING_BRANCHES	:String = 'addTrackingBranches';
 		public static const SET_WORK_TREE			:String = 'initSingleFileRepo';
 		public static const TEST_REPAIR				:String = 'pushRepair';
+		public static const GET_COMMON_PARENT		:String = 'getCommonParent';
+		public static const GET_UNIQUE_COMMITS		:String = 'getUniqueCommits';
 		
 	}
 	

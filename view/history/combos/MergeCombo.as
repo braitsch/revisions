@@ -20,13 +20,14 @@ package view.history.combos {
 
 		public function draw():void
 		{
+			resetMergeView();
 			var a:Vector.<String> = new Vector.<String>();
 			var b:Vector.<Branch> = AppModel.bookmark.branches;
 			for (var i:int = 0; i < b.length; i++) if (b[i] != AppModel.branch) a.push(b[i].name);
 			super.options = a;
 		}
 		
-		private function resetMergeView(e:AppEvent):void
+		private function resetMergeView(e:AppEvent = null):void
 		{
 			_branch = null;
 			super.headingText = 'Open Merge View';

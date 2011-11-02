@@ -60,6 +60,11 @@ package model.vo {
 		{
 			return _starred;
 		}
+		
+		public function set index(n:uint):void
+		{
+			_index = n;
+		}
 
 		public function set starred(b:Boolean):void
 		{

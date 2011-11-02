@@ -2,7 +2,6 @@ package view.history {
 
 	import events.AppEvent;
 	import model.AppModel;
-	import model.vo.Branch;
 	import model.vo.Commit;
 	import view.graphics.PatternBox;
 	import view.graphics.SolidBox;
@@ -18,8 +17,9 @@ package view.history {
 		private static var _height		:uint;
 		private static var _branchA		:HistorySnapshot;
 		private static var _branchB		:HistorySnapshot;
-		private static var _newCommits	:Vector.<Commit>;
-		private static var _oldCommits	:Vector.<Commit>;
+		private static var _aUnique		:Vector.<Commit>;
+		private static var _bUnique		:Vector.<Commit>;
+		private static var _abShared	:Vector.<Commit>;
 
 		public function MergeView()
 		{
@@ -37,21 +37,22 @@ package view.history {
 		
 		private function onBranchData(e:AppEvent):void
 		{
-			var a:Vector.<Commit> = AppModel.branch.history.slice(-25).reverse();
-			var b:Vector.<Commit> = Branch(e.data).history.slice(-25).reverse();
-			if (a[0].sha1 == b[0].sha1){
-				trace('branches are the same');
-			}	else if (compare(a, b)) {
-		//		trace('a is larger');
-				_branchA = new HistorySnapshot(_oldCommits, _newCommits);
-				_branchB = new HistorySnapshot(_oldCommits);
-			}	else if (compare(b, a)) {
-		//		trace('b is larger');
-				_branchA = new HistorySnapshot(_oldCommits);
-				_branchB = new HistorySnapshot(_oldCommits, _newCommits);
+			if (e.data.common == AppModel.branch.lastCommit.sha1){
+				trace('branches are the same'); return;
+			}	else{
+				_bUnique = e.data.unique;
+			// find the common parent commit between a & b //	
+				for (var i:int = AppModel.branch.history.length-1; i > 0; i--) if (AppModel.branch.history[i].sha1 == e.data.common) break;
+				_aUnique = AppModel.branch.history.slice(i + 1);
 			}
+			_abShared = AppModel.branch.history.slice(i - HistoryList.ITEMS_PER_PAGE, i + 1);
+		// rewrite branchB indices so they extend the count from the shared array //	
+			for (i = 0; i < _bUnique.length; i++) _bUnique[i].index = _abShared.length + (i + 1);
+			_aUnique.reverse(); _bUnique.reverse(); _abShared.reverse();
+			_branchA = new HistorySnapshot(_aUnique, _abShared);
+			_branchB = new HistorySnapshot(_bUnique, _abShared);
 			drawLayout();
-			setTimeout(onListsRendered, 1500);
+			setTimeout(onListsRendered, 1000);
 		}
 		
 		private function onListsRendered():void
@@ -63,18 +64,6 @@ package view.history {
 			addChild(_branchA); addChild(_branchB);
 			while ( numChildren > 4 ) removeChildAt(2);
 			AppModel.hideLoader();
-		}
-
-		private function compare(a:Vector.<Commit>, b:Vector.<Commit>):Boolean
-		{
-			_newCommits = null; _oldCommits = null;
-			for (var i:int = 0; i < a.length; i++) {
-				if (a[i].sha1 == b[0].sha1){
-					_newCommits = a.slice(0, i);
-					_oldCommits = a.slice(i, a.length);
-				}
-			}
-			return _newCommits && _oldCommits;
 		}
 		
 		private function drawLayout():void

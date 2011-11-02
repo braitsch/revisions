@@ -8,9 +8,9 @@ package view.history {
 	public class HistorySnapshot extends Sprite {
 		
 
-		public function HistorySnapshot(o:Vector.<Commit>, n:Vector.<Commit> = null)
+		public function HistorySnapshot(n:Vector.<Commit>, o:Vector.<Commit>)
 		{
-			if (n) attach(n, false); attach(o, true);
+			attach(n, false); attach(o, true);
 		}
 		
 		private function attach(v:Vector.<Commit>, merged:Boolean):void

@@ -52,7 +52,8 @@ package model.proxies.local {
 		{
 			_branch = b;
 			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
-			super.queue = [	Vector.<String>([BashMethods.GET_BRANCH_HISTORY, _branch.name])];
+			super.queue = [	Vector.<String>([BashMethods.GET_COMMON_PARENT, AppModel.branch.name, _branch.name]), 
+							Vector.<String>([BashMethods.GET_UNIQUE_COMMITS, AppModel.branch.name, _branch.name])];
 		}		
 		
 		public function getRemoteStatus():void
@@ -73,8 +74,8 @@ package model.proxies.local {
 				case BashMethods.GET_HISTORY :
 					a.length == 1 ? onSummary(a) : onHistory(a);
 				break;
-				case BashMethods.GET_BRANCH_HISTORY :
-					onMergePreview(a);
+				case BashMethods.GET_COMMON_PARENT :
+					onBranchInspection(a);
 				break;				
 				case BashMethods.GET_MODIFIED_FILES:
 					onModified(a);
@@ -121,10 +122,12 @@ package model.proxies.local {
 	//		trace("StatusProxy.onHistory - parsed in", getTimer() - k, 'ms');
 		}
 		
-		private function onMergePreview(a:Array):void
+		private function onBranchInspection(a:Array):void
 		{
-			_branch.history = parseHistory(a[0].result);
-			AppModel.dispatch(AppEvent.BRANCH_HISTORY, _branch);
+			var c:String = a[0].result;
+			var v:Vector.<Commit> = parseHistory(a[1].result);
+	//		for (var i:int = 0; i < v.length; i++) trace(i, v[i].sha1, v[i].note);	
+			AppModel.dispatch(AppEvent.BRANCH_HISTORY, {common:c, unique:v});
 		}		
 		
 		private function parseHistory(s:String):Vector.<Commit>
