@@ -12,7 +12,7 @@ package view.history.combos {
 
 		public function MergeCombo()
 		{
-			super(BranchIcon, 20, false);
+			super.optionIcon = BranchIcon;
 			addEventListener(UIEvent.COMBO_OPTION_CLICK, openMergePreview);
 			addEventListener(UIEvent.COMBO_HEADING_CLICK, hideMergePreview);
 		}
@@ -28,8 +28,8 @@ package view.history.combos {
 		public function reset():void
 		{
 			_branch = null;
-			super.heading = 'Open Merge View';
-			super.setHeadingIcon(OptionsArrow, 20);
+			super.headingText = 'Open Merge View';
+			super.headingIcon = OptionsArrow;
 		}		
 		
 		private function openMergePreview(e:UIEvent):void
@@ -40,8 +40,8 @@ package view.history.combos {
 		private function setBranch(n:uint):void
 		{
 			_branch = AppModel.bookmark.branches[n];
-			super.heading = 'Merging With : '+_branch.name;
-			super.setHeadingIcon(SwitcherDelete, 20);
+			super.headingText = 'Merging With : '+_branch.name;
+			super.headingIcon = SwitcherDelete;
 			AppModel.showLoader('Comparing Branches');
 	// add slight delay so we have time to display the preloader //				
 			setTimeout(function():void{ AppModel.dispatch(AppEvent.GET_BRANCH_HISTORY, _branch); }, 500);

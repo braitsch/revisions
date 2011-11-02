@@ -20,12 +20,13 @@ package view.history.combos {
 		private var _over			:SolidBox = new SolidBox(Box.WHITE);
 		private var _bkgd			:GradientBox = new GradientBox(true);
 	
-		public function ComboItem(s:String, i:Class, x:uint, k:Boolean = false)
+		public function ComboItem(s:String, i:Class, k:Boolean = false)
 		{
 			_over.alpha = 0;
 			addChild(_bkgd);		
 			addChild(_over);
-			setText(s, x); addIcon(i, x); if (k) addKill();
+			addIcon(i); setText(s); 
+			if (k) addKill();
 			addEventListener(MouseEvent.CLICK, onMouseClick);
 			addEventListener(MouseEvent.ROLL_OVER, onRollOver);
 			addEventListener(MouseEvent.ROLL_OUT, onRollOut);
@@ -40,23 +41,24 @@ package view.history.combos {
 		{
 			_over.draw(w, ITEM_HEIGHT);
 			_bkgd.draw(w, ITEM_HEIGHT);
-			if (_kill)	_kill.x = w - 17;
+			if (_kill) _kill.x = w - 17;
 		}
 		
-		private function setText(s:String, x:uint):void
+		private function addIcon(i:Class):void
+		{
+			_icon = new ButtonIcon(new i());
+			_icon.y = 16;
+			_icon.x = i == ClockIcon ? 32 : 20; 
+			addChild(_icon);
+		}
+		
+		private function setText(s:String):void
 		{
 			_text = new TextHeading(s);
 			_text.color = 0x555555;
 			_text.y = 9;
-			_text.x = x + 15;
+			_text.x = _icon.x + 15;
 			addChild(_text);				
-		}
-		
-		private function addIcon(i:Class, x:uint):void
-		{
-			_icon = new ButtonIcon(new i());
-			_icon.y = 16; _icon.x = x;
-			addChild(_icon);
 		}
 		
 		private function addKill():void

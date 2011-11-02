@@ -12,15 +12,16 @@ package view.history.combos {
 
 		public function BranchCombo()
 		{
-			super(BranchIcon, 20, true);
-			super.setHeadingIcon(BranchIcon, 20);
+			super.allowOptionDelete();
+			super.optionIcon = BranchIcon;
+			super.headingIcon = BranchIcon;
 			addEventListener(UIEvent.COMBO_OPTION_KILL, onBranchDelete);
 			addEventListener(UIEvent.COMBO_OPTION_CLICK, onBranchSelection);
 		}
 
 		public function draw():void
 		{
-			super.heading = 'On Branch : '+AppModel.branch.name;
+			super.headingText = 'On Branch : '+AppModel.branch.name;
 			var a:Vector.<String> = new Vector.<String>();
 			var b:Vector.<Branch> = AppModel.bookmark.branches;
 			for (var i:int = 0; i < b.length; i++) if (b[i] != AppModel.branch) a.push('Switch To : '+b[i].name);

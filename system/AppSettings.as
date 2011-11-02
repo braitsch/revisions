@@ -1,5 +1,6 @@
 package system {
 
+	import flash.system.System;
 	import events.AppEvent;
 	import model.AppModel;
 	import flash.display.Stage;
@@ -19,7 +20,7 @@ package system {
 		private static var _file		:File;
 		private static var _xml			:XML;
 		private static var _stage		:Stage;
-		private static var _settings:Object = {};
+		private static var _settings	:Object = {};
 
 		public function initialize(stage:Stage):void
 		{
@@ -54,6 +55,7 @@ package system {
 		// store user-defined preferences //	
 			var p:XMLList = _xml['user-defined'].children();
 			for (var i:int = 0; i < p.length(); i++) _settings[p[i].name()] = castSetting(p[i].valueOf());
+			System.disposeXML(_xml);
 			AppModel.dispatch(AppEvent.APP_SETTINGS);
 		//	traceSettings();
 		}

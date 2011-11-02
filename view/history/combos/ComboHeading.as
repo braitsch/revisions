@@ -29,11 +29,12 @@ package view.history.combos {
 			_text.text = s;
 		}
 		
-		public function setIcon(i:Class, x:uint):void
+		public function setIcon(i:Class):void
 		{
 			if (_icon) removeChild(_icon);
 			_icon = new ButtonIcon(new i());
-			_icon.y = 19; _icon.x = x;
+			_icon.y = 19;
+			_icon.x = i == ClockIcon ? 32 : 20; 
 			_text.x = _icon.x + 15;
 			_icon.buttonMode = i == SwitcherDelete;
 			addChild(_icon);

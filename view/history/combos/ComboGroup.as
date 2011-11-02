@@ -10,55 +10,60 @@ package view.history.combos {
 	public class ComboGroup extends Sprite {
 
 		private var _width				:uint;
-		private var _icon				:Class;
-		private var _iconX				:uint;
-		private var _allowKill			:Boolean;
 		private var _mask				:Shape = new Shape();
 		private var _heading			:ComboHeading;
 		private var _strings			:Vector.<String>;
 		private var _options			:Sprite = new Sprite();
+		private var _optionIcon			:Class;
+		private var _allowOptionDelete	:Boolean = false;
 		private var _dropShadow			:ScaleObject = new ScaleObject(new DropShadowPlate(), new Rectangle(19, 7, 200, 106));
 
-		public function ComboGroup(oi:Class, ox:uint, ak:Boolean)
+		public function ComboGroup()
 		{
 			_heading = new ComboHeading();
-			_icon = oi; _iconX = ox; _allowKill = ak;
 			_options.buttonMode = true;
 			initialize();
 		}
 		
-		public function set heading(s:String):void
+		override public function get width():Number { return _width; }
+		
+		protected function set optionIcon(oi:Class):void
+		{
+			_optionIcon = oi;			
+		}
+		
+		protected function allowOptionDelete():void
+		{
+			_allowOptionDelete = true;
+		}
+		
+		protected function set headingText(s:String):void
 		{
 			_heading.setText(s);
-			_width = _heading.width;
 			if (_strings) sortAndDraw();
 		}
 		
-		public function setHeadingIcon(hi:Class, x:uint):void
+		protected function set headingIcon(hi:Class):void
 		{
-			_heading.setIcon(hi, x);	
+			_heading.setIcon(hi);	
 		}
 		
-		public function set options(v:Vector.<String>):void
+		protected function set options(v:Vector.<String>):void
 		{
 			_strings = v; sortAndDraw();
 		}
 		
-		override public function get width():Number
-		{
-			return _width;
-		}
-		
 		private function sortAndDraw():void
 		{
+			_width = _heading.width;
 			while(_options.numChildren) _options.removeChildAt(0);
 			for (var i:int = 0; i < _strings.length; i++) {
-				var k:ComboItem = new ComboItem(_strings[i], _icon, _iconX, _allowKill);
+				var k:ComboItem = new ComboItem(_strings[i], _optionIcon, _allowOptionDelete);
 					k.y = _options.numChildren * (ComboItem.ITEM_HEIGHT + 2);
 				if (k.width > _width) _width = k.width;
 				_options.addChild(k);
 			}
-			_width += 35; // padding //
+			_width += 35; // padding-right //
 			_heading.draw(_width);
 			if (_options.numChildren > 0){
 				for (i = 0; i < _options.numChildren; i++) ComboItem(_options.getChildAt(i)).draw(_width - 1);

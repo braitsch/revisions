@@ -14,15 +14,15 @@ package view.history.combos {
 
 		public function HistoryCombo()
 		{
-			super(ClockIcon, 32, false);
-			super.setHeadingIcon(ClockIcon, 32);
+			super.optionIcon = ClockIcon;
+			super.headingIcon = ClockIcon;
 			_numPerPage = HistoryList.ITEMS_PER_PAGE;
 			addEventListener(UIEvent.COMBO_OPTION_CLICK, onOptionClick);
 		}
 		
 		public function draw():void
 		{
-			super.heading = 'History of '+AppModel.bookmark.label;
+			super.headingText = 'History of '+AppModel.bookmark.label;
 			_options = new Vector.<String>();
 			_totalCommits = AppModel.bookmark.branch.totalCommits;
 			var n:uint = Math.floor(_totalCommits / _numPerPage);
@@ -58,9 +58,9 @@ package view.history.combos {
 			var n:uint = (Math.floor(_totalCommits / _numPerPage) - _pageNum) * _numPerPage;
 			if (_totalCommits - n < _numPerPage){
 				n = _totalCommits - _numPerPage;
-				super.heading = 'History of '+AppModel.bookmark.label;		
+				super.headingText = 'History of '+AppModel.bookmark.label;		
 			}	else{
-				super.heading = 'Viewing Versions '+pad(n + 1)+' - '+pad(n + _numPerPage);
+				super.headingText = 'Viewing Versions '+pad(n + 1)+' - '+pad(n + _numPerPage);
 			}
 			sort(_pageNum);
 			dispatchEvent(new UIEvent(UIEvent.PAGE_HISTORY, n));
