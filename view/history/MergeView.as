@@ -1,14 +1,14 @@
 package view.history {
 
-	import model.vo.Commit;
 	import events.AppEvent;
 	import model.AppModel;
 	import model.vo.Branch;
+	import model.vo.Commit;
 	import view.graphics.PatternBox;
 	import view.graphics.SolidBox;
 	import com.greensock.TweenLite;
 	import flash.display.Sprite;
-	import flash.events.Event;
+	import flash.utils.setTimeout;
 
 	public class MergeView extends Sprite {
 
@@ -25,19 +25,22 @@ package view.history {
 		{
 			addChild(_bkgd);
 			addChild(_divider);
-			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			AppModel.engine.addEventListener(AppEvent.BRANCH_HISTORY, onBranchData);
 		}
 
 		public function setSize(w:uint, h:uint):void
 		{
 			_width = w; _height = h;
-			if (stage) drawLayout();
+			if (_branchA && _branchB) drawLayout();
 		}
-
+		
+		public function hide():void
+		{
+			TweenLite.to(this, .5, {alpha:0, delay:.3, visible:false});
+		}
+		
 		private function onBranchData(e:AppEvent):void
 		{
-			onAddedToStage();
 			var a:Vector.<Commit> = AppModel.branch.history.slice(-25).reverse();
 			var b:Vector.<Commit> = Branch(e.data).history.slice(-25).reverse();
 			if (a[0].sha1 == b[0].sha1){
@@ -49,12 +52,23 @@ package view.history {
 			}	else if (compare(b, a)) {
 		//		trace('b is larger');
 				_branchA = new HistorySnapshot(_oldCommits);
-				_branchB = new HistorySnapshot(_oldCommits, _newCommits);				
+				_branchB = new HistorySnapshot(_oldCommits, _newCommits);
 			}
-			addChild(_branchA); addChild(_branchB);
 			drawLayout();
+			setTimeout(onListsRendered, 1500);
 		}
 		
+		private function onListsRendered():void
+		{
+			this.visible = true;
+			TweenLite.to(this, .5, {alpha:1});
+			TweenLite.from(_branchA, .5, {alpha:0});
+			TweenLite.from(_branchB, .5, {alpha:0});
+			addChild(_branchA); addChild(_branchB);
+			while ( numChildren > 4 ) removeChildAt(2);
+			AppModel.hideLoader();
+		}
+
 		private function compare(a:Vector.<Commit>, b:Vector.<Commit>):Boolean
 		{
 			_newCommits = null; _oldCommits = null;
@@ -64,18 +78,7 @@ package view.history {
 					_oldCommits = a.slice(i, a.length);
 				}
 			}
-//			if (_newCommits && _oldCommits){
-//				for (i = 0; i < _newCommits.length; i++) trace('new commits = '+_newCommits[i].note);
-//				for (i = 0; i < _oldCommits.length; i++) trace('old commits = '+_oldCommits[i].note);	
-//			}
 			return _newCommits && _oldCommits;
-		}
-		
-		private function onAddedToStage(e:Event = null):void
-		{
-			this.alpha = 0;
-			if (_branchA) {removeChild(_branchA); _branchA = null;}
-			if (_branchB) {removeChild(_branchB); _branchB = null;}
 		}
 		
 		private function drawLayout():void
@@ -86,7 +89,6 @@ package view.history {
 			_branchA.width = _width / 2 - 1;
 			_branchB.width = _width / 2 - 1;
 			_branchB.x = _width / 2 + _divider.width + 1;
-			TweenLite.to(this, .5, {alpha:1, delay:.3});
 		}		
 
 	}

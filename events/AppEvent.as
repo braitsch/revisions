@@ -72,8 +72,9 @@ package events {
 		public static const REMOTE_REPAIRED				:String = "REMOTE_REPAIRED";
 		public static const REQUEST_CANCELLED			:String = "REQUEST_CANCELLED";
 		public static const LOGIN_FAILURE				:String = "LOGIN_FAILURE";
-		public static const GET_BRANCH_HISTORY				:String = "MERGE_REQUESTED";
+		public static const GET_BRANCH_HISTORY			:String = "MERGE_REQUESTED";
 		public static const BRANCH_HISTORY				:String = "MERGE_PREVIEW";
+		public static const RENDERED					:String = "RENDERED";
 	
 		
 		public var data:Object;

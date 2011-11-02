@@ -59,6 +59,11 @@ package view.history {
 			drawHRule(w);
 		}
 		
+		public function resetMergeCombo():void
+		{
+			_merger.reset();
+		}
+		
 		private function drawHRule(w:uint):void
 		{
 			_hrule.graphics.clear();

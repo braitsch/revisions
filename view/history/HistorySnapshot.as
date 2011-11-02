@@ -1,5 +1,7 @@
 package view.history {
 
+	import events.AppEvent;
+	import model.AppModel;
 	import model.vo.Commit;
 	import flash.display.Sprite;
 
@@ -19,7 +21,8 @@ package view.history {
 					k.y = HistoryList.ITEM_SPACING * numChildren;
 					k.mouseEnabled = k.mouseChildren = false;
 				addChild(k);
-			}			
+			}
+			AppModel.dispatch(AppEvent.RENDERED);
 		}
 		
 		override public function set width(n:Number):void

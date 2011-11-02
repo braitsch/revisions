@@ -4,6 +4,7 @@ package view.history.combos {
 	import events.UIEvent;
 	import model.AppModel;
 	import model.vo.Branch;
+	import flash.utils.setTimeout;
 	
 	public class MergeCombo extends ComboGroup {
 
@@ -18,12 +19,18 @@ package view.history.combos {
 
 		public function draw():void
 		{
-			reset();
 			var a:Vector.<String> = new Vector.<String>();
 			var b:Vector.<Branch> = AppModel.bookmark.branches;
 			for (var i:int = 0; i < b.length; i++) if (b[i] != AppModel.branch) a.push(b[i].name);
 			super.options = a;
 		}
+		
+		public function reset():void
+		{
+			_branch = null;
+			super.heading = 'Open Merge View';
+			super.setHeadingIcon(OptionsArrow, 20);
+		}		
 		
 		private function openMergePreview(e:UIEvent):void
 		{
@@ -35,22 +42,14 @@ package view.history.combos {
 			_branch = AppModel.bookmark.branches[n];
 			super.heading = 'Merging With : '+_branch.name;
 			super.setHeadingIcon(SwitcherDelete, 20);
-			dispatchEvent(new UIEvent(UIEvent.SHOW_MERGE_PREVIEW));
-			AppModel.dispatch(AppEvent.GET_BRANCH_HISTORY, _branch);
-		}
-		
-		private function reset():void
-		{
-			_branch = null;
-			super.heading = 'Open Merge View';
-			super.setHeadingIcon(OptionsArrow, 20);
+			AppModel.showLoader('Comparing Branches');
+	// add slight delay so we have time to display the preloader //				
+			setTimeout(function():void{ AppModel.dispatch(AppEvent.GET_BRANCH_HISTORY, _branch); }, 500);
 		}
 		
 		private function hideMergePreview(e:UIEvent):void
 		{
-			if (_branch) {
-				reset(); dispatchEvent(new UIEvent(UIEvent.HIDE_MERGE_PREVIEW));	
-			}
+			if (_branch) dispatchEvent(new UIEvent(UIEvent.HIDE_MERGE_PREVIEW));
 		}
 
 	}

@@ -1,7 +1,7 @@
 package view.history {
 
-	import events.UIEvent;
 	import events.AppEvent;
+	import events.UIEvent;
 	import model.AppModel;
 	import model.vo.Branch;
 	import flash.display.Sprite;
@@ -19,7 +19,6 @@ package view.history {
 		{
 			addChildren();
 			addEventListener(UIEvent.PAGE_HISTORY, onPageRequest);
-			addEventListener(UIEvent.SHOW_MERGE_PREVIEW, onShowMergePreview);
 			addEventListener(UIEvent.HIDE_MERGE_PREVIEW, onHideMergePreview);
 			AppModel.engine.addEventListener(AppEvent.NO_BOOKMARKS, onNoBookmarks);
 			AppModel.engine.addEventListener(AppEvent.BOOKMARK_DELETED, onNoBookmarks);
@@ -29,9 +28,8 @@ package view.history {
 
 		private function addChildren():void
 		{
-			addChild(_listView);
-			addChild(_header);
 			_listView.y = _mergeView.y = 34;
+			addChild(_listView); addChild(_mergeView); addChild(_header);
 		}
 
 		public function resize(w:uint, h:uint):void
@@ -57,8 +55,7 @@ package view.history {
 		{
 			if (AppModel.branch.history == null) return;
 			if (AppModel.branch == _branch && AppModel.branch.isModified != _modified) {
-				_modified = AppModel.branch.isModified;
-				drawView();
+				_modified = AppModel.branch.isModified; drawView();
 			}
 		}
 		
@@ -81,14 +78,10 @@ package view.history {
 			onHideMergePreview();
 		}
 		
-		private function onShowMergePreview(e:UIEvent):void
-		{
-			addChildAt(_mergeView, 1);
-		}
-		
 		private function onHideMergePreview(e:UIEvent = null):void
 		{
-			if (_mergeView.stage) removeChild(_mergeView);
+			_mergeView.hide();
+			_header.resetMergeCombo();
 		}						
 		
 	}
