@@ -86,9 +86,9 @@ package view.history {
 			_divider.x = _width / 2;
 			_divider.draw(2, _height);
 			_bkgd.draw(_width, _height);
-			_branchA.width = _width / 2 - 1;
-			_branchB.width = _width / 2 - 1;
-			_branchB.x = _width / 2 + _divider.width + 1;
+			_branchA.width = _width / 2;
+			_branchB.width = _width / 2;
+			_branchB.x = _width / 2 + _divider.width;
 		}		
 
 	}

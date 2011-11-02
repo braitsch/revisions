@@ -28,11 +28,11 @@ package view.history {
 			_hrule.y = 32;
 			_hrule.filters = [new DropShadowFilter(1, 90, 0, .5, 4, 4, 1, 3)];
 			addChild(_bkgd); 
-			addChild(_scroller); 
 			addChild(_hrule); 
 			addChild(_history);
 			addChild(_switcher);
 			addChild(_merger);
+			addChild(_scroller); 
 			onNoBookmarks(); // hide everything until user loads history //
 			addEventListener(UIEvent.COMBO_HEADING_OVER, onComboRollOver);
 			AppModel.engine.addEventListener(AppEvent.NO_BOOKMARKS, onNoBookmarks);			

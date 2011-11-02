@@ -35,6 +35,7 @@ package view.history.combos {
 			_icon = new ButtonIcon(new i());
 			_icon.y = 19; _icon.x = x;
 			_text.x = _icon.x + 15;
+			_icon.buttonMode = i == SwitcherDelete;
 			addChild(_icon);
 		}
 		

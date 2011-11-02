@@ -23,6 +23,7 @@ package view.history.combos {
 		{
 			_heading = new ComboHeading();
 			_icon = oi; _iconX = ox; _allowKill = ak;
+			_options.buttonMode = true;
 			initialize();
 		}
 		
@@ -59,10 +60,7 @@ package view.history.combos {
 			}
 			_width += 35; // padding //
 			_heading.draw(_width);
-			if (_options.numChildren == 0){
-				buttonMode = false;
-			}	else{
-				buttonMode = true;
+			if (_options.numChildren > 0){
 				for (i = 0; i < _options.numChildren; i++) ComboItem(_options.getChildAt(i)).draw(_width - 1);
 				drawBkgdAndMask();
 			}
