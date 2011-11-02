@@ -33,11 +33,8 @@ package view.history {
 			addChild(_switcher);
 			addChild(_merger);
 			addChild(_scroller); 
-			onNoBookmarks(); // hide everything until user loads history //
+			hideAll(); // hide everything until user loads history //
 			addEventListener(UIEvent.COMBO_HEADING_OVER, onComboRollOver);
-			AppModel.engine.addEventListener(AppEvent.NO_BOOKMARKS, onNoBookmarks);			
-			AppModel.engine.addEventListener(AppEvent.BRANCH_DELETED, onBranchDeleted);
-			AppModel.engine.addEventListener(AppEvent.BOOKMARK_EDITED, onBookmarkEdited);
 		}
 
 		public function refresh():void
@@ -50,6 +47,13 @@ package view.history {
 				hideBranchControls();
 			}
 		}
+		
+		public function hideAll(e:AppEvent = null):void
+		{
+			hideCombo(_history);
+			hideCombo(_merger);
+			hideCombo(_switcher);
+		}	
 
 		public function resize(w:uint, h:uint):void
 		{
@@ -57,11 +61,6 @@ package view.history {
 			_scroller.x = w - 5;
 			_scroller.draw(h);
 			drawHRule(w);
-		}
-		
-		public function resetMergeCombo():void
-		{
-			_merger.reset();
 		}
 		
 		private function drawHRule(w:uint):void
@@ -93,23 +92,6 @@ package view.history {
 		private function onComboRollOver(e:UIEvent):void
 		{
 			setChildIndex(e.data as ComboGroup, numChildren - 1);	
-		}
-		
-		private function onBranchDeleted(e:AppEvent):void
-		{
-			refresh();
-		}				
-		
-		private function onBookmarkEdited(e:AppEvent):void
-		{
-			refresh();	
-		}
-		
-		private function onNoBookmarks(e:AppEvent = null):void
-		{
-			hideCombo(_history);
-			hideCombo(_merger);
-			hideCombo(_switcher);
 		}
 		
 		private function showCombo(n:ComboGroup):void

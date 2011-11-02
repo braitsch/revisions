@@ -19,11 +19,10 @@ package view.history {
 		{
 			addChildren();
 			addEventListener(UIEvent.PAGE_HISTORY, onPageRequest);
-			addEventListener(UIEvent.HIDE_MERGE_PREVIEW, onHideMergePreview);
-			AppModel.engine.addEventListener(AppEvent.NO_BOOKMARKS, onNoBookmarks);
-			AppModel.engine.addEventListener(AppEvent.BOOKMARK_DELETED, onNoBookmarks);
 			AppModel.engine.addEventListener(AppEvent.HISTORY_RECEIVED, onHistory);
 			AppModel.engine.addEventListener(AppEvent.MODIFIED_RECEIVED, onModified);
+			AppModel.engine.addEventListener(AppEvent.NO_BOOKMARKS, hideAll);
+			AppModel.engine.addEventListener(AppEvent.BOOKMARK_DELETED, hideAll);
 		}
 
 		private function addChildren():void
@@ -63,26 +62,26 @@ package view.history {
 		{
 			_header.refresh();
 			_listView.showMostRecent(AppModel.branch);
-			onHideMergePreview();
+			hideMergeView();
 		}
 				
-		private function onNoBookmarks(e:AppEvent):void
-		{
+		private function hideAll(e:AppEvent):void
+		{		
+			_header.hideAll();	
 			_listView.clear();
-			onHideMergePreview();
+			hideMergeView();
 		}
 		
 		private function onPageRequest(e:UIEvent):void
 		{
 			_listView.startFromIndex(AppModel.branch, e.data as uint);
-			onHideMergePreview();
+			hideMergeView();
 		}
 		
-		private function onHideMergePreview(e:UIEvent = null):void
+		private function hideMergeView():void
 		{
-			_mergeView.hide();
-			_header.resetMergeCombo();
-		}						
+			AppModel.dispatch(AppEvent.HIDE_MERGE_VIEW);			
+		}
 		
 	}
 	

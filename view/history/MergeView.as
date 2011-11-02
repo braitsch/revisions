@@ -26,17 +26,13 @@ package view.history {
 			addChild(_bkgd);
 			addChild(_divider);
 			AppModel.engine.addEventListener(AppEvent.BRANCH_HISTORY, onBranchData);
+			AppModel.engine.addEventListener(AppEvent.HIDE_MERGE_VIEW, onHideMergeView);
 		}
 
 		public function setSize(w:uint, h:uint):void
 		{
 			_width = w; _height = h;
 			if (_branchA && _branchB) drawLayout();
-		}
-		
-		public function hide():void
-		{
-			TweenLite.to(this, .5, {alpha:0, delay:.3, visible:false});
 		}
 		
 		private function onBranchData(e:AppEvent):void
@@ -89,7 +85,12 @@ package view.history {
 			_branchA.width = _width / 2;
 			_branchB.width = _width / 2;
 			_branchB.x = _width / 2 + _divider.width;
-		}		
+		}
+		
+		private function onHideMergeView(e:AppEvent):void
+		{
+			TweenLite.to(this, .5, {alpha:0, delay:.3, visible:false});	
+		}				
 
 	}
 	

@@ -74,7 +74,8 @@ package events {
 		public static const LOGIN_FAILURE				:String = "LOGIN_FAILURE";
 		public static const GET_BRANCH_HISTORY			:String = "MERGE_REQUESTED";
 		public static const BRANCH_HISTORY				:String = "MERGE_PREVIEW";
-		public static const RENDERED					:String = "RENDERED";
+		public static const RENDERED:String = "RENDERED";
+		public static const HIDE_MERGE_VIEW:String = "HIDE_MERGE_VIEW";
 	
 		
 		public var data:Object;

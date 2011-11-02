@@ -41,13 +41,11 @@ package events {
 		public static const UNLINK_ACCOUNT			:String = "UNLINK_ACCOUNT";
 		public static const COMMIT_OPTIONS			:String = "COMMIT_OPTIONS";
 		
+		public static const PAGE_HISTORY			:String = "PAGE_HISTORY";
 		public static const COMBO_HEADING_OVER		:String = "COMBO_HEADING_OVER";
 		public static const COMBO_HEADING_CLICK		:String = "COMBO_HEADING_CLICK";
 		public static const COMBO_OPTION_KILL		:String = "COMBO_OPTION_KILL";
-		public static const COMBO_OPTION_CLICK:String = "COMBO_OPTION_CLICK";
-		public static const PAGE_HISTORY:String = "PAGE_HISTORY";
-		public static const SHOW_MERGE_PREVIEW:String = "SHOW_MERGE_PREVIEW";
-		public static const HIDE_MERGE_PREVIEW:String = "HIDE_MERGE_PREVIEW";
+		public static const COMBO_OPTION_CLICK		:String = "COMBO_OPTION_CLICK";
 		
 		public var data:Object;
 

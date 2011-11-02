@@ -15,6 +15,7 @@ package view.history.combos {
 			super.optionIcon = BranchIcon;
 			addEventListener(UIEvent.COMBO_OPTION_CLICK, openMergePreview);
 			addEventListener(UIEvent.COMBO_HEADING_CLICK, hideMergePreview);
+			AppModel.engine.addEventListener(AppEvent.HIDE_MERGE_VIEW, resetMergeView);
 		}
 
 		public function draw():void
@@ -25,11 +26,11 @@ package view.history.combos {
 			super.options = a;
 		}
 		
-		public function reset():void
+		private function resetMergeView(e:AppEvent):void
 		{
 			_branch = null;
 			super.headingText = 'Open Merge View';
-			super.headingIcon = OptionsArrow;
+			super.headingIcon = OptionsArrow;			
 		}		
 		
 		private function openMergePreview(e:UIEvent):void
@@ -49,7 +50,7 @@ package view.history.combos {
 		
 		private function hideMergePreview(e:UIEvent):void
 		{
-			if (_branch) dispatchEvent(new UIEvent(UIEvent.HIDE_MERGE_PREVIEW));
+			AppModel.dispatch(AppEvent.HIDE_MERGE_VIEW);
 		}
 
 	}
