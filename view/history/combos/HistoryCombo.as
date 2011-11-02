@@ -4,7 +4,7 @@ package view.history.combos {
 	import model.AppModel;
 	import view.history.HistoryList;
 
-	public class HistoryChooser extends ComboGroup {
+	public class HistoryCombo extends ComboGroup {
 
 		private static var _options			:Vector.<String>;
 		private static var _pageNum			:uint;
@@ -12,7 +12,7 @@ package view.history.combos {
 		private static var _numPerPage		:uint;
 		private static var _totalCommits	:uint;
 
-		public function HistoryChooser()
+		public function HistoryCombo()
 		{
 			super(ClockIcon, 32, false);
 			super.setHeadingIcon(ClockIcon, 32);

@@ -83,13 +83,11 @@ package view.history {
 		
 		private function onShowMergePreview(e:UIEvent):void
 		{
-			_header.mergeView = true;
-			addChildAt(_mergeView, numChildren - 1);
+			addChildAt(_mergeView, 1);
 		}
 		
 		private function onHideMergePreview(e:UIEvent = null):void
 		{
-			_header.mergeView = false;
 			if (_mergeView.stage) removeChild(_mergeView);
 		}						
 		

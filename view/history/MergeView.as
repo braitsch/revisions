@@ -37,6 +37,7 @@ package view.history {
 
 		private function onBranchData(e:AppEvent):void
 		{
+			onAddedToStage();
 			var a:Vector.<Commit> = AppModel.branch.history.slice(-25).reverse();
 			var b:Vector.<Commit> = Branch(e.data).history.slice(-25).reverse();
 			if (a[0].sha1 == b[0].sha1){
@@ -70,7 +71,7 @@ package view.history {
 			return _newCommits && _oldCommits;
 		}
 		
-		private function onAddedToStage(e:Event):void
+		private function onAddedToStage(e:Event = null):void
 		{
 			this.alpha = 0;
 			if (_branchA) {removeChild(_branchA); _branchA = null;}

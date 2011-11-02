@@ -36,15 +36,6 @@ package view.history.combos {
 			_heading.setIcon(hi, x);	
 		}
 		
-		public function set enabled(b:Boolean):void
-		{
-			if (b){
-				_heading.addEventListener(MouseEvent.ROLL_OVER, showOptions);
-			}	else{
-				_heading.removeEventListener(MouseEvent.ROLL_OVER, showOptions);
-			}
-		}
-		
 		public function set options(v:Vector.<String>):void
 		{
 			while(_options.numChildren) _options.removeChildAt(0);
@@ -91,6 +82,7 @@ package view.history.combos {
 			addChild(_options); 
 			addChild(_mask); 
 			addEventListener(MouseEvent.ROLL_OUT, hideOptions);
+			_heading.addEventListener(MouseEvent.ROLL_OVER, showOptions);
 		}
 		
 		private function showOptions(e:MouseEvent):void

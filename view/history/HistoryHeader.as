@@ -5,10 +5,10 @@ package view.history {
 	import events.UIEvent;
 	import model.AppModel;
 	import view.graphics.PatternBox;
-	import view.history.combos.BranchMerger;
-	import view.history.combos.BranchSwitcher;
+	import view.history.combos.MergeCombo;
+	import view.history.combos.BranchCombo;
 	import view.history.combos.ComboGroup;
-	import view.history.combos.HistoryChooser;
+	import view.history.combos.HistoryCombo;
 	import view.ui.Scroller;
 	import flash.display.Shape;
 	import flash.display.Sprite;
@@ -19,9 +19,9 @@ package view.history {
 		private static var _hrule		:Shape = new Shape();
 		private static var _bkgd		:PatternBox = new PatternBox(new DkGreyPattern());
 		private static var _scroller	:Scroller = new Scroller();
-		private static var _history		:HistoryChooser = new HistoryChooser();
-		private static var _merger		:BranchMerger = new BranchMerger();
-		private static var _switcher	:BranchSwitcher = new BranchSwitcher();
+		private static var _history		:HistoryCombo = new HistoryCombo();
+		private static var _merger		:MergeCombo = new MergeCombo();
+		private static var _switcher	:BranchCombo = new BranchCombo();
 
 		public function HistoryHeader()
 		{
@@ -57,11 +57,6 @@ package view.history {
 			_scroller.x = w - 5;
 			_scroller.draw(h);
 			drawHRule(w);
-		}
-		
-		public function set mergeView(b:Boolean):void
-		{
-			_history.enabled = _switcher.enabled = _merger.enabled = !b;
 		}
 		
 		private function drawHRule(w:uint):void

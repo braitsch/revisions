@@ -5,9 +5,11 @@ package view.history.combos {
 	import model.AppModel;
 	import model.vo.Branch;
 	
-	public class BranchMerger extends ComboGroup {
+	public class MergeCombo extends ComboGroup {
 
-		public function BranchMerger()
+		private static var _branchId	:uint;
+
+		public function MergeCombo()
 		{
 			super(BranchIcon, 20, false);
 			addEventListener(UIEvent.COMBO_OPTION_CLICK, openMergePreview);
@@ -15,23 +17,20 @@ package view.history.combos {
 
 		public function draw():void
 		{
-			this.mergeActive = false;
+			this.mergeActive = false; _branchId = 0;
 			var a:Vector.<String> = new Vector.<String>();
 			var b:Vector.<Branch> = AppModel.bookmark.branches;
 			for (var i:int = 0; i < b.length; i++) if (b[i] != AppModel.branch) a.push(b[i].name);
 			super.options = a;			
 		}
 		
-		public function reset():void
-		{
-			this.mergeActive = false;	
-		}
-		
 		private function openMergePreview(e:UIEvent):void
 		{
-			this.mergeActive = true;
+			if (e.data == _branchId) return;
+			this.mergeActive = true; _branchId = e.data as uint;
+			trace('_branchId: ' + (_branchId));
 			dispatchEvent(new UIEvent(UIEvent.SHOW_MERGE_PREVIEW));
-			AppModel.dispatch(AppEvent.GET_BRANCH_HISTORY, AppModel.bookmark.branches[e.data]);
+			AppModel.dispatch(AppEvent.GET_BRANCH_HISTORY, AppModel.bookmark.branches[_branchId]);
 		}
 		
 		private function set mergeActive(b:Boolean):void
@@ -49,7 +48,6 @@ package view.history.combos {
 		
 		private function onHeadingClick(e:UIEvent):void
 		{
-			this.mergeActive = false;
 			dispatchEvent(new UIEvent(UIEvent.HIDE_MERGE_PREVIEW));	
 		}
 

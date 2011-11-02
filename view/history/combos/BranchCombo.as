@@ -6,11 +6,11 @@ package view.history.combos {
 	import view.windows.modals.system.Confirm;
 	import view.windows.modals.system.Message;
 
-	public class BranchSwitcher extends ComboGroup {
+	public class BranchCombo extends ComboGroup {
 
 		private static var _branch	:Branch;
 
-		public function BranchSwitcher()
+		public function BranchCombo()
 		{
 			super(BranchIcon, 20, true);
 			super.setHeadingIcon(BranchIcon, 20);

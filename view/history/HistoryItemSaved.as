@@ -1,6 +1,5 @@
 package view.history {
 
-	import flash.display.BitmapData;
 	import events.UIEvent;
 	import model.AppModel;
 	import model.vo.Commit;
@@ -13,17 +12,33 @@ package view.history {
 
 	public class HistoryItemSaved extends HistoryItem {
 
-		private var _over			:SolidBox = new SolidBox(Box.WHITE);
-		private var _star			:ButtonIcon = new ButtonIcon(new CommitStar());
+		private var _over			:SolidBox;
+		private var _star			:ButtonIcon;
 		private var _bkgd			:PatternBox;
 		private var _commit			:Commit;
 
-		public function HistoryItemSaved(bmd:BitmapData)
+		public function HistoryItemSaved(merged:Boolean)
 		{
-			_bkgd = new PatternBox(bmd); drawBkgd();
+			merged ? drawMergedItem() : drawNormalItem();
 			addEventListener(MouseEvent.CLICK, onItemSelection);
 			addEventListener(MouseEvent.ROLL_OVER, onItemRollOver);
 			addEventListener(MouseEvent.ROLL_OUT, onItemRollOut);
+		}
+
+		private function drawNormalItem():void
+		{
+			_over = new SolidBox(Box.WHITE);
+			_bkgd = new PatternBox(new HistoryItemBkgd()); 
+			_star = new ButtonIcon(new CommitStar(), true, true);
+			addChild(_bkgd); addChild(_over); _over.alpha = 0;
+			addStar();
+		}
+
+		private function drawMergedItem():void
+		{
+			_bkgd = new PatternBox(new HistoryItemMerged());
+			_star = new ButtonIcon(new CommitStar(), true, false);
+			addChild(_bkgd); addStar();
 		}
 		
 		public function set commit(o:Commit):void
@@ -37,19 +52,17 @@ package view.history {
 		override public function setWidth(w:uint):void
 		{
 			_star.x = w - 38;
-			_over.draw(w, 41);
 			_bkgd.draw(w, 42);
 			super.setWidth(w);
+			if (_over) _over.draw(w, 41);
 		}
 		
-		private function drawBkgd():void
+		private function addStar():void
 		{
-			addChild(_bkgd);
-			addChild(_over);
-			addChild(_star);
-			_star.y = 21; _over.alpha = 0;
+			_star.y = 21;
 			_star.addEventListener(MouseEvent.ROLL_OUT, onStarRollOut);
 			_star.addEventListener(MouseEvent.ROLL_OVER, onStarRollOver);
+			addChild(_star);
 		}
 
 		private function onItemSelection(e:MouseEvent):void

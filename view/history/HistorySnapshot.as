@@ -11,10 +11,10 @@ package view.history {
 			if (n) attach(n, false); attach(o, true);
 		}
 		
-		private function attach(v:Vector.<Commit>, shared:Boolean):void
+		private function attach(v:Vector.<Commit>, merged:Boolean):void
 		{
 			for (var i:int = 0; i < v.length; i++) {
-				var k:HistoryItemSaved = new HistoryItemSaved(shared ? new DkGreyPattern() : new HistoryItemBkgd());
+				var k:HistoryItemSaved = new HistoryItemSaved(merged);
 					k.commit = v[i];
 					k.y = HistoryList.ITEM_SPACING * numChildren;
 					k.mouseEnabled = k.mouseChildren = false;
