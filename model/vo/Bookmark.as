@@ -5,7 +5,7 @@ package model.vo {
 	import model.remote.HostingAccount;
 	import system.StringUtils;
 	import com.adobe.crypto.MD5;
-	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import flash.events.EventDispatcher;
 	import flash.events.TimerEvent;
 	import flash.filesystem.File;
@@ -26,8 +26,8 @@ package model.vo {
 		
 		private var _file				:File;		// for internal use only //
 		private var _timer				:Timer;
-		private var _icon32				:Bitmap;
-		private var _icon128			:Bitmap;
+		private var _icon32				:BitmapData;
+		private var _icon128			:BitmapData;
 		private var _stash				:Array = [];
 		private var _branches			:Vector.<Branch> = new Vector.<Branch>();
 		private var _remote				:Repository;
@@ -48,8 +48,8 @@ package model.vo {
 		public function set autosave(n:uint):void 				{ _autosave = n; 		}
 		public function get autosave():uint 					{ return _autosave;	 	}
 
-		public function get icon32():Bitmap 					{ return _icon32; 		}
-		public function get icon128():Bitmap 					{ return _icon128; 		}
+		public function get icon32():BitmapData 				{ return _icon32; 		}
+		public function get icon128():BitmapData 				{ return _icon128; 		}
 		public function get type():String 						{ return _type; 		}
 		public function get exists():Boolean 					{ return _file.exists;	}
 		public function get gitdir():String 					{ return _gitdir;		}
@@ -87,8 +87,8 @@ package model.vo {
 		{
 			var icons:Array = _file.icon.bitmaps;
 			for (var i:int = 0; i < icons.length; i++) {
-				if (icons[i].width == 32) _icon32 = new Bitmap(icons[i]);
-				if (icons[i].width == 128) _icon128 = new Bitmap(icons[i]);
+				if (icons[i].width == 32) _icon32 = icons[i];
+				if (icons[i].width == 128) _icon128 = icons[i];
 			}
 		}
 		

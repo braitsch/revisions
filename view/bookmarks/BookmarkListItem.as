@@ -60,7 +60,7 @@ package view.bookmarks {
 		private function getSystemIcon():void
 		{
 			if (_bookmark.type == Bookmark.FILE){
-				var b:Bitmap = _bookmark.icon32;
+				var b:Bitmap = new Bitmap(_bookmark.icon32);
 					b.smoothing = true;
 					b.width = b.height = 24;
 				_icon = new ButtonIcon(b, false, false);

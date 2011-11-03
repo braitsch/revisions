@@ -124,10 +124,11 @@ package model.proxies.local {
 		
 		private function onBranchInspection(a:Array):void
 		{
+			trace("StatusProxy.onBranchInspection(a)");
 			var c:String = a[0].result;
 			var v:Vector.<Commit> = parseHistory(a[1].result);
 	//		for (var i:int = 0; i < v.length; i++) trace(i, v[i].sha1, v[i].note);	
-			AppModel.dispatch(AppEvent.BRANCH_HISTORY, {common:c, unique:v});
+			AppModel.dispatch(AppEvent.BRANCH_HISTORY, {common:c, unique:v, branch:_branch});
 		}		
 		
 		private function parseHistory(s:String):Vector.<Commit>

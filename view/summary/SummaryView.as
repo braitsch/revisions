@@ -104,7 +104,7 @@ package view.summary {
 		private function getBookmarkIcon():void
 		{
 			if (_icon) _view.removeChild(_icon);
-			_icon = AppModel.bookmark.icon128;
+			_icon = new Bitmap(AppModel.bookmark.icon128);
 			_icon.x = -64;
 			_icon.y = -140 - _offset;
 			_view.addChild(_icon);
