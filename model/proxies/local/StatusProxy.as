@@ -51,6 +51,7 @@ package model.proxies.local {
 		public function getBranchHistory(b:Branch):void
 		{
 			_branch = b;
+			trace("StatusProxy.getBranchHistory(b)");
 			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
 			super.queue = [	Vector.<String>([BashMethods.GET_COMMON_PARENT, AppModel.branch.name, _branch.name]), 
 							Vector.<String>([BashMethods.GET_UNIQUE_COMMITS, AppModel.branch.name, _branch.name])];
@@ -170,15 +171,8 @@ package model.proxies.local {
 		
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
-			switch(e.data.method){
-				case BashMethods.GET_REMOTE_FILES :
-					trace("StatusProxy.onProcessFailure(e)", e.data.result);
-				break;
-				default :
-					e.data.source = 'StatusProxy.onProcessFailure(e)';
-					AppModel.alert(new Debug(e.data));
-				break;
-			}
+			e.data.source = 'StatusProxy.onProcessFailure(e)';
+			AppModel.alert(new Debug(e.data));
 		}
 		
 //		private function ignoreHiddenFiles(a:Array):Array

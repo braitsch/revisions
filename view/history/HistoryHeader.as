@@ -35,17 +35,14 @@ package view.history {
 			addChild(_scroller); 
 			hideAll(); // hide everything until user loads history //
 			addEventListener(UIEvent.COMBO_HEADING_OVER, onComboRollOver);
+			AppModel.engine.addEventListener(AppEvent.BRANCH_DELETED, drawBranchControls);
 		}
 
 		public function refresh():void
 		{
 			_history.draw();
 			showCombo(_history);
-			if (AppModel.bookmark.branches.length > 1){
-				showBranchControls();
-			}	else{
-				hideBranchControls();
-			}
+			drawBranchControls();
 		}
 		
 		public function hideAll(e:AppEvent = null):void
@@ -72,6 +69,15 @@ package view.history {
 			_hrule.graphics.drawRect(0, 1, w, 1);
 			_hrule.graphics.endFill();			
 		}
+		
+		private function drawBranchControls(e:AppEvent = null):void
+		{
+			if (AppModel.bookmark.branches.length > 1){
+				showBranchControls();
+			}	else{
+				hideBranchControls();
+			}			
+		}		
 		
 		private function showBranchControls():void
 		{
