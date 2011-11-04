@@ -7,7 +7,7 @@ package view.history {
 	import view.history.combos.BranchCombo;
 	import view.history.combos.ComboGroup;
 	import view.history.combos.HistoryCombo;
-	import view.history.combos.MergeCombo;
+	import view.history.combos.SyncCombo;
 	import view.ui.Scroller;
 	import com.greensock.TweenLite;
 	import flash.display.Shape;
@@ -20,7 +20,7 @@ package view.history {
 		private static var _bkgd		:PatternBox = new PatternBox(new DkGreyPattern());
 		private static var _scroller	:Scroller = new Scroller();
 		private static var _history		:HistoryCombo = new HistoryCombo();
-		private static var _merger		:MergeCombo = new MergeCombo();
+		private static var _merger		:SyncCombo = new SyncCombo();
 		private static var _switcher	:BranchCombo = new BranchCombo();
 
 		public function HistoryHeader()

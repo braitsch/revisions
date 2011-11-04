@@ -13,7 +13,7 @@ package view.history {
 		private static var _modified	:Boolean;
 		private static var _header		:HistoryHeader = new HistoryHeader();
 		private static var _listView	:HistoryList = new HistoryList();
-		private static var _mergeView	:MergeView = new MergeView();
+		private static var _mergeView	:SyncView = new SyncView();
 
 		public function HistoryView()
 		{
@@ -80,7 +80,7 @@ package view.history {
 		
 		private function hideMergeView():void
 		{
-			AppModel.dispatch(AppEvent.HIDE_MERGE_VIEW);			
+			AppModel.dispatch(AppEvent.HIDE_SYNC_VIEW);			
 		}
 		
 	}

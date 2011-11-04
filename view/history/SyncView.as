@@ -6,12 +6,12 @@ package view.history {
 	import model.vo.Commit;
 	import view.graphics.PatternBox;
 	import view.graphics.SolidBox;
-	import view.windows.modals.local.MergeLocal;
+	import view.windows.modals.local.SyncLocal;
 	import com.greensock.TweenLite;
 	import flash.display.Sprite;
 	import flash.utils.setTimeout;
 
-	public class MergeView extends Sprite {
+	public class SyncView extends Sprite {
 
 		private static var _bkgd			:PatternBox = new PatternBox(new LtGreyPattern());
 		private static var _divider			:SolidBox = new SolidBox(0xffffff);
@@ -24,12 +24,12 @@ package view.history {
 		private static var _bUnique			:Vector.<Commit>;
 		private static var _abShared		:Vector.<Commit>;
 
-		public function MergeView()
+		public function SyncView()
 		{
 			addChild(_bkgd);
 			addChild(_divider);
 			AppModel.engine.addEventListener(AppEvent.BRANCH_HISTORY, onBranchData);
-			AppModel.engine.addEventListener(AppEvent.HIDE_MERGE_VIEW, onHideMergeView);
+			AppModel.engine.addEventListener(AppEvent.HIDE_SYNC_VIEW, onHideSyncView);
 		}
 
 		public function setSize(w:uint, h:uint):void
@@ -65,7 +65,7 @@ package view.history {
 			while ( numChildren > 4 ) removeChildAt(2);
 			var ac:Commit = _aUnique.length != 0 ? _aUnique[0] : _abShared[0];
 			var bc:Commit = _bUnique.length != 0 ? _bUnique[0] : _abShared[0];
-			AppModel.alert(new MergeLocal(AppModel.branch, _branchMerge, _aUnique.length, _bUnique.length, ac, bc));
+			AppModel.alert(new SyncLocal(AppModel.branch, _branchMerge, _aUnique.length, _bUnique.length, ac, bc));
 			AppModel.hideLoader();
 		}
 		
@@ -79,7 +79,7 @@ package view.history {
 			_branchBList.x = _width / 2 + _divider.width;
 		}
 		
-		private function onHideMergeView(e:AppEvent):void
+		private function onHideSyncView(e:AppEvent):void
 		{
 			TweenLite.to(this, .5, {alpha:0, delay:.3, visible:false});	
 		}				

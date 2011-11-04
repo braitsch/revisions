@@ -13,9 +13,9 @@ package view.windows.modals.local {
 	import flash.events.MouseEvent;
 	import flash.text.TextFieldAutoSize;
 
-	public class MergeLocal extends Alert {
+	public class SyncLocal extends Alert {
 
-		private static var _view			:MergeLocalMC = new MergeLocalMC();
+		private static var _view			:SyncLocalMC = new SyncLocalMC();
 		private static var _heading			:TextHeading = new TextHeading();
 		private static var _check			:ModalCheckbox = new ModalCheckbox(false);
 		private static var _iconA			:Bitmap;	
@@ -26,18 +26,40 @@ package view.windows.modals.local {
 	//	private static var _windowY			:uint;
 		private static var _branchesInSync	:Boolean;
 
-		public function MergeLocal(a:Branch, b:Branch, au:uint, bu:uint, ac:Commit, bc:Commit)
+		public function SyncLocal(a:Branch, b:Branch, au:uint, bu:uint, ac:Commit, bc:Commit)
 		{
-			addChild(_view);
-			super.drawBackground(550, 350);
-			super.title = 'Sync Branches';
-			addOkButton();
-			addNoButton();
-			addChild(_heading);
 			_branchA = a; _branchB = b; 
 			_branchesInSync = au == bu;
+			_view.textMeasure.autoSize = TextFieldAutoSize.LEFT;
+			super.title = 'Sync Branches';
+			super.drawBackground(getWindowWidth(a, b), 360);
+			addOkButton(); addNoButton();
+			addChild(_view); addChild(_heading);
 			drawBranches(au, bu, ac, bc); addIcons(); addCheckBox(); setHeading();
 		//	addEventListener(MouseEvent.MOUSE_DOWN, onMouseDrag);
+		}
+		
+		private function getWindowWidth(a:Branch, b:Branch):uint
+		{
+			var w:uint = 0; var n:uint = 0; 
+			var m:uint = 240;
+			_view.textMeasure.visible = false;
+			_view.textMeasure.text = a.name;
+				w = _view.textMeasure.width;
+			if (w - m > n) n = w - m;
+			_view.textMeasure.text = b.name;
+				w = _view.textMeasure.width;
+		// cut max width to 130 to ensure branch name fits in checkbox //
+			if (_branchesInSync == false) m = 130;
+			if (w - m > n) n = w - m;
+				w = 580 + n;
+			_view.branchB.x = w - 240; 
+			_view.syncIcon.x = w / 2;
+			_view.syncIcon.graphics.clear();
+			_view.syncIcon.graphics.beginFill(0x000000, .1);
+			_view.syncIcon.graphics.drawRect(-(w/2 - 240), -40, (w/2 - 240)*2, 80);
+			_view.syncIcon.graphics.endFill();
+			return w;	
 		}
 
 		private function drawBranches(au:uint, bu:uint, ac:Commit, bc:Commit):void
@@ -48,8 +70,8 @@ package view.windows.modals.local {
 			_view.branchB.time_txt.text = 'Last Saved : '+bc.date;
 			_view.branchA.syncCount.num.text = au;
 			_view.branchB.syncCount.num.text = bu;
-			_view.branchB.syncCount.visible = au != 0;
-			_view.branchA.syncCount.visible = bu != 0;
+			_view.branchA.syncCount.visible = au != 0;
+			_view.branchB.syncCount.visible = bu != 0;
 			_view.branchA.name_txt.autoSize = TextFieldAutoSize.CENTER;
 			_view.branchA.time_txt.autoSize = TextFieldAutoSize.CENTER;
 			_view.branchB.name_txt.autoSize = TextFieldAutoSize.CENTER;
@@ -58,10 +80,10 @@ package view.windows.modals.local {
 		
 		private function setHeading():void
 		{
-			if (_branchesInSync){
-				_heading.text = 'It appears that both of these branches are already in sync.';
-			}	else {
+			if (_branchesInSync == false){
 				_heading.text = 'Would you like to sync these two branches together?';
+			}	else {
+				_heading.text = 'It appears that both of these branches are already in sync.';
 			}			
 			super.noButton.visible = _check.visible = _branchesInSync == false;
 		}		
@@ -86,17 +108,18 @@ package view.windows.modals.local {
 		
 		private function addCheckBox():void
 		{
-			_check.y = 310; 
-			_check.label = 'Delete branch '+_branchB.name+' after merging';
+			_check.y = 320; 
+			_check.label = 'Delete branch '+_branchB.name+' after syncing';	
 			addChild(_check);
 		}
+		
 		
 		override protected function onOkButton(e:Event):void
 		{
 			if (_branchesInSync){
 				closeWindow(e);
 			}	else{
-				trace("MergeLocal.onOkButton(e)", _branchA.name, _branchB.name);
+				trace("SyncLocal.onOkButton(e)", _branchA.name, _branchB.name);
 			}
 		}		
 
@@ -113,7 +136,7 @@ package view.windows.modals.local {
 		private function closeWindow(e:Event):void
 		{
 			super.onOkButton(e);
-			AppModel.dispatch(AppEvent.HIDE_MERGE_VIEW);						
+			AppModel.dispatch(AppEvent.HIDE_SYNC_VIEW);
 		}
 		
 	// window dragging //	

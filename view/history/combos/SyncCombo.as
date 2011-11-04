@@ -6,16 +6,16 @@ package view.history.combos {
 	import model.vo.Branch;
 	import flash.utils.setTimeout;
 	
-	public class MergeCombo extends ComboGroup {
+	public class SyncCombo extends ComboGroup {
 
 		private static var _branch	:Branch;
 
-		public function MergeCombo()
+		public function SyncCombo()
 		{
 			super.optionIcon = BranchIcon;
 			addEventListener(UIEvent.COMBO_OPTION_CLICK, openMergePreview);
 			addEventListener(UIEvent.COMBO_HEADING_CLICK, hideMergePreview);
-			AppModel.engine.addEventListener(AppEvent.HIDE_MERGE_VIEW, resetMergeView);
+			AppModel.engine.addEventListener(AppEvent.HIDE_SYNC_VIEW, resetMergeView);
 		}
 
 		public function draw():void
@@ -30,7 +30,7 @@ package view.history.combos {
 		private function resetMergeView(e:AppEvent = null):void
 		{
 			_branch = null;
-			super.headingText = 'Open Merge View';
+			super.headingText = 'Sync Branches';
 			super.headingIcon = OptionsArrow;			
 		}		
 		
@@ -42,7 +42,7 @@ package view.history.combos {
 		private function setBranch(n:uint):void
 		{
 			_branch = AppModel.bookmark.branches[n];
-			super.headingText = 'Merging With : '+_branch.name;
+			super.headingText = 'Syncing With : '+_branch.name;
 			super.headingIcon = SwitcherDelete;
 			AppModel.showLoader('Comparing Branches');
 	// add slight delay so we have time to display the preloader //				
@@ -51,7 +51,7 @@ package view.history.combos {
 		
 		private function hideMergePreview(e:UIEvent):void
 		{
-			AppModel.dispatch(AppEvent.HIDE_MERGE_VIEW);
+			AppModel.dispatch(AppEvent.HIDE_SYNC_VIEW);
 		}
 
 	}
