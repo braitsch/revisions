@@ -63,6 +63,8 @@ package view.windows.modals {
 			addChild(_preloader);			
 			mouseEnabled = false;
 			_curtain.addEventListener(MouseEvent.CLICK, onCurtainClick);
+			AppModel.engine.addEventListener(AppEvent.USER_COMMIT, onUserCommit);
+			AppModel.engine.addEventListener(AppEvent.SYNC_COMMIT, onSyncCommit);
 			AppModel.engine.addEventListener(AppEvent.SHOW_LOADER, showLoader);
 			AppModel.engine.addEventListener(AppEvent.SHOW_ALERT, onShowAlert);
 			AppModel.engine.addEventListener(AppEvent.HIDE_ALERT, onHideAlert);	
@@ -80,7 +82,6 @@ package view.windows.modals {
 			stage.addEventListener(UIEvent.DRAG_AND_DROP, onDragAndDrop);
 			stage.addEventListener(UIEvent.ADD_BOOKMARK, onNewButtonClick);
 			stage.addEventListener(UIEvent.EDIT_BOOKMARK, editBookmark);
-			stage.addEventListener(UIEvent.COMMIT, addNewCommit);
 			stage.addEventListener(UIEvent.COMMIT_OPTIONS, showCommitOptions);
 			stage.addEventListener(UIEvent.GLOBAL_SETTINGS, globalSettings);	
 			stage.addEventListener(UIEvent.GITHUB_HOME, showGitHubHome);
@@ -169,8 +170,16 @@ package view.windows.modals {
 			}
 		}
 		
-		private function addNewCommit(e:UIEvent):void 
+		private function onUserCommit(e:AppEvent):void 
 		{
+			_commit.message = 'Write a short message so we can easily find this version again later.';
+			showModalWindow(_commit);
+		}
+		
+		private function onSyncCommit(e:AppEvent):void
+		{
+			onHideAlert();
+			_commit.message = 'Please save your edits before syncing branches.';
 			showModalWindow(_commit);
 		}
 		
@@ -178,7 +187,7 @@ package view.windows.modals {
 		{
 			_commitOptions.commit = e.data as Commit;
 			showModalWindow(_commitOptions);	
-		}		
+		}
 		
 		private function globalSettings(e:UIEvent):void
 		{
@@ -229,6 +238,7 @@ package view.windows.modals {
 		
 		private function showModalWindow(mw:ParentWindow):void
 		{
+			if (_alert) return;
 			if (_window) removeChild(_window);
 			addChild(mw);
 			_window = mw;
@@ -247,7 +257,7 @@ package view.windows.modals {
 		private function onShowAlert(e:AppEvent):void
 		{
 			AppModel.proxies.status.locked = true;
-			if (_alert) return;
+			if (_alert) removeChild(_alert);
 			_alert = e.data as Alert;
 			addChild(_alert);
 			_curtain.show();

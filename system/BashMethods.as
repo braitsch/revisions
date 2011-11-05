@@ -35,8 +35,8 @@ package system{
 	// repo-editor.as //		
 		public static const MERGE					:String = 'merge';
 		public static const MERGE_OURS				:String = 'mergeOurs';
-		public static const MERGE_THEIRS			:String = 'mergeTheirs';		
-		public static const COMPARE_COMMITS			:String = 'compareCommits';
+		public static const MERGE_THEIRS			:String = 'mergeTheirs';
+		public static const COMPARE_COMMITS			:String = 'getMostRecentCommits';
 		public static const ADD_BRANCH				:String = 'addBranch';
 		public static const SET_BRANCH				:String = 'setBranch';
 		public static const RENAME_BRANCH			:String = 'renameBranch';
@@ -91,6 +91,7 @@ package system{
 		public static const TEST_REPAIR				:String = 'pushRepair';
 		public static const GET_COMMON_PARENT		:String = 'getCommonParent';
 		public static const GET_UNIQUE_COMMITS		:String = 'getUniqueCommits';
+		public static const SYNC_LOCAL_BRANCHES		:String = 'syncLocalBranches';
 		
 	}
 	

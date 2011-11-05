@@ -1,5 +1,6 @@
 package system {
 
+	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
 	import model.vo.Bookmark;
@@ -70,7 +71,7 @@ package system {
 			switch(cmi.label){
 				case 'Save Latest Version' : 
 					AppModel.bookmark = bkmk;
-					_stage.dispatchEvent(new UIEvent(UIEvent.COMMIT, bkmk));	
+					AppModel.dispatch(AppEvent.USER_COMMIT);
 				break;
 				case 'Edit Bookmark Settings' : 					_stage.dispatchEvent(new UIEvent(UIEvent.EDIT_BOOKMARK, bkmk));	
 				break;

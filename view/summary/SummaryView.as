@@ -1,7 +1,6 @@
 package view.summary {
 
 	import events.AppEvent;
-	import events.UIEvent;
 	import model.AppModel;
 	import model.vo.Bookmark;
 	import view.btns.DrawButton;
@@ -121,7 +120,7 @@ package view.summary {
 		
 		private function onSaveButton(e:MouseEvent):void
 		{
-			if (_saveBtn.enabled) dispatchEvent(new UIEvent(UIEvent.COMMIT));
+			if (_saveBtn.enabled) AppModel.dispatch(AppEvent.USER_COMMIT);
 		}		
 		
 	}

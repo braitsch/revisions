@@ -94,7 +94,7 @@ package system {
         	 		_stage.dispatchEvent(new UIEvent(UIEvent.ADD_BOOKMARK));
         	 	break;
         	 	case _commit	: 
-        	 		if (AppModel.bookmark.branch.isModified) _stage.dispatchEvent(new UIEvent(UIEvent.COMMIT));
+        	 		if (AppModel.bookmark.branch.isModified) AppModel.dispatch(AppEvent.USER_COMMIT);
         	 	break;        	 	
         	 	case _github : 
         	 		onGitHubClick();

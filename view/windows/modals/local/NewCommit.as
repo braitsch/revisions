@@ -20,12 +20,17 @@ package view.windows.modals.local {
 			super.drawBackground(550, 230);			
 			super.title = 'Save Version';
 			
-			_heading = new TextHeading('Write a short message so we can easily find this version again later.');
+			_heading = new TextHeading();
 			addChild(_heading);
 			
 			addOkButton('Save');
 			addEventListener(UIEvent.ENTER_KEY, onEnterKey);
 			_view.textArea.message_txt.type = TextFieldType.INPUT;
+		}
+		
+		public function set message(m:String):void
+		{
+			_heading.text = m;
 		}
 
 		override protected function onAddedToStage(e:Event):void

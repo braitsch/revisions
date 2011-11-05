@@ -10,7 +10,6 @@ package events {
 		public static const DRAG_AND_DROP			:String = "DRAG_AND_DROP";		public static const EDIT_BOOKMARK			:String = "EDIT_BOOKMARK";
 		public static const ADD_BKMK_TO_ACCOUNT		:String = "ADD_BKMK_TO_ACCOUNT";
 		
-		public static const COMMIT					:String = "COMMIT";
 		public static const SHOW_HISTORY			:String = "SHOW_HISTORY";
 		public static const GLOBAL_SETTINGS			:String = "GLOBAL_SETTINGS";
 

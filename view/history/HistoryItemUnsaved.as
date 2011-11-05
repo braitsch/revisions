@@ -1,5 +1,6 @@
 package view.history {
 
+	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
 	import model.vo.Commit;
@@ -44,7 +45,7 @@ package view.history {
 			if (e.target is TrashUnsaved){
 				showPrompt();
 			}	else{
-				dispatchEvent(new UIEvent(UIEvent.COMMIT));
+				AppModel.dispatch(AppEvent.USER_COMMIT);
 			}			
 		}
 		

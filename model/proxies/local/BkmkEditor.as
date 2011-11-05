@@ -92,10 +92,13 @@ package model.proxies.local {
 			super.call(Vector.<String>([BashMethods.ADD_TRACKING_BRANCHES]));
 		}
 		
-		public function mergeLocalIntoLocal(a:Branch, b:Branch):void
+	// sync - merge local and remote branches //	
+		
+		public function syncLocalBranches(b:Branch):void
 		{
+			_branch = b;
 			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
-			super.call(Vector.<String>([BashMethods.MERGE, a.name, b.name]));
+			super.call(Vector.<String>([BashMethods.SYNC_LOCAL_BRANCHES, AppModel.branch.name, _branch.name]));
 		}
 		
 		public function mergeRemoteIntoLocal():void
@@ -116,9 +119,9 @@ package model.proxies.local {
 			super.call(Vector.<String>([BashMethods.MERGE_THEIRS, AppModel.repository.name, AppModel.branch.name, AppModel.proxies.config.userName]));			
 		}		
 		
-		private function getConflictDetails():void
+		private function getConflictDetails(branchName:String):void
 		{
-			super.call(Vector.<String>([BashMethods.COMPARE_COMMITS, AppModel.repository.name, AppModel.branch.name]));	
+			super.call(Vector.<String>([BashMethods.COMPARE_COMMITS, branchName]));	
 		}
 		
 	// remotes //	
@@ -203,7 +206,10 @@ package model.proxies.local {
 				break;								
 				case BashMethods.COMPARE_COMMITS :
 					onCompareCommits(e.data.result);
-				break;					
+				break;	
+				case BashMethods.SYNC_LOCAL_BRANCHES :
+					onLocalSyncComplete(e.data.result);
+				break;									
 				case BashMethods.ADD_REMOTE :
 					onRemoteAdded();
 				break;
@@ -284,16 +290,34 @@ package model.proxies.local {
 		{
 			AppModel.bookmark.delRemote(_repository);
 			AppModel.dispatch(AppEvent.REMOTE_DELETED);
-		}			
+		}	
+		
+	// merge local & remote //			
 
 		private function onMergeComplete(s:String):void
 		{
-			if (hasString(s, 'CONFLICT')){
-				getConflictDetails();
+			if (hasString(s, 'merge attempt failed')){
+				AppModel.merge.mode = 'remote';
+				getConflictDetails(AppModel.repository.name+'/'+AppModel.branch.name);
 			}	else{
 				AppModel.proxies.sync.pushBranch(AppModel.repository);
 			}
 		}
+		
+	// merge local & local //
+	
+		private function onLocalSyncComplete(s:String):void
+		{
+			if (hasString(s, 'checkout failed, unsaved changes')){
+				AppModel.dispatch(AppEvent.SYNC_COMMIT);
+				AppModel.dispatch(AppEvent.HIDE_SYNC_VIEW);
+			}	else if (hasString(s, 'merge attempt failed')){
+				AppModel.merge.mode = 'local';
+				getConflictDetails(_branch.name);
+			}	else{
+				trace("BkmkEditor.onLocalSyncComplete(s)", s);
+			}
+		}	
 		
 		private function onCompareCommits(s:String):void
 		{

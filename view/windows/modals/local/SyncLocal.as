@@ -29,7 +29,7 @@ package view.windows.modals.local {
 		public function SyncLocal(a:Branch, b:Branch, au:uint, bu:uint, ac:Commit, bc:Commit)
 		{
 			_branchA = a; _branchB = b; 
-			_branchesInSync = au == bu;
+			_branchesInSync = au == 0 && bu == 0;
 			_view.textMeasure.autoSize = TextFieldAutoSize.LEFT;
 			super.title = 'Sync Branches';
 			super.drawBackground(getWindowWidth(a, b), 360);
@@ -119,7 +119,7 @@ package view.windows.modals.local {
 			if (_branchesInSync){
 				closeWindow(e);
 			}	else{
-				trace("SyncLocal.onOkButton(e)", _branchA.name, _branchB.name);
+				AppModel.proxies.editor.syncLocalBranches(_branchB);
 			}
 		}		
 
@@ -135,7 +135,6 @@ package view.windows.modals.local {
 		
 		private function closeWindow(e:Event):void
 		{
-			super.onOkButton(e);
 			AppModel.dispatch(AppEvent.HIDE_SYNC_VIEW);
 		}
 		

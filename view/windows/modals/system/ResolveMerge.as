@@ -8,12 +8,9 @@ package view.windows.modals.system {
 	public class ResolveMerge extends Alert {
 		
 		private static var _heading		:TextHeading = new TextHeading();
-//		private static var _ask			:ModalCheckbox = new ModalCheckbox(true);
-//		private static var _mine		:ModalCheckbox = new ModalCheckbox(false);
-//		private static var _recent		:ModalCheckbox = new ModalCheckbox(false);
 		private static var _commitA		:ResolveCommit = new ResolveCommit();
 		private static var _commitB		:ResolveCommit = new ResolveCommit();
-//		private static var _options		:Vector.<ModalCheckbox> = new <ModalCheckbox>[_ask, _mine, _recent];
+		private static var _mergeMode	:String;
 
 		public function ResolveMerge()
 		{
@@ -23,7 +20,11 @@ package view.windows.modals.system {
 			addOkButton();
 			addNoButton();
 			addCommits();
-//			addCheckboxes();
+		}
+		
+		public function set mode(s:String):void
+		{
+			_mergeMode = s;
 		}
 		
 		public function set commits(a:Array):void
@@ -69,30 +70,15 @@ package view.windows.modals.system {
 			addChild(_heading);
 		}
 		
-//		private function addCheckboxes():void
-//		{
-//			for (var i:int = 0; i < _options.length; i++) {
-//				_options[i].y = 320 + (20 * i);
-//				_options[i].addEventListener(MouseEvent.CLICK, onCheckboxSelection);
-//				addChild(_options[i]);
-//			}
-//			_ask.label = 'Always prompt me to choose';
-//			_mine.label = 'Always pick mine';
-//			_recent.label = 'Always pick the most recent version';
-//		}
-//
-//		private function onCheckboxSelection(e:MouseEvent):void
-//		{
-//			for (var i:int = 0; i < _options.length; i++) {
-//				if (e.currentTarget != _options[i]) _options[i].selected = false;
-//			}
-//		}
-		
 		override protected function onOkButton(e:Event):void
 		{
 			super.onOkButton(e);
 			if (_commitA.selected){
-				AppModel.proxies.editor.mergeOurs();
+				if (_mergeMode == 'local'){
+			//		AppModel.proxies.editor.mergeLocal();
+				}	else{	
+					AppModel.proxies.editor.mergeOurs();
+				}
 			}	else if (_commitB.selected){
 				AppModel.proxies.editor.mergeTheirs();
 			}
