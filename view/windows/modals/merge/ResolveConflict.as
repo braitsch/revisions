@@ -1,45 +1,30 @@
 package view.windows.modals.merge {
 
-	import flash.events.Event;
-	import flash.events.MouseEvent;
-	import model.AppModel;
-	import view.type.TextHeading;
 	import view.windows.modals.system.Alert;
+	import flash.events.MouseEvent;
 
 	public class ResolveConflict extends Alert {
 		
-		private static var _heading		:TextHeading = new TextHeading();
 		private static var _commitA		:CommitItem = new CommitItem();
 		private static var _commitB		:CommitItem = new CommitItem();
-		private static var _mergeMode	:String;
 
 		public function ResolveConflict()
 		{
 			super.drawBackground(600, 400);
 			super.title = 'Please Choose';
-			setHeading();
+			addCommits();
 			addOkButton();
 			addNoButton();
-			addCommits();
 		}
 		
-		public function set mode(s:String):void
+		protected function setCommitObjects(a:Array, b:Array):void
 		{
-			_mergeMode = s;
-		}
-		
-		public function set commits(a:Array):void
-		{
-			var cA:Array = a[0].split('-#-');
-			var cB:Array = a[1].split('-#-');
-			_commitA.attachAvatar(cA[2]);
-			_commitB.attachAvatar(cB[2]);
-			_commitA.setText(cA[0], cA[1]);
-			_commitB.setText(cB[0], cB[1]);
-			_commitA.heading = 'Your latest version, authored by '+cA[3];
-			_commitB.heading = 'Their latest version, authored by '+cB[3];
-			_commitA.selected = cA[4] > cB[4];
-			_commitB.selected = cA[4] < cB[4];
+			_commitA.attachAvatar(a[2]);
+			_commitB.attachAvatar(b[2]);
+			_commitA.setText(a[0], a[1]);
+			_commitB.setText(b[0], b[1]);
+			_commitA.selected = a[4] > b[4];
+			_commitB.selected = a[4] < b[4];
 		}
 
 		private function addCommits():void
@@ -63,27 +48,8 @@ package view.windows.modals.merge {
 			}
 		}
 		
-		private function setHeading():void
-		{
-			var m:String = 'Hmm... I was unable to auto-merge your latest version with what\'s on the server.\n';
-				m+='Please choose whose version should be the latest that everyone will sync from.';
-			_heading.text = m;			
-			addChild(_heading);
-		}
-		
-		override protected function onOkButton(e:Event):void
-		{
-			super.onOkButton(e);
-			if (_commitA.selected){
-				if (_mergeMode == 'local'){
-			//		AppModel.proxies.editor.mergeLocal();
-				}	else{	
-					AppModel.proxies.editor.mergeOurs();
-				}
-			}	else if (_commitB.selected){
-				AppModel.proxies.editor.mergeTheirs();
-			}
-		}
+		protected function get commitA():CommitItem { return _commitA; }
+		protected function get commitB():CommitItem { return _commitB; }		
 		
 	}
 	

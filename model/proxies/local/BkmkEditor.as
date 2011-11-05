@@ -9,6 +9,7 @@ package model.proxies.local {
 	import model.vo.Commit;
 	import model.vo.Repository;
 	import system.BashMethods;
+	import view.windows.modals.merge.ResolveRemote;
 	import flash.filesystem.File;
 
 	public class BkmkEditor extends NativeProcessProxy {
@@ -297,7 +298,6 @@ package model.proxies.local {
 		private function onMergeComplete(s:String):void
 		{
 			if (hasString(s, 'merge attempt failed')){
-				AppModel.merge.mode = 'remote';
 				getConflictDetails(AppModel.repository.name+'/'+AppModel.branch.name);
 			}	else{
 				AppModel.proxies.sync.pushBranch(AppModel.repository);
@@ -312,7 +312,6 @@ package model.proxies.local {
 				AppModel.dispatch(AppEvent.SYNC_COMMIT);
 				AppModel.dispatch(AppEvent.HIDE_SYNC_VIEW);
 			}	else if (hasString(s, 'merge attempt failed')){
-				AppModel.merge.mode = 'local';
 				getConflictDetails(_branch.name);
 			}	else{
 				trace("BkmkEditor.onLocalSyncComplete(s)", s);
@@ -321,8 +320,7 @@ package model.proxies.local {
 		
 		private function onCompareCommits(s:String):void
 		{
-			AppModel.merge.commits = parseLogList(s);
-			AppModel.alert(AppModel.merge);
+			AppModel.alert(new ResolveRemote(parseLogList(s)));
 		}
 		
 		private function parseLogList(s:String):Array
