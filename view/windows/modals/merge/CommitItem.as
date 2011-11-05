@@ -1,4 +1,4 @@
-package view.windows.modals.system {
+package view.windows.modals.merge {
 
 	import view.avatars.Avatar;
 	import view.avatars.Avatars;
@@ -9,7 +9,7 @@ package view.windows.modals.system {
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 
-	public class ResolveCommit extends Sprite {
+	public class CommitItem extends Sprite {
 		
 		private var _text		:TextDouble = new TextDouble();
 		private var _avatar		:Sprite;
@@ -17,7 +17,7 @@ package view.windows.modals.system {
 		private var _bkgd		:Bitmap = new Bitmap(new ResolveCommitBkgd());
 		private var _glow		:Bitmap = new Bitmap(new ResolveCommitGlow());
 		
-		public function ResolveCommit()
+		public function CommitItem()
 		{
 			addChild(_glow);
 			addChild(_bkgd);

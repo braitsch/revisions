@@ -1,18 +1,19 @@
-package view.windows.modals.system {
+package view.windows.modals.merge {
 
-	import model.AppModel;
-	import view.type.TextHeading;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import model.AppModel;
+	import view.type.TextHeading;
+	import view.windows.modals.system.Alert;
 
-	public class ResolveMerge extends Alert {
+	public class ResolveConflict extends Alert {
 		
 		private static var _heading		:TextHeading = new TextHeading();
-		private static var _commitA		:ResolveCommit = new ResolveCommit();
-		private static var _commitB		:ResolveCommit = new ResolveCommit();
+		private static var _commitA		:CommitItem = new CommitItem();
+		private static var _commitB		:CommitItem = new CommitItem();
 		private static var _mergeMode	:String;
 
-		public function ResolveMerge()
+		public function ResolveConflict()
 		{
 			super.drawBackground(600, 400);
 			super.title = 'Please Choose';

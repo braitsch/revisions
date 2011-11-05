@@ -1,6 +1,7 @@
 package model {
 
 	import events.AppEvent;
+	import flash.events.EventDispatcher;
 	import model.db.AppDatabase;
 	import model.proxies.AppProxies;
 	import model.vo.Bookmark;
@@ -9,9 +10,8 @@ package model {
 	import system.AppSettings;
 	import system.UpdateManager;
 	import view.graphics.AppIcon;
+	import view.windows.modals.merge.ResolveConflict;
 	import view.windows.modals.system.Alert;
-	import view.windows.modals.system.ResolveMerge;
-	import flash.events.EventDispatcher;
 
 	public class AppModel extends EventDispatcher {
 
@@ -20,7 +20,7 @@ package model {
 		private static var _database		:AppDatabase = new AppDatabase();
 		private static var _settings		:AppSettings = new AppSettings();
 		private static var _updater			:UpdateManager = new UpdateManager();
-		private static var _merge			:ResolveMerge = new ResolveMerge();
+		private static var _merge			:ResolveConflict = new ResolveConflict();
 		private static var _bookmark		:Bookmark; // active bookmark //
 
 		public function AppModel() 
@@ -48,7 +48,7 @@ package model {
 		static public function get database()	:AppDatabase 	{ return _database; }
 		static public function get settings()	:AppSettings 	{ return _settings; }
 		static public function get updater()	:UpdateManager 	{ return _updater; 	}
-		static public function get merge()		:ResolveMerge	{ return _merge; 	}
+		static public function get merge()		:ResolveConflict	{ return _merge; 	}
 		
 		static public function alert(a:Alert):void
 		{

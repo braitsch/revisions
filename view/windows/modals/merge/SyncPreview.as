@@ -1,4 +1,4 @@
-package view.windows.modals.local {
+package view.windows.modals.merge {
 
 	import events.AppEvent;
 	import events.UIEvent;
@@ -13,7 +13,7 @@ package view.windows.modals.local {
 	import flash.events.MouseEvent;
 	import flash.text.TextFieldAutoSize;
 
-	public class SyncLocal extends Alert {
+	public class SyncPreview extends Alert {
 
 		private static var _view			:SyncLocalMC = new SyncLocalMC();
 		private static var _heading			:TextHeading = new TextHeading();
@@ -26,7 +26,7 @@ package view.windows.modals.local {
 	//	private static var _windowY			:uint;
 		private static var _branchesInSync	:Boolean;
 
-		public function SyncLocal(a:Branch, b:Branch, au:uint, bu:uint, ac:Commit, bc:Commit)
+		public function SyncPreview(a:Branch, b:Branch, au:uint, bu:uint, ac:Commit, bc:Commit)
 		{
 			_branchA = a; _branchB = b; 
 			_branchesInSync = au == 0 && bu == 0;
