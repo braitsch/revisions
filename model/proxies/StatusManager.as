@@ -3,8 +3,11 @@ package model.proxies {
 	import events.AppEvent;
 	import model.AppModel;
 	import model.proxies.local.StatusProxy;
+	import model.remote.HostingAccount;
+	import model.remote.Hosts;
 	import model.vo.Bookmark;
 	import model.vo.Branch;
+	import model.vo.Repository;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	import flash.utils.setTimeout;
@@ -109,7 +112,11 @@ package model.proxies {
 				if (exists(AppModel.bookmark) == true){
 					resetTimer(); 
 					if (AppModel.repository.hasBranch(AppModel.branch.name)){
-						fetch ? AppModel.proxies.sync.fetchRepository() : _proxy.getRemoteStatus();
+						if( fetch && isLoggedIn() ){
+							AppModel.proxies.sync.fetchRemote();	
+						}	else{
+							_proxy.getRemoteStatus();	
+						}
 					}
 				}
 			}
@@ -167,7 +174,19 @@ package model.proxies {
 		private function resetTimer():void
 		{
 			_timer.reset(); _timer.start();
-		}		
+		}
+		
+		private function isLoggedIn():Boolean
+		{
+			var at:String = Repository.getAccountType(AppModel.bookmark.remote.url);
+			if (at == HostingAccount.GITHUB && Hosts.github.loggedIn){
+				return true;
+			}	else if (at == HostingAccount.BEANSTALK && Hosts.beanstalk.loggedIn){
+				return true;
+			}	else{
+				return false;
+			}
+		}					
 		
 	}
 	

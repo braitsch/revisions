@@ -28,7 +28,7 @@ package model.proxies.remote.repo {
 		
 		private function onRemoteAdded(e:AppEvent):void 
 		{
-			AppModel.proxies.sync.pushAndTrack(_account.repository);
+			AppModel.proxies.sync.pushBranch(_account.repository, false);
 			AppModel.engine.addEventListener(AppEvent.BRANCH_PUSHED, onBranchPushed);			
 			AppModel.engine.removeEventListener(AppEvent.REMOTE_ADDED, onRemoteAdded);
 		}
