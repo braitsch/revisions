@@ -41,7 +41,10 @@ package view.history {
 		private function onBranchData(e:AppEvent):void
 		{
 			_aUnique = e.data.a; _bUnique = e.data.b; _branchB = e.data.branch;
-			_abShared = AppModel.branch.history.slice(-HistoryList.ITEMS_PER_PAGE, AppModel.branch.history.length-_aUnique.length);
+			var x:uint = AppModel.branch.history.length - _aUnique.length;
+			_abShared = AppModel.branch.history.slice(x - HistoryList.ITEMS_PER_PAGE, x);
+			for (var i:int = 0; i < _aUnique.length; i++) _aUnique[i].index = x + i + 1;
+			for (var k:int = 0; k < _bUnique.length; k++) _bUnique[k].index = x + k + 1;
 			_aUnique.reverse(); _bUnique.reverse(); _abShared.reverse();
 			_branchAList = new HistorySnapshot(_aUnique, _abShared);
 			_branchBList = new HistorySnapshot(_bUnique, _abShared);
