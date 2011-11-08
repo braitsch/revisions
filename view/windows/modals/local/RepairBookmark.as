@@ -4,6 +4,7 @@ package view.windows.modals.local {
 	import events.DataBaseEvent;
 	import events.UIEvent;
 	import model.AppModel;
+	import model.proxies.AppProxies;
 	import model.vo.Bookmark;
 	import view.btns.FormButton;
 	import view.type.TextHeading;
@@ -96,7 +97,7 @@ package view.windows.modals.local {
 				var o:Object = {	oldFile	:MD5.hash(_broken.path), 
 									newFile	:MD5.hash(_newFile.nativePath),
 									newTree :_newFile.parent.nativePath};
-				AppModel.proxies.creator.setFileLocation(o);
+				AppProxies.creator.setFileLocation(o);
 				AppModel.engine.addEventListener(AppEvent.WORKTREE_UPDATED, onFileLocalUpdated);
 			}
 		}

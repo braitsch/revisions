@@ -3,6 +3,7 @@ package view.summary {
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
+	import model.proxies.AppProxies;
 	import system.AppSettings;
 	import view.btns.IconButton;
 	import view.windows.modals.system.Confirm;
@@ -114,7 +115,7 @@ package view.summary {
 				if (AppModel.branch.isModified){
 					AppModel.alert(new Message('Please saves your lastest changes before syncing with the server.'));
 				}	else{
-					AppModel.proxies.editor.mergeRemoteIntoLocal();
+					AppProxies.merge.mergeRemoteIntoLocal();
 				}
 			}
 		}
@@ -139,7 +140,7 @@ package view.summary {
 		
 		private function pushBranch():void
 		{
-			AppModel.proxies.sync.pushBranch(AppModel.repository);
+			AppProxies.sync.pushBranch(AppModel.repository);
 		}
 				
 		private function confirmUnpublishedBranch():void 

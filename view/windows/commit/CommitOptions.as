@@ -3,6 +3,7 @@ package view.windows.commit {
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
+	import model.proxies.AppProxies;
 	import model.vo.Bookmark;
 	import model.vo.Commit;
 	import view.btns.ButtonIcon;
@@ -60,15 +61,15 @@ package view.windows.commit {
 			var saveAs:String = e.data.nativePath+'/'+bkmk.label+' Version '+_commit.index;
 			if (bkmk.type == Bookmark.FILE) saveAs += bkmk.path.substr(bkmk.path.lastIndexOf('.'));
 			AppModel.showLoader('Fetching '+bkmk.label+' v'+_commit.index);
-			AppModel.proxies.status.locked = true;
-			AppModel.proxies.editor.copyVersion(_commit.sha1, saveAs);
+			AppProxies.status.locked = true;
+			AppProxies.editor.copyVersion(_commit.sha1, saveAs);
 			AppModel.engine.addEventListener(AppEvent.COPY_COMPLETE, onCopyVersionComplete);
 		}
 
 		private function onCopyVersionComplete(e:AppEvent):void
 		{
 			AppModel.hideLoader();
-			AppModel.proxies.status.locked = false;
+			AppProxies.status.locked = false;
 			AppModel.engine.removeEventListener(AppEvent.COPY_COMPLETE, onCopyVersionComplete);
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
 		}

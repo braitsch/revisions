@@ -1,9 +1,10 @@
 package model.proxies.remote.repo {
 
-	import events.NativeProcessEvent;
 	import events.AppEvent;
+	import events.NativeProcessEvent;
 	import events.UIEvent;
 	import model.AppModel;
+	import model.proxies.AppProxies;
 	import model.vo.Bookmark;
 	import model.vo.Repository;
 	import system.BashMethods;
@@ -109,7 +110,7 @@ package model.proxies.remote.repo {
 			_clonedFile.moveTo(f, true);
 			var d:File = File.applicationStorageDirectory.resolvePath(MD5.hash(f.nativePath));
 			_savePath.resolvePath(_repoName).moveTo(d, true);
-			AppModel.proxies.creator.setWorkTree(d.nativePath, _savePath.nativePath);
+			AppProxies.creator.setWorkTree(d.nativePath, _savePath.nativePath);
 			AppModel.engine.addEventListener(AppEvent.WORKTREE_SET, addFileBookmark);
 		}
 		
@@ -141,7 +142,7 @@ package model.proxies.remote.repo {
 		
 		private function addTrackingBranches():void
 		{
-			AppModel.proxies.editor.addTrackingBranches(_bookmark);
+			AppProxies.editor.addTrackingBranches(_bookmark);
 			AppModel.engine.addEventListener(AppEvent.TRACKING_BRANCHES_SET, onBranchesSet);
 		
 		}		

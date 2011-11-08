@@ -1,7 +1,7 @@
 package view.history {
 
 	import events.UIEvent;
-	import model.AppModel;
+	import model.proxies.AppProxies;
 	import model.vo.Commit;
 	import view.btns.ButtonIcon;
 	import view.graphics.Box;
@@ -77,9 +77,9 @@ package view.history {
 		private function favoriteCommit():void
 		{
 			if (_commit.starred == false){
-				AppModel.proxies.editor.starCommit(_commit);
+				AppProxies.editor.starCommit(_commit);
 			}	else{
-				AppModel.proxies.editor.unstarCommit(_commit);			
+				AppProxies.editor.unstarCommit(_commit);			
 			}
 			_commit.starred = !_commit.starred;
 		}

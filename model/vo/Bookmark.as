@@ -1,7 +1,7 @@
 package model.vo {
 
 	import model.AppEngine;
-	import model.AppModel;
+	import model.proxies.AppProxies;
 	import model.remote.HostingAccount;
 	import system.StringUtils;
 	import com.adobe.crypto.MD5;
@@ -188,7 +188,7 @@ package model.vo {
 
 		private function onTimerEvent(e:TimerEvent):void
 		{
-			AppModel.proxies.status.autoSave(this);
+			AppProxies.status.autoSave(this);
 		}
 		
 	// static validation function //

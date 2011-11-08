@@ -3,6 +3,7 @@ package system {
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
+	import model.proxies.AppProxies;
 	import model.vo.Bookmark;
 	import view.bookmarks.BookmarkListItem;
 	import view.layout.ListItem;
@@ -56,10 +57,10 @@ package system {
 			var cmi:ContextMenuItem = e.target as ContextMenuItem;
 			switch(cmi.label){
 				case 'Track Item' : 
-					AppModel.proxies.editor.trackFile(getFileItem(e.mouseTarget).file);		
+					AppProxies.editor.trackFile(getFileItem(e.mouseTarget).file);		
 				break;
 				case 'UnTrack Item' : 
-					AppModel.proxies.editor.unTrackFile(getFileItem(e.mouseTarget).file);
+					AppProxies.editor.unTrackFile(getFileItem(e.mouseTarget).file);
 				break;				
 			}
 		}

@@ -2,6 +2,7 @@ package view.windows.modals.local {
 
 	import events.UIEvent;
 	import model.AppModel;
+	import model.proxies.AppProxies;
 	import view.type.TextHeading;
 	import view.windows.base.ParentWindow;
 	import view.windows.modals.system.Message;
@@ -46,7 +47,7 @@ package view.windows.modals.local {
 				AppModel.alert(new Message('Commit Message Cannot Be Empty.'));
 			}	else{
 				dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-				AppModel.proxies.editor.commit(_view.textArea.message_txt.text);
+				AppProxies.editor.commit(_view.textArea.message_txt.text);
 			}
 		}
 		

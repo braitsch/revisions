@@ -2,6 +2,7 @@ package view.windows.commit {
 
 	import events.UIEvent;
 	import model.AppModel;
+	import model.proxies.AppProxies;
 	import model.vo.Commit;
 	import view.btns.FormButton;
 	import view.type.TextHeading;
@@ -68,7 +69,7 @@ package view.windows.commit {
 		{
 			var s:String = _form.getField(0).replace(/\s/g, '-');
 			if (validate(s)){
-				AppModel.proxies.editor.addBranch(s, _commit);
+				AppProxies.editor.addBranch(s, _commit);
 				dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));	
 			}
 		}

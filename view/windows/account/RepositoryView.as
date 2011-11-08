@@ -3,6 +3,7 @@ package view.windows.account {
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
+	import model.proxies.AppProxies;
 	import model.vo.Repository;
 	import view.btns.ButtonIcon;
 	import view.btns.DrawButton;
@@ -98,7 +99,7 @@ package view.windows.account {
 		
 		private function onBrowserSelection(e:UIEvent):void
 		{
-			AppModel.proxies.clone.clone(_cloneURL, e.data as File);
+			AppProxies.clone.clone(_cloneURL, e.data as File);
 			AppModel.engine.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);
 		}
 

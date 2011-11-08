@@ -2,6 +2,7 @@ package model.proxies.remote.repo {
 
 	import events.AppEvent;
 	import model.AppModel;
+	import model.proxies.AppProxies;
 	import model.proxies.remote.acct.ApiProxy;
 	import model.remote.HostingAccount;
 	import model.remote.Hosts;
@@ -22,13 +23,13 @@ package model.proxies.remote.repo {
 		private function onRepositoryCreated(e:AppEvent):void
 		{
 			_proxy.removeEventListener(AppEvent.REPOSITORY_CREATED, onRepositoryCreated);
-			AppModel.proxies.editor.addRemote(_account.repository);
+			AppProxies.editor.addRemote(_account.repository);
 			AppModel.engine.addEventListener(AppEvent.REMOTE_ADDED, onRemoteAdded);
 		}
 		
 		private function onRemoteAdded(e:AppEvent):void 
 		{
-			AppModel.proxies.sync.pushBranch(_account.repository, false);
+			AppProxies.sync.pushBranch(_account.repository, false);
 			AppModel.engine.addEventListener(AppEvent.BRANCH_PUSHED, onBranchPushed);			
 			AppModel.engine.removeEventListener(AppEvent.REMOTE_ADDED, onRemoteAdded);
 		}

@@ -1,6 +1,6 @@
 package view.windows.modals.merge {
 
-	import model.AppModel;
+	import model.proxies.AppProxies;
 	import view.type.TextHeading;
 	import flash.events.Event;
 
@@ -30,9 +30,9 @@ package view.windows.modals.merge {
 		{
 			super.onOkButton(e);
 			if (super.commitA.selected){
-				AppModel.proxies.editor.mergeOurs();
+				AppProxies.merge.mergeOurs();
 			}	else if (super.commitB.selected){
-				AppModel.proxies.editor.mergeTheirs();
+				AppProxies.merge.mergeTheirs();
 			}
 		}		
 			

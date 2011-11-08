@@ -3,6 +3,7 @@ package view.windows.modals.local {
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
+	import model.proxies.AppProxies;
 	import system.AppSettings;
 	import system.LicenseManager;
 	import system.StringUtils;
@@ -54,8 +55,8 @@ package view.windows.modals.local {
 
 		override protected function onAddedToStage(e:Event):void
 		{
-			_form.setField(0, AppModel.proxies.config.userName);
-			_form.setField(1, AppModel.proxies.config.userEmail);
+			_form.setField(0, AppProxies.config.userName);
+			_form.setField(1, AppProxies.config.userEmail);
 			_form.setField(2, LicenseManager.key);
 			_checks[0].selected = AppSettings.getSetting(AppSettings.CHECK_FOR_UPDATES);
 			_checks[1].selected = AppSettings.getSetting(AppSettings.SHOW_TOOL_TIPS);
@@ -95,7 +96,7 @@ package view.windows.modals.local {
 			var e:String = StringUtil.trim(_form.getField(1));
 			var m:String = validateFields(n, e);
 			if (m == ''){
-				AppModel.proxies.config.setUserNameAndEmail(n, e);
+				AppProxies.config.setUserNameAndEmail(n, e);
 			}	else{
 				AppModel.alert(new Message(m));
 			}	

@@ -3,6 +3,7 @@ package {
 	import events.AppEvent;
 	import events.DataBaseEvent;
 	import model.AppModel;
+	import model.proxies.AppProxies;
 	import model.remote.Hosts;
 	import system.AirContextMenu;
 	import system.AirNativeMenu;
@@ -60,7 +61,7 @@ package {
 			AppModel.engine.removeEventListener(AppEvent.APP_UP_TO_DATE, onAppUpToDate);
 			AppModel.engine.removeEventListener(AppEvent.APP_UPDATE_FAILURE, onAppUpToDate);
 			AppModel.engine.removeEventListener(AppEvent.APP_UPDATE_IGNORED, onAppUpToDate);			
-			AppModel.proxies.config.detectGit();
+			AppProxies.config.detectGit();
 			AppModel.engine.addEventListener(AppEvent.GIT_SETTINGS, onGitReady);
 		}
 
@@ -68,7 +69,7 @@ package {
 		{
 			AirNativeMenu.initialize(stage);
 			AirContextMenu.initialize(stage);
-			AppModel.proxies.sshKeyGen.initialize();
+			AppProxies.sshKeyGen.initialize();
 			AppModel.engine.addEventListener(AppEvent.SSH_KEY_READY, onSSHKeyReady);
 			AppModel.engine.removeEventListener(AppEvent.GIT_SETTINGS, onGitReady);
 		}

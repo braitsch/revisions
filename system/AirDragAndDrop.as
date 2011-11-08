@@ -2,6 +2,7 @@ package system {
 
 	import events.UIEvent;
 	import model.AppModel;
+	import model.proxies.AppProxies;
 	import view.windows.modals.system.Message;
 	import flash.desktop.ClipboardFormats;
 	import flash.desktop.NativeApplication;
@@ -31,7 +32,7 @@ package system {
 		
 		private function onNativeDragDrop(e:NativeDragEvent):void 
 		{
-			if (AppModel.proxies.status.locked) return;
+			if (AppProxies.status.locked) return;
 			NativeApplication.nativeApplication.activate();			
 			NativeDragManager.dropAction = NativeDragActions.COPY;
 			var a:Array = e.clipboard.getData(ClipboardFormats.FILE_LIST_FORMAT) as Array;

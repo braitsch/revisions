@@ -3,6 +3,7 @@ package view.windows.modals.merge {
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
+	import model.proxies.AppProxies;
 	import model.vo.Branch;
 	import model.vo.Commit;
 	import view.type.TextHeading;
@@ -119,7 +120,7 @@ package view.windows.modals.merge {
 			if (_branchesInSync){
 				closeWindow(e);
 			}	else{
-				AppModel.proxies.editor.syncLocalBranches(_branchB);
+				AppProxies.merge.syncLocalBranches(_branchB);
 			}
 		}		
 

@@ -3,6 +3,7 @@ package view.history {
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
+	import model.proxies.AppProxies;
 	import model.vo.Commit;
 	import view.btns.ButtonIcon;
 	import view.graphics.Box;
@@ -62,7 +63,7 @@ package view.history {
 
 		private function onConfirm(e:UIEvent):void
 		{
-			if (e.data == true) AppModel.proxies.editor.trashUnsaved();
+			if (e.data == true) AppProxies.editor.trashUnsaved();
 		}
 		
 		private function onKillRollOver(e:MouseEvent):void

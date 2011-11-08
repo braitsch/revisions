@@ -3,6 +3,7 @@ package view.windows.modals.local {
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
+	import model.proxies.AppProxies;
 	import model.remote.Hosts;
 	import view.btns.ButtonIcon;
 	import view.btns.DrawButton;
@@ -142,7 +143,7 @@ package view.windows.modals.local {
 		
 		private function onCloneAttempt(f:File):void
 		{
-			AppModel.proxies.clone.clone(_cloneURL, f);
+			AppProxies.clone.clone(_cloneURL, f);
 			AppModel.engine.addEventListener(AppEvent.CLONE_COMPLETE, onCloneComplete);
 		}
 

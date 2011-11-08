@@ -2,6 +2,7 @@ package view.history.combos {
 
 	import events.UIEvent;
 	import model.AppModel;
+	import model.proxies.AppProxies;
 	import model.vo.Branch;
 	import view.windows.modals.system.Confirm;
 	import view.windows.modals.system.Message;
@@ -33,7 +34,7 @@ package view.history.combos {
 			if (AppModel.branch.isModified){
 				AppModel.alert(new Message('Please save your changes before moving to a new branch.'));					
 			}	else{
-				AppModel.proxies.editor.changeBranch(AppModel.bookmark.branches[e.data]);
+				AppProxies.editor.changeBranch(AppModel.bookmark.branches[e.data]);
 			}				
 		}	
 		
@@ -47,7 +48,7 @@ package view.history.combos {
 		
 		private function onConfirm(e:UIEvent):void
 		{
-			if (e.data as Boolean == true) AppModel.proxies.editor.killBranch(_branch);
+			if (e.data as Boolean == true) AppProxies.editor.killBranch(_branch);
 		}	
 		
 	}

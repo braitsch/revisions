@@ -2,6 +2,7 @@ package model {
 
 	import events.AppEvent;
 	import events.DataBaseEvent;
+	import model.proxies.AppProxies;
 	import model.vo.Bookmark;
 	import flash.events.EventDispatcher;
 	import flash.utils.setTimeout;
@@ -23,15 +24,15 @@ package model {
 		public function addBookmark(b:Bookmark):void
 		{
 			_bookmark = b;
-			AppModel.proxies.status.locked = true;
-			AppModel.proxies.creator.initBookmark(_bookmark);
+			AppProxies.status.locked = true;
+			AppProxies.creator.initBookmark(_bookmark);
 			addEventListener(AppEvent.INITIALIZED, readRepository);		
 		}
 		
 		private function readRepository(e:AppEvent):void
 		{
 			removeEventListener(AppEvent.INITIALIZED, readRepository);
-			AppModel.proxies.reader.getRepositoryInfo(_bookmark);
+			AppProxies.reader.getRepositoryInfo(_bookmark);
 			addEventListener(AppEvent.REPOSITORY_READY, addBkmkToDatabase);
 		}
 		
@@ -56,12 +57,12 @@ package model {
 		public function deleteBookmark(bkmk:Bookmark, killGit:Boolean, killFiles:Boolean):void
 		{
 			_bookmark = bkmk;
-			AppModel.proxies.status.locked = true;
+			AppProxies.status.locked = true;
 			if (!killGit && !killFiles){
 				removeFromBkmkView();
 			}	else{
 				addEventListener(AppEvent.FILES_DELETED, removeFromBkmkView);
-				AppModel.proxies.creator.killBookmark(_bookmark, killGit, killFiles);		
+				AppProxies.creator.killBookmark(_bookmark, killGit, killFiles);		
 			}
 		}
 		
@@ -121,7 +122,7 @@ package model {
 		private function initializeBookmarks():void
 		{
 			AppModel.showLoader('Initalizing Bookmarks');
-			AppModel.proxies.reader.getRepositoryInfo(_bookmarks[_index]);
+			AppProxies.reader.getRepositoryInfo(_bookmarks[_index]);
 			addEventListener(AppEvent.REPOSITORY_READY, onRepositoryReady);
 		}
 
@@ -130,7 +131,7 @@ package model {
 			if (++_index == _bookmarks.length){
 				onAllBookmarksParsed();
 			}	else{
-				AppModel.proxies.reader.getRepositoryInfo(_bookmarks[_index]);	
+				AppProxies.reader.getRepositoryInfo(_bookmarks[_index]);	
 			}
 		}
 		
@@ -147,7 +148,7 @@ package model {
 		// on database error, default to the first bookmark //	
 			if (_bookmark == null) _bookmark = _bookmarks[0];
 			AppModel.bookmark = _bookmark;
-			AppModel.proxies.status.locked = false;
+			AppProxies.status.locked = false;
 		}
 
 	}

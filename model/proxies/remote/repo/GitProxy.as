@@ -4,6 +4,7 @@ package model.proxies.remote.repo {
 	import events.ErrEvent;
 	import events.NativeProcessEvent;
 	import model.AppModel;
+	import model.proxies.AppProxies;
 	import model.proxies.remote.RemoteFailure;
 	import model.proxies.remote.RemoteProxy;
 	import model.remote.HostingAccount;
@@ -179,7 +180,7 @@ package model.proxies.remote.repo {
 		private function editRemote():void
 		{
 		// update the remote url so future push / fetch attempts will succeed //	
-			AppModel.proxies.editor.editRemote(_request.remote);
+			AppProxies.editor.editRemote(_request.remote);
 			AppModel.engine.addEventListener(AppEvent.REMOTE_EDITED, onRemoteEdited);
 		}
 

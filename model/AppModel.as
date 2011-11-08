@@ -16,7 +16,6 @@ package model {
 	public class AppModel extends EventDispatcher {
 
 		private static var _engine			:AppEngine = new AppEngine();	
-		private static var _proxies			:AppProxies = new AppProxies();		
 		private static var _database		:AppDatabase = new AppDatabase();
 		private static var _settings		:AppSettings = new AppSettings();
 		private static var _updater			:UpdateManager = new UpdateManager();
@@ -25,7 +24,7 @@ package model {
 
 		public function AppModel() 
 		{
-			_proxies.status.initialize();
+			AppProxies.status.initialize();
 		}
 		
 		static public function set bookmark(b:Bookmark):void
@@ -44,11 +43,10 @@ package model {
 		static public function get branch()		:Branch 		{ return _bookmark.branch; }
 		static public function get repository()	:Repository 	{ return _bookmark.remote; }
 		static public function get engine()		:AppEngine 		{ return _engine; 	}
-		static public function get proxies()	:AppProxies 	{ return _proxies; 	}
 		static public function get database()	:AppDatabase 	{ return _database; }
 		static public function get settings()	:AppSettings 	{ return _settings; }
 		static public function get updater()	:UpdateManager 	{ return _updater; 	}
-		static public function get merge()		:ResolveConflict	{ return _merge; 	}
+		static public function get merge()		:ResolveConflict{ return _merge; 	}
 		
 		static public function alert(a:Alert):void
 		{

@@ -3,6 +3,7 @@ package view.windows.editor {
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
+	import model.proxies.AppProxies;
 	import model.vo.Repository;
 	import view.btns.ButtonIcon;
 	import view.btns.DrawButton;
@@ -88,7 +89,7 @@ package view.windows.editor {
 
 		private function onConfirm(e:UIEvent):void
 		{
-			if (e.data as Boolean == true) AppModel.proxies.editor.delRemote(_repo);
+			if (e.data as Boolean == true) AppProxies.editor.delRemote(_repo);
 		}
 
 		private function onBkmkRemovedFromAcct(e:AppEvent):void

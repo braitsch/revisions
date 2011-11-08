@@ -3,6 +3,7 @@ package view.windows.modals {
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
+	import model.proxies.AppProxies;
 	import model.remote.Hosts;
 	import model.vo.Bookmark;
 	import model.vo.Commit;
@@ -256,7 +257,7 @@ package view.windows.modals {
 
 		private function onShowAlert(e:AppEvent):void
 		{
-			AppModel.proxies.status.locked = true;
+			AppProxies.status.locked = true;
 			if (_alert) removeChild(_alert);
 			_alert = e.data as Alert;
 			addChild(_alert);
@@ -267,7 +268,7 @@ package view.windows.modals {
 		
 		private function onHideAlert(e:AppEvent = null):void
 		{
-			AppModel.proxies.status.locked = false;
+			AppProxies.status.locked = false;
 			removeChild(_alert);
 			if (_window) {
 				stage.focus = _window;

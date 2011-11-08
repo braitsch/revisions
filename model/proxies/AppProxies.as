@@ -4,6 +4,7 @@ package model.proxies {
 	import model.proxies.local.BkmkEditor;
 	import model.proxies.local.BkmkReader;
 	import model.proxies.local.ConfigProxy;
+	import model.proxies.local.MergeProxy;
 	import model.proxies.local.SSHKeyGenerator;
 	import model.proxies.remote.repo.CloneProxy;
 	import model.proxies.remote.repo.SyncProxy;
@@ -18,48 +19,54 @@ package model.proxies {
 		private static var _status		:StatusManager 		= new StatusManager();
 		private static var _clone		:CloneProxy 		= new CloneProxy();		
 		private static var _sync		:SyncProxy 			= new SyncProxy();
+		private static var _merge		:MergeProxy			= new MergeProxy();
 		private static var _sshKeyGen	:SSHKeyGenerator 	= new SSHKeyGenerator();
 
 	// public getters //	
 
-		public function get config():ConfigProxy
+		static public function get config():ConfigProxy
 		{
 			return _config;
 		}
 		
-		public function get creator():BkmkCreator
+		static public function get creator():BkmkCreator
 		{
 			return _creator;
 		}
 		
-		public function get reader():BkmkReader
+		static public function get reader():BkmkReader
 		{
 			return _reader;
 		}
 		
-		public function get editor():BkmkEditor
+		static public function get editor():BkmkEditor
 		{
 			return _editor;
 		}
 		
-		public function get status():StatusManager
+		static public function get status():StatusManager
 		{
 			return _status;
 		}
 		
-		public function get sshKeyGen():SSHKeyGenerator
+		static public function get sshKeyGen():SSHKeyGenerator
 		{
 			return _sshKeyGen;
 		}
 
-		public function get clone():CloneProxy
+		static public function get clone():CloneProxy
 		{
 			return _clone;
 		}
 
-		public function get sync():SyncProxy
+		static public function get sync():SyncProxy
 		{
 			return _sync;
+		}
+
+		static public function get merge():MergeProxy
+		{
+			return _merge;
 		}		
 		
 	}

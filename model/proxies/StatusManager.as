@@ -113,7 +113,7 @@ package model.proxies {
 					resetTimer(); 
 					if (AppModel.repository.hasBranch(AppModel.branch.name)){
 						if( fetch && isLoggedIn() ){
-							AppModel.proxies.sync.fetchRemote();	
+							AppProxies.sync.fetchRemote();	
 						}	else{
 							_proxy.getRemoteStatus();	
 						}
@@ -134,7 +134,7 @@ package model.proxies {
 			if (_autoSaveQueue.length){
 				var b:Bookmark = e.data as Bookmark;
 				if (b == _autoSaveQueue[0] && b.branch.isModified){
-					stopTimers(); AppModel.proxies.editor.autoSave(_autoSaveQueue[0]);
+					stopTimers(); AppProxies.editor.autoSave(_autoSaveQueue[0]);
 				}	else{
 					_autoSaveQueue.splice(0, 1);			
 				}
