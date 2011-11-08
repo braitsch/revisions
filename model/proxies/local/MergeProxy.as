@@ -40,8 +40,8 @@ package model.proxies.local {
 		{
 			_branch = b;
 			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
-			super.queue = [	Vector.<String>([BashMethods.GET_COMMON_PARENT, AppModel.branch.name, _branch.name]), 
-							Vector.<String>([BashMethods.GET_UNIQUE_COMMITS, AppModel.branch.name, _branch.name])];
+			super.queue = [	Vector.<String>([BashMethods.GET_UNIQUE_COMMITS, AppModel.branch.name, _branch.name]),
+							Vector.<String>([BashMethods.GET_UNIQUE_COMMITS, _branch.name, AppModel.branch.name])];
 		}			
 		
 		private function getConflictDetails(branchName:String):void
@@ -59,7 +59,7 @@ package model.proxies.local {
 				case BashMethods.SYNC_REMOTE :
 					onSyncRemote(a[0].result);
 				break;
-				case BashMethods.GET_COMMON_PARENT :
+				case BashMethods.GET_UNIQUE_COMMITS :
 					onBranchHistory(a);
 				break;											
 				case BashMethods.GET_LAST_COMMIT :
@@ -85,8 +85,7 @@ package model.proxies.local {
 			}	else if (hasString(s, 'merge attempt failed')){
 				getConflictDetails(_branch.name);
 			}	else{
-				trace("MergeProxy.onSyncLocal(s)", s);
-				trace('local sync complete!!');
+				AppModel.dispatch(AppEvent.HISTORY_REQUESTED);
 			}
 		}	
 		
@@ -101,10 +100,9 @@ package model.proxies.local {
 		
 		private function onBranchHistory(a:Array):void
 		{
-			var c:String = a[0].result;
-			var v:Vector.<Commit> = StatusProxy.parseHistory(a[1].result);
-		//	for (var i:int = 0; i < v.length; i++) trace(i, v[i].sha1, v[i].note);	
-			AppModel.dispatch(AppEvent.BRANCH_HISTORY, {common:c, unique:v, branch:_branch});
+			var branchA:Vector.<Commit> = StatusProxy.parseHistory(a[0].result);
+			var branchB:Vector.<Commit> = StatusProxy.parseHistory(a[1].result);
+			AppModel.dispatch(AppEvent.BRANCH_HISTORY, {a:branchA, b:branchB, branch:_branch});
 		}		
 		
 		private function parseLogList(s:String):Array
