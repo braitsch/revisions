@@ -38,7 +38,6 @@ package system{
 		public static const MERGE_OURS				:String = 'mergeOurs';
 		public static const MERGE_THEIRS			:String = 'mergeTheirs';
 		public static const GET_LAST_COMMIT			:String = 'getLastCommit';
-		public static const GET_COMMON_PARENT		:String = 'getCommonParent';
 		public static const GET_UNIQUE_COMMITS		:String = 'getUniqueCommits';
 		
 	// bkmk-editor.sh //

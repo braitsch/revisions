@@ -62,25 +62,17 @@ package view.history {
 		{
 			_header.refresh();
 			_listView.showMostRecent(AppModel.branch);
-			hideMergeView();
 		}
 				
 		private function hideAll(e:AppEvent):void
 		{		
 			_header.hideAll();	
 			_listView.clear();
-			hideMergeView();
 		}
 		
 		private function onPageRequest(e:UIEvent):void
 		{
 			_listView.startFromIndex(AppModel.branch, e.data as uint);
-			hideMergeView();
-		}
-		
-		private function hideMergeView():void
-		{
-			AppModel.dispatch(AppEvent.HIDE_SYNC_VIEW);			
 		}
 		
 	}

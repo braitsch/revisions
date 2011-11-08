@@ -80,11 +80,12 @@ package model.proxies.local {
 		private function onSyncLocal(s:String):void
 		{
 			if (hasString(s, 'checkout failed, unsaved changes')){
-				AppModel.dispatch(AppEvent.SYNC_COMMIT);
 				AppModel.dispatch(AppEvent.HIDE_SYNC_VIEW);
+				AppModel.dispatch(AppEvent.SYNC_COMMIT);
 			}	else if (hasString(s, 'merge attempt failed')){
 				getConflictDetails(_branch.name);
 			}	else{
+				AppModel.dispatch(AppEvent.HIDE_SYNC_VIEW);
 				AppModel.dispatch(AppEvent.HISTORY_REQUESTED);
 			}
 		}	

@@ -1,9 +1,9 @@
 package view.history.combos {
 
-	import model.proxies.AppProxies;
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
+	import model.proxies.AppProxies;
 	import model.vo.Branch;
 	import flash.utils.setTimeout;
 	
@@ -15,7 +15,6 @@ package view.history.combos {
 		{
 			super.optionIcon = BranchIcon;
 			addEventListener(UIEvent.COMBO_OPTION_CLICK, openMergePreview);
-			addEventListener(UIEvent.COMBO_HEADING_CLICK, hideMergePreview);
 			AppModel.engine.addEventListener(AppEvent.HIDE_SYNC_VIEW, resetMergeView);
 		}
 
@@ -50,11 +49,6 @@ package view.history.combos {
 			setTimeout(function():void{ AppProxies.merge.getBranchHistory(_branch); }, 500);
 		}
 		
-		private function hideMergePreview(e:UIEvent):void
-		{
-			AppModel.dispatch(AppEvent.HIDE_SYNC_VIEW);
-		}
-
 	}
 	
 }

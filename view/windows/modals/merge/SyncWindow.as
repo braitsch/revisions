@@ -1,12 +1,12 @@
 package view.windows.modals.merge {
 
-	import system.BashMethods;
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
 	import model.proxies.AppProxies;
 	import model.vo.Branch;
 	import model.vo.Commit;
+	import system.BashMethods;
 	import view.type.TextHeading;
 	import view.ui.ModalCheckbox;
 	import view.windows.modals.system.Alert;
@@ -15,7 +15,7 @@ package view.windows.modals.merge {
 	import flash.events.MouseEvent;
 	import flash.text.TextFieldAutoSize;
 
-	public class SyncPreview extends Alert {
+	public class SyncWindow extends Alert {
 
 		private static var _view			:SyncLocalMC = new SyncLocalMC();
 		private static var _heading			:TextHeading = new TextHeading();
@@ -28,7 +28,7 @@ package view.windows.modals.merge {
 	//	private static var _windowY			:uint;
 		private static var _branchesInSync	:Boolean;
 
-		public function SyncPreview(a:Branch, b:Branch, au:uint, bu:uint, ac:Commit, bc:Commit)
+		public function SyncWindow(a:Branch, b:Branch, au:uint, bu:uint, ac:Commit, bc:Commit)
 		{
 			_branchA = a; _branchB = b; 
 			_branchesInSync = au == 0 && bu == 0;
@@ -38,9 +38,11 @@ package view.windows.modals.merge {
 			addOkButton(); addNoButton();
 			addChild(_view); addChild(_heading);
 			drawBranches(au, bu, ac, bc); addIcons(); addCheckBox(); setHeading();
+			AppModel.engine.addEventListener(AppEvent.HIDE_SYNC_VIEW, closeWindow);
+			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
 		//	addEventListener(MouseEvent.MOUSE_DOWN, onMouseDrag);
 		}
-		
+
 		private function getWindowWidth(a:Branch, b:Branch):uint
 		{
 			var w:uint = 0; var n:uint = 0; 
@@ -118,8 +120,7 @@ package view.windows.modals.merge {
 		override protected function onOkButton(e:Event):void
 		{
 			if (_branchesInSync){
-				closeWindow(e);
-				super.onOkButton(e);
+				AppModel.dispatch(AppEvent.HIDE_SYNC_VIEW);
 			}	else{
 				AppProxies.merge.syncLocal(BashMethods.MERGE_NORMAL);
 			}
@@ -127,20 +128,23 @@ package view.windows.modals.merge {
 
 		override protected function onNoButton(e:UIEvent):void
 		{
-			closeWindow(e);
-			super.onNoButton(e);
+			AppModel.dispatch(AppEvent.HIDE_SYNC_VIEW);
 		}
 		
 		override protected function onCloseClick(e:MouseEvent):void 
 		{
-			closeWindow(e);
-			super.onCloseClick(e);
-		}
-		
-		private function closeWindow(e:Event):void
-		{
 			AppModel.dispatch(AppEvent.HIDE_SYNC_VIEW);
 		}
+		
+		private function closeWindow(e:AppEvent):void
+		{
+			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.HIDE_ALERT));
+		}
+		
+		private function onRemovedFromStage(e:Event):void
+		{
+			AppModel.engine.removeEventListener(AppEvent.HIDE_SYNC_VIEW, closeWindow);			
+		}		
 		
 	// window dragging //	
 		

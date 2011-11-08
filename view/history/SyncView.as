@@ -9,7 +9,7 @@ package view.history {
 	import model.vo.Commit;
 	import view.graphics.PatternBox;
 	import view.graphics.SolidBox;
-	import view.windows.modals.merge.SyncPreview;
+	import view.windows.modals.merge.SyncWindow;
 
 	public class SyncView extends Sprite {
 
@@ -59,7 +59,7 @@ package view.history {
 			while ( numChildren > 4 ) removeChildAt(2);
 			var ac:Commit = _aUnique.length != 0 ? _aUnique[0] : _abShared[0];
 			var bc:Commit = _bUnique.length != 0 ? _bUnique[0] : _abShared[0];
-			AppModel.alert(new SyncPreview(AppModel.branch, _branchB, _aUnique.length, _bUnique.length, ac, bc));
+			AppModel.alert(new SyncWindow(AppModel.branch, _branchB, _aUnique.length, _bUnique.length, ac, bc));
 			AppModel.hideLoader();
 		}
 		
