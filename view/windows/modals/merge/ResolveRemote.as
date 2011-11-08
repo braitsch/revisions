@@ -1,6 +1,7 @@
 package view.windows.modals.merge {
 
 	import model.proxies.AppProxies;
+	import system.BashMethods;
 	import view.type.TextHeading;
 	import flash.events.Event;
 
@@ -30,9 +31,9 @@ package view.windows.modals.merge {
 		{
 			super.onOkButton(e);
 			if (super.commitA.selected){
-				AppProxies.merge.mergeOurs();
+				AppProxies.merge.syncRemote(BashMethods.MERGE_OURS);
 			}	else if (super.commitB.selected){
-				AppProxies.merge.mergeTheirs();
+				AppProxies.merge.syncRemote(BashMethods.MERGE_THEIRS);
 			}
 		}		
 			

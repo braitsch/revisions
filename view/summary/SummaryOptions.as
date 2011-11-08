@@ -1,5 +1,6 @@
 package view.summary {
 
+	import system.BashMethods;
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
@@ -115,7 +116,7 @@ package view.summary {
 				if (AppModel.branch.isModified){
 					AppModel.alert(new Message('Please saves your lastest changes before syncing with the server.'));
 				}	else{
-					AppProxies.merge.mergeRemoteIntoLocal();
+					AppProxies.merge.syncRemote(BashMethods.MERGE_NORMAL);
 				}
 			}
 		}

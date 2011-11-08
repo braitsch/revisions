@@ -32,13 +32,14 @@ package system{
 		public static const ATTEMPT_HTTPS_AUTH		:String = 'attemptHttpsAuth';
 		
 	// bkmk-merge.sh //		
-		public static const MERGE					:String = 'merge';
+		public static const SYNC_LOCAL				:String = 'syncLocal';	
+		public static const SYNC_REMOTE				:String = 'syncRemote';
+		public static const MERGE_NORMAL			:String = 'mergeNormal';		
 		public static const MERGE_OURS				:String = 'mergeOurs';
 		public static const MERGE_THEIRS			:String = 'mergeTheirs';
 		public static const GET_LAST_COMMIT			:String = 'getLastCommit';
 		public static const GET_COMMON_PARENT		:String = 'getCommonParent';
 		public static const GET_UNIQUE_COMMITS		:String = 'getUniqueCommits';
-		public static const SYNC_LOCAL_BRANCHES		:String = 'syncLocalBranches';	
 		
 	// bkmk-editor.sh //
 		public static const TRACK_FILE				:String = 'trackFile';
@@ -87,7 +88,6 @@ package system{
 		public static const DETECT_SSH_KEY			:String = 'detectSSHKey';
 		public static const CREATE_SSH_KEY			:String = 'createSSHKey';
 		public static const ADD_KEY_TO_AUTH_AGENT	:String = 'addKeyToAuthAgent';
-		
 	// new-stuff //	
 		
 	}

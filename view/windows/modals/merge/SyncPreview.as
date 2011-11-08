@@ -1,5 +1,6 @@
 package view.windows.modals.merge {
 
+	import system.BashMethods;
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
@@ -120,7 +121,7 @@ package view.windows.modals.merge {
 				closeWindow(e);
 				super.onOkButton(e);
 			}	else{
-				AppProxies.merge.syncLocalBranches(_branchB);
+				AppProxies.merge.syncLocal(BashMethods.MERGE_NORMAL);
 			}
 		}		
 

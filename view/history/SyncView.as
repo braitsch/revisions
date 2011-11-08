@@ -42,7 +42,11 @@ package view.history {
 		{
 			_bUnique = e.data.unique; _branchMerge = e.data.branch;
 		// traverse the active branch bkwds to find the common parent of a & b //	
-			for (var i:int = AppModel.branch.history.length-1; i > 0; i--) if (AppModel.branch.history[i].sha1 == e.data.common) break;
+			for (var i:int = AppModel.branch.history.length - 1; i > 0; i--) {
+				trace(i, AppModel.branch.history[i].sha1, e.data.common)
+				if (AppModel.branch.history[i].sha1 == e.data.common) break;
+			}
+			trace('broke at ',i);
 			_aUnique = AppModel.branch.history.slice(i + 1);
 			_abShared = AppModel.branch.history.slice(i - HistoryList.ITEMS_PER_PAGE, i + 1);
 		// rewrite branchB indices so they extend the count from the ab-shared array //	

@@ -8,6 +8,7 @@ package model.proxies.local {
 	import model.vo.Branch;
 	import model.vo.Commit;
 	import system.BashMethods;
+	import view.windows.modals.merge.ResolveLocal;
 	import view.windows.modals.merge.ResolveRemote;
 
 	public class MergeProxy extends NativeProcessQueue {
@@ -20,29 +21,19 @@ package model.proxies.local {
 			super.addEventListener(NativeProcessEvent.QUEUE_COMPLETE, onProcessComplete);
 		}
 		
-		public function syncLocalBranches(b:Branch):void
+		public function syncLocal(strategy:String):void
 		{
-			_branch = b;
 			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
-			super.call(Vector.<String>([BashMethods.SYNC_LOCAL_BRANCHES, AppModel.branch.name, _branch.name]));
+			var m:String = 'SYNC--[ '+AppModel.branch.name+' <--> '+_branch.name+' ]';
+			super.call(Vector.<String>([BashMethods.SYNC_LOCAL, AppModel.branch.name, _branch.name, m, strategy]));
 		}
 		
-		public function mergeRemoteIntoLocal():void
+		public function syncRemote(strategy:String):void
 		{
+			_branch = null;
 			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
-			super.call(Vector.<String>([BashMethods.MERGE, AppModel.repository.name, AppModel.branch.name, AppProxies.config.userName]));
-		}
-		
-		public function mergeOurs():void
-		{
-			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
-			super.call(Vector.<String>([BashMethods.MERGE_OURS, AppModel.repository.name, AppModel.branch.name, AppProxies.config.userName]));			
-		}
-		
-		public function mergeTheirs():void
-		{
-			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
-			super.call(Vector.<String>([BashMethods.MERGE_THEIRS, AppModel.repository.name, AppModel.branch.name, AppProxies.config.userName]));			
+			var m:String = 'SYNC--[ '+AppProxies.config.userName+' ]';
+			super.call(Vector.<String>([BashMethods.SYNC_REMOTE, AppModel.repository.name+'/'+AppModel.branch.name, m, strategy]));
 		}
 		
 		public function getBranchHistory(b:Branch):void
@@ -61,30 +52,23 @@ package model.proxies.local {
 		private function onProcessComplete(e:NativeProcessEvent):void 
 		{
 			var a:Array = e.data as Array;
-		//	trace("BkmkEditor.onProcessComplete(e)", e.data.method, e.data.result);
 			switch(a[0].method){
-				case BashMethods.MERGE :
-					onMergeComplete(a[0].result);
+				case BashMethods.SYNC_LOCAL :
+					onSyncLocal(a[0].result);
 				break;
-				case BashMethods.MERGE_OURS :
-					onMergeComplete(a[0].result);
+				case BashMethods.SYNC_REMOTE :
+					onSyncRemote(a[0].result);
 				break;
-				case BashMethods.MERGE_THEIRS :
-					onMergeComplete(a[0].result);
-				break;	
 				case BashMethods.GET_COMMON_PARENT :
-					onBranchInspection(a);
+					onBranchHistory(a);
 				break;											
 				case BashMethods.GET_LAST_COMMIT :
 					onCompareCommits(a[0].result);
 				break;	
-				case BashMethods.SYNC_LOCAL_BRANCHES :
-					onLocalSyncComplete(a[0].result);
-				break;									
 			}
 		}		
 		
-		private function onMergeComplete(s:String):void
+		private function onSyncRemote(s:String):void
 		{
 			if (hasString(s, 'merge attempt failed')){
 				getConflictDetails(AppModel.repository.name+'/'+AppModel.branch.name);
@@ -93,7 +77,7 @@ package model.proxies.local {
 			}
 		}
 		
-		private function onLocalSyncComplete(s:String):void
+		private function onSyncLocal(s:String):void
 		{
 			if (hasString(s, 'checkout failed, unsaved changes')){
 				AppModel.dispatch(AppEvent.SYNC_COMMIT);
@@ -101,20 +85,25 @@ package model.proxies.local {
 			}	else if (hasString(s, 'merge attempt failed')){
 				getConflictDetails(_branch.name);
 			}	else{
-				trace("MergeProxy.onLocalSyncComplete(s)", s);
+				trace("MergeProxy.onSyncLocal(s)", s);
+				trace('local sync complete!!');
 			}
 		}	
 		
 		private function onCompareCommits(s:String):void
 		{
-			AppModel.alert(new ResolveRemote(parseLogList(s)));
+			if (_branch){
+				AppModel.alert(new ResolveLocal(parseLogList(s)));
+			}	else{
+				AppModel.alert(new ResolveRemote(parseLogList(s)));
+			}
 		}
 		
-		private function onBranchInspection(a:Array):void
+		private function onBranchHistory(a:Array):void
 		{
 			var c:String = a[0].result;
 			var v:Vector.<Commit> = StatusProxy.parseHistory(a[1].result);
-	//		for (var i:int = 0; i < v.length; i++) trace(i, v[i].sha1, v[i].note);	
+		//	for (var i:int = 0; i < v.length; i++) trace(i, v[i].sha1, v[i].note);	
 			AppModel.dispatch(AppEvent.BRANCH_HISTORY, {common:c, unique:v, branch:_branch});
 		}		
 		
