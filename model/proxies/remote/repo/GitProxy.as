@@ -53,7 +53,7 @@ package model.proxies.remote.repo {
 				case BashMethods.PUSH_BRANCH :
 					super.call(Vector.<String>([_request.method, _request.remote.name]));
 				break;
-				case BashMethods.TEST_REPAIR :
+				case BashMethods.ATTEMPT_HTTPS_AUTH :
 					super.call(Vector.<String>([_request.method, _request.remote.url]));
 				break;
 			}
@@ -169,7 +169,7 @@ package model.proxies.remote.repo {
 
 		protected function onProcessSuccess(e:NativeProcessEvent):void
 		{
-			if (_request.method == BashMethods.TEST_REPAIR) {
+			if (_request.method == BashMethods.ATTEMPT_HTTPS_AUTH) {
 				Hosts.github.setUserAndPass(_userName, _userPass);
 				editRemote();
 			}	else {
@@ -220,7 +220,7 @@ package model.proxies.remote.repo {
 				dispatchError(ErrEvent.UNRESOLVED_HOST);
 			}	else if (_request.method == BashMethods.PUSH_BRANCH || _request.method == BashMethods.GET_REMOTE_FILES){
 				_failedMethod = _request.method;
-				_request.method = BashMethods.TEST_REPAIR; 
+				_request.method = BashMethods.ATTEMPT_HTTPS_AUTH; 
 				retryRequest();
 			}	else if (hasString(_request.remote.url, 'git@github.com')){
 		// user doesn't have an ssh key setup, retry over https //		

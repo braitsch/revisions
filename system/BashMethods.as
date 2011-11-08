@@ -2,7 +2,7 @@ package system{
 
 	public class BashMethods {
 		
-	// config methods //
+	// config.sh //
 		public static const DETECT_GIT				:String = 'detectGit';
 		public static const INSTALL_GIT				:String = 'installGit';
 		public static const SET_USER_NAME			:String = 'setUserName';
@@ -11,32 +11,41 @@ package system{
 		public static const GET_USER_EMAIL			:String = 'getUserEmail';	
 		public static const GET_USER_REAL_NAME		:String = 'getLoggedInUsersRealName';
 		
-	// repo-creator.as //		
+	// bkmk-create.sh //		
 		public static const INIT_FILE				:String = 'initFile';
-		public static const INIT_FOLDER				:String = 'initFolder';		public static const TRACK_FILE				:String = 'trackFile';
-		public static const UNTRACK_FILE			:String = 'unTrackFile';
-		public static const UPDATE_WORKTREE			:String = 'setFileLocation';
+		public static const INIT_FOLDER				:String = 'initFolder';
 		public static const GET_DIRECTORY_FILES		:String = 'getDirectoryFiles';		
 		public static const ADD_INITIAL_COMMIT		:String = 'addInitialCommit';
+		public static const ADD_TRACKING_BRANCHES	:String = 'addTrackingBranches';
+		public static const SET_WORK_TREE			:String = 'initSingleFileRepo';		
 		
-	// repo-reader.as //			
+	// bkmk-reader.sh //			
 		public static const GET_STASH				:String = 'getStash';
 		public static const GET_REMOTES				:String = 'getRemotes';
 		public static const GET_LOCAL_BRANCHES		:String = 'getLocalBranches';
 		public static const GET_REMOTE_BRANCHES		:String = 'getRemoteBranches';
 		
-	// repo-remote.as //	
+	// bkmk-remote.sh //	
 		public static const CLONE					:String = 'clone';
 		public static const COMMIT					:String = 'commit';		
 		public static const PUSH_BRANCH				:String = 'pushBranch';
-		public static const PUSH_AND_TRACK			:String = 'pushAndTrack';
-		public static const TRASH_UNSAVED			:String = 'trashUnsaved';		
+		public static const ATTEMPT_HTTPS_AUTH		:String = 'attemptHttpsAuth';
 		
-	// repo-editor.as //		
+	// bkmk-merge.sh //		
 		public static const MERGE					:String = 'merge';
 		public static const MERGE_OURS				:String = 'mergeOurs';
 		public static const MERGE_THEIRS			:String = 'mergeTheirs';
-		public static const COMPARE_COMMITS			:String = 'getMostRecentCommits';
+		public static const GET_LAST_COMMIT			:String = 'getLastCommit';
+		public static const GET_COMMON_PARENT		:String = 'getCommonParent';
+		public static const GET_UNIQUE_COMMITS		:String = 'getUniqueCommits';
+		public static const SYNC_LOCAL_BRANCHES		:String = 'syncLocalBranches';	
+		
+	// bkmk-editor.sh //
+		public static const TRACK_FILE				:String = 'trackFile';
+		public static const UNTRACK_FILE			:String = 'unTrackFile';
+		public static const STAR_COMMIT				:String = 'starCommit';
+		public static const UNSTAR_COMMIT			:String = 'unstarCommit';		
+		public static const UPDATE_WORKTREE			:String = 'setFileLocation';		
 		public static const ADD_BRANCH				:String = 'addBranch';
 		public static const SET_BRANCH				:String = 'setBranch';
 		public static const RENAME_BRANCH			:String = 'renameBranch';
@@ -45,15 +54,15 @@ package system{
 		public static const EDIT_REMOTE				:String = 'editRemote';
 		public static const DEL_REMOTE				:String = 'delRemote';
 		public static const COPY_VERSION			:String = 'copyVersion';
+		public static const TRASH_UNSAVED			:String = 'trashUnsaved';
 		
 	// history & status //	
 		public static const GET_HISTORY				:String = 'getHistory';
-		public static const GET_BRANCH_HISTORY		:String = 'getMergePreview';
-		public static const GET_TOTAL_COMMITS		:String = 'getTotalCommits';
-		public static const GET_TRACKED_FILES		:String = 'getTrackedFiles';
 		public static const GET_UNTRACKED_FILES		:String = 'getUntrackedFiles';
 		public static const GET_MODIFIED_FILES		:String = 'getModifiedFiles';
-		public static const GET_IGNORED_FILES		:String = 'getIgnoredFiles';
+		public static const GET_FAVORITES			:String = 'getFavorites';
+		public static const GET_REMOTE_FILES		:String = 'getRemoteFiles';
+		public static const CHERRY_BRANCH			:String = 'cherryBranch';		
 		
 	// github & beanstalk api methods //
 		public static const LOGOUT					:String = 'logout';
@@ -68,30 +77,18 @@ package system{
 		public static const SET_PERMISSIONS			:String = 'setPermissions';
 		public static const SET_ADMINISTRATOR		:String = 'setAdministrator';		
 		
-	// remote keys //	
+	// ssh keys //	
 		public static const GET_REMOTE_KEYS			:String = 'getAllKeys';
 		public static const ADD_KEY_TO_REMOTE		:String = 'addKeyToRemote';
 		public static const REPAIR_REMOTE_KEY		:String = 'repairRemoteKey';
 		public static const DELETE_KEY_FROM_REMOTE	:String = 'deleteKeyFromRemote';
 		public static const ADD_NEW_KNOWN_HOST		:String = 'addNewKnownHost';
-		
-	// local keys //	
 		public static const GET_HOST_NAME			:String = 'getHostName';
 		public static const DETECT_SSH_KEY			:String = 'detectSSHKey';
 		public static const CREATE_SSH_KEY			:String = 'createSSHKey';
 		public static const ADD_KEY_TO_AUTH_AGENT	:String = 'addKeyToAuthAgent';
 		
-		public static const STAR_COMMIT				:String = 'starCommit';
-		public static const UNSTAR_COMMIT			:String = 'unstarCommit';
-		public static const GET_FAVORITES			:String = 'getFavorites';
-		public static const GET_REMOTE_FILES		:String = 'getRemoteFiles';
-		public static const CHERRY_BRANCH			:String = 'cherryBranch';
-		public static const ADD_TRACKING_BRANCHES	:String = 'addTrackingBranches';
-		public static const SET_WORK_TREE			:String = 'initSingleFileRepo';
-		public static const TEST_REPAIR				:String = 'pushRepair';
-		public static const GET_COMMON_PARENT		:String = 'getCommonParent';
-		public static const GET_UNIQUE_COMMITS		:String = 'getUniqueCommits';
-		public static const SYNC_LOCAL_BRANCHES		:String = 'syncLocalBranches';
+	// new-stuff //	
 		
 	}
 	

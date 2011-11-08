@@ -118,6 +118,7 @@ package view.windows.modals.merge {
 		{
 			if (_branchesInSync){
 				closeWindow(e);
+				super.onOkButton(e);
 			}	else{
 				AppProxies.merge.syncLocalBranches(_branchB);
 			}

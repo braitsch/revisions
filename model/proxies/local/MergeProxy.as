@@ -55,7 +55,7 @@ package model.proxies.local {
 		
 		private function getConflictDetails(branchName:String):void
 		{
-			super.call(Vector.<String>([BashMethods.COMPARE_COMMITS, branchName]));	
+			super.call(Vector.<String>([BashMethods.GET_LAST_COMMIT, branchName]));	
 		}
 		
 		private function onProcessComplete(e:NativeProcessEvent):void 
@@ -75,7 +75,7 @@ package model.proxies.local {
 				case BashMethods.GET_COMMON_PARENT :
 					onBranchInspection(a);
 				break;											
-				case BashMethods.COMPARE_COMMITS :
+				case BashMethods.GET_LAST_COMMIT :
 					onCompareCommits(a[0].result);
 				break;	
 				case BashMethods.SYNC_LOCAL_BRANCHES :
@@ -101,7 +101,7 @@ package model.proxies.local {
 			}	else if (hasString(s, 'merge attempt failed')){
 				getConflictDetails(_branch.name);
 			}	else{
-				trace("BkmkEditor.onLocalSyncComplete(s)", s);
+				trace("MergeProxy.onLocalSyncComplete(s)", s);
 			}
 		}	
 		
@@ -112,7 +112,6 @@ package model.proxies.local {
 		
 		private function onBranchInspection(a:Array):void
 		{
-			trace("StatusProxy.onBranchInspection(a)");
 			var c:String = a[0].result;
 			var v:Vector.<Commit> = StatusProxy.parseHistory(a[1].result);
 	//		for (var i:int = 0; i < v.length; i++) trace(i, v[i].sha1, v[i].note);	
