@@ -23,6 +23,7 @@ package model.proxies.local {
 		
 		public function syncLocal(strategy:String):void
 		{
+			trace("MergeProxy.syncLocal(strategy)", strategy);
 			super.appendArgs([AppModel.bookmark.gitdir, AppModel.bookmark.worktree]);
 			var m:String = 'SYNC--[ '+AppModel.branch.name+' <--> '+_branch.name+' ]';
 			super.call(Vector.<String>([BashMethods.SYNC_LOCAL, AppModel.branch.name, _branch.name, m, strategy]));
@@ -93,7 +94,7 @@ package model.proxies.local {
 		private function onCompareCommits(s:String):void
 		{
 			if (_branch){
-				AppModel.alert(new ResolveLocal(parseLogList(s)));
+				AppModel.alert(new ResolveLocal(parseLogList(s), _branch));
 			}	else{
 				AppModel.alert(new ResolveRemote(parseLogList(s)));
 			}

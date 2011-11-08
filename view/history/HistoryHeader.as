@@ -10,6 +10,7 @@ package view.history {
 	import view.history.combos.SyncCombo;
 	import view.ui.Scroller;
 	import com.greensock.TweenLite;
+	import flash.display.Bitmap;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.filters.DropShadowFilter;
@@ -22,6 +23,7 @@ package view.history {
 		private static var _history		:HistoryCombo = new HistoryCombo();
 		private static var _merger		:SyncCombo = new SyncCombo();
 		private static var _switcher	:BranchCombo = new BranchCombo();
+		private static var _comboShadow	:Bitmap = new Bitmap(new ComboShadow());
 
 		public function HistoryHeader()
 		{
@@ -33,6 +35,7 @@ package view.history {
 			addChild(_switcher);
 			addChild(_merger);
 			addChild(_scroller); 
+			addChild(_comboShadow); 
 			hideAll(); // hide everything until user loads history //
 			addEventListener(UIEvent.COMBO_HEADING_OVER, onComboRollOver);
 			AppModel.engine.addEventListener(AppEvent.BRANCH_DELETED, drawBranchControls);
@@ -87,12 +90,14 @@ package view.history {
 			_merger.draw();
 			_merger.x = _switcher.x + _switcher.width + 1;
 			showCombo(_merger);
+			_comboShadow.x = _merger.x + _merger.width;
 		}
 		
 		private function hideBranchControls():void
 		{
 			hideCombo(_merger);
-			hideCombo(_switcher);	
+			hideCombo(_switcher);
+			_comboShadow.x = _history.x + _history.width;
 		}		
 		
 		private function onComboRollOver(e:UIEvent):void
