@@ -1,5 +1,6 @@
 package view.history.combos {
 
+	import model.proxies.AppProxies;
 	import events.AppEvent;
 	import events.UIEvent;
 	import model.AppModel;
@@ -46,7 +47,7 @@ package view.history.combos {
 			super.headingIcon = SwitcherDelete;
 			AppModel.showLoader('Comparing Branches');
 	// add slight delay so we have time to display the preloader //				
-			setTimeout(function():void{ AppModel.dispatch(AppEvent.GET_BRANCH_HISTORY, _branch); }, 500);
+			setTimeout(function():void{ AppProxies.merge.getBranchHistory(_branch); }, 500);
 		}
 		
 		private function hideMergePreview(e:UIEvent):void

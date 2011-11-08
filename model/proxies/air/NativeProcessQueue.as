@@ -11,13 +11,21 @@ package model.proxies.air {
 		public function NativeProcessQueue()
 		{
 			addEventListener(NativeProcessEvent.PROCESS_COMPLETE, onProcessComplete);		}
+		
+		override protected function call(v:Vector.<String>):void
+		{
+			_index = 0;
+			_queue = [v];
+			_results = [];
+			super.call(_queue[_index]);
+		}
 
 		public function set queue($a:Array):void
 		{
 			_index = 0;
 			_queue = $a;
 			_results = [];
-			call(_queue[_index]);
+			super.call(_queue[_index]);
 		}
 		
 	// private methods //	
@@ -27,7 +35,7 @@ package model.proxies.air {
 		//	trace("NativeProcessQueue.onProcessComplete(e)", e.data.method, e.data.result);
 			_index++; _results.push(e.data);	
 			if (_index < _queue.length) {
-				call(_queue[_index]);
+				super.call(_queue[_index]);
 			}	else if (_index == _queue.length){
 				dispatchEvent(new NativeProcessEvent(NativeProcessEvent.QUEUE_COMPLETE, _results));
 			}		

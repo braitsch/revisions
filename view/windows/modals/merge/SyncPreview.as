@@ -114,7 +114,6 @@ package view.windows.modals.merge {
 			addChild(_check);
 		}
 		
-		
 		override protected function onOkButton(e:Event):void
 		{
 			if (_branchesInSync){
@@ -127,11 +126,13 @@ package view.windows.modals.merge {
 		override protected function onNoButton(e:UIEvent):void
 		{
 			closeWindow(e);
+			super.onNoButton(e);
 		}
 		
 		override protected function onCloseClick(e:MouseEvent):void 
 		{
 			closeWindow(e);
+			super.onCloseClick(e);
 		}
 		
 		private function closeWindow(e:Event):void
