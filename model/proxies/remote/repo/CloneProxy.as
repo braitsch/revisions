@@ -69,7 +69,7 @@ package model.proxies.remote.repo {
 		{
 			var f:File = _savePath.resolvePath(_repoName);
 			var s:String = f.isDirectory ? 'folder' : 'file';
-			var m:String = 'The '+s+' "'+f.name+'" has the same name as the package you\'re about to download and will be overwritten if you continue.\n';
+			var m:String = 'There is already a '+s+' named "'+f.name+'" at the location you have chosed to download to. This '+s+' will be overwritten if you continue. ';
 				m += 'Would you like to continue?';
 			var k:Confirm = new Confirm(m);
 				k.addEventListener(UIEvent.CONFIRM, onConfirmDownload);

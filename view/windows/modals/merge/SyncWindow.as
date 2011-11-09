@@ -35,7 +35,7 @@ package view.windows.modals.merge {
 			_view.textMeasure.autoSize = TextFieldAutoSize.LEFT;
 			super.title = 'Sync Branches';
 			super.drawBackground(getWindowWidth(a, b), 360);
-			addOkButton(); addNoButton();
+			if (_branchesInSync == false) addNoButton(); addOkButton();
 			addChild(_view); addChild(_heading);
 			drawBranches(au, bu, ac, bc); addIcons(); addCheckBox(); setHeading();
 			AppModel.engine.addEventListener(AppEvent.HIDE_SYNC_VIEW, closeWindow);

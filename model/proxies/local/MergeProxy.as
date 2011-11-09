@@ -71,6 +71,7 @@ package model.proxies.local {
 		
 		private function onSyncRemote(s:String):void
 		{
+			trace("MergeProxy.onSyncRemote(s)", s);
 			if (hasString(s, 'merge attempt failed')){
 				getConflictDetails(AppModel.repository.name+'/'+AppModel.branch.name);
 			}	else{
