@@ -89,7 +89,8 @@ package view.windows.modals.merge {
 			}	else {
 				_heading.text = 'It appears that both of these branches are already in sync.';
 			}			
-			super.noButton.visible = _check.visible = _branchesInSync == false;
+			_check.visible = false; // disable until implemented //
+		//	super.noButton.visible = _check.visible = _branchesInSync == false;
 		}		
 		
 		private function addIcons():void
