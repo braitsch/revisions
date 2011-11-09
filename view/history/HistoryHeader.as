@@ -36,7 +36,7 @@ package view.history {
 			addChild(_merger);
 			addChild(_scroller); 
 			addChild(_comboShadow); 
-			hideAll(); // hide everything until user loads history //
+			hideAll(0); // hide everything until user loads history //	
 			addEventListener(UIEvent.COMBO_HEADING_OVER, onComboRollOver);
 			AppModel.engine.addEventListener(AppEvent.BRANCH_DELETED, drawBranchControls);
 		}
@@ -46,13 +46,15 @@ package view.history {
 			_history.draw();
 			showCombo(_history);
 			drawBranchControls();
+			TweenLite.to(_comboShadow, .5, {alpha:1});
 		}
 		
-		public function hideAll(e:AppEvent = null):void
+		public function hideAll(n:Number = .5):void
 		{
-			hideCombo(_history);
-			hideCombo(_merger);
-			hideCombo(_switcher);
+			hideCombo(_history, n);
+			hideCombo(_merger, n);
+			hideCombo(_switcher, n);
+			TweenLite.to(_comboShadow, n, {alpha:0});
 		}	
 
 		public function resize(w:uint, h:uint):void
@@ -113,9 +115,9 @@ package view.history {
 			}
 		}
 		
-		private function hideCombo(n:ComboGroup):void
+		private function hideCombo(n:ComboGroup, s:Number = .5):void
 		{
-			TweenLite.to(n, .5, {alpha:0, onComplete:function():void{n.visible = false;}});
+			TweenLite.to(n, s, {alpha:0, onComplete:function():void{n.visible = false;}});
 		}
 
 	}

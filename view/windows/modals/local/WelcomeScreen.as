@@ -8,18 +8,19 @@ package view.windows.modals.local {
 
 	public class WelcomeScreen extends ParentWindow {
 
-		private static var _btn:Sprite = new Sprite();
+		private static var _btn :Sprite = new Sprite();
 
 		public function WelcomeScreen()
 		{
-			_btn.x = 291;
-			_btn.y = 263;
+			_btn.x = 267;
+			_btn.y = 210;
 			_btn.graphics.beginFill(0xff0000, 0);
 			_btn.graphics.drawCircle(0, 0, 30);
 			_btn.graphics.endFill();
 			_btn.buttonMode = true;
 			_btn.addEventListener(MouseEvent.CLICK, onClick);
-			addChild(new Bitmap(new WelcomeMC()));
+			super.drawBackground(550, 300);
+			addChild(new Bitmap(new WelcomePNG()));
 			addChild(_btn);
 		}
 

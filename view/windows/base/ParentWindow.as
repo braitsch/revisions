@@ -18,7 +18,7 @@ package view.windows.base {
 
 		public function ParentWindow()
 		{
-			_bkgd.filters = [_glow];			
+			_bkgd.filters = [_glow];		
 		}
 	
 		public function resize(w:Number, h:Number):void
