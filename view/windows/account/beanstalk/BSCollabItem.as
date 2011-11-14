@@ -1,4 +1,4 @@
-package view.windows.account {
+package view.windows.account.beanstalk {
 
 	import events.UIEvent;
 	import model.AppModel;
@@ -13,7 +13,7 @@ package view.windows.account {
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 
-	public class CollaboratorItemBS extends Sprite {
+	public class BSCollabItem extends Sprite {
 
 		private var _collab		:Collaborator;
 		private var _view		:*;
@@ -21,7 +21,7 @@ package view.windows.account {
 		private var _radios		:Vector.<AccountRadio>;
 		private var _permission	:Permission;
 
-		public function CollaboratorItemBS(o:Collaborator, n:uint)
+		public function BSCollabItem(o:Collaborator, n:uint)
 		{
 			_collab = o; _repoId = n;
 			attachView();

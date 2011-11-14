@@ -1,4 +1,4 @@
-package view.windows.account {
+package view.windows.account.base {
 
 	import com.greensock.TweenLite;
 	import flash.events.MouseEvent;
@@ -8,12 +8,12 @@ package view.windows.account {
 	import view.windows.base.ChildWindow;
 	import flash.display.Sprite;
 
-	public class AccountView extends ChildWindow {
+	public class AccountPage extends ChildWindow {
 
-		private static var _proxy			:ApiProxy;
-		private static var _account			:HostingAccount;
+		private var _proxy			:ApiProxy;
+		private var _account		:HostingAccount;
 
-		public static function set account(a:HostingAccount):void	
+		public function set account(a:HostingAccount):void	
 		{
 			_account = a; 
 			if (_account.acctType == HostingAccount.GITHUB){

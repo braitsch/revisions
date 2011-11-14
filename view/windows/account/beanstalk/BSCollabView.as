@@ -1,16 +1,17 @@
-package view.windows.account {
+package view.windows.account.beanstalk {
 
 
+	import com.greensock.TweenLite;
 	import events.AppEvent;
 	import events.UIEvent;
+	import flash.display.Sprite;
+	import flash.events.Event;
 	import model.AppModel;
 	import model.vo.Collaborator;
 	import view.type.TextHeading;
+	import view.windows.account.base.CollaboratorView;
 	import view.windows.modals.system.Confirm;
-	import com.greensock.TweenLite;
-	import flash.display.Sprite;
-	import flash.events.Event;
-	public class CollaboratorViewBS extends AccountView {
+	public class BSCollabView extends CollaboratorView {
 	
 		private var _item			:Sprite;
 		private var _line2			:TextHeading = new TextHeading();		
@@ -18,7 +19,7 @@ package view.windows.account {
 		private var _collab			:Collaborator;
 		private var _collabs		:Sprite = new Sprite();
 
-		public function CollaboratorViewBS()
+		public function BSCollabView()
 		{
 			_collabs.y = 43; _line2.y = 17;
 			addChild(_collabs); addChild(_line2);
@@ -33,7 +34,7 @@ package view.windows.account {
 			forceOwnerToTopOfList();
 			var n:uint = _pool.length <= 8 ? _pool.length : 8;
 			for (var i:int = 0; i < n; i++) {
-				var k:CollaboratorItemBS = new CollaboratorItemBS(_pool[i], super.account.repository.id);
+				var k:BSCollabItem = new BSCollabItem(_pool[i], super.account.repository.id);
 					k.y = i * 41;
 				_collabs.addChild(k);
 			}
@@ -50,7 +51,7 @@ package view.windows.account {
 		{
 			var n:uint = 0;
 			for (var i:int = 0; i < _collabs.numChildren; i++) {
-				var k:CollaboratorItemBS = _collabs.getChildAt(i) as CollaboratorItemBS;
+				var k:BSCollabItem = _collabs.getChildAt(i) as BSCollabItem;
 				if (k.hasWriteAccess()) n++;
 			}
 			var s:String;

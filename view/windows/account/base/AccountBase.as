@@ -1,18 +1,17 @@
-package view.windows.account {
+package view.windows.account.base {
 
-	import events.UIEvent;
-	import model.AppModel;
-	import model.remote.HostingAccount;
-	import model.remote.Hosts;
-	import view.windows.base.ChildWindow;
-	import view.windows.base.ParentWindow;
-	import view.windows.modals.system.Message;
 	import com.greensock.TweenLite;
+	import events.UIEvent;
 	import flash.display.Shape;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import model.AppModel;
+	import model.remote.HostingAccount;
+	import view.windows.base.ChildWindow;
+	import view.windows.base.ParentWindow;
+	import view.windows.modals.system.Message;
 
-	public class AccountHome extends ParentWindow {
+	public class AccountBase extends ParentWindow {
 
 		private var _mask			:Shape = new Shape();
 		private var _view			:AccountHomeMC = new AccountHomeMC();
@@ -20,11 +19,11 @@ package view.windows.account {
 		private var _account		:HostingAccount;
 		
 	// sub-views //	
-		private var _viewRepos		:RepositoryView = new RepositoryView();
-		private var _viewCollabs	:CollaboratorView = new CollaboratorView();
-		private var _addCollab		:AddCollaborator = new AddCollaborator();
+		private var _viewRepos		:RepositoryView;
+		private var _viewCollabs	:CollaboratorView;
+		private var _addCollab		:AddCollaborator;
 		
-		public function AccountHome()
+		public function AccountBase()
 		{
 			addChild(_view);
 			addChild(_mask);
@@ -36,12 +35,23 @@ package view.windows.account {
 			addEventListener(UIEvent.WIZARD_PREV, onWizardPrev);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
 		}
-
+		
+		protected function setViews(r:RepositoryView, c:CollaboratorView, a:AddCollaborator):void
+		{
+			_viewRepos = r;
+			_viewCollabs = c;
+			_addCollab = a;
+		}
+		
+		protected function setHeading(s:String):void
+		{
+			_view.badgePage.label_txt.text = s;			
+		}
+		
 		public function set account(a:HostingAccount):void
 		{
-			AccountView.account = _account = a;
+			_account = a;
 			attachAvatar();
-			_viewRepos.reset();
 		}
 
 		private function attachAvatar():void
@@ -49,7 +59,6 @@ package view.windows.account {
 			_account.avatar.y = 8;
 			_account.avatar.x = 426;
 			_view.addChild(_account.avatar);
-			_view.badgePage.label_txt.text = _account.acctType == HostingAccount.GITHUB ? 'My Github' : 'My Beanstalk';
 		}
 		
 	// alternating view modes //
@@ -136,10 +145,9 @@ package view.windows.account {
 			TweenLite.to(e.target.over, .3, {alpha:0});
 		}		
 		
-		private function onLogOutClick(e:MouseEvent):void
+		protected function onLogOutClick(e:MouseEvent):void
 		{
 			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-			_account.acctType == HostingAccount.GITHUB ? Hosts.github.logOut() : Hosts.beanstalk.logOut();
 			AppModel.alert(new Message('You Have Successfully Logged Out.'));
 		}			
 		

@@ -1,4 +1,4 @@
-package view.windows.account {
+package view.windows.account.github {
 
 	import com.greensock.TweenLite;
 	import events.AppEvent;
@@ -8,14 +8,15 @@ package view.windows.account {
 	import model.AppModel;
 	import model.vo.Collaborator;
 	import view.type.TextHeading;
-	public class CollaboratorViewGH extends AccountView {
+	import view.windows.account.base.CollaboratorView;
+	public class GHCollabView extends CollaboratorView {
 
 		private var _item			:Sprite;
 		private var _line2			:TextHeading = new TextHeading();		
 		private var _pool			:Vector.<Collaborator>;
 		private var _collabs		:Sprite = new Sprite();
 
-		public function CollaboratorViewGH()
+		public function GHCollabView()
 		{
 			_collabs.y = 43;
 			addChild(_collabs);
@@ -30,7 +31,7 @@ package view.windows.account {
 			_pool = super.account.repository.collaborators;
 			var n:uint = _pool.length <= 15 ? _pool.length : 15;
 			for (var i:int = 0; i < n; i++) {
-				var k:CollaboratorItemGH = new CollaboratorItemGH(_pool[i]);
+				var k:GHCollabItem = new GHCollabItem(_pool[i]);
 					k.x = 199.5 * (i % 3);
 					k.y = Math.floor(i/3) * 57;
 				_collabs.addChild(k);

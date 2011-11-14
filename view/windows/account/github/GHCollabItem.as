@@ -1,4 +1,4 @@
-package view.windows.account {
+package view.windows.account.github {
 
 	import events.UIEvent;
 	import flash.display.Sprite;
@@ -7,12 +7,12 @@ package view.windows.account {
 	import view.avatars.Avatar;
 	import view.avatars.Avatars;
 
-	public class CollaboratorItemGH extends Sprite {
+	public class GHCollabItem extends Sprite {
 
 		private var _collab	:Collaborator;
 		private var _view	:GitHubCollaborator = new GitHubCollaborator();
 
-		public function CollaboratorItemGH(o:Collaborator)
+		public function GHCollabItem(o:Collaborator)
 		{
 			_collab = o;	
 			_view.label.text = _collab.userName;

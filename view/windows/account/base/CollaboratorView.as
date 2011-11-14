@@ -1,12 +1,10 @@
-package view.windows.account {
+package view.windows.account.base {
 
 	import events.UIEvent;
-	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import model.remote.HostingAccount;
 	import view.type.TextHeading;
 
-	public class CollaboratorView extends AccountView {
+	public class CollaboratorView extends AccountPage {
 
 		private var _bkgd			:CollaboratorViewMC = new CollaboratorViewMC();
 		private var _line1			:TextHeading = new TextHeading();
@@ -16,19 +14,7 @@ package view.windows.account {
 			addChild(_bkgd);
 			registerButtons();
 			addTextHeadings();
-			addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		}
-
-		override protected function onAddedToStage(e:Event):void
-		{
-			if (numChildren == 1){
-				if (super.account.acctType == HostingAccount.GITHUB){
-					addChild(new CollaboratorViewGH());
-				}	else if (super.account.acctType == HostingAccount.BEANSTALK){
-					addChild(new CollaboratorViewBS());
-				}
-			}
-		}		
 
 		private function registerButtons():void
 		{

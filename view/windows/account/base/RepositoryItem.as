@@ -1,4 +1,4 @@
-package view.windows.account {
+package view.windows.account.base {
 
 	import events.UIEvent;
 	import flash.display.Sprite;

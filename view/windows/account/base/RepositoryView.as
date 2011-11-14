@@ -1,19 +1,19 @@
-package view.windows.account {
+package view.windows.account.base {
 
 	import events.AppEvent;
 	import events.UIEvent;
+	import flash.display.Shape;
+	import flash.display.Sprite;
+	import flash.events.MouseEvent;
+	import flash.filesystem.File;
 	import model.AppModel;
 	import model.proxies.AppProxies;
 	import model.vo.Repository;
 	import view.btns.ButtonIcon;
 	import view.btns.DrawButton;
 	import view.type.TextHeading;
-	import flash.display.Shape;
-	import flash.display.Sprite;
-	import flash.events.MouseEvent;
-	import flash.filesystem.File;
 	
-	public class RepositoryView extends AccountView {
+	public class RepositoryView extends AccountPage {
 	
 		private var _mask			:Shape = new Shape();
 		private var _view			:RepositoryViewMC = new RepositoryViewMC();

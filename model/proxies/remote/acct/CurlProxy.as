@@ -4,7 +4,6 @@ package model.proxies.remote.acct {
 	import events.NativeProcessEvent;
 	import model.proxies.remote.RemoteProxy;
 	import system.BashMethods;
-	import com.adobe.serialization.json.JSONDecoder;
 
 	public class CurlProxy extends RemoteProxy {
 		
@@ -13,9 +12,9 @@ package model.proxies.remote.acct {
 		// strip off any post headers we receive before parsing github json //	
 			var k:String = s.charAt(s.length - 1);
 			if (k == '}'){
-				return new JSONDecoder(s.substr(s.indexOf('{')), false).getValue();
+				return JSON.parse(s.substr(s.indexOf('{')));
 			}	else if (k == ']'){
-				return new JSONDecoder(s.substr(s.indexOf('[')), false).getValue();
+				return JSON.parse(s.substr(s.indexOf('[')));
 			}	else{
 				return {result:s};
 			}					

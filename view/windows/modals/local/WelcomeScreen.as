@@ -12,14 +12,14 @@ package view.windows.modals.local {
 
 		public function WelcomeScreen()
 		{
-			_btn.x = 267;
-			_btn.y = 210;
+			_btn.x = 247;
+			_btn.y = 212;
 			_btn.graphics.beginFill(0xff0000, 0);
 			_btn.graphics.drawCircle(0, 0, 30);
 			_btn.graphics.endFill();
 			_btn.buttonMode = true;
 			_btn.addEventListener(MouseEvent.CLICK, onClick);
-			super.drawBackground(550, 300);
+			super.drawBackground(500, 300);
 			addChild(new Bitmap(new WelcomePNG()));
 			addChild(_btn);
 		}

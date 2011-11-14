@@ -148,10 +148,12 @@ package model.proxies.remote.acct {
 				break;	
 				case 'Not Found' :
 					dispatchError(ErrEvent.COLLAB_NOT_FOUND);
-				break;					
+				break;
 			}
-			if (o.errors[0]['code'] == 'already_exists'){
-				dispatchError(ErrEvent.REPOSITORY_TAKEN);	
+			if (o.errors){
+				if (o.errors[0]['code'] == 'already_exists'){
+					dispatchError(ErrEvent.REPOSITORY_TAKEN);	
+				}
 			}
 		}
 		
