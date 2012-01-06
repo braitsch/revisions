@@ -5,7 +5,7 @@ package system {
 	public class LicenseManager {
 
 		private static var _key		:String = '56afea94f7c9cda8f96b6cebe53023c64d157a9f';
-		private static var _expire	:Date = new Date(2012, 0, 1);
+		private static var _expire	:Date = new Date(2012, 1, 1);
 		private static var _secret	:String = '12345';
 			
 		static public function get key():String
