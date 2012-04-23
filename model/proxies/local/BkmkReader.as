@@ -1,12 +1,14 @@
 package model.proxies.local {
+	import error.AppError;
 
 	import events.AppEvent;
 	import events.NativeProcessEvent;
+
 	import model.AppModel;
 	import model.proxies.air.NativeProcessQueue;
 	import model.vo.Bookmark;
+
 	import system.BashMethods;
-	import view.windows.modals.system.Debug;
 
 	public class BkmkReader extends NativeProcessQueue {
 
@@ -36,7 +38,7 @@ package model.proxies.local {
 		private function onRepositoryInfo(a:Array):void
 		{
 		// strip the method names off the result array //	
-			for (var i:int = 0; i < 3; i++) a[i] = a[i].result.split(/[\n\r\t]/g);
+			for (var i:int = 0; i < 3; i++) a[i] = a[i].result.split(/[\n\r\t]/g);	
 			_bookmark.addRemotes(a[0]);
 			_bookmark.addLocalBranches(a[1]);
 			_bookmark.addRemoteBranches(a[2]);
@@ -45,8 +47,8 @@ package model.proxies.local {
 		
 		private function onProcessFailure(e:NativeProcessEvent):void 
 		{
-			e.data.source = 'RepoReader.onProcessFailure(e)';
-			AppModel.alert(new Debug(e.data));
+			trace("BkmkReader.onProcessFailure(e)", e.data.method);
+			AppError.resolve(new AppError(e.data, _bookmark, 'BkmkReader.onProcessFailure(e)'));
 		}
 		
 	}

@@ -20,7 +20,7 @@ package view.windows.modals.system {
 			m+='Source : '+o.source+'\n';
 			m+='Method : '+o.method+' failed \n';
 			o.message ? m+='Message: '+o.message+'\n' : m+='Message: '+o.result+'\n';
-			if (o.errors) for (var k:String in o.errors[0]) m+='Error: '+k+' -- '+o.errors[0][k]+'\n';		
+		//	if (o.errors) for (var k:String in o.errors[0]) m+='Error: '+k+' -- '+o.errors[0][k]+'\n';		
 			_view.message_txt.htmlText = m;
 		}
 		

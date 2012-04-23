@@ -1,17 +1,20 @@
 package model {
-
 	import events.AppEvent;
-	import flash.events.EventDispatcher;
+
 	import model.db.AppDatabase;
 	import model.proxies.AppProxies;
 	import model.vo.Bookmark;
 	import model.vo.Branch;
 	import model.vo.Repository;
+
 	import system.AppSettings;
 	import system.UpdateManager;
+
 	import view.graphics.AppIcon;
 	import view.windows.modals.merge.ResolveConflict;
 	import view.windows.modals.system.Alert;
+
+	import flash.events.EventDispatcher;
 
 	public class AppModel extends EventDispatcher {
 
@@ -51,7 +54,7 @@ package model {
 		static public function alert(a:Alert):void
 		{
 			_engine.dispatchEvent(new AppEvent(AppEvent.SHOW_ALERT, a));
-		}
+		}	
 		
 		static public function dispatch(s:String, o:Object = null):void
 		{

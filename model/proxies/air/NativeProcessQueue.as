@@ -32,13 +32,14 @@ package model.proxies.air {
 		
 		private function onProcessComplete(e:NativeProcessEvent):void
 		{
+			if (e.data['result'].search('fatal') != -1) return;
 		//	trace("NativeProcessQueue.onProcessComplete(e)", e.data.method, e.data.result);
 			_index++; _results.push(e.data);	
 			if (_index < _queue.length) {
 				super.call(_queue[_index]);
 			}	else if (_index == _queue.length){
 				dispatchEvent(new NativeProcessEvent(NativeProcessEvent.QUEUE_COMPLETE, _results));
-			}		
+			}
 		}
 		
 	}

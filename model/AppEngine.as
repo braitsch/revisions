@@ -84,8 +84,8 @@ package model {
 		{
 			for (var i:int = 0; i < _bookmarks.length; i++) if (_bookmarks[i] == _bookmark) _bookmarks.splice(i, 1);
 			for (var j:int = 0; j < a.length; j++) if (a[j].active == 1) _bookmark = _bookmarks[j];
-			if (_bookmarks.length){
-				dispatchActiveBookmark();	
+			if (_bookmarks.length) {
+				checkAllBkmksParsed();
 			}	else{
 				AppModel.bookmark = null;
 				AppModel.dispatch(AppEvent.NO_BOOKMARKS);
@@ -128,11 +128,16 @@ package model {
 
 		private function onRepositoryReady(e:AppEvent):void 
 		{
-			if (++_index == _bookmarks.length){
+			_index++; checkAllBkmksParsed();
+		}
+		
+		private function checkAllBkmksParsed():void
+		{
+			if (_index == _bookmarks.length){
 				onAllBookmarksParsed();
 			}	else{
 				AppProxies.reader.getRepositoryInfo(_bookmarks[_index]);	
-			}
+			}			
 		}
 		
 		private function onAllBookmarksParsed():void
