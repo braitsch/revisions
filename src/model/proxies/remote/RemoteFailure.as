@@ -7,7 +7,7 @@ package model.proxies.remote {
 		public static const	MALFORMED_URL	:String = 'malformed-url';
 		public static const	REPO_NOT_FOUND	:String = 'repository-not-found';
 		
-		private static var _keyErrors:Vector.<String> = new <String>[	
+		private static var _keyErrors:Vector.<String> = new <String>[ 
 			'Permission denied',
 			'Authentication failed',
 			'Host key verification failed',
