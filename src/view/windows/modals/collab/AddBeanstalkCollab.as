@@ -97,7 +97,7 @@ package view.windows.modals.collab {
 				vrs.userName = _collab.userName;
 				vrs.userPass = _collab.passWord;
 				vrs.homePage = Hosts.beanstalk.account.repository.homePage;
-			var req:URLRequest = new URLRequest('http://revisions-app.com/email/add-collaborator.php');
+			var req:URLRequest = new URLRequest('http://revisions.braitsch.io/email/add-collaborator.php');
 				req.method = URLRequestMethod.POST;
 				req.data = vrs;
 			_urlLoader = new URLLoader();

@@ -9,6 +9,10 @@ package model.proxies.remote.acct {
 		
 		protected function getResultObject(s:String):Object
 		{
+			trace("CurlProxy.getResultObject(s)");
+			s = "["+s+"]";
+			trace(s);
+			return JSON.parse(String(s));
 		// strip off any post headers we receive before parsing github json //	
 			var k:String = s.charAt(s.length - 1);
 			if (k == '}'){
@@ -17,7 +21,7 @@ package model.proxies.remote.acct {
 				return JSON.parse(s.substr(s.indexOf('[')));
 			}	else{
 				return {result:s};
-			}					
+			}
 		}
 		
 		override protected function onProcessComplete(e:NativeProcessEvent):void

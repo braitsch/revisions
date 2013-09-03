@@ -53,7 +53,7 @@ package view.avatars {
 		
 		private function encodeEmail(email:String):String
 		{
-			return 'http://www.gravatar.com/avatar/'+MD5.hash(email)+'?s='+_size+'&d=http://revisions-app.com/img/rev-icon-30.png';			
+			return 'http://www.gravatar.com/avatar/'+MD5.hash(email)+'?s='+_size+'&d=http://revisions.braitsch.io/img/rev-icon-30.png';			
 		}
 		
 		private function onAvatarLoaded(e:Event):void

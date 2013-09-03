@@ -46,14 +46,14 @@ package {
 		
 		private function checkExpiredAndUpdates():void
 		{
-			if (LicenseManager.checkExpired()){
-				AppModel.dispatch(AppEvent.APP_EXPIRED);
-			}	else{
+		//	if (LicenseManager.checkExpired()){
+		//		AppModel.dispatch(AppEvent.APP_EXPIRED);
+		//	}	else{
 				AppModel.engine.addEventListener(AppEvent.APP_UP_TO_DATE, onAppUpToDate);
 				AppModel.engine.addEventListener(AppEvent.APP_UPDATE_FAILURE, onAppUpToDate);
 				AppModel.engine.addEventListener(AppEvent.APP_UPDATE_IGNORED, onAppUpToDate);
 				AppModel.updater.checkForUpdate();
-			}
+		//	}
 		}
 
 		private function onAppUpToDate(e:AppEvent):void

@@ -60,7 +60,7 @@ package model.proxies.remote.acct {
 			var o:Object = getResultObject(s);
 			if (o.message == null){
 				_account.loginData = o;
-				super.getRepositories(_baseURL + '/user/repos');
+				super.getRepositories(_baseURL + '/user/repos?type=owner');
 			}	else{
 				onLoginFailure();
 			}
@@ -68,6 +68,8 @@ package model.proxies.remote.acct {
 		
 		override protected function onRepositories(s:String):void
 		{
+		//	trace("GitHubApi.onRepositories(s)", s);
+		//  https://braitsch:aelisch76@api.github.com/users/braitsch
 			var o:Object = getResultObject(s);
 			if (o.message == null){
 				var v:Vector.<Repository> = new Vector.<Repository>();

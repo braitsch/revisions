@@ -22,7 +22,7 @@ package system {
 	
 	public class UpdateManager
 	{
-		private static const UPDATE_DESCRIPTOR_URL:String = "http://revisions-app.com/download/update.xml";
+		private static const UPDATE_DESCRIPTOR_URL:String = "http://revisions.braitsch.io/beta/update.xml";
 		
 		private static var updateFile	:File;
 		private static var urlStream	:URLStream;

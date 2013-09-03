@@ -72,7 +72,7 @@ package view.frame {
 					dispatchEvent(new UIEvent(UIEvent.GLOBAL_SETTINGS));
 				break;
 				case 'help_btn' :
-					navigateToURL(new URLRequest('http://revisions-app.com/help'));
+					navigateToURL(new URLRequest('http://revisions.braitsch.io/help'));
 				break;
 			}
 		}
