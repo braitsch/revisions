@@ -18,8 +18,10 @@ function activeLogin
 
 function getRepositories
 {
-	n=`curl --silent -X GET "${args[1]}"`
-	echo $?,$n	
+#	n=`curl --silent -X GET "${args[1]}"`
+	mkdir -p ~/Library/Preferences/com.braitsch.revisions/Local\ Store/cache
+	curl --silent -X GET "${args[1]}" > ~/Library/Preferences/com.braitsch.revisions/Local\ Store/cache/github-repos.txt
+	echo 1
 }
 
 function addRepository

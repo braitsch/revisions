@@ -1,5 +1,8 @@
 package model.proxies.remote.acct {
 
+	import flash.filesystem.File;
+	import flash.filesystem.FileMode;
+	import flash.filesystem.FileStream;
 	import events.AppEvent;
 	import events.ErrEvent;
 	import model.remote.HostingAccount;
@@ -66,18 +69,24 @@ package model.proxies.remote.acct {
 			}
 		}
 		
-		override protected function onRepositories(s:String):void
+		override protected function onRepositories(response:String):void
 		{
-		//	trace("GitHubApi.onRepositories(s)", s);
-		//  https://braitsch:aelisch76@api.github.com/users/braitsch
-			var o:Object = getResultObject(s);
-			if (o.message == null){
+		/* attempting to JSON parse the results of the curl call results in an invalid format error
+		 * so we save the results of the call to a cached file first, then stream that file into JSON.parse
+		 */
+		 	if (response != '1'){
+				dispatchError(ErrEvent.API_DISABLED);
+			}	else{
+				var file:File = File.applicationStorageDirectory.resolvePath("cache/github-repos.txt");
+				var stream:FileStream = new FileStream();
+    			stream.open(file, FileMode.READ);
+				var str:String = stream.readUTFBytes(stream.bytesAvailable);
+				stream.close();
+				var repos:Array = JSON.parse(str) as Array;	
 				var v:Vector.<Repository> = new Vector.<Repository>();
-				for (var i:int = 0; i < o.length; i++) v.push(new GitHubRepo(o[i]));
+				for (var i:int = 0; i < repos.length; i++) v.push(new GitHubRepo(repos[i]));
 				_account.repositories = v;
 				dispatchEvent(new AppEvent(AppEvent.LOGIN_SUCCESS, _account));
-			}	else{
-				handleJSONError(o);
 			}
 		}
 		
