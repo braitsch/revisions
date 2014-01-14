@@ -2,18 +2,21 @@ package {
 
 	import events.AppEvent;
 	import events.DataBaseEvent;
+
 	import model.AppModel;
 	import model.proxies.AppProxies;
 	import model.remote.Hosts;
+
 	import system.AirContextMenu;
 	import system.AirNativeMenu;
 	import system.AppSettings;
-	import system.LicenseManager;
+
 	import flash.desktop.NativeApplication;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.InvokeEvent;
+	import flash.system.Capabilities;
 
 	[SWF(backgroundColor="#ffffff", frameRate="31")]
 
@@ -40,7 +43,7 @@ package {
 		{
 			stage.nativeWindow.visible = true;
 			AppModel.engine.removeEventListener(AppEvent.APP_SETTINGS, onAppSettings);
-			NativeApplication.nativeApplication.startAtLogin = AppSettings.getSetting(AppSettings.START_AT_LOGIN);
+			if (!flash.system.Capabilities.isDebugger) NativeApplication.nativeApplication.startAtLogin = AppSettings.getSetting(AppSettings.START_AT_LOGIN);
 			checkExpiredAndUpdates();
 		}
 		

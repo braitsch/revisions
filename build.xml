@@ -2,11 +2,11 @@
 <project name="AIR 3.1 Build File" default="*. Debug Air Application">
 	
 	<!--external prop files -->
+	<property file="./ant/user.properties" description="system specific file paths" />
     <property file="./ant/proj.properties" description="project specific properties" />
 	<property file="./ant/cert.properties" description="creates a temp cert for testing" />
 	
 	<!-- path to flex sdk & friends -->
-	<property name="sdk" value="/Users/braitsch/Code/flash/libs/flex_sdk_4.6.0.23201B" />
 	<property name="mxmlc" value="${sdk}/lib/mxmlc.jar" />
 	<property name="adl" value="${sdk}/bin/adl" />
 	<property name="adt" value="${sdk}/lib/adt.jar" />
