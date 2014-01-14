@@ -2,16 +2,20 @@ package view.windows.account.base {
 
 	import events.AppEvent;
 	import events.UIEvent;
-	import flash.display.Shape;
-	import flash.display.Sprite;
-	import flash.events.MouseEvent;
-	import flash.filesystem.File;
+
 	import model.AppModel;
 	import model.proxies.AppProxies;
 	import model.vo.Repository;
+
 	import view.btns.ButtonIcon;
 	import view.btns.DrawButton;
 	import view.type.TextHeading;
+
+	import flash.display.Shape;
+	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.filesystem.File;
 	
 	public class RepositoryView extends AccountPage {
 	
@@ -43,6 +47,12 @@ package view.windows.account.base {
 			}	else{
 				showNoRepositories();		
 			}
+		}
+		
+		override protected function onAddedToStage(e:Event):void
+		{
+			_repos.y = 43;
+			super.onAddedToStage(e);
 		}
 
 		private function showRepositories():void

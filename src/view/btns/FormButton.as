@@ -1,8 +1,6 @@
 package view.btns {
 
-	import flash.display.Bitmap;
 	import flash.display.Sprite;
-	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
 	public class FormButton extends Sprite {
 		
@@ -48,18 +46,18 @@ package view.btns {
 //			this.filters = [DrawButton.GLOW];
 		}
 		
-		private function addLabel(s:String):void
-		{
-			var bl:ButtonLabel = new ButtonLabel();
-			bl.label.autoSize = TextFieldAutoSize.CENTER;
-			bl.label.mouseChildren = bl.label.mouseEnabled = false;
-			bl.label.setTextFormat(_format);
-			bl.label.filters = [DrawButton.GLOW];
-			bl.label.text = s;
-			bl.label.x = 60 - bl.label.width / 2;
-			bl.label.y = 15 - bl.label.height / 2 + 1; 
-			addChild(bl.label);
-		}
+//		private function addLabel(s:String):void
+//		{
+//			var bl:ButtonLabel = new ButtonLabel();
+//			bl.label.autoSize = TextFieldAutoSize.CENTER;
+//			bl.label.mouseChildren = bl.label.mouseEnabled = false;
+//			bl.label.setTextFormat(_format);
+//			bl.label.filters = [DrawButton.GLOW];
+//			bl.label.text = s;
+//			bl.label.x = 60 - bl.label.width / 2;
+//			bl.label.y = 15 - bl.label.height / 2 + 1; 
+//			addChild(bl.label);
+//		}
 		
 	}
 	

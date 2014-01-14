@@ -23,17 +23,25 @@ package view.windows.account.base {
 		private var _viewCollabs	:CollaboratorView;
 		private var _addCollab		:AddCollaborator;
 		
+		private static const WIDTH 	:uint = 600;
+		private static const HEIGHT	:uint = 450;
+		
 		public function AccountBase()
 		{
 			addChild(_view);
 			addChild(_mask);
 			addLogOut();
-			drawMask(600, 450);
+			drawMask(WIDTH, HEIGHT);
 			super.addCloseButton();
-			super.drawBackground(600, 450);
+			super.drawBackground(WIDTH, HEIGHT);
 			addEventListener(UIEvent.WIZARD_NEXT, onWizardNext);
 			addEventListener(UIEvent.WIZARD_PREV, onWizardPrev);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
+		}
+		
+		override public function get height():Number
+		{
+			return HEIGHT;
 		}
 		
 		protected function setViews(r:RepositoryView, c:CollaboratorView, a:AddCollaborator):void

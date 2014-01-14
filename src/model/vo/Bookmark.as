@@ -1,11 +1,13 @@
 package model.vo {
 
-	import flash.text.ReturnKeyLabel;
 	import model.AppEngine;
 	import model.proxies.AppProxies;
 	import model.remote.HostingAccount;
+
 	import system.StringUtils;
+
 	import com.adobe.crypto.MD5;
+
 	import flash.display.BitmapData;
 	import flash.events.EventDispatcher;
 	import flash.events.TimerEvent;

@@ -15,7 +15,7 @@ package model.vo {
 
 		override public function get id():uint
 		{
-			return _xml.id;
+			return _xml['id'];
 		}
 		
 	}

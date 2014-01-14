@@ -76,15 +76,18 @@ package model.proxies {
 		
 		private function getModified(b:Bookmark):void
 		{
-			resetTimer();
-			if (exists(b) == true) _proxy.getModified(b);
+			if (exists(b) == true) {
+				resetTimer();
+				_proxy.getModified(b);
+			}
 		}
 		
 		private function getSummary():void
 		{
 			if (exists(AppModel.bookmark)){
+				_ticks = 0;
 				resetTimer();
-				_ticks = 0; _proxy.getSummary();
+				_proxy.getSummary();
 			}
 		}
 		
@@ -144,7 +147,10 @@ package model.proxies {
 		
 		private function exists(b:Bookmark):Boolean
 		{
-			if (b.exists){
+			if (b == null){
+				stopTimers();
+				return false;
+			}	else if (b.exists){
 				return true;
 			}	else{
 				stopTimers();

@@ -14,7 +14,6 @@ package view.windows.base {
 		private var _closeButton			:ModalCloseButton;
 		
 		private static var _glow			:GlowFilter = new GlowFilter(0x000000, .5, 20, 20, 2, 2);		
-		private static var _heightOffset	:uint = 50;
 
 		public function ParentWindow()
 		{
@@ -23,8 +22,8 @@ package view.windows.base {
 	
 		public function resize(w:Number, h:Number):void
 		{
-			this.x = uint(w / 2 - this.width / 2);
-			this.y = uint((h - _heightOffset) / 2 - this.height / 2 + _heightOffset);
+			this.x = int((w/2) - (this.width / 2));
+			this.y = int((h/2) - (this.height / 2));
 		}
 		
 		protected function set title(s:String):void
@@ -40,8 +39,8 @@ package view.windows.base {
 		override protected function onAddedToStage(e:Event):void 
 		{
 			super.onAddedToStage(e);
-			resize(stage.stageWidth, stage.stageHeight - 20);
-		}	
+			resize(stage.stageWidth, stage.stageHeight);
+		}
 		
 		protected function addCloseButton():void
 		{
