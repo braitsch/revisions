@@ -76,7 +76,7 @@
             <arg value="${keystore}"/>
             <arg value="-storepass"/>
             <arg value="${cert_password}"/>
-            <arg value="release/${project_name}.air"/>
+            <arg value="${deploy_dir}/${project_name}.air"/>
             <arg value="${air_descriptor}"/>
             <arg value="-C"/>
             <arg value="bin"/>
@@ -90,7 +90,7 @@
             <arg value="-target"/> 
         	<arg value="native"/> 
             <arg value="${deploy_dir}/${project_name}-${project_version}.dmg"/>
-            <arg value="release/${project_name}.air"/>            	
+            <arg value="${deploy_dir}/${project_name}.air"/>            	
         </java>
     </target>	
 	
@@ -132,8 +132,8 @@
 			<arg value="${keystore}"/>
 			<arg value="-storepass"/>
 			<arg value="${cert_password}"/>	
-			<arg value="release/${project_name}-old.air"/> 
-			<arg value="release/${project_name}-new.air"/> 
+			<arg value="${deploy_dir}/${project_name}-old.air"/> 
+			<arg value="${deploy_dir}/${project_name}-new.air"/> 
 		</java> 
 	</target>			
 	
@@ -147,7 +147,7 @@
 			<length property="filesize" mode="all">
 				<fileset file="bin/${project_name}.swf" />
 			</length>
-			<echo file="log/output.txt" >Author: Stephen Braitsch
+			<echo file="logs/last-build.txt" >Author: Stephen Braitsch
 Date: ${timestamp}${line.separator}
 Project Name: ${project_name}
 Filesize: ${filesize} Bytes
