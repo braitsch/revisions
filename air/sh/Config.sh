@@ -14,7 +14,7 @@ function installGit
 {
 	if [ -d "$store/git" ]; then rm -rf "$store/git"; fi
 	cd `dirname $0`
-	tar -zxvf ../git-1.7.7.1.tar.gz -C "$store" 2>&1
+	tar -zxvf ../git-1.8.5.3.tar.gz -C "$store" 2>&1
 	git --version
 }
 
