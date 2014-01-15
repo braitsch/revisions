@@ -17,7 +17,6 @@
     	<copy todir="bin/sh"><fileset dir="air/sh"/></copy>
     	<copy todir="bin/py"><fileset dir="air/py"/></copy>	
     	<copy todir="bin/icons"><fileset dir="air/icons"/></copy>
-    	<copy todir="bin"><fileset file="git/tar/git-1.7.7.1.tar.gz"/></copy>
     	<copy todir="bin"><fileset file="air/Revisions-app.xml"/></copy>
 		<chmod perm="777"><fileset dir="bin"></fileset></chmod>
     </target>	
