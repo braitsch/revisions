@@ -18,7 +18,7 @@
 ##History
 
 I designed and developed Revisons over a period of about 10 months in 2011.<br>
-[You can read the full story of how the project came about here](https://medium.com/@braitsch/failure-under-version-control-9eaffcba4f36)
+[You can read the full story of how the project came about here.](https://medium.com/@braitsch/failure-under-version-control-9eaffcba4f36)
 
 ##Compiling
 
