@@ -2,59 +2,58 @@ package view.windows.modals.local {
 
 	import events.AppEvent;
 	import events.UIEvent;
+
 	import model.AppModel;
-	import system.AppSettings;
-	import system.LicenseManager;
-	import view.ui.ModalCheckbox;
+
 	import view.windows.base.ParentWindow;
-	import flash.events.MouseEvent;
+
 	import flash.events.ProgressEvent;
 
 	public class AppUpdate extends ParentWindow {
 
 		private static var _view	:AppUpdateMC = new AppUpdateMC();
-		private static var _check	:ModalCheckbox = new ModalCheckbox(false);
+	//	private static var _check	:ModalCheckbox = new ModalCheckbox(false);
 
 		public function AppUpdate()
 		{
 			addChild(_view);
 			super.drawBackground(550, 240);
 			super.title = 'Update Available';
-			addCheckBox();
-			addNoButton('Skip', 285, 190);
+		//	addCheckBox();
+		//	addNoButton('Skip', 285, 190);
 			addOkButton('Download', 415, 190);
 			addEventListener(UIEvent.ENTER_KEY, onDownload);
-			addEventListener(UIEvent.NO_BUTTON, onSkipUpdate);
+		//	addEventListener(UIEvent.NO_BUTTON, onSkipUpdate);
 		}
 
 		public function set newVersion(n:String):void
 		{
 			_view.textArea.message_txt.text = "Revisions "+n+" is now available!\n";
-			_view.textArea.message_txt.text+= "Would you like to update to this latest version?";
-			if (LicenseManager.checkExpired()){
-				super.noButton.enabled = false;
-				removeEventListener(UIEvent.NO_BUTTON, onSkipUpdate);
-			}
+			_view.textArea.message_txt.text+= "Please update to this latest version.";
+//			if (LicenseManager.checkExpired()){
+//				super.noButton.enabled = false;
+//				removeEventListener(UIEvent.NO_BUTTON, onSkipUpdate);
+//			}
 		}
 		
-		private function addCheckBox():void
-		{
-			_check.y = 195; 
-			_check.label = "Don't prompt me to update again.";
-			_check.addEventListener(MouseEvent.CLICK, onCheckbox);
-			addChild(_check);
-		}		
+//		private function addCheckBox():void
+//		{
+//			_check.y = 195; 
+//			_check.label = "Don't prompt me to update again.";
+//			_check.addEventListener(MouseEvent.CLICK, onCheckbox);
+//			addChild(_check);
+//		}		
 		
-		private function onCheckbox(e:MouseEvent):void
-		{
-			AppSettings.setSetting(AppSettings.CHECK_FOR_UPDATES, !_check.selected);
-		}		
+//		private function onCheckbox(e:MouseEvent):void
+//		{
+//			AppSettings.setSetting(AppSettings.CHECK_FOR_UPDATES, !_check.selected);
+//		}		
 		
-		private function onSkipUpdate(e:UIEvent):void
-		{
-			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
-			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.APP_UPDATE_IGNORED));
-		}
+//		private function onSkipUpdate(e:UIEvent):void
+//		{
+//			dispatchEvent(new UIEvent(UIEvent.CLOSE_MODAL_WINDOW));
+//			AppModel.engine.dispatchEvent(new AppEvent(AppEvent.APP_UPDATE_IGNORED));
+//		}
 
 		private function onDownload(e:UIEvent):void
 		{
@@ -71,7 +70,7 @@ package view.windows.modals.local {
 			super.okButton.enabled = false;
 			super.noButton.enabled = false;
 			removeEventListener(UIEvent.ENTER_KEY, onDownload);
-			removeEventListener(UIEvent.NO_BUTTON, onSkipUpdate);			
+		//	removeEventListener(UIEvent.NO_BUTTON, onSkipUpdate);			
 		}
 
 		private function onUpdateError(e:AppEvent):void

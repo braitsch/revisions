@@ -92,9 +92,9 @@
             <arg value="-target"/> 
         	<arg value="native"/> 
             <arg value="release/${project_name}-${project_version}.dmg"/>
-            <arg value="release/${project_name}.air"/>            	
+            <arg value="release/${project_name}.air"/>
         </java>
-    </target>	
+    </target>
 	
 	<!-- Generate Air Certificate -->	
    
@@ -139,7 +139,7 @@
 		</java> 
 	</target>
 	
-	<!-- Write to log file -->		
+	<!-- Write to log file -->
 
 	<target name="5. Write To Log" description="write to a log file each time we compile">
 		<echo>Updating Log</echo>
@@ -149,13 +149,13 @@
 			<length property="filesize" mode="all">
 				<fileset file="bin/${project_name}.swf" />
 			</length>
-			<echo file="log/output.txt" >Author: Stephen Braitsch
+			<echo file="logs/last-build.txt" >Author: Stephen Braitsch
 Date: ${timestamp}${line.separator}
 Project Name: ${project_name}
 Filesize: ${filesize} Bytes
 Build Type: ${debug}${line.separator}
 Target Air Version: ${target_air_version}
 Built On: ${os.name} ${os.version}</echo>
-	</target> 	
+	</target>
 
 </project>
