@@ -1,11 +1,4 @@
+.DS_Store
 .project
 .settings
 bin
-design
-git
-log
-notes
-old
-release
-vid
-ant/user.properties

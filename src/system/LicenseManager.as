@@ -15,6 +15,8 @@ package system {
 		
 		static public function checkExpired():Boolean
 		{
+			return false;
+		// disabling license checking o_O //
 			var now:Date = new Date();
 			return now > _expire;
 		}

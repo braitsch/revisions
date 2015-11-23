@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="AIR 3.1 Build File" default="*. Debug Air Application">
-	
+<project name="AIR 3.7 Build File" default="*. Debug Air Application">
+
 	<!--external prop files -->
-	<property file="./ant/user.properties" description="system specific file paths" />
     <property file="./ant/proj.properties" description="project specific properties" />
 	<property file="./ant/cert.properties" description="creates a temp cert for testing" />
 	
-	<!-- path to flex sdk & friends -->
+	<!-- path to flex sdk – change this to point to the flex 4.6 sdk on your machine -->
+	<property name="sdk" value="/Users/braitsch/Code/flash/libs/flex_sdk_4.6_air_19" />
 	<property name="mxmlc" value="${sdk}/lib/mxmlc.jar" />
 	<property name="adl" value="${sdk}/bin/adl" />
 	<property name="adt" value="${sdk}/lib/adt.jar" />
 		
     <target name="1. Clean Targets" description="deletes and recreates the build and release dirs">
         <delete dir="bin" failOnError="false" includeEmptyDirs="true" />
+    	<delete dir="release" failOnError="false" includeEmptyDirs="true" />
         <mkdir dir="bin" />
+    	<mkdir dir="release" />
     	<copy todir="bin/sh"><fileset dir="air/sh"/></copy>
     	<copy todir="bin/py"><fileset dir="air/py"/></copy>	
     	<copy todir="bin/icons"><fileset dir="air/icons"/></copy>
@@ -57,7 +59,7 @@
 			<arg value="-debug=${debug}" />
 			<arg value="+flexlib=${sdk}/frameworks" />
 			<arg value="+configname=air" />
-			<arg value="-swf-version=13" />			
+			<arg value="-swf-version=17" />			
 			<arg value="-incremental=true" />
 			<arg value="-file-specs=./src/AppMain.as" />
 			<arg value="-source-path=./libs" />			
@@ -89,7 +91,7 @@
             <arg value="-package"/>        	
             <arg value="-target"/> 
         	<arg value="native"/> 
-            <arg value="${deploy_dir}/${project_name}-${project_version}.dmg"/>
+            <arg value="release/${project_name}-${project_version}.dmg"/>
             <arg value="release/${project_name}.air"/>            	
         </java>
     </target>	
@@ -135,7 +137,7 @@
 			<arg value="release/${project_name}-old.air"/> 
 			<arg value="release/${project_name}-new.air"/> 
 		</java> 
-	</target>			
+	</target>
 	
 	<!-- Write to log file -->		
 
